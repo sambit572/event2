@@ -1,0 +1,17 @@
+.person_description {
+  text-align: start;
+}
+.category_person {
+  display: flex;
+  margin: 50px 0 30px 0;
+  justify-content: center;
+  align-items: center;
+}
+.category_person > img {
+  background: none;
+  margin: 0px 80px 0 30px;
+  padding: 5px;
+  width: 100px;
+  height: 100px;
+  display: flex;
+}

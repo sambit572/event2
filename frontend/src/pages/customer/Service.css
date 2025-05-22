@@ -1,0 +1,28 @@
+.single_service {
+  flex-direction: column;
+  margin: 20px;
+  padding: 20px;
+  background-color: seashell;
+  justify-content: space-between;
+}
+.single_service_thumbnail {
+  display: flex;
+  flex-direction: column;
+}
+.single_service_thumbnail > img {
+  width: 80px;
+  height: 80px;
+  margin: 0 30px 10px 0;
+  transition: all 0.2s ease-in-out;
+}
+.single_service_display {
+  width: 500px;
+  height: 500px;
+}
+.selected_image {
+  transform: scale(1.12);
+}
+.service_description {
+  display: flex;
+  text-align: center;
+}
