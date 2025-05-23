@@ -44,12 +44,12 @@ const categories = [
   { title: "Photographer & Videographer", image: image4 },
   { title: "Pandit", image: image5 },
   { title: "magician", image: image6 },
-  { title: "Orchestra(dance and singing)", image: image7 },
+  { title: "Orchestra (dance and singing)", image: image7 },
   { title: "Moulbi", image: image8 },
   { title: "Father", image: image9 },
   { title: "Catering", image: image10 },
   { title: "Makeup & Mehendi Artist", image: image11 },
-  { title: "FlowerDecoration/florist", image: image12 },
+  { title: "Flower Decoration / Florist", image: image12 },
   { title: "HorseCart & Grooming Car", image: image13 },
   { title: "Fireworkers", image: image14 },
   { title: "Card Designers & Printers", image: image15 },
@@ -58,7 +58,7 @@ const Home = () => {
   return (
     <div>
       <ImageSlider images={images} />
-      <h1 className="align_center heading">Categories</h1>
+      <h1 className="heading">Categories</h1>
       <div className="category_section">
         {categories.map((category, index) => (
           <div key={index}>

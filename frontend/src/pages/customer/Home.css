@@ -1,9 +1,16 @@
-.category_section {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-}
 .heading {
-  justify-content: center;
-  margin: 10px 0 20px 0;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 20px 0;
+  color: #232f3e; /* Amazon-style dark navy */
+}
+
+.category_section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 50px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
 }

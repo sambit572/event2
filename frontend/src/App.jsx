@@ -9,7 +9,7 @@ import Service from "./pages/customer/Service";
 const App = () => {
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <main>
         <Routes>
           <Route path="/" element={<Home />}></Route>
