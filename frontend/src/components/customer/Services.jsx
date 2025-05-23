@@ -4,9 +4,11 @@ import "./Services.css";
 const Services = ({ person }) => {
   return (
     <a href="/category/service" className="category_person">
+      <div className="service-img">
       <img src={person} alt="" />
+      </div>
       <div className="person_description">
-        <h3>Name</h3>
+        <h3>wedding dj service</h3>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Harum,
           placeat cupiditate. Laboriosam nihil earum quam odio saepe aut

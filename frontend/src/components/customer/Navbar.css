@@ -16,14 +16,14 @@ ul {
   font-weight: 500;
   list-style: none;
 }
-li {
+/* li {
   padding: 10px;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Adds subtle shadow */
-  border-radius: 8px; /* Slightly smoother corners */
-  background-color: #b8b9f5;
+  /* border-radius: 8px; Slightly smoother corners */
+  /* background-color: #b8b9f5;
   margin: 15px;
-  transition: all 0.3s ease-in-out; /* Adds a smooth hover effect */
-}
+  transition: all 0.3s ease-in-out; Adds a smooth hover effect */
+/* } */ */
 
 li:hover {
   transform: scale(1.05); /* Slight zoom effect on hover */
