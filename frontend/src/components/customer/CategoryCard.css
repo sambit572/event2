@@ -54,11 +54,7 @@
 }
 
 .categoryCard:hover img {
-  opacity: 0;
-}
-
-.categoryCard:hover::before {
-  opacity: 1;
+  opacity: 0.5;
 }
 
 .categoryCard:hover h2 {
@@ -66,5 +62,6 @@
 }
 
 .categoryCard:hover {
+  background: rgba(0, 0, 0, 1);
   transform: scale(1.05);
 }

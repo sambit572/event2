@@ -1,0 +1,49 @@
+.footer {
+  background-color: #222;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+}
+
+.container {
+  margin-top: 50px;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.section {
+  margin: 10px;
+}
+
+.section h4 {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+}
+
+.list li a {
+  color: white;
+  font-weight: 500;
+  font-size: 20px;
+  text-decoration: none;
+}
+
+.list li {
+  background: none;
+  text-decoration: none;
+}
+
+.list li a:hover {
+  text-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  transform: scale(1.05);
+}
+
+.copy {
+  margin-top: 15px;
+  font-size: 14px;
+}

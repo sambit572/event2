@@ -50,7 +50,7 @@ function SamplePrevArrow(props) {
 
 const ImageSlider = ({ images }) => {
   const settings = {
-    dots: false,
+    dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 1,

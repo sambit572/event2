@@ -5,6 +5,7 @@ import Home from "./pages/customer/Home";
 import ServiceList from "./pages/customer/ServiceList";
 import Navbar from "./components/customer/Navbar";
 import Service from "./pages/customer/Service";
+import Footer from "./components/customer/Footer";
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
           <Route path="/category/service" element={<Service />}></Route>
         </Routes>
       </main>
+      <Footer />
     </>
   );
 };
