@@ -1,0 +1,109 @@
+.product-card {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 8px;
+  width: 1300px;
+}
+
+.product-card img {
+  width: 150px;
+  height: 250px;
+  margin-right: 20px;
+  object-fit: cover;
+  margin-left: 20px;
+}
+.sub-category {
+  margin-left: 30px;
+}
+
+
+.product-card .sub-category h2 {
+  margin: 0;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.sub-category .price {
+  margin-bottom: 10px;
+}
+.sub-category .special-price {
+  font-weight: bold;
+  font-size: 25px;
+  margin-right: 10px;
+}
+.sub-category .actual-price {
+  color: gray;
+  text-decoration: line-through;
+  margin-right: 10px;
+  font-weight: 500;
+}
+.sub-category .discount {
+  color: green;
+  font-size: 20px;
+  font-weight: bold;
+}
+.sub-category .rate {
+  margin-bottom: 10px;
+}
+.sub-category .rate .ratings {
+  background-color: darkgreen;
+  color: white;
+  padding: 5px 8px;
+  border-radius: 20px;
+  text-align: center;
+  margin-right: 8px;
+  box-shadow: 0 2px 6px rgba(0, 128, 0, 0.2);
+  font-weight: bold;
+}
+.paragraph{
+    margin-bottom: 10px;
+}
+
+
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .product-card {
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+  }
+
+  .product-card img {
+    width: 100%;
+    height: auto;
+    max-width: 90%;
+    margin: 0 0 15px 0;
+  }
+
+  .sub-category {
+    width: 100%;
+    text-align: center;
+  }
+
+  .sub-category .price,
+  .sub-category .rate {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .sub-category .special-price {
+    font-size: 1.2rem;
+  }
+
+  .sub-category .discount {
+    font-size: 0.9rem;
+  }
+
+  .sub-category .rate .ratings {
+    padding: 4px 8px;
+    font-size: 0.9rem;
+  }
+
+  .paragraph {
+    font-size: 0.9rem;
+  }
+}
