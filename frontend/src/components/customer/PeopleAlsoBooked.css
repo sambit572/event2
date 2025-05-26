@@ -1,0 +1,138 @@
+.similar-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 20px;
+  padding: 0 20px;
+}
+
+.similar-card {
+  background: linear-gradient(to bottom right, #ffffff, #f0f4ff);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  border-radius: 18px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  flex: 0 0 calc(20% - 16px); /* 5 cards per row */
+  max-width: calc(20% - 16px);
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  align-items: center;
+}
+
+.similar-card:hover {
+  transform: scale(1.04);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.15);
+}
+
+.similar-image img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.similar-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 12px;
+  color: #222;
+  text-align: center;
+}
+
+.price-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 10px 0;
+  flex-wrap: nowrap;
+  width: 100%;
+}
+
+.price {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 17px;
+  color: #000;
+}
+
+.original-price {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #888;
+  text-decoration: line-through;
+}
+
+.discount {
+  color: #00a300;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.review-block {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+  justify-content: center;
+}
+
+.rating-badge {
+  background-color: #008000;
+  color: #fff;
+  border-radius: 50px;
+  padding: 4px 10px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.review-text {
+  font-size: 14px;
+  color: #444;
+}
+
+.similar-add-to-cart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(to right, #ff6a00, #ee0979);
+  color: white;
+  font-weight: bold;
+  padding: 10px 12px;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  width: 100%;
+  margin-top: auto;
+}
+
+.similar-add-to-cart:hover {
+  background: linear-gradient(to right, #ee0979, #ff6a00);
+  opacity: 0.95;
+}
+
+/* ---------- Responsive Layout ---------- */
+
+@media (max-width: 768px) {
+  .similar-card {
+    flex: 0 0 calc(50% - 10px);
+    max-width: calc(50% - 10px);
+  }
+
+  .similar-image img {
+    height: 120px;
+  }
+
+  .price-block {
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+}

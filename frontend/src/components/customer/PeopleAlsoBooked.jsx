@@ -1,84 +1,42 @@
 import { BsCurrencyRupee } from "react-icons/bs";
 import { IoIosStar } from "react-icons/io";
-import { FaCartShopping } from "react-icons/fa6"; // or "react-icons/fa" depending on your version
-
-
+import { FaCartShopping } from "react-icons/fa6"; // FontAwesome shopping cart
+import "./PeopleAlsoBooked.css"; // Extracted CSS for maintainability
 
 const SimilarProductCard = ({ product }) => (
-  <div className="similar-img2">
-    <div className="image">
-      <img src={product.image} alt="Similar Product" />
+  <div className="similar-card">
+    <div className="similar-image">
+      <img src={product.image} alt="DJ Service" />
     </div>
-    <div style={{ padding: "8px" }}>
-      <h3>Wedding DJ Service</h3>
-      <div className="price">
-        <div className="rupee">
-          <div
-            style={{
-              fontWeight: "bold",
-              textAlign: "center",
-              display: "flex",
-              alignItems: "center",
-              fontSize: "20px",
-              marginLeft: "20px",
-            }}
-          >
-            <BsCurrencyRupee style={{ fontSize: "17px" }} />
-            <span>{product.price}</span>
-          </div>
-        </div>
 
-        <div className="rupee1">
-          <div
-            style={{
-              textAlign: "center",
-              display: "flex",
-              alignItems: "center",
-              fontSize: "20px",
-              marginLeft: "15px",
-            }}
-          >
-            <BsCurrencyRupee style={{ fontSize: "13px" }} />
-            <span style={{ fontSize: "13px" }}>{product.originalPrice}</span>
-          </div>
-        </div>
+    <div className="similar-content">
+      <h3 className="similar-title">Wedding DJ Service</h3>
 
-        <h2
-          style={{
-            color: "green",
-            marginLeft: "17px",
-            textAlign: "center",
-            fontSize: "17px",
-          }}
-        >
-          40% off
-        </h2>
+      <div className="price-block">
+        <div className="price">
+          <BsCurrencyRupee />
+          <span>{product.price}</span>
+        </div>
+        <div className="original-price">
+          <BsCurrencyRupee />
+          <span>{product.originalPrice}</span>
+        </div>
+        <div className="discount">40% off</div>
       </div>
-    </div>
 
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "5px",
-        marginLeft: "10px",
-      }}
-    >
-      <div className="rating">
-        <div>{product.rating}</div>
-        <div>
+      <div className="review-block">
+        <div className="rating-badge">
+          <span>{product.rating}</span>
           <IoIosStar />
         </div>
+        <span className="review-text">{product.reviews} reviews</span>
       </div>
-      <span style={{ color: "black", fontSize: "17px", fontWeight: "400" }}>
-        {product.reviews} reviews
-      </span>
-    </div>
 
-    <button className="add-to-cart1">
-      <FaCartShopping style={{ marginRight: "8px" }} />
-      Add To Cart
-    </button>
+      <button className="similar-add-to-cart">
+        <FaCartShopping />
+        Add To Cart
+      </button>
+    </div>
   </div>
 );
 

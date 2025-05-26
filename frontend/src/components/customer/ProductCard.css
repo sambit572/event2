@@ -60,7 +60,11 @@
 .paragraph{
     margin-bottom: 10px;
 }
-
+.review{
+      border: none;
+     padding: 0; 
+    border-radius: none;
+}
 
 
 /* Responsive styles */
