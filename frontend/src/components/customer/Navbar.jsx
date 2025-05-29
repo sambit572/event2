@@ -1,12 +1,24 @@
 import React from "react";
 import "./Navbar.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 const Navbar = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleHomeClick = () => {
+    if (location.pathname === "/") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      navigate("/");
+    }
+  };
   return (
     <nav>
       <ul className="navbar_listings">
         <li>
-          <NavLink to="/">Home</NavLink>
+          <NavLink to="/" onClick={handleHomeClick}>
+            Home
+          </NavLink>
         </li>
         <li>
           <NavLink to="/products">Category</NavLink>

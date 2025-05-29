@@ -1,6 +1,12 @@
 nav {
   /* border-bottom: 1px solid black; */
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+  background-color: white; /* or any bg */
+
   /* background: linear-gradient(to right, #cbccf8 0%, #cbccf8 100%); */
 }
 .navbar_listings {

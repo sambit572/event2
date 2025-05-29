@@ -56,7 +56,7 @@ const categories = [
 ];
 const Home = () => {
   return (
-    <div>
+    <div className="home">
       <ImageSlider images={images} />
       <h1 className="heading">Categories</h1>
       <div className="category_section">
@@ -66,7 +66,6 @@ const Home = () => {
           </div>
         ))}
       </div>
-      
     </div>
   );
 };
