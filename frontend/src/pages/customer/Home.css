@@ -1,12 +1,17 @@
 .home {
   width: 100%;
 }
+
 .heading {
+  justify-content: center;
+  padding-top: 20px;
+  /* background-color: #232f3e; */
+  margin-top: 500px;
   text-align: center;
   font-size: 2rem;
   font-weight: bold;
-  margin: 20px 0;
-  color: #232f3e; /* Amazon-style dark navy */
+
+  color: #232f3e;
 }
 
 .category_section {
