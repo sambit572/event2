@@ -5,11 +5,13 @@ import Home from "./pages/customer/Home";
 import ServiceList from "./pages/customer/ServiceList";
 import Navbar from "./components/customer/Navbar";
 import Service from "./pages/customer/Service";
+// import LoginRegister from "./pages/customer/LoginRegister";
 
 const App = () => {
   return (
     <>
       <Navbar />
+      {/* <LoginRegister /> */}
       <main>
         <Routes>
           <Route path="/" element={<Home />}></Route>

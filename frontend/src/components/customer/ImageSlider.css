@@ -17,17 +17,19 @@
 .slider-container {
   position: relative;
   width: 100%;
-  margin-top: 20px;
+  margin-top: 0px;
+  z-index: 1;
   text-align: center;
   overflow: hidden;
+  
 
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  /* box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); */
   background-color: #f4f4f4; /* fallback background */
 }
 
 .slide {
   width: 100%;
-  height: 400px;
+  height: 460px;
   background-size: cover;
   background-position: center;
   transition: transform 0.4s ease;
