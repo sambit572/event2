@@ -1,43 +1,37 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  FaSearch, FaUser, FaSignOutAlt, FaHandsHelping, FaStore,
-  FaEllipsisV, FaChevronDown, FaChevronUp, FaRegEdit, FaHeart
-} from 'react-icons/fa';
-import { MdReviews, MdMiscellaneousServices,  } from "react-icons/md";
-import { IoSettingsSharp } from "react-icons/io5";
-import { TbBrandBooking } from "react-icons/tb";
-import { FcAbout } from "react-icons/fc";
-import { useNavigate } from 'react-router-dom';
+import LoginRegister from '/src/pages/customer/LoginRegister.jsx'; // make sure path is correct
 import './Navbar.css';
+import { FaSearch, FaUser, FaChevronDown, FaChevronUp, FaStore, FaEllipsisV, FaHandsHelping, FaHeart, FaSignOutAlt } from "react-icons/fa";
+import { FcAbout } from "react-icons/fc";
+import { MdMiscellaneousServices, MdReviews } from "react-icons/md";
+import { IoSettingsSharp } from "react-icons/io5";
+import { SiBrandfolder } from "react-icons/si";
 
 const Navbar = () => {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showMyProfileSub, setShowMyProfileSub] = useState(false);
   const [showEllipsisDropdown, setShowEllipsisDropdown] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const profileRef = useRef(null);
   const ellipsisRef = useRef(null);
-  const navigate = useNavigate();
 
-  const handleNavigation = (path) => {
-    navigate(path);
-    setShowProfileDropdown(false);
-    setShowMyProfileSub(false);
-    setShowEllipsisDropdown(false);
+  const handleOpenLoginModal = () => {
+    setShowLoginModal(true);
+    setShowProfileDropdown(false); // Ensure dropdown stays closed when opening login modal
+  };
+
+  const handleToggleProfileDropdown = () => {
+    setShowProfileDropdown(prev => !prev); // Toggle dropdown only when clicking arrow
   };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        profileRef.current && !profileRef.current.contains(event.target)
-      ) {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
         setShowProfileDropdown(false);
         setShowMyProfileSub(false);
       }
-
-      if (
-        ellipsisRef.current && !ellipsisRef.current.contains(event.target)
-      ) {
+      if (ellipsisRef.current && !ellipsisRef.current.contains(event.target)) {
         setShowEllipsisDropdown(false);
       }
     };
@@ -49,7 +43,6 @@ const Navbar = () => {
     <div className="navbar">
       {/* Logo */}
       <div className="logo">
-        {/* <img src="/header-logo.png" alt="Eventsbridge logo" />  */}
         <span>EVENTSBRIDGE</span>
       </div>
 
@@ -63,17 +56,13 @@ const Navbar = () => {
       <div className="nav-icons">
         {/* Profile Dropdown */}
         <div className="nav-item profile-dropdown-container" ref={profileRef}>
-          <div
-            className="profile-btn"
-            onClick={() => setShowProfileDropdown(prev => !prev)}
-          >
+          <div className="profile-btn">
             <FaUser className='icon' />
-            <span onClick={() => handleNavigation('/login')}>Login</span>
-            {showProfileDropdown ? (
-              <FaChevronUp className="dropdown-arrow" />
-            ) : (
-              <FaChevronDown className="dropdown-arrow" />
-            )}
+            <span onClick={handleOpenLoginModal}>Login</span> {/* Opens only login modal */}
+            {showLoginModal && <LoginRegister onClose={() => setShowLoginModal(false)} />}
+            <span onClick={handleToggleProfileDropdown}>
+              {showProfileDropdown ? <FaChevronUp className="dropdown-arrow" /> : <FaChevronDown className="dropdown-arrow" />}
+            </span> {/* Click arrows to toggle dropdown */}
           </div>
 
           {showProfileDropdown && (
@@ -82,59 +71,49 @@ const Navbar = () => {
               <p className='login-p'>To access account and manage services</p>
               <div className="dropdown-header">
                 <span>New Customer?</span>
-                <span className="signup-link" onClick={() => handleNavigation('/register')}>Sign Up</span>
+                <span className="signup-link" onClick={handleOpenLoginModal}>Sign Up</span>
               </div>
-              <hr/>
-
-              <div
-                className="dropdown-item nested-toggle"
-                onClick={() => setShowMyProfileSub(prev => !prev)}
-              >
-                <FaUser  style={{ marginRight: '4px' }} />
+              <hr />
+              <div className="dropdown-item nested-toggle" onClick={() => setShowMyProfileSub(prev => !prev)}>
+                <FaUser style={{ marginRight: '4px' }} />
                 My Profile
-                {showMyProfileSub ? (
-                  <FaChevronUp style={{ marginLeft: '4px' }} />
-                ) : (
-                  <FaChevronDown style={{ marginLeft: '4px' }} />
-                )}
+                {showMyProfileSub ? <FaChevronUp style={{ marginLeft: '4px' }} /> : <FaChevronDown style={{ marginLeft: '4px' }} />}
               </div>
-
               {showMyProfileSub && (
                 <div className="nested-submenu">
-                  <div className="dropdown-item"><FaRegEdit className='icon' /><a href="./edit-profile">Edit My Profile</a></div>
+                  <div className="dropdown-item"><SiBrandfolder className='icon' /><a href="./edit-profile">Edit My Profile</a></div>
                 </div>
               )}
-              <div className='dropdown-item'><TbBrandBooking className='icon' style={{ marginRight: '4px' }} /><a href="./my-booking">Privious Booking</a></div>
               <div className='dropdown-item'><FaHeart className='icon' style={{ marginRight: '4px' }} /><a href="./wishlist">Wishlist</a></div>
-              <div className='dropdown-item'><FaSignOutAlt className='icon'  style={{ marginRight: '4px' }} /><a href="./Logout">Sign Out</a></div>
+              <div className='dropdown-item'><FaSignOutAlt className='icon' style={{ marginRight: '4px' }} /><a href="./Logout">Sign Out</a></div>
             </div>
-
           )}
         </div>
 
         {/* Become Vendor */}
-        <div className="nav-item">
-          <FaStore className='icon' /><a href="./register-vendor">Become a Vendor</a>
+        <div className="nav-item" onClick={handleOpenLoginModal}>
+          <FaStore className='icon' />
+          <span>Become a Vendor</span>
         </div>
 
         {/* Three Dots Dropdown */}
         <div className="nav-item ellipsis-container" ref={ellipsisRef}>
           <FaEllipsisV onClick={() => setShowEllipsisDropdown(prev => !prev)} style={{ cursor: 'pointer' }} />
-
           {showEllipsisDropdown && (
             <div className="dropdown-menu ellipsis-menu">
-              <div className="dropdown-item" onClick={() => handleNavigation('/about_us')}><FcAbout className='icon' style={{ marginright: '6px'}}/> About Us</div>
-              <div className="dropdown-item" onClick={() => handleNavigation('/services')}><MdMiscellaneousServices className='icon'  style={{ marginright: '6px'}}/>Services</div>
-              <div className="dropdown-item" onClick={() => handleNavigation('/reviews')}><MdReviews className='icon' style={{ marginright: '6px'}}/>Reviews</div>
-              <div className="dropdown-item" onClick={() => handleNavigation('/help_us')}><FaHandsHelping className='icon' style={{ marginright: '6px'}}/>Help Us</div>
-              <div className="dropdown-item" onClick={() => handleNavigation('/help_us')}><IoSettingsSharp className='icon' style={{ marginright: '6px'}}/>Setting</div>
+              <div className="dropdown-item" onClick={() => navigate('/about_us')}><FcAbout className='icon' /> About Us</div>
+              <div className="dropdown-item" onClick={() => navigate('/services')}><MdMiscellaneousServices className='icon' /> Services</div>
+              <div className="dropdown-item" onClick={() => navigate('/reviews')}><MdReviews className='icon' /> Reviews</div>
+              <div className="dropdown-item" onClick={() => navigate('/help_us')}><FaHandsHelping className='icon' /> Help Us</div>
+              <div className="dropdown-item" onClick={() => navigate('/settings')}><IoSettingsSharp className='icon' /> Settings</div>
             </div>
           )}
         </div>
       </div>
+
+      {showLoginModal && <LoginRegister onClose={() => setShowLoginModal(false)} />}
     </div>
   );
-
 };
 
 export default Navbar;
