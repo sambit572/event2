@@ -10,7 +10,8 @@ import Footer from "./components/customer/Footer";
 const App = () => {
   return (
     <>
-      {/* <Navbar /> */}
+      <Navbar />
+      {/* <LoginRegister /> */}
       <main>
         <Routes>
           <Route path="/" element={<Home />}></Route>

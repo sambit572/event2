@@ -1,14 +1,14 @@
 .slider-container {
   position: relative;
   width: 100%;
-  margin-top: 20px;
+  margin-top: 0px;
+  z-index: 1;
   text-align: center;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   background-color: #f4f4f4;
 }
 .slide {
   width: 100%;
-
   height: 400px;
   background-size: cover;
   background-position: center;
