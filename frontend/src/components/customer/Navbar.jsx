@@ -1,40 +1,23 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
+import LoginRegister from "/src/pages/customer/LoginRegister.jsx"; // make sure path is correct
 import "./Navbar.css";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
   FaSearch,
   FaUser,
-  FaSignOutAlt,
-  FaHandsHelping,
-  FaStore,
-  FaEllipsisV,
   FaChevronDown,
   FaChevronUp,
-  FaRegEdit,
+  FaStore,
+  FaEllipsisV,
+  FaHandsHelping,
   FaHeart,
+  FaSignOutAlt,
 } from "react-icons/fa";
-import { MdReviews, MdMiscellaneousServices } from "react-icons/md";
-import { IoSettingsSharp } from "react-icons/io5";
-import { TbBrandBooking } from "react-icons/tb";
 import { FcAbout } from "react-icons/fc";
-import { useState } from "react";
-import { useRef } from "react";
-import { useEffect } from "react";
-import LoginRegister from "/src/pages/customer/LoginRegister.jsx";
-
+import { MdMiscellaneousServices, MdReviews } from "react-icons/md";
+import { IoSettingsSharp } from "react-icons/io5";
 import { SiBrandfolder } from "react-icons/si";
 
 const Navbar = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const handleHomeClick = () => {
-    if (location.pathname === "/") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      navigate("/");
-    }
-  };
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showMyProfileSub, setShowMyProfileSub] = useState(false);
   const [showEllipsisDropdown, setShowEllipsisDropdown] = useState(false);
@@ -69,10 +52,9 @@ const Navbar = () => {
   return (
     <div className="navbar">
       {/* Logo */}
-
-      <NavLink to="/" onClick={handleHomeClick} className="logo">
-        EVENTSBRIDGE
-      </NavLink>
+      <div className="logo">
+        <span>EVENTSBRIDGE</span>
+      </div>
 
       {/* Search Bar */}
       <div className="search-bar">
@@ -85,14 +67,11 @@ const Navbar = () => {
         {/* Profile Dropdown */}
         <div className="nav-item profile-dropdown-container" ref={profileRef}>
           <div className="profile-btn">
-            <NavLink
-              to="/login"
-              onClick={handleOpenLoginModal}
-              className="align_center login"
-            >
+            <span onClick={handleOpenLoginModal} className="align_center login">
               <FaUser className="icon" />
               <h4>Login</h4>
-            </NavLink>
+            </span>{" "}
+            {/* Opens only login modal */}
             {showLoginModal && (
               <LoginRegister onClose={() => setShowLoginModal(false)} />
             )}
@@ -102,8 +81,8 @@ const Navbar = () => {
               ) : (
                 <FaChevronDown className="dropdown-arrow" />
               )}
-            </span>
-            {/* {showProfileDropdown ? <FaChevronUp /> : <FaChevronDown />} */}
+            </span>{" "}
+            {/* Click arrows to toggle dropdown */}
           </div>
 
           {showProfileDropdown && (
@@ -112,13 +91,11 @@ const Navbar = () => {
               <p className="login-p">To access account and manage services</p>
               <div className="dropdown-header">
                 <span>New Customer?</span>
-
                 <span className="signup-link" onClick={handleOpenLoginModal}>
                   Sign Up
                 </span>
               </div>
               <hr />
-
               <div
                 className="dropdown-item nested-toggle"
                 onClick={() => setShowMyProfileSub((prev) => !prev)}
@@ -134,18 +111,11 @@ const Navbar = () => {
               {showMyProfileSub && (
                 <div className="nested-submenu">
                   <div className="dropdown-item">
-                    <FaRegEdit className="icon" />
+                    <SiBrandfolder className="icon" />
                     <a href="./edit-profile">Edit My Profile</a>
                   </div>
                 </div>
               )}
-              <div className="dropdown-item">
-                <TbBrandBooking
-                  className="icon"
-                  style={{ marginRight: "4px" }}
-                />
-                <a href="./my-booking">Privious Booking</a>
-              </div>
               <div className="dropdown-item">
                 <FaHeart className="icon" style={{ marginRight: "4px" }} />
                 <a href="./wishlist">Wishlist</a>
@@ -159,12 +129,9 @@ const Navbar = () => {
         </div>
 
         {/* Become Vendor */}
-
-        <div className="nav-item">
-          <NavLink to="/register-vendor" className="align_center">
-            <FaStore className="icon" />
-            Become a Vendor
-          </NavLink>
+        <div className="nav-item" onClick={handleOpenLoginModal}>
+          <FaStore className="icon" />
+          <span>Become a Vendor</span>
         </div>
 
         {/* Three Dots Dropdown */}
@@ -173,38 +140,38 @@ const Navbar = () => {
             onClick={() => setShowEllipsisDropdown((prev) => !prev)}
             style={{ cursor: "pointer" }}
           />
-
           {showEllipsisDropdown && (
             <div className="dropdown-menu ellipsis-menu">
-              <NavLink to="/about_us" className="dropdown-item">
-                <FcAbout className="icon" style={{ marginright: "6px" }} />{" "}
-                About Us
-              </NavLink>
-              <NavLink to="/services" className="dropdown-item">
-                <MdMiscellaneousServices
-                  className="icon"
-                  style={{ marginright: "6px" }}
-                />{" "}
-                Services
-              </NavLink>
-              <NavLink to="/reviews" className="dropdown-item">
-                <MdReviews className="icon" style={{ marginright: "6px" }} />
-                Reviews
-              </NavLink>
-              <NavLink to="/help_us" className="dropdown-item">
-                <FaHandsHelping
-                  className="icon"
-                  style={{ marginright: "6px" }}
-                />{" "}
-                Help Us
-              </NavLink>
-              <NavLink to="/setting" className="dropdown-item">
-                <IoSettingsSharp
-                  className="icon"
-                  style={{ marginright: "6px" }}
-                />{" "}
-                Setting
-              </NavLink>
+              <div
+                className="dropdown-item"
+                onClick={() => navigate("/about_us")}
+              >
+                <FcAbout className="icon" /> About Us
+              </div>
+              <div
+                className="dropdown-item"
+                onClick={() => navigate("/services")}
+              >
+                <MdMiscellaneousServices className="icon" /> Services
+              </div>
+              <div
+                className="dropdown-item"
+                onClick={() => navigate("/reviews")}
+              >
+                <MdReviews className="icon" /> Reviews
+              </div>
+              <div
+                className="dropdown-item"
+                onClick={() => navigate("/help_us")}
+              >
+                <FaHandsHelping className="icon" /> Help Us
+              </div>
+              <div
+                className="dropdown-item"
+                onClick={() => navigate("/settings")}
+              >
+                <IoSettingsSharp className="icon" /> Settings
+              </div>
             </div>
           )}
         </div>
