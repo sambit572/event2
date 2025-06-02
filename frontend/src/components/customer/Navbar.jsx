@@ -20,6 +20,9 @@ import { FcAbout } from "react-icons/fc";
 import { useState } from "react";
 import { useRef } from "react";
 import { useEffect } from "react";
+import LoginRegister from "/src/pages/customer/LoginRegister.jsx";
+
+import { SiBrandfolder } from "react-icons/si";
 
 const Navbar = () => {
   const location = useLocation();
@@ -35,15 +38,18 @@ const Navbar = () => {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showMyProfileSub, setShowMyProfileSub] = useState(false);
   const [showEllipsisDropdown, setShowEllipsisDropdown] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const profileRef = useRef(null);
   const ellipsisRef = useRef(null);
 
-  const handleNavigation = (path) => {
-    navigate(path);
-    setShowProfileDropdown(false);
-    setShowMyProfileSub(false);
-    setShowEllipsisDropdown(false);
+  const handleOpenLoginModal = () => {
+    setShowLoginModal(true);
+    setShowProfileDropdown(false); // Ensure dropdown stays closed when opening login modal
+  };
+
+  const handleToggleProfileDropdown = () => {
+    setShowProfileDropdown((prev) => !prev); // Toggle dropdown only when clicking arrow
   };
 
   useEffect(() => {
@@ -52,7 +58,6 @@ const Navbar = () => {
         setShowProfileDropdown(false);
         setShowMyProfileSub(false);
       }
-
       if (ellipsisRef.current && !ellipsisRef.current.contains(event.target)) {
         setShowEllipsisDropdown(false);
       }
@@ -79,19 +84,26 @@ const Navbar = () => {
       <div className="nav-icons">
         {/* Profile Dropdown */}
         <div className="nav-item profile-dropdown-container" ref={profileRef}>
-          <div
-            className="profile-btn"
-            onClick={() => setShowProfileDropdown((prev) => !prev)}
-          >
+          <div className="profile-btn">
             <NavLink
               to="/login"
-              onClick={handleHomeClick}
+              onClick={handleOpenLoginModal}
               className="align_center login"
             >
               <FaUser className="icon" />
               <h4>Login</h4>
             </NavLink>
-            {showProfileDropdown ? <FaChevronUp /> : <FaChevronDown />}
+            {showLoginModal && (
+              <LoginRegister onClose={() => setShowLoginModal(false)} />
+            )}
+            <span onClick={handleToggleProfileDropdown}>
+              {showProfileDropdown ? (
+                <FaChevronUp className="dropdown-arrow" />
+              ) : (
+                <FaChevronDown className="dropdown-arrow" />
+              )}
+            </span>
+            {/* {showProfileDropdown ? <FaChevronUp /> : <FaChevronDown />} */}
           </div>
 
           {showProfileDropdown && (
@@ -100,10 +112,8 @@ const Navbar = () => {
               <p className="login-p">To access account and manage services</p>
               <div className="dropdown-header">
                 <span>New Customer?</span>
-                <span
-                  className="signup-link"
-                  onClick={() => handleNavigation("/register")}
-                >
+
+                <span className="signup-link" onClick={handleOpenLoginModal}>
                   Sign Up
                 </span>
               </div>
@@ -121,7 +131,6 @@ const Navbar = () => {
                   <FaChevronDown style={{ marginLeft: "4px" }} />
                 )}
               </div>
-
               {showMyProfileSub && (
                 <div className="nested-submenu">
                   <div className="dropdown-item">
@@ -150,6 +159,7 @@ const Navbar = () => {
         </div>
 
         {/* Become Vendor */}
+
         <div className="nav-item">
           <NavLink to="/register-vendor" className="align_center">
             <FaStore className="icon" />
@@ -199,6 +209,10 @@ const Navbar = () => {
           )}
         </div>
       </div>
+
+      {showLoginModal && (
+        <LoginRegister onClose={() => setShowLoginModal(false)} />
+      )}
     </div>
   );
 };
