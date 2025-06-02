@@ -53,17 +53,28 @@ const categories = [
 ];
 
 const Home = () => {
+  const [showAll, setShowAll] = useState(false);
+  const visibleCategories = showAll ? categories : categories.slice(0, 6);
+
   return (
     <div className="home">
       <ImageSlider images={images} />
       <h1 className="align_center heading">Categories</h1>
+      {!showAll && categories.length > 6 && (
+        <div className="browse_all">
+          <button className="browse-all-btn" onClick={() => setShowAll(true)}>
+            Browse All
+          </button>
+        </div>
+      )}
       <div className="align_center category_section">
-        {categories.map((category, index) => (
+        {visibleCategories.map((category, index) => (
           <div key={index}>
             <CategoryCard category={category} />
           </div>
         ))}
       </div>
+
       <ReviewSlider />
     </div>
   );

@@ -11,12 +11,10 @@
   justify-content: space-around;
   flex-wrap: wrap;
 }
-.containerm > a {
-  background-color: ;
+.container > a {
+  background-color: gray;
 }
-FaEnvelope {
-  width: 1000px;
-}
+
 .mid_container {
   /* background-color: aqua; */
   flex-wrap: wrap;
@@ -74,6 +72,8 @@ FaEnvelope {
 } /* Voicemail / custom */
 
 .section h4 {
+  margin-bottom: 10px;
+  display: flex;
   font-size: 20px;
   font-weight: bold;
 }
@@ -84,9 +84,10 @@ FaEnvelope {
 }
 
 .list li a {
+  display: flex;
   color: white;
   font-weight: 500;
-  font-size: 20px;
+  font-size: 15px;
   text-decoration: none;
 }
 

@@ -48,7 +48,10 @@ const Footer = () => {
               <FaInstagram />
             </a>
 
-            <a href="https://linkedin.com" className="followus">
+            <a
+              href="https://www.linkedin.com/company/eventsbridge-com/posts/?feedView=all"
+              className="followus"
+            >
               <FaLinkedin />
             </a>
           </ul>

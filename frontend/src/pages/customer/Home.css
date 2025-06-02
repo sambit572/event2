@@ -17,12 +17,30 @@
 .category_section {
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* default: 2 columns on mobile */
-  gap: 16px;
+  gap: 66px;
+  /* align-content: space-evenly; */
   padding: 16px;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   box-sizing: border-box;
+}
+
+.browse_all {
+  display: flex;
+  margin-right: 20px;
+
+  justify-content: end;
+}
+.browse-all-btn {
+  padding: 10px 20px;
+  background-color: #e38282;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
 @media (min-width: 640px) {
