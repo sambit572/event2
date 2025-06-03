@@ -93,12 +93,12 @@ const Navbar = () => {
         {/* Become Vendor */}
         <div className="nav-item" onClick={handleOpenLoginModal}>
           <FaStore className='icon' />
-          <span>Become a Vendor</span>
+          <span className='vendor'>Become a Vendor</span>
         </div>
 
         {/* Three Dots Dropdown */}
         <div className="nav-item ellipsis-container" ref={ellipsisRef}>
-          <FaEllipsisV onClick={() => setShowEllipsisDropdown(prev => !prev)} style={{ cursor: 'pointer' }} />
+          <FaEllipsisV className='three-dot' onClick={() => setShowEllipsisDropdown(prev => !prev)} style={{ cursor: 'pointer' }} />
           {showEllipsisDropdown && (
             <div className="dropdown-menu ellipsis-menu">
               <div className="dropdown-item" onClick={() => navigate('/about_us')}><FcAbout className='icon' /> About Us</div>

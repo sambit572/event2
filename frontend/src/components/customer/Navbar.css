@@ -118,6 +118,7 @@
 }
 .icon:hover {
   font-size: 20px;
+  color: #f5efff;
 }
 
 
@@ -204,7 +205,12 @@
   padding: 0.5rem;
   width: 200px;
 }
-
+.nav-item .three-dot {
+  color: #3b0340e1;
+}
+.nav-item .vendor {
+  color: #3b0340e1;
+}
 .ellipsis-menu .dropdown-item {
   padding: 8px 12px;
   cursor: pointer;
