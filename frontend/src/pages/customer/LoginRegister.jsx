@@ -120,7 +120,7 @@ const LoginRegister = ({ onClose }) => {
                 <input type="email" name='email' className="login-input" placeholder="Enter email" required />
                 <input type="password" name='password' className="login-input" placeholder="Enter password" required />
 
-                <a className='Login-forget-password-link' href="#">Forget Password?</a>
+                <a className='Login-forget-password-link' href="/forgotpassword">Forget Password?</a>
 
                 <button type="submit" className="otp-button" onClick={handleLogin}>Login</button>
 

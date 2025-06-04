@@ -6,13 +6,13 @@ import ServiceList from "./pages/customer/ServiceList";
 import Navbar from "./components/customer/Navbar";
 import Service from "./pages/customer/Service";
 import LoginRegister from "./pages/customer/LoginRegister";
+import Wishlist from "./pages/customer/Wishlist";
+import ForgotPassword from "./pages/customer/ForgotPassword";
 
 const App = () => {
   return (
     <>
       <Navbar />
-
-
 
       <main>
         <Routes>
@@ -20,6 +20,8 @@ const App = () => {
           <Route path="/category" element={<ServiceList />}></Route>
           <Route path="/category/service" element={<Service />}></Route>
           <Route path="/LoginRegister" element={<LoginRegister />}></Route>
+          <Route path="/Wishlist" element={<Wishlist />}></Route>
+          <Route path="/forgotpassword" element={<ForgotPassword />}></Route>
         </Routes>
       </main>
     </>
