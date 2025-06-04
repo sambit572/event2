@@ -1,5 +1,5 @@
-import React from "react";
-
+import { useEffect } from "react";
+import axios from "axios";
 import "./Home.css";
 import image1 from "../../assets/home/dj.jpg";
 import image2 from "../../assets/home/band.jpg";
@@ -55,6 +55,29 @@ const categories = [
   { title: "Card Designers & Printers", image: image15 },
 ];
 const Home = () => {
+  useEffect(() => {
+    const checkUser = async () => {
+      try {
+        const response = await axios.get("http://localhost:8000/user/", {
+          withCredentials: true,
+        });
+        console.log(response.data.message);
+
+        console.log(response.data.data)
+        const { user, accessToken } = response.data.data;
+        if (user && accessToken) {
+          localStorage.setItem("currentlyLoggedIn", true);
+        }
+      } catch (error) {
+        console.log(
+          "error in noLogin :",
+          error.data?.data?.message || error.message
+        );
+      }
+    };
+
+    checkUser();
+  }, []);
   return (
     <div>
       <ImageSlider images={images} />

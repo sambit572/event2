@@ -1,8 +1,9 @@
 // OTPVerification.jsx
-import React, { useState } from 'react';
-import './OTPVerification.css'; // style as needed
+import React, { useState } from "react";
+import "./OTPVerification.css"; // style as needed
+import PropTypes from "prop-types";
 
-const OTPVerification = ({ onCancel }) => {
+const OTPVerification = ({ setStep }) => {
   const [otp, setOtp] = useState(new Array(6).fill(""));
 
   const handleChange = (element, index) => {
@@ -17,17 +18,34 @@ const OTPVerification = ({ onCancel }) => {
     }
   };
 
-  const handleVerify = () => {
+  const handleVerify = async () => {
     const otpCode = otp.join("");
+    if (otpCode.length !== 6) return;
     console.log("OTP entered:", otpCode);
     // Add actual verification logic here
+
+    try {
+      if (!window.confirmationResult) {
+        alert("OTP session expired. Please try signing in again.");
+        return;
+      }
+      const result = await window.confirmationResult.confirm(otpCode);
+      console.log("Phone auth success:", result.user);
+      setStep("success");
+    } catch (err) {
+      console.error("OTP verification failed", err);
+      alert("Invalid OTP. Please try again.");
+    }
   };
 
   return (
     <div className="otp-wrapper">
       <h2>Verify With OTP</h2>
-      <p>To ensure your security, enter the 6-digit code sent to your registered mobile number/email below.</p>
-      
+      <p>
+        To ensure your security, enter the 6-digit code sent to your registered
+        mobile number/email below.
+      </p>
+
       <div className="otp-inputs">
         {otp.map((data, index) => (
           <input
@@ -40,14 +58,23 @@ const OTPVerification = ({ onCancel }) => {
         ))}
       </div>
 
-      <p>Not received your code? <span className="link">Resend OTP</span></p>
+      <p>
+        Not received your code? <span className="link">Resend OTP</span>
+      </p>
 
-      <button className="otp-button" onClick={handleVerify}>Verify</button>
-      <button className="otp-cancel" onClick={onCancel}>Cancel</button>
+      <button className="otp-button" onClick={handleVerify}>
+        Verify
+      </button>
 
-      <p>Having difficulties with OTP? <span className="link">Get Help</span></p>
+      <p>
+        Having difficulties with OTP? <span className="link">Get Help</span>
+      </p>
     </div>
   );
+};
+
+OTPVerification.propTypes = {
+  setStep: PropTypes.func.isRequired,
 };
 
 export default OTPVerification;

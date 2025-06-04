@@ -6,20 +6,33 @@ import ServiceList from "./pages/customer/ServiceList";
 import Navbar from "./components/customer/Navbar";
 import Service from "./pages/customer/Service";
 import LoginRegister from "./pages/customer/LoginRegister";
+import ForgotPass from "./pages/customer/ForgotPass.jsx";
+import ResetPassword from "./pages/customer/ResetPassword.jsx";
+import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
 
 const App = () => {
   return (
     <>
       <Navbar />
 
-
-
       <main>
         <Routes>
-          <Route path="/" element={<Home />}></Route>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          ></Route>
           <Route path="/category" element={<ServiceList />}></Route>
           <Route path="/category/service" element={<Service />}></Route>
           <Route path="/LoginRegister" element={<LoginRegister />}></Route>
+          <Route path="/forgot-password" element={<ForgotPass />}></Route>
+          <Route
+            path="/reset-password/:resetToken"
+            element={<ResetPassword />}
+          />
         </Routes>
       </main>
     </>

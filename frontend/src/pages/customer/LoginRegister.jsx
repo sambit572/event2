@@ -1,14 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import './LoginRegister.css';
+import { useState, useEffect } from "react";
+import "./LoginRegister.css";
+import axios from "axios";
+import PropTypes from "prop-types";
+import { Link, useNavigate } from "react-router-dom";
+import { auth } from "../../utils/firebase.js";
+import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import OTPVerification from "./OTPVerification.jsx";
+
+
 
 const LoginRegister = ({ onClose }) => {
-  const [isLogin, setIsLogin] = useState(true);
-  const [step, setStep] = useState('form'); // 'form', 'otp', 'success'
-  const [otp, setOtp] = useState(new Array(6).fill(""));
+  const [step, setStep] = useState("form"); // 'form', 'otp', 'success'
+
   const [showSuccessIcon, setShowSuccessIcon] = useState(false);
 
   useEffect(() => {
-    if (step === 'success') {
+    if (step === "success") {
       setShowSuccessIcon(false);
 
       const iconTimer = setTimeout(() => {
@@ -26,136 +33,355 @@ const LoginRegister = ({ onClose }) => {
     }
   }, [step, onClose]);
 
-  const handleOTPChange = (element, index) => {
-    if (isNaN(element.value)) return;
-    const newOtp = [...otp];
-    newOtp[index] = element.value;
-    setOtp(newOtp);
-
-    if (element.nextSibling && element.value !== "") {
-      element.nextSibling.focus();
-    }
-  };
-
-  const handleGetOTP = () => {
-    console.log("OTP sent!");
-    setStep('otp');
-  };
-
-  const handleVerifyOTP = () => {
-    console.log("Entered OTP:", otp.join(""));
-    setStep('success');
-  };
-
-  const handleRegister = (e) => {
-    e.preventDefault();
-    console.log("Register clicked");
-    setIsLogin(true);
-    setStep('form');
-  };
-
-  const handleLogin = (e) => {
-    e.preventDefault();
-    console.log("Login clicked");
-    onClose();
+  const renderContent = () => {
+    if (step === "success")
+      return <SuccessBlock showSuccessIcon={showSuccessIcon} />;
+    if (step === "otp") return <OTPVerification setStep={setStep} />;
+    return <FormBlock setStep={setStep} onClose={onClose} />;
   };
 
   return (
     <div className="login-wrapper" onClick={onClose}>
       <div className="login-modal" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose}>×</button>
+        <button className="modal-close" onClick={onClose}>
+          ×
+        </button>
 
-        {step === 'success' ? (
-          <div className="success-container">
-            <h2 className="success-heading">Congratulations</h2>
-            <p>Welcome 🎉 to Eventsbridge</p>
-
-            {showSuccessIcon && <div className="success-icon"></div>}
-
-            <h3 className="success-heading">Thank you!</h3>
-            <p className="success-message">
-              Your OTP Verification has been completed successfully!
-            </p>
-          </div>
-        ) : step === 'otp' ? (
-          <>
-            <h2 className="login-title">Verify With OTP</h2>
-            <p className="otp-subtext">
-              To ensure your security, enter the 6-digit code sent to your registered mobile number/email below.
-            </p>
-
-            <div className="otp-inputs">
-              {otp.map((digit, index) => (
-                <input
-                  key={index}
-                  maxLength="1"
-                  value={digit}
-                  className="otp-input"
-                  onChange={(e) => handleOTPChange(e.target, index)}
-                />
-              ))}
-            </div>
-
-            <p className="resend-text">
-              Not received your code? <span className="link">Resend OTP</span>
-            </p>
-
-            <button className="otp-button" onClick={handleVerifyOTP}>Verify</button>
-
-            <p className="help-text">
-              Having difficulties with OTP? <span className="link">Get Help</span>
-            </p>
-          </>
-        ) : (
-          <>
-            <h2 className="login-title">{isLogin ? 'Log In' : 'Sign Up'}</h2>
-
-            {isLogin ? (
-              <>
-                <label className="login-label">Enter Mobile No.</label>
-                <input type="number" className="login-input" placeholder="+91 | Enter your number" required />
-
-                <button className="otp-button" onClick={handleGetOTP}>Get OTP</button>
-
-                <input type="email" name='email' className="login-input" placeholder="Enter email" required />
-                <input type="password" name='password' className="login-input" placeholder="Enter password" required />
-
-                <a className='Login-forget-password-link' href="#">Forget Password?</a>
-
-                <button type="submit" className="otp-button" onClick={handleLogin}>Login</button>
-
-                <p className="signup-text">
-                  Don’t have an account?{' '}
-                  <span className="link" onClick={() => {
-                    setIsLogin(false);
-                    setStep('form');
-                  }}>Sign Up</span>
-                </p>
-              </>
-            ) : (
-              <>
-                <input type="text" name='fullName' className="login-input" placeholder="Enter full name" required />
-                <input type="email" name='email' className="login-input" placeholder="Enter email" required />
-                <input type="number" name='phoneNo' className="login-input" placeholder="+91 | Enter the 10 digit number" required />
-                <input type="password" name='password' className="login-input" placeholder="Create password" required />
-                <input type="password" className="login-input" placeholder="Confirm password" required />
-
-                <button type="submit" className="otp-button" onClick={handleRegister}>Register</button>
-
-                <p className="signup-text">
-                  Already have an account?{' '}
-                  <span className="link" onClick={() => {
-                    setIsLogin(true);
-                    setStep('form');
-                  }}>Log In</span>
-                </p>
-              </>
-            )}
-          </>
-        )}
+        {renderContent()}
       </div>
+    </div>
+  ); // later correct sonarlint
+};
+
+LoginRegister.propTypes = {
+  onClose: PropTypes.func.isRequired,
+};
+
+const SuccessBlock = ({ showSuccessIcon }) => {
+  return (
+    <div className="success-container">
+      <h2 className="success-heading">Congratulations</h2>
+      <p>Welcome 🎉 to Eventsbridge</p>
+
+      {showSuccessIcon && <div className="success-icon"></div>}
+
+      <h3 className="success-heading">Thank you!</h3>
+      <p className="success-message">
+        Your OTP Verification has been completed successfully!
+      </p>
     </div>
   );
 };
+
+SuccessBlock.propTypes = {
+  showSuccessIcon: PropTypes.bool.isRequired,
+};
+
+const FormBlock = ({ setStep, onClose }) => {
+  const navigate = useNavigate();
+  const [isLogin, setIsLogin] = useState(true);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [formDataSignUp, setFormDataSignUp] = useState({
+    fullName: "",
+    email: "",
+    phoneNo: "",
+    password: "",
+  });
+  const [formDataLogin, setFormDataLogin] = useState({
+    email: "",
+    phoneNo: "",
+    password: "",
+  });
+
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const handleChange = (e) => {
+    setFormDataSignUp({ ...formDataSignUp, [e.target.name]: e.target.value });
+  };
+  const handleChangeLogin = (e) => {
+    setFormDataLogin({ ...formDataLogin, [e.target.name]: e.target.value });
+  };
+
+  // otp logic
+  function setupRecaptcha() {
+    if (window.recaptchaVerifier) {
+      window.recaptchaVerifier.clear(); // optional
+    }
+    window.recaptchaVerifier = new RecaptchaVerifier(
+      auth,
+      "recaptcha-container",
+      {
+        size: "invisible",
+        callback: (response) => {
+          console.log("reCAPTCHA solved:", response);
+        },
+      }
+    );
+  }
+
+  async function handleGetOTP(e) {
+    e.preventDefault();
+
+    const rawPhone = formDataLogin.phoneNo || "";
+    const cleanedPhone = rawPhone.replace(/\D/g, "");
+    const phoneNumber = "+91" + cleanedPhone;
+    if (!phoneNumber) {
+      setErrorMsg("Please enter your phone number.");
+      return;
+    }
+
+    if (!/^\+91\d{10}$/.test(phoneNumber)) {
+      setErrorMsg("Enter a valid Indian phone number (e.g. +919123456789)");
+      return;
+    }
+
+    try {
+      // Setup reCAPTCHA (runs once)
+      setupRecaptcha();
+
+      const appVerifier = window.recaptchaVerifier;
+
+      console.log(phoneNumber);
+
+      const confirmationResult = await signInWithPhoneNumber(
+        auth,
+        phoneNumber,
+        appVerifier
+      );
+      window.confirmationResult = confirmationResult;
+      console.log("OTP sent successfully.");
+      // Continue to OTP input step
+      setStep("otp");
+    } catch (error) {
+      console.error("OTP sending failed:", error);
+      setErrorMsg("Failed to send OTP. Please try again.");
+    }
+  }
+
+  // otp logic end here
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    console.log("Register clicked");
+    setIsLogin(true);
+    setStep("form");
+
+    setErrorMsg("");
+    // Add registration logic here
+    try {
+      if (formDataSignUp.password !== confirmPassword) {
+        return setErrorMsg("Passwords do not match.");
+      }
+      const response = await axios.post(
+        "http://localhost:8000/user/signup",
+        formDataSignUp,
+        { withCredentials: true }
+      );
+      console.log(response);
+      if (response.data.message === "user do exist") {
+        setErrorMsg("User already exists. Please log in.");
+      } else {
+        localStorage.setItem("currentlyLoggedIn", "true");
+      }
+
+      navigate("/", { replace: true });
+    } catch (error) {
+      const backendMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "something went wrong";
+
+      console.log(error.response);
+      console.log(backendMessage);
+      setErrorMsg(backendMessage || "Something went wrong.");
+    }
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    console.log("Login clicked");
+    setErrorMsg("");
+    // Add login logic here
+    try {
+      if (!formDataLogin.email && !formDataLogin.phoneNo) {
+        return setErrorMsg("Enter either email or phone number to log in.");
+      }
+      const response = await axios.post(
+        "http://localhost:8000/user/login",
+        {
+          email: formDataLogin.email,
+          phoneNo: formDataLogin.phoneNo,
+          password: formDataLogin.password,
+        },
+        { withCredentials: true }
+      );
+
+      if (response.status === 200) {
+        localStorage.setItem("currentlyLoggedIn", "true");
+        console.log("Login successfull");
+      } else {
+        alert(response.data.message);
+      }
+
+      navigate("/", { replace: true });
+    } catch (error) {
+      console.error("Login failed", error);
+      if (
+        error.response?.data?.message == "User does not exist" ||
+        error.message == "User does not exist"
+      ) {
+        setErrorMsg("Please register atleast once before login");
+      }
+      setErrorMsg(
+        `Login failed: May be either password or email is wrong [ ${
+          error.response?.data?.message || error.message
+        }]`
+      );
+    }
+    onClose();
+  };
+
+  return (
+    <>
+      <div id="recaptcha-container"></div>
+      <h2 className="login-title">{isLogin ? "Log In" : "Sign Up"}</h2>
+
+      {isLogin ? (
+        <>
+          <input
+            type="text"
+            className="login-input"
+            name="phoneNo"
+            placeholder="+91 | Enter your phone number"
+            value={formDataLogin.phoneNo}
+            onChange={handleChangeLogin}
+            required
+          />
+
+          <button className="otp-button" onClick={handleGetOTP}>
+            Get OTP
+          </button>
+
+          <input
+            type="email"
+            name="email"
+            className="login-input"
+            placeholder="Enter email"
+            value={formDataLogin.email}
+            onChange={handleChangeLogin}
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            className="login-input"
+            placeholder="Enter password"
+            minLength={8}
+            value={formDataLogin.password}
+            onChange={handleChangeLogin}
+            required
+          />
+
+          <Link to="/forgot-password" className="Login-forget-password-link">
+            Forgot your password? <strong>Reset</strong>
+          </Link>
+
+          {errorMsg && <p className="error">{errorMsg}</p>}
+          <button type="submit" className="otp-button" onClick={handleLogin}>
+            Login
+          </button>
+
+          <p className="signup-text">
+            Don’t have an account?{" "}
+            <span
+              className="link"
+              onClick={() => {
+                setIsLogin(false);
+                setStep("form");
+                setErrorMsg("");
+              }}
+            >
+              Sign Up
+            </span>
+          </p>
+        </>
+      ) : (
+        <>
+          <input
+            type="text"
+            name="fullName"
+            className="login-input"
+            placeholder="Enter full name"
+            value={formDataSignUp.fullName}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="email"
+            name="email"
+            className="login-input"
+            placeholder="Enter email"
+            value={formDataSignUp.email}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="number"
+            name="phoneNo"
+            className="login-input"
+            placeholder="+91 | Enter the 10 digit number"
+            value={formDataSignUp.phoneNo}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            className="login-input"
+            placeholder="Create password"
+            value={formDataSignUp.password}
+            onChange={handleChange}
+            minLength={8}
+            required
+          />
+          <input
+            type="password"
+            className="login-input"
+            placeholder="Confirm password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+
+          <button type="submit" className="otp-button" onClick={handleRegister}>
+            Register
+          </button>
+
+          {errorMsg && <p className="error">{errorMsg}</p>}
+
+          <p className="signup-text">
+            Already have an account?{" "}
+            <span
+              className="link"
+              onClick={() => {
+                setIsLogin(true);
+                setStep("form");
+                setErrorMsg("");
+              }}
+            >
+              Log In
+            </span>
+          </p>
+        </>
+      )}
+    </>
+  );
+};
+
+FormBlock.propTypes = {
+  setStep: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+};
+
 
 export default LoginRegister;

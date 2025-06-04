@@ -6,10 +6,6 @@
   height: 70px;
   padding: 10px 20px;
   background-color: #f5efff;
-  /* background-color: #f6f7c4; */
-  /* background-color: #ffffdd; */
-  /* background-color: #cdc1ff; */
-  /* background-color: white; */
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -236,6 +232,18 @@
   margin-left: 2px;
 }
 
+.signOutButton{
+  border: none;
+  background-color: #f5efff;
+  color: #3b0340e1;
+  font-size: 17px;
+  font-weight: 520;
+}
+
+.signOutButton:hover{
+  font-weight: bold;
+  color: #3b0340e1;
+}
 
 @media (max-width: 768px) { 
   .navbar {
