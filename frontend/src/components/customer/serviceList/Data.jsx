@@ -1,0 +1,63 @@
+import img1 from "../../../assets/service/sub-img1.avif";
+import img2 from "../../../assets/service/sub-img2.webp";
+import img3 from "../../../assets/service/sub-img3.jpg"
+import img4 from "../../../assets/service/sub-img4.jpg"
+import img5 from "../../../assets/service/sub-img5.jpg"
+const service = [
+  {
+    id: 1,
+    img: [img1, img2,img3,img4,img5],
+    title: " Elegant Beats Wedding DJ Package",
+    description: "Experience With All Cultures & Traditions",
+    address: {
+      country: "India",
+      state: "Odisha",
+      city: "Bhubaneswar",
+      area: "patia",
+      pincode: 123344,
+    },
+    rating: 4,
+    reviews: 4000,
+    price: "30,000",
+    originalPrice: 80000,
+    discountPercent: 50,
+  },
+  {
+    id: 2,
+    img: [img1, img2,img3,img4,img5],
+    title: "DJ Service",
+    description: "Experience With All Cultures & Traditions",
+    address: {
+      country: "India",
+      state: "Odisha",
+      city: "Bhubaneswar",
+      area: "patia",
+      pincode: 123344,
+    },
+    rating: 4,
+    reviews: 4000,
+    price: 30000,
+    originalPrice: 80000,
+    discountPercent: 50,
+  },
+  {
+    id: 3,
+    img: [img1, img2,img3,img4,img5],
+    title: "DJ Service",
+    description: "Experience With All Cultures & Traditions",
+    address: {
+      country: "India",
+      state: "Odisha",
+      city: "cuttack",
+      area: "barabati",
+      pincode: 123346,
+    },
+    rating: 4,
+    reviews: 4000,
+    price: 40000,
+    originalPrice: 80000,
+    discountPercent: 40,
+  },
+];
+
+export default service;

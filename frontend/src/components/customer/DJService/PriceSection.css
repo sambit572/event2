@@ -32,7 +32,6 @@
 
 .rupee-icon {
   font-size: inherit;
-  margin-right: 4px;
 }
 
 .discount {
@@ -42,6 +41,27 @@
 }
 
 /* ---------- Responsive Price Section ---------- */
+
+@media (max-width: 1024px) {
+  .price-section {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .current-price {
+    font-size: 22px;
+  }
+
+  .original-price {
+    font-size: 18px;
+  }
+
+  .discount {
+    font-size: 20px;
+  }
+}
+
 @media (max-width: 768px) {
   .price-section {
     flex-direction: column;
@@ -80,5 +100,22 @@
 
   .discount {
     font-size: 16px;
+  }
+}
+
+/* ---------- Extra Small Devices (<360px) ---------- */
+@media (max-width: 360px) {
+  .price-section {
+    gap: 6px;
+    align-items: flex-start;
+  }
+
+  .current-price,
+  .discount {
+    font-size: 16px;
+  }
+
+  .original-price {
+    font-size: 14px;
   }
 }

@@ -1,37 +1,96 @@
-.product-list {
+
+.serviceList {
+  display: flex;
   width: 100%;
-
-  margin-top: 2rem;
+}
+.singleServiceCard {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 1020px;
+  height: 290px;
+  margin-left: 20px;
 }
-.category-service {
-  text-decoration: none;
-  color: black;
-}
-.app-container {
-  padding: 20px;
-  font-family: Arial, sans-serif;
-}
-
-.filter-button-container {
+.serviceCardDetails {
   display: flex;
-  justify-content: flex-end;
-  margin-bottom: 20px;
-  margin-right: 20px;
+  flex-direction: column;
+  gap: 24px;
+  width: 1020px;
 }
 
-.filter-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  cursor: pointer;
-  border-radius: 5px;
-}
-.filter-button.active {
-  background-color: #0056b3;
-  color: white;
+/* Responsive styling for tablet (≤1024px) */
+@media (max-width: 1024px) {
+  .singleServiceCard {
+    flex-direction: column;
+    height: auto;
+    padding: 12px;
+  }
+
+  .serviceCardDetails {
+    gap: 16px;
+  }
 }
 
+/* Responsive styling for mobile (≤768px) */
+@media (max-width: 768px) {
+  .serviceList {
+    flex-direction: column;
+    height: auto;
+    padding: 12px;
+  }
+
+  .singleServiceCard {
+    width: 100%;
+    margin-left: 0;
+    padding: 12px;
+  }
+
+  .serviceCardDetails {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .serviceList {
+    flex-direction: column;
+    height: auto;
+    padding: 8px;
+  }
+
+  .singleServiceCard {
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    padding: 10px;
+    margin: 8px 0;
+  }
+
+  .serviceCardDetails {
+    width: 100%;
+    gap: 10px;
+    padding: 0;
+  }
+}
+
+@media (max-width: 375px) {
+  .singleServiceCard {
+    padding: 8px;
+  }
+
+  .serviceCardDetails {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 320px) {
+  .singleServiceCard {
+    padding: 6px;
+  }
+
+  .serviceCardDetails {
+    gap: 6px;
+  }
+}

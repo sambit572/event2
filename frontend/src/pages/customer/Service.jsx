@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import "../../pages/customer/Service.css";
-import djimg1 from "../../assets/service/dj-img1.png";
-import djimg2 from "../../assets/service/dj-img5.jpg";
-import djimg3 from "../../assets/service/dj-img6.jfif";
-import djimg4 from "../../assets/service/dj-img7.jfif";
-import djimg8 from "../../assets/service/dj-img8.jfif";
-import { FaCartShopping } from "react-icons/fa6";
-import { MdPlayArrow } from "react-icons/md";
+import djimg1 from "../../assets/service/sub-img1.avif";
+import djimg2 from "../../assets/service/sub-img2.webp";
+import djimg3 from "../../assets/service/sub-img3.jpg";
+import djimg4 from "../../assets/service/sub-img4.jpg";
+import djimg8 from "../../assets/service/sub-img4.jpg";
+import { FaHeart } from "react-icons/fa6";
 import { similarServiceData } from "../../components/customer/SimilarServiceData.jsx";
 import ReviewList from "../../components/customer/ReviewList";
-import RatingDetails from "../../components/customer/RatingDetails";
+import RatingDetails from "../../components/customer/RatingDetails.jsx";
 import SimilarProductCard from "../../components/customer/PeopleAlsoBooked";
 import DJServiceCard from "../../components/customer/DJService/DJServiceCard.jsx";
+// import RatingBar from "../../components/customer/RatingBar.jsx";
 
 const Service = () => {
   const mediaList = [
@@ -25,13 +25,23 @@ const Service = () => {
 
   const [selectMedia, setSelectMedia] = useState(mediaList[0]);
 
+  const [isWishlisted, setIsWishlisted] = useState(false);
+
+  const handleClick = () => {
+    setIsWishlisted(!isWishlisted);
+  };
+
   return (
     <div className="dj">
       <div className="dj-total-img">
         <div className="dj-img">
           <div className="thumbnail-list">
             {mediaList.map((media, index) => (
-              <div key={index} onClick={() => setSelectMedia(media)} className="li1">
+              <div
+                key={index}
+                onClick={() => setSelectMedia(media)}
+                className="li1"
+              >
                 {media.type === "image" ? (
                   <img src={media.src} alt={`media-${index}`} />
                 ) : (
@@ -44,18 +54,26 @@ const Service = () => {
             {selectMedia.type === "image" ? (
               <img src={selectMedia.src} alt="Selected media" />
             ) : (
-              <iframe src={selectMedia.src} title="selected-video" allowFullScreen />
+              <iframe
+                src={selectMedia.src}
+                title="selected-video"
+                allowFullScreen
+              />
             )}
           </div>
         </div>
 
         <div className="buttons">
-          <button className="add-to-cart">
-            <FaCartShopping /> Add To Cart
+          <button className="add-to-cart" onClick={handleClick}>
+            <div className="heartIcon">
+            <FaHeart
+              color={isWishlisted ? "red" : "black"}
+              className="wishIcons"
+            />{" "}
+            </div>
+            Add To Wishlist
           </button>
-          <button className="buynow">
-            <MdPlayArrow /> Book Now
-          </button>
+          <button className="buynow">Book Now</button>
         </div>
       </div>
 

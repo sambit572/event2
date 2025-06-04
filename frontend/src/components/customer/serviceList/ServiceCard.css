@@ -1,0 +1,469 @@
+.totalService {
+  display: flex;
+}
+.singleServiceCard {
+  display: flex;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 1020px;
+  height: 290px;
+  margin-left: 20px;
+}
+.serviceCard {
+  display: flex;
+}
+.link {
+  text-decoration: none;
+}
+.serviceCardImg {
+  width: 550px;
+  height: 255px;
+  margin-right: 2px;
+  position: relative;
+}
+.serviceCardImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.navArrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.4);
+  border: none;
+  color: white;
+  padding: 8px;
+  cursor: pointer;
+  z-index: 1;
+  border-radius: 50%;
+}
+
+.navArrow.left {
+  left: 10px;
+}
+
+.navArrow.right {
+  right: 10px;
+}
+.thumbnailColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-right: 10px;
+}
+
+.thumbnailColumn img:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+.thumbnailColumn img {
+  width: 85px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+.actionButtons {
+  margin-top: 10px;
+  display: flex;
+  gap: 15px;
+  margin-left: 20px;
+}
+
+.actionButtons button {
+  padding: 4px 8px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 10px;
+  width: 180px;
+  border-radius: 25px;
+  font-size: 15px;
+  text-align: center;
+}
+/* Default button */
+.viewBtn {
+  border: 1px solid #222;
+  background-color: #fff;
+  color: #222;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+  transition: all 0.3s ease;
+}
+
+/* Hover only when not wishlisted */
+.viewBtn:not(.wishlisted):hover {
+  background-color: red;
+  color: white;
+  border: red;
+}
+
+.viewBtn:not(.wishlisted):hover .wishIcon {
+  color: white;
+}
+
+/* Wishlisted style */
+.viewBtn.wishlisted {
+  border: 1px solid red;
+  background-color: white;
+  color: black;
+}
+
+.viewBtn.wishlisted .wishIcon {
+  color: red;
+}
+
+.bookBtn {
+  border: none;
+  background-color: #0c742b;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+}
+.wishIcon {
+  margin-top: 3px;
+  font-size: 20px;
+}
+.bookBtn:hover {
+  background-color: #0c742bd5;
+}
+.serviceRating,
+.servicePrice {
+  margin-top: 10px;
+  display: flex;
+  gap: 12px;
+  font-size: 14px;
+  align-items: center;
+}
+.servicePrice {
+  margin-bottom: 10px;
+}
+
+.originalPrice {
+  text-decoration: line-through;
+  color: #6d787d;
+  font-weight: 500;
+  line-height: 25px;
+}
+
+.discountPercent {
+  color: green;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 25px;
+}
+.paragraph {
+  margin-right: 20px;
+}
+.serviceDescription h3 {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 24px;
+  color: #222;
+}
+.serviceDescription p {
+  font-size: 16px;
+  line-height: 25px;
+  color: #222;
+  font-weight: 400;
+}
+.serviceRating .rate {
+  background-color: green;
+  color: white;
+  padding: 5px 7px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.serviceRating .review {
+  font-size: 16px;
+  color: #222;
+  line-height: 1.2;
+  font-weight: 400;
+}
+.servicePrice .price {
+  font-size: 22px;
+  color: #222;
+  font-weight: 700;
+}
+.addToWish {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 10px;
+  width: 190px;
+  border-radius: 25px;
+  font-size: 17px;
+  border: 2px solid #b197fc;
+  color: #b197fc;
+  background-color: #ffffff;
+}
+.addToWish:hover {
+  background-color: #b197fc;
+  color: #ffffff;
+  border: none;
+}
+
+/* responsive*/
+@media (max-width: 1024px) {
+  .singleServiceCard {
+    flex-direction: column;
+    width: 95%;
+    height: auto;
+    padding: 12px;
+    margin: 10px auto;
+  }
+
+  .serviceCard {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .serviceCardImg {
+    width: 100%;
+    height: 220px;
+    margin-bottom: 10px;
+  }
+
+  .thumbnailColumn {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 10px;
+  }
+
+  .thumbnailColumn img {
+    width: 60px;
+    height: 40px;
+  }
+
+  .serviceDescription {
+    padding: 0 10px;
+  }
+
+  .actionButtons {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-left: 0;
+    margin-bottom: 10px;
+  }
+
+  .actionButtons button {
+    width: 50%;
+  }
+.bookBtn{
+  padding: 8px 12px;
+}
+  .serviceRating,
+  .servicePrice {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .singleServiceCard {
+    flex-direction: column;
+    width: 95%;
+    padding: 10px;
+    height: auto;
+  }
+
+  .serviceCardImg {
+    width: 100%;
+    height: 180px;
+  }
+
+  .thumbnailColumn img {
+    width: 50px;
+    height: 35px;
+  }
+  .serviceDescription{
+    width: 100%;
+  }
+
+  .serviceDescription h3 {
+    font-size: 18px;
+  }
+
+  .serviceDescription p,
+  .serviceRating .review,
+  .servicePrice .price,
+  .discountPercent,
+  .originalPrice {
+    font-size: 14px;
+  }
+
+  .serviceRating .rate {
+    font-size: 14px;
+    padding: 4px 6px;
+  }
+  .actionButtons{
+    width: 100%;
+  }
+
+  .actionButtons button {
+    font-size: 14px;
+    width: 50%;
+    text-align: center;
+  }
+
+  .wishIcon {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .singleServiceCard {
+    padding: 8px;
+    margin: 8px auto;
+  }
+
+  .serviceCardImg {
+    height: 160px;
+  }
+
+  .thumbnailColumn img {
+    width: 45px;
+    height: 30px;
+  }
+
+  .serviceDescription h3 {
+    font-size: 16px;
+    line-height: 20px;
+  }
+  .serviceDescription{
+    width: 100%;
+  }
+
+  .serviceDescription p {
+    font-size: 13px;
+    line-height: 20px;
+  }
+
+  .serviceRating .rate,
+  .serviceRating .review,
+  .servicePrice .price,
+  .discountPercent,
+  .originalPrice {
+    font-size: 13px;
+  }
+
+  .actionButtons {
+    gap: 8px;
+    width: 100%;
+  }
+
+  .actionButtons button {
+    font-size: 13px;
+    padding: 6px 12px;
+  }
+
+  .addToWish {
+    font-size: 14px;
+    width: 100%;
+  }
+
+  .wishIcon {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 375px) {
+  .singleServiceCard {
+    padding: 6px;
+  }
+
+  .serviceCardImg {
+    height: 140px;
+  }
+
+  .thumbnailColumn img {
+    width: 40px;
+    height: 28px;
+  }
+
+  .serviceDescription h3 {
+    font-size: 15px;
+  }
+
+  .serviceDescription p {
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  .serviceRating .rate,
+  .serviceRating .review,
+  .servicePrice .price,
+  .discountPercent,
+  .originalPrice {
+    font-size: 12px;
+  }
+
+  .actionButtons button,
+  .addToWish {
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+
+  .wishIcon {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 320px) {
+  .singleServiceCard {
+    padding: 4px;
+  }
+
+  .serviceCardImg {
+    height: 120px;
+  }
+
+  .thumbnailColumn img {
+    width: 36px;
+    height: 24px;
+  }
+
+  .serviceDescription h3 {
+    font-size: 14px;
+  }
+
+  .serviceDescription p {
+    font-size: 11px;
+    line-height: 16px;
+  }
+
+  .serviceRating .rate,
+  .serviceRating .review,
+  .servicePrice .price,
+  .discountPercent,
+  .originalPrice {
+    font-size: 11px;
+  }
+
+  .actionButtons button,
+  .addToWish {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+
+  .wishIcon {
+    font-size: 12px;
+  }
+}
+
+

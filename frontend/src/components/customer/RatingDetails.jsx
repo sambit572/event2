@@ -7,7 +7,7 @@ const RatingDetails = () => {
     totalRatings: 150,
     totalReviews: 87,
     breakdown: [
-      { label: "5★", count: 80, color: "#4caf50" },
+      { label: "Execellent", count: 80, color: "#4caf50" },
       { label: "4★", count: 40, color: "#8bc34a" },
       { label: "3★", count: 15, color: "#cddc39" },
       { label: "2★", count: 10, color: "#ffc107" },

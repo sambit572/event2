@@ -29,6 +29,28 @@
   font-size: 20px;
 }
 
+/* ----------- Tablet (up to 1024px) ----------- */
+@media (max-width: 1024px) {
+  .rating-section {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .rating-box {
+    font-size: 15px;
+  }
+
+  .rating-text {
+    font-size: 17px;
+  }
+
+  .star-icon {
+    font-size: 18px;
+  }
+}
+
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .rating-section {
@@ -47,5 +69,36 @@
 
   .star-icon {
     font-size: 18px;
+  }
+}
+/* ----------- Small Mobile (up to 480px) ----------- */
+@media (max-width: 480px) {
+  .rating-box {
+    font-size: 13px;
+    padding: 4px 8px;
+  }
+
+  .rating-text {
+    font-size: 15px;
+  }
+
+  .star-icon {
+    font-size: 16px;
+  }
+}
+
+/* ----------- Extra Small Mobile (up to 360px) ----------- */
+@media (max-width: 360px) {
+  .rating-box {
+    font-size: 12px;
+    padding: 3px 7px;
+  }
+
+  .rating-text {
+    font-size: 14px;
+  }
+
+  .star-icon {
+    font-size: 15px;
   }
 }

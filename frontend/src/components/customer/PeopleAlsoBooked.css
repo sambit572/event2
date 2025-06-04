@@ -19,16 +19,20 @@
   flex-direction: column;
   padding: 12px;
   align-items: center;
+  height: 350px;
 }
 
 .similar-card:hover {
   transform: scale(1.04);
   box-shadow: 0 12px 26px rgba(0, 0, 0, 0.15);
 }
-
+.similar-image {
+  width: 300px;
+  height: 150px;
+}
 .similar-image img {
   width: 100%;
-  height: 140px;
+  height: 100%;
   object-fit: cover;
   border-radius: 12px;
 }
@@ -51,7 +55,7 @@
   width: 100%;
 }
 
-.price {
+.prices {
   display: flex;
   align-items: center;
   font-weight: bold;
@@ -59,7 +63,7 @@
   color: #000;
 }
 
-.original-price {
+.original-prices {
   display: flex;
   align-items: center;
   font-size: 14px;
@@ -67,9 +71,9 @@
   text-decoration: line-through;
 }
 
-.discount {
+.discounts {
   color: #00a300;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -97,42 +101,130 @@
   color: #444;
 }
 
-.similar-add-to-cart {
+.viewBtn {
+  border: 1px solid #222;
+  background-color: #fff;
+  color: #222;
   display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 8px;
-  background: linear-gradient(to right, #ff6a00, #ee0979);
-  color: white;
-  font-weight: bold;
-  padding: 10px 12px;
-  border-radius: 25px;
-  border: none;
+  align-items: center;
+  gap: 3px;
+  transition: all 0.3s ease;
+  padding: 4px 8px;
   cursor: pointer;
-  transition: background 0.3s ease;
-  width: 100%;
-  margin-top: auto;
+  font-weight: bold;
+  margin-top: 10px;
+  width: 180px;
+  border-radius: 25px;
+  font-size: 15px;
+  text-align: center;
 }
 
-.similar-add-to-cart:hover {
-  background: linear-gradient(to right, #ee0979, #ff6a00);
-  opacity: 0.95;
+/* Hover only when not wishlisted */
+.viewBtn:not(.wishlisted):hover {
+  background-color: red;
+  color: white;
+  border: red;
+}
+
+.viewBtn:not(.wishlisted):hover .wishIcon {
+  color: white;
+}
+
+/* Wishlisted style */
+.viewBtn.wishlisted {
+  border: 1px solid red;
+  background-color: white;
+  color: black;
+}
+
+.viewBtn.wishlisted .wishIcon {
+  color: red;
 }
 
 /* ---------- Responsive Layout ---------- */
 
+/* Medium screens (tablets) — 3 cards per row */
+@media (max-width: 1024px) {
+  .similar-card {
+    flex: 0 0 calc(33.333% - 16px);
+    max-width: calc(33.333% - 16px);
+  }
+}
+
 @media (max-width: 768px) {
   .similar-card {
-    flex: 0 0 calc(50% - 10px);
-    max-width: calc(50% - 10px);
+    flex: 0 0 calc(50% - 12px);
+    max-width: calc(50% - 12px);
+    height: auto;
   }
 
-  .similar-image img {
-    height: 120px;
+  .similar-title {
+    font-size: 16px;
   }
 
   .price-block {
-    justify-content: space-between;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .viewBtn {
+    width: 140px;
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+}
+
+/* Small screens (mobile) — 2 cards per row */
+@media (max-width: 600px) {
+  .similar-card {
+    flex: 0 0 calc(50% - 12px);
+    max-width: calc(50% - 12px);
+  }
+
+  .similar-image img {
+    width: 100%;
+    height: 200px;
+  }
+
+  .similar-title {
+    font-size: 16px;
+  }
+
+  .price-block {
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .similar-add-to-cart {
+    font-size: 14px;
+    padding: 8px 10px;
+  }
+}
+
+@media (max-width: 400px) {
+  .similar-card {
+    flex: 0 0 100%;
+    max-width: 100%;
+    padding: 10px;
+  }
+
+  .similar-image {
+    height: 180px;
+  }
+
+  .similar-title {
+    font-size: 15px;
+  }
+
+  .price-block {
+    gap: 4px;
+  }
+
+  .viewBtn {
+    width: 100%;
+    font-size: 13px;
+    padding: 6px;
   }
 }

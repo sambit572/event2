@@ -1,0 +1,260 @@
+
+.filter {
+  width: 280px;
+  max-height: 100%;
+  margin-top: 10px;
+  border-right: 1px solid #ccc;
+  padding: 16px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: #fff;
+}
+.filter h3 {
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+.filterBox {
+  display: flex;
+  width: 280px;
+  height: 600px;
+}
+.rating-option {
+  margin: 8px 0;
+}
+.rating-option input {
+  margin-right: 8px;
+}
+.head4 {
+  margin-bottom: 20px;
+}
+.star {
+  color: black;
+  font-size: 16px;
+}
+.price-range-wrapper {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.slider {
+  position: relative;
+  width: 100%;
+  height: 50px;
+}
+
+input[type="range"] {
+  position: absolute;
+  appearance: none;
+  -webkit-appearance: none;
+  pointer-events: none;
+
+  width: 100%;
+  height: 8px;
+  top: 16px;
+  background: transparent;
+  z-index: 2;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  pointer-events: auto;
+  -webkit-appearance: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #007bff;
+  cursor: pointer;
+  z-index: 3;
+  position: relative;
+}
+.price-box {
+  display: flex;
+  justify-content: space-between;
+  font-size: 17px;
+  font-weight: 600;
+  color: #000;
+  margin-top: 34px;
+}
+
+input[type="range"]::-moz-range-thumb {
+  pointer-events: auto;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #007bff;
+  cursor: pointer;
+  z-index: 3;
+}
+input[type="range"].thumb-left {
+  z-index: 3;
+}
+
+input[type="range"].thumb-right {
+  z-index: 4;
+}
+
+.range-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: transparent;
+  border-radius: 4px;
+  z-index: 1;
+}
+
+/* Highlight active track */
+.slider::before {
+  content: "";
+  position: absolute;
+  height: 8px;
+  top: 16px;
+  background: #007bff;
+  border-radius: 4px;
+  z-index: 1;
+  left: calc((100% * var(--min)) / 100000);
+  width: calc((100% * (var(--max) - var(--min))) / 100000);
+}
+
+.price-display {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 100px;
+  font-size: 14px;
+}
+.line {
+  color: gray;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+.dropdown {
+  margin: 10px 0;
+}
+
+.dropdown select {
+  width: 100%;
+  padding: 6px;
+  border-radius: 6px;
+}
+.dateFilter{
+  width: 100%;
+  padding: 10px;
+}
+.filter-btn{
+  display: flex;
+  justify-content: space-around;
+  margin-top: 30px;
+  padding: 4px 8px;
+  margin-bottom: 10px;
+}
+.applybtn{
+  padding: 8px 12px;
+  border-radius: 8px;
+  background-color: green;
+  border: none;
+  color: white;
+  font-weight: 500;
+  width: 100px;
+  cursor: pointer;
+}
+.cancelbtn{
+   padding: 8px 12px;
+  border-radius: 8px;
+  background-color: rgb(219, 38, 38);
+  border: none;
+  color: white;
+  font-weight: 500;
+  width: 100px;
+  cursor: pointer;
+}
+.applybtn:hover{
+  background-color: white;
+  color: green;
+  border:1px solid green;
+  font-weight: 500;
+}
+.cancelbtn:hover{
+  background-color: white;
+  color: rgb(219, 38, 38);
+  border:1px solid rgb(219, 38, 38);
+  font-weight: 500;
+}
+
+.filter-toggle-btn {
+  display: none;
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  z-index: 1001;
+  background-color: #007bff;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 1024px) {
+  .filterBox {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 280px;
+    background-color: white;
+    z-index: 1000;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .filterBox.show {
+    transform: translateX(0%);
+  }
+
+  .filter-toggle-btn {
+    display: block;
+  }
+
+  .filter {
+    width: 100%;
+    height: auto;
+    border: none;
+    box-shadow: none;
+    margin-top: 60px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .filterBox {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 280px;
+    background-color: white;
+    z-index: 1000;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .filterBox.show {
+    transform: translateX(0%);
+  }
+
+  .filter-toggle-btn {
+    display: block;
+  }
+
+  .filter {
+    width: 100%;
+    height: auto;
+    border: none;
+    box-shadow: none;
+    margin-top: 60px;
+  }
+}

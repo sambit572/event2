@@ -4,8 +4,7 @@
 
   display: inline-block;
   padding: 15px;
-  border-radius: 12px;
-  /* background-color: #fff; */
+  border-radius: 12px; 
   text-align: center;
   transition: transform 0.3s ease-in-out;
 }
@@ -16,15 +15,15 @@
   height: 200px;
   width: 150px;
   display: block;
-}
+} 
 
-/* .categoryCard h2 {
+ .categoryCard h2 {
   position: absolute;
   top: 50%;
   left: 50%;
   opacity: 0;
   transform: translate(-50%, -50%);
-} */
+} 
 .categoryCard h2 {
   position: absolute;
   top: 50%;
@@ -46,15 +45,15 @@
 
 .categoryCard:hover h2 {
   opacity: 1;
-}
+} 
 
-/* .categoryCard {
+ .categoryCard {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 200px; /* Adjust as needed */
-
+ }
 .categoryCard:hover {
   transform: scale(1.05); /* Slight hover effect */
 }

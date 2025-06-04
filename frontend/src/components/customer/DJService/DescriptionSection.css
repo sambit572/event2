@@ -31,6 +31,7 @@ margin-top: 10px;
   }
 }
 
+/* ---------- Small Screens (Phones) ---------- */
 @media (max-width: 480px) {
   .description-section {
     padding: 10px 15px;
@@ -42,5 +43,20 @@ margin-top: 10px;
 
   .description-text {
     font-size: 14px;
+  }
+}
+
+/* ---------- Extra Small Screens (<360px) ---------- */
+@media (max-width: 360px) {
+  .description-section {
+    padding: 8px 12px;
+  }
+
+  .brand {
+    font-size: 15px;
+  }
+
+  .description-text {
+    font-size: 13px;
   }
 }
