@@ -1,0 +1,65 @@
+.filter_section {
+  padding: 10px 0 10px 20px;
+  margin-right: 5px;
+  border: 2px solid #fff;
+  border-radius: 10px;
+  background-color: rgb(255, 255, 255);
+  /* text-align: center; */
+}
+.filter_location {
+  padding-top: 20px;
+  flex-direction: column;
+}
+select {
+  color: #be1717;
+  font-size: 18px;
+  font-weight: 600;
+  width: 80%;
+  padding: 8px;
+  border-radius: 10px;
+  margin: 10px;
+  /* background-color: rgb(228, 255, 255); */
+  background-color: #f5efff;
+}
+
+.filter_price > input {
+  width: 90%;
+  /* margin: 10px 0 10px 8px; */
+}
+.filter_price {
+  margin: 20px 0 20px 0;
+}
+.filter_rating {
+  display: flex;
+  flex-direction: column;
+  margin: 7%;
+}
+.filter_rating > label > input {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+.filter_rating > label {
+  font-size: 20px;
+  font-weight: 500;
+}
+.filter_button {
+  margin: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+.filter_button > button {
+  font-weight: 600;
+  font-size: 20px;
+  padding: 5px 20px 6px 20px;
+
+  color: #fff;
+}
+.filter_button > button:nth-child(1) {
+  background-color: rgb(130, 215, 3);
+  border-radius: 10%;
+}
+.filter_button > button:nth-child(2) {
+  background-color: rgb(242, 106, 134);
+  border-radius: 10%;
+}

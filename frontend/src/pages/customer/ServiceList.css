@@ -2,17 +2,14 @@
   display: grid;
   grid-template-columns: 1.1fr 4fr;
   height: 100vh;
-  margin: 10px;
+  padding: 10px;
+  background-color: #f2f0f4;
 }
-.category_filter {
-  padding: 5px;
-  margin-right: 5px;
-  background-color: antiquewhite;
-  text-align: center;
-}
+
 .category {
   padding: 5px;
   margin-left: 5px;
-  background-color: aliceblue;
+  background-color: #fff;
+
   text-align: center;
 }
