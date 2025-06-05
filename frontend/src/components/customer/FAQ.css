@@ -77,7 +77,7 @@
   }
 }
 
-/* Mobile optimization */
+
 @media (max-width: 576px) {
   .faq-title {
     font-size: 20px;

@@ -66,10 +66,10 @@ const FAQ = () => {
     <div className="faq-container">
       <h2 className="faq-title">Explore Our FAQs </h2>
       <div className="faq-columns">
-        {columns.map((column, colIdx) => (
-          <div key={colIdx} className="faq-column">
+        {columns.map((column, colIdxs) => (
+          <div key={colIdxs} className="faq-column">
             {column.map((item, index) => {
-              const itemIndex = colIdx + index * columnCount;
+              const itemIndex = colIdxs + index * columnCount;
               return (
                 <div
                   key={itemIndex}
