@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
-
+import "./ForgotPass.css";
 function ForgotPass() {
   const [email, setEmail] = useState("");
 
@@ -20,18 +20,19 @@ function ForgotPass() {
   };
 
   return (
-    <div style={styles.container}>
-      <form onSubmit={handleSubmit} style={styles.form}>
-        <h2 style={styles.heading}>Forgot Password</h2>
+    <div className="custom-container">
+      <form onSubmit={handleSubmit} className="custom-form">
+        <h2 className="custom-heading">Forgot Password</h2>
+        <p className="subheading">Enter your valid email address</p>
         <input
           type="email"
+          className="custom-input"
           placeholder="Enter your email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          style={styles.input}
         />
-        <button type="submit" style={styles.button}>
+        <button type="submit" className="custom-button">
           Send Reset Link
         </button>
       </form>
@@ -40,53 +41,5 @@ function ForgotPass() {
 }
 
 // Inline CSS Styles
-const styles = {
-  container: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    minHeight: "100vh",
-    minWidth: "100vw",
-    background: "linear-gradient(to right, #e0ecff, #f4f6ff)",
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    padding: "40px",
-    background: "white",
-    borderRadius: "15px",
-    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-    width: "350px",
-  },
-  heading: {
-    fontSize: "1.8rem",
-    fontWeight: "bold",
-    marginBottom: "20px",
-    color: "#007bff",
-    fontFamily: "'Poppins', sans-serif",
-  },
-  input: {
-    width: "100%",
-    padding: "12px 15px",
-    margin: "10px 0",
-    borderRadius: "10px",
-    border: "1px solid #ccc",
-    fontSize: "16px",
-    outline: "none",
-  },
-  button: {
-    marginTop: "20px",
-    padding: "12px 20px",
-    background: "linear-gradient(to right, #1A2A49, #007bff)",
-    color: "white",
-    fontWeight: "bold",
-    border: "none",
-    borderRadius: "25px",
-    cursor: "pointer",
-    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
-    transition: "all 0.3s ease-in-out",
-  },
-};
 
 export default ForgotPass;

@@ -283,7 +283,7 @@ const FormBlock = ({ setStep, onClose }) => {
           />
 
           <Link to="/forgot-password" className="Login-forget-password-link">
-            Forgot your password? <strong>Reset</strong>
+            Forgot your password?
           </Link>
 
           {errorMsg && <p className="error">{errorMsg}</p>}

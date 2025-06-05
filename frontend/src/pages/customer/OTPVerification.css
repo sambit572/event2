@@ -19,7 +19,7 @@
   border-radius: 8px;
 }
 
-.otp-button, .otp-cancel {
+ .otp-cancel {
   padding: 10px 20px;
   margin: 10px;
   border: none;
