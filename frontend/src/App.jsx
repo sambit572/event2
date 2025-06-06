@@ -9,6 +9,7 @@ import LoginRegister from "./pages/customer/LoginRegister";
 import ForgotPass from "./pages/customer/ForgotPass.jsx";
 import ResetPassword from "./pages/customer/ResetPassword.jsx";
 import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
+import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
 
 const App = () => {
   return (
@@ -33,6 +34,7 @@ const App = () => {
             path="/reset-password/:resetToken"
             element={<ResetPassword />}
           />
+          <Route path="/dashboard" element={<DashBoardMain />}></Route>
         </Routes>
       </main>
     </>

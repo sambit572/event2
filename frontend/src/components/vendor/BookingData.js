@@ -1,0 +1,49 @@
+const BookingData = [
+  {
+    number: 1,
+    service: "Mehendi",
+    bookedBy: "random",
+    price: "₹30,000",
+    date: "15 - 06 - 2025",
+    days: "1 day",
+    status: "Up Coming",
+  },
+  {
+    number: 2,
+    service: "Make Up",
+    bookedBy: "random",
+    price: "₹25,000",
+    date: "16 - 06 - 2025",
+    days: "2 days",
+    status: "Up Coming",
+  },
+  {
+    number: 3,
+    service: "Mehendi",
+    bookedBy: "random",
+    price: "₹30,000",
+    date: "6 - 06 - 2025",
+    days: "1 day",
+    status: "Processing",
+  },
+  {
+    number: 4,
+    service: "Mehendi",
+    bookedBy: "random",
+    price: "₹30,000",
+    date: "28 - 05 - 2025",
+    days: "3 days",
+    status: "Completed",
+  },
+  {
+    number: 5,
+    service: "Mehendi",
+    bookedBy: "random",
+    price: "₹30,000",
+    date: "28 - 05 - 2025",
+    days: "3 days",
+    status: "Completed",
+  },
+];
+
+export default BookingData;
