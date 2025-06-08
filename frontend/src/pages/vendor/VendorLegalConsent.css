@@ -1,0 +1,160 @@
+.checkbox-section {
+  background-color: #FFFFDD;
+  border-radius: 10px;
+  max-width: 600px;
+  height: 600px;
+  margin: 90px auto;
+  padding: 30px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.consent-heading {
+  font-size: 16px;
+  margin-bottom: 20px;
+  line-height: 1.8;
+}
+
+.checkbox-form {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  font-size: 15px;
+  line-height: 1.3;
+}
+.info-icon {
+  font-size: 12px;
+  margin-left: -2px; 
+}
+
+.uploaded-signature {
+  max-height: 50px;
+  max-width: 200px;
+  object-fit: contain;
+}
+
+/* ============ Signature Upload ============ */
+.signature-upload {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.signature-label {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.upload-box {
+  background-color: white;
+  border: 1.5px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  width: 280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 16px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.08);
+}
+
+.upload-icon {
+  height: 24px;
+  width: 24px;
+}
+
+/* For tablets: 1024px and below */
+@media (max-width: 1024px) {
+  .checkbox-section {
+    max-width: 95%;
+    height: auto;
+    padding: 25px;
+    margin: 70px auto;
+  }
+
+  .upload-box {
+    width: 260px;
+    padding: 18px;
+    font-size: 15px;
+  }
+
+  .upload-icon {
+    height: 22px;
+    width: 22px;
+  }
+}
+
+/* For tablets: 768px and below */
+@media (max-width: 768px) {
+  .checkbox-section {
+    max-width: 95%;
+    padding: 20px;
+    margin: 60px auto;
+  }
+
+  .consent-heading {
+    font-size: 15px;
+  }
+
+  .checkbox-label {
+    font-size: 12px;
+    gap: 14px;
+    flex-direction: row; 
+    align-items: flex-start;
+  }
+
+  .upload-box {
+    width: 240px;
+    padding: 16px;
+    font-size: 14px;
+  }
+
+  .upload-icon {
+    height: 20px;
+    width: 20px;
+  }
+}
+
+/* For small screens: 480px and below (e.g., iPhone SE) */
+@media (max-width: 480px) {
+  .checkbox-section {
+    max-width: 94%;
+    padding: 16px;
+    height: auto;
+    margin: 40px auto;
+    overflow-x: hidden;
+  }
+
+  .consent-heading {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .checkbox-label {
+    font-size: 13.5px;
+    gap: 10px;
+    flex-direction: row;
+    align-items: flex-start;
+    flex-wrap: wrap;     
+  }
+
+  .upload-box {
+    width: 100%;
+    padding: 14px;
+    font-size: 13px;
+  }
+
+  .upload-icon {
+    height: 18px;
+    width: 18px;
+  }
+}
+
