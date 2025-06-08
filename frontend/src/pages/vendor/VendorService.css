@@ -1,0 +1,976 @@
+/* ================= Container Styles ================= */
+.form-container {
+  background-color: #FFFFDD;
+  padding: 40px;
+  margin: 50px auto;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 1400px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.form-wrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  align-items: stretch;
+}
+
+.form-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.form-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.form-divider {
+  width: 2px;
+  background: linear-gradient(to bottom, #4b2bb3, #9d7bf9, #4b2bb3);
+  min-height: 100%;
+  flex-shrink: 0;
+  border-radius: 1px;
+}
+
+/* Container Responsive Design */
+@media (max-width: 1200px) {
+  .form-container {
+    width: 95%;
+    padding: 35px;
+  }
+  
+  .form-wrapper {
+    gap: 30px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .form-container {
+    width: 95%;
+    padding: 30px;
+    margin: 40px auto;
+  }
+  
+  .form-wrapper {
+    gap: 25px;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-container {
+    width: 95%;
+    padding: 25px;
+    margin: 30px auto;
+  }
+  
+  .form-wrapper {
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .form-divider {
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(to right, #4b2bb3, #9d7bf9, #4b2bb3);
+    min-height: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .form-container {
+    width: 95%;
+    padding: 20px;
+    margin: 20px auto;
+    gap: 25px;
+  }
+  
+  .form-column,
+  .form-right {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-container {
+    width: 95%;
+    padding: 16px;
+    margin: 15px auto;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 400px) {
+  .form-container {
+    width: 95%;
+    padding: 12px;
+    margin: 10px auto;
+    gap: 15px;
+  }
+}
+
+@media (max-width: 350px) {
+  .form-container {
+    padding: 10px;
+    gap: 12px;
+  }
+}
+
+/* ================= Service Category ================= */
+.ServiceCategory {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ServiceCategory label {
+  font-weight: 600;
+  color: #4b2bb3;
+  font-size: 14px;
+}
+
+.category-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.category-input {
+  display: flex;
+  align-items: center;
+  border: 2px solid #4b2bb3;
+  border-radius: 8px;
+  padding: 10px 12px;
+  background-color: #fff;
+  transition: border-color 0.3s ease;
+}
+
+.category-input:hover {
+  border-color: #6A4BB1;
+}
+
+.category-input input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: #333;
+  background: transparent;
+}
+
+/* Fixed clear icon styles for image */
+.clear-icon-img {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  margin-left: 8px;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.clear-icon-img:hover {
+  transform: scale(1.1);
+  opacity: 1;
+}
+
+/* Keep the original text-based clear icon styles for backward compatibility */
+.clear-icon {
+  cursor: pointer;
+  color: #4b2bb3;
+  font-size: 20px;
+  font-weight: bold;
+  margin-left: 8px;
+  transition: transform 0.2s;
+}
+
+.clear-icon:hover {
+  transform: scale(1.1);
+}
+
+.dropdown-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 2px solid #4b2bb3;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  max-height: 180px;
+  overflow-y: auto;
+  z-index: 1000;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.dropdown-list li {
+  padding: 12px 15px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.dropdown-list li:hover {
+  background-color: #f1ebff;
+}
+
+/* Service Category Responsive Design */
+@media (max-width: 480px) {
+  .category-input {
+    padding: 8px 10px;
+  }
+  
+  .category-input input {
+    font-size: 13px;
+  }
+  
+  .clear-icon-img {
+    width: 14px;
+    height: 14px;
+    margin-left: 6px;
+  }
+}
+
+@media (max-width: 350px) {
+  .category-input {
+    padding: 6px 8px;
+  }
+  
+  .clear-icon-img {
+    width: 12px;
+    height: 12px;
+    margin-left: 4px;
+  }
+}
+
+/* ================= Image Upload ================= */
+.ServiceImageUploadPreview {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ServiceImageUploadPreview label {
+  font-weight: 600;
+  color: #4b2bb3;
+  font-size: 14px;
+}
+
+.ServiceImageUploadPreview input[type="file"] {
+  border: 2px solid #9d7bf9;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #fff;
+  color: #4b2bb3;
+  font-size: 14px;
+}
+
+.preview-container {
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+}
+
+.main-preview img {
+  width: 100%;
+  max-width: 350px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 2px solid #9d7bf9;
+}
+
+.thumbnail-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.thumbnail-preview img {
+  width: 60px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.thumbnail-preview img.active,
+.thumbnail-preview img:hover {
+  border-color: #9d7bf9;
+  transform: scale(1.05);
+}
+
+/* Image Upload Responsive Design */
+@media (max-width: 1024px) {
+  .main-preview img {
+    max-width: 280px;
+    height: 160px;
+  }
+}
+
+@media (max-width: 768px) {
+  .preview-container {
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+  
+  .main-preview {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .main-preview img {
+    max-width: 100%;
+    height: 200px;
+    width: 100%;
+  }
+  
+  .thumbnail-preview {
+    flex-direction: row;
+    max-height: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    width: 100%;
+    padding: 10px 0;
+    gap: 12px;
+    justify-content: flex-start;
+  }
+  
+  .thumbnail-preview img {
+    flex-shrink: 0;
+    width: 80px;
+    height: 60px;
+    border-radius: 8px;
+  }
+}
+
+@media (max-width: 600px) {
+  .preview-container {
+    gap: 16px;
+  }
+  
+  .main-preview img {
+    height: 180px;
+    border-radius: 10px;
+  }
+  
+  .thumbnail-preview {
+    gap: 10px;
+    padding: 8px 0;
+  }
+  
+  .thumbnail-preview img {
+    width: 70px;
+    height: 50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .preview-container {
+    gap: 15px;
+  }
+  
+  .main-preview img {
+    height: 160px;
+    border-radius: 8px;
+  }
+  
+  .thumbnail-preview {
+    gap: 8px;
+    padding: 6px 0;
+    /* Add scrollbar styling for better UX */
+    scrollbar-width: thin;
+    scrollbar-color: #9d7bf9 #f7f3ff;
+  }
+  
+  .thumbnail-preview::-webkit-scrollbar {
+    height: 6px;
+  }
+  
+  .thumbnail-preview::-webkit-scrollbar-track {
+    background: #f7f3ff;
+    border-radius: 3px;
+  }
+  
+  .thumbnail-preview::-webkit-scrollbar-thumb {
+    background: #9d7bf9;
+    border-radius: 3px;
+  }
+  
+  .thumbnail-preview::-webkit-scrollbar-thumb:hover {
+    background: #4b2bb3;
+  }
+  
+  .thumbnail-preview img {
+    width: 65px;
+    height: 45px;
+    border-radius: 6px;
+    /* Add subtle shadow for better depth */
+    box-shadow: 0 2px 4px rgba(75, 43, 179, 0.1);
+  }
+  
+  .thumbnail-preview img:hover,
+  .thumbnail-preview img.active {
+    transform: scale(1.08);
+    box-shadow: 0 4px 8px rgba(75, 43, 179, 0.2);
+  }
+}
+
+@media (max-width: 400px) {
+  .preview-container {
+    gap: 12px;
+  }
+  
+  .main-preview img {
+    height: 140px;
+  }
+  
+  .thumbnail-preview {
+    gap: 6px;
+  }
+  
+  .thumbnail-preview img {
+    width: 60px;
+    height: 40px;
+    border-radius: 5px;
+  }
+}
+
+@media (max-width: 375px) and (max-height: 667px) {
+  /* iPhone SE specific adjustments */
+  .preview-container {
+    gap: 10px;
+  }
+  
+  .main-preview img {
+    height: 130px;
+  }
+  
+  .thumbnail-preview {
+    padding: 5px 0;
+  }
+  
+  .thumbnail-preview img {
+    width: 58px;
+    height: 38px;
+    margin-right: 2px;
+    /* Ensure minimum touch target size */
+    min-width: 44px;
+    min-height: 32px;
+  }
+}
+
+@media (max-width: 350px) {
+  .main-preview img {
+    height: 120px;
+  }
+  
+  .thumbnail-preview img {
+    width: 55px;
+    height: 36px;
+    border-radius: 4px;
+  }
+}
+
+/* Image Upload Landscape Responsive Design */
+@media (max-width: 900px) and (orientation: landscape) {
+  .preview-container {
+    flex-direction: row;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  
+  .main-preview {
+    flex: 2;
+  }
+  
+  .main-preview img {
+    max-width: none;
+    width: 100%;
+    height: 150px;
+  }
+  
+  .thumbnail-preview {
+    flex: 1;
+    flex-direction: column;
+    max-height: 150px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  
+  .thumbnail-preview img {
+    width: 100%;
+    height: 35px;
+    max-width: 80px;
+  }
+}
+
+/* ================= Price Range ================= */
+.price-range-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.section-label {
+  font-weight: 600;
+  color: #4b2bb3;
+  font-size: 14px;
+}
+
+.value-dropdown {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 2px solid #c5b9f5;
+  font-size: 14px;
+  background-color: #f7f3ff;
+  color: #4b2bb3;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.value-dropdown:focus {
+  border-color: #4b2bb3;
+}
+
+.price-input-toggle {
+  display: flex;
+  border-radius: 25px;
+  overflow: hidden;
+  border: 2px solid #c5b9f5;
+  background-color: #fff;
+}
+
+.price-input-toggle button {
+  padding: 10px 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  flex: 1;
+  transition: all 0.3s ease;
+}
+
+.price-input-toggle .active {
+  background-color: #e6dcfd;
+  color: #4b2bb3;
+}
+
+.price-input-fields input {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 2px solid #c5b9f5;
+  font-size: 14px;
+  width: 100%;
+  background-color: #f7f3ff;
+  color: #4b2bb3;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.price-input-fields input:focus {
+  border-color: #4b2bb3;
+}
+
+/* Price Range Responsive Design */
+@media (max-width: 480px) {
+  .price-input-toggle button {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+  
+  .price-input-fields input {
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+}
+
+/* ================= Service Name ================= */
+.service-name-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ServiceName {
+  font-weight: 600;
+  color: #4b2bb3;
+  font-size: 14px;
+}
+
+.input-field {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 2px solid #c5b9f5;
+  font-size: 14px;
+  background-color: #f7f3ff;
+  color: #4b2bb3;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.input-field:focus {
+  border-color: #4b2bb3;
+}
+
+/* Service Name Responsive Design */
+@media (max-width: 480px) {
+  .input-field {
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+}
+
+@media (max-width: 350px) {
+  .input-field {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+}
+
+/* ================= Duration Section ================= */
+.duration-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.section-title {
+  color: #4b2bb3;
+  font-weight: 600;
+  font-size: 16px;
+  margin: 0;
+}
+
+.duration-inputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.duration-field {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 2px solid #c5b9f5;
+  font-size: 14px;
+  width: 80px;
+  background-color: #f7f3ff;
+  color: #4b2bb3;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.duration-field:focus {
+  border-color: #4b2bb3;
+}
+
+.duration-separator {
+  font-weight: bold;
+  color: #4b2bb3;
+  font-size: 16px;
+}
+
+/* Duration Section Responsive Design */
+@media (max-width: 768px) {
+  .duration-inputs {
+    justify-content: center;
+  }
+  
+  .duration-field {
+    width: 70px;
+  }
+}
+
+@media (max-width: 480px) {
+  .duration-field {
+    width: 60px;
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+  
+  .section-title {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 400px) {
+  .duration-inputs {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+  }
+  
+  .duration-field {
+    width: 55px;
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+  
+  .duration-separator {
+    font-size: 14px;
+  }
+}
+
+/* ================= Location Section ================= */
+.location-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.location-label {
+  font-weight: 600;
+  color: #4b2bb3;
+  font-size: 14px;
+}
+
+.location-dropdown-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.dropdown-input {
+  display: flex;
+  align-items: center;
+  border: 2px solid #7a4fff;
+  border-radius: 8px;
+  background-color: #f7f3ff;
+  padding: 10px 12px;
+  color: #4b2bb3;
+  transition: border-color 0.3s ease;
+}
+
+.dropdown-input:hover {
+  border-color: #4b2bb3;
+}
+
+.dropdown-input input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  color: #4b2bb3;
+}
+
+.icon-left {
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+/* Updated cross icon to match Service Category clear icon */
+.cross-icon {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  margin-left: 8px;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.cross-icon:hover {
+  transform: scale(1.1);
+  opacity: 1;
+}
+
+.location-dropdown-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: #f7f3ff;
+  border: 2px solid #7a4fff;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  max-height: 180px;
+  overflow-y: auto;
+  z-index: 1000;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.location-dropdown-list li {
+  padding: 12px 15px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  font-size: 14px;
+  color: #4b2bb3;
+}
+
+.location-dropdown-list li:hover {
+  background-color: #e2d7ff;
+}
+
+/* Location Section Responsive Design */
+@media (max-width: 480px) {
+  .dropdown-input {
+    padding: 8px 10px;
+  }
+  
+  .dropdown-input input {
+    font-size: 13px;
+  }
+  
+  .cross-icon {
+    width: 14px;
+    height: 14px;
+    margin-left: 6px;
+  }
+}
+
+@media (max-width: 350px) {
+  .dropdown-input {
+    padding: 6px 8px;
+  }
+  
+  .cross-icon {
+    width: 12px;
+    height: 12px;
+    margin-left: 4px;
+  }
+}
+
+/* ================= Description Section ================= */
+.description-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.description-label {
+  font-weight: 600;
+  color: #4b2bb3;
+  font-size: 14px;
+}
+
+.description-textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px 15px;
+  font-size: 14px;
+  border: 2px solid #c5b9f5;
+  border-radius: 8px;
+  background-color: #f7f3ff;
+  color: #4b2bb3;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.3s ease;
+  font-family: inherit;
+}
+
+.description-textarea:focus {
+  border-color: #4b2bb3;
+}
+
+/* Description Section Responsive Design */
+@media (max-width: 600px) {
+  .description-textarea {
+    min-height: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .description-textarea {
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+}
+
+@media (max-width: 350px) {
+  .description-textarea {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+}
+
+/* ================= Navigation Buttons ================= */
+.form-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.nav-button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.back-button {
+  background-color: #6c757d;
+  color: white;
+}
+
+.back-button:hover {
+  background-color: #5a6268;
+  transform: translateY(-2px);
+}
+
+.next-button {
+  background-color: #4b2bb3;
+  color: white;
+}
+
+.next-button:hover {
+  background-color: #3a1f8a;
+  transform: translateY(-2px);
+}
+
+/* Navigation Buttons Responsive Design */
+@media (max-width: 600px) {
+  .nav-button {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-navigation {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .nav-button {
+    width: 100%;
+    padding: 12px;
+  }
+}
+
+@media (max-width: 350px) {
+  .nav-button {
+    padding: 10px;
+    font-size: 12px;
+  }
+}
+
+/* ================= High DPI Screens ================= */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .form-divider {
+    background-size: 100% 100%;
+  }
+}
