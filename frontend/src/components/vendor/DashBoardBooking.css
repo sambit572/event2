@@ -5,7 +5,6 @@
 .main-content {
   flex: 1;
   background: #f5efff;
-  /* padding: 30px; */
 }
 
 .tabs {
@@ -19,65 +18,153 @@
 .sort-dropdown {
   padding: 6px;
   border-radius: 6px;
-  border: 1px solid #57448f;
-  margin-right: 100px;
+  border: 1px solid #3b0340e1;
+  margin-right: -230px;
+font-weight: 500;
+  background-color: #3b0340e1;
+  color: white;
 }
-
+.sort-dropdown option {
+  background-color: white;
+  color: black;
+  font-weight: 600;
+}
+.sort-dropdown option:hover {
+  background-color: #3b0340e1;
+  color: white;
+}
 .booking-container {
   width: 100%;
-  max-width: 1000px;
+  max-width: 1100px;
   margin: auto;
-  font-family: "Segoe UI", sans-serif;
+  margin-left: 332px;
 }
 
-/* Header row */
-.booking-header {
-  display: flex;
-  justify-content: space-between;
-  background-color: #e8dbf4;
-  font-weight: bold;
-  padding: 12px 16px;
-  border: 1px solid #c8aee0;
-  border-radius: 5px 5px 0 0;
-  box-shadow: 4px 4px 10px 0px rgba(0, 0, 0, 0.25);
-  margin-bottom: 20px;
-}
-
-/* Data rows */
+/* ------------------------------------ */
+/* ✅ LAPTOP / DESKTOP (Default) Layout */
+/* ------------------------------------ */
+.booking-header,
 .booking-row {
   display: flex;
   justify-content: space-between;
-  background-color: white;
+  align-items: center;
   padding: 12px 16px;
-  margin-top: 8px;
-  border: 1px solid #cfcfcf;
+  border: 1px solid #ccc;
   border-radius: 5px;
-  transition: all 0.3s ease;
-  box-shadow: 4px 4px 10px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+  background-color: white;
+  margin-bottom: 10px;
 }
 
-.booking-row:hover{
-    background-color: rgb(201, 192, 192);
-    cursor: pointer;
-
-    
+.booking-header {
+  background-color: #e8dbf4;
+  font-weight: bold;
+  margin-bottom: 23px;
 }
-/* Equal spacing between columns */
-.booking-header div,
-.booking-row div {
+
+.booking-header .number,
+.booking-row .number,
+.booking-header .status,
+.booking-row .status,
+.booking-header .middle,
+.booking-row .middle {
   flex: 1;
   text-align: center;
 }
+.booking-header:hover {
+  background-color: rgb(184, 181, 181);
+}
+.booking-row:hover {
+  background-color: rgb(170, 168, 168);
+}
+.booking-header .middle,
+.booking-row .middle {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+}
 
-/* Status styles */
+.booking-header .middle div,
+.booking-row .middle div {
+  flex: 1;
+  text-align: center;
+  width: 120px;
+}
+
 .status.completed {
   color: green;
+  font-weight: bold;
 }
-
 .status.processing {
   color: orange;
+  font-weight: bold;
 }
-
 .status.up-coming {
   color: blue;
+  font-weight: bold;
+}
+
+/* -------------------- Responsive styles for mobile -------------------- */
+@media screen and (max-width: 768px) {
+  .booking-header {
+    display: none;
+  }
+
+  .booking-row {
+    display: grid;
+    grid-template-areas: "number middle status";
+    grid-template-columns: auto 1fr auto;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .booking-header .number,
+  .booking-row .number {
+    grid-area: number;
+    text-align: left;
+  }
+
+  .booking-header .status,
+  .booking-row .status {
+    grid-area: status;
+    font-weight: bold;
+    text-align: right;
+  }
+
+  .booking-header .middle,
+  .booking-row .middle {
+    grid-area: middle;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: center;
+    align-items: center;
+  }
+
+  .booking-header .middle div,
+  .booking-row .middle div {
+    font-size: 14px;
+  }
+
+  .booking-header,
+  .booking-row {
+    font-size: 14px;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
+  }
+
+  .tabs {
+    flex-direction: column;
+    align-items: flex-end;
+    margin: 10px;
+  }
+
+  .sort-dropdown {
+    width: 30%;
+    margin: 10px -62px 0 0;
+  }
+  .booking-container{
+    margin-left: 42px;
+  }
 }

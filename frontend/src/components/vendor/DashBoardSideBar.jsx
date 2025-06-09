@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./DashBoardSideBar.css";
 
-function DashBoardSideBar() {
+function DashBoardSideBar({ isOpen }) {
   const [fullName, setFullName] = useState("Rudransh Dash");
   const [email, setEmail] = useState("rudransh7381@gmail.com");
   const [contact, setContact] = useState("+91 9692486267");
@@ -10,7 +10,7 @@ function DashBoardSideBar() {
   const [accountNumber, setAccountNumber] = useState("123456789");
   const [ifscCode, setIfscCode] = useState("SBIN0001234");
   const [bankDropdownOpen, setBankDropdownOpen] = useState(false);
-  const [active,setActive] = useState(true)
+  const [active, setActive] = useState(true);
 
   const [editMode, setEditMode] = useState(false);
 
@@ -19,14 +19,14 @@ function DashBoardSideBar() {
   };
 
   return (
-    <div className="sidebar">
+    <div className={`sidebar ${isOpen ? "open" : ""}`}>
       <h2 className="dasgboardHeading">DASHBOARD</h2>
       <div className="sidebar-content">
         <svg
           className="profile-pic"
           xmlns="http://www.w3.org/2000/svg"
-          width="160"
-          height="150"
+          width="140"
+          height="130"
           viewBox="0 0 166 156"
           fill="none"
         >

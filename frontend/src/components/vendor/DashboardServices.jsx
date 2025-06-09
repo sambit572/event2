@@ -41,14 +41,15 @@ const DashboardServices = () => {
     <div className="dashboard-container">
       <main className="content-area">
         <div className="tab-buttons">
+          <div className={`bg-slider ${activeTab}`}></div>
           <button
-            className={activeTab === "services" ? "active" : ""}
+            className={`button1 ${activeTab === "services" ? "active" : ""}`}
             onClick={() => setActiveTab("services")}
           >
             My Services
           </button>
           <button
-            className={activeTab === "bookings" ? "active" : ""}
+            className={`button2 ${activeTab === "bookings" ? "active" : ""}`}
             onClick={() => setActiveTab("bookings")}
           >
             My Bookings
