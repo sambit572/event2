@@ -44,11 +44,11 @@ const Footer = () => {
               <FaTwitter />
             </a>
 
-            <a href="https://instagram.com" className="followus">
+            <a href="https://www.instagram.com/eventsbridge_/profilecard/?igsh=d3NjcDc0YWJsY3Vx" className="followus">
               <FaInstagram />
             </a>
 
-            <a href="https://linkedin.com" className="followus">
+            <a href="https://www.linkedin.com/company/eventsbridge-com/posts/?feedView=all" className="followus">
               <FaLinkedin />
             </a>
           </ul>
