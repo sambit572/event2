@@ -1,0 +1,80 @@
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+.back-btn,
+.next-btn {
+  padding: 10px 22px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.payment-back-arrow-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.back-btn {
+  background-color: #999;
+  color: #fff;
+}
+
+.back-btn:hover {
+  background-color: #777;
+}
+
+.next-btn {
+  background-color: #2563eb;
+  color: #fff;
+  width: 120px;
+}
+
+.next-btn:hover {
+  background-color: #1e3a8a;
+}
+
+.payment-next-arrow-icon {
+  width: 16px;
+  height: 16px;
+  margin-left: 12px;
+  vertical-align: middle;
+}
+
+/* =================== Tablet (768px and below) =================== */
+@media screen and (max-width: 768px) {
+  .form-buttons {
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+  }
+
+  .back-btn,
+  .next-btn {
+    width: 100%;
+    max-width: 220px;
+  }
+}
+
+/* =================== Mobile (540px and below) =================== */
+@media screen and (max-width: 540px) {
+  .form-buttons {
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .back-btn,
+  .next-btn {
+    width: 100%;
+    max-width: 220px;
+    font-size: 13px;
+  }
+}

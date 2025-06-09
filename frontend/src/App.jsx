@@ -10,27 +10,28 @@ import VendorLegalConsent from "./pages/vendor/VendorLegalConsent";
 import VendorPayment from "./pages/vendor/VendorPayment";
 import VendorThankYou from "./pages/vendor/VendorThankYou";
 import VendorRegistration from "./pages/vendor/VendorRegistration";
+
 import Footer from "./components/customer/Footer";
 import LoginRegister from "./pages/customer/LoginRegister";
-
-import VendorService from "./pages/vendor/VendorService";
 import Navbar from "./components/customer/Navbar";
 
+import VendorService from "./pages/vendor/VendorService";
+// import Navbar from "./components/customer/Navbar";
+
 const App = () => {
-
-
-
   /*{ const location = useLocation();
 
   // Define routes where you want to hide the navbar
   const hideNavbarRoutes = [
     "/vendor/legal-consent",
+    "/category/VendorService",
     "/vendor/payment-info",
     "/vendor/thank-you",
     "/vendor/register"
   ];
   const hideFooterRoutes = [
     "/vendor/legal-consent",
+    "/category/VendorService",
     "/vendor/payment-info",
     "/vendor/thank-you",
     "/vendor/register"
@@ -38,10 +39,10 @@ const App = () => {
 
   const shouldShowNavbar = !hideNavbarRoutes.includes(location.pathname);
   const shouldShowFooter = !hideFooterRoutes.includes(location.pathname); }*/
-  
+
   return (
     <>
-          <Navbar />
+      <Navbar />
 
       {/* {shouldShowNavbar && <Navbar />} */}
 
@@ -55,10 +56,7 @@ const App = () => {
           <Route path="/LoginRegister" element={<LoginRegister />}></Route>
           {/* Vendor Routes */}
           <Route path="/vendor/register" element={<VendorRegistration />} />
-          <Route
-            path="/category/VendorService"
-            element={<VendorService currentStep={1} />}
-          />
+          <Route path="/category/VendorService" element={<VendorService />} />
           <Route path="/vendor/payment-info" element={<VendorPayment />} />
           <Route
             path="/vendor/legal-consent"
@@ -67,7 +65,7 @@ const App = () => {
           <Route path="/vendor/thank-you" element={<VendorThankYou />} />
         </Routes>
       </main>
-     {shouldShowFooter && <Footer />}
+      {/* {shouldShowFooter && <Footer />} */}
     </>
   );
 };

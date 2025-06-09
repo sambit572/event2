@@ -1,4 +1,3 @@
-// src/components/StepProgress.jsx
 import React from "react";
 import "./StepProgress.css";
 

@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import "./VendorPayment.css";
 
 import StepProgress from "./StepProgress";
-
-import "./VendorPayment.css";
 import "./StepProgress.css";
-import Button from "./Button";
-import "./Button.css";
+import Button from "./../../components/vendor/register/Button";
 
 export default function VendorPayment() {
   const navigate = useNavigate();
@@ -153,7 +151,7 @@ export default function VendorPayment() {
             onChange={handleChange}
           />
         </div>
-        {/* <Button onBack={() => navigate(-1)} onNext={handleNext} /> */}
+        <Button onBack={() => navigate(-1)} onNext={handleNext} />
       </div>
     </div>
   );

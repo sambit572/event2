@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; 
-import RegisterStepProgress from "./RegisterStepProgress"; 
+import { useNavigate } from "react-router-dom";
+import RegisterStepProgress from "./RegisterStepProgress";
 import "./VendorRegistration.css";
 
 export default function VendorRegister() {
-   const navigate = useNavigate();
-   
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     fullName: "",
     email: "",
     phone: "",
     password: "",
-    confirmPassword: "", 
+    confirmPassword: "",
     profilePic: null,
   });
 
@@ -31,18 +31,15 @@ export default function VendorRegister() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-     /*  if (form.password !== form.confirmPassword) {
-      alert("Passwords do not match!");
-      return;
-    } */
-     console.log("Form Data:", form);
-    
+
+    console.log("Form Data:", form);
+
     // Navigate to VendorService page
-    navigate('/category/VendorService', { 
-      state: { 
+    navigate("/category/VendorService", {
+      state: {
         currentStep: 1, // Move to next step
-        vendorData: form // Pass form data if needed
-      } 
+        vendorData: form, // Pass form data if needed
+      },
     });
   };
 
@@ -50,15 +47,12 @@ export default function VendorRegister() {
 
   return (
     <div className="vendor-register-page">
-
       {/* Progress Bar */}
-      <RegisterStepProgress currentStepIndex={currentStepIndex} />  
+      <RegisterStepProgress currentStepIndex={currentStepIndex} />
 
       {/* Main white box container */}
       <div className="vendor-register-container">
-
         <div className="vendor-register-content">
-
           {/* Left: Registration Form */}
           <form className="vendor-register-form" onSubmit={handleSubmit}>
             <h2>Create Vendor Account</h2>
