@@ -6,7 +6,6 @@ import "./DashboardMain.css";
 function DashBoardMain() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Lock sidebar open on desktop
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 768) {
@@ -22,13 +21,16 @@ function DashBoardMain() {
 
   return (
     <div className="dashboard-container">
+      {/* Hamburger / Cross button for mobile */}
       <button
-        className="hamburger"
+        className={`hamburger ${isSidebarOpen?"open":""}`}
         onClick={() => setIsSidebarOpen((prev) => !prev)}
       >
-        ☰
+        {isSidebarOpen ? "✕" : "☰"}
       </button>
+
       <DashBoardSideBar isOpen={isSidebarOpen} />
+
       <div className="main-content">
         <DashboardServices />
       </div>
