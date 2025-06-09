@@ -1,13 +1,17 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; 
 import RegisterStepProgress from "./RegisterStepProgress"; 
 import "./VendorRegistration.css";
 
 export default function VendorRegister() {
+   const navigate = useNavigate();
+   
   const [form, setForm] = useState({
     fullName: "",
     email: "",
     phone: "",
     password: "",
+    confirmPassword: "", 
     profilePic: null,
   });
 
@@ -27,7 +31,19 @@ export default function VendorRegister() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form Data:", form);
+     /*  if (form.password !== form.confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    } */
+     console.log("Form Data:", form);
+    
+    // Navigate to VendorService page
+    navigate('/category/VendorService', { 
+      state: { 
+        currentStep: 1, // Move to next step
+        vendorData: form // Pass form data if needed
+      } 
+    });
   };
 
   const currentStepIndex = location.state?.currentStep || 0; // Default to step 1
@@ -50,7 +66,7 @@ export default function VendorRegister() {
 
             <div className="social-signup-row">
               <div className="google-signup-btn">
-                <img src="/google.png" alt="Google Icon" />
+                <img src="/GoogleImg.png" alt="Google Icon" />
                 <span>Sign up with Google</span>
               </div>
 
