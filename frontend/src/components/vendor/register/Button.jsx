@@ -8,7 +8,6 @@ export default function PaymentFormButtons({ onBack, onNext }) {
         <img src="/back.png" alt="Back" className="payment-back-arrow-icon" />
         Back
       </button>
-
       <button type="button" className="next-btn" onClick={onNext}>
         Next
         <img src="/next.png" alt="Next" className="payment-next-arrow-icon" />
