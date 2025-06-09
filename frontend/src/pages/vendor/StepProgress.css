@@ -1,0 +1,205 @@
+.progress-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  margin: 2rem auto;
+  max-width: 100%;
+  box-sizing: border-box;
+  position:relative;
+  gap: 20px;
+  max-width: 900px;
+}
+
+/* Each Step */
+.step-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  text-align: center;
+}
+
+/* Title Text */
+.step-label {
+  margin-bottom: 0.4rem;
+  font-size: 1vw;
+  font-weight: bold;
+}
+
+/* Step Circle */
+.step-circle {
+  width: 4vw;
+  height: 4vw;
+  min-width: 30px;
+  min-height: 30px;
+  border-radius: 50%;
+  border: 0.2vw solid #2e1065;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.step-circle img {
+  width: 2vw;
+  height: 2vw;
+  min-width: 15px;
+  min-height: 15px;
+}
+
+/* Active Step */
+.step-circle.active {
+  background-color: #d9f99d;
+}
+
+/* Step Sub Label */
+.step-sub-label {
+  margin-top: 0.4rem;
+  font-size: 0.8vw;
+  background: #f1f1f1;
+  padding: 0.3rem 0.6rem;
+  border-radius: 8px;
+}
+
+/* Line Between Steps */
+.line {
+  position: absolute;
+  top: 55px;
+  right: -50%;
+  left:50%;
+  transform: translateX(-5%);
+  height: 0.2vw;
+  width: 250px;
+  background-color: #2e1065;
+  z-index: 0;
+  transition: width 0.3s ease;
+}
+
+
+/* Scale Down for Small Screens */
+@media (max-width: 768px) {
+  .progress-container {
+    gap: 6px;
+    padding: 0.8rem;
+  }
+
+  .step-label,
+  .step-sub-label {
+    font-size: 10px;
+  }
+
+  .step-circle {
+    width: 36px;
+    height: 36px;
+    border-width: 3px;
+  }
+
+  .step-circle img {
+    width: 18px;
+    height: 18px;
+  }
+
+ .line {
+    top: 35px;
+    right: -50%;
+    left: 50%;
+    transform: translateX(-5%);
+    width: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .step-wrapper {
+    flex: 1;
+  }
+
+  .step-label {
+    font-size: 9px;
+  }
+
+  .step-sub-label {
+    font-size: 8px;
+    padding: 2px 4px;
+  }
+
+  .step-circle {
+    width: 30px;
+    height: 30px;
+    border-width: 2px;
+  }
+
+  .step-circle img {
+    width: 14px;
+    height: 14px;
+  }
+
+  .line {
+    top: 33px;
+    right: -50%;
+    left: 50%;
+    transform: translateX(-5%);
+    width: 100px;
+  }
+}
+/* Z Folds */
+@media (max-width: 400px) and (max-height: 900px) {
+  .step-circle {
+    width: 28px;
+    height: 28px;
+  }
+
+  .step-circle img {
+    width: 14px;
+    height: 14px;
+  }
+
+  .line {
+    top: 32px;
+    right: -50%;
+    left: 50%;
+    transform: translateX(-5%);
+    width: 100px;
+  }
+
+  .step-label {
+    font-size: 8.5px;
+  
+  }
+
+  .step-sub-label {
+    font-size: 7.5px;
+    padding: 2px 5px;
+  }
+}
+
+/* iPad Air & iPad Pro (landscape & portrait) */
+@media (min-device-width: 820px) and (max-device-width: 1024px) {
+  .line {
+    top:33px;
+    width: 230px;
+  }
+}
+
+/* Surface Pro 7 */
+@media (min-width: 912px) and (max-width: 1025px) and (min-height: 1368px) {
+  .line {
+    width: 220px;
+  }
+}
+
+/* Surface Duo */
+@media (max-width: 540px) and (max-height: 720px) {
+  .line {
+    width: 120px;
+  }
+}
+
+/* Asus Zenbook Fold (approx.) */
+@media (min-width: 1280px) and (max-width: 1920px) and (orientation: landscape) {
+  .line {
+    width: 230px;
+  }
+}

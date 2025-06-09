@@ -1,0 +1,345 @@
+.vendor-register-page {
+  background: linear-gradient(to bottom, #a9c5e7 0%, #5584d0 50%, #3b6087 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 130px;
+  padding-bottom: 40px;
+}
+
+.vendor-register-container {
+  background-color: rgb(255, 255, 255);
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1000px;
+}
+
+.vendor-register-content {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+}
+/* ===== Form Styling ===== */
+.vendor-register-form {
+  display: flex;
+  flex-direction: column;
+  color: #333;
+  flex:1;
+  width: 100%;
+  max-width: 500px;
+  margin: auto;
+}
+
+.vendor-register-form h2 {
+  color: #5BA8A0;
+  margin-bottom: 5px;
+  text-align: center;
+  font-size: 22px;
+  margin-left: 65px;
+}
+
+.vendor-register-form p {
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #555;
+  text-align: center;
+  margin-left: 65px;
+}
+
+.vendor-register-form label {
+  display: block;
+  margin: 8px;
+  font-weight: 500;
+  margin-left: 70px;
+  
+}
+
+/* ===== Animation ===== */
+.vendor-animation-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.vendor-animation-container video {
+  width: 100%;
+  max-width: 500px;
+  height: 230px;
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  margin-top: 70px;
+}
+
+/* Red asterisk */
+.required-star {
+  color: red;
+  margin-left: 2px;
+}
+
+.vendor-register-form input[type="text"],
+.vendor-register-form input[type="email"],
+.vendor-register-form input[type="tel"],
+.vendor-register-form input[type="password"],
+.vendor-register-form input[type="file"] {
+  width: 400px;
+  padding: 10px;
+  border: 1px solid #5BA8A0;
+  border-radius: 6px;
+  font-size: 12px;
+  background-color: white;
+  box-sizing: border-box;
+  margin-top: 5px;
+  margin-left: 70px;
+}
+
+/* Password field with eye icon */
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width : 470px;
+  margin-left: 2px;
+}
+
+.password-input-wrapper input {
+  flex: 1;
+  padding-right: 40px;
+}
+
+.password-input-wrapper img {
+  position: absolute;
+  right: 10px;
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.password-input-wrapper img:hover {
+  opacity: 1;
+}
+
+/* ===== Button Styling ===== */
+.vendor-register-form button {
+  background-color: #3b6087;
+  color: white;
+  border: none;
+  padding: 12px;
+  margin-top: 20px;
+  width: 200px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  margin-left: 170px;
+}
+
+.vendor-register-form button:hover {
+  background-color: #9DC183;
+}
+
+/* ===== Google Button Styling ===== */
+.social-signup-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.google-signup-btn {
+  margin-left: 170px; 
+}
+
+.google-signup-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ccc;
+  padding: 8px 8px;                
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  margin-top: 20px;  
+  max-width: 180px;              
+  font-size: 13px;  
+             
+}
+
+/* Smaller icons */
+.google-signup-btn img,
+.apple-signup-btn img {
+  height: 16px;            
+  margin-right: 6px;
+}
+/* Responsive for 1024px */
+@media screen and (max-width: 1024px) {
+  .vendor-register-container {
+    max-width: 700px;
+    padding: 30px;
+
+  }
+
+  .vendor-register-content {
+    flex-direction: row; 
+    gap: 30px;
+  }
+
+  .vendor-register-form {
+    max-width: 350px;
+    width: 100%;
+  }
+
+  .vendor-register-form input[type="text"],
+  .vendor-register-form input[type="email"],
+  .vendor-register-form input[type="tel"],
+  .vendor-register-form input[type="password"],
+  .vendor-register-form input[type="file"] {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .vendor-register-form label{
+    margin-left: 0;
+    text-align: left;
+  }
+  .vendor-register-form h2,
+  .vendor-register-form p {
+    margin-left: 20px;
+    text-align: center;
+    font-size: 16px;
+  }
+
+  .password-input-wrapper {
+    width: 100%;
+    margin-left: 0;
+  }
+  .google-signup-btn {
+    margin-left: 60px;
+    width: 180px;
+  }
+   .vendor-register-form button{
+    margin-left: 60px;
+    width: 180px;
+   }
+}
+
+/* Responsive for 768px */
+@media screen and (max-width: 768px) {
+  .vendor-register-container {
+    max-width: 600px;
+    padding: 25px;
+  }
+
+  .vendor-register-content {
+    flex-direction: row;
+    gap: 25px;
+  }
+
+  .vendor-register-form {
+    max-width: 300px;
+    width: 100%;
+  }
+
+  .vendor-register-form input[type="text"],
+  .vendor-register-form input[type="email"],
+  .vendor-register-form input[type="tel"],
+  .vendor-register-form input[type="password"],
+  .vendor-register-form input[type="file"] {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .vendor-register-form label {
+    margin-left: 0;
+    text-align: left;
+  }
+   .vendor-register-form h2,
+  .vendor-register-form p{
+    margin-left: 20px;
+    text-align: center;
+    font-size: 13px;
+  }
+
+  .password-input-wrapper {
+    width: 100%;
+    margin-left: 0;
+  }
+
+ 
+  .google-signup-btn {
+    margin-left: 40px;
+    width: 160px;
+  }
+   .vendor-register-form button{
+    margin-left: 50px;
+    width: 170px;
+   }
+}
+
+@media screen and (max-width: 480px) {
+  .vendor-register-container {
+    max-width: 100%;
+    padding: 30px;
+   
+  }
+
+  .vendor-register-content {
+    flex-direction: column; /* stack vertically */
+    gap: 20px;
+  }
+
+  .vendor-animation-container {
+    display: none !important;
+    width: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .vendor-register-form {
+    max-width: 100%;
+    width: 100%;
+    
+  }
+
+  .vendor-register-form input[type="text"],
+  .vendor-register-form input[type="email"],
+  .vendor-register-form input[type="tel"],
+  .vendor-register-form input[type="password"],
+  .vendor-register-form input[type="file"] {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .vendor-register-form label
+  {
+    margin-left: 0;
+    text-align: left;
+  }
+  .vendor-register-form h2,
+  .vendor-register-form p {
+    margin-left: 0;
+    text-align: center;
+  }
+
+  .password-input-wrapper {
+    width: 100%;
+    margin-left: 0;
+  }
+  .google-signup-btn {
+    margin-left: 50px;
+    width: 100%;
+  }
+  .vendor-register-form button{
+    margin-left: 80px;
+    width: 160px;
+  }
+}
