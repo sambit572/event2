@@ -1,7 +1,7 @@
 import { BsCurrencyRupee } from "react-icons/bs";
 import { IoIosStar } from "react-icons/io";
 import { FaHeart } from "react-icons/fa6"; // FontAwesome shopping cart
-import "../../components/customer/PeopleAlsoBooked.css"; // Extracted CSS for maintainability
+import "./PeopleAlsoBooked.css"; // Extracted CSS for maintainability
 import { useState } from "react";
 
 const SimilarProductCard = ({ product }) => {

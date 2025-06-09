@@ -1,6 +1,6 @@
-import "../DJService/DescriptionSection.css"; // Ensure this points to your CSS file
+import "./ServiceDescription.css"; // Ensure this points to your CSS file
 
-const DescriptionSection = () => {
+const ServiceDescription = () => {
   return (
     <div className="description-section">
       <div className="brand">
@@ -14,4 +14,4 @@ const DescriptionSection = () => {
   );
 };
 
-export default DescriptionSection;
+export default ServiceDescription;

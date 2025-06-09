@@ -1,6 +1,6 @@
-import "../DJService/DJDetailsSection.css"; // Ensure CSS is imported
+import "./ServiceDetailsSection.css"; // Ensure CSS is imported
 
-const DJDetailsSection = () => {
+const ServiceDetailsSection = () => {
   return (
     <div className="dj-details">
       <h2>DJ Details</h2>
@@ -20,4 +20,4 @@ const DJDetailsSection = () => {
   );
 };
 
-export default DJDetailsSection;
+export default ServiceDetailsSection;

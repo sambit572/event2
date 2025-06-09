@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
 import "./ReviewSlider.css";
-import user1 from "../../assets/reviews/user1.jpg";
-import user2 from "../../assets/reviews/user2.jpg";
-import user3 from "../../assets/reviews/user3.jpg";
+import user1 from "../../../assets/reviews/user1.jpg";
+import user2 from "../../../assets/reviews/user2.jpg";
+import user3 from "../../../assets/reviews/user3.jpg";
 import { useRef } from "react";
 import { useEffect } from "react";
 

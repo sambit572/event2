@@ -1,15 +1,13 @@
-import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { FiAlertCircle } from 'react-icons/fi';
-import Footer from './Footer';
-import Nav from './Nav';
-import StepProgress from './StepProgress';
-import LegalButton from './LegalButton';
-import './VendorLegalConsent.css';
-import './Nav.css';
-import './Footer.css';
-import './StepProgress.css';
-import './LegalButton.css';
+import React from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { FiAlertCircle } from "react-icons/fi";
+
+import StepProgress from "./StepProgress";
+import LegalButton from "./LegalButton";
+import "./VendorLegalConsent.css";
+
+import "./StepProgress.css";
+import "./LegalButton.css";
 
 export default function VendorLegalConsent() {
   const [signatureFile, setSignatureFile] = React.useState(null);
@@ -21,18 +19,17 @@ export default function VendorLegalConsent() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate('/vendor/thank-you');
+    navigate("/vendor/thank-you");
   };
 
   return (
     <div className="legal-consent-page">
-      <Nav />
-
       <StepProgress currentStepIndex={currentStepIndex} />
 
       <div className="checkbox-section">
         <p className="consent-heading">
-          Before submitting your registration, please review and agree to the following terms and authorizations.
+          Before submitting your registration, please review and agree to the
+          following terms and authorizations.
         </p>
 
         <form className="checkbox-form" onSubmit={handleSubmit}>
@@ -55,11 +52,13 @@ export default function VendorLegalConsent() {
           </label>
 
           <div className="signature-upload">
-            <label className="signature-label">Signature (digital) or Name as e-sign</label>
+            <label className="signature-label">
+              Signature (digital) or Name as e-sign
+            </label>
             <div
               className="upload-box"
               onClick={() => fileInputRef.current.click()}
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: "pointer" }}
             >
               {signatureFile ? (
                 <img
@@ -70,13 +69,17 @@ export default function VendorLegalConsent() {
               ) : (
                 <>
                   <span>Upload</span>
-                  <img src="/Upload.png" alt="Upload Icon" className="upload-icon" />
+                  <img
+                    src="/Upload.png"
+                    alt="Upload Icon"
+                    className="upload-icon"
+                  />
                 </>
               )}
               <input
                 type="file"
                 ref={fileInputRef}
-                style={{ display: 'none' }}
+                style={{ display: "none" }}
                 accept="image/*"
                 onChange={(e) => setSignatureFile(e.target.files[0])}
               />
@@ -86,8 +89,6 @@ export default function VendorLegalConsent() {
           <LegalButton />
         </form>
       </div>
-
-      <Footer />
     </div>
   );
 }

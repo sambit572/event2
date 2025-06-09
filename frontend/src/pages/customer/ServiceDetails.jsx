@@ -1,17 +1,18 @@
 import React, { useState } from "react";
-import "../../pages/customer/Service.css";
+import "./ServiceDetails.css";
 import djimg1 from "../../assets/service/sub-img1.avif";
 import djimg2 from "../../assets/service/sub-img2.webp";
 import djimg3 from "../../assets/service/sub-img3.jpg";
 import djimg4 from "../../assets/service/sub-img4.jpg";
 import djimg8 from "../../assets/service/sub-img4.jpg";
 import { FaHeart } from "react-icons/fa6";
-import { similarServiceData } from "../../components/customer/SimilarServiceData.jsx";
-import ReviewList from "../../components/customer/ReviewList";
-import RatingDetails from "../../components/customer/RatingDetails.jsx";
-import SimilarProductCard from "../../components/customer/PeopleAlsoBooked";
-import DJServiceCard from "../../components/customer/DJService/DJServiceCard.jsx";
+import { similarServiceData } from "../../components/customer/ServiceDetails/SimilarServiceData.jsx";
+
+import RatingDetails from "../../components/customer/ServiceDetails/RatingDetails.jsx";
+import SimilarProductCard from "../../components/customer/ServiceDetails/PeopleAlsoBooked.jsx";
+import DJServiceCard from "../../components/customer/ServiceDetails/ServiceCard.jsx";
 // import RatingBar from "../../components/customer/RatingBar.jsx";
+import ReviewList from "./../../components/customer/ServiceDetails/ReviewList";
 
 const Service = () => {
   const mediaList = [

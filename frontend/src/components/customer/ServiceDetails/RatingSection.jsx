@@ -1,5 +1,5 @@
 import { IoIosStar } from "react-icons/io";
-import "../DJService/RatingSection.css"; // Separate CSS for better maintainability
+import "./RatingSection.css"; // Separate CSS for better maintainability
 
 const RatingSection = () => {
   return (

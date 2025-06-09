@@ -1,9 +1,9 @@
 import React from "react";
-import ReviewCard from "../../components/customer/ReviewCard.jsx";
-import similarimg2 from "../../assets/service/similar-dj-img2.jfif";
-import similarimg3 from "../../assets/service/similar-dj-img3.jpg";
-import similarimg4 from "../../assets/service/similar-dj-img4.jpg";
-import similarimg5 from "../../assets/service/similar-dj-img5.jpg";
+import similarimg2 from "../../../assets/service/similar-dj-img2.jfif";
+import similarimg3 from "../../../assets/service/similar-dj-img3.jpg";
+import similarimg4 from "../../../assets/service/similar-dj-img4.jpg";
+import similarimg5 from "../../../assets/service/similar-dj-img5.jpg";
+import ReviewCard from "./ReviewCard";
 // Sample review data
 const reviews = [
   {

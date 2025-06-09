@@ -16,10 +16,10 @@ import image12 from "../../assets/home/decoration.jpg";
 import image13 from "../../assets/home/horsecart.jpg";
 import image14 from "../../assets/home/cracker.jpg";
 import image15 from "../../assets/home/cardsinvite.jpg";
-import ImageSlider from "../../components/customer/ImageSlider";
-import CategoryCard from "../../components/customer/CategoryCard";
-import ReviewSlider from "../../components/customer/ReviewSlider";
-import FaqSection from "../../components/customer/FaqSection";
+import CategoryCard from "../../components/customer/Home/CategoryCard";
+import ReviewSlider from "./../../components/customer/Home/ReviewSlider";
+import FaqSection from "./../../components/customer/Home/FaqSection";
+import ImageSlider from "./../../components/customer/Home/ImageSlider";
 
 const images = [
   image1,

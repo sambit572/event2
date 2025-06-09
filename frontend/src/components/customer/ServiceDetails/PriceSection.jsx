@@ -1,5 +1,5 @@
 import { BsCurrencyRupee } from "react-icons/bs";
-import "../DJService/PriceSection.css"; // Ensure your CSS file is imported
+import "./PriceSection.css"; // Ensure your CSS file is imported
 
 const PriceSection = () => {
   return (

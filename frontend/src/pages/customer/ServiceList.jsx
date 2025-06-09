@@ -1,9 +1,11 @@
 import React from "react";
-import Filter from "../../components/customer/serviceList/Filter";
-import ServiceCard from "../../components/customer/serviceList/ServiceCard";
+
+// import ServiceCard from "../../components/customer/serviceList/ServiceCard.js";
 import serviceList from "../../components/customer/serviceList/Data.jsx";
-import "../../pages/customer/ServiceList.css";
-import FilterSection from "./../../components/customer/servicelist/FilterSection";
+import "./ServiceList.css";
+// import FilterSection from "../../components/customer/serviceList/FilterSection.js";
+import Filter from "./../../components/customer/servicelist/Filter";
+import ServiceCard from "./../../components/customer/servicelist/ServiceCard";
 
 const ServiceList = () => {
   return (

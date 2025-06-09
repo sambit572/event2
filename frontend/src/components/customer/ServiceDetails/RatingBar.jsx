@@ -19,5 +19,4 @@ const RatingBar = ({ label, count, max, color }) => {
     </div>
   );
 };
-export default RatingBar
-
+export default RatingBar;
