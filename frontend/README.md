@@ -1,3 +1,5 @@
+<<<<<<< HEAD
+
 # EventsBridge Frontend
 
 This is the **React frontend** for the EventsBridge platform. The project uses modern tools and libraries like `react-router-dom` for routing and `react-slick` for carousels.
@@ -29,3 +31,6 @@ git add .
 git commit -m "Describe your feature"
 git push origin your-feature-name
 ```
+
+how to take pull from origin?
+-> In the terminal you will write git pull origin main

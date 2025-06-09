@@ -1,15 +1,41 @@
-.category_box {
-  display: grid;
-  grid-template-columns: 1.1fr 4fr;
-  height: 100vh;
-  padding: 10px;
-  background-color: #f2f0f4;
+.serviceList {
+  display: flex;
+
+  width: 100%;
+}
+.singleServiceCard {
+  display: flex;
+  flex-direction: column;
+
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-right: 10px;
+}
+.serviceCardDetails {
+  /* display: flex; */
+  width: 100%;
+  flex-direction: column;
+  margin: 10px;
+  background-color: rgb(255, 255, 255);
+  box-sizing: border-box;
 }
 
-.category {
-  padding: 5px;
-  margin-left: 5px;
-  background-color: #fff;
+/* For screen widths between 1012px and 1350px */
+@media screen and (min-width: 1024px) and (max-width: 1350px) {
+  .serviceCardDetails {
+    width: 80%;
+  }
+  .singleServiceCard {
+    width: 100%;
+  }
+}
 
-  text-align: center;
+/* Responsive styling for tablet (≤1024px) */
+@media (max-width: 1024px) {
+  .serviceCardDetails {
+    margin-top: 50px;
+  }
 }

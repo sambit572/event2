@@ -23,8 +23,8 @@ select {
 }
 
 .filter_price > input {
-  width: 90%;
-  /* margin: 10px 0 10px 8px; */
+  width: 80%;
+  margin: 10px 0 10px 8px;
 }
 .filter_price {
   margin: 20px 0 20px 0;
@@ -44,9 +44,11 @@ select {
   font-weight: 500;
 }
 .filter_button {
-  margin: 20px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
+  margin-top: 30px;
+  padding: 4px 8px;
+  margin-bottom: 10px;
 }
 .filter_button > button {
   font-weight: 600;
@@ -54,6 +56,11 @@ select {
   padding: 5px 20px 6px 20px;
 
   color: #fff;
+}
+.filter_button > button:hover {
+  background-color: #ffffff !important;
+  cursor: pointer;
+  color: #000000;
 }
 .filter_button > button:nth-child(1) {
   background-color: rgb(130, 215, 3);

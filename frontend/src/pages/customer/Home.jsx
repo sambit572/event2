@@ -19,6 +19,7 @@ import image15 from "../../assets/home/cardsinvite.jpg";
 import ImageSlider from "../../components/customer/ImageSlider";
 import CategoryCard from "../../components/customer/CategoryCard";
 import ReviewSlider from "../../components/customer/ReviewSlider";
+import FaqSection from "../../components/customer/FaqSection";
 
 const images = [
   image1,
@@ -63,7 +64,7 @@ const Home = () => {
       {!showAll && categories.length > 6 && (
         <div className="browse_all">
           <button className="browse-all-btn" onClick={() => setShowAll(true)}>
-            Browse All
+            Browse All &#x2192;
           </button>
         </div>
       )}
@@ -76,6 +77,7 @@ const Home = () => {
       </div>
 
       <ReviewSlider />
+      <FaqSection />
     </div>
   );
 };

@@ -12,10 +12,10 @@ import LoginRegister from "./pages/customer/LoginRegister";
 
 const App = () => {
   return (
-    <>
+    <div className="app">
       <Navbar />
 
-      <main>
+      <main className="main-content">
         <Routes>
           <Route path="/" element={<Home />}></Route>
           <Route path="/category" element={<ServiceList />}></Route>
@@ -24,7 +24,7 @@ const App = () => {
         </Routes>
       </main>
       <Footer />
-    </>
+    </div>
   );
 };
 

@@ -6,9 +6,10 @@
 }
 
 .container {
-  margin-top: 50px;
+  /* background-color: #0077b5; */
+  /* margin-top: 50px; */
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   flex-wrap: wrap;
 }
 .container > a {
@@ -44,14 +45,11 @@
 
 .store-icons img:hover {
   cursor: pointer;
-
-  /* background: transparent; */
 }
 
 .followus {
-  /* background-color: aqua; */
-  font-size: 50px;
-  font-weight: 500;
+  font-size: 45px;
+
   color: rgb(255, 255, 255);
   margin: 0px 15px 0 0;
 }
@@ -89,6 +87,7 @@
   font-weight: 500;
   font-size: 15px;
   text-decoration: none;
+  margin: 10px;
 }
 
 .list li {
@@ -104,4 +103,25 @@
 .copy {
   margin-top: 15px;
   font-size: 14px;
+}
+@media (max-width: 400px) {
+  .section {
+    width: 100%;
+  }
+  .container {
+    align-items: start;
+    justify-content: start;
+  }
+  h3 {
+    text-align: start;
+  }
+  p {
+    text-align: start;
+  }
+  .icons {
+    margin-right: 10px;
+  }
+  .followus {
+    font-size: 40px;
+  }
 }

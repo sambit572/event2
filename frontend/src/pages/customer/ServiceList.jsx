@@ -1,18 +1,21 @@
 import React from "react";
-
-import "./ServiceList.css";
-import person from "../../assets/category/person.png";
-import Services from "./../../components/customer/Services";
+import Filter from "../../components/customer/serviceList/Filter";
+import ServiceCard from "../../components/customer/serviceList/ServiceCard";
+import serviceList from "../../components/customer/serviceList/Data.jsx";
+import "../../pages/customer/ServiceList.css";
 import FilterSection from "./../../components/customer/servicelist/FilterSection";
+
 const ServiceList = () => {
   return (
-    <div className="category_box">
-      <FilterSection />
-      <div className="category">
-        <h1>Services</h1>
-        <Services person={person} />
-        <Services person={person} />
-        <Services person={person} />
+    <div className="serviceList">
+      <Filter />
+
+      <div className="serviceCardDetails">
+        {serviceList.map((service, idx) => (
+          <div className="singleServiceCard" key={idx}>
+            <ServiceCard service={service} />
+          </div>
+        ))}
       </div>
     </div>
   );

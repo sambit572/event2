@@ -16,8 +16,19 @@ import { FcAbout } from "react-icons/fc";
 import { MdMiscellaneousServices, MdReviews } from "react-icons/md";
 import { IoSettingsSharp } from "react-icons/io5";
 import { SiBrandfolder } from "react-icons/si";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleHomeClick = () => {
+    if (location.pathname === "/") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      navigate("/");
+    }
+  };
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showMyProfileSub, setShowMyProfileSub] = useState(false);
   const [showEllipsisDropdown, setShowEllipsisDropdown] = useState(false);
@@ -53,7 +64,7 @@ const Navbar = () => {
     <div className="navbar">
       {/* Logo */}
       <div className="logo">
-        <span>EVENTSBRIDGE</span>
+        <span onClick={handleHomeClick}>EVENTSBRIDGE</span>
       </div>
 
       {/* Search Bar */}
@@ -69,7 +80,7 @@ const Navbar = () => {
           <div className="profile-btn">
             <span onClick={handleOpenLoginModal} className="align_center login">
               <FaUser className="icon" />
-              <h4>Login</h4>
+              <span>Login</span>
             </span>{" "}
             {/* Opens only login modal */}
             {showLoginModal && (

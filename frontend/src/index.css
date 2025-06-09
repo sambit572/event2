@@ -3,9 +3,18 @@
 * {
   margin: 0;
   padding: 0;
+
   box-sizing: border-box;
   font-family: "Montserrat", sans-serif;
 }
+body,
+html {
+  margin: 0;
+  padding: 0;
+  /* Prevent horizontal scroll */
+  box-sizing: border-box;
+}
+
 .align_center {
   display: flex;
   align-items: center;

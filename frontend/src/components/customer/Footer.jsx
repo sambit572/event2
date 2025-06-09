@@ -25,7 +25,7 @@ const Footer = () => {
 
       <div className="align_center mid_container">
         <div className="section">
-          <h4>Experience Eventsbridge App On Mobile</h4>
+          <h3>Experience Eventsbridge App On Mobile</h3>
           <div className="store-icons">
             <img src={google} alt="playstore" />
             <img src={appstore} alt="appstore" />
@@ -64,19 +64,19 @@ const Footer = () => {
           <ul className="list">
             <li>
               <a href="/about" className="align_center">
-                <FaEnvelope />
+                <FaEnvelope className="icons" />
                 email@gmail.com
               </a>
             </li>
             <li>
               <a href="/events" className="align_center">
-                <FaPhoneVolume />
+                <FaPhoneVolume className="icons" />
                 123-456-7890
               </a>
             </li>
             <li>
               <a href="/pricing" className="align_center">
-                <FaLocationDot />
+                <FaLocationDot className="icons" />
                 Bhunneshwar Odisha India
               </a>
             </li>

@@ -18,16 +18,15 @@
 
 /* Logo */
 .logo {
+  cursor: pointer;
   text-decoration: none;
   font-size: 22px;
   font-weight: 700;
 }
 .login {
-  display: flex;
-  align-items: center;
   color: #3b0340e1;
-
   font-size: 19px;
+  font-weight: bold;
 }
 .login:hover .icon {
   /* border-radius: 50%;
@@ -84,6 +83,7 @@
 .nav-icons {
   display: flex;
   align-items: center;
+
   gap: 21px;
   height: 36px;
 }
@@ -110,6 +110,7 @@
 .profile-btn {
   display: flex;
   align-items: center;
+
   padding: 6px;
   color: #3b0340e1;
   border-radius: 6px;
@@ -120,14 +121,15 @@
   font-size: 16px;
   height: 36px;
 }
+
 .profile-btn:hover {
   color: #f5efff;
   font-weight: bold;
   background: #3b0340e1;
 }
 .icon {
-  margin-right: 5px;
   font-size: 15px;
+  margin-right: 5px;
   color: #3b0340e1;
 }
 .dropdown-menu {
@@ -241,7 +243,7 @@
 @media (max-width: 768px) {
   .navbar {
     height: 80px;
-    width: auto;
+    width: 100%;
   }
   .nav-item a {
     font-size: 12px;
@@ -280,13 +282,29 @@
   }
 }
 
-@media (max-width: 440px) {
+@media (max-width: 680px) {
+  .navbar {
+    display: flex;
+    flex-wrap: wrap;
+    height: 100px;
+  }
+  .search-bar {
+    width: 40%;
+  }
+  .nav-icons {
+    width: 100%;
+    margin-top: 10px;
+    /* background-color: #0056b3; */
+    justify-content: space-between;
+  }
+
   html {
     font-size: 85%;
   }
   .logo img {
     height: 35px;
   }
+
   .dropdown-menu {
     width: calc(100% - 20px);
     left: 10px !important;
@@ -294,5 +312,21 @@
   }
   .ellipsis-menu {
     min-width: 10;
+  }
+}
+@media (max-width: 370px) {
+  .logo {
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .login {
+    font-size: 15px;
+    font-weight: bold;
+  }
+  .nav-item {
+    /* background-color: #0056b3 !important; */
+    font-size: 12px;
+    font-weight: 600;
   }
 }
