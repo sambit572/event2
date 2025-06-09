@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import LoginRegister from "/src/pages/customer/LoginRegister.jsx"; // make sure path is correct
 import "./Navbar.css";
+
 import {
   FaSearch,
   FaUser,
@@ -17,6 +17,7 @@ import { MdMiscellaneousServices, MdReviews } from "react-icons/md";
 import { IoSettingsSharp } from "react-icons/io5";
 import { SiBrandfolder } from "react-icons/si";
 import { useLocation, useNavigate } from "react-router-dom";
+import LoginRegister from "./../../pages/common/LoginRegister";
 
 const Navbar = () => {
   const location = useLocation();
@@ -29,6 +30,7 @@ const Navbar = () => {
       navigate("/");
     }
   };
+
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showMyProfileSub, setShowMyProfileSub] = useState(false);
   const [showEllipsisDropdown, setShowEllipsisDropdown] = useState(false);

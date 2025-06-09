@@ -11,12 +11,15 @@ import VendorPayment from "./pages/vendor/VendorPayment";
 import VendorThankYou from "./pages/vendor/VendorThankYou";
 import VendorRegistration from "./pages/vendor/VendorRegistration";
 
-import Footer from "./components/customer/Footer";
-import LoginRegister from "./pages/customer/LoginRegister";
-import Navbar from "./components/customer/Navbar";
+import Footer from "./components/common/Footer";
+import LoginRegister from "./pages/common/LoginRegister";
+import Navbar from "./components/common/Navbar";
 
 import VendorService from "./pages/vendor/VendorService";
 // import Navbar from "./components/customer/Navbar";
+
+import Chatbot from "./components/common/Chatbot";
+import AboutUs from "./pages/common/AboutUs";
 
 const App = () => {
   /*{ const location = useLocation();
@@ -54,6 +57,7 @@ const App = () => {
 
           <Route path="/category/service" element={<ServiceDetails />} />
           <Route path="/LoginRegister" element={<LoginRegister />}></Route>
+
           {/* Vendor Routes */}
           <Route path="/vendor/register" element={<VendorRegistration />} />
           <Route path="/category/VendorService" element={<VendorService />} />
@@ -63,9 +67,14 @@ const App = () => {
             element={<VendorLegalConsent />}
           />
           <Route path="/vendor/thank-you" element={<VendorThankYou />} />
+          <Route path="/about_us" element={<AboutUs />} />
         </Routes>
       </main>
       {/* {shouldShowFooter && <Footer />} */}
+
+      <Chatbot />
+
+      <Footer />
     </>
   );
 };

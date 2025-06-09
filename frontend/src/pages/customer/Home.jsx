@@ -17,9 +17,9 @@ import image13 from "../../assets/home/horsecart.jpg";
 import image14 from "../../assets/home/cracker.jpg";
 import image15 from "../../assets/home/cardsinvite.jpg";
 import CategoryCard from "../../components/customer/Home/CategoryCard";
-import ReviewSlider from "./../../components/customer/Home/ReviewSlider";
-import FaqSection from "./../../components/customer/Home/FaqSection";
-import ImageSlider from "./../../components/customer/Home/ImageSlider";
+import ReviewSlider from "../../components/customer/Home/ReviewSlider";
+import FaqSection from "../../components/customer/Home/FaqSection";
+import ImageSlider from "../../components/customer/Home/ImageSlider";
 
 const images = [
   image1,
