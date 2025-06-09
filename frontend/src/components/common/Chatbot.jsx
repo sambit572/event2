@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import "./Chatbot.css";
-import chatIcon from '../../assets/home/logo.png';
+import chatIcon from "../../assets/home/logo.png";
 
 const chatbotFAQs = [
   "What is EventsBridge?",
   "How can I register for an event?",
   "Who can host events on EventsBridge?",
-  "Is EventsBridge free to use?"
+  "Is EventsBridge free to use?",
 ];
 
 const faqPromptContext = `
@@ -55,9 +55,7 @@ const Chatbot = () => {
           body: JSON.stringify({
             contents: [
               {
-                parts: [
-                  { text: `${faqPromptContext}\nUser: ${userMessage}` },
-                ],
+                parts: [{ text: `${faqPromptContext}\nUser: ${userMessage}` }],
               },
             ],
           }),
@@ -90,9 +88,7 @@ const Chatbot = () => {
 
   return (
     <div className="chatbot-container">
-      {!isOpen && showTooltip && (
-        <div className="chat-tooltip">Ask me!</div>
-      )}
+      {!isOpen && showTooltip && <div className="chat-tooltip">Ask me!</div>}
 
       <img
         src={chatIcon}
@@ -119,7 +115,9 @@ const Chatbot = () => {
           <div className="chat-body">
             {messages.length === 0 && (
               <div className="chat-message bot">
-                <p><strong>Try asking:</strong></p>
+                <p>
+                  <strong>Try asking:</strong>
+                </p>
                 <ul>
                   {chatbotFAQs.map((q, idx) => (
                     <li
@@ -128,7 +126,7 @@ const Chatbot = () => {
                       style={{
                         cursor: "pointer",
                         color: "#007bff",
-                        marginBottom: "5px"
+                        marginBottom: "5px",
                       }}
                     >
                       {q}
@@ -155,7 +153,10 @@ const Chatbot = () => {
               placeholder="Ask something..."
               disabled={loading}
             />
-            <button onClick={() => handleSend()} disabled={loading || !input.trim()}>
+            <button
+              onClick={() => handleSend()}
+              disabled={loading || !input.trim()}
+            >
               Send
             </button>
           </div>
