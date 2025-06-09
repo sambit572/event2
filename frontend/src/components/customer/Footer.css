@@ -1,0 +1,107 @@
+.footer {
+  background-color: #222;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+}
+
+.container {
+  margin-top: 50px;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+.container > a {
+  background-color: gray;
+}
+
+.mid_container {
+  /* background-color: aqua; */
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.section {
+  margin: 20px;
+}
+/* .store-icons img:nth-child(1) {
+
+
+} */
+
+.store-icons img:nth-child(2) {
+  margin-top: 4px;
+  height: 54px;
+  width: 250px;
+}
+.store-icons img {
+  width: 200px;
+  height: 100px;
+  object-fit: contain;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.store-icons img:hover {
+  cursor: pointer;
+
+  /* background: transparent; */
+}
+
+.followus {
+  /* background-color: aqua; */
+  font-size: 50px;
+  font-weight: 500;
+  color: rgb(255, 255, 255);
+  margin: 0px 15px 0 0;
+}
+.followus:hover:nth-child(1) {
+  color: #1877f2;
+} /* Facebook */
+.followus:hover:nth-child(2) {
+  color: #1da1f2;
+} /* Twitter */
+.followus:hover:nth-child(3) {
+  color: #e4405f;
+} /* Instagram */
+.followus:hover:nth-child(4) {
+  color: #0077b5;
+} /* LinkedIn */
+.followus:hover:nth-child(5) {
+  color: #ff9900;
+} /* Voicemail / custom */
+
+.section h4 {
+  margin-bottom: 10px;
+  display: flex;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+}
+
+.list li a {
+  display: flex;
+  color: white;
+  font-weight: 500;
+  font-size: 15px;
+  text-decoration: none;
+}
+
+.list li {
+  background: none;
+  text-decoration: none;
+}
+
+.list li a:hover {
+  text-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  transform: scale(1.05);
+}
+
+.copy {
+  margin-top: 15px;
+  font-size: 14px;
+}
