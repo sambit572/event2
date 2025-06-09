@@ -17,14 +17,40 @@ import VendorService from "./pages/vendor/VendorService";
 import Navbar from "./components/customer/Navbar";
 
 const App = () => {
+
+
+
+  /*{ const location = useLocation();
+
+  // Define routes where you want to hide the navbar
+  const hideNavbarRoutes = [
+    "/vendor/legal-consent",
+    "/vendor/payment-info",
+    "/vendor/thank-you",
+    "/vendor/register"
+  ];
+  const hideFooterRoutes = [
+    "/vendor/legal-consent",
+    "/vendor/payment-info",
+    "/vendor/thank-you",
+    "/vendor/register"
+  ];
+
+  const shouldShowNavbar = !hideNavbarRoutes.includes(location.pathname);
+  const shouldShowFooter = !hideFooterRoutes.includes(location.pathname); }*/
+  
   return (
     <>
-      <Navbar />
+          <Navbar />
+
+      {/* {shouldShowNavbar && <Navbar />} */}
+
       <main>
         <Routes>
           {/* Customer Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/category" element={<ServiceList />} />
+
           <Route path="/category/service" element={<ServiceDetails />} />
           <Route path="/LoginRegister" element={<LoginRegister />}></Route>
           {/* Vendor Routes */}
@@ -41,7 +67,7 @@ const App = () => {
           <Route path="/vendor/thank-you" element={<VendorThankYou />} />
         </Routes>
       </main>
-      <Footer />
+     {shouldShowFooter && <Footer />}
     </>
   );
 };
