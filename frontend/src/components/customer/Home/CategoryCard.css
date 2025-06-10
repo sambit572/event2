@@ -35,7 +35,7 @@
 }
 
 .categoryCard img {
-  height: 75%;
+  height: 85%;
   width: 100%;
   object-fit: cover;
   border-radius: 2px;
@@ -72,7 +72,7 @@
 .categoryCard h3 {
   height: 100%;
   text-decoration: none;
-  text-align: start;
+  text-align: center;
   padding: 5px 0 5px 10px;
   background-color: rgb(218, 217, 217);
 }
