@@ -24,8 +24,12 @@
     .hamburger {
       display: flex;
       left: 0;
+      margin-top: 25px;
     }
   
+    .open{
+        color: whitesmoke;
+    }
     
   }
   

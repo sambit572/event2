@@ -101,6 +101,12 @@
 }
 
 .profile-pic {
+  width: 140px;
+  height: 130px;
+  border-radius: 50%; /* Makes it circular */
+  box-shadow: -5px 5px 4px rgba(0, 0, 0, 0.25); /* Matches SVG's shadow */
+  object-fit: cover; /* Makes sure image covers circle cleanly */
+  background-color: #7B80E2; /* fallback if image doesn't load */
   margin-left: 27px;
 }
 

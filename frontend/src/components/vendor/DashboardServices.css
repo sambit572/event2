@@ -388,12 +388,14 @@
 
 
 @media screen and (max-width: 768px){
-  .tab-buttons{
-     margin-left: 97px;
-     
+  .tab-buttons {
+    margin-left: 53px;
+   
   }
+
+
   .booking-h2{
-    margin-right: 35px;
+    margin-right: -30px;
   }
   .content-area{
     position: fixed;
