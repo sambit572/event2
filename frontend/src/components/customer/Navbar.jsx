@@ -1,15 +1,28 @@
-import React, { useState, useEffect, useRef } from 'react';
-import LoginRegister from '../../pages/customer/LoginRegister.jsx'; // make sure path is correct
-import './Navbar.css';
-import { FaSearch, FaUser, FaChevronDown, FaChevronUp, FaStore, FaEllipsisV, FaHandsHelping, FaHeart, FaSignOutAlt } from "react-icons/fa";
+import React, { useState, useEffect, useRef } from "react";
+import LoginRegister from "../../pages/customer/LoginRegister.jsx";
+import "./Navbar.css";
+import {
+  FaSearch,
+  FaUser,
+  FaChevronDown,
+  FaChevronUp,
+  FaStore,
+  FaEllipsisV,
+  FaHandsHelping,
+  FaHeart,
+  FaSignOutAlt,
+} from "react-icons/fa";
 import { FcAbout } from "react-icons/fc";
 import { MdMiscellaneousServices, MdReviews } from "react-icons/md";
 import { IoSettingsSharp } from "react-icons/io5";
 import { SiBrandfolder } from "react-icons/si";
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 const Navbar = () => {
-  const navigate=useNavigate()
+  const navigate = useNavigate();
+
+  const [userFirstName, setUserFirstName] = useState(null);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showMyProfileSub, setShowMyProfileSub] = useState(false);
   const [showEllipsisDropdown, setShowEllipsisDropdown] = useState(false);
@@ -18,33 +31,34 @@ const Navbar = () => {
   const profileRef = useRef(null);
   const ellipsisRef = useRef(null);
 
+  // Load userFirstName from localStorage
+  
+
   const handleOpenLoginModal = () => {
     setShowLoginModal(true);
-    setShowProfileDropdown(false); // Ensure dropdown stays closed when opening login modal
+    setShowProfileDropdown(false);
   };
 
   const handleToggleProfileDropdown = () => {
-    setShowProfileDropdown(prev => !prev); // Toggle dropdown only when clicking arrow
+    setShowProfileDropdown((prev) => !prev);
   };
 
   const handleLogout = async () => {
     try {
-      const response = await axios.post(
+      await axios.post(
         "http://localhost:8000/user/logout",
         {},
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
-
-      console.log(response.data.message);
-      localStorage.removeItem("currentlyLoggedIn");
-      navigate("/LoginRegister",{replace:true});
+      localStorage.removeItem("userFirstName");
+      setUserFirstName(null);
+      navigate("/LoginRegister", { replace: true });
     } catch (error) {
       console.error("Logout failed", error);
     }
   };
 
+  // Handle outside clicks to close dropdowns
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (profileRef.current && !profileRef.current.contains(event.target)) {
@@ -55,9 +69,23 @@ const Navbar = () => {
         setShowEllipsisDropdown(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    const updateName = () => {
+      const storedName = localStorage.getItem("userFirstName");
+      setUserFirstName(storedName);
+    };
+
+    updateName(); // initial load
+
+    window.addEventListener("userLoggedIn", updateName);
+
+    return () => window.removeEventListener("userLoggedIn", updateName);
+  }, []);
+  
 
   return (
     <div className="navbar">
@@ -72,69 +100,85 @@ const Navbar = () => {
         <input type="text" placeholder="Search for Services and More" />
       </div>
 
-      {/* Nav Items */}
+      {/* Nav Icons */}
       <div className="nav-icons">
         {/* Profile Dropdown */}
         <div className="nav-item profile-dropdown-container" ref={profileRef}>
           <div className="profile-btn">
             <FaUser className="icon" />
-            <span onClick={handleOpenLoginModal}>Login</span>{" "}
-            {/* Opens only login modal */}
-            {showLoginModal && (
-              <LoginRegister onClose={() => setShowLoginModal(false)} />
-            )}
+            <span onClick={!userFirstName ? handleOpenLoginModal : undefined}>
+              {userFirstName ? `Hi, ${userFirstName}` : "Login"}
+            </span>
             <span onClick={handleToggleProfileDropdown}>
               {showProfileDropdown ? (
                 <FaChevronUp className="dropdown-arrow" />
               ) : (
                 <FaChevronDown className="dropdown-arrow" />
               )}
-            </span>{" "}
-            {/* Click arrows to toggle dropdown */}
+            </span>
           </div>
 
           {showProfileDropdown && (
             <div className="dropdown-menu profile-menu">
-              <h4 className="login-h4">Welcome</h4>
-              <p className="login-p">To access account and manage services</p>
-              <div className="dropdown-header">
-                <span>New Customer?</span>
-                <span className="signup-link" onClick={handleOpenLoginModal}>
-                  Sign Up
-                </span>
-              </div>
-              <hr />
-              <div
-                className="dropdown-item nested-toggle"
-                onClick={() => setShowMyProfileSub((prev) => !prev)}
-              >
-                <FaUser style={{ marginRight: "4px" }} />
-                My Profile
-                {showMyProfileSub ? (
-                  <FaChevronUp style={{ marginLeft: "4px" }} />
-                ) : (
-                  <FaChevronDown style={{ marginLeft: "4px" }} />
-                )}
-              </div>
-              {showMyProfileSub && (
-                <div className="nested-submenu">
-                  <div className="dropdown-item">
-                    <SiBrandfolder className="icon" />
-                    <a href="./edit-profile">Edit My Profile</a>
+              {!userFirstName && (
+                <>
+                  <h4 className="login-h4">Welcome</h4>
+                  <p className="login-p">
+                    To access account and manage services
+                  </p>
+                  <div className="dropdown-header">
+                    <span>New Customer?</span>
+                    <span
+                      className="signup-link"
+                      onClick={handleOpenLoginModal}
+                    >
+                      Sign Up
+                    </span>
                   </div>
-                </div>
+                  <hr />
+                </>
               )}
-              <div className="dropdown-item">
-                <FaHeart className="icon" style={{ marginRight: "4px" }} />
-                <a href="./wishlist">Wishlist</a>
-              </div>
-              <div className="dropdown-item">
-                <FaSignOutAlt className="icon" style={{ marginRight: "4px" }} />
-                {/* <a href="./Logout">Sign Out</a> */}
-                <button className="signOutButton" onClick={handleLogout}>
-                  Sign Out
-                </button>
-              </div>
+
+              {userFirstName && (
+                <>
+                  <div
+                    className="dropdown-item nested-toggle"
+                    onClick={() => setShowMyProfileSub((prev) => !prev)}
+                  >
+                    <FaUser style={{ marginRight: "4px" }} />
+                    My Profile
+                    {showMyProfileSub ? (
+                      <FaChevronUp style={{ marginLeft: "4px" }} />
+                    ) : (
+                      <FaChevronDown style={{ marginLeft: "4px" }} />
+                    )}
+                  </div>
+
+                  {showMyProfileSub && (
+                    <div className="nested-submenu">
+                      <div className="dropdown-item">
+                        <SiBrandfolder className="icon" />
+                        <a href="./edit-profile">Edit My Profile</a>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="dropdown-item">
+                    <FaHeart className="icon" style={{ marginRight: "4px" }} />
+                    <a href="./wishlist">Wishlist</a>
+                  </div>
+
+                  <div className="dropdown-item">
+                    <FaSignOutAlt
+                      className="icon"
+                      style={{ marginRight: "4px" }}
+                    />
+                    <button className="signOutButton" onClick={handleLogout}>
+                      Sign Out
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           )}
         </div>
@@ -189,6 +233,7 @@ const Navbar = () => {
         </div>
       </div>
 
+      {/* Login Modal */}
       {showLoginModal && (
         <LoginRegister onClose={() => setShowLoginModal(false)} />
       )}

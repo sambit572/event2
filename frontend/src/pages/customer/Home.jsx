@@ -67,6 +67,8 @@ const Home = () => {
         const { user, accessToken } = response.data.data;
         if (user && accessToken) {
           localStorage.setItem("currentlyLoggedIn", true);
+          localStorage.setItem("userFirstName",user.fullName.split(' ')[0]);
+          
         }
       } catch (error) {
         console.log(
