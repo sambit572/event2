@@ -16,7 +16,7 @@ const DashBoardBooking = () => {
 
         <div className="booking-container">
           <div className="booking-header">
-            <div className="number">Number</div>
+            <div className="number">No.</div>
             <div className="middle">
               <div>Service</div>
               <div>Booked By</div>
