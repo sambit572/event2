@@ -21,8 +21,9 @@
   background-color: #ead8f6;
   max-width: fit-content;
   border-radius: 6.25rem;
-  position: relative; /* Required for absolute positioning of .bg-slider */
-  overflow: hidden; 
+  position: relative;
+  /* Required for absolute positioning of .bg-slider */
+  overflow: hidden;
 }
 
 .tab-buttons button {
@@ -43,7 +44,7 @@
 }
 
 .tab-buttons .active {
-  
+
   color: #f5efff;
   border-color: #f5efff;
   background: transparent;
@@ -60,6 +61,7 @@
   margin-left: 10px;
   margin-right: 3px;
 }
+
 .button2 {
   margin-right: 10px;
   margin-left: 3px;
@@ -72,7 +74,9 @@
   bottom: 10px;
   width: 50%;
   border-radius: 6.25rem;
-  background-color: rgb(145 44 209);; /* subtle purple highlight */
+  background-color: rgb(145 44 209);
+  ;
+  /* subtle purple highlight */
   z-index: 1;
   transition: all 0.43s ease;
 }
@@ -87,7 +91,7 @@
 .bg-slider.bookings {
   left: 125px;
   width: 120px;
-  
+
 }
 
 /* ========== Service Card Section ========== */
@@ -263,6 +267,7 @@
     opacity: 0;
     transform: translateY(-15px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -360,25 +365,23 @@
   left: -70%;
   width: 50%;
   height: 100%;
-  background: linear-gradient(
-    120deg,
-    transparent,
-    rgba(255, 255, 255, 0.5),
-    transparent
-  );
+  background: linear-gradient(120deg,
+      transparent,
+      rgba(255, 255, 255, 0.5),
+      transparent);
   transform: skewX(-20deg);
   transition: left 0.4s ease;
 }
 
-.toggle-switch input:checked + .slider {
+.toggle-switch input:checked+.slider {
   background: linear-gradient(90deg, #3cb0ff, #6e1274);
 }
 
-.toggle-switch input:checked + .slider::before {
+.toggle-switch input:checked+.slider::before {
   transform: translateX(28px);
 }
 
-.toggle-switch input:checked + .slider::after {
+.toggle-switch input:checked+.slider::after {
   left: 120%;
 }
 
@@ -387,18 +390,223 @@
 }
 
 
-@media screen and (max-width: 768px){
+@media screen and (max-width: 768px) {
   .tab-buttons {
     margin-left: 53px;
-   
+
   }
 
 
-  .booking-h2{
+  .booking-h2 {
     margin-right: -30px;
   }
-  .content-area{
+
+  .content-area {
     position: fixed;
     left: 0;
+  }
+}
+
+/* ========== Responsive Design ========== */
+
+/* Tablets (width <= 1024px) */
+@media (max-width: 1024px) {
+  .dashboard-container {
+    flex-direction: column;
+    width: auto;
+  }
+
+  .sidebar {
+    width: 270px;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 15px;
+    text-align: center;
+  }
+
+  .content-area {
+    padding: 15px;
+  }
+
+  .main-image {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .thumbnail-column {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .thumbnail {
+    width: 50px;
+    height: 35px;
+  }
+
+  .service-card {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .main-image-and-buttons {
+    width: 75%;
+    align-items: center;
+  }
+
+  .image-buttons {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .edit,
+  .delete {
+    padding: 8px 14px;
+    font-size: 14px;
+  }
+
+  .right-section {
+    text-align: left;
+    align-items: center;
+  }
+}
+
+/* Mobile Devices (width <= 768px) */
+@media (max-width: 768px) {
+  .dashboard-container {
+    width: 100vw;
+    height: 100vh;
+  }
+  .service-card {
+    width: 720px;
+    margin-top: 5px;  
+    margin-left: 9px;
+  }
+  
+  .edit-form {
+    width: 650px;
+    height: auto;
+    padding: 15px;
+  }
+
+  .main-image {
+    max-width: 95%;
+    height: auto;
+  }
+
+  .thumbnail {
+    width: 40px;
+    height: 28px;
+  }
+
+  .booking-card {
+    font-size: 14px;
+    padding: 15px;
+  }
+
+  .booking-card h2 {
+    font-size: 20px;
+  }
+
+  .details h2 {
+    font-size: 20px;
+  }
+
+  .toggle-switch {
+    width: 50px;
+    height: 28px;
+  }
+
+  .toggle-switch .slider::before {
+    width: 22px;
+    height: 22px;
+  }
+
+  .toggle-switch input:checked+.slider::before {
+    transform: translateX(22px);
+  }
+}
+
+/* Extra Small Devices (width <= 480px) */
+@media (max-width: 480px) {
+  .sidebar {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .tab-buttons {
+    gap: 8px;
+  }
+
+  .thumbnail {
+    width: 35px;
+    height: 24px;
+  }
+
+  .edit,
+  .delete {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  .edit-form button {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 375px) {
+  .dashboard-container {
+    overflow-y: auto;
+    width: 100vw;
+    height: 100vh;
+  }
+  .service-card {
+    width: 325px;
+    margin-top: 5px;  
+    margin-right: 40px;
+  }
+  
+  .edit-form {
+    width: 280px;
+    padding: 15px;
+  }
+
+  .main-image {
+    max-width: 95%;
+    height: auto;
+  }
+
+  .thumbnail {
+    width: 40px;
+    height: 28px;
+  }
+
+  .booking-card {
+    font-size: 14px;
+    padding: 15px;
+  }
+
+  .booking-card h2 {
+    font-size: 20px;
+  }
+
+  .details h2 {
+    font-size: 20px;
+  }
+
+  .toggle-switch {
+    width: 50px;
+    height: 28px;
+  }
+
+  .toggle-switch .slider::before {
+    width: 22px;
+    height: 22px;
+  }
+
+  .toggle-switch input:checked+.slider::before {
+    transform: translateX(22px);
   }
 }
