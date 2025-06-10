@@ -313,11 +313,15 @@ margin-right: 30px;
   .booking-row {
     font-size: 13px;
     padding: 10px;
-    width: 260px;
+    width: 290px;
   }
 
   .booking-row .middle {
     font-size: 13px;
+  }
+
+  .booking-row .middle div{
+    width: 110px;
   }
 
   .sort-dropdown {
