@@ -2,7 +2,7 @@
 /* RD */
 .dashboard-container {
   display: flex;
-  background-color: #f5efff;
+  background-color: #fff;
   height: 100vh;
   font-family: sans-serif;
   margin-left: 260px;
@@ -390,22 +390,6 @@
 }
 
 
-@media screen and (max-width: 768px) {
-  .tab-buttons {
-    margin-left: 53px;
-
-  }
-
-
-  .booking-h2 {
-    margin-right: -30px;
-  }
-
-  .content-area {
-    position: fixed;
-    left: 0;
-  }
-}
 
 /* ========== Responsive Design ========== */
 
@@ -526,6 +510,21 @@
   .toggle-switch input:checked+.slider::before {
     transform: translateX(22px);
   }
+
+  .tab-buttons {
+    margin-left: 53px;
+
+  }
+
+
+  .booking-h2 {
+    margin-right: -30px;
+  }
+
+  .content-area {
+    position: fixed;
+    left: 0;
+  }
 }
 
 /* Extra Small Devices (width <= 480px) */
@@ -536,7 +535,7 @@
     height: 100vh;
   }
   .service-card {
-    width: 455px;
+    width: 340px;
     margin-top: 5px;  
     margin-right: 10px;
   }
