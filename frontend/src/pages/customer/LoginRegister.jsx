@@ -7,8 +7,6 @@ import { auth } from "../../utils/firebase.js";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import OTPVerification from "./OTPVerification.jsx";
 
-
-
 const LoginRegister = ({ onClose }) => {
   const [step, setStep] = useState("form"); // 'form', 'otp', 'success'
 
@@ -178,10 +176,13 @@ const FormBlock = ({ setStep, onClose }) => {
         { withCredentials: true }
       );
       console.log(response);
+      const { user } = response.data.data;
       if (response.data.message === "user do exist") {
         setErrorMsg("User already exists. Please log in.");
       } else {
+        localStorage.setItem("userFirstName", user.fullName.split(" ")[0]);
         localStorage.setItem("currentlyLoggedIn", "true");
+        window.dispatchEvent(new Event("userLoggedIn"));
       }
 
       navigate("/", { replace: true });
@@ -216,8 +217,12 @@ const FormBlock = ({ setStep, onClose }) => {
         { withCredentials: true }
       );
 
+      console.log(response.data.data);
+      const { user } = response.data.data;
       if (response.status === 200) {
         localStorage.setItem("currentlyLoggedIn", "true");
+        localStorage.setItem("userFirstName", user.fullName.split(" ")[0]);
+        window.dispatchEvent(new Event("userLoggedIn"));
         console.log("Login successfull");
       } else {
         alert(response.data.message);
@@ -382,6 +387,5 @@ FormBlock.propTypes = {
   setStep: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
 };
-
 
 export default LoginRegister;
