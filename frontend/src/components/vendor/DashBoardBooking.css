@@ -138,10 +138,10 @@
     width: 125px;
     padding: 2px;
   }
-    .number {
+  .number {
     width: 5px;
   }
-  .status{
+  .status {
     width: 5px;
   }
 }
@@ -169,7 +169,7 @@
   .number {
     width: 10px;
   }
-  .status{
+  .status {
     width: 10px;
   }
   .booking-header .middle div,
@@ -202,30 +202,28 @@
     margin: 10px 0;
   }
   .number {
-    width: 10px;
+    width: 30px; /* or even 25px if you're okay with tighter spacing */
+    min-width: 25px;
+    max-width: 30px;
+    text-align: center;
+    flex-shrink: 0;
   }
-  .status{
-    width: 10px;
+
+  .status {
+    width: 70px; /* or 50px depending on the word length */
+    min-width: 50px;
+    max-width: 70px;
+    text-align: center;
+    font-size: 13px; /* optional: reduce text size */
+    flex-shrink: 0; /* prevent it from stretching */
+    padding-right: 10px;
   }
   .booking-header,
   .booking-row {
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
-
-  .booking-header .number,
-  .booking-row .number {
-    width: 5px;
-    text-align: center;
-  }
-    .booking-header .status,
-  .booking-row .status{
-    width: 5px;
-    text-align: center;
-  }
-
   .booking-header .middle,
   .booking-row .middle {
     flex-direction: row;
@@ -234,9 +232,84 @@
 
   .booking-header .middle div,
   .booking-row .middle div {
-    width: 62px;
+    width: 42px;
     text-align: center;
     margin-right: 10px;
+  }
+}
+
+@media screen and (max-width: 820px) {
+  .booking-header {
+    display: none;
+  }
+
+  .booking-row {
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 8px;
+    width: 350px;
+    margin-left: 280px;
+  }
+
+  .booking-header .number,
+  .booking-row .number {
+    grid-area: number;
+    text-align: center;
+  }
+
+  .booking-header .status,
+  .booking-row .status {
+    grid-area: status;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .booking-header .middle,
+  .booking-row .middle {
+    grid-area: middle;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: center;
+    align-items: center;
+  }
+
+  .booking-header .middle div,
+  .booking-row .middle div {
+    font-size: 14px;
+    width: 110px;
+  }
+
+  .booking-header,
+  .booking-row {
+    font-size: 14px;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
+  }
+  .status {
+    width: 90px; /* or 50px depending on the word length */
+    min-width: 50px;
+    max-width: 90px;
+    text-align: center;
+    font-size: 13px; /* optional: reduce text size */
+    flex-shrink: 0; /* prevent it from stretching */
+    padding-right: 10px;
+  }
+
+  .tabs {
+    flex-direction: column;
+    align-items: flex-end;
+    margin: 10px 0;
+  }
+
+  .sort-dropdown {
+    width: 20%;
+    padding: 6px;
+    margin-right: 30px;
+  }
+  .booking-container {
+    margin-left: 42px;
+    width: 100%;
   }
 }
 
@@ -247,14 +320,12 @@
   }
 
   .booking-row {
-    /* display: grid;
-    grid-template-areas: "number middle status";
-    grid-template-columns: auto 1fr auto; */
     align-items: flex-start;
     gap: 10px;
     padding: 12px;
     border-radius: 8px;
-    width: 400px;
+    width: 450px;
+   margin-left: 10px;
   }
 
   .booking-header .number,
@@ -300,7 +371,7 @@
   .sort-dropdown {
     width: 20%;
     padding: 6px;
-margin-right: 30px;
+    margin-right: 30px;
   }
   .booking-container {
     margin-left: 42px;
@@ -314,13 +385,14 @@ margin-right: 30px;
     font-size: 13px;
     padding: 10px;
     width: 290px;
+    margin-left: 5px;
   }
 
   .booking-row .middle {
     font-size: 13px;
   }
 
-  .booking-row .middle div{
+  .booking-row .middle div {
     width: 110px;
   }
 
@@ -328,9 +400,9 @@ margin-right: 30px;
     font-size: 13px;
     width: 25%;
   }
-   .sort-dropdown option{
+  .sort-dropdown option {
     width: 25%;
-   }
+  }
 }
 
 @media screen and (max-width: 360px) {
