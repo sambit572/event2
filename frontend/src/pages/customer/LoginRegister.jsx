@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../utils/firebase.js";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import OTPVerification from "./OTPVerification.jsx";
+import PasswordInput from "../../utils/PasswordInput.jsx";
 
 const LoginRegister = ({ onClose }) => {
   const [step, setStep] = useState("form"); // 'form', 'otp', 'success'
@@ -161,7 +162,7 @@ const FormBlock = ({ setStep, onClose }) => {
   const handleRegister = async (e) => {
     e.preventDefault();
     console.log("Register clicked");
-    setIsLogin(true);
+
     setStep("form");
 
     setErrorMsg("");
@@ -180,12 +181,12 @@ const FormBlock = ({ setStep, onClose }) => {
       if (response.data.message === "user do exist") {
         setErrorMsg("User already exists. Please log in.");
       } else {
+        setIsLogin(true);
         localStorage.setItem("userFirstName", user.fullName.split(" ")[0]);
         localStorage.setItem("currentlyLoggedIn", "true");
         window.dispatchEvent(new Event("userLoggedIn"));
+        navigate("/", { replace: true });
       }
-
-      navigate("/", { replace: true });
     } catch (error) {
       const backendMessage =
         error.response?.data?.message ||
@@ -276,15 +277,13 @@ const FormBlock = ({ setStep, onClose }) => {
             onChange={handleChangeLogin}
             required
           />
-          <input
-            type="password"
+          <PasswordInput
             name="password"
-            className="login-input"
             placeholder="Enter password"
-            minLength={8}
             value={formDataLogin.password}
             onChange={handleChangeLogin}
             required
+            minLength={8}
           />
 
           <Link to="/forgot-password" className="Login-forget-password-link">
@@ -339,23 +338,22 @@ const FormBlock = ({ setStep, onClose }) => {
             onChange={handleChange}
             required
           />
-          <input
-            type="password"
+          <PasswordInput
             name="password"
-            className="login-input"
             placeholder="Create password"
             value={formDataSignUp.password}
             onChange={handleChange}
-            minLength={8}
             required
+            minLength={8}
           />
-          <input
-            type="password"
-            className="login-input"
+
+          <PasswordInput
+            name="confirmPassword"
             placeholder="Confirm password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
+            minLength={8}
           />
 
           <button type="submit" className="otp-button" onClick={handleRegister}>
