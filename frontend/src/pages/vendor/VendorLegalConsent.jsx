@@ -24,7 +24,7 @@ export default function VendorLegalConsent() {
 
   return (
     <div className="legal-consent-page">
-      <StepProgress currentStepIndex={currentStepIndex} />
+     <StepProgress currentStep={currentStepIndex} />
 
       <div className="checkbox-section">
         <p className="consent-heading">

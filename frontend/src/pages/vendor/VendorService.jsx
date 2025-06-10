@@ -3,13 +3,14 @@ import { useNavigate } from "react-router-dom";
 import "./VendorService.css";
 import StepProgress from "./StepProgress";
 import Button from "./../../components/vendor/register/Button";
+import "./../../components/vendor/register/Button.css";
 function VendorService({ currentStep }) {
   const navigate = useNavigate();
 
   const steps = [
     { label: "Registration", subLabel: "Step 1", icon: "/verify.png" },
     { label: "Service Details", subLabel: "Step 2", icon: "/service.png" },
-    { label: "Payment", subLabel: "Step 3", icon: "/payment.png" },
+    { label: "Payment Details", subLabel: "Step 3", icon: "/payment.png" },
     { label: "Legal Consents", subLabel: "Step 4", icon: "/legal.png" },
   ];
 
@@ -452,11 +453,11 @@ function VendorService({ currentStep }) {
             />
           </div>
         </div>
-        <button
-          handleBack={handleBack}
-          handleNext={handleNext}
-          currentStep={currentStep}
-          steps={steps}
+       <Button
+        handleBack={handleBack}
+        handleNext={handleNext}
+        currentStep={currentStep}
+        steps={steps}
         />
       </div>
     </>

@@ -1,15 +1,15 @@
 .vendor-register-page {
-  background: linear-gradient(to bottom, #a9c5e7 0%, #5584d0 50%, #3b6087 100%);
+ /*  background: linear-gradient(to bottom, #a9c5e7 0%, #5584d0 50%, #3b6087 100%); */
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-top: 130px;
+  padding-top: 190px;
   padding-bottom: 40px;
 }
 
 .vendor-register-container {
-  background-color: rgb(255, 255, 255);
+   background: linear-gradient(to bottom, #e5e7ea 0%, #92cadb 50%, #be62ef 100%); 
   border-radius: 12px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   padding: 40px;
@@ -161,7 +161,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #ccc;
+  border: 1px solid #0e0c0c;
   padding: 8px 8px;                
   border-radius: 5px;
   cursor: pointer;

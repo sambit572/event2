@@ -34,7 +34,8 @@
 .next-btn {
   background-color: #2563eb;
   color: #fff;
-  width: 120px;
+  width: 140px;
+  height:42px;
 }
 
 .next-btn:hover {

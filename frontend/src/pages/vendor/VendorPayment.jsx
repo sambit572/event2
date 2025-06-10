@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./VendorPayment.css";
-
 import StepProgress from "./StepProgress";
 import "./StepProgress.css";
 import Button from "./../../components/vendor/register/Button";
@@ -49,7 +48,8 @@ export default function VendorPayment() {
         <div className="popup-message">Please fill all required fields!</div>
       )}
 
-      <StepProgress currentStepIndex={currentStepIndex} />
+     <StepProgress currentStep={currentStepIndex} />
+
 
       <div className="payment-box">
         <h2 className="payment-box-title">Bank Details</h2>
