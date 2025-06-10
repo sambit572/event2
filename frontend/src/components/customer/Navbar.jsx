@@ -75,8 +75,8 @@ const Navbar = () => {
               </div>
               <hr />
               <div className="dropdown-item nested-toggle" onClick={() => setShowMyProfileSub(prev => !prev)}>
-                <FaUser style={{ marginRight: '4px' }} />
-                My Profile
+                <FaUser style={{ marginRight: '4px' }} /> 
+                <a href="/dashboardservices">My Profile</a>
                 {showMyProfileSub ? <FaChevronUp style={{ marginLeft: '4px' }} /> : <FaChevronDown style={{ marginLeft: '4px' }} />}
               </div>
               {showMyProfileSub && (

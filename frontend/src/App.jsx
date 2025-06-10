@@ -8,6 +8,7 @@ import Service from "./pages/customer/Service";
 import LoginRegister from "./pages/customer/LoginRegister";
 import Wishlist from "./pages/customer/Wishlist";
 import ForgotPassword from "./pages/customer/ForgotPassword";
+import DashboardServices from "./pages/customer/DashboardServices";
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
           <Route path="/LoginRegister" element={<LoginRegister />}></Route>
           <Route path="/Wishlist" element={<Wishlist />}></Route>
           <Route path="/forgotpassword" element={<ForgotPassword />}></Route>
+          <Route path="/dashboardservices" element={<DashboardServices />}></Route>
         </Routes>
       </main>
     </>

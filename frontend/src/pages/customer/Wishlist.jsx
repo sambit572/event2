@@ -83,7 +83,6 @@ const Wishlist = () => {
           <div className="wishlist-right">
             <div className="wishlist-header">
               <h3 className="wishlist-title">{item.title}</h3>
-              <FaTrash className="wishlist-delete" onClick={() => handleDeleteClick(item.id)} />
             </div>
             <div className="wishlist-pricing">
               <span className="wishlist-price">{item.price}</span>
@@ -91,7 +90,10 @@ const Wishlist = () => {
               <span className="wishlist-discount">{item.discount}</span>
             </div>
             <p className="wishlist-description">{item.description}</p>
-            <button className="wishlist-book-btn">Book Now</button>
+            <div className='btn-columns'>
+              <button className="wishlist-book-btn">Book Now</button>
+            <button className="wishlist-remove-btn" onClick={() => handleDeleteClick(item.id)} >Remove</button>
+            </div>
           </div>
         </div>
       ))}
@@ -104,7 +106,7 @@ const Wishlist = () => {
             </p>
             <div className="popup-buttons">
               <button className="popup-yes" onClick={confirmDelete}>
-                Delete
+                Remove
               </button>
               <button className="popup-no" onClick={cancelDelete}>
                 Cancel
