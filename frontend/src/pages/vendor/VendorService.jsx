@@ -453,12 +453,7 @@ function VendorService({ currentStep }) {
             />
           </div>
         </div>
-       <Button
-        handleBack={handleBack}
-        handleNext={handleNext}
-        currentStep={currentStep}
-        steps={steps}
-        />
+        <Button handleBack={handleBack} handleNext={handleNext} />
       </div>
     </>
   );

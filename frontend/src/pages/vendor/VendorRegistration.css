@@ -1,15 +1,15 @@
 .vendor-register-page {
- /*  background: linear-gradient(to bottom, #a9c5e7 0%, #5584d0 50%, #3b6087 100%); */
+  /*  background: linear-gradient(to bottom, #a9c5e7 0%, #5584d0 50%, #3b6087 100%); */
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-top: 190px;
+
   padding-bottom: 40px;
 }
 
 .vendor-register-container {
-   background: linear-gradient(to bottom, #e5e7ea 0%, #92cadb 50%, #be62ef 100%); 
+  background: linear-gradient(to bottom, #e5e7ea 0%, #92cadb 50%, #be62ef 100%);
   border-radius: 12px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   padding: 40px;
@@ -28,14 +28,14 @@
   display: flex;
   flex-direction: column;
   color: #333;
-  flex:1;
+  flex: 1;
   width: 100%;
   max-width: 500px;
   margin: auto;
 }
 
 .vendor-register-form h2 {
-  color: #5BA8A0;
+  color: #5ba8a0;
   margin-bottom: 5px;
   text-align: center;
   font-size: 22px;
@@ -55,7 +55,6 @@
   margin: 8px;
   font-weight: 500;
   margin-left: 70px;
-  
 }
 
 /* ===== Animation ===== */
@@ -71,7 +70,7 @@
   max-width: 500px;
   height: 230px;
   border-radius: 10px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   margin-top: 70px;
 }
 
@@ -88,7 +87,7 @@
 .vendor-register-form input[type="file"] {
   width: 400px;
   padding: 10px;
-  border: 1px solid #5BA8A0;
+  border: 1px solid #5ba8a0;
   border-radius: 6px;
   font-size: 12px;
   background-color: white;
@@ -102,7 +101,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  width : 470px;
+  width: 470px;
   margin-left: 2px;
 }
 
@@ -142,7 +141,7 @@
 }
 
 .vendor-register-form button:hover {
-  background-color: #9DC183;
+  background-color: #9dc183;
 }
 
 /* ===== Google Button Styling ===== */
@@ -153,7 +152,7 @@
 }
 
 .google-signup-btn {
-  margin-left: 170px; 
+  margin-left: 170px;
 }
 
 .google-signup-btn {
@@ -162,19 +161,18 @@
   align-items: center;
   justify-content: center;
   border: 1px solid #0e0c0c;
-  padding: 8px 8px;                
+  padding: 8px 8px;
   border-radius: 5px;
   cursor: pointer;
   transition: background 0.2s ease;
-  margin-top: 20px;  
-  max-width: 180px;              
-  font-size: 13px;  
-             
+  margin-top: 20px;
+  max-width: 180px;
+  font-size: 13px;
 }
 
 /* Smaller icons */
-.google-signup-btn img{
-  height: 20px;            
+.google-signup-btn img {
+  height: 20px;
   margin-right: 6px;
 }
 /* Responsive for 1024px */
@@ -182,11 +180,10 @@
   .vendor-register-container {
     max-width: 700px;
     padding: 30px;
-
   }
 
   .vendor-register-content {
-    flex-direction: row; 
+    flex-direction: row;
     gap: 30px;
   }
 
@@ -204,7 +201,7 @@
     margin-left: 0;
   }
 
-  .vendor-register-form label{
+  .vendor-register-form label {
     margin-left: 0;
     text-align: left;
   }
@@ -223,10 +220,10 @@
     margin-left: 60px;
     width: 180px;
   }
-   .vendor-register-form button{
+  .vendor-register-form button {
     margin-left: 60px;
     width: 180px;
-   }
+  }
 }
 
 /* Responsive for 768px */
@@ -259,8 +256,8 @@
     margin-left: 0;
     text-align: left;
   }
-   .vendor-register-form h2,
-  .vendor-register-form p{
+  .vendor-register-form h2,
+  .vendor-register-form p {
     margin-left: 20px;
     text-align: center;
     font-size: 13px;
@@ -271,22 +268,20 @@
     margin-left: 0;
   }
 
- 
   .google-signup-btn {
     margin-left: 40px;
     width: 160px;
   }
-   .vendor-register-form button{
+  .vendor-register-form button {
     margin-left: 50px;
     width: 170px;
-   }
+  }
 }
 
 @media screen and (max-width: 480px) {
   .vendor-register-container {
     max-width: 100%;
     padding: 30px;
-   
   }
 
   .vendor-register-content {
@@ -306,7 +301,6 @@
   .vendor-register-form {
     max-width: 100%;
     width: 100%;
-    
   }
 
   .vendor-register-form input[type="text"],
@@ -318,8 +312,7 @@
     margin-left: 0;
   }
 
-  .vendor-register-form label
-  {
+  .vendor-register-form label {
     margin-left: 0;
     text-align: left;
   }
@@ -337,7 +330,7 @@
     margin-left: 50px;
     width: 100%;
   }
-  .vendor-register-form button{
+  .vendor-register-form button {
     margin-left: 80px;
     width: 160px;
   }

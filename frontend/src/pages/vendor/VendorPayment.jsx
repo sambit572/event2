@@ -7,8 +7,6 @@ import Button from "./../../components/vendor/register/Button";
 
 export default function VendorPayment() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const currentStepIndex = location.state?.currentStep || 2;
 
   const [formData, setFormData] = useState({
     name: "",
@@ -31,15 +29,10 @@ export default function VendorPayment() {
   };
 
   const handleNext = () => {
-    const { name, accountNumber, branchName, ifsc, panFile } = formData;
-
-    if (!name || !accountNumber || !branchName || !ifsc || !panFile) {
-      setShowPopup(true);
-      setTimeout(() => setShowPopup(false), 3000);
-      return;
-    }
-
-    navigate("/vendor/legal-consent", { state: { currentStep: 3 } });
+    navigate("/vendor/legal-consent");
+  };
+  const handleBack = () => {
+    navigate("/category/VendorService");
   };
 
   return (
@@ -48,8 +41,7 @@ export default function VendorPayment() {
         <div className="popup-message">Please fill all required fields!</div>
       )}
 
-     <StepProgress currentStep={currentStepIndex} />
-
+      <StepProgress currentStep={2} />
 
       <div className="payment-box">
         <h2 className="payment-box-title">Bank Details</h2>
@@ -151,7 +143,7 @@ export default function VendorPayment() {
             onChange={handleChange}
           />
         </div>
-        <Button onBack={() => navigate(-1)} onNext={handleNext} />
+        <Button handleBack={handleBack} handleNext={handleNext} />
       </div>
     </div>
   );

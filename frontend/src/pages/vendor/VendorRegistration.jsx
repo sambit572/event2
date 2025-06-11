@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import RegisterStepProgress from "./RegisterStepProgress";
+import StepProgress from "./StepProgress";
 import "./VendorRegistration.css";
 
 export default function VendorRegister() {
@@ -32,130 +32,125 @@ export default function VendorRegister() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log("Form Data:", form);
+    // console.log("Form Data:", form);
 
     // Navigate to VendorService page
-    navigate("/category/VendorService", {
-      state: {
-        currentStep: 1, // Move to next step
-        vendorData: form, // Pass form data if needed
-      },
-    });
+    navigate("/category/VendorService");
   };
 
-  const currentStepIndex = location.state?.currentStep || 0; // Default to step 1
-
   return (
-    <div className="vendor-register-page">
-      {/* Progress Bar */}
-      <RegisterStepProgress currentStepIndex={currentStepIndex} />
+    <>
+      <StepProgress currentStep={0} />
+      <div className="vendor-register-page">
+        {/* Progress Bar */}
 
-      {/* Main white box container */}
-      <div className="vendor-register-container">
-        <div className="vendor-register-content">
-          {/* Left: Registration Form */}
-          <form className="vendor-register-form" onSubmit={handleSubmit}>
-            <h2>Create Vendor Account</h2>
-            <p>Welcome! Please fill in the details to register.</p>
+        {/* Main white box container */}
+        <div className="vendor-register-container">
+          <div className="vendor-register-content">
+            {/* Left: Registration Form */}
+            <form className="vendor-register-form" onSubmit={handleSubmit}>
+              <h2>Create Vendor Account</h2>
+              <p>Welcome! Please fill in the details to register.</p>
 
-            <div className="social-signup-row">
-              <div className="google-signup-btn">
-                <img src="/GoogleImg.png" alt="Google Icon" />
-                <span>Sign up with Google</span>
-              </div>
+              <div className="social-signup-row">
+                <div className="google-signup-btn">
+                  <img src="/GoogleImg.png" alt="Google Icon" />
+                  <span>Sign up with Google</span>
+                </div>
 
-              {/* <div className="apple-signup-btn">
+                {/* <div className="apple-signup-btn">
                 <img src="/apple-logo.png" alt="Apple Icon" />
                 <span>Sign up with Apple</span>
               </div> */}
-            </div>
+              </div>
 
-            <label>
-              Full Name <span className="required-star">*</span>
-            </label>
-            <input
-              type="text"
-              name="fullName"
-              value={form.fullName}
-              onChange={handleChange}
-              required
-            />
-
-            <label>
-              Email Address <span className="required-star">*</span>
-            </label>
-            <input
-              type="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              required
-            />
-
-            <label>
-              Phone Number <span className="required-star">*</span>
-            </label>
-            <input
-              type="tel"
-              name="phone"
-              value={form.phone}
-              onChange={handleChange}
-              required
-            />
-
-            <label>
-              Password <span className="required-star">*</span>
-            </label>
-            <div className="password-input-wrapper">
+              <label>
+                Full Name <span className="required-star">*</span>
+              </label>
               <input
-                type={showPassword ? "text" : "password"}
-                name="password"
-                value={form.password}
+                type="text"
+                name="fullName"
+                value={form.fullName}
                 onChange={handleChange}
                 required
               />
-              <img
-                src={showPassword ? "/hide.png" : "/view.png"}
-                alt={showPassword ? "Hide password" : "Show password"}
-                onClick={togglePasswordVisibility}
-              />
-            </div>
 
-            <label>
-              Confirm Password <span className="required-star">*</span>
-            </label>
-            <div className="password-input-wrapper">
+              <label>
+                Email Address <span className="required-star">*</span>
+              </label>
               <input
-                type={showPassword ? "text" : "password"}
-                name="password"
-                value={form.password}
+                type="email"
+                name="email"
+                value={form.email}
                 onChange={handleChange}
                 required
               />
-              <img
-                src={showPassword ? "/hide.png" : "/view.png"}
-                alt={showPassword ? "Hide password" : "Show password"}
-                onClick={togglePasswordVisibility}
+
+              <label>
+                Phone Number <span className="required-star">*</span>
+              </label>
+              <input
+                type="tel"
+                name="phone"
+                value={form.phone}
+                onChange={handleChange}
+                required
               />
+
+              <label>
+                Password <span className="required-star">*</span>
+              </label>
+              <div className="password-input-wrapper">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={form.password}
+                  onChange={handleChange}
+                  required
+                />
+                <img
+                  src={showPassword ? "/hide.png" : "/view.png"}
+                  alt={showPassword ? "Hide password" : "Show password"}
+                  onClick={togglePasswordVisibility}
+                />
+              </div>
+
+              <label>
+                Confirm Password <span className="required-star">*</span>
+              </label>
+              <div className="password-input-wrapper">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={form.password}
+                  onChange={handleChange}
+                  required
+                />
+                <img
+                  src={showPassword ? "/hide.png" : "/view.png"}
+                  alt={showPassword ? "Hide password" : "Show password"}
+                  onClick={togglePasswordVisibility}
+                />
+              </div>
+
+              <label>Profile Picture (Optional)</label>
+              <input
+                type="file"
+                name="profilePic"
+                accept="image/*"
+                onChange={handleChange}
+              />
+
+              <button type="submit">Next</button>
+            </form>
+
+            {/* Right: Animation */}
+            <div className="vendor-animation-container">
+              <video src="/Animation.mp4" autoPlay muted loop playsInline />
             </div>
-
-            <label>Profile Picture (Optional)</label>
-            <input
-              type="file"
-              name="profilePic"
-              accept="image/*"
-              onChange={handleChange}
-            />
-
-            <button type="submit">Next</button>
-          </form>
-
-          {/* Right: Animation */}
-          <div className="vendor-animation-container">
-            <video src="/Animation.mp4" autoPlay muted loop playsInline />
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
