@@ -30,6 +30,7 @@ const PasswordInput = ({
         onBlur={() => setTouched(true)}
         required={required}
         minLength={minLength}
+        maxLength={10}
         className={`password-input ${
           touched && !isValid(value) ? "invalid" : ""
         }`}
@@ -40,7 +41,6 @@ const PasswordInput = ({
         className="toggle-visibility"
       >
         {showPassword ? <FaEyeSlash /> : <FaEye />}
-        <span className="toggle-label">{showPassword ? "Hide" : "Show"}</span>
       </span>
     </div>
   );

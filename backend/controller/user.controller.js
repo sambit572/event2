@@ -5,7 +5,7 @@ import { User } from "../model/user.model.js";
 import { ApiError } from "../utilities/ApiError.js";
 import { ApiResponse } from "../utilities/ApiResponse.js";
 import jwt from "jsonwebtoken";
-import {isValidPhoneNumber} from 'libphonenumber-js'
+import { isValidPhoneNumber } from "libphonenumber-js";
 
 const option = {
   httpOnly: true,
@@ -24,7 +24,7 @@ const generateAccessAndRefreshTokens = async (userId) => {
 
     return { accessToken, refreshToken };
   } catch (error) {
-    console.error(`error in generating token : ${error}`)
+    console.error(`error in generating token : ${error}`);
     return { error: "Something went wrong while generating tokens" };
   }
 };
@@ -59,7 +59,7 @@ const registerUser = async (req, res) => {
 
     const user = await User.create({
       fullName,
-      email:email.toLowerCase(),
+      email: email.toLowerCase(),
       phoneNo,
       password,
     });
@@ -67,7 +67,6 @@ const registerUser = async (req, res) => {
     const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
       user._id
     );
-
 
     const createdUser = await User.findById(user._id).select(
       "-password -refreshToken -accessToken"
@@ -102,7 +101,7 @@ const loginUser = async (req, res) => {
       return res.status(400).json(new ApiError(400, "All fields are required"));
     }
 
-    if ( email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return res
         .status(400)
         .json(new ApiError(400, "Please provide a valid email address"));
@@ -122,7 +121,7 @@ const loginUser = async (req, res) => {
         .json(new ApiError(400, "Password must be 8 character long"));
     }
 
-    const existUser = await User.findOne({ $or:[{email},{phoneNo}] });
+    const existUser = await User.findOne({ $or: [{ email }, { phoneNo }] });
 
     if (!existUser) {
       return res.status(404).json(new ApiError(404, "User does not exist"));
@@ -205,7 +204,6 @@ const sendPasswordResetLink = async (req, res) => {
     const resetToken = crypto.randomBytes(32).toString("hex");
     console.log(`🔹 Generated reset token: ${resetToken}`);
 
-    
     console.log(`✅ Hashed reset token saved to database`);
 
     // Step 4: Store hashed token and expiration time in DB
@@ -298,32 +296,18 @@ const resetPassword = async (req, res) => {
 
 const changePassword = async (req, res) => {
   try {
-    const { email, oldPassword, newPassword } = req.body;
+    const oldPassword = req.body.oldPassword?.trim();
+    const newPassword = req.body.newPassword?.trim();
 
-    if (!email || !oldPassword || !newPassword) {
+    if (!oldPassword || !newPassword) {
       return res
         .status(400)
-        .json(
-          new ApiError(
-            400,
-            "Email, old password, and new password are required"
-          )
-        );
+        .json(new ApiError(400, "Old password and new password are required"));
     }
 
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return res
-        .status(400)
-        .json(new ApiError(400, "Please provide a valid email address"));
-    }
+    const userWithPassword = await User.findById(req.user._id);
 
-    const user = await User.findOne({ email });
-
-    if (!user) {
-      return res.status(404).json(new ApiError(404, "User not found"));
-    }
-
-    const isSame = await bcrypt.compare(oldPassword, user.password);
+    const isSame = await bcrypt.compare(oldPassword, userWithPassword.password);
 
     if (!isSame) {
       return res.status(400).json(new ApiError(400, "Incorrect old password"));
@@ -335,14 +319,16 @@ const changePassword = async (req, res) => {
         .json(new ApiError(400, "New password cannot be same as old password"));
     }
 
-    user.password = newPassword;
-    await user.save();
+    userWithPassword.password = newPassword;
+    await userWithPassword.save();
+
+    console.log('Backend working fine for change password')
 
     return res
       .status(200)
       .json(new ApiResponse(200, null, "Password changed successfully"));
   } catch (error) {
-    console.error(`error in changing password after login : ${error}`);
+    console.error(`Error in changing password:`, error);
     return res.status(500).json(new ApiError(500, "Internal Server Error"));
   }
 };

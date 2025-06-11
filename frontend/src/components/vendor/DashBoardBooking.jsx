@@ -1,8 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import BookingData from "./BookingData.js";
+import BookingPopup from "./BookingPopup.jsx";
 import "./DashBoardBooking.css";
 
 const DashBoardBooking = () => {
+  const [hoveredRow, setHoveredRow] = useState(null);
+  const [clickedRow, setClickedRow] = useState(null);
+
+  const handleRowClick = (rowNumber) => {
+    setClickedRow(clickedRow === rowNumber ? null : rowNumber);
+  };
+
+  const handleMouseEnter = (rowNumber) => {
+    setHoveredRow(rowNumber);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredRow(null);
+  };
+
+  const isPopupVisible = (rowNumber) => {
+    return clickedRow === rowNumber || hoveredRow === rowNumber;
+  };
+
+  const closePopup = () => {
+    setClickedRow(null);
+  };
+
   return (
     <div className="booking-page">
       <main className="main-content">
@@ -29,11 +53,14 @@ const DashBoardBooking = () => {
             </div>
             <div className="status">Status</div>
           </div>
-
           {BookingData.map((b) => (
             <div
-              className={`booking-row ${b.number === 2 ? "highlight" : ""}`}
               key={b.number}
+              className="booking-row"
+              style={{ position: "relative", cursor: "pointer" }}
+              onClick={() => handleRowClick(b.number)}
+              onMouseEnter={() => handleMouseEnter(b.number)}
+              onMouseLeave={handleMouseLeave}
             >
               <div className="number">{b.number}</div>
 
@@ -54,6 +81,17 @@ const DashBoardBooking = () => {
               >
                 {b.status}
               </div>
+
+              {/* Popup */}
+              {isPopupVisible(b.number) && (
+                <div className="row-popup-wrapper">
+                  <BookingPopup
+                    isOpen={true}
+                    onClose={closePopup}
+                    booking={b}
+                  />
+                </div>
+              )}
             </div>
           ))}
         </div>

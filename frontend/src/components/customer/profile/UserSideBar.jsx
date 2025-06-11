@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import "./UserSideBar.css";
 import { FaEdit } from "react-icons/fa";
+import axios from "axios";
+import { BACKEND_URL } from "../../../utils/constant.js";
 
-function UserSideBar({ isOpen }) {
+function UserSideBar({ isOpen, setShowPasswordModal }) {
   const [fullName, setFullName] = useState("Rudransh Dash");
   const [email, setEmail] = useState("rudransh7381@gmail.com");
   const [contact, setContact] = useState("+91 9692486267");
@@ -10,32 +12,12 @@ function UserSideBar({ isOpen }) {
 
   const [editMode, setEditMode] = useState(false);
 
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
-
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleToggleEdit = () => {
     setEditMode((prev) => !prev);
   };
 
-  const handlePasswordChangeSubmit = () => {
-    // TODO: Password validation logic
-    console.log(
-      "Old:",
-      oldPassword,
-      "New:",
-      newPassword,
-      "Confirm:",
-      confirmPassword
-    );
-    setShowPasswordModal(false);
-    // Reset fields
-    setOldPassword("");
-    setNewPassword("");
-    setConfirmPassword("");
-  };
+  
 
   return (
     <div className={`user-sidebar ${isOpen ? "open" : ""}`}>
@@ -106,37 +88,6 @@ function UserSideBar({ isOpen }) {
           )}
         </button>
       </div>
-      {showPasswordModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h3>Change Password</h3>
-            <input
-              type="password"
-              placeholder="Old Password"
-              value={oldPassword}
-              onChange={(e) => setOldPassword(e.target.value)}
-            />
-            <input
-              type="password"
-              placeholder="New Password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-            <input
-              type="password"
-              placeholder="Confirm Password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-            <div className="modal-buttons">
-              <button onClick={handlePasswordChangeSubmit}>Submit</button>
-              <button onClick={() => setShowPasswordModal(false)}>
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

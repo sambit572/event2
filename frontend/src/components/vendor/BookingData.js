@@ -1,12 +1,15 @@
 const BookingData = [
   {
     number: 1,
-    service: "Mehendi",
-    bookedBy: "random",
-    price: "₹30,000",
-    date: "15 - 06 - 2025",
-    days: "1 day",
+    service: "DJ Night",
+    bookedBy: "Sarita Khatua",
+    price: "₹5000",
+    date: "12-07-2025",
+    days: "Saturday",
     status: "Initialize",
+    location: "Bangalore",
+    advanceAmount: 5000,
+    advanceStatus: "Paid",
   },
   {
     number: 2,
@@ -16,6 +19,9 @@ const BookingData = [
     date: "16 - 06 - 2025",
     days: "2 days",
     status: "Up Coming",
+    location: "Bangalore",
+    advanceAmount: 3000,
+    advanceStatus: "Paid",
   },
   {
     number: 3,
@@ -25,6 +31,9 @@ const BookingData = [
     date: "6 - 06 - 2025",
     days: "1 day",
     status: "Processing",
+    location: "Bangalore",
+    advanceAmount: 3000,
+    advanceStatus: "Paid",
   },
   {
     number: 4,
@@ -34,6 +43,9 @@ const BookingData = [
     date: "28 - 05 - 2025",
     days: "3 days",
     status: "Completed",
+    location: "Bangalore",
+    advanceAmount: 3000,
+    advanceStatus: "Paid",
   },
   {
     number: 5,
@@ -43,8 +55,9 @@ const BookingData = [
     date: "28 - 05 - 2025",
     days: "3 days",
     status: "Completed",
+    location: "Bangalore",
   },
-   {
+  {
     number: 6,
     service: "Make Up",
     bookedBy: "random",
@@ -52,6 +65,9 @@ const BookingData = [
     date: "16 - 06 - 2025",
     days: "2 days",
     status: "Cancelled",
+    location: "Bangalore",
+    advanceAmount: 3000,
+    advanceStatus: "Paid",
   },
 ];
 
