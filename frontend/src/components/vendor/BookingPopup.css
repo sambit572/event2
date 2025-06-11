@@ -1,0 +1,193 @@
+
+
+/* Popup shown inside row */
+.row-popup-wrapper {
+  position: absolute;
+  top: 100%; /* directly below the row */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  width: auto;
+  padding-top: 10px;
+}
+
+
+.popup-box {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px 20px;
+  width: 400px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  font-family: "Segoe UI", sans-serif;
+  color: #1e1e2f;
+  animation: scaleUp 0.25s ease-in-out;
+}
+.popup-box::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 8px solid transparent;
+  border-bottom-color: #ffffff;
+}
+
+
+/* Modern styles */
+.popup-title {
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+  color: #3b0340e1;
+  text-align: center;
+  font-weight: 600;
+}
+
+.popup-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.popup-row {
+  font-size: 1rem;
+  line-height: 1.4;
+  background: #f7f7fa;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+/* Close button */
+.close-btn {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  background: none;
+  border: none;
+  font-size: 25px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #666;
+  transition: color 0.2s ease;
+}
+
+.close-btn:hover {
+  color: #ff3b3b;
+}
+
+.status-paid {
+  color: green;
+  font-weight: 600;
+}
+
+.status-unpaid {
+  color: red;
+  font-weight: 600;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    background: rgba(0, 0, 0, 0);
+  }
+  to {
+    background: rgba(0, 0, 0, 0.4);
+  }
+}
+
+@keyframes scaleUp {
+  0% {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* iPad Pro Large (1025px - 1366px) */
+@media (min-width: 1025px) and (max-width: 1366px) {
+  .popup-box {
+    max-width: 420px;
+    padding: 24px;
+  }
+
+  .popup-title {
+    font-size: 1.5rem;
+  }
+
+  .popup-row {
+    font-size: 1rem;
+  }
+}
+/* iPad Pro Landscape (835px - 1024px) */
+@media (min-width: 835px) and (max-width: 1024px) {
+  .popup-box {
+    max-width: 400px;
+    padding: 22px;
+  }
+
+  .popup-title {
+    font-size: 1.4rem;
+  }
+
+  .popup-row {
+    font-size: 1rem;
+  }
+}
+/* iPad Portrait & smaller tablets (768px - 834px) */
+@media (min-width: 768px) and (max-width: 834px) {
+  .popup-box {
+    max-width: 360px;
+    padding: 20px;
+  }
+
+  .popup-title {
+    font-size: 1.3rem;
+  }
+
+  .popup-row {
+    font-size: 0.95rem;
+    padding: 10px;
+  }
+
+  .close-btn {
+    font-size: 22px;
+    top: 12px;
+    right: 16px;
+  }
+}
+
+
+
+/* Mobile (less than 768px) */
+@media (max-width: 767px) {
+  .popup-box {
+    width: 300px;
+    padding: 18px;
+  }
+
+  .popup-title {
+    font-size: 1.2rem;
+  }
+
+  .popup-row {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .popup-box {
+    max-width: 280px;
+    padding: 14px;
+  }
+
+  .popup-title {
+    font-size: 1.1rem;
+  }
+
+  .popup-row {
+    font-size: 0.85rem;
+    padding: 6px 8px;
+  }
+}

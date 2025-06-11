@@ -39,6 +39,24 @@
   margin: auto;
   margin-left: 332px;
 }
+.booking-row-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.booking-inline-popup {
+  background: #f7f7fa;
+  padding: 16px;
+  border-left: 4px solid #3b0340e1;
+  border-radius: 8px;
+  margin: 0 10px 10px 10px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.booking-row.expanded {
+  background-color: #f0e6ff;
+}
+
 
 /* ------------------------------------ */
 /* ✅ LAPTOP / DESKTOP (Default) Layout */
