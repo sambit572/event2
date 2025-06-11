@@ -6,7 +6,7 @@ const BookingData = [
     price: "₹30,000",
     date: "15 - 06 - 2025",
     days: "1 day",
-    status: "Up Coming",
+    status: "Initialize",
   },
   {
     number: 2,
@@ -43,6 +43,15 @@ const BookingData = [
     date: "28 - 05 - 2025",
     days: "3 days",
     status: "Completed",
+  },
+   {
+    number: 6,
+    service: "Make Up",
+    bookedBy: "random",
+    price: "₹25,000",
+    date: "16 - 06 - 2025",
+    days: "2 days",
+    status: "Cancelled",
   },
 ];
 

@@ -153,7 +153,7 @@ function DashBoardSideBar({ isOpen }) {
         </ul>
 
         <button className="edit-button" onClick={handleToggleEdit}>
-          {editMode ? "Save" : <FaEdit />}
+          {editMode ? "Save" : (<><FaEdit /> Edit</>)}
         </button>
       </div>
     </div>
