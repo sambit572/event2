@@ -17,6 +17,7 @@ import image12 from "../../assets/home/decoration.jpg";
 import image13 from "../../assets/home/horsecart.jpg";
 import image14 from "../../assets/home/cracker.jpg";
 import image15 from "../../assets/home/cardsinvite.jpg";
+import banner from "../../assets/home/banner1.jpeg";
 import CategoryCard from "../../components/customer/Home/CategoryCard";
 import ReviewSlider from "../../components/customer/Home/ReviewSlider";
 import FaqSection from "../../components/customer/Home/FaqSection";
@@ -86,6 +87,7 @@ const Home = () => {
   return (
     <div className="home">
       <ImageSlider images={images} />
+      <img className="addbanner" src={banner} alt="" />
       <h1 className="align_center heading">Categories</h1>
       {!showAll && categories.length > 6 && (
         <div className="browse_all">
