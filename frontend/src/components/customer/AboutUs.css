@@ -9,19 +9,21 @@
 }
 
 .aboutus-left {
-  flex: 1;
-  min-width: 300px;
+  width: 800px;
+  height: 800px;
 }
 
 .aboutus-image {
+  margin-top: 70px;
   width: 100%;
   border-radius: 12px;
   object-fit: cover;
 }
 
 .aboutus-right {
-  flex: 1;
-  min-width: 300px;
+  
+  width: 765px;
+  height: 642px;
 }
 
 .aboutus-right h2 {
@@ -142,3 +144,129 @@
   transform: scale(1.05);
 }
 
+/* Default (Mobile-first): stack content */
+.aboutus-container {
+  flex-direction: column;
+  padding: 30px 15px;
+}
+
+.aboutus-left,
+.aboutus-right {
+  width: 100%;
+  height: auto;
+}
+
+/* Tablet View */
+@media screen and (min-width: 768px) {
+  .aboutus-container {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 40px 30px;
+  }
+
+  .aboutus-left {
+    width: 45%;
+    height: auto;
+  }
+
+  .aboutus-right {
+    width: 50%;
+    padding: 25px;
+  }
+}
+
+/* Desktop View */
+@media screen and (min-width: 1024px) {
+  .aboutus-left {
+    width: 500px;
+    height: 500px;
+  }
+
+  .aboutus-right {
+    width: 600px;
+    height: auto;
+    padding: 30px 40px;
+  }
+}
+
+.eventsbridge-container {
+  max-width: 800px;
+  margin: auto;
+  padding: 2rem;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.eventsbridge-container h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #1a1a1a;
+  text-align: center;
+}
+
+.eventsbridge-container p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.service-section {
+  margin-bottom: 1.5rem;
+}
+
+.service-section h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: #000000;
+}
+
+.service-section ul {
+  padding-left: 1.5rem;
+}
+
+.service-section li {
+  margin-bottom: 0.3rem;
+  list-style-type: disc;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Two equal columns */
+  gap: 20px; /* Space between columns and rows */
+  margin-top: 20px;
+}
+
+.service-section {
+  background-color: #f9f9f9; /* Optional: to visually separate */
+  padding: 10px;
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Extra-large desktop view */
+@media screen and (min-width: 1440px) {
+  .aboutus-container {
+    padding: 60px 80px;
+  }
+
+  .aboutus-left {
+    width: 600px;
+    height: auto;
+  }
+
+  .aboutus-right {
+    width: 700px;
+  }
+
+  .services-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import "./Milestones.css"; // Ensure you have the appropriate CSS for styling
+import "./Milestones.css"; 
 const Milestone = ({ number, label }) => (
   <div className="milestone-card">
     <h2 className="milestone-number">{number}+</h2>

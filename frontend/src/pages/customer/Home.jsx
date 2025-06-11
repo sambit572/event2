@@ -19,6 +19,7 @@ import image15 from "../../assets/home/cardsinvite.jpg";
 import ImageSlider from "../../components/customer/ImageSlider";
 import CategoryCard from "../../components/customer/CategoryCard";
 import ReviewSlider from "../../components/customer/ReviewSlider";
+import Milestones from "../../components/customer/Milestones";
 
 const images = [
   image1,
@@ -64,6 +65,7 @@ const Home = () => {
           </div>
         ))}
       </div>
+      <Milestones />
       <ReviewSlider />
     </div>
   );
