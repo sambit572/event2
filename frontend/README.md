@@ -36,4 +36,8 @@ git push origin your-feature-name
 how to take pull from origin?
 -> In the terminal you will write git pull origin main
 =======
->>>>>>> integrated
+
+> > > > > > > for backend install
+> > > > > > > 1 node then indtall
+> > > > > > > npm install prop-types
+> > > > > > > npm install express cors cookie-parser dotenv
