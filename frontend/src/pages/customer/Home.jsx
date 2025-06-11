@@ -23,6 +23,8 @@ import ReviewSlider from "../../components/customer/Home/ReviewSlider";
 import FaqSection from "../../components/customer/Home/FaqSection";
 import ImageSlider from "../../components/customer/Home/ImageSlider";
 
+import Milestones from "../../components/common/aboutus/Milestones";
+
 const images = [
   image1,
   image2,
@@ -103,7 +105,7 @@ const Home = () => {
           </div>
         ))}
       </div>
-
+      <Milestones />
       <ReviewSlider />
       <FaqSection />
     </div>
