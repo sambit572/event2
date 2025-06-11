@@ -17,14 +17,13 @@ import { MdMiscellaneousServices, MdReviews } from "react-icons/md";
 import { IoSettingsSharp } from "react-icons/io5";
 import { SiBrandfolder } from "react-icons/si";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
 
   const [userFirstName, setUserFirstName] = useState(null);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
-  const [showMyProfileSub, setShowMyProfileSub] = useState(false);
   const [showEllipsisDropdown, setShowEllipsisDropdown] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
@@ -63,7 +62,6 @@ const Navbar = () => {
     const handleClickOutside = (event) => {
       if (profileRef.current && !profileRef.current.contains(event.target)) {
         setShowProfileDropdown(false);
-        setShowMyProfileSub(false);
       }
       if (ellipsisRef.current && !ellipsisRef.current.contains(event.target)) {
         setShowEllipsisDropdown(false);
@@ -141,28 +139,12 @@ const Navbar = () => {
 
               {userFirstName && (
                 <>
-                  <div
-                    className="dropdown-item nested-toggle"
-                    onClick={() => setShowMyProfileSub((prev) => !prev)}
-                  >
+                  <div onClick={()=>{
+                    navigate('/profile')
+                  }}>
                     <FaUser style={{ marginRight: "4px" }} />
                     My Profile
-                    {showMyProfileSub ? (
-                      <FaChevronUp style={{ marginLeft: "4px" }} />
-                    ) : (
-                      <FaChevronDown style={{ marginLeft: "4px" }} />
-                    )}
                   </div>
-
-                  {showMyProfileSub && (
-                    <div className="nested-submenu">
-                      <div className="dropdown-item">
-                        <SiBrandfolder className="icon" />
-                        <a href="./edit-profile">Edit My Profile</a>
-                      </div>
-                    </div>
-                  )}
-
                   <div className="dropdown-item">
                     <FaHeart className="icon" style={{ marginRight: "4px" }} />
                     <a href="./wishlist">Wishlist</a>
