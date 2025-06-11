@@ -10,6 +10,7 @@ import ForgotPass from "./pages/customer/ForgotPass.jsx";
 import ResetPassword from "./pages/customer/ResetPassword.jsx";
 import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
 import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
+import UserDetails from "./pages/customer/UserDetails.jsx";
 
 const App = () => {
   return (
@@ -35,6 +36,7 @@ const App = () => {
             element={<ResetPassword />}
           />
           <Route path="/dashboard" element={<DashBoardMain />}></Route>
+          <Route path="/userdetails" element={<UserDetails />}></Route>
         </Routes>
       </main>
     </>
