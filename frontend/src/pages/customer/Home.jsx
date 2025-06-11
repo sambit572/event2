@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
 
 import "./Home.css";
 import image1 from "../../assets/home/dj.jpg";
@@ -56,6 +57,31 @@ const categories = [
 const Home = () => {
   const [showAll, setShowAll] = useState(false);
   const visibleCategories = showAll ? categories : categories.slice(0, 6);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      try {
+        const response = await axios.get("http://localhost:8000/user/", {
+          withCredentials: true,
+        });
+        console.log(response.data.message);
+
+        console.log(response.data.data);
+        const { user, accessToken } = response.data.data;
+        if (user && accessToken) {
+          localStorage.setItem("currentlyLoggedIn", true);
+          localStorage.setItem("userFirstName", user.fullName.split(" ")[0]);
+        }
+      } catch (error) {
+        console.log(
+          "error in noLogin :",
+          error.data?.data?.message || error.message
+        );
+      }
+    };
+
+    checkUser();
+  }, []);
 
   return (
     <div className="home">

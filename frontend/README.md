@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 # EventsBridge Frontend
 
@@ -34,3 +35,5 @@ git push origin your-feature-name
 
 how to take pull from origin?
 -> In the terminal you will write git pull origin main
+=======
+>>>>>>> integrated

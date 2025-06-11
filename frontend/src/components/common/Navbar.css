@@ -6,10 +6,6 @@
   height: 70px;
   padding: 10px 20px;
   background-color: #f5efff;
-  /* background-color: #f6f7c4; */
-  /* background-color: #ffffdd; */
-  /* background-color: #cdc1ff; */
-  /* background-color: white; */
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -110,8 +106,7 @@
 .profile-btn {
   display: flex;
   align-items: center;
-
-  padding: 6px;
+  padding-right: 6px;
   color: #3b0340e1;
   border-radius: 6px;
   gap: 5px;
@@ -120,6 +115,12 @@
   border: none;
   font-size: 16px;
   height: 36px;
+}
+.profile-btn:hover .icon {
+  color: #fff;
+}
+.profile-btn > span {
+  padding: 6px 0 6px 6px;
 }
 
 .profile-btn:hover {
@@ -132,6 +133,7 @@
   margin-right: 5px;
   color: #3b0340e1;
 }
+
 .dropdown-menu {
   position: absolute;
   top: 75px;
@@ -214,7 +216,12 @@
   padding: 0.5rem;
   width: 200px;
 }
-
+.nav-item .three-dot {
+  color: #3b0340e1;
+}
+.nav-item .vendor {
+  color: #3b0340e1;
+}
 .ellipsis-menu .dropdown-item {
   padding: 8px 12px;
   cursor: pointer;
@@ -241,6 +248,18 @@
 }
 
 @media (max-width: 768px) {
+  .signOutButton {
+    border: none;
+    background-color: #f5efff;
+    color: #3b0340e1;
+    font-size: 17px;
+    font-weight: 520;
+  }
+
+  .signOutButton:hover {
+    font-weight: bold;
+    color: #3b0340e1;
+  }
   .navbar {
     height: 80px;
     width: 100%;

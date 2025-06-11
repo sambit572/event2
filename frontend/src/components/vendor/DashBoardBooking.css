@@ -1,0 +1,442 @@
+.booking-page {
+  display: flex;
+}
+
+.main-content {
+  flex: 1;
+  background: #fff;
+}
+
+.tabs {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+  margin-right: 10px;
+}
+
+.sort-dropdown {
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #3b0340e1;
+  margin-right: -230px;
+  font-weight: 500;
+  background-color: #3b0340e1;
+  color: white;
+}
+.sort-dropdown option {
+  background-color: white;
+  color: black;
+  font-weight: 600;
+}
+.sort-dropdown option:hover {
+  background-color: #3b0340e1;
+  color: white;
+}
+.booking-container {
+  width: 100%;
+  max-width: 1100px;
+  margin: auto;
+  margin-left: 332px;
+}
+
+/* ------------------------------------ */
+/* ✅ LAPTOP / DESKTOP (Default) Layout */
+/* ------------------------------------ */
+.booking-header,
+.booking-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  margin-bottom: 10px;
+}
+
+.booking-header {
+  background-color: #e8dbf4;
+  font-weight: bold;
+  margin-bottom: 23px;
+}
+
+.booking-header .number,
+.booking-row .number,
+.booking-header .status,
+.booking-row .status,
+.booking-header .middle,
+.booking-row .middle {
+  flex: 1;
+  text-align: center;
+}
+.booking-header .number,
+.booking-row .number {
+  width: 5px;
+}
+.booking-header:hover {
+  background-color: rgb(184, 181, 181);
+}
+.booking-row:hover {
+  background-color: #ece6e6;
+}
+.booking-header .middle,
+.booking-row .middle {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.booking-header .middle div,
+.booking-row .middle div {
+  flex: 1;
+  text-align: center;
+  width: 120px;
+}
+.status.initialize{
+  color: #FA4B0E;
+  font-weight: bold;
+}
+
+.status.completed {
+  color: green;
+  font-weight: bold;
+}
+.status.processing {
+  color: #FAC331;
+  font-weight: bold;
+}
+.status.up-coming {
+  color: blue;
+  font-weight: bold;
+}
+.status.cancelled{
+  color: red;
+  font-weight: bold;
+}
+
+@media screen and (max-width: 1366px) {
+  .booking-container {
+    margin-left: 280px;
+    margin-right: 20px;
+    max-width: 100%;
+  }
+
+  .sort-dropdown {
+    width: 100px;
+    padding: 8px;
+    margin-left: 200px;
+  }
+
+  .tabs {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
+    margin: 10px 0;
+  }
+
+  .booking-header .middle,
+  .booking-row .middle {
+    gap: 20px;
+  }
+
+  .booking-header .middle div,
+  .booking-row .middle div {
+    width: 125px;
+    padding: 2px;
+  }
+  .number {
+    width: 5px;
+  }
+  .status {
+    width: 5px;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .booking-container {
+    width: 100%;
+    margin-left: 260px;
+    padding: 0 10px;
+  }
+
+  .booking-header,
+  .booking-row {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .booking-header .middle,
+  .booking-row .middle {
+    flex-direction: row;
+    gap: 10px;
+    width: 100%;
+  }
+  .number {
+    width: 10px;
+  }
+  .status {
+    width: 10px;
+  }
+  .booking-header .middle div,
+  .booking-row .middle div {
+    text-align: center;
+    width: 70px;
+    margin-right: 15px;
+  }
+
+  .sort-dropdown {
+    width: 12%;
+    margin-left: 200px;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .booking-container {
+    margin-left: 260px;
+    max-width: 100%;
+  }
+
+  .sort-dropdown {
+    width: 12%;
+    font-size: 14px;
+  }
+
+  .tabs {
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    margin: 10px 0;
+  }
+  .number {
+    width: 30px; /* or even 25px if you're okay with tighter spacing */
+    min-width: 25px;
+    max-width: 30px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .status {
+    width: 70px; /* or 50px depending on the word length */
+    min-width: 50px;
+    max-width: 70px;
+    text-align: center;
+    font-size: 13px; /* optional: reduce text size */
+    flex-shrink: 0; /* prevent it from stretching */
+    padding-right: 10px;
+  }
+  .booking-header,
+  .booking-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .booking-header .middle,
+  .booking-row .middle {
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .booking-header .middle div,
+  .booking-row .middle div {
+    width: 42px;
+    text-align: center;
+    margin-right: 10px;
+  }
+}
+
+@media screen and (max-width: 820px) {
+  .booking-header {
+    display: none;
+  }
+
+  .booking-row {
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 8px;
+    width: 350px;
+    margin-left: 280px;
+  }
+
+  .booking-header .number,
+  .booking-row .number {
+    grid-area: number;
+    text-align: center;
+  }
+
+  .booking-header .status,
+  .booking-row .status {
+    grid-area: status;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .booking-header .middle,
+  .booking-row .middle {
+    grid-area: middle;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: center;
+    align-items: center;
+  }
+
+  .booking-header .middle div,
+  .booking-row .middle div {
+    font-size: 14px;
+    width: 110px;
+  }
+
+  .booking-header,
+  .booking-row {
+    font-size: 14px;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
+  }
+  .status {
+    width: 90px; /* or 50px depending on the word length */
+    min-width: 50px;
+    max-width: 90px;
+    text-align: center;
+    font-size: 13px; /* optional: reduce text size */
+    flex-shrink: 0; /* prevent it from stretching */
+    padding-right: 10px;
+  }
+
+  .tabs {
+    flex-direction: column;
+    align-items: flex-end;
+    margin: 10px 0;
+  }
+
+  .sort-dropdown {
+    width: 20%;
+    padding: 6px;
+    margin-right: 30px;
+  }
+  .booking-container {
+    margin-left: 42px;
+    width: 100%;
+  }
+}
+
+/* -------------------- Responsive styles for mobile -------------------- */
+@media screen and (max-width: 768px) {
+  .booking-header {
+    display: none;
+  }
+
+  .booking-row {
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 8px;
+    width: 450px;
+   margin-left: 10px;
+  }
+
+  .booking-header .number,
+  .booking-row .number {
+    grid-area: number;
+    text-align: center;
+  }
+
+  .booking-header .status,
+  .booking-row .status {
+    grid-area: status;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .booking-header .middle,
+  .booking-row .middle {
+    grid-area: middle;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: center;
+    align-items: center;
+  }
+
+  .booking-header .middle div,
+  .booking-row .middle div {
+    font-size: 14px;
+  }
+
+  .booking-header,
+  .booking-row {
+    font-size: 14px;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
+  }
+
+  .tabs {
+    flex-direction: column;
+    align-items: flex-end;
+    margin: 10px 0;
+  }
+
+  .sort-dropdown {
+    width: 15%;
+    padding: 6px;
+    margin-right: 30px;
+  }
+  .booking-container {
+    margin-left: 148px;
+    width: 100%;
+  }
+
+  .tab-buttons{
+    margin-left: 49px;
+  }
+
+  .booking-h2{
+    margin-left: 11px;
+  }
+}
+
+/* Extra mobile-specific tweaks for very small screens */
+@media screen and (max-width: 480px) {
+  .booking-row {
+    font-size: 13px;
+    padding: 10px;
+    width: 290px;
+    margin-left: 5px;
+  }
+
+  .booking-row .middle {
+    font-size: 13px;
+  }
+
+  .booking-row .middle div {
+    width: 110px;
+  }
+
+  .sort-dropdown {
+    font-size: 13px;
+    width: 25%;
+  }
+  .sort-dropdown option {
+    width: 25%;
+  }
+
+  .booking-container{
+    margin-left: 49px;
+  }
+  
+}
+
+@media screen and (max-width: 360px) {
+  .booking-row {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  .booking-row .middle {
+    font-size: 12px;
+  }
+
+  .sort-dropdown {
+    font-size: 12px;
+  }
+}

@@ -3,7 +3,6 @@ import { Route, Routes, useLocation } from "react-router-dom";
 
 import Home from "./pages/customer/Home";
 import ServiceList from "./pages/customer/ServiceList";
-
 import ServiceDetails from "./pages/customer/ServiceDetails";
 
 import VendorLegalConsent from "./pages/vendor/VendorLegalConsent";
@@ -20,6 +19,11 @@ import VendorService from "./pages/vendor/VendorService";
 
 import Chatbot from "./components/common/Chatbot";
 import AboutUs from "./pages/common/AboutUs";
+
+import ForgotPass from "./pages/customer/ForgotPass.jsx";
+import ResetPassword from "./pages/customer/ResetPassword.jsx";
+import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
+import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
 
 const App = () => {
   /*{ const location = useLocation();
@@ -52,7 +56,14 @@ const App = () => {
       <main>
         <Routes>
           {/* Customer Routes */}
-          <Route path="/" element={<Home />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          ></Route>
           <Route path="/category" element={<ServiceList />} />
 
           <Route path="/category/service" element={<ServiceDetails />} />
@@ -67,6 +78,14 @@ const App = () => {
             element={<VendorLegalConsent />}
           />
           <Route path="/vendor/thank-you" element={<VendorThankYou />} />
+
+          {/* a */}
+          <Route path="/forgot-password" element={<ForgotPass />}></Route>
+          <Route
+            path="/reset-password/:resetToken"
+            element={<ResetPassword />}
+          />
+          <Route path="/dashboard" element={<DashBoardMain />}></Route>
           <Route path="/about_us" element={<AboutUs />} />
         </Routes>
       </main>
