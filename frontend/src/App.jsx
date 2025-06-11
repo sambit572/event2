@@ -3,6 +3,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 
 import Home from "./pages/customer/Home";
 import ServiceList from "./pages/customer/ServiceList";
+
 import ServiceDetails from "./pages/customer/ServiceDetails";
 
 import VendorLegalConsent from "./pages/vendor/VendorLegalConsent";
@@ -24,6 +25,10 @@ import ForgotPass from "./pages/customer/ForgotPass.jsx";
 import ResetPassword from "./pages/customer/ResetPassword.jsx";
 import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
 import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
+
+import Wishlist from "./pages/customer/Wishlist";
+import DashboardServices from "./pages/customer/DashboardServices";
+import ForgotPassword from "./pages/customer/ForgotPassword";
 
 const App = () => {
   /*{ const location = useLocation();
@@ -87,6 +92,13 @@ const App = () => {
           />
           <Route path="/dashboard" element={<DashBoardMain />}></Route>
           <Route path="/about_us" element={<AboutUs />} />
+
+          <Route path="/Wishlist" element={<Wishlist />}></Route>
+          <Route path="/forgotpassword" element={<ForgotPassword />}></Route>
+          <Route
+            path="/dashboardservices"
+            element={<DashboardServices />}
+          ></Route>
         </Routes>
       </main>
       {/* {shouldShowFooter && <Footer />} */}
