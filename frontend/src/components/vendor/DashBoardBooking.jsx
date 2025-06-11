@@ -11,6 +11,9 @@ const DashBoardBooking = () => {
             <option>Sort by</option>
             <option value="status">Status</option>
             <option value="serviceName">Service Name</option>
+            <option value="cancelled">Cancelled</option>
+            <option value="last1">Last 3 months</option>
+            <option value="last2">Last 6 months</option>
           </select>
         </div>
 

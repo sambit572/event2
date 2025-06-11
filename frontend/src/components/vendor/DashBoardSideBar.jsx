@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./DashBoardSideBar.css";
+import { FaEdit } from "react-icons/fa";
 
 function DashBoardSideBar({ isOpen }) {
   const [fullName, setFullName] = useState("Rudransh Dash");
@@ -152,7 +153,7 @@ function DashBoardSideBar({ isOpen }) {
         </ul>
 
         <button className="edit-button" onClick={handleToggleEdit}>
-          {editMode ? "Save" : "Edit"}
+          {editMode ? "Save" : (<><FaEdit /> Edit</>)}
         </button>
       </div>
     </div>
