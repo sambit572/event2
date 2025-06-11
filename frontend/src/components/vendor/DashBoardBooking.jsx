@@ -4,32 +4,19 @@ import BookingPopup from "./BookingPopup.jsx";
 import "./DashBoardBooking.css";
 
 const DashBoardBooking = () => {
-  const [hoveredRow, setHoveredRow] = useState(null);
   const [clickedRow, setClickedRow] = useState(null);
 
-  const handleRowClick = (rowNumber) => {
-    setClickedRow(clickedRow === rowNumber ? null : rowNumber);
+  const handleRowClick = (booking) => {
+    setClickedRow(clickedRow?.number === booking.number ? null : booking);
   };
 
-  const handleMouseEnter = (rowNumber) => {
-    setHoveredRow(rowNumber);
-  };
-
-  const handleMouseLeave = () => {
-    setHoveredRow(null);
-  };
-
-  const isPopupVisible = (rowNumber) => {
-    return clickedRow === rowNumber || hoveredRow === rowNumber;
-  };
-
-  const closePopup = () => {
+  const handleClose = () => {
     setClickedRow(null);
   };
 
   return (
     <div className="booking-page">
-      <main className="main-content">
+      <main className="main-contents">
         <div className="tabs">
           <select className="sort-dropdown">
             <option>Sort by</option>
@@ -55,12 +42,10 @@ const DashBoardBooking = () => {
           </div>
           {BookingData.map((b) => (
             <div
+              className={`booking-row ${b.number === 2 ? "highlight" : ""}`}
               key={b.number}
-              className="booking-row"
+              onClick={() => handleRowClick(b)}
               style={{ position: "relative", cursor: "pointer" }}
-              onClick={() => handleRowClick(b.number)}
-              onMouseEnter={() => handleMouseEnter(b.number)}
-              onMouseLeave={handleMouseLeave}
             >
               <div className="number">{b.number}</div>
 
@@ -82,13 +67,13 @@ const DashBoardBooking = () => {
                 {b.status}
               </div>
 
-              {/* Popup */}
-              {isPopupVisible(b.number) && (
+              {/* Popup only for clicked row */}
+              {clickedRow?.number === b.number && (
                 <div className="row-popup-wrapper">
                   <BookingPopup
                     isOpen={true}
-                    onClose={closePopup}
-                    booking={b}
+                    onClose={handleClose}
+                    booking={clickedRow}
                   />
                 </div>
               )}
