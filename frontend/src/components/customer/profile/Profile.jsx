@@ -113,8 +113,16 @@ function Profile() {
             />
 
             <div className="modal-buttons">
-              <button className="submit-btn" onClick={handlePasswordChangeSubmit}>Submit</button>
-              <button className='cancel-btn' onClick={() => setShowPasswordModal(false)}>
+              <button
+                className="submit-btn"
+                onClick={handlePasswordChangeSubmit}
+              >
+                Submit
+              </button>
+              <button
+                className="cancel-btn"
+                onClick={() => setShowPasswordModal(false)}
+              >
                 Cancel
               </button>
             </div>
@@ -125,10 +133,15 @@ function Profile() {
       )}
 
       <div className="main-content">
-        
-          <h2 className="booking-title">My Bookings</h2>
-          <div className="sort-btn">sort by <span>▼</span></div>
-      
+        <h2 className="booking-title">My Bookings</h2>
+        <select className="sort-dropdown">
+          <option>Sort by</option>
+          <option value="status">Status</option>
+          <option value="serviceName">Service Name</option>
+          <option value="cancelled">Cancelled</option>
+          <option value="last1">Last 3 months</option>
+          <option value="last2">Last 6 months</option>
+        </select>
 
         <div className="booking-card">
           <div className="booking-content">
@@ -141,18 +154,26 @@ function Profile() {
             <div className="booking-details">
               <div className="booking-left">
                 <h3>DJ Weeding Service</h3>
-                <p>Patia, Bhubaneswar, Odisha, India</p>
-                <p>Booking Date :- 10/06/2025</p>
-                <p>Event Date :- 10/06/2025</p>
+                <div>Patia, Bhubaneswar, Odisha, India</div>
+                <div>Booking Date : 10/06/2025</div>
+                <div>Event Date : 10/06/2025</div>
                 <a href="#payment-details">Payment Details</a>
               </div>
 
               <div className="booking-right">
-                <div>Actual Amount :- <strong>₹50,000</strong></div>
-                <div className="strike">Paid Amount :-  <strong>₹3,000</strong></div>
+                <div>
+                  Actual Amount :<strong>₹50,000</strong>
+                </div>
+                <div className="strike">
+                  Paid Amount :<strong>₹3,000</strong>
+                </div>
                 <hr />
-                <div>Remaining Amount :- <strong>₹47,000</strong></div>
-                <p className="status">Pending<span className="dots">...</span></p>
+                <div>
+                  Remaining Amount :<strong>₹47,000</strong>
+                </div>
+                <p className="status">
+                  Pending<span className="dots">...</span>
+                </p>
               </div>
             </div>
           </div>
