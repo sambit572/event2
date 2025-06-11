@@ -2,7 +2,7 @@
 
 .wishlist-container {
   width: 1100px;
-  background-color: #eee; /* Use background-color for clarity */
+  background-color: white; /* Use background-color for clarity */
   margin: 50px auto; /* Center horizontally if possible */
   padding: 20px; /* Optional: gives some inner spacing */
   display: block; /* Ensures it's treated as a block container */
@@ -12,7 +12,10 @@
   display: flex;
   padding: 1%;
   background-color: #eee; 
-  padding-top: 30px;
+  padding-top: 40px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border-radius: 10px;
   padding-bottom: 2px;
   overflow: hidden;
   border-bottom: 1px solid #cdcaca;
@@ -25,6 +28,7 @@
 .wishlist-image {
   width: 250px;
   height: 175px;
+  margin-left: 10px;
   border-radius: 10px;
 }
 
