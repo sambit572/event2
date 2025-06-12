@@ -5,7 +5,7 @@
   background-color: #fff;
   height: 100vh;
   font-family: sans-serif;
-  margin-left: 260px;
+  /* margin-left: 260px; */
 }
 
 /* ========== Main Content Area ========== */
@@ -44,7 +44,6 @@
 }
 
 .tab-buttons .active {
-
   color: #f5efff;
   border-color: #f5efff;
   background: transparent;
@@ -75,7 +74,6 @@
   width: 50%;
   border-radius: 6.25rem;
   background-color: rgb(145 44 209);
-  ;
   /* subtle purple highlight */
   z-index: 1;
   transition: all 0.43s ease;
@@ -91,7 +89,6 @@
 .bg-slider.bookings {
   left: 125px;
   width: 120px;
-
 }
 
 /* ========== Service Card Section ========== */
@@ -365,31 +362,31 @@
   left: -70%;
   width: 50%;
   height: 100%;
-  background: linear-gradient(120deg,
-      transparent,
-      rgba(255, 255, 255, 0.5),
-      transparent);
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.5),
+    transparent
+  );
   transform: skewX(-20deg);
   transition: left 0.4s ease;
 }
 
-.toggle-switch input:checked+.slider {
+.toggle-switch input:checked + .slider {
   background: linear-gradient(90deg, #3cb0ff, #6e1274);
 }
 
-.toggle-switch input:checked+.slider::before {
+.toggle-switch input:checked + .slider::before {
   transform: translateX(28px);
 }
 
-.toggle-switch input:checked+.slider::after {
+.toggle-switch input:checked + .slider::after {
   left: 120%;
 }
 
 .booking-h2 {
   text-align: center;
 }
-
-
 
 /* ========== Responsive Design ========== */
 
@@ -413,15 +410,18 @@
   }
 
   .main-image {
-    width: 100%;
-    max-width: 100%;
+    width: 75%;
     height: auto;
+    position: relative;
+    top: -240px;
+    right: -27px;
   }
 
   .thumbnail-column {
-    flex-direction: row;
+    flex-direction: column;
     flex-wrap: wrap;
-    justify-content: center;
+    position: relative;
+    left: -192px;
   }
 
   .thumbnail {
@@ -432,16 +432,18 @@
   .service-card {
     flex-direction: column;
     align-items: center;
+    height: 571px;
   }
 
-  .main-image-and-buttons {
-    width: 75%;
-    align-items: center;
+  .edit-form {
+    position: relative;
+    bottom: 444px;
   }
 
   .image-buttons {
     flex-direction: row;
     flex-wrap: wrap;
+    position: fixed;
   }
 
   .edit,
@@ -450,9 +452,9 @@
     font-size: 14px;
   }
 
-  .right-section {
-    text-align: left;
-    align-items: center;
+  .details {
+    position: relative;
+    top: -188px;
   }
 }
 
@@ -464,10 +466,10 @@
   }
   .service-card {
     width: 720px;
-    margin-top: 5px;  
+    margin-top: 5px;
     margin-left: 9px;
   }
-  
+
   .edit-form {
     width: 650px;
     height: auto;
@@ -507,15 +509,13 @@
     height: 22px;
   }
 
-  .toggle-switch input:checked+.slider::before {
+  .toggle-switch input:checked + .slider::before {
     transform: translateX(22px);
   }
 
   .tab-buttons {
     margin-left: 53px;
-
   }
-
 
   .booking-h2 {
     margin-right: -30px;
@@ -529,17 +529,17 @@
 
 /* Extra Small Devices (width <= 480px) */
 @media (max-width: 480px) {
-.dashboard-container {
+  .dashboard-container {
     overflow-y: auto;
     width: 100vw;
     height: 100vh;
   }
   .service-card {
     width: 340px;
-    margin-top: 5px;  
+    margin-top: 5px;
     margin-right: 10px;
   }
-  
+
   .edit-form {
     width: 300px;
     padding: 15px;
@@ -578,7 +578,7 @@
     height: 22px;
   }
 
-  .toggle-switch input:checked+.slider::before {
+  .toggle-switch input:checked + .slider::before {
     transform: translateX(22px);
   }
 }
@@ -591,9 +591,9 @@
   }
   .service-card {
     width: 325px;
-    margin-top: 5px;  
+    margin-top: 5px;
   }
-  
+
   .edit-form {
     width: 280px;
     padding: 15px;
@@ -632,7 +632,7 @@
     height: 22px;
   }
 
-  .toggle-switch input:checked+.slider::before {
+  .toggle-switch input:checked + .slider::before {
     transform: translateX(22px);
   }
 }

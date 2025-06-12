@@ -1,16 +1,20 @@
-
 /* ===== Hamburger Button ===== */
+* {
+  box-sizing: border-box;
+}
+
+/* Hamburger Menu */
 .hamburger {
-  font-size: 28px;
+  font-size: 33px;
   border: none;
-  color: #4527a0;
+  color: #000000;
   cursor: pointer;
-  margin: 10px;
-  z-index: 30;
-  position: fixed;
-  left: 220px;
   padding: 5px;
   background: none;
+  position: fixed;
+  top: 70px;
+  left: 20px;
+  z-index: 1001;
   display: none;
 }
 
@@ -123,6 +127,15 @@
 }
 
 /* ===== Modal Styles ===== */
+
+/* Main Content */
+.main-content {
+  margin-left: 260px;
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+}
+
+/* Modal Styles */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -133,7 +146,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 2000;
 }
 
 .modal-content {
@@ -143,14 +156,13 @@
   width: 90%;
   max-width: 400px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  z-index: 10001;
+  z-index: 2001;
 }
 
 .modal-content input {
   width: 100%;
   padding: 10px;
-  margin-top: 10px;
-  margin-bottom: 12px;
+  margin: 10px 0 12px;
   border: 1px solid #ccc;
   border-radius: 8px;
 }
@@ -174,6 +186,7 @@
   background-color: rgb(236, 67, 67);
 }
 
+
 .cancel-btn:hover {
   background-color: red;
   font-weight: 700;
@@ -182,22 +195,242 @@
 .submit-btn {
   background-color: #7f66ff;
 }
-
 .submit-btn:hover {
   background-color: #4425e1;
   font-weight: 700;
 }
 
+
 /* ===== Responsive Layout ===== */
+
+/* Booking Section */
+.booking-title {
+  text-align: center;
+  margin-top: 0px;
+}
+
+.booking-card {
+  background-color: #e0dae9;
+  width: 100%;
+  max-width: 900px;
+  border: 1px solid #da8edc;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  font-family: sans-serif;
+}
+
+.booking-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.booking-image {
+  flex: 1 1 250px;
+  max-width: 250px;
+  max-height: 188px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.booking-details {
+  flex: 2 1 60%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.booking-left {
+  flex: 1 1 50%;
+  margin-top: 10px;
+}
+
+.booking-left h3 {
+  margin: 0 0 10px;
+  font-size: 20px;
+  color: #4a004e;
+}
+
+.booking-left div {
+  margin-bottom: 5px;
+  font-size: 15px;
+  color: black;
+  font-weight: 500;
+}
+
+.booking-left a {
+  color: #6e1274;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.booking-right {
+  flex: 1 1 45%;
+  background-color: #e0dae9;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 17px;
+  color: black;
+  font-weight: 500;
+}
+
+.booking-right strong {
+  color: #6e1274;
+}
+
+.status {
+  margin-top: 10px;
+  font-weight: bold;
+  color: #fac33a;
+  font-size: 20px;
+  text-align: center;
+}
+
+/* Dropdown */
+.profile-sort-dropdown {
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #3b0340e1;
+  background-color: #3b0340e1;
+  color: white;
+  font-weight: 500;
+  width: 100px;
+  margin: 20px 0;
+  display: block;
+  margin-left: auto;
+}
+
+.profile-sort-dropdown option {
+  background-color: white;
+  color: black;
+  font-weight: 600;
+}
+
+/* Dots Animation */
+.dots {
+  animation: blink 1s infinite;
+}
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* Sidebar Base */
+.user-sidebar {
+  width: 240px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #3b0340e1;
+  padding: 20px;
+  color: white;
+  z-index: 1000;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Sidebar closed */
+.user-sidebar.closed {
+  transform: translateX(-100%);
+}
+
+/* Sidebar open */
+.user-sidebar.open {
+  transform: translateX(0);
+}
+
+/* Responsive Styles */
+@media (max-width: 13px) {
+  .main-content {
+    margin-left: 0;
+    padding: 16px;
+  }
+  .booking-card {
+    margin: 20px;
+    width: auto;
+  }
+  .booking-content {
+    flex-direction: column;
+  }
+  .booking-image {
+    width: 100%;
+    max-width: 100%;
+  }
+  .booking-right,
+  .booking-left {
+    width: 100%;
+  }
+}
+
+@media (max-width: 820px) {
+  .booking-image {
+    max-width: 479px;
+  }
+}
+
+/* Show hamburger on small screens */
+
 @media (max-width: 768px) {
   .hamburger {
-    display: flex;
-    left: 0;
-    margin-top: 25px;
+    display: block;
   }
 
-  .open {
-    color: whitesmoke;
+  .booking-card {
+    width: 68%;
+    position: relative;
+    top: -52px;
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding-top: 40px;
+  }
+
+  .modal-content {
+    max-width: 90%;
+  }
+
+  .profile-sort-dropdown {
+    width: 100%;
+    max-width: 90px;
+    font-size: 15px;
+    position: relative;
+    top: -52px;
+    right: 118px;
+  }
+}
+
+/* Small Devices */
+@media (max-width: 480px) {
+
+  .hamburger{
+    left: 0;
+  }
+  .booking-card {
+    width: 57%;
+    position: relative;
+    left: -85px;
+  }
+
+  .profile-sort-dropdown {
+    position: relative;
+    left: -195px;
+    margin-top: 73px;
+  }
+  .booking-title {
+    font-size: 18px;
+    position: relative;
+    left: -88px;
+  }
+  .booking-right {
+    font-size: 14px;
   }
 
   .main-content {
@@ -253,6 +486,17 @@
     position: fixed;
     left: 36px;
     top: 213px;
+  }
+
+  .booking-left div {
+    font-size: 14px;
+  }
+  .status {
+    font-size: 18px;
+  }
+
+  .booking-image {
+    width: 50%;
   }
   .sort-btn {
     position: relative;

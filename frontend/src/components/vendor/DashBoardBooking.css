@@ -2,7 +2,7 @@
   display: flex;
 }
 
-.main-content {
+.main-contents {
   flex: 1;
   background: #fff;
 }
@@ -19,7 +19,7 @@
   padding: 6px;
   border-radius: 6px;
   border: 1px solid #3b0340e1;
-  margin-right: -230px;
+  /* margin-right: -230px; */
   font-weight: 500;
   background-color: #3b0340e1;
   color: white;
@@ -33,12 +33,12 @@
   background-color: #3b0340e1;
   color: white;
 }
-.booking-container {
+/* .booking-container {
   width: 100%;
   max-width: 1100px;
   margin: auto;
   margin-left: 332px;
-}
+} */
 .booking-row-wrapper {
   display: flex;
   flex-direction: column;
@@ -136,15 +136,19 @@
 
 @media screen and (max-width: 1366px) {
   .booking-container {
-    margin-left: 280px;
+    /* margin-left: 280px; */
     margin-right: 20px;
     max-width: 100%;
+  }
+  .booking-row,.booking-header{
+    width: 1000px;
   }
 
   .sort-dropdown {
     width: 100px;
     padding: 8px;
-    margin-left: 200px;
+    margin-right: 20px;
+    /* margin-left: 200px; */
   }
 
   .tabs {
@@ -175,7 +179,7 @@
 @media screen and (max-width: 1100px) {
   .booking-container {
     width: 100%;
-    margin-left: 260px;
+    /* margin-left: 260px; */
     padding: 0 10px;
   }
 
@@ -207,13 +211,13 @@
 
   .sort-dropdown {
     width: 12%;
-    margin-left: 200px;
+    /* margin-left: 200px; */
   }
 }
 
 @media screen and (max-width: 1024px) {
   .booking-container {
-    margin-left: 260px;
+    /* margin-left: 260px; */
     max-width: 100%;
   }
 
@@ -249,6 +253,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 700px;
   }
   .booking-header .middle,
   .booking-row .middle {
@@ -275,7 +280,7 @@
     padding: 12px;
     border-radius: 8px;
     width: 350px;
-    margin-left: 280px;
+    /* margin-left: 280px; */
   }
 
   .booking-header .number,
