@@ -3,6 +3,7 @@ import UserSideBar from "./UserSideBar.jsx";
 import PasswordInput from "../../../utils/PasswordInput.jsx";
 import axios from "axios";
 import { BACKEND_URL } from "../../../utils/constant.js";
+import { IoIosArrowDropdown } from "react-icons/io";
 import "./Profile.css";
 
 function Profile() {
