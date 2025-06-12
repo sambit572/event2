@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import RegisterStepProgress from "./RegisterStepProgress";
 import "./VendorRegistration.css";
+import axios from "axios";
 
 export default function VendorRegister() {
   const navigate = useNavigate();
@@ -16,6 +17,8 @@ export default function VendorRegister() {
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(""); 
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -29,21 +32,73 @@ export default function VendorRegister() {
     setShowPassword((prev) => !prev);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    console.log("Form Data:", form);
-
-    // Navigate to VendorService page
-    navigate("/category/VendorService", {
-      state: {
-        currentStep: 1, // Move to next step
-        vendorData: form, // Pass form data if needed
-      },
-    });
+  //Basic validation function
+  const validateForm = () => {
+    if (form.password !== form.confirmPassword) {
+      setError("Passwords don't match!");
+      return false;
+    }
+    if (form.password.length < 6) {
+      setError("Password must be at least 6 characters!");
+      return false;
+    }
+    return true;
   };
 
-  const currentStepIndex = location.state?.currentStep || 0; // Default to step 1
+  // Handle form submission with axios
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(""); 
+
+    // Validate form first
+    if (!validateForm()) {
+      return;
+    }
+
+    setLoading(true); 
+
+    try {
+      
+      const response = await axios.post('http://localhost:8000/vendor/register', {
+        fullName: form.fullName,
+        email: form.email,
+        phone: form.phone,
+        password: form.password,
+      
+      });
+
+      // SUCCESS: API call worked
+      console.log("Registration successful:", response.data);
+      
+      // Navigate to next step with the response data
+      navigate("/category/VendorService", {
+        state: {
+          currentStep: 1,
+          vendorData: form,
+          apiResponse: response.data, // Pass API response if needed
+        },
+      });
+
+    } catch (error) {
+      // ERROR: API call failed
+      console.error("Registration failed:", error);
+      
+      // error message
+      if (error.response?.data?.message) {
+        setError(error.response.data.message);
+      } else if (error.response?.status === 400) {
+        setError("Invalid data provided. Please check your inputs.");
+      } else if (error.response?.status === 409) {
+        setError("Email already exists. Please use a different email.");
+      } else {
+        setError("Registration failed. Please try again.");
+      }
+    } finally {
+      setLoading(false); 
+    }
+  };
+
+  const currentStepIndex = location.state?.currentStep || 0;
 
   return (
     <div className="vendor-register-page">
@@ -58,16 +113,24 @@ export default function VendorRegister() {
             <h2>Create Vendor Account</h2>
             <p>Welcome! Please fill in the details to register.</p>
 
+            {/* error message */}
+            {error && (
+              <div style={{ 
+                color: 'red', 
+                backgroundColor: '#ffebee', 
+                padding: '10px', 
+                borderRadius: '4px', 
+                marginBottom: '15px' 
+              }}>
+                {error}
+              </div>
+            )}
+
             <div className="social-signup-row">
               <div className="google-signup-btn">
                 <img src="/GoogleImg.png" alt="Google Icon" />
                 <span>Sign up with Google</span>
               </div>
-
-              {/* <div className="apple-signup-btn">
-                <img src="/apple-logo.png" alt="Apple Icon" />
-                <span>Sign up with Apple</span>
-              </div> */}
             </div>
 
             <label>
@@ -127,8 +190,8 @@ export default function VendorRegister() {
             <div className="password-input-wrapper">
               <input
                 type={showPassword ? "text" : "password"}
-                name="password"
-                value={form.password}
+                name="confirmPassword" 
+                value={form.confirmPassword}
                 onChange={handleChange}
                 required
               />
@@ -147,7 +210,10 @@ export default function VendorRegister() {
               onChange={handleChange}
             />
 
-            <button type="submit">Next</button>
+            {/* UPDATED: Button shows loading state */}
+            <button type="submit" disabled={loading}>
+              {loading ? "Registering..." : "Next"}
+            </button>
           </form>
 
           {/* Right: Animation */}
