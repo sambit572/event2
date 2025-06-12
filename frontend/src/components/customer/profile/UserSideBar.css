@@ -13,8 +13,8 @@
   transition: width 0.3s ease;
   overflow-y: auto;
   position: fixed;
+  left: 0;
   top: 70px;
-  left:0;
   z-index: 5;
 }
 
@@ -149,7 +149,7 @@
 @media (max-width: 820px) {
   .user-sidebar {
     position: fixed;
-    top: 0;
+    top: 70px;
     left: 0;
     bottom: 0;
     width: 240px;
