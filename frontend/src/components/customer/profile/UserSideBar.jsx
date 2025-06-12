@@ -20,7 +20,7 @@ function UserSideBar({ isOpen, setShowPasswordModal }) {
   
 
   return (
-    <div className={`user-sidebar ${isOpen ? "open" : ""}`}>
+    <div className={`user-sidebar ${isOpen ? "open" : "closed"}`}>
       <h2 className="profile-heading">PROFILE</h2>
       <div className="user-sidebar-content">
         <img
