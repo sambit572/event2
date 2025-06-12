@@ -134,7 +134,7 @@ function Profile() {
 
       <div className="main-content">
         <h2 className="booking-title">My Bookings</h2>
-        <select className="sort-dropdown">
+        <select className="profile-sort-dropdown">
           <option>Sort by</option>
           <option value="status">Status</option>
           <option value="serviceName">Service Name</option>

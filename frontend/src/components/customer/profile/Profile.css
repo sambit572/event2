@@ -172,7 +172,7 @@
 }
 
 /* Dropdown */
-.sort-dropdown {
+.profile-sort-dropdown {
   padding: 6px;
   border-radius: 6px;
   border: 1px solid #3b0340e1;
@@ -185,7 +185,7 @@
   margin-left: auto;
 }
 
-.sort-dropdown option {
+.profile-sort-dropdown option {
   background-color: white;
   color: black;
   font-weight: 600;
@@ -196,8 +196,13 @@
   animation: blink 1s infinite;
 }
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
 }
 
 /* Sidebar Base */
@@ -241,8 +246,15 @@
     width: 100%;
     max-width: 100%;
   }
-  .booking-right, .booking-left {
+  .booking-right,
+  .booking-left {
     width: 100%;
+  }
+}
+
+@media (max-width: 820px) {
+  .booking-image {
+    max-width: 479px;
   }
 }
 
@@ -250,6 +262,12 @@
 @media (max-width: 768px) {
   .hamburger {
     display: block;
+  }
+
+  .booking-card {
+    width: 68%;
+    position: relative;
+    top: -52px;
   }
 
   .main-content {
@@ -261,23 +279,50 @@
     max-width: 90%;
   }
 
-  .sort-dropdown {
+  .profile-sort-dropdown {
     width: 100%;
     max-width: 90px;
     font-size: 15px;
+    position: relative;
+    top: -52px;
+    right: 118px;
   }
 }
 
 /* Small Devices */
 @media (max-width: 480px) {
+
+  .hamburger{
+    left: 0;
+  }
+  .booking-card {
+    width: 57%;
+    position: relative;
+    left: -85px;
+  }
+
+  .profile-sort-dropdown {
+    position: relative;
+    left: -195px;
+    margin-top: 73px;
+  }
   .booking-title {
     font-size: 18px;
+    position: relative;
+    left: -88px;
   }
-  .booking-left div, .booking-right {
+  .booking-right {
+    font-size: 14px;
+  }
+
+  .booking-left div {
     font-size: 14px;
   }
   .status {
     font-size: 18px;
   }
-}    
 
+  .booking-image {
+    width: 50%;
+  }
+}
