@@ -13,7 +13,7 @@ app.on("error", (error) => {
   throw error;
 });
 
-let port = process.env.PORT || 5001
+let port = process.env.PORT || 8000
 
 connectToDb().then(()=>{
     app.listen(port, () => {

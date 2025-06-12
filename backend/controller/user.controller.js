@@ -14,12 +14,6 @@ const option = {
   sameSite: "Lax",
 };
 
-/**
- * @description Generates access and refresh tokens for a given user ID.
- * This function ideally should be a method on your User model for better encapsulation.
- * @param {string} userId - The ID of the user.
- * @returns {Promise<{accessToken: string, refreshToken: string}|{error: string}>} Tokens or an error object.
- */
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
     const user = await User.findById(userId);
@@ -39,14 +33,6 @@ const generateAccessAndRefreshTokens = async (userId) => {
   }
 };
 
-/**
- * @description Registers a new user.
- * Handles validation, checking for existing users, password hashing (via model),
- * and generating JWT tokens.
- * @param {Object} req - The Express request object.
- * @param {Object} res - The Express response object.
- * @returns {Promise<void>}
- */
 const registerUser = async (req, res) => {
   try {
     // Note: Changed `phoneNo` to `phoneNumber` for consistency with common schema patterns
@@ -125,13 +111,6 @@ const registerUser = async (req, res) => {
   }
 };
 
-/**
- * @description Handles user login.
- * Allows login by email or phone number.
- * @param {Object} req - The Express request object.
- * @param {Object} res - The Express response object.
- * @returns {Promise<void>}
- */
 const loginUser = async (req, res) => {
   try {
     // User can login with either email or phoneNumber
@@ -207,12 +186,6 @@ const loginUser = async (req, res) => {
   }
 };
 
-/**
- * @description Logs out a user by clearing the refresh token in the database and clearing cookies.
- * @param {Object} req - The Express request object (expects req.user to be populated by auth middleware).
- * @param {Object} res - The Express response object.
- * @returns {Promise<void>}
- */
 const logoutUser = async (req, res) => {
   try {
     // Assuming req.user is populated by an authentication middleware
@@ -235,12 +208,6 @@ const logoutUser = async (req, res) => {
   }
 };
 
-/**
- * @description Sends a password reset link to the user's email.
- * @param {Object} req - The Express request object.
- * @param {Object} res - The Express response object.
- * @returns {Promise<void>}
- */
 const sendPasswordResetLink = async (req, res) => {
   try {
     console.log("🔹 Received request for password reset");
@@ -323,13 +290,6 @@ const sendPasswordResetLink = async (req, res) => {
       .json(new ApiError(500, error.message || "Internal Server Error during password reset link generation."));
   }
 };
-
-/**
- * @description Resets the user's password using a reset token.
- * @param {Object} req - The Express request object.
- * @param {Object} res - The Express response object.
- * @returns {Promise<void>}
- */
 const resetPassword = async (req, res) => {
   try {
     console.log("🔹 Reset password request received");
@@ -382,12 +342,7 @@ const resetPassword = async (req, res) => {
   }
 };
 
-/**
- * @description Allows an authenticated user to change their password.
- * @param {Object} req - The Express request object.
- * @param {Object} res - The Express response object.
- * @returns {Promise<void>}
- */
+
 const changePassword = async (req, res) => {
   try {
     const { email, oldPassword, newPassword } = req.body;
@@ -448,13 +403,7 @@ const changePassword = async (req, res) => {
   }
 };
 
-/**
- * @description Handles automatic login using refresh token if available (e.g., "stay logged in").
- * This function essentially refreshes access token using the refresh token from cookies.
- * @param {Object} req - The Express request object.
- * @param {Object} res - The Express response object.
- * @returns {Promise<void>}
- */
+
 const noNeedToLogin = async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken;

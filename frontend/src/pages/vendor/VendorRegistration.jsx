@@ -12,7 +12,7 @@ export default function VendorRegister() {
     phone: "",
     password: "",
     confirmPassword: "",
-    profilePic: null,
+    profilePic: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
