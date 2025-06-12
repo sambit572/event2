@@ -13,12 +13,14 @@ app.on("error", (error) => {
   throw error;
 });
 
-let port = process.env.PORT || 8000
+let port = process.env.PORT || 8000;
 
-connectToDb().then(()=>{
+connectToDb()
+  .then(() => {
     app.listen(port, () => {
-        console.log(`connected on ${port}`);
-      });
-}).catch((err)=>{
-    console.log(`err:${err}`)
-})
+      console.log(`connected on ${port}`);
+    });
+  })
+  .catch((err) => {
+    console.log(`err:${err}`);
+  });

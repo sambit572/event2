@@ -4,33 +4,39 @@ const serviceSchema = new Schema(
   {
     vendorid: {
       type: Schema.Types.ObjectId,
-      ref:"Vendor",
+      ref: "Vendor",
     },
     serviceCategory: {
       type: String,
       required: true,
     },
     serviceImage: {
-      type: String,
+      type: [String], 
       required: true,
     },
     priceRange: {
       type: String,
-      required: true,
+      required: false, 
+    },
+    minPrice: {
+      type: Number,
+      required: false,
     },
     serviceName: {
       type: String,
       required: true,
     },
     duration: {
-      type: TimeRanges,
+      type: Number,
+      required: true,
     },
     locationOffered: {
       type: String,
       required: true,
     },
     serviceDes: {
-      type: string,
+      type: String,
+      required: true,
     },
   },
   { timestamps: true }

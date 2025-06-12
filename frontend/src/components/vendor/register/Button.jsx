@@ -1,7 +1,7 @@
 import React from "react";
 import "./Button.css";
 
-export default function PaymentFormButtons({ onBack, onNext }) {
+export default function Button({ onBack, onNext }) {
   return (
     <div className="form-buttons">
       <button type="button" className="back-btn" onClick={onBack}>
