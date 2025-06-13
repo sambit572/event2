@@ -27,7 +27,7 @@ app.get("/", (req, res) => {
   });
 });
 
-import userRouter from "./routes/user.routes.js";
+import userRouter from './routes/user/user.routes.js'
 import { vendor_router } from "./routes/vendor/vendor.routes.js";
 
 app.use("/user", userRouter);

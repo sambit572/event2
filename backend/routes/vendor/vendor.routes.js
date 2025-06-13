@@ -47,6 +47,7 @@ vendor_router.put("/bank-details/:vendorId", updateBankDetails); // after vendor
 // Delete bank details by vendor ID
 vendor_router.delete("/bank-details/:vendorId", deleteBankDetails); // after vendor registration complete change
 
+
 // --- Legal Consent Routes ---
 vendor_router.post(
 "/legal-consent",

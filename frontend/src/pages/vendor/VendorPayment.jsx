@@ -6,19 +6,21 @@ import StepProgress from "./StepProgress";
 import "./StepProgress.css";
 import Button from "./../../components/vendor/register/Button";
 
+import axios from "axios";
+
 export default function VendorPayment() {
   const navigate = useNavigate();
   const location = useLocation();
   const currentStepIndex = location.state?.currentStep || 2;
 
   const [formData, setFormData] = useState({
-    name: "",
+    accountHolderName: "",
     accountNumber: "",
     branchName: "",
-    ifsc: "",
-    gstin: "",
-    upi: "",
-    panFile: null,
+    ifscCode: "",
+    gst: "",
+    upiId: "",
+    panCardPic: "",
   });
 
   const [showPopup, setShowPopup] = useState(false);
@@ -31,17 +33,57 @@ export default function VendorPayment() {
     }));
   };
 
-  const handleNext = () => {
-    const { name, accountNumber, branchName, ifsc, panFile } = formData;
+  const handleNext = async () => {
+    const {
+      accountHolderName,
+      accountNumber,
+      branchName,
+      ifscCode,
+      gst,
+      upiId,
+      panCardPic,
+    } = formData;
 
-    if (!name || !accountNumber || !branchName || !ifsc || !panFile) {
+    if (
+      !accountHolderName ||
+      !accountNumber ||
+      !branchName ||
+      !ifscCode ||
+      !panCardPic
+    ) {
       setShowPopup(true);
       setTimeout(() => setShowPopup(false), 3000);
       return;
     }
 
-    navigate("/vendor/legal-consent", { state: { currentStep: 3 } });
+    try {
+      const fd = new FormData();
+      fd.append("accountHolderName", accountHolderName);
+      fd.append("accountNumber", accountNumber);
+      fd.append("branchName", branchName);
+      fd.append("ifscCode", ifscCode);
+      fd.append("gst", gst);
+      fd.append("upiId", upiId);
+      fd.append("panCardPic", panCardPic);
+
+      const res = await axios.post(
+        "http://localhost:8000/vendors/bank-details",
+        fd,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log("Success:", res.data);
+      navigate("/vendor/legal-consent", { state: { currentStep: 3 } });
+    } catch (err) {
+      console.error("Upload failed:", err.response?.data || err.message);
+      setShowPopup(true);
+    }
   };
+  
 
   return (
     <div className="vendor-payment-page">
@@ -58,8 +100,8 @@ export default function VendorPayment() {
           Account Holder Name <span className="required-icon">*</span>
           <input
             type="text"
-            name="name"
-            value={formData.name}
+            name="accountHolderName"
+            value={formData.accountHolderName}
             onChange={handleChange}
             placeholder="Enter account name"
           />
@@ -94,8 +136,8 @@ export default function VendorPayment() {
           <div className="input-with-icon">
             <input
               type="text"
-              name="ifsc"
-              value={formData.ifsc}
+              name="ifscCode"
+              value={formData.ifscCode}
               onChange={handleChange}
               placeholder="Enter IFSC code"
             />
@@ -111,8 +153,8 @@ export default function VendorPayment() {
           GSTIN (Optional)
           <input
             type="text"
-            name="gstin"
-            value={formData.gstin}
+            name="gst"
+            value={formData.gst}
             onChange={handleChange}
             placeholder="Enter GSTIN if available"
           />
@@ -123,8 +165,8 @@ export default function VendorPayment() {
             UPI Id (Optional)
             <input
               type="text"
-              name="upi"
-              value={formData.upi}
+              name="upiId"
+              value={formData.upiId}
               onChange={handleChange}
               placeholder="Enter UPI Id"
             />
@@ -146,7 +188,7 @@ export default function VendorPayment() {
           <img src="/Upload.png" alt="Upload Icon" />
           <input
             type="file"
-            name="panFile"
+            name="panCardPic"
             accept=".jpg,.jpeg,.png,.pdf"
             onChange={handleChange}
           />
