@@ -42,6 +42,7 @@ export const createLegalConsent = async (req, res) => {
       signature: cloudinaryResponse.secure_url, // Save Cloudinary URL
     });
 
+    console.log("consent backend working fine...")
     res.status(201).json({
       success: true,
       message: "Legal consent created successfully",
