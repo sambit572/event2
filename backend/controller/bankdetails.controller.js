@@ -7,8 +7,6 @@ import {
 import { ApiResponse } from "../utilities/ApiResponse.js";
 import { ApiError } from "../utilities/ApiError.js";
 
-
-
 // chnage "pan card pic upload" from regular to private in production as otherwise may violate indian law :
 
 // IT Act, 2000 (India)
