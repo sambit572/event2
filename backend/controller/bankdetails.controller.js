@@ -7,8 +7,6 @@ import {
 import { ApiResponse } from "../utilities/ApiResponse.js";
 import { ApiError } from "../utilities/ApiError.js";
 
-
-
 // chnage "pan card pic upload" from regular to private in production as otherwise may violate indian law :
 
 // IT Act, 2000 (India)
@@ -16,7 +14,6 @@ import { ApiError } from "../utilities/ApiError.js";
 // Aadhaar & PAN privacy regulations
 
 // DPDP Bill (Digital Personal Data Protection), 2023
-
 
 export const createBankDetails = async (req, res) => {
   try {
@@ -77,15 +74,18 @@ export const getBankDetailsByVendor = async (req, res) => {
     const details = await BankDetails.findOne({ vendorid: vendorId });
 
     if (!details) {
-      return res.status(404).json(new ApiError(404,"Bank details can't be found"));
+      return res
+        .status(404)
+        .json(new ApiError(404, "Bank details can't be found"));
     }
 
-    res.status(200).json(new ApiResponse(200,details,"Bank details fetched successfully"));
+    res
+      .status(200)
+      .json(new ApiResponse(200, details, "Bank details fetched successfully"));
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
-
 
 export const updateBankDetails = async (req, res) => {
   try {
@@ -136,7 +136,6 @@ export const updateBankDetails = async (req, res) => {
     });
   }
 };
-
 
 // Deleting bank details by vendor ID
 export const deleteBankDetails = async (req, res) => {

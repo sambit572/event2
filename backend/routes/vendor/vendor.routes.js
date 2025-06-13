@@ -51,4 +51,5 @@ vendor_router.put("/bank-details/:vendorId", updateBankDetails); // after vendor
 vendor_router.delete("/bank-details/:vendorId", deleteBankDetails); // after vendor registration complete change
 
 
+
 export { vendor_router };

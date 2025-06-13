@@ -4,22 +4,25 @@ import { ApiError } from "../utilities/ApiError.js";
 import { ApiResponse } from "../utilities/ApiResponse.js";
 import fs from "fs/promises";
 import path from "path";
+import { uploadOnCloudinary } from "../utilities/cloudinary.js";
 
 const registerVendor = async (req, res) => {
   try {
     const { fullName, email, phoneNumber, password } = req.body;
 
-    // 1. Basic Validation: Check if all required fields are present
+    // 1. Basic Validation
     if ([fullName, email, phoneNumber, password].some((field) => !field)) {
-      return next(
-        new ApiError(
-          400,
-          "All required fields (full name, email, phone number, password) must be provided."
-        )
-      );
+      return res
+        .status(400)
+        .json(
+          new ApiError(
+            400,
+            "All required fields (full name, email, phone number, password) must be provided."
+          )
+        );
     }
 
-    // 3. Check for existing vendor by email or phone number
+    // 2. Check if vendor already exists
     const existingVendor = await Vendor.findOne({
       $or: [{ email }, { phoneNumber }],
     });
@@ -35,64 +38,45 @@ const registerVendor = async (req, res) => {
         );
     }
 
-    // 4. Handle profile picture upload
-    let profilePicturePath = "";
+    // 3. Optional: Upload to Cloudinary
+    let profilePictureUrl = "";
     if (req.file) {
-      profilePicturePath = path.join(
-        "uploads",
-        "profile-pictures",
-        req.file.filename
-      );
+      const cloudinaryResult = await uploadOnCloudinary(req.file.path);
+      if (!cloudinaryResult?.url) {
+        return res
+          .status(500)
+          .json(
+            new ApiError(500, "Failed to upload profile picture to Cloudinary.")
+          );
+      }
+      profilePictureUrl = cloudinaryResult.url;
     }
 
-    // 5. Create new vendor instance
+    // 4. Create Vendor
     const newVendor = await Vendor.create({
       fullName,
       email,
       phoneNumber,
       password,
-      profilePicture: profilePicturePath,
+      profilePicture: profilePictureUrl, // May be empty string
     });
 
-    // 8. Send successful response
-    res
+    // 5. Return success response
+    return res
       .status(200)
       .json(new ApiResponse(200, newVendor, "Vendor registered successfully."));
   } catch (error) {
-    // Log the error for debugging purposes
     console.error("Vendor registration error:", error);
-    if (req.file && req.file.path) {
-      try {
-        await fs.unlink(req.file.path);
-        console.log(`Deleted partially uploaded file: ${req.file.path}`);
-      } catch (unlinkError) {
-        console.error("Error deleting partially uploaded file:", unlinkError);
-      }
-    }
 
-    // Handle Mongoose validation errors (e.g., schema validation)
+    // Mongoose schema validation
     if (error.name === "ValidationError") {
-      const errorMessages = Object.values(error.errors).map(
-        (err) => err.message
-      );
-      return next(
-        new ApiError(400, `Validation failed: ${errorMessages.join(", ")}`)
-      );
+      const messages = Object.values(error.errors).map((err) => err.message);
+      return res
+        .status(400)
+        .json(new ApiError(400, `Validation failed: ${messages.join(", ")}`));
     }
 
-    // Handle Mongoose duplicate key error (if email/phoneNumber fields have unique index)
-    if (error.code === 11000) {
-      const field = Object.keys(error.keyValue)[0];
-      return next(
-        new ApiError(409, `A vendor with this ${field} already exists.`)
-      );
-    }
-    next(
-      new ApiError(
-        500,
-        "An internal server error occurred during vendor registration."
-      )
-    );
+    return res.status(500).json(new ApiError(500, "Internal server error"));
   }
 };
 

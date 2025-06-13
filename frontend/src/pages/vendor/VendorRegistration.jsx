@@ -18,7 +18,7 @@ export default function VendorRegister() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(""); 
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -48,42 +48,49 @@ export default function VendorRegister() {
   // Handle form submission with axios
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); 
+    setError("");
 
-    // Validate form first
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
 
-    setLoading(true); 
+    setLoading(true);
 
     try {
-      
-      const response = await axios.post('http://localhost:8000/vendor/register', {
-        fullName: form.fullName,
-        email: form.email,
-        phone: form.phone,
-        password: form.password,
-      
-      });
+      if (form.confirmPassword !== form.password) {
+        setError("Password not matching");
+      }
 
-      // SUCCESS: API call worked
+      const formData = new FormData();
+      formData.append("fullName", form.fullName);
+      formData.append("email", form.email);
+      formData.append("phoneNumber", form.phone);
+      formData.append("password", form.password);
+
+      if (form.profilePic) {
+        formData.append("profilePicture", form.profilePic); // file appended
+      }
+
+      const response = await axios.post(
+        "http://localhost:8000/vendors/register",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // important
+          },
+        }
+      );
+
       console.log("Registration successful:", response.data);
-      
-      // Navigate to next step with the response data
+
       navigate("/category/VendorService", {
         state: {
           currentStep: 1,
           vendorData: form,
-          apiResponse: response.data, // Pass API response if needed
+          apiResponse: response.data,
         },
       });
-
     } catch (error) {
-      // ERROR: API call failed
       console.error("Registration failed:", error);
-      
-      // error message
+
       if (error.response?.data?.message) {
         setError(error.response.data.message);
       } else if (error.response?.status === 400) {
@@ -94,7 +101,7 @@ export default function VendorRegister() {
         setError("Registration failed. Please try again.");
       }
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
@@ -115,13 +122,15 @@ export default function VendorRegister() {
 
             {/* error message */}
             {error && (
-              <div style={{ 
-                color: 'red', 
-                backgroundColor: '#ffebee', 
-                padding: '10px', 
-                borderRadius: '4px', 
-                marginBottom: '15px' 
-              }}>
+              <div
+                style={{
+                  color: "red",
+                  backgroundColor: "#ffebee",
+                  padding: "10px",
+                  borderRadius: "4px",
+                  marginBottom: "15px",
+                }}
+              >
                 {error}
               </div>
             )}
@@ -159,7 +168,7 @@ export default function VendorRegister() {
               Phone Number <span className="required-star">*</span>
             </label>
             <input
-              type="tel"
+              type="text"
               name="phone"
               value={form.phone}
               onChange={handleChange}
@@ -190,7 +199,7 @@ export default function VendorRegister() {
             <div className="password-input-wrapper">
               <input
                 type={showPassword ? "text" : "password"}
-                name="confirmPassword" 
+                name="confirmPassword"
                 value={form.confirmPassword}
                 onChange={handleChange}
                 required
