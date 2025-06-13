@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StepProgress from "./StepProgress";
 import "./VendorRegistration.css";
+import axios from "axios";
 
 export default function VendorRegister() {
   const navigate = useNavigate();
@@ -12,10 +13,12 @@ export default function VendorRegister() {
     phone: "",
     password: "",
     confirmPassword: "",
-    profilePic: null,
+    profilePic: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -29,18 +32,85 @@ export default function VendorRegister() {
     setShowPassword((prev) => !prev);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    // console.log("Form Data:", form);
-
-    // Navigate to VendorService page
-    navigate("/category/VendorService");
+  //Basic validation function
+  const validateForm = () => {
+    if (form.password !== form.confirmPassword) {
+      setError("Passwords don't match!");
+      return false;
+    }
+    if (form.password.length < 6) {
+      setError("Password must be at least 6 characters!");
+      return false;
+    }
+    return true;
   };
+
+  // Handle form submission with axios
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (!validateForm()) return;
+
+    setLoading(true);
+
+    try {
+      if (form.confirmPassword !== form.password) {
+        setError("Password not matching");
+      }
+
+      const formData = new FormData();
+      formData.append("fullName", form.fullName);
+      formData.append("email", form.email);
+      formData.append("phoneNumber", form.phone);
+      formData.append("password", form.password);
+
+      if (form.profilePic) {
+        formData.append("profilePicture", form.profilePic); // file appended
+      }
+
+      const response = await axios.post(
+        "http://localhost:8000/vendors/register",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // important
+          },
+        }
+      );
+
+      console.log("Registration successful:", response.data);
+
+      navigate("/category/VendorService", {
+        state: {
+          currentStep: 1,
+          vendorData: form,
+          apiResponse: response.data,
+        },
+      });
+    } catch (error) {
+      console.error("Registration failed:", error);
+
+      if (error.response?.data?.message) {
+        setError(error.response.data.message);
+      } else if (error.response?.status === 400) {
+        setError("Invalid data provided. Please check your inputs.");
+      } else if (error.response?.status === 409) {
+        setError("Email already exists. Please use a different email.");
+      } else {
+        setError("Registration failed. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const StepIndex = location.state?.currentStep || 0;
 
   return (
     <>
       <StepProgress currentStep={0} />
+
       <div className="vendor-register-page">
         {/* Progress Bar */}
 
@@ -52,16 +122,26 @@ export default function VendorRegister() {
               <h2>Create Vendor Account</h2>
               <p>Welcome! Please fill in the details to register.</p>
 
+              {/* error message */}
+              {error && (
+                <div
+                  style={{
+                    color: "red",
+                    backgroundColor: "#ffebee",
+                    padding: "10px",
+                    borderRadius: "4px",
+                    marginBottom: "15px",
+                  }}
+                >
+                  {error}
+                </div>
+              )}
+
               <div className="social-signup-row">
                 <div className="google-signup-btn">
                   <img src="/GoogleImg.png" alt="Google Icon" />
                   <span>Sign up with Google</span>
                 </div>
-
-                {/* <div className="apple-signup-btn">
-                <img src="/apple-logo.png" alt="Apple Icon" />
-                <span>Sign up with Apple</span>
-              </div> */}
               </div>
 
               <label>
@@ -90,7 +170,7 @@ export default function VendorRegister() {
                 Phone Number <span className="required-star">*</span>
               </label>
               <input
-                type="tel"
+                type="text"
                 name="phone"
                 value={form.phone}
                 onChange={handleChange}
@@ -121,8 +201,8 @@ export default function VendorRegister() {
               <div className="password-input-wrapper">
                 <input
                   type={showPassword ? "text" : "password"}
-                  name="password"
-                  value={form.password}
+                  name="confirmPassword"
+                  value={form.confirmPassword}
                   onChange={handleChange}
                   required
                 />
@@ -141,7 +221,10 @@ export default function VendorRegister() {
                 onChange={handleChange}
               />
 
-              <button type="submit">Next</button>
+              {/* UPDATED: Button shows loading state */}
+              <button type="submit" disabled={loading}>
+                {loading ? "Registering..." : "Next"}
+              </button>
             </form>
 
             {/* Right: Animation */}

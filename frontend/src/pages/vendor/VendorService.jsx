@@ -4,6 +4,8 @@ import "./VendorService.css";
 import StepProgress from "./StepProgress";
 import Button from "./../../components/vendor/register/Button";
 import "./../../components/vendor/register/Button.css";
+import axios from "axios";
+
 function VendorService({ currentStep }) {
   const navigate = useNavigate();
 
@@ -30,6 +32,7 @@ function VendorService({ currentStep }) {
   const [hours, setHours] = useState("");
   const [minutes, setMinutes] = useState("");
   const [selectedDropdownValue, setSelectedDropdownValue] = useState("");
+  const [selectedFiles, setSelectedFiles] = useState([]);
 
   const categories = [
     "DJ",
@@ -56,37 +59,84 @@ function VendorService({ currentStep }) {
 
   // Enhanced image upload with validation
   const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files);
+    try {
+      const files = Array.from(e.target.files);
 
-    // Validate file types and sizes
-    const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif"];
-    const maxSize = 5 * 1024 * 1024; // 5MB
+      // Validate file types and sizes
+      const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif"];
+      const maxSize = 5 * 1024 * 1024; // 5MB
 
-    for (let file of files) {
-      if (!validTypes.includes(file.type)) {
-        alert("Please upload only image files (JPEG, PNG, GIF)");
-        return;
+      for (let file of files) {
+        if (!validTypes.includes(file.type)) {
+          alert("Please upload only image files (JPEG, PNG, GIF)");
+          return;
+        }
+        if (file.size > maxSize) {
+          alert("Image size should be less than 5MB");
+          return;
+        }
       }
-      if (file.size > maxSize) {
-        alert("Image size should be less than 5MB");
-        return;
-      }
+
+      const imageUrls = files.map((file) => URL.createObjectURL(file));
+      setPreviewImages(imageUrls);
+      setSelectedFiles(files);
+      setSelectedImageIndex(0);
+    } catch (error) {
+      console.error("error in handle image", error);
     }
-
-    const imageUrls = files.map((file) => URL.createObjectURL(file));
-    setPreviewImages(imageUrls);
-    setSelectedImageIndex(0);
   };
 
   const handleBack = () => {
     navigate("/vendor/register");
   };
 
-  const handleNext = () => {
-    const isFormValid = validateForm();
+  const handleNext = async () => {
+    console.log("next button clicked");
 
-    if (isFormValid) {
+    if (!validateForm()) {
+      console.log("form is not validated wrong");
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append("serviceName", serviceName);
+      formData.append("serviceDes", serviceDescription);
+
+      if (selectedDropdownValue) {
+        formData.append("priceRange", selectedDropdownValue);
+      } else {
+        formData.append("minPrice", minPrice);
+        formData.append("maxPrice", maxPrice);
+      }
+
+      formData.append("serviceCategory", categorySearchTerm);
+      formData.append("locationOffered", locationSearchTerm);
+
+      selectedFiles.forEach((file) => {
+        formData.append("images", file);
+      });
+
+      formData.append("days", days);
+      formData.append("hrs", hours);
+      formData.append("mins", minutes);
+
+      const response = await axios.post(
+        "http://localhost:8000/vendors/create-service",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log(response);
+
       navigate("/vendor/payment-info");
+    } catch (error) {
+      console.error("Error submitting service:", error);
+      alert("Failed to submit service. Please try again.");
     }
   };
 
