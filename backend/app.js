@@ -28,10 +28,11 @@ app.get("/", (req, res) => {
 });
 
 import userRouter from "./routes/user.routes.js";
-import vendorRoutes from "./routes/vendor.routes.js";
+import { vendor_router } from "./routes/vendor/vendor.routes.js";
 
 app.use("/user", userRouter);
-app.use("/vendors", vendorRoutes);
+app.use("/vendors", vendor_router);
+
 app.use(errorHandler);
 
 export { app };

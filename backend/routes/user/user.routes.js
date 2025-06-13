@@ -7,8 +7,8 @@ import {
   registerUser,
   resetPassword,
   sendPasswordResetLink,
-} from "../controller/user.controller.js";
-import { verifyJwt } from "../middleware/auth.middleware.js";
+} from "../../controller/user.controller.js";
+import { verifyJwt } from "../../middleware/auth.middleware.js";
 
 
 const router = Router();
