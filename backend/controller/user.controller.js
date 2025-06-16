@@ -5,7 +5,7 @@ import { User } from "../model/user.model.js";
 import { ApiError } from "../utilities/ApiError.js";
 import { ApiResponse } from "../utilities/ApiResponse.js";
 import jwt from "jsonwebtoken";
-import {isValidPhoneNumber} from 'libphonenumber-js'
+import { isValidPhoneNumber } from "libphonenumber-js";
 
 const option = {
   httpOnly: true,
@@ -24,147 +24,127 @@ const generateAccessAndRefreshTokens = async (userId) => {
 
     return { accessToken, refreshToken };
   } catch (error) {
-    console.error(`error in generating token : ${error}`)
+    console.error(`error in generating token : ${error}`);
     return { error: "Something went wrong while generating tokens" };
   }
 };
 
 const registerUser = async (req, res) => {
   try {
-    // Note: Changed `phoneNo` to `phoneNumber` for consistency with common schema patterns
-    const { fullName, email, phoneNumber, password } = req.body;
+    const { fullName, email, phoneNo, password } = req.body;
 
-    // Basic input validation
-    if (!fullName || !email || !password || !phoneNumber) {
-      return res.status(400).json(new ApiError(400, "All fields are required."));
+    if (!fullName || !email || !password || !phoneNo) {
+      return res.status(400).json(new ApiError(400, "All fields are required"));
     }
 
-    // Email format validation
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return res
         .status(400)
-        .json(new ApiError(400, "Please provide a valid email address."));
+        .json(new ApiError(400, "Please provide a valid email address"));
     }
 
-    // Password length validation
     if (password.length < 6) {
       return res
         .status(400)
-        .json(new ApiError(400, "Password must be at least 6 characters long."));
+        .json(new ApiError(400, "Password must be 6 character long"));
     }
 
-    // Check if user already exists by email or phone number
-    const userExist = await User.findOne({ $or: [{ email }, { phoneNumber }] }); // Consistent with phoneNumber
+    const userExist = await User.findOne({ $or: [{ email }, { phoneNo }] });
+
     if (userExist) {
-      // It's generally better to return 409 Conflict for existing resources
       return res
-        .status(409) // Changed status to 409 for conflict
-        .json(new ApiError(409, "User with this email or phone number already exists."));
+        .status(200)
+        .json(new ApiResponse(200, userExist, "User already exists"));
     }
 
-    // Create new user (password will be hashed by a pre-save hook in user.model.js)
     const user = await User.create({
       fullName,
-      email: email.toLowerCase(), // Store email in lowercase
-      phoneNumber, // Consistent with phoneNumber
+      email: email.toLowerCase(),
+      phoneNo,
       password,
     });
 
-    // Generate access and refresh tokens
-    const { accessToken, refreshToken, error: tokenError } = await generateAccessAndRefreshTokens(user._id);
+    const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
+      user._id
+    );
 
-    // Handle token generation error
-    if (tokenError) {
-      return res.status(500).json(new ApiError(500, tokenError));
-    }
-
-    // Fetch the created user, excluding sensitive fields
     const createdUser = await User.findById(user._id).select(
-      "-password -refreshToken" // Assuming accessToken is not stored directly on user
+      "-password -refreshToken -accessToken"
     );
 
     if (!createdUser) {
-      // This case should ideally not happen if user.create was successful
-      return res.status(500).json(new ApiError(500, "User creation failed, unable to retrieve user data."));
+      return res.status(500).json(new ApiError(500, "Unable to create user"));
     }
 
-    // Set cookies and send success response
     return res
-      .status(201) // Changed status to 201 Created
+      .status(200)
       .cookie("accessToken", accessToken, option)
       .cookie("refreshToken", refreshToken, option)
       .json(
         new ApiResponse(
-          201, // Consistent status
+          200,
           { user: createdUser, accessToken, refreshToken },
-          "User registered and logged in successfully."
+          "User created successfully"
         )
       );
   } catch (error) {
-    console.error(`Error in registering user: ${error}`);
-    // More specific error handling could be added here (e.g., Mongoose validation errors)
-    return res.status(500).json(new ApiError(500, "Internal Server Error during registration."));
+    console.error(`error in registering user : ${error}`);
+    return res.status(500).json(new ApiError(500, "Internal Server Error"));
   }
 };
 
 const loginUser = async (req, res) => {
   try {
-    // User can login with either email or phoneNumber
-    const { email, phoneNumber, password } = req.body; // Consistent with phoneNumber
+    const { email, phoneNo, password } = req.body;
 
-    // Check if at least one identifier (email or phoneNumber) is provided
-    if (!email && !phoneNumber) {
-      return res.status(400).json(new ApiError(400, "Please provide email or phone number to login."));
+    if (!email && !phoneNo) {
+      return res.status(400).json(new ApiError(400, "All fields are required"));
     }
 
-    // Validate email format if provided
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return res
         .status(400)
-        .json(new ApiError(400, "Please provide a valid email address."));
+        .json(new ApiError(400, "Please provide a valid email address"));
     }
 
-    // Validate phone number format if provided (using libphonenumber-js for 'IN' locale)
-    if (phoneNumber && !isValidPhoneNumber(phoneNumber, "IN")) {
-      return res.status(400).json(new ApiError(400, "Invalid phone number format for India."));
+    if (phoneNo && !isValidPhoneNumber(phoneNo, "IN")) {
+      return res.status(400).json(new ApiError(400, "Invalid phone number"));
     }
 
-    // Password validation
     if (!password) {
-      return res.status(400).json(new ApiError(400, "Password is required."));
+      return res.status(400).json(new ApiError(400, "Password required"));
     }
+
     if (password.length < 8) {
       return res
         .status(400)
-        .json(new ApiError(400, "Password must be at least 8 characters long for login."));
+        .json(new ApiError(400, "Password must be 8 character long"));
     }
 
-    // Find user by email or phone number, explicitly select password for comparison
-    const existUser = await User.findOne({ $or: [{ email }, { phoneNumber }] }).select('+password'); // Consistent with phoneNumber
+    const existUser = await User.findOne({ $or: [{ email }, { phoneNo }] });
 
     if (!existUser) {
-      return res.status(404).json(new ApiError(404, "User not found."));
+      return res.status(404).json(new ApiError(404, "User does not exist"));
     }
 
-    // Compare provided password with hashed password (method from user.model.js)
     const isCorrect = await existUser.isPasswordCorrect(password);
+
     if (!isCorrect) {
-      return res.status(401).json(new ApiError(401, "Incorrect password."));
+      return res.status(400).json(new ApiError(400, "Incorrect password"));
     }
 
-    // Generate new access and refresh tokens
-    const { accessToken, refreshToken, error: tokenError } = await generateAccessAndRefreshTokens(existUser._id);
-
-    if (tokenError) {
-      return res.status(500).json(new ApiError(500, tokenError));
-    }
-
-    // Fetch logged-in user details, excluding sensitive data
-    const loggedInUser = await User.findById(existUser._id).select(
-      "-password -refreshToken"
+    const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
+      existUser._id
     );
 
-    // Set cookies and send success response
+    if (accessToken?.error) {
+      return res.status(500).json(new ApiError(500, accessToken.error));
+    }
+
+    const loggedInUser = await User.findById(existUser._id).select(
+      "-password -refreshToken -accessToken"
+    );
+
     return res
       .status(200)
       .cookie("accessToken", accessToken, option)
@@ -184,23 +164,16 @@ const loginUser = async (req, res) => {
 
 const logoutUser = async (req, res) => {
   try {
-    // Assuming req.user is populated by an authentication middleware
-    if (!req.user || !req.user._id) {
-      return res.status(401).json(new ApiError(401, "Unauthorized: User not authenticated."));
-    }
-
-    // Unset the refresh token in the database
     await User.findByIdAndUpdate(req.user._id, { $unset: { refreshToken: 1 } });
 
-    // Clear cookies and send success response
     return res
       .status(200)
       .clearCookie("accessToken", option)
       .clearCookie("refreshToken", option)
-      .json(new ApiResponse(200, {}, "User logged out successfully."));
+      .json(new ApiResponse(200, {}, "User logged out"));
   } catch (error) {
-    console.error(`Error in logging out user: ${error}`);
-    return res.status(500).json(new ApiError(500, "Internal Server Error during logout."));
+    console.error(`error in logging out user : ${error}`);
+    return res.status(500).json(new ApiError(500, "Internal Server Error"));
   }
 };
 
@@ -208,85 +181,77 @@ const sendPasswordResetLink = async (req, res) => {
   try {
     console.log("🔹 Received request for password reset");
 
+    // Step 1: Check if email is present in the request body
     const { email } = req.body;
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return res
         .status(400)
-        .json(new ApiError(400, "Please provide a valid email address."));
+        .json(new ApiError(400, "Please provide a valid email address"));
     }
+
     console.log(`✅ Email received: ${email}`);
 
+    // Step 2: Find the user in the database
     const user = await User.findOne({ email });
     if (!user) {
       console.error(`❌ Error: User with email ${email} not found`);
-      return res.status(404).json(new ApiError(404, "User not found."));
+      return res.status(404).json(new ApiError(404, "User not found"));
     }
     console.log(`✅ User found: ${user.email}`);
 
+    // Step 3: Generate reset token and hash it
     const resetToken = crypto.randomBytes(32).toString("hex");
     console.log(`🔹 Generated reset token: ${resetToken}`);
 
-    // Hash the reset token before storing it in the database for security
-    // Your previous code was missing the hashing of the token before saving
-    const hashedResetToken = await bcrypt.hash(resetToken, 10); // Hash the token
-    user.resetPasswordToken = hashedResetToken; // Store the HASHED token
-    user.resetPasswordTokenExpires = Date.now() + 3600000; // 1 hour expiry
-    await user.save({ validateBeforeSave: false }); // Save without re-running all validations
-    console.log("✅ Hashed reset token saved to database");
+    console.log(`✅ Hashed reset token saved to database`);
 
-    // Construct the reset link to be sent in the email
-    // The actual token (unhashed) is sent to the user
+    // Step 4: Store hashed token and expiration time in DB
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordTokenExpires = Date.now() + 3600000; // 1 hour expiry
+    await user.save();
+    console.log("✅ Token saved in database");
+
+    // Step 5: Construct the reset link
     const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
     console.log(`🔹 Reset URL: ${resetUrl}`);
 
-    // Configure Nodemailer for sending emails
-    // Ensure EMAIL_USER and EMAIL_PASS are set in your .env
+    // Step 6: Configure Nodemailer
     const transporter = nodemailer.createTransport({
-      service: "gmail", // Or other services like 'smtp.mailtrap.io' for testing
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-      },
+      service: "gmail",
+      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
     });
 
-    // Email content
+    // Step 7: Email options
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: user.email,
       subject: "Password Reset Request",
-      html: `<p>You requested a password reset. Click <a href="${resetUrl}">here</a> to reset your password. This link is valid for 1 hour.</p>`,
+      html: `<p>You requested a password reset. Click <a href="${resetUrl}">here</a> to reset your password.</p>`,
     };
 
     console.log(`🔹 Sending email to ${user.email}`);
 
-
-    // Send the email
+    // Step 8: Send email
     const info = await transporter.sendMail(mailOptions);
     console.log("✅ Email sent successfully:", info.response);
 
     return res
       .status(200)
-      .json(new ApiResponse(200, null, "Password reset link sent to your email."));
+      .json(new ApiResponse(200, null, "Password reset link sent to email"));
   } catch (error) {
     console.error("❌ Error in sendPasswordResetLink:", error);
-    // If an error occurs, clear the token to prevent malicious use if it was partially saved
     const { email } = req.body;
-    try {
-      const user = await User.findOne({ email });
-      if (user) {
-        user.resetPasswordToken = undefined; // Use undefined to remove field
-        user.resetPasswordTokenExpires = undefined; // Use undefined to remove field
-        await user.save({ validateBeforeSave: false });
-      }
-    } catch (cleanUpError) {
-      console.error("Error cleaning up reset token after send error:", cleanUpError);
-    }
+    const user = await User.findOne({ email });
+    user.resetPasswordToken = null;
+    user.resetPasswordTokenExpires = null;
+    await user.save();
     return res
       .status(500)
-      .json(new ApiError(500, error.message || "Internal Server Error during password reset link generation."));
+      .json(new ApiError(500, error.message || "Internal Server Error"));
   }
 };
+
 const resetPassword = async (req, res) => {
   try {
     console.log("🔹 Reset password request received");
@@ -298,179 +263,129 @@ const resetPassword = async (req, res) => {
     if (!resetToken || !newPassword) {
       return res
         .status(400)
-        .json(new ApiError(400, "Token and new password are required.")); // Consistent with ApiError
+        .json({ error: "Token and new password are required" });
     }
 
-    if (newPassword.length < 8) {
-        return res
-          .status(400)
-          .json(new ApiError(400, "New password must be at least 8 characters long."));
-    }
-
-    // Find the user by comparing the provided resetToken with the HASHED token in the database
-    // Iterate through all users to find a match (less efficient but necessary for bcrypt)
-    const users = await User.find({ resetPasswordTokenExpires: { $gt: Date.now() } }).select('+resetPasswordToken');
-    let user = null;
-    for (const u of users) {
-        if (u.resetPasswordToken && await bcrypt.compare(resetToken, u.resetPasswordToken)) {
-            user = u;
-            break;
-        }
-    }
+    // Check if the user exists with a valid token
+    const user = await User.findOne({
+      resetPasswordToken: resetToken,
+      resetPasswordTokenExpires: { $gt: Date.now() },
+    });
 
     if (!user) {
-      return res.status(400).json(new ApiError(400, "Invalid or expired token.")); // Consistent with ApiError
+      return res.status(400).json({ error: "Invalid or expired token" });
     }
 
     console.log("✅ Valid reset token found for:", user.email);
 
-    // Update password (pre-save middleware in model will handle hashing)
+    // Update password (pre-save middleware will handle hashing)
     user.password = newPassword;
 
-    // Clear reset token fields (use undefined to remove from document)
+    // Remove reset token fields
     user.resetPasswordToken = undefined;
     user.resetPasswordTokenExpires = undefined;
-    await user.save({ validateBeforeSave: false }); // Save without re-running all validations
+    await user.save();
 
     console.log("✅ Password reset successfully for:", user.email);
-    return res.status(200).json(new ApiResponse(200, null, "Password reset successfully.")); // Consistent with ApiResponse
+    return res.status(200).json({ message: "Password reset successfully" });
   } catch (error) {
     console.error("❌ Error in resetPassword:", error);
-    return res.status(500).json(new ApiError(500, "Internal Server Error during password reset.")); // Consistent with ApiError
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
 
 const changePassword = async (req, res) => {
   try {
-    const { email, oldPassword, newPassword } = req.body;
+    const oldPassword = req.body.oldPassword?.trim();
+    const newPassword = req.body.newPassword?.trim();
 
-    if (!email || !oldPassword || !newPassword) {
+    if (!oldPassword || !newPassword) {
       return res
         .status(400)
-        .json(
-          new ApiError(
-            400,
-            "Email, old password, and new password are required"
-          )
-        );
+        .json(new ApiError(400, "Old password and new password are required"));
     }
 
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return res
-        .status(400)
-        .json(new ApiError(400, "Please provide a valid email address."));
-    }
+    const userWithPassword = await User.findById(req.user._id);
 
-    // Find user by email, explicitly select password to compare
-    const user = await User.findOne({ email }).select('+password');
+    const isSame = await bcrypt.compare(oldPassword, userWithPassword.password);
 
-    if (!user) {
-      return res.status(404).json(new ApiError(404, "User not found."));
-    }
-
-    // Compare old password with stored hashed password
-    const isSame = await bcrypt.compare(oldPassword, user.password);
     if (!isSame) {
-      return res.status(400).json(new ApiError(400, "Incorrect old password."));
+      return res.status(400).json(new ApiError(400, "Incorrect old password"));
     }
 
-    // New password cannot be the same as old password
     if (oldPassword === newPassword) {
       return res
         .status(400)
-        .json(new ApiError(400, "New password cannot be the same as old password."));
+        .json(new ApiError(400, "New password cannot be same as old password"));
     }
 
-    if (newPassword.length < 8) {
-        return res
-          .status(400)
-          .json(new ApiError(400, "New password must be at least 8 characters long."));
-    }
+    userWithPassword.password = newPassword;
+    await userWithPassword.save();
 
-    // Update password (pre-save middleware in model will hash it)
-    user.password = newPassword;
-    await user.save({ validateBeforeSave: false }); // Save without re-running all validations
+    console.log("Backend working fine for change password");
 
     return res
       .status(200)
-      .json(new ApiResponse(200, null, "Password changed successfully."));
+      .json(new ApiResponse(200, null, "Password changed successfully"));
   } catch (error) {
-    console.error(`Error in changing password: ${error}`);
-    return res.status(500).json(new ApiError(500, "Internal Server Error during password change."));
+    console.error(`Error in changing password:`, error);
+    return res.status(500).json(new ApiError(500, "Internal Server Error"));
   }
 };
-
 
 const noNeedToLogin = async (req, res) => {
   try {
-    const refreshToken = req.cookies.refreshToken;
+    const token = req.cookies.refreshToken;
 
-    if (!refreshToken) {
-      return res.status(401).json(new ApiResponse(401, null, "No refresh token found. User needs to log in."));
+    if (!token) {
+      res.status(401).json(new ApiResponse(401, "User is loging first time"));
     }
 
-    console.log("🔹 Refresh token found:", refreshToken);
+    console.log(token);
     let decodedToken;
     try {
-      // Verify the refresh token
-      decodedToken = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-      console.log("✅ Refresh token decoded:", decodedToken);
+      decodedToken = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
     } catch (err) {
-      console.error("❌ Refresh token verification error:", err);
-      // Clear potentially invalid/expired cookies
-      res.clearCookie("accessToken", option).clearCookie("refreshToken", option);
+      console.log("isOldUser try-catch error: ", err);
       return res
         .status(401)
-        .json(new ApiError(401, "Invalid or expired refresh token. Please log in again."));
+        .json(new ApiResponse(401, null, "Token expired or invalid"));
     }
 
-    // Find the user associated with the refresh token
-    // Ensure User model has `select: false` on refreshToken if needed
+    console.log(decodedToken);
     const user = await User.findById(decodedToken._id);
 
-    if (!user || user.refreshToken !== refreshToken) {
-      console.log("❌ User not found or refresh token mismatch.");
-      // Clear cookies if token is valid but doesn't match the user's stored token
-      res.clearCookie("accessToken", option).clearCookie("refreshToken", option);
-      return res.status(401).json(new ApiError(401, "Refresh token mismatch or user not found. Please log in again."));
+    if (!user) {
+      console.log("cannot find user using refresh token");
+    } else {
+      console.log(user);
     }
 
-    console.log("✅ User found for refresh token:", user.email);
-
-    // Generate new access and refresh tokens
-    const { accessToken, refreshToken: newRefreshToken, error: tokenError } = await generateAccessAndRefreshTokens(user._id);
-
-    if (tokenError) {
-      return res.status(500).json(new ApiError(500, tokenError));
-    }
-
-    // Fetch user details, excluding sensitive data, for response
-    const loggedInUser = await User.findById(user._id).select(
-      "-password -refreshToken"
+    const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
+      user._id
     );
 
-    console.log("✅ New tokens generated and user logged in via refresh token.");
+    if (accessToken?.error) {
+      return res.status(500).json(new ApiError(500, accessToken.error));
+    }
+
+    console.log("backend logic of no need to login works fine");
     return res
       .status(200)
       .cookie("accessToken", accessToken, option)
-      .cookie("refreshToken", newRefreshToken, option) // Send the new refresh token
+      .cookie("refreshToken", refreshToken, option)
       .json(
         new ApiResponse(
           200,
-          { user: loggedInUser, accessToken, refreshToken: newRefreshToken }, // Include new refresh token in response
-          "User logged in successfully through refresh token."
+          { user, accessToken },
+          "User logged in successfully through refresh token"
         )
       );
   } catch (error) {
-    console.error("❌ Error in noNeedToLogin:", error);
-    // Ensure cookies are cleared on any unexpected error during this flow
-    res.clearCookie("accessToken", option).clearCookie("refreshToken", option);
-    return res.status(500).json(new ApiError(500, "Internal Server Error during refresh token validation."));
+    console.log("In no need to login: ", error);
   }
 };
 
-// Export all controller functions
 export {
   registerUser,
   loginUser,
