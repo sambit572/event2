@@ -66,7 +66,7 @@ function Profile() {
     <div className="profile-container">
       {/* Hamburger / Cross button for mobile */}
       <button
-        className={`hamburger ${isSidebarOpen ? "open" : ""}`}
+        className={`profile-hamburger ${isSidebarOpen ? "open" : ""}`}
         onClick={() => setIsSidebarOpen((prev) => !prev)}
       >
         {isSidebarOpen ? "✕" : "☰"}

@@ -152,7 +152,7 @@ function DashBoardSideBar({ isOpen }) {
           </li>
         </ul>
 
-        <button className="edit-buttons" onClick={handleToggleEdit}>
+        <button className="edit-buttons flex gap-1 h" onClick={handleToggleEdit}>
           {editMode ? "Save" : (<><FaEdit /> Edit</>)}
         </button>
       </div>

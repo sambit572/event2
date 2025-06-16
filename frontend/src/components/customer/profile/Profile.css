@@ -3,7 +3,7 @@
 }
 
 /* Hamburger Menu */
-.hamburger {
+.profile-hamburger {
   font-size: 33px;
   border: none;
   color: #000000;
@@ -260,7 +260,7 @@
 
 /* Show hamburger on small screens */
 @media (max-width: 768px) {
-  .hamburger {
+  .profile-hamburger {
     display: block;
   }
 
@@ -292,7 +292,7 @@
 /* Small Devices */
 @media (max-width: 480px) {
 
-  .hamburger{
+  .profile-hamburger{
     left: 0;
   }
   .booking-card {
