@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FiAlertCircle } from "react-icons/fi";
 
@@ -9,9 +9,12 @@ import "./VendorLegalConsent.css";
 import "./StepProgress.css";
 import "./LegalButton.css";
 import axios from "axios";
+import Spinner from "./../../components/common/Spinner";
 
 export default function VendorLegalConsent() {
   const [signatureFile, setSignatureFile] = React.useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
   const fileInputRef = React.useRef();
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,7 +29,7 @@ export default function VendorLegalConsent() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setIsLoading(true);
     if (!signatureFile) {
       alert("Please upload your signature before submitting.");
       return;
@@ -58,6 +61,7 @@ export default function VendorLegalConsent() {
         "Consent submission failed:",
         error?.response?.data || error.message
       );
+      setIsLoading(false);
       alert("Failed to submit consent. Please try again.");
     }
   };
@@ -66,6 +70,8 @@ export default function VendorLegalConsent() {
     <div className="legal-consent-page">
       <StepProgress currentStep={currentStepIndex} />
 
+      {isLoading && <Spinner />}
+      {/* {isLoading ? "true" : "false"} */}
       <div className="checkbox-section">
         <p className="consent-heading">
           Before submitting your registration, please review and agree to the

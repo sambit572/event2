@@ -4,11 +4,13 @@ import "./VendorPayment.css";
 import StepProgress from "./StepProgress";
 import "./StepProgress.css";
 import Button from "./../../components/vendor/register/Button";
+import Spinner from "./../../components/common/Spinner";
 
 import axios from "axios";
 
 export default function VendorPayment() {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     accountHolderName: "",
@@ -38,6 +40,7 @@ export default function VendorPayment() {
     navigate("/category/VendorService");
   };
   const handleNext = async () => {
+    setIsLoading(true);
     const {
       accountHolderName,
       accountNumber,
@@ -86,6 +89,7 @@ export default function VendorPayment() {
       console.error("Upload failed:", err.response?.data || err.message);
       setShowPopup(true);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -95,7 +99,7 @@ export default function VendorPayment() {
       )}
 
       <StepProgress currentStep={2} />
-
+      {isLoading && <Spinner />}
       <div className="payment-box">
         <h2 className="payment-box-title">Bank Details</h2>
 

@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 import StepProgress from "./StepProgress";
 import "./VendorRegistration.css";
 import axios from "axios";
+import Spinner from "./../../components/common/Spinner";
 
 export default function VendorRegister() {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [form, setForm] = useState({
     fullName: "",
@@ -48,6 +50,7 @@ export default function VendorRegister() {
   // Handle form submission with axios
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     setError("");
 
     if (!validateForm()) return;
@@ -103,6 +106,7 @@ export default function VendorRegister() {
     } finally {
       setLoading(false);
     }
+    setIsLoading(false);
   };
 
   const StepIndex = location.state?.currentStep || 0;
@@ -110,7 +114,7 @@ export default function VendorRegister() {
   return (
     <>
       <StepProgress currentStep={0} />
-
+      {isLoading && <Spinner />}
       <div className="vendor-register-page">
         {/* Progress Bar */}
 

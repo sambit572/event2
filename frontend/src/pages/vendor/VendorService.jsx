@@ -5,9 +5,11 @@ import StepProgress from "./StepProgress";
 import Button from "./../../components/vendor/register/Button";
 import "./../../components/vendor/register/Button.css";
 import axios from "axios";
+import Spinner from "./../../components/common/Spinner";
 
 function VendorService({ currentStep }) {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const steps = [
     { label: "Registration", subLabel: "Step 1", icon: "/verify.png" },
@@ -91,6 +93,7 @@ function VendorService({ currentStep }) {
   };
 
   const handleNext = async () => {
+    setIsLoading(true);
     console.log("next button clicked");
 
     if (!validateForm()) {
@@ -138,6 +141,7 @@ function VendorService({ currentStep }) {
       console.error("Error submitting service:", error);
       alert("Failed to submit service. Please try again.");
     }
+    setIsLoading(false);
   };
 
   // Comprehensive validation function
@@ -231,7 +235,7 @@ function VendorService({ currentStep }) {
   return (
     <>
       <StepProgress currentStep={1} />
-
+      {isLoading && <Spinner />}
       <div className="form-container">
         <div className="form-wrapper">
           {/* Left Side: Form Column */}
