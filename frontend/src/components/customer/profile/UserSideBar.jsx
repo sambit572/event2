@@ -77,7 +77,7 @@ function UserSideBar({ isOpen, setShowPasswordModal }) {
           Change Password
         </button>
 
-        <button className="edit-button" onClick={handleToggleEdit}>
+        <button className="edit-button flex gap-1" onClick={handleToggleEdit}>
           {editMode ? (
             "Save"
           ) : (
