@@ -1,4 +1,3 @@
-   // Refactored DashBoardBooking.jsx with scroll fix and improved responsiveness
 import React, { useState } from "react";
 import BookingData from "./BookingData.js";
 import BookingPopup from "./BookingPopup.jsx";
@@ -16,68 +15,72 @@ const DashBoardBooking = () => {
   };
 
   return (
-    <div className="booking-page">
-      <main className="main-contents">
-        <div className="tabs">
-          <select className="sort-dropdown">
+    <div className="dashboard-booking-page">
+      <main className="dashboard-main-content">
+        {/* Sort Dropdown */}
+        <div className="dashboard-controls">
+          <select className="dashboard-sort-dropdown">
             <option>Sort by</option>
             <option value="status">Status</option>
             <option value="serviceName">Service Name</option>
             <option value="cancelled">Cancelled</option>
-            <option value="last1">Last 3 months</option>
-            <option value="last2">Last 6 months</option>
+            <option value="last3">Last 3 months</option>
+            <option value="last6">Last 6 months</option>
           </select>
         </div>
 
-        <div className="booking-scroll-wrapper">
-          <div className="booking-container">
-            <div className="booking-header">
-              <div className="number">No.</div>
-              <div className="middle">
+        {/* Booking Table */}
+        <div className="dashboard-booking-scroll">
+          <div className="dashboard-booking-container">
+            {/* Header Row */}
+            <div className="dashboard-booking-header">
+              <div className="booking-col-number">No.</div>
+              <div className="booking-col-middle">
                 <div>Service</div>
                 <div>Booked By</div>
                 <div>Price</div>
                 <div>Booking Date</div>
                 <div>Booking Day</div>
               </div>
-              <div className="status">Status</div>
+              <div className="booking-col-status">Status</div>
             </div>
-            {BookingData.map((b) => (
-              <div
-                className={`booking-row ${b.number === 2 ? "highlight" : ""}`}
-                key={b.number}
-                onClick={() => handleRowClick(b)}
-                style={{ position: "relative", cursor: "pointer" }}
-              >
-                <div className="number">{b.number}</div>
 
-                <div className="middle">
-                  <div>
-                    <strong>{b.service}</strong>
-                  </div>
-                  <div>{b.bookedBy}</div>
-                  <div>{b.price}</div>
-                  <div>{b.date}</div>
-                  <div>{b.days}</div>
+            {/* Booking Rows */}
+            {BookingData.map((booking) => (
+              <div
+                className={`dashboard-booking-row ${clickedRow?.number === booking.number ? "expanded" : ""}`}
+                key={booking.number}
+                onClick={() => handleRowClick(booking)}
+              >
+                <div className="booking-col-number">{booking.number}</div>
+
+                <div className="booking-col-middle">
+                  <div><strong>{booking.service}</strong></div>
+                  <div>{booking.bookedBy}</div>
+                  <div>{booking.price}</div>
+                  <div>{booking.date}</div>
+                  <div>{booking.days}</div>
                 </div>
 
                 <div
-                  className={`status ${b.status.toLowerCase().replace(/\s+/g, "-")}`}
+                  className={`booking-col-status status-${booking.status.toLowerCase().replace(/\s+/g, "-")}`}
                 >
-                  {b.status}
+                  {booking.status}
                 </div>
-
-                {clickedRow?.number === b.number && (
-                  <div className="row-popup-wrapper">
-                    <BookingPopup
-                      isOpen={true}
-                      onClose={handleClose}
-                      booking={clickedRow}
-                    />
-                  </div>
-                )}
               </div>
             ))}
+
+            {/* Render popup ONLY ONCE at the end */}
+            {clickedRow && (
+              <div className="popup-overlay">
+                <BookingPopup
+                  isOpen={true}
+                  onClose={handleClose}
+                  booking={clickedRow}
+                />
+              </div>
+            )}
+
           </div>
         </div>
       </main>

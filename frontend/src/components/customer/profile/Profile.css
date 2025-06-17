@@ -222,6 +222,11 @@
 
 @media (max-width: 768px) {
   .profile-hamburger {
+    display: block;
+  }
+
+  .booking-card {
+    width: 68%;
     position: relative;
     left: 0;
     display: flex;
@@ -252,7 +257,7 @@
 /* Small Devices */
 @media (max-width: 480px) {
 
-  .profile-hamburger {
+  .profile-hamburger{
     left: 0;
   }
 

@@ -13,15 +13,24 @@
 
 
 .popup-box {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background: #ffffff;
   border-radius: 12px;
   padding: 16px 20px;
-  width: 400px;
+  width: 90vw;            /* Responsive width */
+  max-width: 400px;       /* Don't exceed this width */
+  max-height: 90vh;       /* Avoid going beyond the screen height */
+  overflow-y: auto;       /* Add scroll if content is long */
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
   font-family: "Segoe UI", sans-serif;
   color: #1e1e2f;
   animation: scaleUp 0.25s ease-in-out;
+  z-index: 9999;
 }
+
 .popup-box::before {
   content: "";
   position: absolute;
@@ -35,11 +44,12 @@
 
 /* Modern styles */
 .popup-title {
-  font-size: 1.5rem;
-  margin-bottom: 16px;
   color: #3b0340e1;
   text-align: center;
   font-weight: 600;
+  position: relative;
+  top: -14px;
+
 }
 
 .popup-content {
@@ -58,9 +68,9 @@
 
 /* Close button */
 .close-btn {
-  position: absolute;
-  top: 14px;
-  right: 18px;
+  position: relative;
+  top: -7px;
+  right: -334px;
   background: none;
   border: none;
   font-size: 25px;
@@ -82,6 +92,15 @@
 .status-unpaid {
   color: red;
   font-weight: 600;
+}
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 9998;
 }
 
 /* Animations */
@@ -125,6 +144,8 @@
   .popup-box {
     max-width: 400px;
     padding: 22px;
+    position: relative;
+    top: 325px;
   }
 
   .popup-title {
@@ -140,6 +161,7 @@
   .popup-box {
     max-width: 360px;
     padding: 20px;
+    position: relative;
   }
 
   .popup-title {
@@ -154,7 +176,7 @@
   .close-btn {
     font-size: 22px;
     top: 12px;
-    right: 16px;
+    left: 5px;
   }
 }
 
@@ -176,10 +198,12 @@
   }
 }
 
-@media (max-width: 400px) {
+/* Extra Small Devices (max-width: 480px) */
+@media (max-width: 420px) {
   .popup-box {
-    max-width: 280px;
-    padding: 14px;
+    width: 92vw;
+    padding: 12px;
+    position: relative;
   }
 
   .popup-title {
@@ -187,7 +211,55 @@
   }
 
   .popup-row {
-    font-size: 0.85rem;
-    padding: 6px 8px;
+    font-size: 0.9rem;
+    padding: 6px 10px;
+  }
+
+  .close-btn {
+    font-size: 20px;
+    top: 8px;
+  }
+}
+
+
+/* Ultra Small Devices (max-width: 360px) */
+@media (max-width: 360px) {
+  .popup-box {
+    width: 94vw;
+    padding: 12px;
+  }
+
+  .popup-title {
+    font-size: 0.95rem;
+  }
+
+  .popup-row {
+    font-size: 0.8rem;
+    padding: 6px;
+  }
+
+  .close-btn {
+    font-size: 18px;
+  }
+}
+
+/* Tiny Devices (max-width: 320px) */
+@media (max-width: 320px) {
+  .popup-box {
+    width: 95vw;
+    padding: 10px;
+  }
+
+  .popup-title {
+    font-size: 0.9rem;
+  }
+
+  .popup-row {
+    font-size: 0.75rem;
+    padding: 4px 6px;
+  }
+
+  .close-btn {
+    font-size: 16px;
   }
 }
