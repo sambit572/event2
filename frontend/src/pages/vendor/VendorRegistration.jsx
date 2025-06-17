@@ -53,7 +53,10 @@ export default function VendorRegister() {
     setIsLoading(true);
     setError("");
 
-    if (!validateForm()) return;
+    if (!validateForm()) {
+      setIsLoading(false);
+      return;
+    }
 
     setLoading(true);
 

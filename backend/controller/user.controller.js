@@ -161,10 +161,14 @@ const loginUser = async (req, res) => {
     return res.status(500).json(new ApiError(500, "Internal Server Error"));
   }
 };
-
 const logoutUser = async (req, res) => {
   try {
-    await User.findByIdAndUpdate(req.user._id, { $unset: { refreshToken: 1 } });
+    // Optional: Only attempt DB update if req.user exists
+    if (req.user && req.user._id) {
+      await User.findByIdAndUpdate(req.user._id, {
+        $unset: { refreshToken: 1 },
+      });
+    }
 
     return res
       .status(200)

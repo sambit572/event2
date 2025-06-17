@@ -44,6 +44,9 @@ const Navbar = () => {
     setShowLoginModal(true);
     setShowProfileDropdown(false);
   };
+  const handleOpenRegisterModal = () => {
+    navigate("/vendor/register");
+  };
 
   const handleToggleProfileDropdown = () => {
     setShowProfileDropdown((prev) => !prev);
@@ -58,7 +61,7 @@ const Navbar = () => {
       );
       localStorage.removeItem("userFirstName");
       setUserFirstName(null);
-      navigate("/LoginRegister", { replace: true });
+      navigate("/", { replace: true });
     } catch (error) {
       console.error("Logout failed", error);
     }
@@ -189,7 +192,12 @@ const Navbar = () => {
         </div>
 
         {/* Become Vendor */}
-        <div className="nav-item" onClick={handleOpenLoginModal}>
+        <div
+          className="nav-item"
+          onClick={
+            !userFirstName ? handleOpenLoginModal : handleOpenRegisterModal
+          }
+        >
           <FaStore className="icon" />
           <span className="vendor">Become a Vendor</span>
         </div>

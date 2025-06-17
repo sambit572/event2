@@ -149,6 +149,7 @@
 
 .dropdown-header {
   /* Light grey border */
+
   padding: 10px 0;
   display: flex;
   justify-content: space-between; /* Center items horizontally */

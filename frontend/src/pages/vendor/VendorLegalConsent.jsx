@@ -31,6 +31,7 @@ export default function VendorLegalConsent() {
     e.preventDefault();
     setIsLoading(true);
     if (!signatureFile) {
+      setIsLoading(false);
       alert("Please upload your signature before submitting.");
       return;
     }

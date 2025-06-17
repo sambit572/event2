@@ -97,6 +97,7 @@ function VendorService({ currentStep }) {
     console.log("next button clicked");
 
     if (!validateForm()) {
+      setIsLoading(false);
       console.log("form is not validated wrong");
       return;
     }

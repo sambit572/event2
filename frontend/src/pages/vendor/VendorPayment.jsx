@@ -58,6 +58,7 @@ export default function VendorPayment() {
       !ifscCode ||
       !panCardPic
     ) {
+      setIsLoading(false);
       setShowPopup(true);
       setTimeout(() => setShowPopup(false), 3000);
       return;
