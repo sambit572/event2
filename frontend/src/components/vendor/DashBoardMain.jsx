@@ -23,7 +23,7 @@ function DashBoardMain() {
     <div className="dashboard-container">
       {/* Hamburger / Cross button for mobile */}
       <button
-        className={`hamburger ${isSidebarOpen?"open":""}`}
+        className={`hamburger ${isSidebarOpen ? "open" : ""}`}
         onClick={() => setIsSidebarOpen((prev) => !prev)}
       >
         {isSidebarOpen ? "✕" : "☰"}
