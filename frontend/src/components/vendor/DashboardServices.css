@@ -431,6 +431,7 @@
     align-items: center;
     height: 541px;
     width: 500px;
+    margin-left: 100px;
   }
 
   .edit-form {
@@ -495,6 +496,7 @@
     flex-direction: column;
     align-items: center;
     height: 550px;
+    margin-left: 0;
   }
 
   .edit-form {
