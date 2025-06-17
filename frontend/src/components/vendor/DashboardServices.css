@@ -400,13 +400,6 @@
     width: auto;
   }
 
-  .sidebar {
-    width: 270px;
-    flex-direction: row;
-    justify-content: space-around;
-    padding: 15px;
-    text-align: center;
-  }
 
   .content-area {
     padding: 15px;
@@ -472,13 +465,6 @@
     width: auto;
   }
 
-  .sidebar {
-    width: 270px;
-    flex-direction: row;
-    justify-content: space-around;
-    padding: 15px;
-    text-align: center;
-  }
 
   .content-area {
     padding: 15px;

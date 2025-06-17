@@ -144,6 +144,8 @@
   .popup-box {
     max-width: 400px;
     padding: 22px;
+    position: relative;
+    top: 325px;
   }
 
   .popup-title {
@@ -159,6 +161,7 @@
   .popup-box {
     max-width: 360px;
     padding: 20px;
+    position: relative;
   }
 
   .popup-title {
@@ -173,7 +176,7 @@
   .close-btn {
     font-size: 22px;
     top: 12px;
-    right: 16px;
+    left: 5px;
   }
 }
 
@@ -200,6 +203,7 @@
   .popup-box {
     width: 92vw;
     padding: 12px;
+    position: relative;
   }
 
   .popup-title {
@@ -214,7 +218,6 @@
   .close-btn {
     font-size: 20px;
     top: 8px;
-    right: 8px;
   }
 }
 
