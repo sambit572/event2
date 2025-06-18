@@ -39,7 +39,7 @@ const DashboardServices = () => {
 
   return (
     <div className="dashboard-container">
-      <main className="content-area">
+      <main className="content-area relative">
         <div className="tab-buttons">
           <div className={`bg-slider ${activeTab}`}></div>
           <button
@@ -79,10 +79,10 @@ const DashboardServices = () => {
                 className="main-image"
               />
               <div className="image-buttons">
-                <button className="edit" onClick={() => setIsEditing(true)}>
+                <button className="edit flex gap-1" onClick={() => setIsEditing(true)}>
                   <FaEdit /> Edit
                 </button>
-                <button className="delete">
+                <button className="delete flex gap-1">
                   <FaTrash /> Delete
                 </button>
               </div>
@@ -163,7 +163,6 @@ const DashboardServices = () => {
           </section>
         ) : (
           <>
-            <h2 className="booking-h2">Booking Details</h2>
             <DashBoardBooking />
           </>
         )}

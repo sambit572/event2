@@ -1,0 +1,241 @@
+.user-sidebar {
+  height: calc(100vh - 70px);
+  width: 260px;
+  background: linear-gradient(
+    180deg,
+    rgba(163, 116, 225, 0.71) 12.5%,
+    rgba(165, 76, 194, 0.71) 25.48%,
+    rgba(112, 71, 165, 0.71) 43.27%,
+    rgba(86, 112, 189, 0.71) 85.38%
+  );
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  color: white;
+  transition: width 0.3s ease;
+  position: fixed;
+  left: 500px;
+  margin-top: 70px;
+  z-index: 10001;
+}
+
+.user-sidebar.collapsed {
+  width: 60px;
+}
+
+.user-sidebar-content {
+  margin-top: 20px;
+  margin-left: -10px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  padding: 10px;
+  max-height: 100%;
+}
+
+.user-sidebar-content a {
+  text-decoration: none;
+  color: white;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.user-sidebar-content a:hover {
+  background-color: #34495e;
+}
+
+.profile-heading {
+  background-color: #f3f0ed;
+  background-clip: text;
+  -webkit-background-clip: text;
+  font-family: Sansation system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+    sans-serif;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  margin-left: 40px;
+  margin-bottom: 10px;
+  margin-top: 1px;
+}
+
+.custom-list-decor {
+  list-style: none;
+  position: relative;
+  top: -25px;
+  bottom: -5px;
+}
+
+.typography {
+  color: #fff;
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin-top: 12px;
+}
+
+.custom-font {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.edit-button {
+  border-radius: 10px;
+  background: #eee;
+  box-shadow: -5px 5px 4px 0px rgba(0, 0, 0, 0.25);
+  color: #000;
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  border: none;
+  padding: 10px 20px;
+  width: 110px;
+  margin-left: 35px;
+  position: relative;
+  top: -50px;
+}
+
+.user-profile-pic {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  box-shadow: -5px 5px 4px rgba(0, 0, 0, 0.25);
+  object-fit: cover;
+  background-color: #7b80e2;
+  margin-left: 24px;
+}
+
+.custom-li {
+  padding: 6px;
+  border-radius: 5px;
+  width: 100%;
+  margin-left: 2px;
+  border: 1px solid black;
+  background: linear-gradient(130deg, #ffffdd, white);
+  color: rgba(0, 0, 0, 0.732);
+  font-weight: 550;
+}
+
+.custom-li:hover {
+  border-color: rgb(131, 207, 217);
+}
+
+.custom-font-active {
+  font-size: 15px;
+}
+
+.ch-password {
+  width: 100%;
+  border-radius: 10px;
+  border: none;
+  position: relative;
+  padding: 3px;
+  top: -35px;
+  background: none;
+  color: white;
+  font-size: 18px;
+}
+
+.ch-password:hover {
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ch-password:active {
+  color: rgb(75, 75, 184);
+}
+
+/* Mobile Responsive Styles */
+
+@media (max-width: 820px) {
+  .user-sidebar {
+    position: relative;
+    top: 70px;
+    left: 0;
+    bottom: 0;
+    width: 240px;
+    background: linear-gradient(
+      180deg,
+      rgba(163, 116, 225, 0.71) 12.5%,
+      rgba(165, 76, 194, 0.71) 25.48%,
+      rgba(112, 71, 165, 0.71) 43.27%,
+      rgba(86, 112, 189, 0.71) 85.38%
+    );
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 20;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+    height: 100vh;
+  }
+  .user-sidebar.open {
+    transform: translateX(0);
+  }
+  .ch-password {
+    top: -70px;
+  }
+  .edit-button {
+    top: -80px;
+  }
+  .custom-list-decor {
+    top: -50px;
+  }
+  .user-profile-pic {
+    margin-left: 26px;
+    position: relative;
+    top: -18px;
+    width: 140px;
+    height: 130px;
+  }
+}
+
+@media (max-width: 768px) {
+  .user-sidebar {
+    position: relative;
+    top: 70px;
+    left: 0;
+    bottom: 0;
+    width: 240px;
+    background: linear-gradient(
+      180deg,
+      rgba(163, 116, 225, 0.71) 12.5%,
+      rgba(165, 76, 194, 0.71) 25.48%,
+      rgba(112, 71, 165, 0.71) 43.27%,
+      rgba(86, 112, 189, 0.71) 85.38%
+    );
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 20;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+    height: 100vh;
+  }
+
+  .user-sidebar.open {
+    transform: translateX(0);
+  }
+  .ch-password {
+    top: -70px;
+  }
+  .edit-button {
+    top: -80px;
+  }
+  .custom-list-decor {
+    top: -50px;
+  }
+  .user-profile-pic {
+    margin-left: 26px;
+    position: relative;
+    top: -18px;
+    width: 140px;
+    height: 130px;
+  }
+}

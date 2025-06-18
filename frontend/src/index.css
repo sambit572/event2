@@ -1,20 +1,34 @@
+/* ✅ Import Montserrat font from Google Fonts */
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 
-* {
-  margin: 0;
-  padding: 0;
+/* ✅ Tailwind layers come first */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  box-sizing: border-box;
-  font-family: "Montserrat", sans-serif;
-}
-body,
-html {
-  margin: 0;
-  padding: 0;
-  /* Prevent horizontal scroll */
-  box-sizing: border-box;
+/* ✅ Custom base styles in Tailwind-safe @layer */
+@layer base {
+  /* Set default font */
+  html {
+    font-family: "Montserrat", sans-serif;
+  }
+
+  /* Consistent box-sizing and reset */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+  }
 }
 
+/* ✅ Custom utility class outside Tailwind layers */
 .align_center {
   display: flex;
   align-items: center;

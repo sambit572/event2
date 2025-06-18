@@ -25,6 +25,8 @@ import ForgotPass from "./pages/customer/ForgotPass.jsx";
 import ResetPassword from "./pages/customer/ResetPassword.jsx";
 import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
 import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
+import Profile from "./components/customer/profile/Profile.jsx";
+import UserDetails from "./pages/customer/UserDetails.jsx";
 
 import Wishlist from "./pages/customer/Wishlist";
 import DashboardServices from "./pages/customer/DashboardServices";
@@ -99,6 +101,8 @@ const App = () => {
             path="/dashboardservices"
             element={<DashboardServices />}
           ></Route>
+          <Route path="/profile" element={<Profile />}></Route>
+          <Route path="/userdetails" element={<UserDetails />}></Route>
         </Routes>
       </main>
       {/* {shouldShowFooter && <Footer />} */}

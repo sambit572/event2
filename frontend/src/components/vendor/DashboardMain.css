@@ -1,35 +1,30 @@
 .hamburger {
-    font-size: 28px;
-    border: none;
-    color: #4527a0;
-    cursor: pointer;
-    margin: 10px;
-    z-index: 30;
-    position: fixed;
-    left: 220px;
-    padding: 5px;
-    background: none;
-    display: none;
+  font-size: 28px;
+  border: none;
+  color: #4527a0;
+  cursor: pointer;
+  margin: 10px;
+  z-index: 30;
+  position: fixed;
+  left: 220px;
+  padding: 5px;
+  background: none;
+  display: none;
 }
 
-.main-content{
-    position: fixed;
+.main-contain {
+  margin-left: 260px;
+}
+
+/* Show hamburger only on small screens */
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
     left: 0;
-}
-
-
-  
-  /* Show hamburger only on small screens */
-  @media (max-width: 768px) {
-    .hamburger {
-      display: flex;
-      left: 0;
-      margin-top: 25px;
-    }
-  
-    .open{
-        color: whitesmoke;
-    }
-    
+    margin-top: 25px;
   }
-  
+
+  .open {
+    color: whitesmoke;
+  }
+}
