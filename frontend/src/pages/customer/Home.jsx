@@ -17,7 +17,7 @@ import image12 from "../../assets/home/decoration.jpg";
 import image13 from "../../assets/home/horsecart.jpg";
 import image14 from "../../assets/home/cracker.jpg";
 import image15 from "../../assets/home/cardsinvite.jpg";
-import banner from "../../assets/home/banner1.jpeg";
+import banner from "../../assets/home/banner.jpg";
 import CategoryCard from "../../components/customer/Home/CategoryCard";
 import ReviewSlider from "../../components/customer/Home/ReviewSlider";
 import FaqSection from "../../components/customer/Home/FaqSection";
