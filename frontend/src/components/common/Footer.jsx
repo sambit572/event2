@@ -1,141 +1,67 @@
-import React from "react";
+import React from 'react';
+import './Footer.css';
 
-import "./Footer.css";
-import google from "../../assets/home/google.png";
-import appstore from "../../assets/home/appstore.png";
-import { FaLocationDot } from "react-icons/fa6";
 
-import {
-  FaPhoneVolume,
-  FaEnvelope,
-  FaFacebook,
-  FaLinkedin,
-  FaTwitter,
-  FaInstagram,
-  FaVoicemail,
-} from "react-icons/fa";
-const Footer = () => {
+function Footer() {
   return (
-    <footer className="footer">
-      <div className="section">
-        <h3>EventsBridge</h3>
-        <br />
-        <p>Your one-stop platform for booking events effortlessly.</p>
-      </div>
-
-      <div className="align_center mid_container">
-        <div className="section">
-          <h3>Experience Eventsbridge App On Mobile</h3>
-          <div className="store-icons">
-            <img src={google} alt="playstore" />
-            <img src={appstore} alt="appstore" />
+      <footer className="footer-enhanced">
+        <div className="footer-top">
+          <h3>Your one-stop platform for Booking Events effortlessly</h3>
+          <p>EXPERIENCE EVENTSBIDGE APP ON MOBILE</p>
+          <div className="app-buttons">
+            <img src="/App Store.png" alt="Google Play" />
+            <img src="/Google_Play.png" alt="App Store" />
           </div>
         </div>
 
-        <div className="section">
-          <h4>Follow Us</h4>
-          <br />
-          <ul className="list">
-            <a href="https://facebook.com" className="followus">
-              <FaFacebook />
-            </a>
+        <div className="footer-columns-wrapper">
+          <div className="footer-columns">
+            <div>
+              <h4>Contact Information</h4>
+              <p><img src="/mail.png" alt="Email icon" className="icon" /> Email@Example.Com</p>
+              <p><img src="/phone 1.png" alt="Phone icon" className="icon" /> 123-456-7890,3456780</p>
+              <p><img src="/location.png" alt="Location icon" className="icon" />Bhubaneswar,Odisha</p>
+              <div className="social-media">
+                <h4>Follow Us</h4>
+                <img src="/facebook 1.png" alt="Facebook" className="social-icon" />
+                <img src="/twitter 1.png" alt="Twitter" className="social-icon" />
+                <img src="/instagram-2 1.png" alt="Instagram" className="social-icon" />
+                <img src="/linkedin-2 1.png" alt="LinkedIn" className="social-icon" />
+                <img src="/email-2 1.png" alt="Gmail" className="social-icon" />
+                <img src="/whatsapp.png" alt="Whatsapp" className="social-icon" />
+              </div>
+            </div>
 
-            <a href="https://twitter.com" className="followus">
-              <FaTwitter />
-            </a>
+            <div>
+              <h4>Quick Links</h4>
+              <p>About Us</p>
+              <p>Services</p>
+              <p>Help</p>
+              <p>FAQs</p>
+            </div>
 
-            <a
-              href="https://www.instagram.com/eventsbridge_/profilecard/?igsh=d3NjcDc0YWJsY3Vx"
-              className="followus"
-            >
-              <FaInstagram />
-            </a>
-            <a
-              href="https://www.linkedin.com/company/eventsbridge-com/posts/?feedView=all"
-              className="followus"
-            >
-              <FaLinkedin />
-            </a>
-          </ul>
-        </div>
-      </div>
+            <div>
+              <h4>Privacy Policy</h4>
+              <p>Terms and Conditions</p>
+              <p>Refund Policy</p>
+              <p>Legal Information</p>
+            </div>
 
-      <div className="container">
-        <div className="section">
-          <h4>Contact Us</h4>
-          <ul className="list">
-            <li>
-              <a href="/about" className="align_center">
-                <FaEnvelope className="icons" />
-                email@gmail.com
-              </a>
-            </li>
-            <li>
-              <a href="/events" className="align_center">
-                <FaPhoneVolume className="icons" />
-                123-456-7890
-              </a>
-            </li>
-            <li>
-              <a href="/pricing" className="align_center">
-                <FaLocationDot className="icons" />
-                Bhunneshwar Odisha India
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div className="section">
-          <h4>Quick Links</h4>
-          <ul className="list">
-            <li>
-              <a href="/about">About Us</a>
-            </li>
-            <li>
-              <a href="/events">Services</a>
-            </li>
-            <li>
-              <a href="/pricing">Help</a>
-            </li>
-            <li>
-              <a href="/contact">FAQs</a>
-            </li>
-          </ul>
+            <div>
+              <h4>About Company</h4>
+              <p>Our Approach</p>
+              <p>Awards & Reviews</p>
+              <p>About HostGator</p>
+            </div>
+          </div>
         </div>
 
-        <div className="section">
-          <h4>Privacy Policies</h4>
-          <ul className="list">
-            <li>
-              <a href="/privacy">Terms and Conditions</a>
-            </li>
-            <li>
-              <a href="/terms">Refund Policy</a>
-            </li>
-            <li>
-              <a href="/refund">Legal Information</a>
-            </li>
-          </ul>
+        <div className="footer-bottom">
+          <div><span>🌐 India | English</span></div>
+          <div><p>© Copyright 2025 EventsBridge. All Rights Reserved.</p></div>
         </div>
-        <div className="section">
-          <h4>About Company</h4>
-          <ul className="list">
-            <li>
-              <a href="/privacy">Our Approach</a>
-            </li>
-            <li>
-              <a href="/terms">Awards & Reviews</a>
-            </li>
-            <li>
-              <a href="/refund">About HostGator</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div className="copy">
-        &copy; {new Date().getFullYear()} EventsBridge. All rights reserved.
-      </div>
-    </footer>
+      </footer>
   );
-};
+}
 
 export default Footer;
