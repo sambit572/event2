@@ -58,7 +58,10 @@ function Profile() {
       </button>
 
       {/* Sidebar */}
-      <UserSideBar isOpen={isSidebarOpen} setShowPasswordModal={setShowPasswordModal} />
+      <UserSideBar
+        isOpen={isSidebarOpen}
+        setShowPasswordModal={setShowPasswordModal}
+      />
 
       {/* Main Content */}
       <main className="flex-1 px-4 py-6 md:px-12">
@@ -94,7 +97,9 @@ function Profile() {
                   setConfirmPassword(e.target.value);
                 }}
               />
-              {errorMsg && <p className="text-red-500 mt-2 text-sm">{errorMsg}</p>}
+              {errorMsg && (
+                <p className="text-red-500 mt-2 text-sm">{errorMsg}</p>
+              )}
               <div className="mt-4 flex justify-center gap-4">
                 <button
                   onClick={handlePasswordChangeSubmit}
@@ -114,17 +119,29 @@ function Profile() {
         )}
 
         {/* Page Title */}
-        <h2 className="boking-text text-2xl md:text-3xl font-bold text-center mb-6">My Bookings</h2>
+        <h2 className="boking-text text-2xl md:text-3xl font-bold text-center mb-6">
+          My Bookings
+        </h2>
 
         {/* Sort Dropdown */}
         <div className="flex justify-end mb-4 xl:mr-[175px]">
           <select className="bg-purple-900 text-white p-2 font-semibold rounded-lg shadow">
             <option className="bg-white text-black">Sort by</option>
-            <option className="bg-white text-black" value="completed">Completed</option>
-            <option className="bg-white text-black" value="pending">Pending</option>
-            <option className="bg-white text-black" value="cancelled">Cancelled</option>
-            <option className="bg-white text-black" value="last1">Last 3 months</option>
-            <option className="bg-white text-black" value="last2">Last 6 months</option>
+            <option className="bg-white text-black" value="completed">
+              Completed
+            </option>
+            <option className="bg-white text-black" value="pending">
+              Pending
+            </option>
+            <option className="bg-white text-black" value="cancelled">
+              Cancelled
+            </option>
+            <option className="bg-white text-black" value="last1">
+              Last 3 months
+            </option>
+            <option className="bg-white text-black" value="last2">
+              Last 6 months
+            </option>
           </select>
         </div>
 
@@ -139,12 +156,14 @@ function Profile() {
             />
 
             {/* Content */}
-            <div className="flex-1 flex flex-col justify-between">
+            <div className="flex-1 w-full bg-blue-500 flex flex-col justify-between">
               <div className="space-y-1 text-sm md:text-base text-left xl:relative xl:top-[20px]">
                 <h3 className="text-lg md:text-xl font-bold text-purple-900">
                   DJ Wedding Service
                 </h3>
-                <p className="text-gray-700">Patia, Bhubaneswar, Odisha, India</p>
+                <p className="text-gray-700">
+                  Patia, Bhubaneswar, Odisha, India
+                </p>
                 <p className="text-gray-600">Booking Date: 10/06/2025</p>
                 <p className="text-gray-600">Event Date: 10/06/2025</p>
                 <a

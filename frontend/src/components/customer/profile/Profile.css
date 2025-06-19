@@ -85,11 +85,9 @@
   font-weight: 700;
 }
 
-
 /* ==== Model Style ==== */
 
 /* container for booking */
-
 
 /* container for booking */
 
@@ -145,7 +143,6 @@
 }
 
 @keyframes blink {
-
   0%,
   100% {
     opacity: 1;
@@ -168,14 +165,17 @@
   position: fixed;
   top: 0;
   left: 0;
-  background: linear-gradient(180deg,
-      rgba(163, 116, 225, 0.71) 12.5%,
-      rgba(165, 76, 194, 0.71) 25.48%,
-      rgba(112, 71, 165, 0.71) 43.27%,
-      rgba(86, 112, 189, 0.71) 85.38%);
+  background: linear-gradient(
+    180deg,
+    rgba(163, 116, 225, 0.71) 12.5%,
+    rgba(165, 76, 194, 0.71) 25.48%,
+    rgba(112, 71, 165, 0.71) 43.27%,
+    rgba(86, 112, 189, 0.71) 85.38%
+  );
   padding: 20px;
   color: white;
-  z-index: 1000;
+  z-index: 0;
+  overflow: hidden;
   transition: transform 0.3s ease-in-out;
 }
 
@@ -186,19 +186,33 @@
 
 /* Sidebar open */
 .user-sidebar.open {
+  background-color: #000000;
+
   transform: translateX(0);
 }
 
 /* =========================================================================================== */
 
-
 /* Responsive Styles */
+@media (min-width: 1301px) {
+  .profile-hamburger {
+    display: block !important;
+    left: 10px;
+    top: 80px;
+    color: white;
+  }
+}
 @media (max-width: 1300px) {
   .main-content {
     margin-left: 0;
     padding: 16px;
   }
-
+  .profile-hamburger {
+    display: block !important;
+    left: 10px;
+    top: 80px;
+    color: white;
+  }
   .booking-card {
     margin: 20px;
     width: auto;
@@ -224,7 +238,7 @@
     max-width: 479px;
   }
 
-  .user-sidebar{
+  .user-sidebar {
     background: linear-gradient(
       180deg,
       rgba(163, 116, 225, 0.71) 12.5%,
@@ -236,7 +250,7 @@
     -webkit-backdrop-filter: blur(14px);
   }
 
-  .modal-content{
+  .modal-content {
     position: fixed;
     top: 172px;
   }
@@ -248,14 +262,12 @@
   .open {
     color: #fff;
   }
-  
 }
 
 /* Show hamburger on small screens */
 
 @media (max-width: 768px) {
-
-  .modal-content{
+  .modal-content {
     position: fixed;
     top: 172px;
   }
@@ -270,14 +282,10 @@
     display: flex;
     top: 0;
   }
-  
-
-
 }
 
 /* Small Devices */
 @media (max-width: 480px) {
-
   .modal-content {
     max-width: 300px;
     position: fixed;
@@ -285,11 +293,9 @@
     top: 213px;
   }
 
-  .profile-hamburger{
+  .profile-hamburger {
     left: 0;
   }
-
-  
 
   .booking-card {
     width: 57%;
@@ -303,7 +309,6 @@
     position: relative;
     left: -195px;
     margin-top: 73px;
-
   }
 
   .booking-title {
@@ -327,7 +332,6 @@
   .sort-btn {
     margin-top: 10px;
     width: 110px;
-
   }
 
   .booking-content {
@@ -339,12 +343,9 @@
     flex-direction: column;
     align-items: flex-start;
   }
-
 }
 
-@media (max-width:430px) {
-
-
+@media (max-width: 430px) {
   #sort {
     left: -30px;
   }
@@ -362,8 +363,6 @@
 }
 
 @media (max-width: 414px) {
-  
-
   #boking-card {
     width: 350px;
     left: 2px;
@@ -386,7 +385,6 @@
 }
 
 @media (max-width: 380px) {
-
   .modal-content {
     max-width: 300px;
     position: fixed;
@@ -401,6 +399,4 @@
   #pending {
     left: 170px;
   }
-
-
 }

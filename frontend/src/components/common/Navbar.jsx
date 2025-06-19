@@ -147,9 +147,11 @@ const Navbar = () => {
 
               {userFirstName && (
                 <>
-                  <div onClick={()=>{
-                    navigate('/profile')
-                  }}>
+                  <div
+                    onClick={() => {
+                      navigate("/profile");
+                    }}
+                  >
                     <FaUser style={{ marginRight: "4px" }} />
                     My Profile
                   </div>
