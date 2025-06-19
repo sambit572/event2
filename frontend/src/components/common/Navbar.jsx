@@ -110,16 +110,24 @@ const Navbar = () => {
       <div className="nav-icons">
         {/* Profile Dropdown */}
         <div className="nav-item profile-dropdown-container" ref={profileRef}>
-          <div className="profile-btn">
-            <span onClick={!userFirstName ? handleOpenLoginModal : undefined}>
-              <FaUser className="icon" />
-              {userFirstName ? `Hi, ${userFirstName}` : "Login"}
+          <div className="flex items-center gap-2 text-gray-700 cursor-pointer">
+            {/* User Icon + Greeting/Login */}
+            <span
+              className="flex items-center gap-2"
+              onClick={!userFirstName ? handleOpenLoginModal : undefined}
+            >
+              <FaUser className="text-lg" />
+              <span className="font-medium">
+                {userFirstName ? `Hi, ${userFirstName}` : "Login"}
+              </span>
             </span>
+
+            {/* Dropdown Arrow */}
             <span onClick={handleToggleProfileDropdown}>
               {showProfileDropdown ? (
-                <FaChevronUp className="dropdown-arrow" />
+                <FaChevronUp className="text-sm" />
               ) : (
-                <FaChevronDown className="dropdown-arrow" />
+                <FaChevronDown className="text-sm" />
               )}
             </span>
           </div>

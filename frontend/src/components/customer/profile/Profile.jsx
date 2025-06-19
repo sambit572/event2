@@ -48,7 +48,15 @@ function Profile() {
   }, []);
 
   return (
-    <div className="relative min-h-screen flex flex-col md:flex-row bg-white xl:overflow-x-hidden">
+    <div
+      className="relative min-h-screen flex flex-col md:flex-row bg-white xl:overflow-x-hidden sm:Class	CSS Equivalent
+mt-0	margin-top: 0
+mt-2	margin-top: 0.5rem
+mt-4	margin-top: 1rem
+mt-8	margin-top: 2rem
+mt-10	margin-top: 2.5rem
+mt-[30px]"
+    >
       {/* Hamburger Button */}
       <button
         className={`profile-hamburger ${isSidebarOpen ? "open" : ""}`}
@@ -64,7 +72,7 @@ function Profile() {
       />
 
       {/* Main Content */}
-      <main className="flex-1 px-4 py-6 md:px-12">
+      <main className="flex-1 px-4 md:px-12">
         {/* Password Modal */}
         {showPasswordModal && (
           <div className="modal-overlay">
@@ -119,13 +127,13 @@ function Profile() {
         )}
 
         {/* Page Title */}
-        <h2 className="boking-text text-2xl md:text-3xl font-bold text-center mb-6">
+        <h2 className="boking-text text-2xl md:text-3xl font-bold text-center mb-2">
           My Bookings
         </h2>
 
         {/* Sort Dropdown */}
-        <div className="flex justify-end mb-4 xl:mr-[175px]">
-          <select className="bg-purple-900 text-white p-2 font-semibold rounded-lg shadow">
+        <div className="w-1/2 ml-auto flex justify-end items-center p-4 ">
+          <select className="w-full max-w-xs bg-purple-900 text-white p-2 font-semibold rounded-lg shadow">
             <option className="bg-white text-black">Sort by</option>
             <option className="bg-white text-black" value="completed">
               Completed
@@ -146,7 +154,7 @@ function Profile() {
         </div>
 
         {/* Booking Card */}
-        <div className=" bg-white rounded-lg shadow-lg p-4 md:p-6 w-full max-w-[900px] md:relative md:bg-slate-100 lg:ml-[220px] lg:max-w-[700px] xl:max-w-[1000px] xl:ml-[250px] xl:h-[230px]">
+        <div className=" bg-white rounded-lg shadow-lg p-4 md:p-2  max-w-[900px] md:relative md:bg-slate-200 lg:ml-[230px]  xl:max-w-[85%] xl:ml-[250px] xl:h-[230px] lg:ml-auto ">
           <div className="relative flex flex-col md:flex-row gap-4">
             {/* Image */}
             <img
@@ -156,7 +164,7 @@ function Profile() {
             />
 
             {/* Content */}
-            <div className="flex-1 w-full bg-blue-500 flex flex-col justify-between">
+            <div className="flex-1 flex  flex-col justify-between">
               <div className="space-y-1 text-sm md:text-base text-left xl:relative xl:top-[20px]">
                 <h3 className="text-lg md:text-xl font-bold text-purple-900">
                   DJ Wedding Service

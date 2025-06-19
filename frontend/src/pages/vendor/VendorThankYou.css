@@ -4,8 +4,8 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background: linear-gradient(to right, #64A6BD 0%, #D6E655 100%);
-  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to right, #64a6bd 0%, #d6e655 100%);
+  font-family: "Segoe UI", sans-serif;
 }
 
 .thankyou-card {
@@ -149,10 +149,18 @@ p {
   transform: scale(1.2);
 }
 
-.social-icons a:nth-child(1) .social-icon-img { animation-delay: 0.4s; }
-.social-icons a:nth-child(2) .social-icon-img { animation-delay: 0.55s; }
-.social-icons a:nth-child(3) .social-icon-img { animation-delay: 0.7s; }
-.social-icons a:nth-child(4) .social-icon-img { animation-delay: 0.85s; }
+.social-icons a:nth-child(1) .social-icon-img {
+  animation-delay: 0.4s;
+}
+.social-icons a:nth-child(2) .social-icon-img {
+  animation-delay: 0.55s;
+}
+.social-icons a:nth-child(3) .social-icon-img {
+  animation-delay: 0.7s;
+}
+.social-icons a:nth-child(4) .social-icon-img {
+  animation-delay: 0.85s;
+}
 
 @keyframes fadeIn {
   to {
@@ -172,9 +180,9 @@ button {
   font-size: 14px;
 }
 
-button:hover {
+/* button:hover {
   background-color: #1f074c;
-}
+} */
 /* ===== Responsive for max-width: 1024px ===== */
 @media (max-width: 1024px) {
   .thankyou-card {
