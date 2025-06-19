@@ -3,6 +3,7 @@ import "./DashboardServices.css";
 import { FaTrash, FaEdit } from "react-icons/fa";
 import DashBoardBooking from "./DashBoardBooking.jsx";
 
+
 const dummyService = {
   images: [
     "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&auto=format&fit=crop&q=60",
@@ -40,7 +41,7 @@ const DashboardServices = () => {
   return (
     <div className="dashboard-container">
       <main className="content-area relative">
-        <div className="tab-buttons">
+        <div className="tab-btn">
           <div className={`bg-slider ${activeTab}`}></div>
           <button
             className={`button1 ${activeTab === "services" ? "active" : ""}`}
@@ -57,7 +58,7 @@ const DashboardServices = () => {
         </div>
 
         {activeTab === "services" ? (
-          <section className="service-card">
+          <section className="service-box">
             <div className="thumbnail-column">
               {formData.images.map((img, index) => (
                 <img

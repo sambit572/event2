@@ -1,4 +1,4 @@
-/* ========== Dashboard Container ========== */
+
 /* RD */
 .dashboard-container {
   display: flex;
@@ -15,7 +15,7 @@
 }
 
 /* ========== Tab Buttons ========== */
-.tab-buttons {
+.tab-btn {
   display: flex;
   margin-bottom: 20px;
   background-color: #ead8f6;
@@ -27,7 +27,7 @@
   font-family: "Montserrat";
 }
 
-.tab-buttons button {
+.tab-btn button {
   padding: 10px 10px;
   border-radius: 6.2rem;
   z-index: 2;
@@ -45,16 +45,16 @@
   position: relative;
 }
 
-.tab-buttons .active {
+.tab-btn .active {
   color: #f5efff;
   border-color: #f5efff;
   background: transparent;
 }
 
-/* .tab-buttons button:hover {
+/* .tab-btn button:hover {
   transform: translateY(-2px);
 } */
-/* .tab-buttons .active:hover {
+/* .tab-btn .active:hover {
   background-color: rgb(112, 13, 174);
 } */
 
@@ -94,7 +94,7 @@
 }
 
 /* ========== Service Card Section ========== */
-.service-card {
+.service-box {
   display: flex;
   gap: 20px;
   background-color: #dfe9fd;
@@ -113,7 +113,7 @@
   flex-shrink: 0;
 }
 
-/* Main image and buttons to the right of thumbnails */
+/* Main image and btn to the right of thumbnails */
 .main-image-and-buttons {
   display: flex;
   flex-direction: column;
@@ -425,7 +425,7 @@
     height: 35px;
   }
 
-  .service-card {
+  .service-box {
     flex-direction: column;
     align-items: center;
     height: 541px;
@@ -490,7 +490,7 @@
     height: 35px;
   }
 
-  .service-card {
+  .service-box {
     flex-direction: column;
     align-items: center;
     height: 550px;
@@ -532,7 +532,7 @@
     width: 100vw;
     height: 100vh;
   }
-  .service-card {
+  .service-box {
     width: 480px;
     margin-left: -200px;
     height: 495px;
@@ -593,7 +593,7 @@
     width: 100vw;
     height: 100vh;
   }
-  .service-card {
+  .service-box {
     width: 340px;
     height: 505px;
     position: relative;
@@ -657,7 +657,7 @@
     width: 100vw;
     height: 100vh;
   }
-  .service-card {
+  .service-box {
     width: 337px;
     left: -40px;
   }
@@ -723,7 +723,7 @@
     width: 100vw;
     height: 100vh;
   }
-  .service-card {
+  .service-box {
     width: 325px;
     left: -50px;
   }

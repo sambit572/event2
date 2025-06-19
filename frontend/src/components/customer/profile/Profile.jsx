@@ -154,7 +154,7 @@ mt-[30px]"
         </div>
 
         {/* Booking Card */}
-        <div className=" bg-white rounded-lg shadow-lg p-4 md:p-2  max-w-[900px] md:relative md:bg-slate-200 lg:ml-[230px]  xl:max-w-[85%] xl:ml-[250px] xl:h-[230px] lg:ml-auto ">
+        <div className=" bg-white rounded-lg shadow-lg p-4 md:p-2  max-w-[900px] md:relative md:bg-slate-200 lg:ml-[200px]  xl:max-w-[85%] xl:ml-[250px] xl:h-[230px] lg:ml-auto ">
           <div className="relative flex flex-col md:flex-row gap-4">
             {/* Image */}
             <img
