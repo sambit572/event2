@@ -31,6 +31,8 @@ import UserDetails from "./pages/customer/UserDetails.jsx";
 import Wishlist from "./pages/customer/Wishlist";
 import DashboardServices from "./pages/customer/DashboardServices";
 import ForgotPassword from "./pages/customer/ForgotPassword";
+import ReviewSlider from "./components/customer/Home/ReviewSlider.jsx";
+import CategoryCard from "./components/customer/Home/CategoryCard.jsx";
 
 const App = () => {
   /*{ const location = useLocation();
@@ -63,16 +65,10 @@ const App = () => {
       <main>
         <Routes>
           {/* Customer Routes */}
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            }
-          ></Route>
+          <Route path="/" element={<Home />}></Route>
           <Route path="/category" element={<ServiceList />} />
-
+          <Route path="/categories" element={<CategoryCard/>}></Route>
+          <Route path="/reviews" element={<ReviewSlider />} />
           <Route path="/category/service" element={<ServiceDetails />} />
           <Route path="/LoginRegister" element={<LoginRegister />}></Route>
 
