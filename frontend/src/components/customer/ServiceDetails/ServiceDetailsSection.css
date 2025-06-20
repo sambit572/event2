@@ -1,0 +1,102 @@
+/* ---------- DJ Details Section ---------- */
+.dj-details {
+  margin-top: 20px;
+}
+
+.dj-details h2 {
+  margin-bottom: 12px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.dj-details h3 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 20px;
+  color: #444;
+}
+
+.para1 {
+  margin-bottom: 8px;
+  font-size: 16px;
+  color: #333;
+}
+
+.details-list {
+  padding-left: 20px;
+}
+.details-list ul {
+  list-style-type: circle;
+}
+
+.details-list li {
+  margin-bottom: 8px;
+  font-size: 16px;
+  color: #444;
+}
+
+/* ---------- Responsive Adjustments ---------- */
+@media (max-width: 768px) {
+  .dj-details {
+    /* padding: 15px 20px; */
+    width: 100%;
+    margin-left: 10px;
+    /* margin-right: 10px; */
+  }
+
+  .dj-details h2 {
+    font-size: 20px;
+  }
+
+  .dj-details h3 {
+    font-size: 18px;
+  }
+
+  .para1,
+  .details-list li {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dj-details {
+    padding: 10px 15px;
+    width: 100%;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .dj-details h2 {
+    font-size: 18px;
+  }
+
+  .dj-details h3 {
+    font-size: 16px;
+  }
+
+  .para1,
+  .details-list li {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 360px) {
+  .dj-details {
+    padding: 8px 10px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .dj-details h2 {
+    font-size: 16px;
+  }
+
+  .dj-details h3 {
+    font-size: 15px;
+  }
+
+  .para1,
+  .details-list li {
+    font-size: 12.5px;
+  }
+}

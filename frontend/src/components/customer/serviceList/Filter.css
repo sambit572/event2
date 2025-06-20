@@ -1,4 +1,3 @@
-
 .filter {
   width: 280px;
   max-height: 100%;
@@ -7,7 +6,6 @@
   padding: 16px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  background-color: #fff;
 }
 .filter h3 {
   font-weight: bold;
@@ -134,18 +132,18 @@ input[type="range"].thumb-right {
   padding: 6px;
   border-radius: 6px;
 }
-.dateFilter{
+.dateFilter {
   width: 100%;
   padding: 10px;
 }
-.filter-btn{
+.filter-btn {
   display: flex;
   justify-content: space-around;
   margin-top: 30px;
   padding: 4px 8px;
   margin-bottom: 10px;
 }
-.applybtn{
+.applybtn {
   padding: 8px 12px;
   border-radius: 8px;
   background-color: green;
@@ -155,8 +153,8 @@ input[type="range"].thumb-right {
   width: 100px;
   cursor: pointer;
 }
-.cancelbtn{
-   padding: 8px 12px;
+.cancelbtn {
+  padding: 8px 12px;
   border-radius: 8px;
   background-color: rgb(219, 38, 38);
   border: none;
@@ -165,16 +163,16 @@ input[type="range"].thumb-right {
   width: 100px;
   cursor: pointer;
 }
-.applybtn:hover{
+.applybtn:hover {
   background-color: white;
   color: green;
-  border:1px solid green;
+  border: 1px solid green;
   font-weight: 500;
 }
-.cancelbtn:hover{
+.cancelbtn:hover {
   background-color: white;
   color: rgb(219, 38, 38);
-  border:1px solid rgb(219, 38, 38);
+  border: 1px solid rgb(219, 38, 38);
   font-weight: 500;
 }
 
@@ -182,7 +180,7 @@ input[type="range"].thumb-right {
   display: none;
   position: fixed;
   top: 80px;
-  right: 20px;
+  right: 25px;
   z-index: 1001;
   background-color: #007bff;
   color: white;
@@ -247,7 +245,9 @@ input[type="range"].thumb-right {
   }
 
   .filter-toggle-btn {
-    display: block;
+    top: 90px;
+
+    right: 30px;
   }
 
   .filter {
@@ -256,5 +256,12 @@ input[type="range"].thumb-right {
     border: none;
     box-shadow: none;
     margin-top: 60px;
+  }
+}
+@media screen and (max-width: 440px) {
+  .filter-toggle-btn {
+    top: 110px;
+
+    right: 20px;
   }
 }

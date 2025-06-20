@@ -2,21 +2,10 @@ import React, { useState } from "react";
 import "../../customer/serviceList/ServiceCard.css";
 import { Link } from "react-router-dom";
 import { FaHeart, FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import ServiceDescription from "./ServiceDescription";
 
 const ServiceCard = ({ service }) => {
-  const {
-    img,
-    title,
-    address,
-    rating,
-    reviews,
-    price,
-    originalPrice,
-    discountPercent,
-  } = service;
-
-  const [isWishlisted, setIsWishlisted] = useState(false);
-
+  const { img } = service;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [hovered, setHovered] = useState(false);
 
@@ -28,9 +17,6 @@ const ServiceCard = ({ service }) => {
     setCurrentIndex((prev) => (prev + 1) % img.length);
   };
 
-  const handleClick = () => {
-    setIsWishlisted(!isWishlisted);
-  };
   return (
     <div className="totalService">
       <div className="serviceCard">
@@ -67,48 +53,8 @@ const ServiceCard = ({ service }) => {
             />
           ))}
         </div>
-
-        <div className="serviceDescription">
-          <Link to="/category/service" className="link">
-            <h3>{title}</h3>
-            <p className="address">
-              {address.area}, {address.city}, {address.state} -{" "}
-              {address.pincode}
-            </p>
-            <div className="serviceRating">
-              <span className="rate">{rating} ☆</span>
-              <span className="review">{reviews} reviews</span>
-            </div>
-            <div className="servicePrice">
-              <span className="price">₹{price}</span>
-              <span className="originalPrice">₹{originalPrice}</span>
-              <span className="discountPercent">{discountPercent}% off</span>
-            </div>
-            <p className="paragraph">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente
-              blanditiis enim quaerat eaque cum.
-            </p>
-          </Link>
-          <div className="actionButtons">
-            <button
-              className={`viewBtn ${isWishlisted ? "wishlisted" : ""}`}
-              onClick={handleClick}
-            >
-              <div>
-                <FaHeart
-                  className="wishIcon"
-                  color={isWishlisted ? "red" : undefined}
-                />
-              </div>
-              <div>{isWishlisted ? "Wishlisted" : "Add To Wishlist"}</div>
-            </button>
-
-            <button className="bookBtn">
-              <span>Book Now</span>
-            </button>
-          </div>
-        </div>
       </div>
+      <ServiceDescription service={service} />
     </div>
   );
 };

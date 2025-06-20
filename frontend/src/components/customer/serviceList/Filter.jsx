@@ -61,7 +61,7 @@ const Filter = () => {
         {showFilter ? "Close Filters" : "Filters"}
       </button>
       <div className={`filterBox ${showFilter ? "show" : ""}`}>
-        <div className="filter">
+        <div className="filter m-2">
           <h3>Filters</h3>
 
           <div className="price-range-wrapper">
@@ -100,9 +100,9 @@ const Filter = () => {
           <div>
             <h4 className="head4">Customer Rating</h4>
             {rating.map((rating) => (
-              <div key={rating} className="rating-option">
+              <div key={rating} className="align_center rating-option">
                 <input type="checkbox" id={`rating-${rating}`} />
-                <label htmlFor={`rating-${rating}`}>
+                <label className="align_center" htmlFor={`rating-${rating}`}>
                   {rating}{" "}
                   <span className="star">
                     <TiStarFullOutline />
@@ -118,7 +118,9 @@ const Filter = () => {
             <h4>Location</h4>
 
             <div className="dropdown">
-              <label htmlFor="state" className="state">State</label>
+              <label htmlFor="state" className="state">
+                State
+              </label>
               <select value={selectedState} onChange={handleStateChange}>
                 <option value="">Select State</option>
                 {Object.keys(locationData).map((state) => (

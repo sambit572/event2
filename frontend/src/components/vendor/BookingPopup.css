@@ -1,0 +1,265 @@
+
+
+/* Popup shown inside row */
+.row-popup-wrapper {
+  position: absolute;
+  top: 100%; /* directly below the row */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  width: auto;
+  padding-top: 10px;
+}
+
+
+.popup-box {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px 20px;
+  width: 90vw;            /* Responsive width */
+  max-width: 400px;       /* Don't exceed this width */
+  max-height: 90vh;       /* Avoid going beyond the screen height */
+  overflow-y: auto;       /* Add scroll if content is long */
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  font-family: "Segoe UI", sans-serif;
+  color: #1e1e2f;
+  animation: scaleUp 0.25s ease-in-out;
+  z-index: 9999;
+}
+
+.popup-box::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 8px solid transparent;
+  border-bottom-color: #ffffff;
+}
+
+
+/* Modern styles */
+.popup-title {
+  color: #3b0340e1;
+  text-align: center;
+  font-weight: 600;
+  position: relative;
+  top: -14px;
+
+}
+
+.popup-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.popup-row {
+  font-size: 1rem;
+  line-height: 1.4;
+  background: #f7f7fa;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+/* Close button */
+.close-btn {
+  position: relative;
+  top: -7px;
+  right: -334px;
+  background: none;
+  border: none;
+  font-size: 25px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #666;
+  transition: color 0.2s ease;
+}
+
+.close-btn:hover {
+  color: #ff3b3b;
+}
+
+.status-paid {
+  color: green;
+  font-weight: 600;
+}
+
+.status-unpaid {
+  color: red;
+  font-weight: 600;
+}
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 9998;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    background: rgba(0, 0, 0, 0);
+  }
+  to {
+    background: rgba(0, 0, 0, 0.4);
+  }
+}
+
+@keyframes scaleUp {
+  0% {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* iPad Pro Large (1025px - 1366px) */
+@media (min-width: 1025px) and (max-width: 1366px) {
+  .popup-box {
+    max-width: 420px;
+    padding: 24px;
+  }
+
+  .popup-title {
+    font-size: 1.5rem;
+  }
+
+  .popup-row {
+    font-size: 1rem;
+  }
+}
+/* iPad Pro Landscape (835px - 1024px) */
+@media (min-width: 835px) and (max-width: 1024px) {
+  .popup-box {
+    max-width: 400px;
+    padding: 22px;
+    position: relative;
+    top: 325px;
+  }
+
+  .popup-title {
+    font-size: 1.4rem;
+  }
+
+  .popup-row {
+    font-size: 1rem;
+  }
+}
+/* iPad Portrait & smaller tablets (768px - 834px) */
+@media (min-width: 768px) and (max-width: 834px) {
+  .popup-box {
+    max-width: 360px;
+    padding: 20px;
+    position: relative;
+  }
+
+  .popup-title {
+    font-size: 1.3rem;
+  }
+
+  .popup-row {
+    font-size: 0.95rem;
+    padding: 10px;
+  }
+
+  .close-btn {
+    font-size: 22px;
+    top: 12px;
+    left: 5px;
+  }
+}
+
+
+
+/* Mobile (less than 768px) */
+@media (max-width: 767px) {
+  .popup-box {
+    width: 300px;
+    padding: 18px;
+  }
+
+  .popup-title {
+    font-size: 1.2rem;
+  }
+
+  .popup-row {
+    font-size: 0.9rem;
+  }
+}
+
+/* Extra Small Devices (max-width: 480px) */
+@media (max-width: 420px) {
+  .popup-box {
+    width: 92vw;
+    padding: 12px;
+    position: relative;
+  }
+
+  .popup-title {
+    font-size: 1.1rem;
+  }
+
+  .popup-row {
+    font-size: 0.9rem;
+    padding: 6px 10px;
+  }
+
+  .close-btn {
+    font-size: 20px;
+    top: 8px;
+  }
+}
+
+
+/* Ultra Small Devices (max-width: 360px) */
+@media (max-width: 360px) {
+  .popup-box {
+    width: 94vw;
+    padding: 12px;
+  }
+
+  .popup-title {
+    font-size: 0.95rem;
+  }
+
+  .popup-row {
+    font-size: 0.8rem;
+    padding: 6px;
+  }
+
+  .close-btn {
+    font-size: 18px;
+  }
+}
+
+/* Tiny Devices (max-width: 320px) */
+@media (max-width: 320px) {
+  .popup-box {
+    width: 95vw;
+    padding: 10px;
+  }
+
+  .popup-title {
+    font-size: 0.9rem;
+  }
+
+  .popup-row {
+    font-size: 0.75rem;
+    padding: 4px 6px;
+  }
+
+  .close-btn {
+    font-size: 16px;
+  }
+}

@@ -1,0 +1,55 @@
+.slider-container {
+  position: relative;
+  width: 100%;
+  margin-top: 0px;
+  z-index: 1;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  background-color: #f4f4f4;
+}
+.slide {
+  width: 100%;
+  height: 400px;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.4s ease;
+  filter: brightness(0.75);
+}
+
+.slider-container:hover .slide {
+  filter: brightness(0.65);
+}
+
+.slick-dots li {
+  position: relative;
+  width: 10px !important;
+  height: 4px !important;
+  border-radius: 5px;
+  background-color: white !important;
+  /* overflow: hidden; */
+}
+.slick-dots li.slick-active {
+  width: 40px !important;
+  height: 4px !important;
+}
+/* Create the animated bar */
+.slick-dots li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0%;
+  background-color: black;
+  transition: width 5s linear; /* Adjust this duration to match autoplay speed */
+  z-index: 1;
+}
+
+/* Trigger animation on active dot */
+.slick-dots li.slick-active::before {
+  width: 100%;
+}
+
+.slick-dots li button {
+  opacity: 0;
+}

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
 
 import "./Home.css";
 import image1 from "../../assets/home/dj.jpg";
@@ -16,10 +17,13 @@ import image12 from "../../assets/home/decoration.jpg";
 import image13 from "../../assets/home/horsecart.jpg";
 import image14 from "../../assets/home/cracker.jpg";
 import image15 from "../../assets/home/cardsinvite.jpg";
-import ImageSlider from "../../components/customer/ImageSlider";
-import CategoryCard from "../../components/customer/CategoryCard";
-import ReviewSlider from "../../components/customer/ReviewSlider";
-import FAQ from "../../components/customer/FAQ";
+import banner from "../../assets/home/banner1.jpeg";
+import CategoryCard from "../../components/customer/Home/CategoryCard";
+import ReviewSlider from "../../components/customer/Home/ReviewSlider";
+import FaqSection from "../../components/customer/Home/FaqSection";
+import ImageSlider from "../../components/customer/Home/ImageSlider";
+
+import Milestones from "../../components/common/aboutus/Milestones";
 
 const images = [
   image1,
@@ -57,14 +61,40 @@ const Home = () => {
   const [showAll, setShowAll] = useState(false);
   const visibleCategories = showAll ? categories : categories.slice(0, 6);
 
+  useEffect(() => {
+    const checkUser = async () => {
+      try {
+        const response = await axios.get("http://localhost:8000/user/", {
+          withCredentials: true,
+        });
+        console.log(response.data.message);
+
+        console.log(response.data.data);
+        const { user, accessToken } = response.data.data;
+        if (user && accessToken) {
+          localStorage.setItem("currentlyLoggedIn", true);
+          localStorage.setItem("userFirstName", user.fullName.split(" ")[0]);
+        }
+      } catch (error) {
+        console.log(
+          "error in noLogin :",
+          error.data?.data?.message || error.message
+        );
+      }
+    };
+
+    checkUser();
+  }, []);
+
   return (
     <div className="home">
       <ImageSlider images={images} />
+      <img className="addbanner" src={banner} alt="" />
       <h1 className="align_center heading">Categories</h1>
       {!showAll && categories.length > 6 && (
         <div className="browse_all">
           <button className="browse-all-btn" onClick={() => setShowAll(true)}>
-            Browse All
+            Browse All &#x2192;
           </button>
         </div>
       )}
@@ -75,9 +105,9 @@ const Home = () => {
           </div>
         ))}
       </div>
-
+      <Milestones />
       <ReviewSlider />
-      <FAQ/>
+      <FaqSection />
     </div>
   );
 };

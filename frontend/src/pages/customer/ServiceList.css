@@ -1,96 +1,41 @@
-
 .serviceList {
   display: flex;
+
   width: 100%;
 }
 .singleServiceCard {
   display: flex;
+  flex-direction: column;
+
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 16px;
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 1020px;
-  height: 290px;
-  margin-left: 20px;
+  margin-right: 10px;
 }
 .serviceCardDetails {
-  display: flex;
+  /* display: flex; */
+  width: 100%;
   flex-direction: column;
-  gap: 24px;
-  width: 1020px;
+  margin: 10px;
+  background-color: rgb(255, 255, 255);
+  box-sizing: border-box;
+}
+
+/* For screen widths between 1012px and 1350px */
+@media screen and (min-width: 1024px) and (max-width: 1350px) {
+  .serviceCardDetails {
+    width: 80%;
+  }
+  .singleServiceCard {
+    width: 100%;
+  }
 }
 
 /* Responsive styling for tablet (≤1024px) */
 @media (max-width: 1024px) {
-  .singleServiceCard {
-    flex-direction: column;
-    height: auto;
-    padding: 12px;
-  }
-
   .serviceCardDetails {
-    gap: 16px;
-  }
-}
-
-/* Responsive styling for mobile (≤768px) */
-@media (max-width: 768px) {
-  .serviceList {
-    flex-direction: column;
-    height: auto;
-    padding: 12px;
-  }
-
-  .singleServiceCard {
-    width: 100%;
-    margin-left: 0;
-    padding: 12px;
-  }
-
-  .serviceCardDetails {
-    gap: 12px;
-  }
-}
-
-@media (max-width: 480px) {
-  .serviceList {
-    flex-direction: column;
-    height: auto;
-    padding: 8px;
-  }
-
-  .singleServiceCard {
-    flex-direction: column;
-    width: 100%;
-    height: auto;
-    padding: 10px;
-    margin: 8px 0;
-  }
-
-  .serviceCardDetails {
-    width: 100%;
-    gap: 10px;
-    padding: 0;
-  }
-}
-
-@media (max-width: 375px) {
-  .singleServiceCard {
-    padding: 8px;
-  }
-
-  .serviceCardDetails {
-    gap: 8px;
-  }
-}
-
-@media (max-width: 320px) {
-  .singleServiceCard {
-    padding: 6px;
-  }
-
-  .serviceCardDetails {
-    gap: 6px;
+    margin-top: 50px;
   }
 }

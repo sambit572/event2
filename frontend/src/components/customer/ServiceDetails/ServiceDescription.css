@@ -1,0 +1,62 @@
+/* ---------- Description Section ---------- */
+.description-section {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.brand {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.description-text {
+  font-size: 16px;
+  color: #444;
+  line-height: 1.6;
+}
+
+/* ---------- Responsive Adjustments ---------- */
+@media (max-width: 768px) {
+  .description-section {
+    /* padding: 15px 20px; */
+  }
+
+  .brand {
+    font-size: 18px;
+  }
+
+  .description-text {
+    font-size: 15px;
+  }
+}
+
+/* ---------- Small Screens (Phones) ---------- */
+@media (max-width: 480px) {
+  /* .description-section {
+    padding: 10px 15px;
+  } */
+
+  .brand {
+    font-size: 16px;
+  }
+
+  .description-text {
+    font-size: 14px;
+  }
+}
+
+/* ---------- Extra Small Screens (<360px) ---------- */
+@media (max-width: 360px) {
+  .description-section {
+    padding: 8px 12px;
+  }
+
+  .brand {
+    font-size: 15px;
+  }
+
+  .description-text {
+    font-size: 13px;
+  }
+}

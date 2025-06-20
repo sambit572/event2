@@ -1,0 +1,118 @@
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-top: 20px;
+  flex-wrap: nowrap;
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+  flex-direction: row;
+}
+.back-btn {
+  width: 140px;
+  height: 42px;
+  background-color: #b5afaf;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.back-btn:hover {
+  background-color: #a29b9b;
+}
+
+.back-arrow-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.submit-btn {
+  width: 140px;
+  height: 42px;
+  background-color: #32CD32;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: #28a428;
+}
+
+/* ============ Responsive ============ */
+@media (max-width: 1024px) {
+  .form-buttons {
+    gap: 18px;
+  }
+
+  .back-btn {
+    width: 130px;
+    height: 40px;
+    font-size: 13.5px;
+  }
+
+  .submit-btn {
+    width: 130px;
+    height: 40px;
+    font-size: 13.5px;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-buttons {
+    gap: 15px;
+  }
+
+  .back-btn {
+    width: 120px;
+    height: 38px;
+    font-size: 13px;
+  }
+
+  .submit-btn {
+    width: 120px;
+    height: 38px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-buttons {
+    flex-direction: column;
+    gap: 12px;
+    max-width: 100%;
+    
+  }
+
+  .back-btn {
+    width: 100%;
+    max-width: 260px;
+    height: 30px;
+    font-size: 12.5px;
+  }
+
+  .submit-btn {
+    width: 100%;
+    max-width: 260px;
+    height: 30px;
+    font-size: 12.5px;
+  }
+}

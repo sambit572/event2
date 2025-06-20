@@ -1,12 +1,29 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Montserrat", sans-serif;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ✅ Inject custom base styles using @layer base */
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 }
-.align_center {
-  display: flex;
-  align-items: center;
+
+/* ✅ Inject custom utility class using @layer utilities */
+@layer utilities {
+  .align_center {
+    @apply flex items-center;
+  }
 }
