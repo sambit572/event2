@@ -110,7 +110,7 @@ const Navbar = () => {
       <div className="nav-icons">
         {/* Profile Dropdown */}
         <div className="nav-item profile-dropdown-container" ref={profileRef}>
-          <div className="profile-btn">
+          <div className="flex flex-row">
             <span className="flex flex-row " onClick={!userFirstName ? handleOpenLoginModal : undefined}>
               <FaUser className="relative top-1 mr-1" />
               {userFirstName ? `${userFirstName}` : "Login"}
@@ -119,9 +119,9 @@ const Navbar = () => {
             {/* Dropdown Arrow */}
             <span onClick={handleToggleProfileDropdown}>
               {showProfileDropdown ? (
-                <FaChevronUp className="text-sm" />
+                <FaChevronUp className="text-sm ml-1 relative top-1" />
               ) : (
-                <FaChevronDown className="text-sm" />
+                <FaChevronDown className="text-sm ml-1 relative top-1" />
               )}
             </span>
           </div>
