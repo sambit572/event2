@@ -63,14 +63,7 @@ const App = () => {
       <main>
         <Routes>
           {/* Customer Routes */}
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            }
-          ></Route>
+          <Route path="/" element={<Home />}></Route>
           <Route path="/category" element={<ServiceList />} />
 
           <Route path="/category/service" element={<ServiceDetails />} />

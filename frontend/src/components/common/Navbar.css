@@ -83,12 +83,14 @@
   gap: 21px;
   height: 36px;
 }
-
+.gap-2{
+  gap: 0.3rem;
+}
 .nav-item {
   display: flex;
 
   align-items: center;
-  gap: 5px;
+  /* gap: 5px; */
   cursor: pointer;
   font-size: 15px;
   font-weight: 500;
