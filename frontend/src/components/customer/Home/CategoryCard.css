@@ -73,8 +73,13 @@
   height: 100%;
   text-decoration: none;
   text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: #3b0340e1;
   padding: 5px 0 5px 10px;
-  background-color: rgb(218, 217, 217);
+  /* background-color: rgb(218, 217, 217);
+   */
+  background: linear-gradient(135deg, #f5efff, #ffffff);
 }
 a {
   text-decoration: none;

@@ -1,5 +1,7 @@
 .footer-enhanced {
-  background-color: #64a6bd;
+  /* background-color: #64a6bd; */
+  /* background: linear-gradient(135deg, #fff7ed, #fde2e4); */
+  background: linear-gradient(135deg, #f5efff, #ffffff);
   color: white;
   padding: 30px 60px;
   font-size: 14px;
@@ -63,7 +65,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: white;
+  color: rgb(7, 7, 7);
 }
 
 .footer-divider {
@@ -90,7 +92,7 @@
 
 .footer-bottom p {
   margin: 0;
-  color: white;
+  color: rgb(0, 0, 0);
 }
 
 .footer-columns h4,
@@ -98,7 +100,7 @@
 .footer-top p,
 .footer-bottom p,
 .footer-bottom span {
-  color: white;
+  color: rgb(0, 0, 0);
 }
 
 .social-media {

@@ -110,7 +110,7 @@ const Navbar = () => {
       <div className="nav-icons">
         {/* Profile Dropdown */}
         <div className="nav-item profile-dropdown-container" ref={profileRef}>
-          <div className="flex items-center gap-2 text-gray-700 cursor-pointer">
+          <div className="flex items-center gap-2 text-[rgb(59,3,64)] text-opacity-90 cursor-pointer">
             {/* User Icon + Greeting/Login */}
             <span
               className="flex items-center gap-2"
@@ -156,11 +156,12 @@ const Navbar = () => {
               {userFirstName && (
                 <>
                   <div
+                    className="flex text-[rgb(59,3,64)] text-opacity-90"
                     onClick={() => {
                       navigate("/profile");
                     }}
                   >
-                    <FaUser style={{ marginRight: "4px" }} />
+                    <FaUser style={{ marginRight: "8px" }} />
                     My Profile
                   </div>
                   <div className="dropdown-item">
