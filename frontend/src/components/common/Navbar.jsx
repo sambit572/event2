@@ -110,10 +110,16 @@ const Navbar = () => {
       <div className="nav-icons">
         {/* Profile Dropdown */}
         <div className="nav-item profile-dropdown-container" ref={profileRef}>
-          <div className="flex flex-row">
-            <span className="flex flex-row " onClick={!userFirstName ? handleOpenLoginModal : undefined}>
-              <FaUser className="relative top-1 mr-1" />
-              {userFirstName ? `${userFirstName}` : "Login"}
+          <div className="flex items-center gap-2 text-[rgb(59,3,64)] text-opacity-90 cursor-pointer">
+            {/* User Icon + Greeting/Login */}
+            <span
+              className="flex items-center gap-2"
+              onClick={!userFirstName ? handleOpenLoginModal : undefined}
+            >
+              <FaUser className="text-lg" />
+              <span className="font-medium">
+                {userFirstName ? `Hi, ${userFirstName}` : "Login"}
+              </span>
             </span>
 
             {/* Dropdown Arrow */}
@@ -150,11 +156,12 @@ const Navbar = () => {
               {userFirstName && (
                 <>
                   <div
+                    className="flex text-[rgb(59,3,64)] text-opacity-90"
                     onClick={() => {
                       navigate("/profile");
                     }}
                   >
-                    <FaUser style={{ marginRight: "4px" }} />
+                    <FaUser style={{ marginRight: "8px" }} />
                     My Profile
                   </div>
                   <div className="dropdown-item">

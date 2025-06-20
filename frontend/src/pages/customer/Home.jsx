@@ -17,13 +17,14 @@ import image12 from "../../assets/home/decoration.jpg";
 import image13 from "../../assets/home/horsecart.jpg";
 import image14 from "../../assets/home/cracker.jpg";
 import image15 from "../../assets/home/cardsinvite.jpg";
-import banner from "../../assets/home/banner1.jpeg";
+import banner from "../../assets/home/banner.jpg";
 import CategoryCard from "../../components/customer/Home/CategoryCard";
 import ReviewSlider from "../../components/customer/Home/ReviewSlider";
 import FaqSection from "../../components/customer/Home/FaqSection";
 import ImageSlider from "../../components/customer/Home/ImageSlider";
 
 import Milestones from "../../components/common/aboutus/Milestones";
+import AddsBanner from "../../components/customer/Home/AddsBanner";
 
 const images = [
   image1,
@@ -89,7 +90,8 @@ const Home = () => {
   return (
     <div className="home">
       <ImageSlider images={images} />
-      <img className="addbanner" src={banner} alt="" />
+      <AddsBanner />
+      {/* <img className="addbanner" src={banner} alt="" /> */}
       <h1 className="align_center heading">Categories</h1>
       {!showAll && categories.length > 6 && (
         <div className="browse_all">

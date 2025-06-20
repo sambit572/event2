@@ -1,25 +1,30 @@
-
-:root {
+/* :root {
   --sk-border-radius: 1rem;
   --bs-primary: #ffffff; 
   --sk-text-custom-color: #0C1424;
   --sk-grey-bg: #eaedf1;
-}
+} */
 
 /* Container for the milestones section */
 .milestones-wrapper {
   padding: 4rem 3rem;
-  background-color: var(--bs-primary);
-  border-radius: var(--sk-border-radius);
-  color: #fff;
+  margin-top: 40px;
+  /* background: linear-gradient(135deg, #fca311, #14213d); */
+  /* background: linear-gradient(135deg, #fff7ed, #fde2e4); */
+  /* background: linear-gradient(135deg, #f0fff4, #d1fae5); */
+  background: linear-gradient(135deg, #f5efff, #ffffff);
+
+  color: #1f2937;
+  border-radius: var(--sk-border-radius, 1rem);
+  /* color: #ffffff; */
   position: relative;
   overflow: hidden;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
-
 
 .milestones-wrapper::after {
   bottom: 0%;
@@ -42,7 +47,7 @@
 
 /* Milestone number styling */
 .milestone-number {
-  color: black;
+  /* color: black; */
   font-weight: bold !important;
   font-size: 2.5rem;
   margin-bottom: 0.5rem;
@@ -53,6 +58,5 @@
   text-transform: uppercase;
   margin-bottom: 0;
   font-size: 1rem;
-  color: black;
+  /* color: black; */
 }
-
