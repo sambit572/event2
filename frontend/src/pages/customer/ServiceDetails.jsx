@@ -66,14 +66,17 @@ const Service = () => {
           </div>
 
           <div className="buttons">
-            <button className="add-to-cart" onClick={handleClick}>
-              <div className="heartIcon">
+            <button
+              className={`viewBtns ${isWishlisted ? "wishlisted" : ""}`}
+              onClick={handleClick}
+            >
+              <div>
                 <FaHeart
-                  color={isWishlisted ? "red" : "black"}
-                  className="wishIcons"
-                />{" "}
+                  className="wishIcon"
+                  color={isWishlisted ? "red" : undefined}
+                />
               </div>
-              Add To Wishlist
+              <div>{isWishlisted ? "Wishlisted" : "Add To Wishlist"}</div>
             </button>
             <button className="buynow">Book Now</button>
           </div>
@@ -101,7 +104,7 @@ const Service = () => {
       </div>
 
       <div className="view-dj-section">
-        <h2>People Also Booked</h2>
+        <h2 className="people-also-book">People Also Booked</h2>
         <div className="view-dj">
           {similarServiceData.map((product) => (
             <SimilarProductCard key={product.id} product={product} />

@@ -11,7 +11,7 @@ const ServiceCard = () => {
       <h2 className="dj-title">
         Wedding DJ Service – Premium Entertainment for Your Big Day
       </h2>
-
+      <p className="serviceDetails-location">Patia, Bhubaneswar, Odisha, India</p>
       <PriceSection />
       <RatingSection />
       <ServiceDescription />

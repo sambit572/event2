@@ -127,9 +127,9 @@ const Navbar = () => {
             {/* Dropdown Arrow */}
             <span onClick={handleToggleProfileDropdown}>
               {showProfileDropdown ? (
-                <FaChevronUp className="text-sm ml-1 relative top-1" />
+                <FaChevronUp className="text-sm  relative " />
               ) : (
-                <FaChevronDown className="text-sm ml-1 relative top-1" />
+                <FaChevronDown className="text-sm  relative " />
               )}
             </span>
           </div>

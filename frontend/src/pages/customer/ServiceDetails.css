@@ -107,27 +107,70 @@
 .buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 30px;
   width: 100%;
   margin-top: 20px;
   /* background-color: #0c742b; */
-  justify-content: space-evenly;
+  justify-content: center;
   /* align-items: center; */
   /* width: 500px; */
 }
-.add-to-cart {
+.addToWish {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 10px;
+  width: 190px;
+  border-radius: 25px;
+  font-size: 17px;
+  border: 2px solid #b197fc;
+  color: #b197fc;
+  background-color: #ffffff;
+}
+.addToWish:hover {
+  background-color: #b197fc;
+  color: #ffffff;
+  border: none;
+}
+.viewBtns {
   border: 1px solid #222;
   background-color: #fff;
   color: #222;
   display: flex;
+  font-weight: 700;
+  border-radius: 20px;
   justify-content: center;
   align-items: center;
   gap: 3px;
-  padding: 8px 12px;
-  border-radius: 5px;
-  font-weight: 600;
-  font-size: 15px;
-  width: 190px;
+  padding: 10px 12px;
+  transition: all 0.3s ease;
+}
+
+/* Hover only when not wishlisted */
+.viewBtns:not(.wishlisted):hover {
+  background-color: red;
+  color: white;
+  border: red;
+}
+
+.viewBtns:not(.wishlisted):hover .wishIcon {
+  color: white;
+}
+
+/* Wishlisted style */
+.viewBtns.wishlisted {
+  border: 1px solid red;
+  background-color: white;
+  color: black;
+  font-weight: 700;
+}
+
+.viewBtns.wishlisted .wishIcon {
+  color: red;
+}
+.people-also-book{
+font-weight: 700;
+font-size: 20px;
 }
 .heartIcon {
   margin-top: 2px;
@@ -144,7 +187,7 @@
   justify-content: center;
   align-items: center;
   gap: 3px;
-  border-radius: 5px;
+  border-radius: 20px;
   padding: 10px 12px;
   width: 200px;
   font-size: 17px;

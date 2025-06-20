@@ -19,7 +19,7 @@ const ServiceCard = ({ service }) => {
 
   return (
     <div className="totalService">
-      <div className="serviceCard">
+      <div className="serviceCards">
         <div
           className="serviceCardImg"
           onMouseEnter={() => setHovered(true)}

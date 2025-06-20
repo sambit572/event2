@@ -111,7 +111,6 @@ input[type="range"].thumb-right {
   left: calc((100% * var(--min)) / 100000);
   width: calc((100% * (var(--max) - var(--min))) / 100000);
 }
-
 .price-display {
   display: flex;
   justify-content: space-between;
@@ -184,11 +183,30 @@ input[type="range"].thumb-right {
   z-index: 1001;
   background-color: #007bff;
   color: white;
-  padding: 10px 16px;
+  padding: 8px 12px;
   border: none;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-toggle-btn .filter-icon {
+  font-size: 20px;
+}
+
+.filter-toggle-btn .filter-text {
+  font-size: 16px;
+}
+
+.filter-toggle-btn .close-icon {
+  font-size: 20px;
+}
+.filter-toggle-btn:hover {
+  background-color: #0056b3;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+  transform: scale(1.03);
 }
 
 @media screen and (max-width: 1024px) {
@@ -212,7 +230,7 @@ input[type="range"].thumb-right {
   }
 
   .filter-toggle-btn {
-    display: block;
+    display: flex;
   }
 
   .filter {
@@ -222,6 +240,9 @@ input[type="range"].thumb-right {
     box-shadow: none;
     margin-top: 60px;
   }
+  .heading4 {
+  margin-top: 45px;
+}
 }
 
 @media screen and (max-width: 768px) {
