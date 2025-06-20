@@ -9,7 +9,6 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  position: fixed;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -104,19 +103,7 @@
   text-decoration: none;
 } */
 /* Profile dropdown styles */
-.profile-btn {
-  display: flex;
-  align-items: center;
-  padding-right: 6px;
-  color: #3b0340e1;
-  border-radius: 6px;
-  gap: 5px;
-  cursor: pointer;
-  background: transparent;
-  border: none;
-  font-size: 16px;
-  height: 36px;
-}
+
 .profile-btn:hover .icon {
   color: #fff;
 }

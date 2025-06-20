@@ -115,11 +115,13 @@ const Navbar = () => {
               <FaUser className="relative top-1 mr-1" />
               {userFirstName ? `${userFirstName}` : "Login"}
             </span>
+
+            {/* Dropdown Arrow */}
             <span onClick={handleToggleProfileDropdown}>
               {showProfileDropdown ? (
-                <FaChevronUp className="dropdown-arrow" />
+                <FaChevronUp className="text-sm" />
               ) : (
-                <FaChevronDown className="dropdown-arrow" />
+                <FaChevronDown className="text-sm" />
               )}
             </span>
           </div>

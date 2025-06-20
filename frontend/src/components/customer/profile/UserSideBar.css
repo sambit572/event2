@@ -239,3 +239,8 @@
     height: 130px;
   }
 }
+@media (min-width: 375px) {
+  .user-sidebar {
+    margin-top: 90px;
+  }
+}
