@@ -111,9 +111,9 @@ const Navbar = () => {
         {/* Profile Dropdown */}
         <div className="nav-item profile-dropdown-container" ref={profileRef}>
           <div className="profile-btn">
-            <span onClick={!userFirstName ? handleOpenLoginModal : undefined}>
-              <FaUser className="icon" />
-              {userFirstName ? `Hi, ${userFirstName}` : "Login"}
+            <span className="flex flex-row " onClick={!userFirstName ? handleOpenLoginModal : undefined}>
+              <FaUser className="relative top-1 mr-1" />
+              {userFirstName ? `${userFirstName}` : "Login"}
             </span>
             <span onClick={handleToggleProfileDropdown}>
               {showProfileDropdown ? (

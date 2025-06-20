@@ -1,4 +1,4 @@
-.hamburger {
+.dashboard-hamburger {
   font-size: 28px;
   border: none;
   color: #4527a0;
@@ -12,19 +12,32 @@
   display: none;
 }
 
-.main-contain {
-  margin-left: 260px;
+.dashboard-hamburger:hover{
+  background: none;
+}
+
+.dashboard-container-box {
+  display: flex;
+  background-color: white;
+  height: 100vh;
+  font-family: sans-serif;
 }
 
 /* Show hamburger only on small screens */
 @media (max-width: 768px) {
-  .hamburger {
+  .dashboard-hamburger {
     display: flex;
     left: 0;
-    margin-top: 25px;
+    top: 70px;
   }
 
   .open {
     color: whitesmoke;
+  }
+}
+
+@media (max-width:431px) {
+  .dashboard-hamburger{
+    top: 90px;
   }
 }

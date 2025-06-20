@@ -1,0 +1,116 @@
+.tab-btn {
+  display: flex;
+  margin-bottom: 20px;
+  margin-top: 100px;
+  background-color: #ead8f6;
+  max-width: fit-content;
+  border-radius: 6.25rem;
+  position: relative;
+  /* Required for absolute positioning of .bg-slider */
+  overflow: hidden;
+  font-family: "Montserrat";
+}
+
+.tab-btn button {
+  padding: 10px 10px;
+  border-radius: 6.2rem;
+  z-index: 2;
+  border: none;
+  background-color: #ead8f6;
+  color: #000;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  margin-right: 20px;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease,
+    border-color 0.3s ease;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.tab-btn .active {
+  color: #f5efff;
+  border-color: #f5efff;
+  background: transparent;
+}
+
+.button1 {
+  margin-left: 10px;
+  margin-right: 3px;
+}
+
+.button2 {
+  margin-right: 10px;
+  margin-left: -12px;
+}
+
+/* Sliding background box */
+.bg-slider {
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  width: 50%;
+  border-radius: 6.25rem;
+  background-color: rgb(145 44 209);
+  /* subtle purple highlight */
+  z-index: 1;
+  transition: all 0.43s ease;
+}
+
+/* When 'services' is active, move to the left */
+.bg-slider.services {
+  left: 10px;
+  width: 112px;
+}
+
+/* When 'bookings' is active, move to the right */
+.bg-slider.bookings {
+  left: 125px;
+  width: 125px;
+}
+
+@media (max-width: 431px) {
+  .tab-btn {
+    position: relative;
+    right: 111px;
+    height: 55px;
+    margin-top: 120px;
+    width: 400px;
+  }
+
+  .tab-btn button {
+    font-size: 12px;
+  }
+
+  .bg-slider.services {
+    left: 5%;
+    width: 40%;
+  }
+
+  .bg-slider.bookings {
+    left: 47%;
+    width: 47%;
+    height: 35px;
+  }
+}
+
+@media (max-width: 380px) {
+
+  .tab-btn{
+    right: 139px;
+  }
+  .tab-btn button {
+    font-size: 11px;
+  }
+  .bg-slider.services {
+    left: 5%;
+    width: 40%;
+  }
+
+  .bg-slider.bookings {
+    left: 47%;
+    width: 47%;
+    height: 35px;
+  }
+}

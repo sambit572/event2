@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import "./DashboardServices.css";
 import { FaTrash, FaEdit } from "react-icons/fa";
-import DashBoardBooking from "./DashBoardBooking.jsx";
-
 
 const dummyService = {
   images: [
@@ -24,7 +22,6 @@ const dummyService = {
 
 const DashboardServices = () => {
   const [selectedImage, setSelectedImage] = useState(dummyService.images[0]);
-  const [activeTab, setActiveTab] = useState("services");
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({ ...dummyService });
 
@@ -39,139 +36,111 @@ const DashboardServices = () => {
   };
 
   return (
-    <div className="dashboard-container">
-      <main className="content-area relative">
-        <div className="tab-btn">
-          <div className={`bg-slider ${activeTab}`}></div>
+    <section className="service-box xl:ml-20">
+      <div className="thumbnail-column-dashboard">
+        {formData.images.map((img, index) => (
+          <img
+            key={index}
+            src={img}
+            alt={`thumb-${index}`}
+            className={`thumbnail ${selectedImage === img ? "selected" : ""}`}
+            onClick={() => setSelectedImage(img)}
+          />
+        ))}
+      </div>
+
+      <div className="main-image-and-buttons">
+        <img
+          src={selectedImage}
+          alt="DJ Service"
+          className="main-image-dashboard"
+        />
+        <div className="image-buttons-dashboard">
           <button
-            className={`button1 ${activeTab === "services" ? "active" : ""}`}
-            onClick={() => setActiveTab("services")}
+            className="edit flex gap-1"
+            onClick={() => setIsEditing(true)}
           >
-            My Services
+            <FaEdit /> Edit
           </button>
-          <button
-            className={`button2 ${activeTab === "bookings" ? "active" : ""}`}
-            onClick={() => setActiveTab("bookings")}
-          >
-            My Bookings
+          <button className="delete flex gap-1">
+            <FaTrash /> Delete
           </button>
         </div>
+      </div>
 
-        {activeTab === "services" ? (
-          <section className="service-box">
-            <div className="thumbnail-column">
-              {formData.images.map((img, index) => (
-                <img
-                  key={index}
-                  src={img}
-                  alt={`thumb-${index}`}
-                  className={`thumbnail ${
-                    selectedImage === img ? "selected" : ""
-                  }`}
-                  onClick={() => setSelectedImage(img)}
-                />
-              ))}
-            </div>
-
-            <div className="main-image-and-buttons">
-              <img
-                src={selectedImage}
-                alt="DJ Service"
-                className="main-image"
-              />
-              <div className="image-buttons">
-                <button
-                  className="edit flex gap-1"
-                  onClick={() => setIsEditing(true)}
-                >
-                  <FaEdit /> Edit
-                </button>
-                <button className="delete flex gap-1">
-                  <FaTrash /> Delete
-                </button>
-              </div>
-            </div>
-
-            <div className="right-section">
-              {isEditing ? (
-                <form className="edit-form">
-                  <input
-                    type="text"
-                    name="title"
-                    value={formData.title}
-                    onChange={handleChange}
-                    placeholder="Title"
-                  />
-                  <input
-                    type="text"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleChange}
-                    placeholder="Location"
-                  />
-                  <input
-                    type="text"
-                    name="priceRange"
-                    value={formData.priceRange}
-                    onChange={handleChange}
-                    placeholder="Price Range"
-                  />
-                  <input
-                    type="text"
-                    name="category"
-                    value={formData.category}
-                    onChange={handleChange}
-                    placeholder="Category"
-                  />
-                  <input
-                    type="text"
-                    name="duration"
-                    value={formData.duration}
-                    onChange={handleChange}
-                    placeholder="Duration"
-                  />
-                  <textarea
-                    name="description"
-                    value={formData.description}
-                    onChange={handleChange}
-                    placeholder="Description"
-                  />
-                  <button type="button" onClick={handleSave}>
-                    Save
-                  </button>
-                </form>
-              ) : (
-                <div className="details">
-                  <h2 className="details-h2">{formData.title}</h2>
-                  <p className="l">{formData.location}</p>
-                  <p className="pr">{formData.priceRange}</p>
-                  <p className="c">
-                    <strong>Category: </strong>
-                    {formData.category}
-                  </p>
-                  <p className="d">
-                    <strong>Duration: </strong>
-                    {formData.duration}
-                  </p>
-                  <p className="des">
-                    <strong>Description: </strong>
-                  </p>
-                  <p>{formData.description}</p>
-                  <p className="u">
-                    <strong>User Reviews: </strong>
-                    {formData.userReviews}
-                  </p>
-                </div>
-              )}
-            </div>
-          </section>
+      <div className="right-section">
+        {isEditing ? (
+          <form className="edit-form-dashboard">
+            <input
+              type="text"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              placeholder="Title"
+            />
+            <input
+              type="text"
+              name="location"
+              value={formData.location}
+              onChange={handleChange}
+              placeholder="Location"
+            />
+            <input
+              type="text"
+              name="priceRange"
+              value={formData.priceRange}
+              onChange={handleChange}
+              placeholder="Price Range"
+            />
+            <input
+              type="text"
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              placeholder="Category"
+            />
+            <input
+              type="text"
+              name="duration"
+              value={formData.duration}
+              onChange={handleChange}
+              placeholder="Duration"
+            />
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Description"
+            />
+            <button type="button" onClick={handleSave}>
+              Save
+            </button>
+          </form>
         ) : (
-          <>
-            <DashBoardBooking />
-          </>
+          <div className="details xl:w-[500px] xl:ml-3">
+            <h2 className="details-h2">{formData.title}</h2>
+            <div className="l">{formData.location}</div>
+            <div className="pr">{formData.priceRange}</div>
+            <div className="c">
+              <strong>Category: </strong>
+              {formData.category}
+            </div>
+            <div className="d">
+              <strong>Duration: </strong>
+              {formData.duration}
+            </div>
+            <div className="des">
+              <strong>Description: </strong>
+            </div>
+            <div>{formData.description}</div>
+            <div className="u">
+              <strong>User Reviews: </strong>
+              {formData.userReviews}
+            </div>
+          </div>
         )}
-      </main>
-    </div>
+      </div>
+    </section>
   );
 };
 

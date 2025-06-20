@@ -9,7 +9,7 @@ const BookingPopup = ({ isOpen, onClose, booking }) => {
   const pendingAmount = price - advanceAmount;
 
   return (
-    <div className="popup-box inline-popup">
+    <div className="booking-popup-box inline-popup">
       <button className="close-btn" onClick={onClose}>×</button>
       <h2 className="popup-title">Booking Details</h2>
       <div className="popup-content">
