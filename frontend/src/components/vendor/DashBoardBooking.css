@@ -11,7 +11,7 @@
   padding: 20px;
   background-color: #fff;
   width: 70vw;
-  /* margin-left: 50px; */
+  margin-left: 50px;
 }
 
 /* Header and sorting */
@@ -151,7 +151,7 @@
   }
 
   .dashboard-main-content {
-    margin-left: 0px;
+    margin-left: 54px;
   }
 
   .booking-col-number {
@@ -168,11 +168,20 @@
 
   .booking-col-status {
     text-align: right;
-    width: auto;
+    width: max-content;
     font-weight: bold;
     padding-right: 13px;
+    position: relative;
+    right: 10px;
   }
 
+  .booking-col-status.status-initialize{
+    right: -10px;
+  }
+
+  .booking-col-status.status-cancelled{
+    right: 1px;
+  }
   .dashboard-sort-dropdown {
     width: 25%;
     margin-top: 10px;
@@ -208,7 +217,7 @@
   }
 
   .dashboard-main-content {
-    margin-left: -120px;
+    margin-left: -60px;
   }
 
   .booking-col-number {
@@ -225,9 +234,11 @@
 
   .booking-col-status {
     text-align: right;
-    width: auto;
+    width: max-content;
     font-weight: bold;
     padding-right: 13px;
+    position: relative;
+    right: 10px;
   }
 
   .dashboard-sort-dropdown {
@@ -246,10 +257,11 @@
 
 @media (max-width: 440px) {
   .dashboard-main-content {
-    width: 100%;
     max-width: 340px;
-    margin-left: -250px;
     padding: 10px;
+    margin-right: 54px;
+    position: relative;
+    right: 89px;
   }
 
   .dashboard-booking-row {
@@ -277,7 +289,7 @@
   }
 
   .dashboard-sort-dropdown {
-    width: 30%;
+    width: 51%;
     margin-top: 10px;
     margin-right: 0;
   }
@@ -292,18 +304,15 @@
   .dashboard-booking-header {
     display: none;
   }
-
-  .tab-buttons {
-    margin-left: -180px;
-  }
 }
 
-@media (max-width: 360px) {
+@media (max-width: 393px) {
   .dashboard-main-content {
-    width: 100%;
-    margin-left: -260px;
+    width: 105%;
     max-width: 320px;
     padding: 10px;
+    position: relative;
+    right: 121px;
   }
 
   .dashboard-booking-row {
@@ -331,7 +340,7 @@
   }
 
   .dashboard-sort-dropdown {
-    width: 30%;
+    width: 48%;
     margin-top: 10px;
     margin-right: 0;
   }

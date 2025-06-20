@@ -1,5 +1,3 @@
-
-
 /* Popup shown inside row */
 .row-popup-wrapper {
   position: absolute;
@@ -11,8 +9,7 @@
   padding-top: 10px;
 }
 
-
-.popup-box {
+.booking-popup-box {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -20,10 +17,10 @@
   background: #ffffff;
   border-radius: 12px;
   padding: 16px 20px;
-  width: 90vw;            /* Responsive width */
-  max-width: 400px;       /* Don't exceed this width */
-  max-height: 90vh;       /* Avoid going beyond the screen height */
-  overflow-y: auto;       /* Add scroll if content is long */
+  width: 90vw; /* Responsive width */
+  max-width: 400px; /* Don't exceed this width */
+  max-height: 90vh; /* Avoid going beyond the screen height */
+  overflow-y: auto; /* Add scroll if content is long */
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
   font-family: "Segoe UI", sans-serif;
   color: #1e1e2f;
@@ -31,7 +28,7 @@
   z-index: 9999;
 }
 
-.popup-box::before {
+.booking-popup-box::before {
   content: "";
   position: absolute;
   top: -8px;
@@ -41,7 +38,6 @@
   border-bottom-color: #ffffff;
 }
 
-
 /* Modern styles */
 .popup-title {
   color: #3b0340e1;
@@ -49,7 +45,6 @@
   font-weight: 600;
   position: relative;
   top: -14px;
-
 }
 
 .popup-content {
@@ -70,7 +65,7 @@
 .close-btn {
   position: relative;
   top: -7px;
-  right: -334px;
+  left: 328px;
   background: none;
   border: none;
   font-size: 25px;
@@ -126,7 +121,7 @@
 
 /* iPad Pro Large (1025px - 1366px) */
 @media (min-width: 1025px) and (max-width: 1366px) {
-  .popup-box {
+  .booking-popup-box {
     max-width: 420px;
     padding: 24px;
   }
@@ -141,11 +136,12 @@
 }
 /* iPad Pro Landscape (835px - 1024px) */
 @media (min-width: 835px) and (max-width: 1024px) {
-  .popup-box {
-    max-width: 400px;
+  .booking-popup-box {
+    max-width: 430px;
     padding: 22px;
     position: relative;
-    top: 325px;
+    top: -103px;
+    left: 350px;
   }
 
   .popup-title {
@@ -158,10 +154,12 @@
 }
 /* iPad Portrait & smaller tablets (768px - 834px) */
 @media (min-width: 768px) and (max-width: 834px) {
-  .popup-box {
-    max-width: 360px;
+  .booking-popup-box {
+    max-width: 401px;
     padding: 20px;
     position: relative;
+    top: 84px;
+    left: 250px;
   }
 
   .popup-title {
@@ -180,13 +178,14 @@
   }
 }
 
-
-
 /* Mobile (less than 768px) */
 @media (max-width: 767px) {
-  .popup-box {
-    width: 300px;
+  .booking-popup-box {
+    width: 80vw;
     padding: 18px;
+    position: relative;
+    top: 10px;
+    left: 130px;
   }
 
   .popup-title {
@@ -196,13 +195,19 @@
   .popup-row {
     font-size: 0.9rem;
   }
+
+  .close-btn {
+    left: 260px;
+  }
 }
 
 /* Extra Small Devices (max-width: 480px) */
 @media (max-width: 420px) {
-  .popup-box {
-    width: 92vw;
+  .booking-popup-box {
+    width: 77vw;
     padding: 12px;
+    top: 10px;
+    left: 110px;
     position: relative;
   }
 
@@ -218,15 +223,17 @@
   .close-btn {
     font-size: 20px;
     top: 8px;
+    left: 260px;
   }
 }
 
-
 /* Ultra Small Devices (max-width: 360px) */
-@media (max-width: 360px) {
-  .popup-box {
-    width: 94vw;
+@media (max-width: 391px) {
+  .booking-popup-box {
+    width: 80vw;
     padding: 12px;
+    position: relative;
+    left: 85px;
   }
 
   .popup-title {
@@ -243,9 +250,15 @@
   }
 }
 
+@media (max-width: 380px) {
+  .close-btn {
+    left: 250px;
+  }
+}
+
 /* Tiny Devices (max-width: 320px) */
 @media (max-width: 320px) {
-  .popup-box {
+  .booking-popup-box {
     width: 95vw;
     padding: 10px;
   }

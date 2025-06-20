@@ -20,7 +20,7 @@ function DashBoardSideBar({ isOpen }) {
   };
 
   return (
-    <div className={`sidebar ${isOpen ? "open" : ""}`}>
+    <div className={`dash-sidebar ${isOpen ? "open" : ""}`}>
       <h2 className="dasgboardHeading">DASHBOARD</h2>
       <div className="sidebar-content">
         <img
@@ -29,7 +29,7 @@ function DashBoardSideBar({ isOpen }) {
           className="profile-pic"
         />
 
-        <ul className="custom-list-decor">
+        <ul className="custom-list-decor-dashboard">
           <li className="typography custom-font">
             {editMode ? (
               <input
@@ -42,18 +42,6 @@ function DashBoardSideBar({ isOpen }) {
               fullName
             )}
           </li>
-          {/* <li className="typography custom-font-active">
-            {editMode ? (
-              <input
-                type="text"
-                value={active}
-                className="custom-li"
-                onChange={(e) => setActive(e.target.value)}
-              />
-            ) : (
-              active
-            )}
-          </li> */}
           {editMode ? (
             <label className="status-edit-toggle">
               <input
@@ -152,8 +140,14 @@ function DashBoardSideBar({ isOpen }) {
           </li>
         </ul>
 
-        <button className="edit-buttons flex gap-1 h" onClick={handleToggleEdit}>
-          {editMode ? "Save" : (<><FaEdit /> Edit</>)}
+        <button className="edit-buttons flex gap-1 " onClick={handleToggleEdit}>
+          {editMode ? (
+            "Save"
+          ) : (
+            <>
+              <FaEdit /> Edit
+            </>
+          )}
         </button>
       </div>
     </div>

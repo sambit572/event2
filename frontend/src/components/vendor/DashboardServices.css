@@ -1,12 +1,6 @@
 
 /* RD */
-.dashboard-container {
-  display: flex;
-  background-color: #fff;
-  height: 100vh;
-  font-family: sans-serif;
-  /* margin-left: 260px; */
-}
+
 
 /* ========== Main Content Area ========== */
 .content-area {
@@ -14,84 +8,15 @@
   padding: 20px;
 }
 
-/* ========== Tab Buttons ========== */
-.tab-btn {
-  display: flex;
-  margin-bottom: 20px;
-  background-color: #ead8f6;
-  max-width: fit-content;
-  border-radius: 6.25rem;
-  position: relative;
-  /* Required for absolute positioning of .bg-slider */
-  overflow: hidden;
+.details{
   font-family: "Montserrat";
+
 }
 
-.tab-btn button {
-  padding: 10px 10px;
-  border-radius: 6.2rem;
-  z-index: 2;
-  border: none;
-  background-color: #ead8f6;
-  color: #000;
-  cursor: pointer;
-  font-size: 15px;
-  font-weight: 500;
-  margin-right: 20px;
-  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease,
-    border-color 0.3s ease;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  position: relative;
+.details-h2{
+  font-weight: 600;
 }
 
-.tab-btn .active {
-  color: #f5efff;
-  border-color: #f5efff;
-  background: transparent;
-}
-
-/* .tab-btn button:hover {
-  transform: translateY(-2px);
-} */
-/* .tab-btn .active:hover {
-  background-color: rgb(112, 13, 174);
-} */
-
-.button1 {
-  margin-left: 10px;
-  margin-right: 3px;
-}
-
-.button2 {
-  margin-right: 10px;
-  margin-left: -12px;
-}
-
-/* Sliding background box */
-.bg-slider {
-  position: absolute;
-  top: 10px;
-  bottom: 10px;
-  width: 50%;
-  border-radius: 6.25rem;
-  background-color: rgb(145 44 209);
-  /* subtle purple highlight */
-  z-index: 1;
-  transition: all 0.43s ease;
-}
-
-/* When 'services' is active, move to the left */
-.bg-slider.services {
-  left: 10px;
-  width: 112px;
-}
-
-/* When 'bookings' is active, move to the right */
-.bg-slider.bookings {
-  left: 125px;
-  width: 120px;
-}
 
 /* ========== Service Card Section ========== */
 .service-box {
@@ -105,7 +30,7 @@
 }
 
 /* Thumbnail column on left, vertically stacked */
-.thumbnail-column {
+.thumbnail-column-dashboard {
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -122,7 +47,7 @@
 }
 
 /* Main Image */
-.main-image {
+.main-image-dashboard {
   width: 380px;
   height: 250px;
   object-fit: cover;
@@ -147,7 +72,7 @@
 }
 
 /* Buttons below main image */
-.image-buttons {
+.image-buttons-dashboard {
   display: flex;
   justify-content: center;
   gap: 15px;
@@ -195,45 +120,6 @@
   justify-content: flex-start;
 }
 
-.details {
-  font-family: "Montserrat";
-}
-
-.details h2 {
-  margin: 0;
-  font-size: 26px;
-  font-weight: 600;
-}
-
-.details .l {
-  color: #666;
-  font-size: 14px;
-  margin-top: 10px;
-}
-
-.details .c,
-.details .d,
-.details .des,
-.details .u {
-  color: black;
-  font-size: 15px;
-  margin-top: 6px;
-  font-weight: 500;
-}
-
-.details .pr {
-  font-weight: 600;
-  color: #000;
-  font-size: 15px;
-  margin-top: 6px;
-}
-
-.details .c strong,
-.details .d strong,
-.details .des strong,
-.details .u strong {
-  font-weight: 600;
-}
 
 /* ========== Bookings Section ========== */
 .booking-card {
@@ -252,7 +138,7 @@
 }
 
 /* ========== Edit Form with Animation ========== */
-.edit-form {
+.edit-form-dashboard {
   display: flex;
   width: 350px;
   flex-direction: column;
@@ -278,8 +164,8 @@
   }
 }
 
-.edit-form input,
-.edit-form textarea {
+.edit-form-dashboard input,
+.edit-form-dashboard textarea {
   padding: 12px 14px;
   font-size: 15px;
   border: 1px solid #ccc;
@@ -290,21 +176,21 @@
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.edit-form input:focus,
-.edit-form textarea:focus {
+.edit-form-dashboard input:focus,
+.edit-form-dashboard textarea:focus {
   border-color: #3cb0ff;
   background-color: #fff;
   box-shadow: 0 0 6px rgba(60, 176, 255, 0.4);
   outline: none;
 }
 
-.edit-form textarea {
+.edit-form-dashboard textarea {
   min-height: 90px;
   resize: vertical;
 }
 
 /* Save Button with Glow Effect */
-.edit-form button {
+.edit-form-dashboard button {
   align-self: flex-start;
   padding: 10px 22px;
   font-size: 15px;
@@ -318,77 +204,10 @@
   box-shadow: 0 4px 12px rgba(60, 176, 255, 0.3);
 }
 
-.edit-form button:hover {
+.edit-form-dashboard button:hover {
   background-color: #1e90ff;
   box-shadow: 0 6px 15px rgba(30, 144, 255, 0.5);
   transform: translateY(-2px);
-}
-
-/* ========== Animated Toggle Switch ========== */
-.toggle-switch {
-  position: relative;
-  width: 60px;
-  height: 32px;
-  display: inline-block;
-}
-
-.toggle-switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.toggle-switch .slider {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, #ddd, #bbb);
-  border-radius: 50px;
-  transition: all 0.4s ease-in-out;
-  cursor: pointer;
-  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-}
-
-.toggle-switch .slider::before {
-  content: "";
-  position: absolute;
-  width: 26px;
-  height: 26px;
-  left: 3px;
-  bottom: 3px;
-  background-color: #fff;
-  border-radius: 50%;
-  transition: transform 0.4s ease, background-color 0.4s ease;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-}
-
-.toggle-switch .slider::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -70%;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(
-    120deg,
-    transparent,
-    rgba(255, 255, 255, 0.5),
-    transparent
-  );
-  transform: skewX(-20deg);
-  transition: left 0.4s ease;
-}
-
-.toggle-switch input:checked + .slider {
-  background: linear-gradient(90deg, #3cb0ff, #6e1274);
-}
-
-.toggle-switch input:checked + .slider::before {
-  transform: translateX(28px);
-}
-
-.toggle-switch input:checked + .slider::after {
-  left: 120%;
 }
 
 /* ========== Responsive Design ========== */
@@ -404,15 +223,15 @@
     padding: 15px;
   }
 
-  .main-image {
+  .main-image-dashboard {
     height: 185px;
     width: 352px;
     position: relative;
-    top: -215px;
+    top: -213px;
     right: -27px;
   }
 
-  .thumbnail-column {
+  .thumbnail-column-dashboard {
     flex-direction: column;
     flex-wrap: wrap;
     position: relative;
@@ -428,22 +247,23 @@
   .service-box {
     flex-direction: column;
     align-items: center;
-    height: 541px;
+    height: 561px;
     width: 500px;
     margin-left: 100px;
   }
 
-  .edit-form {
+  .edit-form-dashboard {
     position: relative;
     bottom: 444px;
   }
 
-  .image-buttons {
+  .image-buttons-dashboard {
     flex-direction: row;
     flex-wrap: wrap;
     position: relative;
-    bottom: 215px;
+    top:70px;
     margin-left: 24px;
+    
   }
 
   .edit,
@@ -454,8 +274,12 @@
 
   .details {
     position: relative;
-    top: -224px;
+    top: -262px;
     font-size: 15px;
+  }
+
+  .details-h2{
+    font-weight: 500;
   }
 }
 
@@ -469,7 +293,7 @@
     padding: 15px;
   }
 
-  .main-image {
+  .main-image-dashboard {
     height: 185px;
     width: 325px;
     position: relative;
@@ -477,7 +301,7 @@
     right: -27px;
   }
 
-  .thumbnail-column {
+  .thumbnail-column-dashboard {
     flex-direction: column;
     flex-wrap: wrap;
     position: relative;
@@ -494,12 +318,11 @@
     flex-direction: column;
     align-items: center;
     height: 550px;
-    margin-left: 0;
+    margin-left: 20px;
   }
 
-  .edit-form {
+  .edit-form-dashboard {
     position: relative;
-    bottom: 444px;
   }
 
   .image-buttons {
@@ -518,8 +341,10 @@
 
   .details {
     position: relative;
-    top: -224px;
+    top: -257px;
   }
+
+  
 }
 
 /* Mobile Devices (width <= 768px) */
@@ -534,17 +359,17 @@
   }
   .service-box {
     width: 480px;
-    margin-left: -200px;
-    height: 495px;
+    margin-left: -100px;
+    height: 538px;
   }
 
-  .edit-form {
+  .edit-form-dashboard {
     width: 650px;
     height: auto;
     padding: 15px;
   }
 
-  .main-image {
+  .main-image-dashboard {
     height: 160px;
     margin-top: 36px;
   }
@@ -567,23 +392,11 @@
     font-size: 20px;
   }
 
-  .toggle-switch {
-    width: 50px;
-    height: 28px;
+  .edit-form-dashboard{
+    width: 500px;
   }
 
-  .toggle-switch .slider::before {
-    width: 22px;
-    height: 22px;
-  }
 
-  .toggle-switch input:checked + .slider::before {
-    transform: translateX(22px);
-  }
-
-  .tab-buttons {
-    margin-left: -100px;
-  }
 }
 
 /* Extra Small Devices (width <= 480px) */
@@ -600,14 +413,15 @@
     left: -73px;
   }
 
-  .edit-form {
+  .edit-form-dashboard {
     width: 300px;
     padding: 15px;
   }
 
-  .main-image {
+  .main-image-dashboard {
     width: 250px;
     height: 150px;
+    margin-top: 51px;
   }
 
   .thumbnail {
@@ -632,21 +446,8 @@
     font-size: 17px;
   }
 
-  .toggle-switch {
-    width: 50px;
-    height: 28px;
-  }
 
-  .toggle-switch .slider::before {
-    width: 22px;
-    height: 22px;
-  }
-
-  .toggle-switch input:checked + .slider::before {
-    transform: translateX(22px);
-  }
-
-  .thumbnail-column {
+  .thumbnail-column-dashboard {
     left: -134px;
   }
 }
@@ -659,17 +460,17 @@
   }
   .service-box {
     width: 337px;
-    left: -40px;
+    left: -100px;
   }
 
-  .edit-form {
+  .edit-form-dashboard {
     width: 280px;
     padding: 15px;
   }
 
-  .main-image {
+  .main-image-dashboard {
     max-width: 95%;
-    height: auto;
+    height: 142px;
   }
 
   .thumbnail {
@@ -696,24 +497,6 @@
 
   .details strong {
     font-size: 14px;
-  }
-
-  .toggle-switch {
-    width: 50px;
-    height: 28px;
-  }
-
-  .toggle-switch .slider::before {
-    width: 22px;
-    height: 22px;
-  }
-
-  .toggle-switch input:checked + .slider::before {
-    transform: translateX(22px);
-  }
-
-  .tab-buttons {
-    margin-left: -170px;
   }
 }
 
@@ -725,17 +508,17 @@
   }
   .service-box {
     width: 325px;
-    left: -50px;
+    
   }
 
-  .edit-form {
+  .edit-form-dashboard {
     width: 280px;
     padding: 15px;
   }
 
-  .main-image {
-    max-width: 95%;
-    height: auto;
+  .main-image-dashboard {
+    max-width: 83%;
+    height: 131px;
   }
 
   .thumbnail {
@@ -764,21 +547,4 @@
     font-size: 14px;
   }
 
-  .toggle-switch {
-    width: 50px;
-    height: 28px;
-  }
-
-  .toggle-switch .slider::before {
-    width: 22px;
-    height: 22px;
-  }
-
-  .toggle-switch input:checked + .slider::before {
-    transform: translateX(22px);
-  }
-
-  .tab-buttons {
-    margin-left: 26px;
-  }
 }

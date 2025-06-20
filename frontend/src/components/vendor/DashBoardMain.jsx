@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import DashBoardSideBar from "./DashBoardSideBar.jsx";
 import DashboardServices from "./DashboardServices.jsx";
+import DashBoardBooking from "./DashBoardBooking.jsx";
+import ToggleTabs from "./ToggleTabs.jsx";
 import "./DashboardMain.css";
 
 function DashBoardMain() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("services");
 
   useEffect(() => {
     const handleResize = () => {
@@ -20,10 +23,10 @@ function DashBoardMain() {
   }, []);
 
   return (
-    <div className="dashboard-container">
+    <div className="dashboard-container-box">
       {/* Hamburger / Cross button for mobile */}
       <button
-        className={`hamburger ${isSidebarOpen ? "open" : ""}`}
+        className={`dashboard-hamburger ${isSidebarOpen ? "open" : ""}`}
         onClick={() => setIsSidebarOpen((prev) => !prev)}
       >
         {isSidebarOpen ? "✕" : "☰"}
@@ -32,7 +35,12 @@ function DashBoardMain() {
       <DashBoardSideBar isOpen={isSidebarOpen} />
 
       <div className="main-contain">
-        <DashboardServices />
+        <ToggleTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+        {activeTab === "services" ? (
+          <DashboardServices />
+        ) : (
+          <DashBoardBooking />
+        )}
       </div>
     </div>
   );

@@ -127,9 +127,9 @@ const Navbar = () => {
             {/* Dropdown Arrow */}
             <span onClick={handleToggleProfileDropdown}>
               {showProfileDropdown ? (
-                <FaChevronUp className="text-sm" />
+                <FaChevronUp className="text-sm ml-1 relative top-1" />
               ) : (
-                <FaChevronDown className="text-sm" />
+                <FaChevronDown className="text-sm ml-1 relative top-1" />
               )}
             </span>
           </div>
@@ -158,11 +158,12 @@ const Navbar = () => {
               {userFirstName && (
                 <>
                   <div
+                    className="flex text-[rgb(59,3,64)] text-opacity-90"
                     onClick={() => {
                       navigate("/profile");
                     }}
                   >
-                    <FaUser style={{ marginRight: "4px" }} />
+                    <FaUser style={{ marginRight: "8px" }} />
                     My Profile
                   </div>
                   <div className="dropdown-item">
