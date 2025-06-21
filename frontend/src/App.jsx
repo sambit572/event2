@@ -16,7 +16,7 @@ import LoginRegister from "./pages/common/LoginRegister";
 import Navbar from "./components/common/Navbar";
 
 import VendorService from "./pages/vendor/VendorService";
-// import Navbar from "./components/customer/Navbar";
+
 
 import Chatbot from "./components/common/Chatbot";
 import AboutUs from "./pages/common/AboutUs";
@@ -28,37 +28,16 @@ import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
 import Profile from "./components/customer/profile/Profile.jsx";
 import UserDetails from "./pages/customer/UserDetails.jsx";
 
-import Wishlist from "./pages/customer/Wishlist";
+import Wishlist from "./pages/customer/Wishlist.jsx";
 import DashboardServices from "./pages/customer/DashboardServices";
 import ForgotPassword from "./pages/customer/ForgotPassword";
 
 const App = () => {
-  /*{ const location = useLocation();
 
-  // Define routes where you want to hide the navbar
-  const hideNavbarRoutes = [
-    "/vendor/legal-consent",
-    "/category/VendorService",
-    "/vendor/payment-info",
-    "/vendor/thank-you",
-    "/vendor/register"
-  ];
-  const hideFooterRoutes = [
-    "/vendor/legal-consent",
-    "/category/VendorService",
-    "/vendor/payment-info",
-    "/vendor/thank-you",
-    "/vendor/register"
-  ];
-
-  const shouldShowNavbar = !hideNavbarRoutes.includes(location.pathname);
-  const shouldShowFooter = !hideFooterRoutes.includes(location.pathname); }*/
 
   return (
     <>
       <Navbar />
-
-      {/* {shouldShowNavbar && <Navbar />} */}
 
       <main>
         <Routes>
