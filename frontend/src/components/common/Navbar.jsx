@@ -120,16 +120,16 @@ const Navbar = () => {
             >
               <FaUser className="text-lg" />
               <span className="font-medium">
-                {userFirstName ? `Hi, ${userFirstName}` : "Login"}
+                {userFirstName ? `${userFirstName}` : "Login"}
               </span>
             </span>
 
             {/* Dropdown Arrow */}
             <span onClick={handleToggleProfileDropdown}>
               {showProfileDropdown ? (
-                <FaChevronUp className="text-sm  relative " />
+                <FaChevronUp className="text-sm" />
               ) : (
-                <FaChevronDown className="text-sm  relative " />
+                <FaChevronDown className="text-sm" />
               )}
             </span>
           </div>
