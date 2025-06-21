@@ -18,6 +18,8 @@ import { IoSettingsSharp } from "react-icons/io5";
 import { SiBrandfolder } from "react-icons/si";
 import axios from "axios";
 import { useNavigate, Navigate } from "react-router-dom";
+import ReviewSlider from "../customer/Home/ReviewSlider.jsx";
+
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -110,7 +112,7 @@ const Navbar = () => {
       <div className="nav-icons">
         {/* Profile Dropdown */}
         <div className="nav-item profile-dropdown-container" ref={profileRef}>
-          <div className="flex items-center gap-2 text-[rgb(59,3,64)] text-opacity-90 cursor-pointer">
+          <div className="flex items-center gap-2 text-gray-700 cursor-pointer login">
             {/* User Icon + Greeting/Login */}
             <span
               className="flex items-center gap-2"
@@ -186,12 +188,12 @@ const Navbar = () => {
 
         {/* Become Vendor */}
         <div
-          className="nav-item"
+          className="nav-items"
           onClick={
             !userFirstName ? handleOpenLoginModal : handleOpenRegisterModal
           }
         >
-          <FaStore className="icon" />
+          <FaStore className="icons" />
           <span className="vendor">Become a Vendor</span>
         </div>
 
@@ -212,7 +214,7 @@ const Navbar = () => {
               </div>
               <div
                 className="dropdown-item"
-                onClick={() => navigate("/services")}
+                onClick={() => navigate("/category")}
               >
                 <MdMiscellaneousServices className="icon" /> Services
               </div>
@@ -227,12 +229,6 @@ const Navbar = () => {
                 onClick={() => navigate("/help_us")}
               >
                 <FaHandsHelping className="icon" /> Help Us
-              </div>
-              <div
-                className="dropdown-item"
-                onClick={() => navigate("/settings")}
-              >
-                <IoSettingsSharp className="icon" /> Settings
               </div>
             </div>
           )}

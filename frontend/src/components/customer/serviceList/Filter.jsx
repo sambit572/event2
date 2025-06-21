@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import "../../customer/serviceList/Filter.css";
 import { TiStarFullOutline } from "react-icons/ti";
 import locationData from "./LocationData";
+import { IoFilterOutline } from "react-icons/io5";
+import { RxCross2 } from "react-icons/rx";
 
 const Filter = () => {
   const rating = [4.9, 4.2, 3.5];
@@ -58,14 +60,16 @@ const Filter = () => {
         className="filter-toggle-btn"
         onClick={() => setShowFilter(!showFilter)}
       >
-        {showFilter ? "Close Filters" : "Filters"}
+         {!showFilter && <IoFilterOutline className="filter-icon" />}
+        <span className="filter-text">{showFilter ? "Close" : "Filters"}</span>
+        {showFilter && <RxCross2 className="close-icon" />}
       </button>
       <div className={`filterBox ${showFilter ? "show" : ""}`}>
         <div className="filter m-2">
           <h3>Filters</h3>
 
           <div className="price-range-wrapper">
-            <h4>Price</h4>
+            <h4 className="heading4">Price</h4>
             <div
               className="slider"
               style={{

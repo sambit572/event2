@@ -21,6 +21,10 @@
   border: 0;
   border-top: 1px solid #ccc;
 }
+.serviceDetails-location{
+    margin-top: -25px;
+    margin-bottom: -10px;
+}
 
 /* Responsive Adjustments */
 @media (max-width: 1024px) {

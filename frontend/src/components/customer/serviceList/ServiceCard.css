@@ -2,9 +2,9 @@
   display: flex;
   /* background-color: aqua; */
 }
-.serviceCard {
+.serviceCards {
   display: flex;
-  width: 85%;
+  width: 100%;
 
   /* background-color: #0c742b; */
 }
