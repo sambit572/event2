@@ -92,7 +92,14 @@ const Home = () => {
       <ImageSlider images={images} />
       <AddsBanner />
       {/* <img className="addbanner" src={banner} alt="" /> */}
-      <h1 className="align_center heading">Categories</h1>
+      <h1 className="align_center heading">
+        Book Trusted Services for Any Occasion
+      </h1>
+      <p className="text-center">
+        Explore trusted professionals across categories and simplify your event
+        planning.
+      </p>
+
       {!showAll && categories.length > 6 && (
         <div className="browse_all">
           <button className="browse-all-btn" onClick={() => setShowAll(true)}>

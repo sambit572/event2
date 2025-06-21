@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import LoginRegister from "../../pages/common/LoginRegister.jsx";
 import "./Navbar.css";
 import {
   FaSearch,
@@ -14,12 +13,8 @@ import {
 } from "react-icons/fa";
 import { FcAbout } from "react-icons/fc";
 import { MdMiscellaneousServices, MdReviews } from "react-icons/md";
-import { IoSettingsSharp } from "react-icons/io5";
-import { SiBrandfolder } from "react-icons/si";
 import axios from "axios";
-import { useNavigate, Navigate } from "react-router-dom";
-import ReviewSlider from "../customer/Home/ReviewSlider.jsx";
-
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -27,12 +22,9 @@ const Navbar = () => {
   const [userFirstName, setUserFirstName] = useState(null);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showEllipsisDropdown, setShowEllipsisDropdown] = useState(false);
-  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const profileRef = useRef(null);
   const ellipsisRef = useRef(null);
-
-  // Load userFirstName from localStorage
 
   const handleHomeClick = () => {
     if (location.pathname === "/") {
@@ -40,13 +32,6 @@ const Navbar = () => {
     } else {
       navigate("/");
     }
-  };
-  const handleOpenLoginModal = () => {
-    setShowLoginModal(true);
-    setShowProfileDropdown(false);
-  };
-  const handleOpenRegisterModal = () => {
-    navigate("/vendor/register");
   };
 
   const handleToggleProfileDropdown = () => {
@@ -68,7 +53,6 @@ const Navbar = () => {
     }
   };
 
-  // Handle outside clicks to close dropdowns
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (profileRef.current && !profileRef.current.contains(event.target)) {
@@ -88,10 +72,8 @@ const Navbar = () => {
       setUserFirstName(storedName);
     };
 
-    updateName(); // initial load
-
+    updateName();
     window.addEventListener("userLoggedIn", updateName);
-
     return () => window.removeEventListener("userLoggedIn", updateName);
   }, []);
 
@@ -113,18 +95,15 @@ const Navbar = () => {
         {/* Profile Dropdown */}
         <div className="nav-item profile-dropdown-container" ref={profileRef}>
           <div className="flex items-center gap-2 text-gray-700 cursor-pointer login">
-            {/* User Icon + Greeting/Login */}
             <span
               className="flex items-center gap-2"
-              onClick={!userFirstName ? handleOpenLoginModal : undefined}
+              onClick={!userFirstName ? () => navigate("/login") : undefined}
             >
               <FaUser className="text-lg" />
               <span className="font-medium">
                 {userFirstName ? `${userFirstName}` : "Login"}
               </span>
             </span>
-
-            {/* Dropdown Arrow */}
             <span onClick={handleToggleProfileDropdown}>
               {showProfileDropdown ? (
                 <FaChevronUp className="text-sm" />
@@ -136,7 +115,7 @@ const Navbar = () => {
 
           {showProfileDropdown && (
             <div className="dropdown-menu profile-menu">
-              {!userFirstName && (
+              {!userFirstName ? (
                 <>
                   <h4 className="login-h4">Welcome</h4>
                   <p className="login-p">
@@ -146,22 +125,18 @@ const Navbar = () => {
                     <span>New Customer?</span>
                     <span
                       className="signup-link"
-                      onClick={handleOpenLoginModal}
+                      onClick={() => navigate("/register")}
                     >
                       Sign Up
                     </span>
                   </div>
                   <hr />
                 </>
-              )}
-
-              {userFirstName && (
+              ) : (
                 <>
                   <div
                     className="flex text-[rgb(59,3,64)] text-opacity-90"
-                    onClick={() => {
-                      navigate("/profile");
-                    }}
+                    onClick={() => navigate("/profile")}
                   >
                     <FaUser style={{ marginRight: "8px" }} />
                     My Profile
@@ -170,7 +145,6 @@ const Navbar = () => {
                     <FaHeart className="icon" style={{ marginRight: "4px" }} />
                     <a href="./wishlist">Wishlist</a>
                   </div>
-
                   <div className="dropdown-item">
                     <FaSignOutAlt
                       className="icon"
@@ -189,8 +163,8 @@ const Navbar = () => {
         {/* Become Vendor */}
         <div
           className="nav-items"
-          onClick={
-            !userFirstName ? handleOpenLoginModal : handleOpenRegisterModal
+          onClick={() =>
+            !userFirstName ? navigate("/login") : navigate("/vendor/register")
           }
         >
           <FaStore className="icons" />
@@ -234,11 +208,6 @@ const Navbar = () => {
           )}
         </div>
       </div>
-
-      {/* Login Modal */}
-      {showLoginModal && (
-        <LoginRegister onClose={() => setShowLoginModal(false)} />
-      )}
     </div>
   );
 };
