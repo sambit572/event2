@@ -42,8 +42,8 @@ const images = [
 
 const categories = [
   { title: "Dj", image: image1 },
-  { title: "Brass band & Other regional band", image: image2 },
-  { title: "Tenthouse & Decor", image: image3 },
+  { title: "Varities of Bands", image: image2 },
+  { title: "Tent & Decor", image: image3 },
   { title: "Photographer & Videographer", image: image4 },
   { title: "Pandit", image: image5 },
   { title: "Magician", image: image6 },
