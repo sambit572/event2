@@ -98,7 +98,7 @@ const Home = () => {
       </div>
 
       <h1 className="align_center heading">
-        Book Trusted Services for Any Occasion
+        Book Trusted Vendors for Any Occasion
       </h1>
       <p className="text-center">
         Explore trusted professionals across categories and simplify your event
