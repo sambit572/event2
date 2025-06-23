@@ -1,20 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./VendorService.css";
 import StepProgress from "./StepProgress";
 import Button from "./../../components/vendor/register/Button";
-import "./../../components/vendor/register/Button.css";
 import axios from "axios";
-import Spinner from "./../../components/common/Spinner";
 
 function VendorService({ currentStep }) {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
 
   const steps = [
     { label: "Registration", subLabel: "Step 1", icon: "/verify.png" },
     { label: "Service Details", subLabel: "Step 2", icon: "/service.png" },
-    { label: "Payment Details", subLabel: "Step 3", icon: "/payment.png" },
+    { label: "Payment", subLabel: "Step 3", icon: "/payment.png" },
     { label: "Legal Consents", subLabel: "Step 4", icon: "/legal.png" },
   ];
 
@@ -22,7 +19,7 @@ function VendorService({ currentStep }) {
   const [categorySearchTerm, setCategorySearchTerm] = useState("");
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [previewImages, setPreviewImages] = useState([]);
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(-1);
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [activeField, setActiveField] = useState("min");
@@ -35,6 +32,8 @@ function VendorService({ currentStep }) {
   const [minutes, setMinutes] = useState("");
   const [selectedDropdownValue, setSelectedDropdownValue] = useState("");
   const [selectedFiles, setSelectedFiles] = useState([]);
+
+  const fileInputRef = useRef(null);
 
   const categories = [
     "DJ",
@@ -62,29 +61,42 @@ function VendorService({ currentStep }) {
   // Enhanced image upload with validation
   const handleImageUpload = (e) => {
     try {
-      const files = Array.from(e.target.files);
+      const newFiles = Array.from(e.target.files);
+      const valid = ["image/jpeg", "image/jpg", "image/png", "image/gif"];
+      const max = 5 * 1024 * 1024;
 
-      // Validate file types and sizes
-      const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif"];
-      const maxSize = 5 * 1024 * 1024; // 5MB
-
-      for (let file of files) {
-        if (!validTypes.includes(file.type)) {
-          alert("Please upload only image files (JPEG, PNG, GIF)");
-          return;
-        }
-        if (file.size > maxSize) {
-          alert("Image size should be less than 5MB");
-          return;
-        }
+      for (let f of newFiles) {
+        if (!valid.includes(f.type)) return alert("JPEG/PNG/GIF only");
+        if (f.size > max) return alert("Image < 5 MB, please");
       }
 
-      const imageUrls = files.map((file) => URL.createObjectURL(file));
-      setPreviewImages(imageUrls);
-      setSelectedFiles(files);
-      setSelectedImageIndex(0);
-    } catch (error) {
-      console.error("error in handle image", error);
+      const newUrls = newFiles.map((f) => URL.createObjectURL(f));
+
+      setPreviewImages((prev) => [...prev, ...newUrls]);
+      setSelectedFiles((prev) => [...prev, ...newFiles]);
+      setSelectedImageIndex((prev) => (prev === -1 ? 0 : prev));
+    } catch (err) {
+      console.error("Image upload error:", err);
+    }
+  };
+  const handleDeleteImage = (index) => {
+    const updatedImages = [...previewImages];
+    const updatedFiles = [...selectedFiles];
+
+    updatedImages.splice(index, 1);
+    updatedFiles.splice(index, 1);
+
+    setPreviewImages(updatedImages);
+    setSelectedFiles(updatedFiles);
+
+    if (selectedImageIndex === index) {
+      setSelectedImageIndex(updatedImages.length > 0 ? 0 : -1);
+    } else if (selectedImageIndex > index) {
+      setSelectedImageIndex((prev) => prev - 1);
+    }
+
+    if (updatedImages.length === 0 && fileInputRef.current) {
+      fileInputRef.current.value = "";
     }
   };
 
@@ -93,11 +105,9 @@ function VendorService({ currentStep }) {
   };
 
   const handleNext = async () => {
-    setIsLoading(true);
     console.log("next button clicked");
 
     if (!validateForm()) {
-      setIsLoading(false);
       console.log("form is not validated wrong");
       return;
     }
@@ -142,7 +152,6 @@ function VendorService({ currentStep }) {
       console.error("Error submitting service:", error);
       alert("Failed to submit service. Please try again.");
     }
-    setIsLoading(false);
   };
 
   // Comprehensive validation function
@@ -236,7 +245,7 @@ function VendorService({ currentStep }) {
   return (
     <>
       <StepProgress currentStep={1} />
-      {isLoading && <Spinner />}
+
       <div className="form-container">
         <div className="form-wrapper">
           {/* Left Side: Form Column */}
@@ -291,6 +300,7 @@ function VendorService({ currentStep }) {
                 accept="image/*"
                 multiple
                 onChange={handleImageUpload}
+                ref={fileInputRef}
                 required
               />
               {previewImages.length > 0 && (
@@ -303,13 +313,41 @@ function VendorService({ currentStep }) {
                   </div>
                   <div className="thumbnail-preview">
                     {previewImages.map((img, idx) => (
-                      <img
-                        key={idx}
-                        src={img}
-                        alt={`Thumb-${idx}`}
-                        className={selectedImageIndex === idx ? "active" : ""}
-                        onClick={() => setSelectedImageIndex(idx)}
-                      />
+                      <div key={idx} className="thumbnail-wrapper">
+                        <img
+                          src={img}
+                          alt={`Thumb-${idx}`}
+                          className={selectedImageIndex === idx ? "active" : ""}
+                          onClick={() => setSelectedImageIndex(idx)}
+                        />
+                        <span
+                          className="image-close"
+                          onClick={(e) => {
+                            e.stopPropagation(); // So thumbnail image click doesn't trigger
+                            handleDeleteImage(idx);
+                            const updatedPreviews = [...previewImages];
+                            const updatedFiles = [...selectedFiles];
+
+                            updatedPreviews.splice(idx, 1);
+                            updatedFiles.splice(idx, 1);
+
+                            let newSelectedIndex = selectedImageIndex;
+
+                            if (selectedImageIndex === idx) {
+                              newSelectedIndex =
+                                updatedPreviews.length > 0 ? 0 : -1;
+                            } else if (selectedImageIndex > idx) {
+                              newSelectedIndex = selectedImageIndex - 1;
+                            }
+
+                            setPreviewImages(updatedPreviews);
+                            setSelectedFiles(updatedFiles);
+                            setSelectedImageIndex(newSelectedIndex);
+                          }}
+                        >
+                          ×
+                        </span>
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -508,7 +546,7 @@ function VendorService({ currentStep }) {
             />
           </div>
         </div>
-        <Button handleBack={handleBack} handleNext={handleNext} />
+        <Button onBack={handleBack} onNext={handleNext} />
       </div>
     </>
   );
