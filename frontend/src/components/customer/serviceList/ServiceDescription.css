@@ -64,7 +64,6 @@
   gap: 3px;
 }
 .wishIcon {
-  margin-top: 3px;
   font-size: 20px;
 }
 .bookBtn:hover {
@@ -102,6 +101,17 @@
 }
 .paragraph {
   margin-right: 20px;
+}
+.wishlist-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px; /* Adjust spacing between text and + */
+}
+
+.plusSign {
+  font-size: 1.5em; /* Make the plus sign larger */
+  line-height: 1; /* Keep it vertically aligned */
+  margin-top: 1px; /* Adjust if it looks slightly off */
 }
 .serviceDescription h3 {
   font-size: 20px;

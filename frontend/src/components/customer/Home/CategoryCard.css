@@ -8,7 +8,8 @@
   border-radius: 10px;
   overflow: hidden;
   margin: 0 auto;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.25s ease-in-out;
+  
 }
 
 /* Mobile first (default height + full width) */
@@ -16,84 +17,75 @@
 /* Tablet: Increase height and max width */
 @media (min-width: 640px) {
   .categoryCard {
-    /* height: 150px; */
     max-width: 220px;
   }
 }
-@media (max-width: 450px) {
+@media (max-width: 450px) { /* <= 450px width: ; */
   .categoryCard {
     height: 110px;
   }
 }
 
 /* Desktop: More space, larger cards */
-@media (min-width: 1024px) {
+@media (min-width: 1024px) { /* >= 1024px width: ; */
   .categoryCard {
-    /* height: 200px; */
     max-width: 460px;
   }
 }
 
 .categoryCard img {
-  height: 85%;
+  height: 100%;
   width: 100%;
   object-fit: cover;
-  border-radius: 2px;
+  border-radius: 5px;
   display: block;
+  filter: brightness(65%);
   transition: opacity 0.2s ease-in-out;
 }
 
-.categoryCard::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, #4e54c8, #8f94fb); /* gradient overlay */
-  opacity: 0;
-  transition: opacity 0.4s ease-in-out;
-  z-index: 1;
-}
 
 .categoryCard h2 {
   position: absolute;
-  top: 50%;
+  top:50%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 2;
-  opacity: 0;
   color: white;
   font-weight: 700;
-  font-size: 1.3rem;
-  /* padding: 0 10px; */
+  font-size: 20px;
   text-align: center;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 0.6),
     0 3px 8px rgba(0, 0, 0, 0.5);
   transition: opacity 0.3s ease-in-out;
 }
-.categoryCard h3 {
-  height: 100%;
-  text-decoration: none;
+
+.categoryCard p{
+  position: absolute;
+  margin-top: 70px;
+  top:50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  color: white;
+  font-weight: 400;
+  font-size: 15px;
   text-align: center;
-  font-size: 18px;
-  font-weight: 700;
-  color: #3b0340e1;
-  padding: 5px 0 5px 10px;
-  /* background-color: rgb(218, 217, 217);
-   */
-  background: linear-gradient(135deg, #f5efff, #ffffff);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 0.6),
+    0 3px 8px rgba(0, 0, 0, 0.5);
+  transition: opacity 0.3s ease-in-out;
+  opacity: 0;
 }
+
 a {
   text-decoration: none;
 }
 
-.categoryCard:hover img {
-  opacity: 0.5;
-}
-
-.categoryCard:hover h2 {
-  opacity: 1;
-}
 
 .categoryCard:hover {
   background: rgba(0, 0, 0, 1);
   transform: scale(1.05);
+}
+
+.categoryCard:hover p{
+  opacity: 1;
 }
