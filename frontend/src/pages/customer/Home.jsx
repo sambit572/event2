@@ -60,6 +60,7 @@ const categories = [
 
 const Home = () => {
   const [showAll, setShowAll] = useState(false);
+  const [hovered, setHovered] = useState(false);
   const visibleCategories = showAll ? categories : categories.slice(0, 6);
 
   useEffect(() => {
@@ -92,11 +93,19 @@ const Home = () => {
       <ImageSlider images={images} />
       <AddsBanner />
       {/* <img className="addbanner" src={banner} alt="" /> */}
-      <h1 className="align_center heading">Categories</h1>
+      <div className="categories-head1">
+        <h1 className="align_center categories-head">Categories</h1>
+      </div>
+
       {!showAll && categories.length > 6 && (
         <div className="browse_all">
-          <button className="browse-all-btn" onClick={() => setShowAll(true)}>
-            Browse All &#x2192;
+          <button
+            className="browse-all-btn"
+            onClick={() => setShowAll(true)}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+          >
+            View All <span className="arrow">{hovered ? "⇒" : "→"}</span>
           </button>
         </div>
       )}

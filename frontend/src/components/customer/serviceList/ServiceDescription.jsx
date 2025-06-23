@@ -46,12 +46,17 @@ const ServiceDescription = ({ service }) => {
           onClick={handleClick}
         >
           <div>
-            <FaHeart
-              className="wishIcon"
-              color={isWishlisted ? "red" : undefined}
-            />
+            {isWishlisted && <FaHeart className="wishIcon" color="red" />}
           </div>
-          <div>{isWishlisted ? "Wishlisted" : "Add To Wishlist"}</div>
+          <div>
+            {isWishlisted ? (
+              "Wishlisted"
+            ) : (
+              <span className="wishlist-text">
+                <span className="plusSign">+</span> Wishlist
+              </span>
+            )}
+          </div>
         </button>
 
         <button className="bookBtn">

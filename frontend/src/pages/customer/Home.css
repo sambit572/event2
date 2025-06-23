@@ -2,15 +2,34 @@
   width: 100%;
 }
 
-.heading {
+.categories-head1 {
+  display: flex;
   justify-content: center;
-  padding-top: 20px;
-  margin-top: 500px;
-  text-align: center;
-  font-size: 2rem;
-  font-weight: bold;
+  margin-top: 50px;
+}
 
-  color: #232f3e;
+
+.categories-head {
+  background-color: rgb(13, 146, 13); /* light transparent green */
+  color: white;
+  padding: 10px 12px;
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: bold;
+  width: 300px;
+  border: 6px double rgba(255, 255, 255, 0.6);
+  border-radius: 30px 10px 30px 10px;
+  display: inline-block;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+
+
+}
+
+.heading {
+  display: flex;
+  justify-content: center;
 }
 
 .category_section {
@@ -27,19 +46,47 @@
 
 .browse_all {
   display: flex;
-  margin-right: 20px;
-
   justify-content: end;
+  margin-right: 130px;
+  margin-bottom: 15px;
 }
 .browse-all-btn {
-  padding: 10px 20px;
-  background-color: #232f3e;
-  color: #fff;
-  font-size: 18px;
-  font-weight: 600;
+  padding: 12px 32px;
+  background-color: #800080; /* deep solid purple */
+  color: #ffffff;
+  font-size: 16px;
+   margin-right: 80px;
+  font-weight: 700;
   border: none;
-  border-radius: 8px;
+  border-radius: 20px;
   cursor: pointer;
+  box-shadow: 0 8px 20px rgba(128, 0, 128, 0.3);
+  transition: all 0.3s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.browse-all-btn:hover {
+  background-color: #660066; /* darker purple on hover */
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(128, 0, 128, 0.4);
+}
+
+.browse-all-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 5px 10px rgba(128, 0, 128, 0.2);
+}
+
+.arrow {
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.browse-all-btn:hover .arrow {
+  transform: translateX(4px);
 }
 
 /* .addbanner {
@@ -64,4 +111,8 @@
       minmax(250px, 1fr)
     ); /* desktop: auto-fit */
   }
+  .browse-all-btn {
+    margin-right: -45px;
+  }
 }
+
