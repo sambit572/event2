@@ -53,7 +53,7 @@
   line-height: normal;
   margin-left: 23px;
   margin-bottom: 10px;
-  margin-top: 88px;
+  margin-top: 20px;
 }
 
 .custom-list-decor-dashboard {
@@ -250,10 +250,10 @@
     flex-direction: column;
     gap: 6px;
     padding: 0 10px;
-    
+    width: 33vw;
   }
 
-  .dasgboardHeading{
+  .dasgboardHeading {
     margin-top: 36px;
   }
 
@@ -266,5 +266,16 @@
     margin-top: 56px;
     width: 140px;
     height: 130px;
+  }
+}
+
+@media (max-width: 431px) {
+  .sidebar-content {
+    width: 57vw;
+  }
+}
+@media (max-width: 391px) {
+  .sidebar-content {
+    width: 63vw;
   }
 }

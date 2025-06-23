@@ -11,8 +11,13 @@
   background: none;
   display: none;
 }
+.custom-scroll-wrapper {
+  max-height: 100vh;
+  overflow-y: auto;
+  padding-right: 1rem;
+}
 
-.dashboard-hamburger:hover{
+.dashboard-hamburger:hover {
   background: none;
 }
 
@@ -34,10 +39,21 @@
   .open {
     color: whitesmoke;
   }
+  .main-contain {
+    width: 30%;
+  }
 }
 
-@media (max-width:431px) {
-  .dashboard-hamburger{
+@media (max-width: 431px) {
+  .dashboard-hamburger {
     top: 90px;
+  }
+  .main-contain {
+    width: 30%;
+  }
+}
+@media (max-width: 400px) {
+  .main-contain {
+    width: 30%;
   }
 }
