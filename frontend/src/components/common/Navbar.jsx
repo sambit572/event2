@@ -118,16 +118,16 @@ const Navbar = () => {
             >
               <FaUser className="text-lg" />
               <span className="font-medium">
-                {userFirstName ? `Hi, ${userFirstName}` : "Login"}
+                {userFirstName ? `${userFirstName}` : "Login"}
               </span>
             </span>
 
             {/* Dropdown Arrow */}
             <span onClick={handleToggleProfileDropdown}>
               {showProfileDropdown ? (
-                <FaChevronUp className="text-sm ml-1 relative top-1" />
+                <FaChevronUp className="text-sm" />
               ) : (
-                <FaChevronDown className="text-sm ml-1 relative top-1" />
+                <FaChevronDown className="text-sm" />
               )}
             </span>
           </div>
