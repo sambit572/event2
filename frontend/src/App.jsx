@@ -1,76 +1,60 @@
 import React from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 
+// Core Components
+import Navbar from "./components/common/Navbar";
+import Footer from "./components/common/Footer";
+import Chatbot from "./components/common/Chatbot";
+
+// Auth Modals
+import Login from "./pages/common/Login.jsx";
+import Register from "./pages/common/Resgister.jsx";
+
+// Customer Pages
 import Home from "./pages/customer/Home";
 import ServiceList from "./pages/customer/ServiceList";
-
+import CategoryCard from "./components/customer/Home/CategoryCard.jsx";
+import ReviewSlider from "./components/customer/Home/ReviewSlider.jsx";
 import ServiceDetails from "./pages/customer/ServiceDetails";
-
-import VendorLegalConsent from "./pages/vendor/VendorLegalConsent";
-import VendorPayment from "./pages/vendor/VendorPayment";
-import VendorThankYou from "./pages/vendor/VendorThankYou";
-import VendorRegistration from "./pages/vendor/VendorRegistration";
-
-import Footer from "./components/common/Footer";
-import LoginRegister from "./pages/common/LoginRegister";
-import Navbar from "./components/common/Navbar";
-
-import VendorService from "./pages/vendor/VendorService";
-// import Navbar from "./components/customer/Navbar";
-
-import Chatbot from "./components/common/Chatbot";
-import AboutUs from "./pages/common/AboutUs";
-
 import ForgotPass from "./pages/customer/ForgotPass.jsx";
 import ResetPassword from "./pages/customer/ResetPassword.jsx";
-import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
-import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
+import ForgotPassword from "./pages/customer/ForgotPassword.jsx";
+import Wishlist from "./pages/customer/Wishlist.jsx";
 import Profile from "./components/customer/profile/Profile.jsx";
 import UserDetails from "./pages/customer/UserDetails.jsx";
+import DashboardServices from "./components/vendor/DashboardServices.jsx";
 
-import Wishlist from "./pages/customer/Wishlist";
-import DashboardServices from "./pages/customer/DashboardServices";
-import ForgotPassword from "./pages/customer/ForgotPassword";
-import ReviewSlider from "./components/customer/Home/ReviewSlider.jsx";
-import CategoryCard from "./components/customer/Home/CategoryCard.jsx";
+// Vendor Pages
+import VendorRegistration from "./pages/vendor/VendorRegistration";
+import VendorService from "./pages/vendor/VendorService";
+import VendorPayment from "./pages/vendor/VendorPayment";
+import VendorLegalConsent from "./pages/vendor/VendorLegalConsent";
+import VendorThankYou from "./pages/vendor/VendorThankYou";
+import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
+
+// Common
+import AboutUs from "./pages/common/AboutUs";
+import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
 
 const App = () => {
-  /*{ const location = useLocation();
-
-  // Define routes where you want to hide the navbar
-  const hideNavbarRoutes = [
-    "/vendor/legal-consent",
-    "/category/VendorService",
-    "/vendor/payment-info",
-    "/vendor/thank-you",
-    "/vendor/register"
-  ];
-  const hideFooterRoutes = [
-    "/vendor/legal-consent",
-    "/category/VendorService",
-    "/vendor/payment-info",
-    "/vendor/thank-you",
-    "/vendor/register"
-  ];
-
-  const shouldShowNavbar = !hideNavbarRoutes.includes(location.pathname);
-  const shouldShowFooter = !hideFooterRoutes.includes(location.pathname); }*/
+  const navigate = useNavigate();
 
   return (
     <>
       <Navbar />
 
-      {/* {shouldShowNavbar && <Navbar />} */}
-
       <main>
         <Routes>
           {/* Customer Routes */}
-          <Route path="/" element={<Home />}></Route>
+          <Route path="/" element={<Home />} />
           <Route path="/category" element={<ServiceList />} />
-          <Route path="/categories" element={<CategoryCard/>}></Route>
+          <Route path="/categories" element={<CategoryCard />} />
           <Route path="/reviews" element={<ReviewSlider />} />
           <Route path="/category/service" element={<ServiceDetails />} />
-          <Route path="/LoginRegister" element={<LoginRegister />}></Route>
+          <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/userdetails" element={<UserDetails />} />
+          <Route path="/dashboardservices" element={<DashboardServices />} />
 
           {/* Vendor Routes */}
           <Route path="/vendor/register" element={<VendorRegistration />} />
@@ -81,30 +65,30 @@ const App = () => {
             element={<VendorLegalConsent />}
           />
           <Route path="/vendor/thank-you" element={<VendorThankYou />} />
+          <Route path="/dashboard" element={<DashBoardMain />} />
 
-          {/* a */}
-          <Route path="/forgot-password" element={<ForgotPass />}></Route>
+          {/* Auth Routes */}
+          <Route
+            path="/login"
+            element={<Login onClose={() => navigate(-1)} />}
+          />
+          <Route
+            path="/register"
+            element={<Register onClose={() => navigate(-1)} />}
+          />
+          <Route path="/forgot-password" element={<ForgotPass />} />
           <Route
             path="/reset-password/:resetToken"
             element={<ResetPassword />}
           />
-          <Route path="/dashboard" element={<DashBoardMain />}></Route>
-          <Route path="/about_us" element={<AboutUs />} />
+          <Route path="/forgotpassword" element={<ForgotPassword />} />
 
-          <Route path="/Wishlist" element={<Wishlist />}></Route>
-          <Route path="/forgotpassword" element={<ForgotPassword />}></Route>
-          <Route
-            path="/dashboardservices"
-            element={<DashboardServices />}
-          ></Route>
-          <Route path="/profile" element={<Profile />}></Route>
-          <Route path="/userdetails" element={<UserDetails />}></Route>
+          {/* Misc */}
+          <Route path="/about_us" element={<AboutUs />} />
         </Routes>
       </main>
-      {/* {shouldShowFooter && <Footer />} */}
 
       <Chatbot />
-
       <Footer />
     </>
   );

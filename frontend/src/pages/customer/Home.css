@@ -36,7 +36,6 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* default: 2 columns on mobile */
   gap: 66px;
-
   padding: 16px;
   width: 100%;
   max-width: 1200px;
