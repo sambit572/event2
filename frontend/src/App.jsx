@@ -66,9 +66,9 @@ const App = () => {
           <Route
             path="/"
             element={
-              <ProtectedRoute>
+              
                 <Home />
-              </ProtectedRoute>
+              
             }
           ></Route>
           <Route path="/category" element={<ServiceList />} />
