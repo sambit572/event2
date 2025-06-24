@@ -93,8 +93,6 @@
   font-size: 15px;
   font-weight: 520;
   padding: 0;
-  
-
 }
 
 .profile-btn:hover .icon {
@@ -168,8 +166,6 @@
   font-size: 15px;
 }
 
-
-
 .nested-submenu {
   margin-left: 15px;
   margin-top: 5px;
@@ -201,7 +197,6 @@
 .nav-item .vendor {
   color: #3b0340e1;
 }
-
 
 .login-h4 {
   font-size: 16px;
@@ -281,7 +276,6 @@
   .dropdown-item a:hover {
     color: #1f0122e1;
     font-weight: 800;
-    
   }
 
   .signup-link:hover {
@@ -291,13 +285,17 @@
 }
 
 @media (max-width: 1024px) {
-  .compact-hide {
-    display: none !important;
+  .dropdown-menu {
+    right: 10px;
+    width: 250px;
   }
 
-  .dropdown-menu{
-    right: 10px;
-    width:250px;
+  .search-bar {
+    margin-left: -14px;
+  }
+
+  .search-bar:focus-within {
+    width: 380px;
   }
 }
 @media (max-width: 820px) {
@@ -308,12 +306,15 @@
     margin-left: 0px;
   }
   .search-bar:focus-within {
-    width: 390px;
+    width: 350px;
+  }
+
+  .nav-icons {
+    gap: 19px;
   }
 }
 
 @media (max-width: 768px) {
-
   .navbar {
     height: 80px;
     width: 100%;
@@ -410,6 +411,22 @@
   .signOutButton {
     padding: 0;
   }
+  .search-bar {
+    width: 43%;
+  }
+}
+
+@media (max-width: 415px) {
+  .search-bar {
+    width: 46%;
+  }
+}
+@media (max-width: 391px) {
+  .search-bar {
+    width: 47%;
+    padding-right: 2px;
+    padding-left: 11px;
+  }
 }
 
 @media (max-width: 376px) {
@@ -427,8 +444,16 @@
     font-weight: 600;
   }
 
-  .dropdown-menu{
+  .dropdown-menu {
     left: 148px !important;
   }
+
+  .search-bar {
+    padding-left: 7px;
+  }
+  .search-bar input {
+    margin-left: 6px;
+  }
+
   
 }

@@ -110,13 +110,13 @@ const Navbar = () => {
         <div className="nav-icons">
           {/* Profile Dropdown */}
           <div className="nav-item profile-dropdown-container" ref={profileRef}>
-            <div className="flex items-center gap-2 text-gray-700 cursor-pointer login">
+            <div className="flex items-center gap-2 text-gray-700 cursor-pointer login  ">
               <span
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 max-[1024px]:flex-col max-[1024px]:text-[12px] max-[820px]:text-[11px]"
                 onClick={!userFirstName ? () => navigate("/login") : undefined}
               >
                 <FaUser className="text-lg" />
-                <span className="font-medium compact-hide">
+                <span className="font-medium ">
                   {userFirstName ? `${userFirstName}` : "Login"}
                 </span>
               </span>
@@ -184,13 +184,15 @@ const Navbar = () => {
 
           {/* Become Vendor */}
           <div
-            className="nav-items"
+            className="nav-items max-[1024px]:flex-col max-[1024px]:text-[12px] max-[820px]:text-[11px]"
             onClick={() =>
               !userFirstName ? navigate("/login") : navigate("/vendor/register")
             }
           >
-            <FaStore className="icons" />
-            <span className="vendor compact-hide">Become a Vendor</span>
+            <FaStore className="icons max-[1024px]:h-[18px] max-[1024px]:w-[18px]  max-[820px]:h-[15px]" />
+            <span className="vendor max-[1024px]:mt-[6px] max-[820px]:text-[11px] max-[820px]:w-max">
+              Be a Vendor
+            </span>
           </div>
 
           {/* Three Dots Dropdown */}
