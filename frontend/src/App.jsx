@@ -16,6 +16,21 @@ import ServiceList from "./pages/customer/ServiceList";
 import CategoryCard from "./components/customer/Home/CategoryCard.jsx";
 import ReviewSlider from "./components/customer/Home/ReviewSlider.jsx";
 import ServiceDetails from "./pages/customer/ServiceDetails";
+
+import VendorLegalConsent from "./pages/vendor/VendorLegalConsent";
+import VendorPayment from "./pages/vendor/VendorPayment";
+import VendorThankYou from "./pages/vendor/VendorThankYou";
+import VendorRegistration from "./pages/vendor/VendorRegistration";
+
+import VendorService from "./pages/vendor/VendorService";
+
+
+
+import AboutUs from "./pages/common/AboutUs";
+import HelpUs from "./pages/common/HelpUs";
+import HelpCenter from "./pages/common/HelpCenter";
+
+
 import ForgotPass from "./pages/customer/ForgotPass.jsx";
 import ResetPassword from "./pages/customer/ResetPassword.jsx";
 import ForgotPassword from "./pages/customer/ForgotPassword.jsx";
@@ -25,15 +40,10 @@ import UserDetails from "./pages/customer/UserDetails.jsx";
 import DashboardServices from "./components/vendor/DashboardServices.jsx";
 
 // Vendor Pages
-import VendorRegistration from "./pages/vendor/VendorRegistration";
-import VendorService from "./pages/vendor/VendorService";
-import VendorPayment from "./pages/vendor/VendorPayment";
-import VendorLegalConsent from "./pages/vendor/VendorLegalConsent";
-import VendorThankYou from "./pages/vendor/VendorThankYou";
+
 import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
 
 // Common
-import AboutUs from "./pages/common/AboutUs";
 import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
 
 const App = () => {
@@ -85,6 +95,18 @@ const App = () => {
 
           {/* Misc */}
           <Route path="/about_us" element={<AboutUs />} />
+          <Route path="/help_us" element={<HelpUs />} />
+          <Route path="/help-Center" element={<HelpCenter />} />
+
+
+          <Route path="/Wishlist" element={<Wishlist />}></Route>
+          <Route path="/forgotpassword" element={<ForgotPassword />}></Route>
+          <Route
+            path="/dashboardservices"
+            element={<DashboardServices />}
+          ></Route>
+          <Route path="/profile" element={<Profile />}></Route>
+          <Route path="/userdetails" element={<UserDetails />}></Route>
         </Routes>
       </main>
 

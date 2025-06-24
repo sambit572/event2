@@ -220,7 +220,7 @@
 
 @media (max-width: 1024px) {
   .wishlist-container {
-    width: 800px;
+    width: 900px;
     position: relative;
     top: -50px;
     margin-left: 10px;
@@ -228,6 +228,7 @@
 
   .wishlist-card {
     position: relative;
+    width: 100%;
     height: 300px;
   }
 
@@ -409,6 +410,8 @@
 
   .wishlist-card {
     position: relative;
+    left: 20px;
+    width: 100%;
     height: 300px;
   }
 
@@ -622,9 +625,9 @@
 }
 
 
-@media (max-width:430px) {
+@media (max-width:450px) {
   .wishlist-container {
-    width: 400px;
+    width: 100%;
     position: relative;
     top: -50px;
     text-align: center;
@@ -632,7 +635,9 @@
 
   .wishlist-card {
     position: relative;
+    left: 10px;
     height: 300px;
+    width: 100%;
   }
 
   .wishlist-image {
@@ -755,6 +760,36 @@
   }
 }
 
+@media (max-width: 420px) {
+    .wishlist-card {
+    position: relative;
+    right: 8px;
+    left: -1px;
+    width: 390px;
+    height: 300px;
+
+  }
+}
+@media (max-width: 412px) {
+    .wishlist-card {
+    position: relative;
+    right: 8px;
+    width: 350px;
+    height: 300px;
+
+    }
+}
+@media (max-width: 360px) {
+    .wishlist-card {
+    position: relative;
+    right: 8px;
+    left: -2px;
+    width: 390px;
+    height: 300px;
+
+  }
+}
+
 
 @media (max-width: 380px) {
   .wishlist-container {
@@ -766,7 +801,8 @@
 
   .wishlist-card {
     position: relative;
-    right: 20px;
+    right: 8px;
+    left: -1px;
     width: 350px;
     height: 280px;
 
