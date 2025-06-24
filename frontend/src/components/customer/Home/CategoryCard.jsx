@@ -3,11 +3,14 @@ import "./CategoryCard.css";
 
 const CategoryCard = ({ category }) => {
   return (
-    <a href="/category" className="categoryCard">
-      <img src={category.image} alt="" />
-      {/* <h3>Staring at &#8377;4999</h3> */}
-      <h2>{category.title}</h2>
-      <h3>{category.title}</h3>
+    <a href={`/category/${category.id}`} className="categoryCard">
+      <div className="card-image">
+        <img src={category.image} alt={category.title} />
+      </div>
+      <div className="card-content">
+        <h2>{category.title}</h2>
+        <p>{category.description}</p>
+      </div>
     </a>
   );
 };

@@ -1,0 +1,463 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+/* General Reset for Consistency */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Font Import */
+
+
+/* Screen Reader Only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* Heading Styling */
+.heading-negotiated {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(45deg, #000000, #000000);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* Overlay Styling */
+.negotiation-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.5s ease-in-out;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+/* Modal Styling */
+.negotiation-modal {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 20px;
+  padding: 2rem;
+  width: 90vw;
+  max-width: 550px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 15px 60px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 0, 0, 0.1);
+  position: relative;
+  animation: scaleIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Close Button */
+.modal-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  font-size: 2rem;
+  background: none;
+  border: none;
+  color: #000000;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0.5rem;
+  border-radius: 50%;
+}
+.modal-close:hover{
+  background-color: #979191;
+}
+
+/* Modal Details */
+.modal-details p {
+  margin: 0.75rem 0;
+  font-size: 1rem;
+  color: #374151;
+  line-height: 1.6;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  background: rgba(243, 244, 246, 0.5);
+  transition: background 0.2s ease;
+}
+
+.modal-details p:hover {
+  background: rgba(199, 193, 193, 0.8);
+}
+
+/* Input Styling */
+.modal-input {
+  margin-top: 1.5rem;
+}
+
+.VenueInput {
+  border: grey 1px solid;
+  border-radius: 5px;
+  padding: 0.5rem;
+  width: 50%;
+}
+
+.modal-input label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+}
+
+.modal-input input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(209, 213, 219, 0.5);
+  border-radius: 12px;
+  font-size: 1rem;
+  background: #ffffff;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.modal-input input:focus {
+  border-color: #000000;
+  outline: none;
+  background: #f8fafc;
+  box-shadow: 0 0 0 4px rgba(146, 8, 164, 0.2);
+}
+
+/* Button Group */
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+/* Primary and Secondary Buttons */
+.modal-submit,
+.modal-secondary {
+  flex: 1;
+  padding: 0.875rem;
+  font-size: 1rem;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  touch-action: manipulation;
+}
+
+.modal-submit {
+  background: linear-gradient(45deg, #000000, #000000);
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.modal-submit:hover {
+  background: linear-gradient(45deg, #000000, #000000);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+.modal-submit:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.modal-secondary {
+  background: transparent;
+  border: 2px solid #000000;
+  color: #000000;
+}
+
+.modal-secondary:hover {
+  background: #000000;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Timer Styling */
+.modal-timer {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 1.15rem;
+  color: #1f2937;
+  background: rgba(243, 244, 246, 0.7);
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal-timer h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: #000000;
+}
+
+.timer-progress {
+  height: 6px;
+  background: #e5e7eb;
+  border-radius: 6px;
+  margin-top: 0.75rem;
+  overflow: hidden;
+}
+
+.timer-progress div {
+  height: 100%;
+  background: linear-gradient(45deg, #000000, #000000);
+  transition: width 1s linear;
+}
+
+/* Call Box Styling */
+.call-box {
+  margin-top: 1.25rem;
+  background: linear-gradient(135deg, #f9fafb, #e5e7eb);
+  padding: 1.25rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+}
+
+.call-box h4 {
+  margin-bottom: 0.75rem;
+  color: #1f2937;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* Call Buttons */
+.call-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  touch-action: manipulation;
+}
+
+.call-btn.start {
+  background: linear-gradient(45deg, #000000, #000000);
+  color: white;
+}
+
+.call-btn.start:hover {
+  background: linear-gradient(45deg, #000000, #000000);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(146, 8, 164, 0.4);
+}
+
+.call-btn.end {
+  background: linear-gradient(45deg, #ff6b6b, #d00000);
+  color: white;
+}
+
+.call-btn.end:hover {
+  background: linear-gradient(45deg, #d00000, #ff6b6b);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Responsive Design */
+
+/* Phones (up to 480px, e.g., iPhone SE, Galaxy S series) */
+@media screen and (max-width: 480px) {
+  .negotiation-overlay {
+    padding: 1rem;
+    height: 74vh;
+  }
+  .negotiation-modal {
+    width: 95vw;
+    max-height: 85vh;
+    padding: 1.25rem;
+    border-radius: 16px;
+  }
+  .heading-negotiated {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+  }
+  .modal-close {
+    font-size: 1.5rem;
+    padding: 0.4rem;
+  }
+  .modal-details p {
+    font-size: 0.875rem;
+    padding: 0.4rem 0.6rem;
+  }
+  .modal-input label {
+    font-size: 0.875rem;
+  }
+  .modal-input input {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.875rem;
+  }
+  .modal-actions {
+    gap: 0.5rem;
+  }
+  .modal-submit,
+  .modal-secondary {
+    padding: 0.75rem;
+    font-size: 0.875rem;
+  }
+  .modal-timer {
+    font-size: 1rem;
+    padding: 0.75rem;
+  }
+  .modal-timer h3 {
+    font-size: 1rem;
+  }
+  .call-box {
+    padding: 0.75rem;
+  }
+  .call-box h4 {
+    font-size: 0.875rem;
+  }
+  .call-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Tablets: iPad Mini (~768px, 7.9-inch) */
+@media screen and (min-width: 481px) and (max-width: 768px) {
+  .negotiation-overlay {
+    padding: 1.5rem;
+    height: 66vh;
+  }
+  .negotiation-modal {
+    width: 85vw;
+    max-height: 88vh;
+    padding: 1.5rem;
+    border-radius: 18px;
+  }
+  .heading-negotiated {
+    font-size: 1.6rem;
+    margin-bottom: 1.25rem;
+  }
+  .modal-close {
+    font-size: 1.75rem;
+    padding: 0.5rem;
+  }
+  .modal-details p {
+    font-size: 0.95rem;
+    padding: 0.5rem 0.75rem;
+  }
+  .modal-input label {
+    font-size: 0.9rem;
+  }
+  .modal-input input {
+    padding: 0.7rem 0.9rem;
+    font-size: 0.95rem;
+  }
+  .modal-actions {
+    gap: 0.75rem;
+  }
+  .modal-submit,
+  .modal-secondary {
+    padding: 0.8rem;
+    font-size: 0.95rem;
+  }
+  .modal-timer {
+    font-size: 1.1rem;
+    padding: 0.9rem;
+  }
+  .modal-timer h3 {
+    font-size: 1.1rem;
+  }
+  .call-box {
+    padding: 1rem;
+  }
+  .call-box h4 {
+    font-size: 0.95rem;
+  }
+  .call-btn {
+    padding: 0.7rem 1.25rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* Tablets: iPad Pro (~1024px, 11-inch and 12.9-inch) */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .negotiation-overlay {
+    padding: 2rem;
+    height: 54vh;
+  }
+  .negotiation-modal {
+    width: 80vw;
+    max-height: 90vh;
+    padding: 1.75rem;
+  }
+  .heading-negotiated {
+    font-size: 1.7rem;
+  }
+  .modal-close {
+    font-size: 1.9rem;
+  }
+  .modal-details p {
+    font-size: 1rem;
+  }
+  .modal-input label {
+    font-size: 0.95rem;
+  }
+  .modal-input input {
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+  }
+  .modal-submit,
+  .modal-secondary {
+    padding: 0.9rem;
+    font-size: 1rem;
+  }
+  .modal-timer {
+    font-size: 1.15rem;
+  }
+  .modal-timer h3 {
+    font-size: 1.15rem;
+  }
+  .call-box {
+    padding: 1.25rem;
+  }
+  .call-box h4 {
+    font-size: 1rem;
+  }
+  .call-btn {
+    padding: 0.8rem 1.5rem;
+  }
+}

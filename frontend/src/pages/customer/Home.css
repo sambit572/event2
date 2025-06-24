@@ -12,23 +12,21 @@
 
   color: #232f3e;
 }
-
 .category_section {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* default: 2 columns on mobile */
-  gap: 66px;
-
-  padding: 16px;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
+  grid-template-columns: repeat(2, 1fr); /* Default: 2 columns for mobile */
+ /* Consistent with CategoryCard.css */
+  padding: 0; /* Remove padding to allow full width */
+  margin-left: 45px; ;
+  width: fit-content; /* Full width */
   box-sizing: border-box;
+  gap: 20px; /* Space between cards */
+
 }
 
 .browse_all {
   display: flex;
   margin-right: 20px;
-
   justify-content: end;
 }
 .browse-all-btn {

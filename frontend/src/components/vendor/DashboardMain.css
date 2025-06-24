@@ -41,3 +41,270 @@
     top: 90px;
   }
 }
+/* Pop-up overlay */
+.popup-overlayfinal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9000;
+  animation: fadeIn 0.5s ease-in-out;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    env(safe-area-inset-bottom) env(safe-area-inset-left);
+    
+}
+
+/* Pop-up container (consolidated from .popup-container and .popup-box) */
+.popup-container {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 16px; /* Slightly smaller radius for smaller screens */
+  padding: 1.5rem; /* Reduced padding for smaller screens */
+  width: 90vw;
+  max-width: 550px;
+  max-height: 85vh; /* Slightly reduced to ensure space for browser UI on phones */
+  overflow-y: auto; /* Enable vertical scrollbar for overflow */
+  box-shadow: 0 15px 60px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 0, 0, 0.1);
+  position: relative;
+  animation: scaleIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  scrollbar-width: thin; /* Firefox: Thin scrollbar */
+  scrollbar-color: #888 #f8fafc; /* Firefox: Scrollbar colors */
+}
+
+/* Webkit scrollbar styling (Chrome, Safari, Edge) */
+.popup-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.popup-container::-webkit-scrollbar-track {
+  background: #f8fafc;
+  border-radius: 10px;
+}
+
+.popup-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.popup-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Pop-up title */
+.popup-title {
+  color: #000000;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Pop-up content */
+.popup-content p {
+  margin: 0.75rem 0;
+  font-size: 1rem;
+  color: #374151;
+  line-height: 1.6;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  background: rgba(243, 244, 246, 0.5);
+  transition: background 0.2s ease;
+}
+
+.popup-content p:hover {
+  background: rgba(199, 193, 193, 0.8);
+}
+
+.popup-content strong {
+  color: #000000;
+}
+
+/* Pop-up actions */
+.popup-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  justify-content: flex-end;
+  flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+}
+
+/* Buttons */
+.btn-accept,
+.btn-decline,
+.btn-close {
+  padding: 8px 16px; /* Slightly smaller padding for smaller screens */
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem; /* Smaller font for better fit */
+  transition: all 0.3s ease;
+  min-width: 100px; /* Ensure buttons don’t shrink too much */
+}
+
+.btn-accept {
+  background: #000000;
+  color: white;
+}
+
+.btn-accept:hover {
+  background: #333333; /* Slightly lighter for hover */
+  transform: translateY(-2px);
+}
+
+.btn-decline {
+  background: #000000;
+  color: white;
+}
+
+.btn-decline:hover {
+  background: #333333;
+  transform: translateY(-2px);
+}
+
+.btn-close {
+  background: #e0e0e0;
+  color: #333;
+}
+
+.btn-close:hover {
+  background: #d5d5d5;
+  transform: translateY(-2px);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@media (max-width: 1024px){
+.popup-container {
+    width: 85vw;
+    max-width: 500px; /* Slightly smaller than desktop */
+    padding: 1.4rem;
+    max-height: 44vh; /* Fit within tablet screen */
+    border-radius: 14px;
+    margin-bottom: 700px;
+  }
+}
+@media (max-width: 850px){
+   .popup-container {
+    width: 85vw;
+    max-width: 500px; /* Slightly smaller than desktop */
+    padding: 1.4rem;
+    max-height: 82vh; /* Fit within tablet screen */
+    border-radius: 14px;
+    margin-bottom: 500px;
+  }
+
+  .popup-title {
+    font-size: 1.4rem; /* Slightly smaller title */
+  }
+
+  .popup-content p {
+    font-size: 0.95rem; /* Slightly smaller text */
+    padding: 0.45rem 0.7rem;
+  }
+
+  .btn-accept,
+  .btn-decline,
+  .btn-close {
+    padding: 7px 15px;
+    font-size: 0.9rem;
+    min-width: 95px;
+  }
+}
+
+/* Tablet screens (max-width: 768px) */
+@media (max-width: 768px) {
+  .popup-container {
+    width: 85vw; /* Slightly smaller width for tablets */
+    max-width: 450px; /* Reduced max-width */
+    padding: 1.25rem; /* Slightly less padding */
+    max-height: 80vh; /* Ensure space for browser UI */
+    border-radius: 14px;
+    margin-bottom: 350px;
+  }
+
+  .popup-title {
+    font-size: 1.3rem; /* Smaller title */
+  }
+
+  .popup-content p {
+    font-size: 0.9rem; /* Smaller text */
+    padding: 0.4rem 0.6rem;
+  }
+
+  .btn-accept,
+  .btn-decline,
+  .btn-close {
+    padding: 7px 14px;
+    font-size: 0.85rem;
+    min-width: 90px;
+  }
+}
+
+/* Phone screens (max-width: 430px) */
+@media (max-width: 432px) {
+  .popup-container {
+    width: 90vw; /* Full width for phones */
+    max-width: 350px; /* Smaller max-width for phones */
+    padding: 1rem; /* Minimal padding */
+    max-height: 75vh; /* Reduced height to fit phone screens */
+    border-radius: 12px;
+    margin-top: 100px;
+    margin-bottom: 190px;
+    
+  }
+
+  .popup-title {
+    font-size: 1.1rem; /* Smaller title for phones */
+    margin-bottom: 10px;
+  }
+
+  .popup-content p {
+    font-size: 0.85rem; /* Smaller text for phones */
+    padding: 0.3rem 0.5rem;
+    line-height: 1.4;
+  }
+
+  .popup-actions {
+    flex-direction: column; /* Stack buttons vertically on phones */
+    gap: 8px;
+    align-items: stretch; /* Buttons take full width */
+  }
+
+  .btn-accept,
+  .btn-decline,
+  .btn-close {
+    padding: 8px;
+    font-size: 0.8rem;
+    min-width: 100%; /* Full-width buttons */
+  }
+}
+

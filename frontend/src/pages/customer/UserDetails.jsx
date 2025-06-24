@@ -1,22 +1,23 @@
 import React, { useState } from 'react';
 import './UserDetails.css';
+import CustomerNegotiationModal from '../../components/customer/CustomerNegotiationModal';
+import { useNavigate } from 'react-router-dom';
 
 const UserDetails = () => {
+    const navigate = useNavigate();
     const [userName, setUserName] = useState('');
-    const [showPopup, setShowPopup] = useState(false);
-
+    const [showModal, setShowModal] = useState(false);
     const [formData, setFormData] = useState({
         phone: '',
         altPhone: '',
         startDate: '',
         endDate: '',
         address: '',
-        landmark: '',
         state: '',
         district: '',
         city: '',
         pincode: '',
-        country: ''
+        country: 'India',
     });
 
     const handleChange = (e) => {
@@ -48,12 +49,19 @@ const UserDetails = () => {
             return;
         }
 
+        console.log("User Name:", userName);
+        console.log("Form Data:", formData);
         const allFieldsFilled = userName.trim() !== '' &&
             Object.values(formData).every(value => value.trim() !== '');
 
         if (allFieldsFilled) {
-            setShowPopup(true);
-            setTimeout(() => setShowPopup(false), 3000);
+            navigate('/pop-up',{
+                state: {
+                    userName,
+                    venueLocation: formData.address,
+                    eventDate: formData.startDate
+                }
+            }) // Show the modal
         } else {
             alert("Please fill in all fields before saving.");
         }
@@ -61,6 +69,10 @@ const UserDetails = () => {
 
     const handleCancel = () => {
         alert('Cancelled');
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false); // Close the modal
     };
 
     return (
@@ -147,19 +159,6 @@ const UserDetails = () => {
                     />
                 </div>
 
-                <div className="form-group">
-                    <label>Landmark:</label>
-                    <input
-                        type="text"
-                        className="form-input"
-                        placeholder="Landmark"
-                        name="landmark"
-                        value={formData.landmark}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-
                 <div className="location-group">
                     <div className="form-group small">
                         <label>State:</label>
@@ -235,13 +234,6 @@ const UserDetails = () => {
                     <button type="submit" className="btn save-btn">Save</button>
                     <button type="button" className="btn cancel-btn" onClick={handleCancel}>Cancel</button>
                 </div>
-
-                {showPopup && (
-                    <div className="popup-inside">
-                        <strong>{userName},</strong><br />
-                        <p>Your User Details Saved Successfully!</p>
-                    </div>
-                )}
             </form>
         </div>
     );

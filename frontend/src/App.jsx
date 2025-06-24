@@ -31,6 +31,7 @@ import UserDetails from "./pages/customer/UserDetails.jsx";
 import Wishlist from "./pages/customer/Wishlist";
 import DashboardServices from "./pages/customer/DashboardServices";
 import ForgotPassword from "./pages/customer/ForgotPassword";
+import PopUp from "./components/customer/CustomerNegotiationModal";
 
 const App = () => {
   /*{ const location = useLocation();
@@ -66,9 +67,9 @@ const App = () => {
           <Route
             path="/"
             element={
-              <ProtectedRoute>
+              
                 <Home />
-              </ProtectedRoute>
+
             }
           ></Route>
           <Route path="/category" element={<ServiceList />} />
@@ -103,6 +104,7 @@ const App = () => {
           ></Route>
           <Route path="/profile" element={<Profile />}></Route>
           <Route path="/userdetails" element={<UserDetails />}></Route>
+          <Route path="/pop-up" element={<PopUp />}></Route>
         </Routes>
       </main>
       {/* {shouldShowFooter && <Footer />} */}

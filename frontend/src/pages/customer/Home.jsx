@@ -41,21 +41,81 @@ const images = [
 ];
 
 const categories = [
-  { title: "Dj", image: image1 },
-  { title: "Brass band & Other regional band", image: image2 },
-  { title: "Tenthouse & Decor", image: image3 },
-  { title: "Photographer & Videographer", image: image4 },
-  { title: "Pandit", image: image5 },
-  { title: "Magician", image: image6 },
-  { title: "Orchestra (dance and singing)", image: image7 },
-  { title: "Moulbi", image: image8 },
-  { title: "Father", image: image9 },
-  { title: "Catering", image: image10 },
-  { title: "Makeup & Mehendi Artist", image: image11 },
-  { title: "Flower Decoration / Florist", image: image12 },
-  { title: "Horse Cart & Grooming Car", image: image13 },
-  { title: "Fireworkers", image: image14 },
-  { title: "Card Designers & Printers", image: image15 },
+   {
+    title: "DJ",
+    description: "Groove to the beats with professional DJ setups for every vibe.",
+    image: image1
+  },
+  {
+    title: "Brass band & Other regional band",
+    description: "Traditional and cultural rhythms to elevate every procession.",
+    image: image2
+  },
+  {
+    title: "Tenthouse & Decor",
+    description: "Stylish, comfortable, and theme-ready tent & decor services.",
+    image: image3
+  },
+  {
+    title: "Photographer & Videographer",
+    description: "Capture timeless memories with skilled photo & video professionals.",
+    image: image4
+  },
+  {
+    title: "Pandit",
+    description: "Experienced Pandits for all religious ceremonies and rituals.",
+    image: image5
+  },
+  {
+    title: "Magician",
+    description: "Add wonder and laughter to your event with live magic shows.",
+    image: image6
+  },
+  {
+    title: "Orchestra (dance and singing)",
+    description: "Live performances of music and dance for energetic celebrations.",
+    image: image7
+  },
+  {
+    title: "Moulbi",
+    description: "Qualified Moulbis for authentic and respectful Islamic rituals.",
+    image: image8
+  },
+  {
+    title: "Father",
+    description: "Experienced priests to bless and officiate Christian weddings and events.",
+    image: image9
+  },
+  {
+    title: "Catering",
+    description: "Delicious multi-cuisine catering for all tastes and themes.",
+    image: image10
+  },
+  {
+    title: "Makeup & Mehendi Artist",
+    description: "Bridal and guest glam with expert mehendi and makeup artists.",
+    image: image11
+  },
+  {
+    title: "Flower Decoration / Florist",
+    description: "Fresh floral arrangements for a blooming and fragrant venue.",
+    image: image12
+  },
+  {
+    title: "Horse Cart & Grooming Car",
+    description: "Royal baraat entry with well-groomed horses and decorated cars.",
+    image: image13
+  },
+  {
+    title: "Fireworkers",
+    description: "Dazzling fireworks to light up your special moments.",
+    image: image14
+  },
+  {
+    title: "Card Designers & Printers",
+    description: "Elegant and custom invitation card designing and printing.",
+    image: image15
+  }
 ];
 
 const Home = () => {
