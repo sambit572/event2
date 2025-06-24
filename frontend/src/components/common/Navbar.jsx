@@ -140,7 +140,7 @@ const Navbar = () => {
                     <div className="dropdown-header">
                       <span>New Customer?</span>
                       <span
-                        className="signup-link"
+                        className="signup-link text-sky-300"
                         onClick={() => navigate("/register")}
                       >
                         Sign Up
