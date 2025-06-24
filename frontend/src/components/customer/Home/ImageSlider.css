@@ -20,6 +20,10 @@
 .slider-container:hover .slide {
   filter: brightness(0.65);
 }
+.slick-prev,
+.slick-next {
+  display: none !important;
+}
 
 .slick-dots li {
   position: relative;
