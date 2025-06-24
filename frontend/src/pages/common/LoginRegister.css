@@ -254,6 +254,12 @@
   }
 }
 
+@media (min-width: 822px) and (max-width: 1023px) {
+  .login-modal{
+    top: 20px;
+  }
+}
+
 @media (max-width:820px) {
   .login-modal{
     top: -270px;
