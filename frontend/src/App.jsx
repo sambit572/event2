@@ -22,14 +22,10 @@ import VendorPayment from "./pages/vendor/VendorPayment";
 import VendorThankYou from "./pages/vendor/VendorThankYou";
 import VendorRegistration from "./pages/vendor/VendorRegistration";
 
-import Footer from "./components/common/Footer";
-import LoginRegister from "./pages/common/LoginRegister";
-import Navbar from "./components/common/Navbar";
-
 import VendorService from "./pages/vendor/VendorService";
-// import Navbar from "./components/customer/Navbar";
 
-import Chatbot from "./components/common/Chatbot";
+
+
 import AboutUs from "./pages/common/AboutUs";
 import HelpUs from "./pages/common/HelpUs";
 import HelpCenter from "./pages/common/HelpCenter";
@@ -44,15 +40,10 @@ import UserDetails from "./pages/customer/UserDetails.jsx";
 import DashboardServices from "./components/vendor/DashboardServices.jsx";
 
 // Vendor Pages
-import VendorRegistration from "./pages/vendor/VendorRegistration";
-import VendorService from "./pages/vendor/VendorService";
-import VendorPayment from "./pages/vendor/VendorPayment";
-import VendorLegalConsent from "./pages/vendor/VendorLegalConsent";
-import VendorThankYou from "./pages/vendor/VendorThankYou";
+
 import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
 
 // Common
-import AboutUs from "./pages/common/AboutUs";
 import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
 
 const App = () => {
