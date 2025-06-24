@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import LoginRegister from "../../pages/common/LoginRegister.jsx";
 import "./Navbar.css";
 import {
   FaSearch,
@@ -14,12 +13,8 @@ import {
 } from "react-icons/fa";
 import { FcAbout } from "react-icons/fc";
 import { MdMiscellaneousServices, MdReviews } from "react-icons/md";
-import { IoSettingsSharp } from "react-icons/io5";
-import { SiBrandfolder } from "react-icons/si";
 import axios from "axios";
-import { useNavigate, Navigate } from "react-router-dom";
-import ReviewSlider from "../customer/Home/ReviewSlider.jsx";
-
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -27,12 +22,11 @@ const Navbar = () => {
   const [userFirstName, setUserFirstName] = useState(null);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showEllipsisDropdown, setShowEllipsisDropdown] = useState(false);
-  const [showLoginModal, setShowLoginModal] = useState(false);
+
+  const [searchInput, setSearchInput] = useState("")
 
   const profileRef = useRef(null);
   const ellipsisRef = useRef(null);
-
-  // Load userFirstName from localStorage
 
   const handleHomeClick = () => {
     if (location.pathname === "/") {
@@ -40,13 +34,6 @@ const Navbar = () => {
     } else {
       navigate("/");
     }
-  };
-  const handleOpenLoginModal = () => {
-    setShowLoginModal(true);
-    setShowProfileDropdown(false);
-  };
-  const handleOpenRegisterModal = () => {
-    navigate("/vendor/register");
   };
 
   const handleToggleProfileDropdown = () => {
@@ -68,7 +55,11 @@ const Navbar = () => {
     }
   };
 
-  // Handle outside clicks to close dropdowns
+  const handleSearch = () =>{
+    setSearchInput("")
+  }
+
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (profileRef.current && !profileRef.current.contains(event.target)) {
@@ -78,6 +69,7 @@ const Navbar = () => {
         setShowEllipsisDropdown(false);
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -88,10 +80,8 @@ const Navbar = () => {
       setUserFirstName(storedName);
     };
 
-    updateName(); // initial load
-
+    updateName();
     window.addEventListener("userLoggedIn", updateName);
-
     return () => window.removeEventListener("userLoggedIn", updateName);
   }, []);
 
@@ -102,143 +92,136 @@ const Navbar = () => {
         <span onClick={handleHomeClick}>EVENTSBRIDGE</span>
       </div>
 
-      {/* Search Bar */}
-      <div className="search-bar">
-        <FaSearch className="search-icon" />
-        <input type="text" placeholder="Search for Services and More" />
-      </div>
+      <div className="search-and-nav-icons-container ">
+        {/* Search Bar */}
+        <div className="search-bar" onClick={handleSearch}>
+          <FaSearch className="search-icon" />
+          <input
+            type="text"
+            placeholder="Search for Services and More"
+            value={searchInput}
+            onChange={(e) => {
+              setSearchInput(e.target.value);
+            }}
+          />
+        </div>
 
-      {/* Nav Icons */}
-      <div className="nav-icons">
-        {/* Profile Dropdown */}
-        <div className="nav-item profile-dropdown-container" ref={profileRef}>
-          <div className="flex items-center gap-2 text-gray-700 cursor-pointer login">
-            {/* User Icon + Greeting/Login */}
-            <span
-              className="flex items-center gap-2"
-              onClick={!userFirstName ? handleOpenLoginModal : undefined}
-            >
-              <FaUser className="text-lg" />
-              <span className="font-medium">
-                {userFirstName ? `${userFirstName}` : "Login"}
+        {/* Nav Icons */}
+        <div className="nav-icons">
+          {/* Profile Dropdown */}
+          <div className="nav-item profile-dropdown-container" ref={profileRef}>
+            <div className="flex items-center gap-2 text-gray-700 cursor-pointer login  ">
+              <span
+                className="flex items-center gap-2 max-[1024px]:flex-col max-[1024px]:text-[12px] max-[820px]:text-[11px]"
+                onClick={!userFirstName ? () => navigate("/login") : undefined}
+              >
+                <FaUser className="text-lg" />
+                <span className="font-medium ">
+                  {userFirstName ? `${userFirstName}` : "Login"}
+                </span>
               </span>
-            </span>
+              <span onClick={handleToggleProfileDropdown}>
+                {showProfileDropdown ? (
+                  <FaChevronUp className="text-sm" />
+                ) : (
+                  <FaChevronDown className="text-sm" />
+                )}
+              </span>
+            </div>
 
-            {/* Dropdown Arrow */}
-            <span onClick={handleToggleProfileDropdown}>
-              {showProfileDropdown ? (
-                <FaChevronUp className="text-sm" />
-              ) : (
-                <FaChevronDown className="text-sm" />
-              )}
+            {showProfileDropdown && (
+              <div className="dropdown-menu profile-menu">
+                {!userFirstName ? (
+                  <>
+                    <h4 className="login-h4">Welcome</h4>
+                    <p className="login-p">
+                      To access account and manage services
+                    </p>
+                    <div className="dropdown-header">
+                      <span>New Customer?</span>
+                      <span
+                        className="signup-link"
+                        onClick={() => navigate("/register")}
+                      >
+                        Sign Up
+                      </span>
+                    </div>
+                    <hr />
+                  </>
+                ) : (
+                  <>
+                    <div
+                      className="flex flex-row gap-1 mb-[10px] text-[#3b0340e1] hover:text-[#1f0122e1] hover:font-bold text-[15px]"
+                      onClick={() => navigate("/profile")}
+                    >
+                      <FaUser style={{ marginRight: "8px" }} />
+                      My Profile
+                    </div>
+                    <div className="dropdown-item hover:text-[#1f0122e1] hover:font-bold">
+                      <FaHeart
+                        className="icon "
+                        style={{ marginRight: "4px" }}
+                      />
+                      <a href="./wishlist">Wishlist</a>
+                    </div>
+                    <div className="dropdown-item">
+                      <FaSignOutAlt
+                        className="icon hover:text-[#1f0122e1] hover:font-bold"
+                        style={{ marginRight: "4px" }}
+                      />
+                      <button
+                        className="signOutButton hover:text-[#1f0122e1] hover:font-bold  "
+                        onClick={handleLogout}
+                      >
+                        Sign Out
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Become Vendor */}
+          <div
+            className="nav-items max-[1024px]:flex-col max-[1024px]:text-[12px] max-[820px]:text-[11px]"
+            onClick={() =>
+              !userFirstName ? navigate("/login") : navigate("/vendor/register")
+            }
+          >
+            <FaStore className="icons max-[1024px]:h-[18px] max-[1024px]:w-[18px]  max-[820px]:h-[15px]" />
+            <span className="vendor max-[1024px]:mt-[6px] max-[820px]:text-[11px] max-[820px]:w-max">
+              Be a Vendor
             </span>
           </div>
 
-          {showProfileDropdown && (
-            <div className="dropdown-menu profile-menu">
-              {!userFirstName && (
-                <>
-                  <h4 className="login-h4">Welcome</h4>
-                  <p className="login-p">
-                    To access account and manage services
-                  </p>
-                  <div className="dropdown-header">
-                    <span>New Customer?</span>
-                    <span
-                      className="signup-link"
-                      onClick={handleOpenLoginModal}
-                    >
-                      Sign Up
-                    </span>
-                  </div>
-                  <hr />
-                </>
-              )}
+          {/* Three Dots Dropdown */}
+          <div className="nav-item ellipsis-container" ref={ellipsisRef}>
+            <FaEllipsisV
+              className="three-dot"
+              onClick={() => setShowEllipsisDropdown((prev) => !prev)}
+              style={{ cursor: "pointer" }}
+            />
+            {showEllipsisDropdown && (
+              <div className="dropdown-menu ellipsis-menu">
+                <div
+                  className="dropdown-item"
+                  onClick={() => navigate("/about_us")}
+                >
+                  <FcAbout className="icon" /> About Us
+                </div>
 
-              {userFirstName && (
-                <>
-                  <div
-                    className="flex text-[rgb(59,3,64)] text-opacity-90"
-                    onClick={() => {
-                      navigate("/profile");
-                    }}
-                  >
-                    <FaUser style={{ marginRight: "8px" }} />
-                    My Profile
-                  </div>
-                  <div className="dropdown-item">
-                    <FaHeart className="icon" style={{ marginRight: "4px" }} />
-                    <a href="./wishlist">Wishlist</a>
-                  </div>
-
-                  <div className="dropdown-item">
-                    <FaSignOutAlt
-                      className="icon"
-                      style={{ marginRight: "4px" }}
-                    />
-                    <button className="signOutButton" onClick={handleLogout}>
-                      Sign Out
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* Become Vendor */}
-        <div
-          className="nav-items"
-          onClick={
-            !userFirstName ? handleOpenLoginModal : handleOpenRegisterModal
-          }
-        >
-          <FaStore className="icons" />
-          <span className="vendor">Become a Vendor</span>
-        </div>
-
-        {/* Three Dots Dropdown */}
-        <div className="nav-item ellipsis-container" ref={ellipsisRef}>
-          <FaEllipsisV
-            className="three-dot"
-            onClick={() => setShowEllipsisDropdown((prev) => !prev)}
-            style={{ cursor: "pointer" }}
-          />
-          {showEllipsisDropdown && (
-            <div className="dropdown-menu ellipsis-menu">
-              <div
-                className="dropdown-item"
-                onClick={() => navigate("/about_us")}
-              >
-                <FcAbout className="icon" /> About Us
+                <div
+                  className="dropdown-item"
+                  onClick={() => navigate("/help_us")}
+                >
+                  <FaHandsHelping className="icon" /> Help Us
+                </div>
               </div>
-              <div
-                className="dropdown-item"
-                onClick={() => navigate("/category")}
-              >
-                <MdMiscellaneousServices className="icon" /> Services
-              </div>
-              <div
-                className="dropdown-item"
-                onClick={() => navigate("/reviews")}
-              >
-                <MdReviews className="icon" /> Reviews
-              </div>
-              <div
-                className="dropdown-item"
-                onClick={() => navigate("/help_us")}
-              >
-                <FaHandsHelping className="icon" /> Help Us
-              </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
-
-      {/* Login Modal */}
-      {showLoginModal && (
-        <LoginRegister onClose={() => setShowLoginModal(false)} />
-      )}
     </div>
   );
 };

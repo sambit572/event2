@@ -47,94 +47,110 @@ function Profile() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const sidebar = document.querySelector(".profile-sidebar-fixed");
+        if (entry.isIntersecting) {
+          sidebar.style.position = "relative";
+        } else {
+          sidebar.style.position = "sticky";
+          sidebar.style.top = "0";
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const footerEl = document.querySelector("footer"); // Add an id if needed
+    if (footerEl) observer.observe(footerEl);
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div
-      className="relative min-h-screen flex flex-col md:flex-row bg-white xl:overflow-x-hidden sm:Class	CSS Equivalent
-mt-0	margin-top: 0
-mt-2	margin-top: 0.5rem
-mt-4	margin-top: 1rem
-mt-8	margin-top: 2rem
-mt-10	margin-top: 2.5rem
-mt-[30px]"
+      className="mb-[-148px] relative w-full min-h-screen flex flex-col md:flex-row bg-white xl:overflow-x-hidden sm:Class	CSS Equivalent
+"
     >
-      {/* Hamburger Button */}
-      <button
-        className={`profile-hamburger ${isSidebarOpen ? "open" : ""}`}
-        onClick={() => setIsSidebarOpen((prev) => !prev)}
-      >
-        {isSidebarOpen ? "✕" : "☰"}
-      </button>
+      <div className="profile-sidebar-fixed">
+        {/* Hamburger Button */}
+        <button
+          className={`profile-hamburger ${isSidebarOpen ? "open" : ""}`}
+          onClick={() => setIsSidebarOpen((prev) => !prev)}
+        >
+          {isSidebarOpen ? "✕" : "☰"}
+        </button>
 
-      {/* Sidebar */}
-      <UserSideBar
-        isOpen={isSidebarOpen}
-        setShowPasswordModal={setShowPasswordModal}
-      />
+        {/* Sidebar */}
+        <UserSideBar
+          isOpen={isSidebarOpen}
+          setShowPasswordModal={setShowPasswordModal}
+        />
 
-      {/* Main Content */}
-      <main className="flex-1 px-4 md:px-12">
-        {/* Password Modal */}
-        {showPasswordModal && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <h3 className="text-lg font-semibold mb-4">Change Password</h3>
-              <PasswordInput
-                name="oldPassword"
-                type="password"
-                placeholder="Current Password"
-                value={oldPassword}
-                onChange={(e) => setOldPassword(e.target.value)}
-              />
-              <PasswordInput
-                name="newPassword"
-                type="password"
-                placeholder="New Password"
-                value={newPassword}
-                onChange={(e) => {
-                  setErrorMsg("");
-                  setNewPassword(e.target.value);
-                }}
-              />
-              <PasswordInput
-                name="confirmPassword"
-                type="password"
-                placeholder="Confirm Password"
-                value={confirmPassword}
-                onChange={(e) => {
-                  setErrorMsg("");
-                  setConfirmPassword(e.target.value);
-                }}
-              />
-              {errorMsg && (
-                <p className="text-red-500 mt-2 text-sm">{errorMsg}</p>
-              )}
-              <div className="mt-4 flex justify-center gap-4">
-                <button
-                  onClick={handlePasswordChangeSubmit}
-                  className="bg-purple-700 text-white px-4 py-2 rounded"
-                >
-                  Submit
-                </button>
-                <button
-                  onClick={() => setShowPasswordModal(false)}
-                  className="bg-gray-300 px-4 py-2 rounded"
-                >
-                  Cancel
-                </button>
+        {/* Main Content */}
+        <main className="flex-1 px-4 md:px-12 ">
+          {/* Password Modal */}
+          {showPasswordModal && (
+            <div className="modal-overlay">
+              <div className="modal-content">
+                <h3 className="text-lg font-semibold mb-4">Change Password</h3>
+                <PasswordInput
+                  name="oldPassword"
+                  type="password"
+                  placeholder="Current Password"
+                  value={oldPassword}
+                  onChange={(e) => setOldPassword(e.target.value)}
+                />
+                <PasswordInput
+                  name="newPassword"
+                  type="password"
+                  placeholder="New Password"
+                  value={newPassword}
+                  onChange={(e) => {
+                    setErrorMsg("");
+                    setNewPassword(e.target.value);
+                  }}
+                />
+                <PasswordInput
+                  name="confirmPassword"
+                  type="password"
+                  placeholder="Confirm Password"
+                  value={confirmPassword}
+                  onChange={(e) => {
+                    setErrorMsg("");
+                    setConfirmPassword(e.target.value);
+                  }}
+                />
+                {errorMsg && (
+                  <p className="text-red-500 mt-2 text-sm">{errorMsg}</p>
+                )}
+                <div className="mt-4 flex justify-center gap-4">
+                  <button
+                    onClick={handlePasswordChangeSubmit}
+                    className="bg-purple-700 text-white px-4 py-2 rounded"
+                  >
+                    Submit
+                  </button>
+                  <button
+                    onClick={() => setShowPasswordModal(false)}
+                    className="bg-gray-300 px-4 py-2 rounded"
+                  >
+                    Cancel
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        )}
-
-        {/* Page Title */}
-        <h2 className="boking-text text-2xl md:text-3xl font-bold text-center mb-2">
+          )}
+        </main>
+      </div>
+      <div className="profile-scrollable-content">
+        <h2 className="boking-text text-2xl md:text-3xl font-bold text-center mb-4">
           My Bookings
         </h2>
 
-        {/* Sort Dropdown */}
-        <div className="w-1/2 ml-auto flex justify-end items-center p-4 ">
-          <select className="w-full max-w-xs bg-purple-900 text-white p-2 font-semibold rounded-lg shadow">
-            <option className="bg-white text-black">Sort by</option>
+        <div className="w-1/2 ml-auto mr-[40px] flex justify-end items-center p-4 mt-[-20px]">
+          <select className="sortby-dropdown max-w-xs bg-purple-900 text-white p-2 font-semibold rounded-lg shadow">
+            <option value="">Sort by</option>
             <option className="bg-white text-black" value="completed">
               Completed
             </option>
@@ -153,58 +169,49 @@ mt-[30px]"
           </select>
         </div>
 
-        {/* Booking Card */}
-        <div className=" bg-white rounded-lg shadow-lg p-4 md:p-2  max-w-[900px] md:relative md:bg-slate-200 lg:ml-[200px]  xl:max-w-[85%] xl:ml-[250px] xl:h-[230px] lg:ml-auto ">
-          <div className="relative flex flex-col md:flex-row gap-4">
-            {/* Image */}
-            <img
-              src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600"
-              alt="DJ Service"
-              className="w-full md:w-[300px] h-[200px] object-cover rounded xl:h-[180px]"
-            />
-
-            {/* Content */}
-            <div className="flex-1 flex  flex-col justify-between">
-              <div className="space-y-1 text-sm md:text-base text-left xl:relative xl:top-[20px]">
-                <h3 className="text-lg md:text-xl font-bold text-purple-900">
+        {/* Cards Container with scroll detection */}
+        <div className="booking-card-container" id="bookingCards">
+          {[1, 2, 3,4,5,6].map((_, index) => (
+            <div key={index} className="modern-booking-card">
+              <div className="image-section">
+                <img
+                  src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600"
+                  alt="DJ Service"
+                  className="rounded-lg"
+                />
+              </div>
+              <div className="info-section">
+                <div className="user-booking-info-section">
+                <h3 className="text-xl font-bold text-purple-800">
                   DJ Wedding Service
                 </h3>
-                <p className="text-gray-700">
+                <p className="text-black" >
                   Patia, Bhubaneswar, Odisha, India
                 </p>
-                <p className="text-gray-600">Booking Date: 10/06/2025</p>
-                <p className="text-gray-600">Event Date: 10/06/2025</p>
+                <p className="text-sm text-black mt-[-20px] mb-[8px]">
+                  Booking Date: 10/06/2025
+                </p>
+                <p className="text-sm text-black ">Event Date: 10/06/2025</p>
                 <a
                   href="#payment-details"
-                  className="text-purple-700 underline font-medium block mt-2"
+                  className="text-purple-600 underline font-medium mt-2 block"
                 >
                   Payment Details
                 </a>
-
-                {/* Payment Details */}
-                <div className="mt-4 space-y-1 xl:relative xl:right-[-370px] xl:top-[-140px]">
-                  <p>
-                    Actual Amount: <strong>₹50,000</strong>
-                  </p>
-                  <p>
-                    Paid Amount: <strong>₹3,000</strong>
-                  </p>
-                  <p>
-                    Remaining Amount: <strong>₹47,000</strong>
+                </div>
+                <div className="payment mt-3 ml-[80px]">
+                  <p className="text-black mb-[8px]">Actual:<span className="text-black"> ₹50,000</span></p>
+                  <p className="text-black mb-[8px]">Paid: ₹3,000</p>
+                  <p className="text-black">Remaining: ₹47,000</p>
+                  <p className="text-yellow-600 font-semibold mt-2">
+                    Payment Pending
                   </p>
                 </div>
               </div>
-
-              {/* Payment Status (bottom right) */}
-              <div className="mt-6 flex justify-end xl:relative xl:top-[-100px]">
-                <p className="text-yellow-500 font-bold text-sm md:text-base">
-                  Payment Pending
-                </p>
-              </div>
             </div>
-          </div>
+          ))}
         </div>
-      </main>
+      </div>
     </div>
   );
 }

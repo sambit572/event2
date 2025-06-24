@@ -124,6 +124,7 @@
   .booking-popup-box {
     max-width: 420px;
     padding: 24px;
+    top: 40%;
   }
 
   .popup-title {
@@ -139,9 +140,8 @@
   .booking-popup-box {
     max-width: 430px;
     padding: 22px;
-    position: relative;
-    top: -103px;
-    left: 350px;
+    
+    top: 300px;
   }
 
   .popup-title {
@@ -151,15 +151,17 @@
   .popup-row {
     font-size: 1rem;
   }
+
+  .close-btn{
+    color: red;
+  }
 }
 /* iPad Portrait & smaller tablets (768px - 834px) */
 @media (min-width: 768px) and (max-width: 834px) {
   .booking-popup-box {
     max-width: 401px;
     padding: 20px;
-    position: relative;
-    top: 84px;
-    left: 250px;
+    top: 308px;
   }
 
   .popup-title {
@@ -175,6 +177,7 @@
     font-size: 22px;
     top: 12px;
     left: 5px;
+    color: red;
   }
 }
 
@@ -183,9 +186,8 @@
   .booking-popup-box {
     width: 80vw;
     padding: 18px;
-    position: relative;
-    top: 10px;
-    left: 130px;
+    left: 230px;
+    top: 320px;
   }
 
   .popup-title {
@@ -198,6 +200,7 @@
 
   .close-btn {
     left: 260px;
+    color: red;
   }
 }
 
@@ -206,9 +209,8 @@
   .booking-popup-box {
     width: 77vw;
     padding: 12px;
-    top: 10px;
-    left: 110px;
-    position: relative;
+    top: 300px;
+    left: 200px;
   }
 
   .popup-title {
@@ -224,6 +226,7 @@
     font-size: 20px;
     top: 8px;
     left: 260px;
+    color: red;
   }
 }
 
@@ -232,8 +235,7 @@
   .booking-popup-box {
     width: 80vw;
     padding: 12px;
-    position: relative;
-    left: 85px;
+    left: 185px;
   }
 
   .popup-title {
@@ -253,6 +255,7 @@
 @media (max-width: 380px) {
   .close-btn {
     left: 250px;
+    color: red;
   }
 }
 
@@ -274,5 +277,6 @@
 
   .close-btn {
     font-size: 16px;
+    color: red;
   }
 }

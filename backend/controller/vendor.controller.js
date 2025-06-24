@@ -5,6 +5,7 @@ import { ApiResponse } from "../utilities/ApiResponse.js";
 import fs from "fs/promises";
 import path from "path";
 import { uploadOnCloudinary } from "../utilities/cloudinary.js";
+import { validateEmailDomain } from "../utilities/verifyDNS.js";
 
 const registerVendor = async (req, res) => {
   try {
@@ -22,6 +23,10 @@ const registerVendor = async (req, res) => {
         );
     }
 
+    const isValidDns = await validateEmailDomain(email);
+    if (!isValidDns) {
+      return res.status(400).json(new ApiError(400, "Invalid email domain"));
+    }
     // 2. Check if vendor already exists
     const existingVendor = await Vendor.findOne({
       $or: [{ email }, { phoneNumber }],
