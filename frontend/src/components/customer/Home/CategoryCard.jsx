@@ -3,12 +3,42 @@ import "./CategoryCard.css";
 
 const CategoryCard = ({ category }) => {
   return (
-    <a href="/category" className="categoryCard">
-      <img src={category.image} alt="" />
-      {/* <h3>Staring at &#8377;4999</h3> */}
-      <h2>{category.title}</h2>
-      <p>The tag line for the catagory</p>
-    </a>
+    <div className="courseCard">
+      <span className="brandLabel">EventsBridge</span>
+
+      <div className="imageWrapper">
+        <img
+          src={category.image}
+          alt={category.title}
+          className="courseImage"
+        />
+
+        {/* Dark Blur Overlay + Tagline */}
+        {category.tagline && (
+          <div className="taglineOverlay">
+            <span className="taglineText">{category.tagline}</span>
+          </div>
+        )}
+      </div>
+
+      <div className="courseContent">
+        <h3 className="courseTitle">
+          {/* <span className="courseIcon">{category.icon}</span> */}
+          <span className="courseText">{category.title}</span>
+        </h3>
+
+        {/* Tagline visible only in mobile/tablet */}
+        {category.tagline && (
+          <p className="courseTaglineResponsive">{category.tagline}</p>
+        )}
+
+        {/* {category.badge && (
+          <span className={`courseTag ${category.badge.toLowerCase()}`}>
+            {category.badge}
+          </span>
+        )} */}
+      </div>
+    </div>
   );
 };
 
