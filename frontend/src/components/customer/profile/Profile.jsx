@@ -143,7 +143,7 @@ function Profile() {
           )}
         </main>
       </div>
-      <div className="profile-scrollable-content">
+      <div className="profile-scrollable-content max-[430px]:flex-row">
         <h2 className="boking-text text-2xl md:text-3xl font-bold text-center mb-4">
           My Bookings
         </h2>

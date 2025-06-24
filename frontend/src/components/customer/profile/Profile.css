@@ -301,7 +301,8 @@
 @media (max-width:430px) {
   .profile-scrollable-content{
     width: 100%;
-    margin-left: -220px;
+    margin-left: 0px;
+    margin-top: -980px;
   }
   .info-section{
     display: block;
@@ -325,6 +326,11 @@
   .image-section{
     width: 250px;
     height: 150px;
+  }
+  .profile-scrollable-content{
+    width: 100%;
+    margin-left: 0px;
+    margin-top: -750px;
   }
 }
 
