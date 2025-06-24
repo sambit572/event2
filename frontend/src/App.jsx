@@ -20,6 +20,9 @@ import VendorService from "./pages/vendor/VendorService";
 
 import Chatbot from "./components/common/Chatbot";
 import AboutUs from "./pages/common/AboutUs";
+import HelpUs from "./pages/common/HelpUs";
+import HelpCenter from "./pages/common/HelpCenter";
+
 
 import ForgotPass from "./pages/customer/ForgotPass.jsx";
 import ResetPassword from "./pages/customer/ResetPassword.jsx";
@@ -90,6 +93,9 @@ const App = () => {
           />
           <Route path="/dashboard" element={<DashBoardMain />}></Route>
           <Route path="/about_us" element={<AboutUs />} />
+          <Route path="/help_us" element={<HelpUs />} />
+          <Route path="/help-Center" element={<HelpCenter />} />
+
 
           <Route path="/Wishlist" element={<Wishlist />}></Route>
           <Route path="/forgotpassword" element={<ForgotPassword />}></Route>
