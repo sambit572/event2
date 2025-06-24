@@ -137,16 +137,9 @@
   gap: 8px; /* Space between the spans */
   margin-top: 10px;
 }
-.dropdown-header span {
-  color: #3b0340e1;
-}
 
-.signup-link {
-  cursor: pointer;
-  font-weight: 500;
-  color: #007bff; /* Optional: blue color */
-  transition: color 0.2s ease;
-}
+
+
 
 .dropdown-item {
   display: flex;
@@ -278,10 +271,6 @@
     font-weight: 800;
   }
 
-  .signup-link:hover {
-    font-weight: bold;
-    color: #0056b3; /* Optional: darker on hover */
-  }
 }
 
 @media (max-width: 1024px) {

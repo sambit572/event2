@@ -138,13 +138,13 @@ const Navbar = () => {
                       To access account and manage services
                     </p>
                     <div className="dropdown-header">
-                      <span>New Customer?</span>
-                      <span
-                        className="signup-link text-sky-300"
+                      <span className="text-[#3b0340e1]">New Customer?</span>
+                      <button
+                        className="bg-blue-500 hover:bg-blue-600"
                         onClick={() => navigate("/register")}
                       >
                         Sign Up
-                      </span>
+                      </button>
                     </div>
                     <hr />
                   </>
