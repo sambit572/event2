@@ -69,7 +69,9 @@ const ReviewSlider = () => {
   const duplicatedReviews = [...reviews, ...reviews];
   return (
     <div className="review_section">
-      <h1 className="align_center heading">Reviews</h1>
+      <h1 className="heading">Our Reviews</h1>
+      <h3 className="subheading">Celebrated by Many, Loved by All.
+</h3>
       <div className="review_wrapper" ref={containerRef}>
         <div
           className="review_container"
@@ -85,10 +87,15 @@ const ReviewSlider = () => {
                 className="review_avatar"
               />
               <h3>{review.name}</h3>
-              <div className="review_rating">
-                {"★".repeat(review.rating)}
-                {"☆".repeat(5 - review.rating)}
-              </div>
+             <div className="review_rating">
+             {Array.from({ length: review.rating }, (_, i) => (
+             <span key={`filled-${i}`} className="star filled">★</span>
+            ))}
+             {Array.from({ length: 5 - review.rating }, (_, i) => (
+             <span key={`empty-${i}`} className="star empty">☆</span>
+           ))}
+             </div>
+
               <p>{review.text}</p>
             </div>
           ))}

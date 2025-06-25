@@ -1,5 +1,5 @@
 .footer-enhanced {
-  background: linear-gradient(135deg, #2395d7, #ffffff);
+  background: #001F3F;
   color: black;
   padding: 30px 60px;
   font-size: 14px;
@@ -13,9 +13,13 @@
   margin-bottom: 30px;
 }
 
-.footer-top h3,
+.footer-top h3
+ {
+  color: #FFC107;
+}
 .footer-top p {
-  color: black;
+  color: white;
+  margin: 10px 0;
 }
 
 .footer-top h3 {
@@ -43,15 +47,24 @@
 .footer-columns {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 220px;
+  gap: 100px;
   max-width: 1200px;
   width: 100%;
   margin: 30px auto;
 }
 
-.footer-columns h4,
-.footer-columns p {
-  color: black;
+.footer-columns h4
+ {
+  color: #FFC107;
+}
+.footer-columns p{
+  color: white;
+  font-size: 14px;
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
 }
 
 .footer-columns h4 {
@@ -101,7 +114,7 @@
   font-size: 15px;
   font-weight: bold;
   margin-bottom: 8px;
-  color: black;
+  color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -122,7 +135,7 @@
 }
 
 .footer-dropdown-content p {
-  color: black;
+  color: white;
   font-size: 13px;
   margin: 6px 0;
   display: flex;
@@ -132,7 +145,7 @@
 
 .footer-vertical-divider {
   width: 1px;
-  background-color: black;
+  background-color: white;
   height: auto;
 }
 
@@ -144,7 +157,7 @@
 .social-media-column h4 {
   font-size: 20px;
   font-weight: bold;
-  color: black;
+  color: white;
   margin-bottom: 12px;
 }
 
@@ -173,7 +186,7 @@
 }
 
 .footer-bottom {
-  border-top: 1px solid rgba(5, 4, 4, 0.1);
+  border-top: white 1px solid;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -185,7 +198,7 @@
 
 .footer-bottom span,
 .footer-bottom p {
-  color: black;
+  color: white;
   margin: 0;
 }
 
