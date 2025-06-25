@@ -1,22 +1,8 @@
-/* :root {
-  --sk-border-radius: 1rem;
-  --bs-primary: #ffffff; 
-  --sk-text-custom-color: #0C1424;
-  --sk-grey-bg: #eaedf1;
-} */
-
 /* Container for the milestones section */
 .milestones-wrapper {
   padding: 4rem 3rem;
   margin-top: 40px;
-  /* background: linear-gradient(135deg, #fca311, #14213d); */
-  /* background: linear-gradient(135deg, #fff7ed, #fde2e4); */
-  /* background: linear-gradient(135deg, #f0fff4, #d1fae5); */
-  background: linear-gradient(135deg, #f5efff, #ffffff);
-
-  color: #1f2937;
-  border-radius: var(--sk-border-radius, 1rem);
-  /* color: #ffffff; */
+  color: aliceblue;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -24,17 +10,29 @@
   flex-wrap: wrap;
   gap: 2rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  z-index: 1;
 }
 
-.milestones-wrapper::after {
-  bottom: 0%;
-  left: -13%;
-}
-
+/* Blurred background layer */
 .milestones-wrapper::before {
-  bottom: -19%;
-  right: -26%;
-  transform: rotate(205deg);
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url('/milestone.jpg');
+  background-size: cover;
+  background-position:center 48%;
+  background-repeat: no-repeat;
+  filter: blur(12px); /* adjust blur strength */
+  z-index: -2;
+}
+
+/* Optional dark overlay for readability */
+.milestones-wrapper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3); /* dark overlay */
+  z-index: -1;
 }
 
 /* Individual milestone card */
@@ -43,11 +41,12 @@
   flex: 1 1 200px;
   min-width: 150px;
   padding: 1rem;
+  background: none;
+  color: aliceblue;
 }
 
 /* Milestone number styling */
 .milestone-number {
-  /* color: black; */
   font-weight: bold !important;
   font-size: 2.5rem;
   margin-bottom: 0.5rem;
@@ -58,5 +57,5 @@
   text-transform: uppercase;
   margin-bottom: 0;
   font-size: 1rem;
-  /* color: black; */
+  color: aliceblue;
 }
