@@ -18,7 +18,7 @@
 .service-box {
   display: flex;
   overflow-y: auto;
-  width: 80%;
+  width: 90%;
   gap: 20px;
   background-color: #dfe9fd;
   border-radius: 8px;
@@ -47,7 +47,7 @@
 /* Main Image */
 .main-image-dashboard {
   width: 780px;
-  height: 250px;
+  height: 220px;
   object-fit: cover;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -73,7 +73,7 @@
 .image-buttons-dashboard {
   display: flex;
   justify-content: center;
-  gap: 15px;
+  gap: 20px;
   width: 100%;
 }
 
@@ -246,7 +246,6 @@
     flex-direction: column;
 
     align-items: center;
-    height: 561px;
     width: 95%;
     margin-left: 20px;
   }
@@ -523,6 +522,7 @@
     /* margin: 10px; */
     /* left: -30px; */
     width: 270%;
+    margin-left: -20px;
   }
 
   .edit-form-dashboard {

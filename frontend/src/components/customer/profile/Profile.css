@@ -353,7 +353,11 @@
     margin-top: 20px;
   }
 }
-
+@media (max-width:400px){
+  .profile-scrollable-content{
+    margin-top: -620px;
+  }
+}
 @media (max-width: 380px) {
   .image-section {
     width: 250px;
@@ -365,7 +369,11 @@
     margin-top: -750px;
   }
 }
-
+@media (max-width:350px){
+  .profile-scrollable-content{
+    margin-top: -600px;
+  }
+}
 @media (max-width: 999px) {
   .booking-image {
     max-width: 479px;
