@@ -14,7 +14,8 @@ import {
 import { FcAbout } from "react-icons/fc";
 import { MdMiscellaneousServices, MdReviews } from "react-icons/md";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
+import ReviewSlider from "../customer/Home/ReviewSlider.jsx";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -106,28 +107,29 @@ const Navbar = () => {
           />
         </div>
 
-        {/* Nav Icons */}
-        <div className="nav-icons">
-          {/* Profile Dropdown */}
-          <div className="nav-item profile-dropdown-container" ref={profileRef}>
-            <div className="flex items-center gap-2 text-gray-700 cursor-pointer login  ">
-              <span
-                className="flex items-center gap-2 max-[1024px]:flex-col max-[1024px]:text-[12px] max-[820px]:text-[11px]"
-                onClick={!userFirstName ? () => navigate("/login") : undefined}
-              >
-                <FaUser className="text-lg" />
-                <span className="font-medium ">
-                  {userFirstName ? `${userFirstName}` : "Login"}
-                </span>
+      {/* Nav Icons */}
+      <div className="nav-icons">
+        {/* Profile Dropdown */}
+        <div className="nav-item profile-dropdown-container" ref={profileRef}>
+          <div className="flex items-center gap-2 text-gray-700 cursor-pointer login">
+            {/* User Icon + Greeting/Login */}
+            <span
+              className="flex items-center gap-2"
+              onClick={!userFirstName ? () => navigate("/login") : undefined}
+            >
+              <FaUser className="text-lg" />
+              <span className="font-medium">
+                {userFirstName ? `${userFirstName}` : "Login"}
               </span>
-              <span onClick={handleToggleProfileDropdown}>
-                {showProfileDropdown ? (
-                  <FaChevronUp className="text-sm" />
-                ) : (
-                  <FaChevronDown className="text-sm" />
-                )}
-              </span>
-            </div>
+            </span>
+            <span onClick={handleToggleProfileDropdown}>
+              {showProfileDropdown ? (
+                <FaChevronUp className="text-sm" />
+              ) : (
+                <FaChevronDown className="text-sm" />
+              )}
+            </span>
+          </div>
 
             {showProfileDropdown && (
               <div className="dropdown-menu profile-menu">

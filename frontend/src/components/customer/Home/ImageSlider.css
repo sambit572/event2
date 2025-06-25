@@ -9,7 +9,7 @@
 }
 .slide {
   width: 100%;
-  height: 400px;
+  height: 500px;
   object-fit: cover;
   background-size: cover;
   background-position: center;
@@ -19,6 +19,10 @@
 
 .slider-container:hover .slide {
   filter: brightness(0.65);
+}
+.slick-prev,
+.slick-next {
+  display: none !important;
 }
 
 .slick-dots li {

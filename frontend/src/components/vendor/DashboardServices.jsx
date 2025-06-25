@@ -36,7 +36,7 @@ const DashboardServices = () => {
   };
 
   return (
-    <section className="service-box xl:ml-20">
+    <section className="service-box  xl:ml-20">
       <div className="thumbnail-column-dashboard">
         {formData.images.map((img, index) => (
           <img

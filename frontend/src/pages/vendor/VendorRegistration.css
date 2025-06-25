@@ -9,7 +9,7 @@
 }
 
 .vendor-register-container {
-  background: linear-gradient(to bottom, #e5e7ea 0%, #92cadb 50%, #be62ef 100%);
+  background: linear-gradient(to bottom, #e5e7ea 20%, #e1b7df 50%, #e5e7ea 100%);
   border-radius: 12px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   padding: 40px;
@@ -35,7 +35,7 @@
 }
 
 .vendor-register-form h2 {
-  color: #5ba8a0;
+  color: #EC4899;
   margin-bottom: 5px;
   text-align: center;
   font-size: 22px;
@@ -87,7 +87,7 @@
 .vendor-register-form input[type="file"] {
   width: 400px;
   padding: 10px;
-  border: 1px solid #5ba8a0;
+  border: 1px solid #EC4899;
   border-radius: 6px;
   font-size: 12px;
   background-color: white;
@@ -126,7 +126,7 @@
 
 /* ===== Button Styling ===== */
 .vendor-register-form button {
-  background-color: #3b6087;
+  background-color: #1E90FF;
   color: white;
   border: none;
   padding: 12px;

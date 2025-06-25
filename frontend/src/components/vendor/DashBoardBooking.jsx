@@ -32,7 +32,7 @@ const DashBoardBooking = () => {
         {/* Booking Table */}
         <div className="dashboard-booking-scroll">
           <div className="dashboard-booking-container">
-            {/* Header Row */}
+            {/* Header Row (fixed at top) */}
             <div className="dashboard-booking-header">
               <div className="booking-col-number">No.</div>
               <div className="booking-col-middle">
@@ -45,32 +45,38 @@ const DashBoardBooking = () => {
               <div className="booking-col-status">Status</div>
             </div>
 
-            {/* Booking Rows */}
-            {BookingData.map((booking) => (
-              <div
-                className={`dashboard-booking-row ${clickedRow?.number === booking.number ? "expanded" : ""}`}
-                key={booking.number}
-                onClick={() => handleRowClick(booking)}
-              >
-                <div className="booking-col-number">{booking.number}</div>
-
-                <div className="booking-col-middle">
-                  <div><strong>{booking.service}</strong></div>
-                  <div>{booking.bookedBy}</div>
-                  <div>{booking.price}</div>
-                  <div>{booking.date}</div>
-                  <div>{booking.days}</div>
-                </div>
-
+            {/* ✅ Scrollable Rows Wrapper */}
+            <div className="booking-rows-scroll">
+              {BookingData.map((booking) => (
                 <div
-                  className={`booking-col-status status-${booking.status.toLowerCase().replace(/\s+/g, "-")}`}
+                  className={`dashboard-booking-row ${
+                    clickedRow?.number === booking.number ? "expanded" : ""
+                  }`}
+                  key={booking.number}
+                  onClick={() => handleRowClick(booking)}
                 >
-                  {booking.status}
+                  <div className="booking-col-number">{booking.number}</div>
+                  <div className="booking-col-middle">
+                    <div>
+                      <strong>{booking.service}</strong>
+                    </div>
+                    <div>{booking.bookedBy}</div>
+                    <div>{booking.price}</div>
+                    <div>{booking.date}</div>
+                    <div>{booking.days}</div>
+                  </div>
+                  <div
+                    className={`booking-col-status status-${booking.status
+                      .toLowerCase()
+                      .replace(/\s+/g, "-")}`}
+                  >
+                    {booking.status}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
 
-            {/* Render popup ONLY ONCE at the end */}
+            {/* Popup */}
             {clickedRow && (
               <div className="popup-overlay">
                 <BookingPopup
@@ -80,7 +86,6 @@ const DashBoardBooking = () => {
                 />
               </div>
             )}
-
           </div>
         </div>
       </main>
