@@ -18,7 +18,7 @@
 .service-box {
   display: flex;
   overflow-y: auto;
-  /* width: 100%; */
+  width: 80%;
   gap: 20px;
   background-color: #dfe9fd;
   border-radius: 8px;
