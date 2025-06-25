@@ -180,7 +180,9 @@
   color: black;
   font-weight: 600;
 }
-
+ .boking-text {
+    margin-top: 20px;
+  }
 /* Dots Animation */
 .dots {
   animation: blink 1s infinite;
@@ -299,7 +301,7 @@
   .profile-scrollable-content {
     width: 100%;
     margin-left: 0px;
-    margin-top: -980px;
+    margin-top: -930px;
   }
   .info-section {
     display: block;
@@ -315,6 +317,9 @@
   .profile-hamburger {
     margin-top: 30px;
     margin-left: 5px;
+  }
+   .boking-text {
+    margin-top: 20px;
   }
 }
 
