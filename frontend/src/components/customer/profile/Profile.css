@@ -257,7 +257,7 @@
 /* Responsive Styles */
 @media (max-width: 1024px) {
   .profile-scrollable-content {
-    width: 100%;
+    width: 95%;
     margin-left: -200px;
   }
   .payment {
@@ -292,47 +292,50 @@
   .profile-hamburger {
     display: block !important;
 
-    margin-top: 30px;
-    margin-left: 5px;
+    /* top: -60px; */
+    margin-left: -5px;
+  }
+  .open {
+    top: 40px;
   }
 }
-@media (max-width:767px){
-  .profile-scrollable-content{
+@media (max-width: 767px) {
+  .profile-scrollable-content {
     width: 100%;
     margin-left: -80px;
     margin-top: -1100px;
   }
-  .image-section{
+  .image-section {
     width: 320px;
     margin-left: 50px;
   }
 }
-@media (max-width:640px){
-  .image-section{
+@media (max-width: 640px) {
+  .image-section {
     margin-left: 10px;
     width: 230px;
     height: 150px;
   }
-  .info-section{
+  .info-section {
     display: block;
   }
-  .profile-scrollable-content{
+  .profile-scrollable-content {
     margin-top: -800px;
     width: 100%;
     margin-left: -100px;
   }
 }
-@media (max-width:500px){
-  .image-section{
+@media (max-width: 500px) {
+  .image-section {
     width: 170px;
-    height:120px ;
+    height: 120px;
   }
 }
 @media (max-width: 430px) {
   .profile-scrollable-content {
     width: 100%;
     margin-left: 0px;
-    margin-top: -940px;
+    margin-top: -950px;
   }
   .info-section {
     display: block;
@@ -346,7 +349,7 @@
     margin-left: 0px;
   }
   .profile-hamburger {
-    margin-top: 30px;
+    /* margin-top: 30px; */
     margin-left: 5px;
   }
   .boking-text {
@@ -388,12 +391,6 @@
   .modal-content {
     position: fixed;
     top: 172px;
-  }
-  .profile-hamburger {
-    display: block;
-
-    top: -20px;
-    left: 0;
   }
 
   .open {
