@@ -14,7 +14,8 @@ import {
 import { FcAbout } from "react-icons/fc";
 import { MdMiscellaneousServices, MdReviews } from "react-icons/md";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
+import ReviewSlider from "../customer/Home/ReviewSlider.jsx";
 
 const Navbar = () => {
   const navigate = useNavigate();

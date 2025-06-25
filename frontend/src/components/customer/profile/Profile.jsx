@@ -171,7 +171,7 @@ function Profile() {
 
         {/* Cards Container with scroll detection */}
         <div className="booking-card-container" id="bookingCards">
-          {[1, 2, 3,4,5,6].map((_, index) => (
+          {[1, 2, 3, 4, 5, 6].map((_, index) => (
             <div key={index} className="modern-booking-card">
               <div className="image-section">
                 <img
@@ -182,25 +182,27 @@ function Profile() {
               </div>
               <div className="info-section">
                 <div className="user-booking-info-section">
-                <h3 className="text-xl font-bold text-purple-800">
-                  DJ Wedding Service
-                </h3>
-                <p className="text-black" >
-                  Patia, Bhubaneswar, Odisha, India
-                </p>
-                <p className="text-sm text-black mt-[-20px] mb-[8px]">
-                  Booking Date: 10/06/2025
-                </p>
-                <p className="text-sm text-black ">Event Date: 10/06/2025</p>
-                <a
-                  href="#payment-details"
-                  className="text-purple-600 underline font-medium mt-2 block"
-                >
-                  Payment Details
-                </a>
+                  <h3 className="text-xl font-bold text-purple-800">
+                    DJ Wedding Service
+                  </h3>
+                  <p className="text-black">
+                    Patia, Bhubaneswar, Odisha, India
+                  </p>
+                  <p className="text-sm text-black mt-[-20px] mb-[8px]">
+                    Booking Date: 10/06/2025
+                  </p>
+                  <p className="text-sm text-black ">Event Date: 10/06/2025</p>
+                  <a
+                    href="#payment-details"
+                    className="text-purple-600 underline font-medium mt-2 block"
+                  >
+                    Payment Details
+                  </a>
                 </div>
                 <div className="payment mt-3 ml-[80px]">
-                  <p className="text-black mb-[8px]">Actual:<span className="text-black"> ₹50,000</span></p>
+                  <p className="text-black mb-[8px]">
+                    Actual:<span className="text-black"> ₹50,000</span>
+                  </p>
                   <p className="text-black mb-[8px]">Paid: ₹3,000</p>
                   <p className="text-black">Remaining: ₹47,000</p>
                   <p className="text-yellow-600 font-semibold mt-2">

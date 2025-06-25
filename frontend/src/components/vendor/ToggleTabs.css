@@ -3,9 +3,10 @@
   margin-bottom: 20px;
   margin-top: 20px;
   background-color: #ead8f6;
-  max-width: fit-content;
+  /* max-width: fit-content; */
   border-radius: 6.25rem;
   position: relative;
+  width: 270px !important;
   /* Required for absolute positioning of .bg-slider */
   overflow: hidden;
   font-family: "Montserrat";
@@ -69,14 +70,29 @@
   left: 125px;
   width: 125px;
 }
-
+@media (max-width: 530px) {
+  .tab-btn {
+    width: 260px !important;
+    align-items: start;
+    right: 50px;
+    /* background-color: #000; */
+  }
+}
+@media (max-width: 480px) {
+  .tab-btn {
+    width: 260px !important;
+    align-items: start;
+    right: 90px;
+    /* background-color: #000; */
+  }
+}
 @media (max-width: 431px) {
   .tab-btn {
     position: relative;
-    right: 111px;
+    right: 100px;
     height: 55px;
     margin-top: 20px;
-    width: 400px;
+    width: 229px !important;
   }
 
   .tab-btn button {
@@ -96,8 +112,7 @@
 }
 
 @media (max-width: 380px) {
-
-  .tab-btn{
+  .tab-btn {
     right: 139px;
   }
   .tab-btn button {

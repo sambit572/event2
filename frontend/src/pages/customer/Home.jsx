@@ -17,7 +17,17 @@ import image12 from "../../assets/home/flower decor.png";
 import image13 from "../../assets/home/car & horsecart decor.png";
 import image14 from "../../assets/home/fireworks.png";
 import image15 from "../../assets/home/cardsinvite.jpg";
-import banner from "../../assets/home/banner.jpg";
+
+import shaadiMobile from "../../assets/home/shaadiMobile.png";
+import shaadiTablet from "../../assets/home/shaadiTablet.png";
+import shaadiDesktop from "../../assets/home/shaadiDesktop.png";
+import christianMobile from "../../assets/home/christianMobile.png";
+import christianTablet from "../../assets/home/christianTablet.png";
+import christianDesktop from "../../assets/home/christianDesktop.png";
+import cateringMobile from "../../assets/home/cateringMobile.png";
+import cateringTablet from "../../assets/home/cateringTablet.png";
+import cateringDesktop from "../../assets/home/cateringDesktop.png";
+
 import CategoryCard from "../../components/customer/Home/CategoryCard";
 import ReviewSlider from "../../components/customer/Home/ReviewSlider";
 import FaqSection from "../../components/customer/Home/FaqSection";
@@ -27,17 +37,66 @@ import Milestones from "../../components/common/aboutus/Milestones";
 import AddsBanner from "../../components/customer/Home/AddsBanner";
 
 const images = [
-  image1,
-  image2,
-  image4,
-  image6,
-  image7,
-  image10,
-  image11,
-  image12,
-  image13,
-  image14,
-  image15,
+  {
+    mobile: shaadiMobile,
+    tablet: shaadiTablet,
+    desktop: shaadiDesktop,
+  },
+  {
+    mobile: christianMobile,
+
+    desktop: christianDesktop,
+  },
+  {
+    mobile: cateringMobile,
+    tablet: cateringTablet,
+    desktop: cateringDesktop,
+  },
+  // {
+  //   mobile: image4Mobile,
+  //   tablet: image4Tablet,
+  //   desktop: image4Desktop,
+  // },
+  // {
+  //   mobile: image6Mobile,
+  //   tablet: image6Tablet,
+  //   desktop: image6Desktop,
+  // },
+  // {
+  //   mobile: image7Mobile,
+  //   tablet: image7Tablet,
+  //   desktop: image7Desktop,
+  // },
+  // {
+  //   mobile: image10Mobile,
+  //   tablet: image10Tablet,
+  //   desktop: image10Desktop,
+  // },
+  // {
+  //   mobile: image11Mobile,
+  //   tablet: image11Tablet,
+  //   desktop: image11Desktop,
+  // },
+  // {
+  //   mobile: image12Mobile,
+  //   tablet: image12Tablet,
+  //   desktop: image12Desktop,
+  // },
+  // {
+  //   mobile: image13Mobile,
+  //   tablet: image13Tablet,
+  //   desktop: image13Desktop,
+  // },
+  // {
+  //   mobile: image14Mobile,
+  //   tablet: image14Tablet,
+  //   desktop: image14Desktop,
+  // },
+  // {
+  //   mobile: image15Mobile,
+  //   tablet: image15Tablet,
+  //   desktop: image15Desktop,
+  // },
 ];
 
 const categories = [
