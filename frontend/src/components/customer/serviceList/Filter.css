@@ -2,8 +2,9 @@
   width: 280px;
   max-height: 100%;
   margin-left: 5px;
-  margin-top: 10px;
-  border: 1px solid #001f3f;
+  margin-top: 17px;
+  background: #eee;
+  border: 1px solid #eee;
   padding: 16px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
@@ -26,6 +27,7 @@
 }
 .head4 {
   margin-bottom: 20px;
+  color: #001f3f;
 }
 .star {
   color: #001f3f;
@@ -33,6 +35,7 @@
 }
 .price-range-wrapper {
   width: 100%;
+  color: #001f3f;
   margin-bottom: 20px;
 }
 
@@ -127,14 +130,22 @@ input[type="range"].thumb-right {
 .dropdown {
   margin: 10px 0;
 }
+.state {
+  color: #001f3f;
+}
+.l {
+  color: #001f3f;
+}
 
 .dropdown select {
   width: 100%;
+  color: #001f3f;
   padding: 6px;
   border-radius: 6px;
 }
 .dateFilter {
   width: 100%;
+  color: #001f3f;
   padding: 10px;
 }
 .filter-btn {

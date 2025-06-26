@@ -1,5 +1,7 @@
 .serviceDescription {
   width: 100%;
+  color: #001f3f;
+  background: #e5e5de;
   padding: 10px;
 }
 .actionButtons {
