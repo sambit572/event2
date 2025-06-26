@@ -2,7 +2,7 @@
 .milestones-wrapper {
   padding: 4rem 3rem;
   margin-top: 40px;
-  color: aliceblue;
+  color: #fff9c4;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -21,6 +21,7 @@
   background-image: url('/milestone.jpg');
   background-size: cover;
   background-position:center 48%;
+  color: rgba(255,193,7,0.15);
   background-repeat: no-repeat;
   filter: blur(12px); /* adjust blur strength */
   z-index: -2;
@@ -31,7 +32,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.3); /* dark overlay */
+  background: linear-gradient(to right #fff8e1 ,#ffecb3); 
   z-index: -1;
 }
 
@@ -42,7 +43,7 @@
   min-width: 150px;
   padding: 1rem;
   background: none;
-  color: aliceblue;
+  color: #ffc107;
 }
 
 /* Milestone number styling */
@@ -57,5 +58,6 @@
   text-transform: uppercase;
   margin-bottom: 0;
   font-size: 1rem;
-  color: aliceblue;
+  color: #1a237e;
+  font-weight: 700;
 }
