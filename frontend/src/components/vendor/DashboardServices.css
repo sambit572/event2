@@ -20,11 +20,11 @@
   overflow-y: auto;
   width: 90%;
   gap: 20px;
-  background-color: #dfe9fd;
   border-radius: 8px;
   padding: 16px;
-  border: 1px solid #666;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  background-color: #ffffff; /* very soft yellow */
+  border-left: 5px solid #ffc107;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Thumbnail column on left, vertically stacked */
@@ -88,31 +88,34 @@
   transition: all 0.3s ease;
 }
 
-.edit {
+.vendor-edit-btn {
   background-color: transparent;
-  border: 2px solid #666;
-  color: black;
+  border: 2px solid #3f51b5;
+  color: #3f51b5;
+  font-weight: 600;
 }
 
-.edit:hover {
-  background: #6e1274;
-  color: #eee;
+.vendor-edit-btn:hover {
+  background-color: #3f51b5;
+  color: #ffffff;
 }
 
-.delete {
+.vendor-delete-btn {
   background-color: transparent;
-  border: 2px solid #666;
-  color: black;
+  border: 2px solid #b71c1c;
+  color: #b71c1c;
+  font-weight: 600;
 }
 
-.delete:hover {
-  background: red;
-  color: #eee;
+.vendor-delete-btn:hover {
+  background-color: #b71c1c;
+  color: #fff;
 }
 
 /* ========== Right Text Section ========== */
 .right-section {
   display: flex;
+  color: rgb(2, 2, 43);
   flex-direction: column;
   gap: 6px;
   justify-content: flex-start;
@@ -120,11 +123,11 @@
 
 /* ========== Bookings Section ========== */
 .booking-card {
-  background-color: #ffe9fb;
-  border: 1px solid #a55aa5;
+  background-color: #f0f4ff; /* subtle light blue */
+  border: 1px solid #0d47a1;
+  color: #1a237e;
   padding: 20px;
   border-radius: 10px;
-  color: #4a2e4a;
   font-size: 16px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
@@ -191,19 +194,19 @@
   align-self: flex-start;
   padding: 10px 22px;
   font-size: 15px;
-  background-color: #3cb0ff;
+  background-color: #0d47a1;
+  box-shadow: 0 4px 12px rgba(13, 71, 161, 0.3);
   color: #fff;
   font-weight: bold;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
-  box-shadow: 0 4px 12px rgba(60, 176, 255, 0.3);
 }
 
 .edit-form-dashboard button:hover {
-  background-color: #1e90ff;
-  box-shadow: 0 6px 15px rgba(30, 144, 255, 0.5);
+  background-color: #1565c0;
+  box-shadow: 0 6px 15px rgba(21, 101, 192, 0.5);
   transform: translateY(-2px);
 }
 
@@ -244,7 +247,7 @@
   .service-box {
     /* background-color: #1e90ff; */
     flex-direction: column;
-
+    height: 41vh;
     align-items: center;
     width: 95%;
     margin-left: 20px;
@@ -252,9 +255,13 @@
 
   .edit-form-dashboard {
     position: relative;
-    bottom: 444px;
+    bottom: 490px;
+    width: 600px;
+    height: 540px;
   }
-
+  .edit-form-dashboard button {
+    margin-top: 20px;
+  }
   .image-buttons-dashboard {
     flex-direction: row;
     flex-wrap: wrap;
@@ -322,6 +329,7 @@
 
   .edit-form-dashboard {
     position: relative;
+    width: 500px;
   }
 
   .image-buttons {
@@ -369,6 +377,7 @@
     width: 650px;
     height: auto;
     padding: 15px;
+    margin-top: 40px;
   }
 
   .main-image-dashboard {
@@ -470,12 +479,13 @@
   .edit-form-dashboard {
     width: 280px;
     padding: 15px;
+    height: 550px;
   }
 
   .main-image-dashboard {
     max-width: 95%;
     height: 142px;
-    margin-top: 55px;
+    margin-top: 40px;
   }
 
   .thumbnail {
@@ -521,24 +531,26 @@
     /* padding-left: 60px; */
     /* margin: 10px; */
     /* left: -30px; */
-    width: 270%;
-    margin-left: -20px;
+    width: 300px;
+    margin-left: -30px;
   }
 
   .edit-form-dashboard {
     width: 280px;
     padding: 15px;
   }
-
+.edit-form-dashboard button {
+        margin-top: 0px;
+    }
   .main-image-dashboard {
     max-width: 90%;
-
-    height: 145px;
+    margin-top: 40px;
   }
 
   .thumbnail {
     width: 40px;
     height: 28px;
+    margin-left: 20px;
   }
 
   .booking-card {

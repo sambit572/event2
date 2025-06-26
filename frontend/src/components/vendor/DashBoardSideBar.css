@@ -1,16 +1,10 @@
 .dash-sidebar {
-  height: 123vh;
-  width: 260px;
-  background: linear-gradient(
-    180deg,
-    rgba(163, 116, 225, 0.71) 12.5%,
-    rgba(165, 76, 194, 0.71) 25.48%,
-    rgba(112, 71, 165, 0.71) 43.27%,
-    rgba(86, 112, 189, 0.71) 85.38%
-  );
+  height: 100vh;
+  width: 270px;
+ background: linear-gradient(45deg	,#004989,#001F3F);
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 
-  color: white;
+  color: #f5f5f5;
   transition: width 0.3s ease;
 
   position: relative;
@@ -44,10 +38,11 @@
 
 .dasgboardHeading {
   background-color: #f3f0ed;
+  color: #fff;
   background-clip: text;
   -webkit-background-clip: text;
   font-family: Sansation;
-  font-size: 32px;
+  font-size: 30px;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
@@ -77,19 +72,24 @@
   font-size: 18px;
   font-weight: 600;
 }
-
+/* .vendor-accno{
+color: #ffc107;
+}
+.vendor-ifsc{
+  color: #ffc107;
+} */
 .edit-buttons {
   border-radius: 10px;
-  background: whitesmoke;
+  background: #e5e5de;
   box-shadow: -5px 5px 4px 0px rgba(0, 0, 0, 0.25);
-  color: #000;
+  color: #0d1b2a;
   text-align: center;
   font-family: Montserrat;
   font-size: 17px;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
-  border: none;
+  border: 1px solid #0d1b2a;
   padding-top: 10px;
   padding-bottom: 10px;
   padding-left: 20px;
@@ -101,7 +101,7 @@
 }
 
 .edit-buttons:hover {
-  background: rgb(230, 225, 225);
+  background: #ffb007ee;
 }
 
 .profile-pic {
@@ -148,6 +148,7 @@
 .status-indicator {
   display: flex;
   align-items: center;
+  color: #ffc107;
   gap: 8px;
   font-weight: 700;
   margin-left: 66px;
@@ -182,7 +183,6 @@
 .custom-font-active {
   font-size: 15px;
 }
-
 @media (max-width: 1024px) {
   .custom-li {
     padding: 3px;
