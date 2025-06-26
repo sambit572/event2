@@ -226,13 +226,14 @@ const Home = () => {
         <h1 className="align_center categories-head">Categories</h1>
       </div>
 
-      <h1 className="align_center heading">
-        Book Trusted Vendors for Any Occasion
-      </h1>
-      <p className="text-center">
+      <h4 className="align_center heading">
         Explore trusted professionals across categories and simplify your event
         planning.
-      </p>
+      </h4>
+      {/* <p className="text-center">
+        Explore trusted professionals across categories and simplify your event
+        planning.
+      </p> */}
 
       {!showAll && categories.length > 6 && (
         <div className="browse_all">

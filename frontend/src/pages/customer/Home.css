@@ -36,6 +36,12 @@
   color: rgb(219, 176, 21);
 }
 
+.heading h4{
+  font-size: 2.5rem;
+  color: #001F3F; /* dark blue */
+  margin-bottom: 10px;
+}
+
 .category_section {
   display: grid;
   grid-template-columns: repeat(1, 1fr); /* default: 1 column */
@@ -50,12 +56,12 @@
   display: flex;
   margin-right: 20px;
   justify-content: end;
-  margin-right: 90px;
+  margin-right: 140px;
   margin-bottom: 0px;
 }
 .browse-all-btn {
   padding: 12px 32px;
-  background-color: #800080; /* deep solid purple */
+  background-color: #f3c12d;
   color: #ffffff;
   font-size: 16px;
   font-weight: 700;
@@ -72,7 +78,7 @@
 }
 
 .browse-all-btn:hover {
-  background-color: #660066; /* darker purple on hover */
+  background-color: #001F3F; 
   transform: translateY(-2px);
   box-shadow: 0 10px 25px rgba(128, 0, 128, 0.4);
 }
