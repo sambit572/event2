@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate,useLocation } from "react-router-dom";
 
 // Core Components
 import Navbar from "./components/common/Navbar";
@@ -21,7 +21,6 @@ import VendorLegalConsent from "./pages/vendor/VendorLegalConsent";
 import VendorPayment from "./pages/vendor/VendorPayment";
 import VendorThankYou from "./pages/vendor/VendorThankYou";
 import VendorRegistration from "./pages/vendor/VendorRegistration";
-
 import VendorService from "./pages/vendor/VendorService";
 
 
@@ -47,12 +46,18 @@ import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
 import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 
+
+
 const App = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
 
   return (
     <>
-      <Navbar />
+
+    {location.pathname !== "/admin" && <Navbar />}
+     {/*  <Navbar /> */}
 
       <main>
         <Routes>
