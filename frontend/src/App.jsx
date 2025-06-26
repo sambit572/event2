@@ -51,7 +51,7 @@ const App = () => {
 
   return (
     <>
-      <Navbar />
+      <Navbar /> 
 
       <main>
         <Routes>
@@ -98,15 +98,6 @@ const App = () => {
           <Route path="/help_us" element={<HelpUs />} />
           <Route path="/help-Center" element={<HelpCenter />} />
 
-
-          <Route path="/Wishlist" element={<Wishlist />}></Route>
-          <Route path="/forgotpassword" element={<ForgotPassword />}></Route>
-          <Route
-            path="/dashboardservices"
-            element={<DashboardServices />}
-          ></Route>
-          <Route path="/profile" element={<Profile />}></Route>
-          <Route path="/userdetails" element={<UserDetails />}></Route>
         </Routes>
       </main>
 
