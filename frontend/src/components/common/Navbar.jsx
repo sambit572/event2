@@ -139,7 +139,7 @@ const Navbar = () => {
                       To access account and manage services
                     </p>
                     <div className="dropdown-header">
-                      <span className="text-[#3b0340e1]">New Customer?</span>
+                      <span className="text-[#001f3f]">New Customer?</span>
                       <button
                         className="bg-blue-500 hover:bg-blue-600"
                         onClick={() => navigate("/register")}
@@ -152,13 +152,13 @@ const Navbar = () => {
                 ) : (
                   <>
                     <div
-                      className="flex flex-row gap-1 mb-[10px] text-[#3b0340e1] hover:text-[#1f0122e1] hover:font-bold text-[15px]"
+                      className="flex flex-row gap-1 mb-[10px] text-[#001f3f] hover:text-[#022f5d] hover:font-bold text-[15px]"
                       onClick={() => navigate("/profile")}
                     >
                       <FaUser style={{ marginRight: "8px" }} />
                       My Profile
                     </div>
-                    <div className="dropdown-item hover:text-[#1f0122e1] hover:font-bold">
+                    <div className="dropdown-item hover:text-[#001f3f] hover:font-bold">
                       <FaHeart
                         className="icon "
                         style={{ marginRight: "4px" }}
@@ -167,11 +167,11 @@ const Navbar = () => {
                     </div>
                     <div className="dropdown-item">
                       <FaSignOutAlt
-                        className="icon hover:text-[#1f0122e1] hover:font-bold"
+                        className="icon hover:text-[#001f3f] hover:font-bold"
                         style={{ marginRight: "4px" }}
                       />
                       <button
-                        className="signOutButton hover:text-[#1f0122e1] hover:font-bold  "
+                        className="signOutButton hover:text-[#001f3f] hover:font-bold  "
                         onClick={handleLogout}
                       >
                         Sign Out
@@ -185,13 +185,13 @@ const Navbar = () => {
 
           {/* Become Vendor */}
           <div
-            className="nav-items max-[1024px]:flex-col max-[1024px]:text-[12px] max-[820px]:text-[11px]"
+            className="nav-items  max-[1024px]:flex-col max-[1024px]:text-[12px] max-[820px]:text-[11px]"
             onClick={() =>
               !userFirstName ? navigate("/login") : navigate("/vendor/register")
             }
           >
             <FaStore className="icons max-[1024px]:h-[18px] max-[1024px]:w-[18px]  max-[820px]:h-[15px]" />
-            <span className="vendor text-[#3b0340e1] font-semibold max-[1024px]:mt-[6px] max-[820px]:text-[11px] max-[820px]:w-max">
+            <span className=" text-[#001F3F] hover:text-white  font-semibold max-[1024px]:mt-[6px] max-[820px]:text-[11px] max-[820px]:w-max">
               Be a Vendor
             </span>
           </div>

@@ -1,5 +1,6 @@
 .home {
   width: 100%;
+  
 }
 
 .categories-head1 {
@@ -49,7 +50,7 @@ color: #001f3f;
 .browse_all {
   display: flex;
   justify-content: end;
-  margin-right: 90px;
+  margin-right: 140px;
   margin-bottom: 0px;
 }
 .browse-all-btn {

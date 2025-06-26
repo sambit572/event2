@@ -33,7 +33,6 @@ import HelpCenter from "./pages/common/HelpCenter";
 
 import ForgotPass from "./pages/customer/ForgotPass.jsx";
 import ResetPassword from "./pages/customer/ResetPassword.jsx";
-import ForgotPassword from "./pages/customer/ForgotPassword.jsx";
 import Wishlist from "./pages/customer/Wishlist.jsx";
 import Profile from "./components/customer/profile/Profile.jsx";
 import UserDetails from "./pages/customer/UserDetails.jsx";
@@ -51,7 +50,7 @@ const App = () => {
 
   return (
     <>
-      <Navbar />
+      <Navbar /> 
 
       <main>
         <Routes>
@@ -91,22 +90,13 @@ const App = () => {
             path="/reset-password/:resetToken"
             element={<ResetPassword />}
           />
-          <Route path="/forgotpassword" element={<ForgotPassword />} />
+          
 
           {/* Misc */}
           <Route path="/about_us" element={<AboutUs />} />
           <Route path="/help_us" element={<HelpUs />} />
           <Route path="/help-Center" element={<HelpCenter />} />
 
-
-          <Route path="/Wishlist" element={<Wishlist />}></Route>
-          <Route path="/forgotpassword" element={<ForgotPassword />}></Route>
-          <Route
-            path="/dashboardservices"
-            element={<DashboardServices />}
-          ></Route>
-          <Route path="/profile" element={<Profile />}></Route>
-          <Route path="/userdetails" element={<UserDetails />}></Route>
         </Routes>
       </main>
 

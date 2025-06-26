@@ -1,14 +1,17 @@
 import React from "react";
 import "./CategoryCard.css";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const CategoryCard = ({ category }) => {
-  
+
+  const navigate = useNavigate();
 
   return (
-    <div className="courseCard">
+    <div className="courseCard" onClick={()=>{
+      navigate('/category')
+    }}>
       <span className="brandLabel">EventsBridge</span>
-      <Link to="/category">
+    
         <div className="imageWrapper">
           <img
             src={category.image}
@@ -35,7 +38,7 @@ const CategoryCard = ({ category }) => {
             <p className="courseTaglineResponsive">{category.tagline}</p>
           )}
         </div>
-      </Link>
+     
     </div>
   );
 };

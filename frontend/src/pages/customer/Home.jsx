@@ -192,6 +192,7 @@ const Home = () => {
   const [hovered, setHovered] = useState(false);
   const visibleCategories = showAll ? categories : categories.slice(0, 6);
 
+
   useEffect(() => {
     const checkUser = async () => {
       try {
@@ -244,7 +245,7 @@ const Home = () => {
       )}
       <div className="align_center category_section">
         {visibleCategories.map((category, index) => (
-          <div key={index}>
+          <div key={index} >
             <CategoryCard category={category} />
           </div>
         ))}
