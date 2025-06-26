@@ -24,12 +24,9 @@ import VendorRegistration from "./pages/vendor/VendorRegistration";
 
 import VendorService from "./pages/vendor/VendorService";
 
-
-
 import AboutUs from "./pages/common/AboutUs";
 import HelpUs from "./pages/common/HelpUs";
 import HelpCenter from "./pages/common/HelpCenter";
-
 
 import ForgotPass from "./pages/customer/ForgotPass.jsx";
 import ResetPassword from "./pages/customer/ResetPassword.jsx";
@@ -38,6 +35,7 @@ import Wishlist from "./pages/customer/Wishlist.jsx";
 import Profile from "./components/customer/profile/Profile.jsx";
 import UserDetails from "./pages/customer/UserDetails.jsx";
 import DashboardServices from "./components/vendor/DashboardServices.jsx";
+import PopUp from "./components/customer/CustomerNegotiationModal";
 
 // Vendor Pages
 
@@ -98,7 +96,6 @@ const App = () => {
           <Route path="/help_us" element={<HelpUs />} />
           <Route path="/help-Center" element={<HelpCenter />} />
 
-
           <Route path="/Wishlist" element={<Wishlist />}></Route>
           <Route path="/forgotpassword" element={<ForgotPassword />}></Route>
           <Route
@@ -107,6 +104,7 @@ const App = () => {
           ></Route>
           <Route path="/profile" element={<Profile />}></Route>
           <Route path="/userdetails" element={<UserDetails />}></Route>
+          <Route path="/pop-up" element={<PopUp />}></Route>
         </Routes>
       </main>
 

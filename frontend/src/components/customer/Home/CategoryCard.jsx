@@ -3,6 +3,7 @@ import "./CategoryCard.css";
 
 const CategoryCard = ({ category }) => {
   return (
+    // <a href={`/category/${category.id}`}>
     <a href="/category">
       <div className="courseCard">
         <span className="brandLabel">EventsBridge</span>
