@@ -5,6 +5,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+
 }
 
 /* Font Import */
@@ -20,16 +21,17 @@
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   border: 0;
+
 }
 
 /* Heading Styling */
 .heading-negotiated {
   font-size: 1.8rem;
   font-weight: 700;
-  color: #1a1a1a;
+  color: #000000;
   text-align: center;
   margin-bottom: 1.5rem;
-  background: linear-gradient(45deg, #000000, #000000);
+  background: linear-gradient(45deg, #001F3F, #001F3F);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   letter-spacing: 0.5px;
@@ -43,7 +45,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.75);
+  background-color: rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
@@ -52,11 +54,12 @@
   animation: fadeIn 0.5s ease-in-out;
   padding: env(safe-area-inset-top) env(safe-area-inset-right)
     env(safe-area-inset-bottom) env(safe-area-inset-left);
+ 
 }
 
 /* Modal Styling */
 .negotiation-modal {
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  background: linear-gradient(135deg,  #e5e5de 0%,  #e5e5de 100%);
   border-radius: 20px;
   padding: 2rem;
   width: 90vw;
@@ -67,7 +70,8 @@
   position: relative;
   animation: scaleIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+
+ 
 }
 
 /* Close Button */
@@ -85,14 +89,15 @@
   border-radius: 50%;
 }
 .modal-close:hover{
-  background-color: #979191;
+  background-color: 	#005fa3;
+  color: black;
 }
 
 /* Modal Details */
 .modal-details p {
   margin: 0.75rem 0;
   font-size: 1rem;
-  color: #374151;
+  color: #001F3F;
   line-height: 1.6;
   display: flex;
   justify-content: space-between;
@@ -112,17 +117,17 @@
 }
 
 .VenueInput {
-  border: grey 1px solid;
-  border-radius: 5px;
+  border: rgba(199, 193, 193, 0.8) 2px solid;
+  border-radius: 20px;
   padding: 0.5rem;
-  width: 50%;
+  width: 80%;
 }
 
 .modal-input label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 600;
-  color: #1f2937;
+  color: #001F3F;
   font-size: 0.95rem;
   letter-spacing: 0.02em;
 }
@@ -130,7 +135,7 @@
 .modal-input input {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 1px solid rgba(209, 213, 219, 0.5);
+  border: 2px solid rgba(0, 0, 0, 0.5);
   border-radius: 12px;
   font-size: 1rem;
   background: #ffffff;
@@ -142,7 +147,7 @@
   border-color: #000000;
   outline: none;
   background: #f8fafc;
-  box-shadow: 0 0 0 4px rgba(146, 8, 164, 0.2);
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.2);
 }
 
 /* Button Group */
@@ -170,15 +175,16 @@
 }
 
 .modal-submit {
-  background: linear-gradient(45deg, #000000, #000000);
+  background: linear-gradient(45deg, #001F3F	,#004989);
   color: white;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
 }
 
 .modal-submit:hover {
-  background: linear-gradient(45deg, #000000, #000000);
+  background: linear-gradient(45deg, #001F3F, #2169a9);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  color:  #ffd700;
 }
 
 .modal-submit:disabled {
@@ -188,16 +194,17 @@
 }
 
 .modal-secondary {
-  background: transparent;
-  border: 2px solid #000000;
+  background: #eee;
+  
   color: #000000;
 }
 
 .modal-secondary:hover {
-  background: #000000;
-  color: white;
+  background: linear-gradient(90deg, #ffd700 0%, #daa126 100%);
+  color: #001F3F;
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+ 
+  box-shadow: 0 4px 15px rgba(218, 161, 38, 0.5), 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* Timer Styling */
@@ -205,7 +212,7 @@
   margin-top: 1.5rem;
   text-align: center;
   font-size: 1.15rem;
-  color: #1f2937;
+  color: #ffd700;
   background: rgba(243, 244, 246, 0.7);
   padding: 1rem;
   border-radius: 12px;
@@ -228,7 +235,7 @@
 
 .timer-progress div {
   height: 100%;
-  background: linear-gradient(45deg, #000000, #000000);
+  background: linear-gradient(45deg, #ffd700, #ffd700);
   transition: width 1s linear;
 }
 
@@ -263,18 +270,18 @@
 }
 
 .call-btn.start {
-  background: linear-gradient(45deg, #000000, #000000);
+  background: linear-gradient(45deg, #258b00, #277404);
   color: white;
 }
 
 .call-btn.start:hover {
-  background: linear-gradient(45deg, #000000, #000000);
+  background: linear-gradient(45deg, #128b07, #079c0f);
   transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(146, 8, 164, 0.4);
 }
 
 .call-btn.end {
-  background: linear-gradient(45deg, #ff6b6b, #d00000);
+  background: linear-gradient(45deg, #ff0000, #d00000);
   color: white;
 }
 

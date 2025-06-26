@@ -59,6 +59,7 @@
 }
 /* Pop-up overlay */
 .popup-overlayfinal {
+  background: linear-gradient(135deg,  #e5e5de 0%,  #e5e5de 100%);
   position: fixed;
   top: 0;
   left: 0;
@@ -78,7 +79,8 @@
 
 /* Pop-up container (consolidated from .popup-container and .popup-box) */
 .popup-container {
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  background: linear-gradient(135deg,  #e5e5de 0%,  #e5e5de 100%);
+  
   border-radius: 16px; /* Slightly smaller radius for smaller screens */
   padding: 1.5rem; /* Reduced padding for smaller screens */
   width: 90vw;
@@ -115,7 +117,7 @@
 
 /* Pop-up title */
 .popup-title {
-  color: #000000;
+  color: #001F3F;
   font-size: 1.5rem;
   margin-bottom: 15px;
   display: flex;
@@ -126,8 +128,9 @@
 /* Pop-up content */
 .popup-content p {
   margin: 0.75rem 0;
+  border: #000000 2px solid;
   font-size: 1rem;
-  color: #374151;
+  color: #001F3F;
   line-height: 1.6;
   display: flex;
   justify-content: space-between;
@@ -142,7 +145,7 @@
 }
 
 .popup-content strong {
-  color: #000000;
+  color: #001F3F;
 }
 
 /* Pop-up actions */
@@ -169,22 +172,22 @@
 }
 
 .btn-accept {
-  background: #000000;
+  background: #4dc718;
   color: white;
 }
 
 .btn-accept:hover {
-  background: #333333; /* Slightly lighter for hover */
+  background: #56db04; /* Slightly lighter for hover */
   transform: translateY(-2px);
 }
 
 .btn-decline {
-  background: #000000;
+  background: #b92020;
   color: white;
 }
 
 .btn-decline:hover {
-  background: #333333;
+  background: #df0d0d;
   transform: translateY(-2px);
 }
 
