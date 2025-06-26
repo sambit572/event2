@@ -128,7 +128,7 @@
   font-size: 15px;
   margin-right: 5px;
   margin-top: -1.2px;
-  color: #3b0340e1;
+  color: #001f3f;
 }
 .profile-btn:hover {
   color: #f5efff;
@@ -315,7 +315,7 @@
   }
 
   .nav-item .login:hover {
-    background-color: #3b0340e1;
+    background-color: #001f3f;
     color: #fff;
     border-radius: 10px;
     padding: 8px 12px;
@@ -328,7 +328,7 @@
   .profile-btn:hover {
     color: #f5efff;
     font-weight: bold;
-    background: #3b0340e1;
+    background: #001f3f;
   }
 
   .login:hover .icon {
@@ -339,7 +339,7 @@
   }
 
   .nav-items:hover {
-    background-color: #3b0340e1;
+    background-color: #001f3f;
     color: #fff;
     border-radius: 10px;
     font-weight: 500;
@@ -348,13 +348,13 @@
 
   .ellipsis-menu .dropdown-item:hover {
     font-weight: bold;
-    background-color: #3b0340e1;
+    background-color: #001f3f;
     color: #fff;
     border-radius: 5px;
   }
 
   .dropdown-item a:hover {
-    color: #1f0122e1;
+    color: #001f3f;
     font-weight: 800;
   }
 }
