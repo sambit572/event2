@@ -3,9 +3,10 @@
   margin-bottom: 20px;
   margin-top: 20px;
   background-color: #ead8f6;
-  max-width: fit-content;
+  /* max-width: fit-content; */
   border-radius: 6.25rem;
   position: relative;
+  width: 280px !important;
   /* Required for absolute positioning of .bg-slider */
   overflow: hidden;
   font-family: "Montserrat";
@@ -21,7 +22,7 @@
   cursor: pointer;
   font-size: 15px;
   font-weight: 500;
-  margin-right: 20px;
+  margin-right: 40px;
   transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease,
     border-color 0.3s ease;
   margin-top: 10px;
@@ -69,14 +70,34 @@
   left: 125px;
   width: 125px;
 }
-
+@media (max-width: 530px) {
+  .tab-btn {
+    width: 280px !important;
+    align-items: start;
+    /* right: 120px; */
+    /* background-color: #000; */
+  }
+}
+@media (max-width:540px){
+  .tab-btn{
+    margin-left: -120px;
+  }
+}
+@media (max-width: 480px) {
+  .tab-btn {
+    width: 280px !important;
+    align-items: start;
+    /* right: 90px; */
+    /* background-color: #000; */
+  }
+}
 @media (max-width: 431px) {
   .tab-btn {
     position: relative;
-    right: 111px;
+    right: 50px;
     height: 55px;
     margin-top: 20px;
-    width: 400px;
+    width: 250px !important;
   }
 
   .tab-btn button {
@@ -96,9 +117,8 @@
 }
 
 @media (max-width: 380px) {
-
-  .tab-btn{
-    right: 139px;
+  .tab-btn {
+    right: 60px;
   }
   .tab-btn button {
     font-size: 11px;

@@ -9,12 +9,12 @@ const faqData = [
       "Eventsbridge is a seamless and intuitive platform designed to connect event planners, hosts, and customers with reliable vendors offering services like decorations, DJ entertainment, lighting, and more. Our goal is to simplify your event planning by providing easy access to trusted vendors in one place.",
   },
   {
-    question: "How do I book a vendor on Eventsbridge?",
+    question: "How do I book a vendor?",
     answer:
       "Booking is quick and straightforward. Choose your event type and date, browse vendors’ profiles, check their availability, ratings, and reviews, then select the one that fits your needs. Complete the booking by making a secure payment on the platform.",
   },
   {
-    question: "Can I book multiple vendors for the same event?",
+    question: "Book multiple vendors for one event?",
     answer:
       "Yes! Eventsbridge allows you to book as many vendors as you need for a single event. Whether it’s DJs, decorators, caterers, or photographers, you can manage all bookings conveniently through your dashboard.",
   },
@@ -24,12 +24,12 @@ const faqData = [
       "We support a variety of secure payment methods, including credit/debit cards, UPI, digital wallets, and net banking. All payments are encrypted to protect your personal and financial information.",
   },
   {
-    question: "Can I communicate with the vendor before the event?",
+    question: "Can I contact the vendor before the event?",
     answer:
       "Yes, after booking, you can directly communicate with vendors through the platform’s chat or call features to clarify requirements, discuss event details, and coordinate effectively.",
   },
   {
-    question: "What happens if I need to cancel or reschedule?",
+    question: "What if I need to cancel or reschedule?",
     answer:
       "You can cancel or reschedule your booking up to 7days before the event. For cancellations or changes, please contact customer support or manage your bookings via the platform dashboard.",
   },
@@ -64,6 +64,8 @@ const FaqSection = () => {
   return (
     <div className="faq-container">
       <h2 className="faq-title">Explore Our FAQs </h2>
+      <h3 className="faq-subtitle">Bridging the Gap Between You and Clarity </h3>
+
       <div className="faq-columns">
         {columns.map((column, colIdxs) => (
           <div key={colIdxs} className="faq-column">

@@ -21,7 +21,15 @@ const ImageSlider = ({ images }) => {
       <Slider {...settings}>
         {images.map((image, index) => (
           <div key={index}>
-            <img className="slide" src={image} alt={`Slide ${index}`} />
+            <picture>
+              <source media="(min-width: 1024px)" srcSet={image.desktop} />
+              <source media="(min-width: 768px)" srcSet={image.tablet} />
+              <img
+                className="slide"
+                src={image.mobile}
+                alt={`Slide ${index}`}
+              />
+            </picture>
           </div>
         ))}
       </Slider>

@@ -51,14 +51,14 @@ const App = () => {
 
   return (
     <>
-      <Navbar />
+      <Navbar /> 
 
       <main>
         <Routes>
           {/* Customer Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/category" element={<ServiceList />} />
-          <Route path="/categories" element={<CategoryCard />} />
+          <Route path="/categories" element={<CategoryCard />}></Route>
           <Route path="/reviews" element={<ReviewSlider />} />
           <Route path="/category/service" element={<ServiceDetails />} />
           <Route path="/wishlist" element={<Wishlist />} />
@@ -98,15 +98,6 @@ const App = () => {
           <Route path="/help_us" element={<HelpUs />} />
           <Route path="/help-Center" element={<HelpCenter />} />
 
-
-          <Route path="/Wishlist" element={<Wishlist />}></Route>
-          <Route path="/forgotpassword" element={<ForgotPassword />}></Route>
-          <Route
-            path="/dashboardservices"
-            element={<DashboardServices />}
-          ></Route>
-          <Route path="/profile" element={<Profile />}></Route>
-          <Route path="/userdetails" element={<UserDetails />}></Route>
         </Routes>
       </main>
 

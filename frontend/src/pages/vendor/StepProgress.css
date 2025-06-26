@@ -31,7 +31,7 @@
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  border: 3px solid #2e1065;
+  border: 3px solid #000000;
   background-color: white;
   display: flex;
   justify-content: center;
@@ -47,7 +47,8 @@
 }
 
 .step-circle.active {
-  background-color: #d9f99d;
+  background: rgb(145, 227, 91);
+;
 }
 
 .step-sub-label {
@@ -78,7 +79,7 @@
   left: calc(50% + 30px);
   height: 3px;
   width: calc(100% - 60px);
-  background-color: #2e1065;
+  background-color: #000000;
   z-index: 0;
   transform: translateY(-50%);
 }

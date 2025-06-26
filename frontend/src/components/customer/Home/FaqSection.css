@@ -17,7 +17,8 @@
 }
 .faq-question:hover {
   color: #fff;
-  background-color: #3b0340e1;
+  background-color:  #001F3F
+;
 }
 .faq-column {
   flex: 1;
@@ -38,13 +39,13 @@
 .faq-item.active {
   box-shadow: 0 0 10px rgba(0, 128, 0, 0.2);
 
-  border: 1px solid #3b0340e1;
+  border: 1px solid #344003e1;
 }
 
 .faq-question {
   width: 100%;
-  background-color: #f5efff;
-  color: #3b0340e1;
+  background-color: #fee9b2;
+  color: black;
   padding: 14px;
   text-align: left;
   font-weight: bold;
@@ -63,11 +64,22 @@
 
 .faq-icon {
   font-size: 18px;
-  color: #3b0340e1;
+  color: black;
 }
 .faq-icon:hover {
   color: white;
 }
+.faq-subtitle {
+  font-size: 18px;
+  margin-top: -20px;
+  font-weight: 500;
+  color: black; /* Muted plum tone */
+  text-align: center;
+  margin-bottom: 40px;
+  letter-spacing: 0.5px;
+ 
+}
+
 @media (max-width: 992px) {
   .faq-columns {
     flex-direction: column;

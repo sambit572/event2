@@ -1,76 +1,160 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Footer.css';
-import payment from "../../assets/home/payment.png";
-
 
 function Footer() {
+  const [openSections, setOpenSections] = useState({
+    contact: false,
+    quick: false,
+    company: false,
+    privacy: false
+  });
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const toggleSection = (section) => {
+    if (isMobile) {
+      setOpenSections((prev) => ({
+        ...prev,
+        [section]: !prev[section]
+      }));
+    }
+  };
+
   return (
     <footer className="footer-enhanced">
       <div className="footer-top">
-        <h3 className='top-h3'>Your one-stop platform for Booking Events effortlessly</h3>
-        <p className='top-p'>EXPERIENCE EVENTSBIDGE APP ON MOBILE</p>
+        <h3>Your one-stop platform for Booking Events effortlessly</h3>
+        <p>EXPERIENCE EVENTSBIDGE APP ON MOBILE</p>
         <div className="app-buttons">
-          <img src="/App Store.png" alt="Google Play" />
-          <img src="/Google_Play.png" alt="App Store" />
+          <img src="/App Store.png" alt="App Store" />
+          <img src="/Google_Play.png" alt="Google Play" />
         </div>
       </div>
 
       <div className="footer-columns-wrapper">
+        {/* Desktop */}
         <div className="footer-columns">
-          <div className='flex flex-row gap-20'>
-            <div>
-              <h4 className='columns-h4'>Contact Information</h4>
-              <p className='columns-p'><img src="/mail.png" alt="Email icon" className="icon" /> Email@Example.Com</p>
-              <p className='columns-p'><img src="/phone 1.png" alt="Phone icon" className="icon" /> 123-456-7890,3456780</p>
-              <p className='columns-p'><img src="/location.png" alt="Location icon" className="icon" />Bhubaneswar,Odisha</p>
-            </div>
+          <div>
+            <h4>Contact</h4>
+            <p><img src="/gmail.png" alt="Email" className="icon" /> Eb@Example.Com</p>
+            <p><img src="/phone-call.png" alt="Phone" className="icon" /> 123-456-7890</p>
+            <p><img src="/placeholder.png" alt="Location" className="icon" /> Bhubaneswar, Odisha</p>
+          </div>
+          <div>
+            <h4>Quick Links</h4>
+            <p>Our Approach</p>
+            <p>About HostGator</p>
+            <p>FAQs</p>
+          </div>
+          <div>
+            <h4>Privacy Policy</h4>
+            <p>Terms and Conditions</p>
+            <p>Refund Policy</p>
+            <p>Legal Information</p>
+          </div>
+          <div>
+            <h4>Company</h4>
+            <p>About Us</p>
+            <p>Awards & Reviews</p>
+            <p>Services</p>
+            <p>Help Desk</p>
+          </div>
+        </div>
 
-            <div className='links'>
-              <h4 className='links-h4'>Quick Links</h4>
-              <div className='links-p'>About Us</div>
-              <div className='links-p'>Services</div>
-              <div className='links-p'>Help</div>
-              <div className='links-p'>FAQs</div>
+        {/* Mobile */}
+        <div className="footer-columns-mobile-wrapper">
+          <div className="footer-row">
+            <div className="footer-dropdown">
+              <h4 onClick={() => toggleSection('contact')}>
+                Contact Us
+                <img
+                  src={openSections.contact ? '/up-arrow.png' : '/down.png'}
+                  alt="dropdown icon"
+                  className="dropdown-icon"
+                />
+              </h4>
+              <div className={`footer-dropdown-content ${openSections.contact ? 'show' : ''}`}>
+                <p><img src="/gmail.png" alt="Email" className="icon" /> Eb@Example.Com</p>
+                <p><img src="/phone-call.png" alt="Phone" className="icon" /> 123-456-7890</p>
+                <p><img src="/placeholder.png" alt="Location" className="icon" /> Bhubaneswar, Odisha</p>
+              </div>
+            </div>
+            <div className="footer-vertical-divider" />
+            <div className="footer-dropdown">
+              <h4 onClick={() => toggleSection('quick')}>
+                Quick Links
+                <img
+                  src={openSections.quick ? '/up-arrow.png' : '/down.png'}
+                  alt="dropdown icon"
+                  className="dropdown-icon"
+                />
+              </h4>
+              <div className={`footer-dropdown-content ${openSections.quick ? 'show' : ''}`}>
+                <p>Our Approach</p>
+                <p>About HostGator</p>
+                <p>FAQs</p>
+              </div>
             </div>
           </div>
 
-
-          <div className='flex flex-row gap-20'>
-            <div className='policy'>
-              <h4 className='policy-h4'>Privacy Policy</h4>
-              <p className='policy-p'>Terms and Conditions</p>
-              <p className='policy-p'>Refund Policy</p>
-              <p className='policy-p'>Legal Information</p>
+          <div className="footer-row">
+            <div className="footer-dropdown">
+              <h4 onClick={() => toggleSection('company')}>
+                Company
+                <img
+                  src={openSections.company ? '/up-arrow.png' : '/down.png'}
+                  alt="dropdown icon"
+                  className="dropdown-icon"
+                />
+              </h4>
+              <div className={`footer-dropdown-content ${openSections.company ? 'show' : ''}`}>
+                <p>About Us</p>
+                <p>Awards & Reviews</p>
+                <p>Services</p>
+                <p>Help Desk</p>
+              </div>
             </div>
-
-            <div className='company'>
-              <h4 className='company-p'>About Company</h4>
-              <p className='company-p'>Our Approach</p>
-              <p className='company-p'>Awards & Reviews</p>
-              <p className='company-p'>About HostGator</p>
+            <div className="footer-vertical-divider" />
+            <div className="footer-dropdown">
+              <h4 onClick={() => toggleSection('privacy')}>
+                Privacy Policy
+                <img
+                  src={openSections.privacy ? '/up-arrow.png' : '/down.png'}
+                  alt="dropdown icon"
+                  className="dropdown-icon"
+                />
+              </h4>
+              <div className={`footer-dropdown-content ${openSections.privacy ? 'show' : ''}`}>
+                <p>Terms and Conditions</p>
+                <p>Refund Policy</p>
+                <p>Legal Information</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div className='flex flex-row gap-20'>
-      <div className="social-media">
-        <div className='s-h4'>Follow Us</div>
-        <img src="/facebook 1.png" alt="Facebook" className="social-icon" />
-        <img src="/twitter 1.png" alt="Twitter" className="social-icon" />
-        <img src="/instagram-2 1.png" alt="Instagram" className="social-icon" />
-        <img src="/linkedin-2 1.png" alt="LinkedIn" className="social-icon" />
-        <img src="/email-2 1.png" alt="Gmail" className="social-icon" />
-        <img src="/whatsapp.png" alt="Whatsapp" className="social-icon" />
-      </div>
 
-      <div className='footer-payment'>
-        <img src={payment} alt="" />
-      </div>
+      <div className="social-media-column">
+        <h4>Follow Us</h4>
+        <div className="social-media">
+          <img src="/facebook.png" alt="Facebook" className="social-icon" />
+          <img src="/twitter 1.png" alt="Twitter" className="social-icon" />
+          <img src="/instagram.png" alt="Instagram" className="social-icon" />
+          <img src="/linkedin.png" alt="LinkedIn" className="social-icon" />
+          <img src="/gmail.png" alt="Gmail" className="social-icon" />
+          <img src="/whatsapp.png" alt="Whatsapp" className="social-icon" />
+        </div>
       </div>
 
       <div className="footer-bottom">
-        <div className='bottom-language'>🌐 India | English</div>
-        <div className='bottom-copy'>© Copyright 2025 EventsBridge. All Rights Reserved.</div>
+        <div><span>🌐 India | English</span></div>
+        <div><p>© Copyright 2025 EventsBridge. All Rights Reserved.</p></div>
       </div>
     </footer>
   );

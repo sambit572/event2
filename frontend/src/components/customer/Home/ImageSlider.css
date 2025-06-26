@@ -1,6 +1,7 @@
 .slider-container {
   position: relative;
   width: 100%;
+  padding-top: 20px;
   margin-top: 0px;
   z-index: 1;
   text-align: center;
@@ -8,12 +9,8 @@
   background-color: #f4f4f4;
 }
 .slide {
-  position: relative;
-  top: 10px;
-  left: 10px;
-  border-radius: 10px;
-  width: 98%;
-  height: 455px;
+  width: 100%;
+  height: 500px;
   object-fit: cover;
   background-size: cover;
   background-position: center;
@@ -23,6 +20,10 @@
 
 .slider-container:hover .slide {
   filter: brightness(0.65);
+}
+.slick-prev,
+.slick-next {
+  display: none !important;
 }
 
 .slick-dots li {
