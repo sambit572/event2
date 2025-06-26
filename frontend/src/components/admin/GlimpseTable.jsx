@@ -19,7 +19,7 @@ export default function GlimpseTable({
           <thead className="bg-gray-100 text-black text-xs uppercase">
             <tr>
               {headers.map((h, i) => (
-                <th key={i} className="py-3 px-6 text-left whitespace-nowrap">
+                <th key={i} className="py-3 px-6 text-center whitespace-nowrap">
                   {h}
                 </th>
               ))}
@@ -29,10 +29,10 @@ export default function GlimpseTable({
             {rows.map((row, rIdx) => (
               <tr key={rIdx} className="border-b hover:bg-gray-100 cursor-pointer">
                 {row.map((cell, cIdx) => (
-                  <td key={cIdx} className="py-3 px-6 whitespace-nowrap">
+                  <td key={cIdx} className="py-3 px-5 whitespace-nowrap text-center">
                     {statusCol === cIdx ? (
                       <span
-                        className={`px-3 py-1 font-medium rounded-full ${
+                        className={`px-1 py-1 font-medium rounded-full ${
                           getStatusColor ? getStatusColor(cell) : ""
                         }`}
                       >
