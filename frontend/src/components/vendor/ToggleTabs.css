@@ -5,7 +5,7 @@
   margin-left: 50px;
   background-color: #e5e5de;
   color: #0d1b2a;
-  /* max-width: fit-content; */
+  max-width: fit-content;
   border-radius: 6.25rem;
   position: relative;
   width: 290px !important;
@@ -24,7 +24,7 @@
   cursor: pointer;
   font-size: 13px;
   font-weight: 500;
-  margin-right: 40px;
+  margin-right: 35px;
   transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease,
     border-color 0.3s ease;
   margin-top: 10px;
@@ -105,6 +105,7 @@
 
   .tab-btn button {
     font-size: 12px;
+    width: max-content;
   }
 
   .bg-slider.services {

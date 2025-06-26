@@ -18,10 +18,7 @@
   scrollbar-color: #0d47a1 #f0f4ff;
 }
 
-.dashboard-hamburger:hover {
-  background: none;
-  color: #512da8;
-}
+
 
 .dashboard-container-box {
   display: flex;
@@ -39,7 +36,7 @@
   }
 
   .open {
-    color: whitesmoke;
+    color: white;
   }
   .main-contain {
     width: 30%;
