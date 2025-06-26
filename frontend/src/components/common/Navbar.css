@@ -5,7 +5,7 @@
   width: 100%;
   height: 70px;
   padding: 10px 20px;
-  background-color: #f0d2e3;
+  background: #f3c12d;
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -20,9 +20,15 @@
   font-weight: 700;
 }
 .login {
-  color: #3b0340e1;
+  color: black;
   font-size: 19px;
   font-weight: bold;
+}
+.login:hover .icon {
+  color: #fff;
+}
+.login:hover {
+  color: #fff;
 }
 
 /* Search Bar */
@@ -42,23 +48,40 @@
 .search-bar:focus-within {
   width: 600px;
   border-color: #3b0340e1;
+  border: 1px solid #001f3f;
+}
+
+.search-bar:hover {
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  border-radius: 999px;
+}
+
+.search-bar:focus-within {
+  width: 480px;
+  border-color: black;
   box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
 }
 
 .search-bar .search-icon {
-  color: #3b0340e1;
+  color: black;
   font-size: 18px;
 }
-
 .search-bar input {
   border: none;
   outline: none;
   margin-left: 12px;
   background: transparent;
   font-size: 16px;
-  color: #3b0340e1;
+  color: black;
   flex: 1;
   font-weight: bold;
+}
+
+.search-bar input::placeholder {
+  color: black;
+  opacity: 1;
+  font-weight: 500;
 }
 
 /* Nav Icons */
@@ -74,7 +97,6 @@
 }
 .nav-item {
   display: flex;
-
   align-items: center;
   cursor: pointer;
   font-size: 15px;
@@ -82,7 +104,7 @@
 }
 .nav-item a {
   text-decoration: none;
-  color: #3b0340e1;
+  color: black;
   font-weight: 500;
 }
 
@@ -108,6 +130,16 @@
   margin-top: -1.2px;
   color: #3b0340e1;
 }
+.profile-btn:hover {
+  color: #f5efff;
+  font-weight: bold;
+  background: black;
+}
+.icon {
+  font-size: 15px;
+  margin-right: 5px;
+  color: black;
+}
 
 .nav-items {
   display: flex;
@@ -128,18 +160,28 @@
 }
 
 .dropdown-header {
-  /* Light grey border */
-
   padding: 10px 0;
   display: flex;
-  justify-content: space-between; /* Center items horizontally */
-  align-items: center; /* Center items vertically */
-  gap: 8px; /* Space between the spans */
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
   margin-top: 10px;
 }
+.dropdown-header span {
+  color: black;
+}
 
+.signup-link {
+  cursor: pointer;
+  font-weight: 500;
+  color: #007bff;
+  transition: color 0.2s ease;
+}
 
-
+.signup-link:hover {
+  font-weight: bold;
+  color: #0056b3;
+}
 
 .dropdown-item {
   display: flex;
@@ -147,7 +189,7 @@
   font-weight: 500;
   font-size: 17px;
   gap: 8px;
-  color: #3b0340e1;
+  color: black;
   padding: 6px 0;
   cursor: pointer;
   margin-top: 10px;
@@ -160,6 +202,19 @@
   color: #3b0340e1;
   text-decoration: none;
   font-size: 15px;
+}
+.dropdown-item:hover {
+  font-weight: bold;
+  color: black;
+}
+
+.dropdown-item a {
+  color: inherit;
+  text-decoration: none;
+}
+.dropdown-item a:hover {
+  font-weight: bold;
+  color: black;
 }
 
 .nested-submenu {
@@ -178,12 +233,20 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   z-index: 1000;
   width: 200px;
+}
+.nav-item .three-dot {
+  color: black;
+}
+.nav-item .vendor {
+  color: black;
+}
+.ellipsis-menu .dropdown-item {
   padding: 8px 12px;
   cursor: pointer;
   font-weight: 300;
   font-size: 15px;
   text-align: center;
-  background: none;
+  background: #fff;
   color: #3b0340e1;
 }
 .nav-item .three-dot {
@@ -192,15 +255,22 @@
 
 .nav-item .vendor {
   color: #3b0340e1;
+  background: none;
+  color: black;
+}
+
+.ellipsis-menu .dropdown-item:hover {
+  font-weight: bold;
+  color: black;
 }
 
 .login-h4 {
   font-size: 16px;
-  color: #3b0340e1;
+  color: black;
 }
 .login-p {
   font-size: 12px;
-  color: #3b0340e1;
+  color: black;
   margin-top: 5px;
   margin-left: 2px;
 }
@@ -220,6 +290,20 @@
 
   .search-bar:focus-within {
     width: 480px;
+  }
+}
+@media (max-width: 768px) {
+  .signOutButton {
+    border: none;
+    background-color: #f5efff;
+    color: black;
+    font-size: 17px;
+    font-weight: 520;
+  }
+
+  .signOutButton:hover {
+    font-weight: bold;
+    color: black;
   }
 }
 
@@ -273,7 +357,6 @@
     color: #1f0122e1;
     font-weight: 800;
   }
-
 }
 
 @media (max-width: 1024px) {
@@ -360,7 +443,6 @@
   .nav-icons {
     width: 100%;
     margin-top: 10px;
-    /* background-color: #0056b3; */
     justify-content: space-between;
   }
 
@@ -446,6 +528,4 @@
   .search-bar input {
     margin-left: 6px;
   }
-
-  
 }
