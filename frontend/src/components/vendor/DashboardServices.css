@@ -46,8 +46,8 @@
 
 /* Main Image */
 .main-image-dashboard {
-  width: 780px;
-  height: 220px;
+  width: 405px;
+  height: 240px;
   object-fit: cover;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -539,9 +539,9 @@
     width: 280px;
     padding: 15px;
   }
-.edit-form-dashboard button {
-        margin-top: 0px;
-    }
+  .edit-form-dashboard button {
+    margin-top: 0px;
+  }
   .main-image-dashboard {
     max-width: 90%;
     margin-top: 40px;
