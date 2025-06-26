@@ -45,6 +45,7 @@ import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
 
 // Common
 import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
+import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 
 const App = () => {
   const navigate = useNavigate();
@@ -107,6 +108,7 @@ const App = () => {
           ></Route>
           <Route path="/profile" element={<Profile />}></Route>
           <Route path="/userdetails" element={<UserDetails />}></Route>
+          <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
       </main>
 
