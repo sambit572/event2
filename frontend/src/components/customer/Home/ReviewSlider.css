@@ -8,14 +8,26 @@
   transform: scale(1.05);
 }
 
-.heading {
-  text-align: center;
-  font-size: 2rem;
-  padding-bottom: 20px;
+.heading_review {
+  background: #f3c12d;
+  color: rgb(253, 253, 253);
+  padding: 10px 30px;
+  font-size: 2.2rem;
   font-weight: bold;
-  margin: 20px 0;
-  color: #232f3e;
+  width: 300px;
+  margin: 20px auto;
+  border: 6px double #001f3f;
+  border-radius: 30px 10px 30px 10px;
+  display: block;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  align-items: center !important;
+  justify-content: center !important;
+
+  text-align: center;
 }
+
 .review_wrapper {
   max-width: 100%;
   margin: 0 auto;
@@ -100,4 +112,6 @@
 
 .review_section h1 {
   margin-bottom: 65px;
+  color: #001f3f;
+  align-items: center;
 }

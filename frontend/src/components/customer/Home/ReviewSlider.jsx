@@ -69,7 +69,7 @@ const ReviewSlider = () => {
   const duplicatedReviews = [...reviews, ...reviews];
   return (
     <div className="review_section">
-      <h1 className="align_center heading">Reviews</h1>
+      <h1 className="heading_review">Reviews</h1>
       <div className="review_wrapper" ref={containerRef}>
         <div
           className="review_container"
