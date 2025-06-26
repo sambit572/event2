@@ -44,7 +44,7 @@ const images = [
   },
   {
     mobile: christianMobile,
-
+    tablet: christianTablet,
     desktop: christianDesktop,
   },
   {

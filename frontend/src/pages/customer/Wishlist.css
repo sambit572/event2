@@ -491,8 +491,6 @@
   }
 }
 
-
-
 @media (min-width: 522px) and (max-width: 767px) {
   .wishlist-container {
     width: 500px;
@@ -630,7 +628,7 @@
 
 @media (max-width: 540px) {
   .wishlist-container {
-    width: 500px;
+    width: 350px;
     position: relative;
     top: -50px;
     text-align: center;
@@ -645,10 +643,10 @@
 
   .wishlist-image {
     position: relative;
-    width: 400px;
+    width: 380px;
     height: 130px;
     top: -20px;
-    left: 41px;
+    left: 0px;
   }
 
   .wishlist-title {
@@ -689,7 +687,7 @@
 
   .wishlist-book-btn {
     position: relative;
-    left: -311px;
+    left: -380px;
     top: 56px;
     width: 90px;
     height: 34px;
@@ -701,7 +699,7 @@
 
   .wishlist-remove-btn {
     position: relative;
-    left: -315px;
+    left: -380px;
     top: 56px;
     width: 90px;
     height: 34px;
@@ -763,9 +761,9 @@
   }
 }
 
-@media (max-width: 450px) {
+@media (max-width: 470px) {
   .wishlist-container {
-    width: 100%;
+    width: 90%;
     position: relative;
     top: -50px;
     text-align: center;
@@ -780,16 +778,16 @@
 
   .wishlist-image {
     position: relative;
-    width: 250px;
+    width: 290px;
     height: 130px;
     top: -20px;
-    left: 41px;
+    left: 20px;
   }
 
   .wishlist-title {
     position: relative;
     top: 95px;
-    left: -230px;
+    left: -290px;
     font-size: 16px;
   }
 
@@ -797,34 +795,34 @@
     font-size: 14px;
     position: relative;
     top: 78px;
-    left: -316px;
+    left: -350px;
   }
 
   .wishlist-old-price {
     position: relative;
     font-size: 14px;
     top: 78px;
-    left: -316px;
+    left: -350px;
   }
 
   .wishlist-discount {
     position: relative;
     font-size: 14px;
     top: 78px;
-    left: -316px;
+    left: -350px;
   }
 
   .wishlist-description {
     position: relative;
     top: 69px;
-    left: -268px;
+    left: -290px;
     font-size: 10px;
-    width: 350px;
+    width: 300px;
   }
 
   .wishlist-book-btn {
     position: relative;
-    left: -311px;
+    left: -330px;
     top: 56px;
     width: 90px;
     height: 34px;
@@ -836,7 +834,7 @@
 
   .wishlist-remove-btn {
     position: relative;
-    left: -315px;
+    left: -330px;
     top: 56px;
     width: 90px;
     height: 34px;
@@ -915,13 +913,21 @@
     height: 300px;
   }
 }
-@media (max-width: 360px) {
+@media (max-width: 362px) {
+  /* .wishlist-container {
+    width: 250px;
+    position: relative;
+    top: -50px;
+    text-align: center;
+  } */
+
   .wishlist-card {
     position: relative;
     right: 8px;
     left: -2px;
-    width: 390px;
+    width: 350px;
     height: 300px;
+    /* background-color: #000; */
   }
 }
 
@@ -929,7 +935,7 @@
   .wishlist-container {
     width: 350px;
     position: relative;
-    top: -50px;
+    top: -40px;
     text-align: center;
   }
 
@@ -1060,7 +1066,7 @@
   }
 }
 
-@media (max-width: 350px) {
+/* @media (max-width: 350px) {
   .wishlist-container {
     width: 300px;
   }
@@ -1072,4 +1078,4 @@
   .wishlist-image {
     margin-left: -10px;
   }
-}
+} */
