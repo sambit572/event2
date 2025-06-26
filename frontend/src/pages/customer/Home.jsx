@@ -100,91 +100,21 @@ const images = [
 ];
 
 const categories = [
-  { title: "DJ", image: image1, tagline: "Beats That Breathe Fun", icon: "🎧" },
-  {
-    title: "Bands",
-    image: image2,
-    tagline: "Brass Beats the Best",
-    icon: "🎺",
-  },
-  {
-    title: "Tent & Decor",
-    image: image3,
-    tagline: "Dream Drapes, Divine Vibes",
-    icon: "🎪",
-  },
-  {
-    title: "Photographer",
-    image: image4,
-    tagline: "Freeze Time with Frames",
-    icon: "📸",
-  },
-  {
-    title: "Pandit",
-    image: image5,
-    tagline: "Mantras Meet Moments",
-    icon: "🕉",
-  },
-  {
-    title: "Magician",
-    image: image6,
-    tagline: "Illusions that Amaze All",
-    icon: "🎩",
-  },
-  {
-    title: "Orchestra (Dance & Singing)",
-    image: image7,
-    tagline: "Echoes of Celebration",
-    icon: "🎤",
-  },
-  {
-    title: "Maulbi",
-    image: image8,
-    tagline: "Prayers that Guide Hearts",
-    icon: "🕌",
-  },
-  {
-    title: "Father (Priest)",
-    image: image9,
-    tagline: "Grace in Every Verse",
-    icon: "⛪",
-  },
-  {
-    title: "Catering",
-    image: image10,
-    tagline: "Flavours that Speak Love",
-    icon: "🍽",
-  },
-  {
-    title: "Makeup & Mehendi Artist",
-    image: image11,
-    tagline: "Beauty in Every Brush",
-    icon: "💄",
-  },
-  {
-    title: "Flower Decoration/ Florist ",
-    image: image12,
-    tagline: "Blooms that Whisper Joy",
-    icon: "💐",
-  },
-  {
-    title: "Horse Cart & Grooming Car",
-    image: image13,
-    tagline: "Royal Rides Await You",
-    icon: "🐎",
-  },
-  {
-    title: "Fireworkers",
-    image: image14,
-    tagline: "Skies that Spark Magic",
-    icon: "🎆",
-  },
-  {
-    title: "Card Printers & Designers",
-    image: image15,
-    tagline: "Words That Welcome",
-    icon: "💌",
-  },
+  { title: "DJ Services", image: image1 },
+  { title: "Live Musical Band", image: image2 },
+  { title: "Venue Styling & Decor", image: image3 },
+  { title: "Photo & Video", image: image4 },
+  { title: "Hindu Priest", image: image5 },
+  { title: "Magic Shows", image: image6 },
+  { title: "Cultural Troupe", image: image7 },
+  { title: "Islamic Priest", image: image8 },
+  { title: "Christian Priest", image: image9 },
+  { title: "Catering", image: image10 },
+  { title: "Makeup & Mehendi Artist", image: image11 },
+  { title: "Floral Decor", image: image12 },
+  { title: "Wedding Transport", image: image13 },
+  { title: "Fireworks", image: image14 },
+  { title: "Custom Invitation Design & Printing", image: image15 },
 ];
 
 const Home = () => {
