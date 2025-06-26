@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./VendorService.css";
 import StepProgress from "./StepProgress";
-import Button from "./../../components/vendor/register/Button";
+import Button from "../../components/vendor/register/VendorButton";
 import axios from "axios";
 
 function VendorService({ currentStep }) {
@@ -546,7 +546,11 @@ function VendorService({ currentStep }) {
             />
           </div>
         </div>
-        <Button onBack={handleBack} onNext={handleNext} />
+          <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+          <div style={{ width: "100%", maxWidth: "750px" }}>
+           <Button onBack={handleBack} onNext={handleNext} />
+          </div>
+        </div>
       </div>
     </>
   );

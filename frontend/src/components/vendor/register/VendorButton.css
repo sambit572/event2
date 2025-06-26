@@ -4,10 +4,12 @@
   align-items: center;
   gap: 20px;
   padding: 20px;
-  margin: 20px 30%;
-  max-width: 100%;
+  margin: 20px auto 0;
+  max-width: 300px; /* or adjust based on your design */
+  width: 100%;
   box-sizing: border-box;
 }
+
 
 .navigation-buttons button {
   padding: 12px 24px;
