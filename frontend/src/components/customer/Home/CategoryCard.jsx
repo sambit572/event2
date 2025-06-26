@@ -1,9 +1,15 @@
 import React from "react";
 import "./CategoryCard.css";
+import { useNavigate } from "react-router-dom";
 
 const CategoryCard = ({ category }) => {
+
+  const navigate = useNavigate();
+
   return (
-    <div className="courseCard">
+    <div className="courseCard" onClick={()=>{
+      navigate('/category')
+    }}>
       <span className="brandLabel">EventsBridge</span>
 
       <div className="imageWrapper">

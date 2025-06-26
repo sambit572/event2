@@ -91,7 +91,7 @@
 
 /* Buttons */
 .otp-button {
-  background-color: #74047ee1;
+  background-color: darkgreen;
   color: white;
   padding: 10px 16px;
   margin-top: 10px;
@@ -110,7 +110,7 @@
 }
 
 .otp-button:hover {
-  background-color: #3b0340e1;
+  background-color: rgb(1, 61, 1);
 }
 
 /* Links */

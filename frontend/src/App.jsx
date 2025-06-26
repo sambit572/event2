@@ -33,7 +33,6 @@ import HelpCenter from "./pages/common/HelpCenter";
 
 import ForgotPass from "./pages/customer/ForgotPass.jsx";
 import ResetPassword from "./pages/customer/ResetPassword.jsx";
-import ForgotPassword from "./pages/customer/ForgotPassword.jsx";
 import Wishlist from "./pages/customer/Wishlist.jsx";
 import Profile from "./components/customer/profile/Profile.jsx";
 import UserDetails from "./pages/customer/UserDetails.jsx";
@@ -91,7 +90,7 @@ const App = () => {
             path="/reset-password/:resetToken"
             element={<ResetPassword />}
           />
-          <Route path="/forgotpassword" element={<ForgotPassword />} />
+          
 
           {/* Misc */}
           <Route path="/about_us" element={<AboutUs />} />
