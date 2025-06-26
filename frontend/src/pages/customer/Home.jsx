@@ -225,11 +225,7 @@ const Home = () => {
       <div className="categories-head1 mb-[-15px]">
         <h1 className="align_center categories-head">Categories</h1>
       </div>
-
-      <h1 className="align_center heading">
-        Book Trusted Vendors for Any Occasion
-      </h1>
-      <p className="text-center">
+      <p className="category-subheads  text-center ">
         Explore trusted professionals across categories and simplify your event
         planning.
       </p>
