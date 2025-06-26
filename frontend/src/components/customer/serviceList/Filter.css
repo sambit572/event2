@@ -1,8 +1,9 @@
 .filter {
   width: 280px;
   max-height: 100%;
+  margin-left: 5px;
   margin-top: 10px;
-  border-right: 1px solid #ccc;
+  border: 1px solid #001f3f;
   padding: 16px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
@@ -10,6 +11,7 @@
 .filter h3 {
   font-weight: bold;
   margin-bottom: 12px;
+  color: #001f3f;
 }
 .filterBox {
   display: flex;
@@ -26,7 +28,7 @@
   margin-bottom: 20px;
 }
 .star {
-  color: black;
+  color: #001f3f;
   font-size: 16px;
 }
 .price-range-wrapper {
@@ -69,7 +71,7 @@ input[type="range"]::-webkit-slider-thumb {
   justify-content: space-between;
   font-size: 17px;
   font-weight: 600;
-  color: #000;
+  color: #001f3f;
   margin-top: 34px;
 }
 

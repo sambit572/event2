@@ -76,6 +76,10 @@ const Wishlist = () => {
 
   return (
     <div className="wishlist-container">
+      <h1 className="text-4xl font-bold text-[#001f3f] mb-8 text-center">My Wishlist</h1>
+      <p className="text-gray-600 ml-20 relative bottom-5 text-lg inline text-center max-w-2xl mx-auto mb-10">
+        Here's a list of your saved services. You can book them anytime or remove the ones you no longer need.
+      </p>
       {wishlistItems.map((item) => (
         <div className="wishlist-card" key={item.id}>
           <div className="wishlist-left">
@@ -93,7 +97,7 @@ const Wishlist = () => {
             <p className="wishlist-description">{item.description}</p>
             <div className='btn-columns'>
               <button className="wishlist-book-btn"><a href="userdetails">Book Now</a></button>
-            <button className="wishlist-remove-btn" onClick={() => handleDeleteClick(item.id)} >Remove</button>
+              <button className="wishlist-remove-btn" onClick={() => handleDeleteClick(item.id)} >Remove</button>
             </div>
           </div>
         </div>

@@ -11,7 +11,7 @@ const HelpCenter = () => {
 
   const content = {
     en: {
-      heading: "Welcome to the Help Center 💜",
+      heading: "Welcome to the Help Center",
       sub: "Need help? Feel free to chat or call us anytime!",
       chatTitle: "Chat with us",
       chatDesc:
@@ -27,7 +27,7 @@ const HelpCenter = () => {
       callBtn: "Need Help →",
     },
     hi: {
-      heading: "सहायता केंद्र में आपका स्वागत है 💜",
+      heading: "सहायता केंद्र में आपका स्वागत है ",
       sub: "क्या आपको मदद चाहिए? कभी भी चैट या कॉल करें!",
       chatTitle: "हमसे चैट करें",
       chatDesc:
@@ -43,7 +43,7 @@ const HelpCenter = () => {
       callBtn: "मदद चाहिए →",
     },
     ta: {
-      heading: "உதவி மையத்திற்கு வரவேற்கிறோம் 💜",
+      heading: "உதவி மையத்திற்கு வரவேற்கிறோம் 🖤",
       sub: "உங்களுக்கு உதவி தேவைப்படுகிறதா? எங்களை எப்போதும் தொடர்பு கொள்ளலாம்!",
       chatTitle: "எங்களுடன் அரட்டையடிக்கவும்",
       chatDesc:
@@ -59,7 +59,7 @@ const HelpCenter = () => {
       callBtn: "உதவி தேவை →",
     },
     or: {
-      heading: "ସହଯୋଗ କେନ୍ଦ୍ରକୁ ସ୍ବାଗତ 💜",
+      heading: "ସହଯୋଗ କେନ୍ଦ୍ରକୁ ସ୍ବାଗତ",
       sub: "ମଦଦ ଆବଶ୍ୟକ? ଯେକୌଣସି ସମୟରେ ଆମ ସହିତ ଚାଟ କିମ୍ବା କଲ୍ କରନ୍ତୁ!",
       chatTitle: "ଆମ ସହିତ ଚାଟ କରନ୍ତୁ",
       chatDesc:
@@ -86,7 +86,7 @@ const HelpCenter = () => {
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
-            className="border border-gray-300 text-left  rounded  py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className=" bg-[#f7f7f7] text-[#001f3f] ml-5 mr-5 border border-black-700 text-left  rounded  py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#001f3f]"
           >
             <option value="en">English</option>
             <option value="hi">हिन्दी (Hindi)</option>
@@ -97,23 +97,23 @@ const HelpCenter = () => {
 
         {/* Header */}
         <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold text-purple-700">{content[language].heading}</h1>
-          <p className="text-gray-600 mt-3 text-lg">{content[language].sub}</p>
+          <h1 className="text-4xl font-bold text-[#001f3f]">{content[language].heading}</h1>
+          <p className="text-[#001f3f] mt-3 text-lg">{content[language].sub}</p>
         </div>
 
         {/* Chat and Call Section */}
         <div className="grid md:grid-cols-3 gap-6 mb-12">
           {/* Chat */}
-          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition">
+          <div className="bg-[#f7f7f7] p-6 rounded-lg shadow-md hover:shadow-xl transition">
             <div className="flex items-center gap-3 mb-4">
               <div className="bg-green-100 p-3 rounded-full">
                 <FaComments className="text-green-600 text-2xl" />
               </div>
-              <h2 className="text-xl font-semibold text-gray-800">
+              <h2 className="text-xl font-semibold text-[#001f3f]">
                 {content[language].chatTitle}
               </h2>
             </div>
-            <p className="text-gray-700 mb-4">{content[language].chatDesc}</p>
+            <p className="text-[#001f3f] mb-4">{content[language].chatDesc}</p>
             <div className='flex justify-center'>
             <button className="bg-green-500 text-white px-5 py-2 rounded hover:bg-green-600 transition">
               {content[language].chatBtn}
@@ -122,16 +122,16 @@ const HelpCenter = () => {
           </div>
 
           {/* Call */}
-          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition">
+          <div className="bg-[#f7f7f7] p-6 rounded-lg shadow-md hover:shadow-xl transition">
             <div className="flex items-center gap-3 mb-4">
               <div className="bg-blue-100 p-3 rounded-full">
                 <FaPhoneAlt className="text-blue-600 text-2xl" />
               </div>
-              <h2 className="text-xl font-semibold text-gray-800">
+              <h2 className="text-xl font-semibold text-[#001f3f]">
                 {content[language].callTitle}
               </h2>
             </div>
-            <p className="text-gray-700 mb-4">{content[language].callDesc}</p>
+            <p className="text-[#001f3f] mb-4">{content[language].callDesc}</p>
             <div className='text-blue-700 text-base mb-1 mt-[-2px]'>{content[language].callNo}</div>
             <div className="flex justify-center">
               <button className="bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-600 transition">
@@ -140,16 +140,16 @@ const HelpCenter = () => {
             </div>
           </div>
           {/* Call */}
-          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition">
+          <div className="bg-[#f7f7f7] p-6 rounded-lg shadow-md hover:shadow-xl transition">
             <div className="flex items-center gap-3 mb-4">
               <div className="bg-purple-100 p-3 rounded-full">
                 <FaEnvelope className="text-purple-600 text-2xl" />
               </div>
-              <h2 className="text-xl font-semibold text-gray-800">
+              <h2 className="text-xl font-semibold text-[#001f3f]">
                 {content[language].emailTitle}
               </h2>
             </div>
-            <p className="text-gray-700 mb-4">{content[language].emailDesc}</p>
+            <p className="text-[#001f3f] mb-4">{content[language].emailDesc}</p>
             <div className='text-purple-700 text-base mb-1 mt-[-2px]'>{content[language].emailId}</div>
             <div className='flex justify-center'>
             <button className="bg-purple-500 text-white px-5 py-2 rounded hover:bg-purple-600 transition">
