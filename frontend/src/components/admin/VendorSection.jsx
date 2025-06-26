@@ -1,4 +1,3 @@
-// src/components/admin/VendorSection.jsx
 import React from "react";
 import GlimpseTable from "./GlimpseTable";
 

@@ -1,4 +1,3 @@
-// src/components/admin/BookingSection.jsx
 import React from "react";
 import GlimpseTable from "./GlimpseTable";
 

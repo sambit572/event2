@@ -1,5 +1,3 @@
-// src/components/Sidebar.jsx
-
 import { BarChart3, Users, Calendar, DollarSign } from 'lucide-react';
 
 export default function AdminSidebar({ scrollToSection, refs }) {
@@ -11,9 +9,9 @@ export default function AdminSidebar({ scrollToSection, refs }) {
   ];
 
   return (
-    <aside className="w-64 bg-gradient-to-b from-purple-500 to-purple-700 text-white flex flex-col shadow-2xl">
-      <div className="p-6 border-b border-purple-700">
-        <h1 className="text-2xl font-bold flex items-center gap-2 text-white">
+    <aside className="w-64 bg-[#f2e1ad] text-black flex flex-col shadow-2xl">
+      <div className="p-6 border-b border-yellow-500">
+        <h1 className="text-2xl font-bold flex items-center gap-2 text-black">
           <BarChart3 className="w-8 h-8" />
           Admin Panel
         </h1>
@@ -25,7 +23,7 @@ export default function AdminSidebar({ scrollToSection, refs }) {
             <li key={key}>
               <button
                 onClick={() => scrollToSection(refs[key])}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all bg-purple-500 hover:bg-purple-700 hover:translate-x-1"
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all bg-[#f3c12d] hover:bg-[#001F3F] hover:translate-x-1"
               >
                 <Icon className="w-5 h-5" />
                 {label}
@@ -37,4 +35,3 @@ export default function AdminSidebar({ scrollToSection, refs }) {
     </aside>
   );
 }
-

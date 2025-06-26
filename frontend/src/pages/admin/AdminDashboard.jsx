@@ -281,28 +281,27 @@ export default function AdminDashboard() {
         <div className="p-6 overflow-y-auto h-full space-y-12">
           {/* Summary cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-  {summaryData.map(({ title, value, icon: Icon, color }, i) => (
+  {summaryData.map(({ title, value, icon: Icon }, i) => (
+  <div
+    key={i}
+    className="group bg-white rounded-xl shadow-md transition-all duration-300 ease-in-out hover:shadow-2xl transform hover:-translate-y-1"
+  >
     <div
-      key={i}
-      className="group bg-white rounded-xl shadow-md transition-all duration-300 ease-in-out hover:shadow-2xl transform hover:-translate-y-1"
+      className={`
+        bg-[#f3c12d] 
+        group-hover:bg-[#001F3F]
+        p-4 flex justify-between items-center rounded-t-xl transition-colors duration-300
+      `}
     >
-      <div
-        className={`
-          bg-gradient-to-r ${color} 
-          group-hover:from-sky-500 group-hover:to-fuchsia-500
-          p-4 flex justify-between items-center rounded-t-xl transition-colors duration-300
-        `}
-      >
-        <Icon className="w-8 h-8 text-white" />
-        <div className="text-right">
-          <p className="text-2xl font-bold text-white">{value}</p>
-          <p className="text-sm text-purple-100">{title}</p>
-        </div>
+      <Icon className="w-8 h-8 text-white" />
+      <div className="text-right">
+        <p className="text-2xl font-bold text-white">{value}</p>
+        <p className="text-sm text-white">{title}</p>
       </div>
     </div>
-  ))}
-</div>
-
+  </div>
+))}
+          </div>
 
           {/* Glimpses on Dashboard */}
           {activeTab === "dashboard" && (
