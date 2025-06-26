@@ -47,7 +47,8 @@
 }
 
 .step-circle.active {
-  background-color: #d9f99d;
+  background: rgb(145, 227, 91);
+;
 }
 
 .step-sub-label {
