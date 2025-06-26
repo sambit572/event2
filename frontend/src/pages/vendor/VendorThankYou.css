@@ -1,4 +1,3 @@
-/* Base Layout */
 .thankyou-page {
   display: flex;
   align-items: center;
@@ -9,8 +8,7 @@
 }
 
 .thankyou-card {
-background: linear-gradient(to right, #eee0b5, #eccf7a);
-
+background:  #001F3F;
   padding: 40px 50px;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
@@ -30,7 +28,7 @@ background: linear-gradient(to right, #eee0b5, #eccf7a);
 .animated-check {
   width: 100%;
   height: 100%;
-  stroke: #0b6b25;
+  stroke: rgb(235, 235, 101);
   stroke-width: 4;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -62,7 +60,7 @@ background: linear-gradient(to right, #eee0b5, #eccf7a);
 }
 
 h1 {
-  color: #0b6b25;
+  color: rgb(235, 235, 101);
   font-weight: bold;
   font-size: 28px;
   margin-bottom: 10px;
@@ -70,7 +68,7 @@ h1 {
 
 p {
   font-size: 15px;
-  color: #000000;
+  color: white;
   margin-bottom: 30px;
 }
 
@@ -113,12 +111,19 @@ p {
   }
 }
 
-.thankyou-social h3,
-.thankyou-visit h3 {
+.thankyou-social h3
+ {
   font-size: 16px;
   margin-bottom: 15px;
   color: #0b6b25;
   font-weight: bold;
+}
+
+.thankyou-visit h3{
+  color:#001F3F;
+  font-size: 16px;
+  font-weight: bold;
+   margin-bottom: 15px;
 }
 
 /* Social Media Icons */
