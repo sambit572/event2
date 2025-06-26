@@ -13,7 +13,7 @@
 
 /* Modal box */
 .login-modal {
-  background-color: #f5efff;
+  background-color: #e5e5de;
   padding: 30px 25px;
   border-radius: 12px;
   width: 100%;
@@ -160,7 +160,7 @@
   margin: 20px auto;
   width: 80px;
   height: 80px;
-  background-color: #a40bb2e1;
+  background-color: darkgreen;
   border-radius: 50%;
   position: relative;
   animation: popIn 0.6s ease-out;
