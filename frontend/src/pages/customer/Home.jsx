@@ -230,10 +230,15 @@ const Home = () => {
       <div className="categories-head1 mb-[-15px]">
         <h1 className="align_center categories-head">Categories</h1>
       </div>
-      <p className="category-subheads text-center">
+
+      <h4 className="align_center heading">
         Explore trusted professionals across categories and simplify your event
         planning.
-      </p>
+      </h4>
+      {/* <p className="text-center">
+        Explore trusted professionals across categories and simplify your event
+        planning.
+      </p> */}
 
       {!showAll && categories.length > 6 && (
         <div className="browse_all">
