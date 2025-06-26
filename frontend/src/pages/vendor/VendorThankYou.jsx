@@ -22,32 +22,14 @@ export default function VendorThankYou() {
         <p>
           We've received your submission. You can find more information on our website or social pages.
         </p>
-
-        <div className="thankyou-actions">
-          <div className="thankyou-social">
-            <h3>Connect With Us</h3>
-            <div className="social-icons">
-              <a href="#" aria-label="Facebook">
-                <img src="/facebook 1.png" alt="Facebook" className="social-icon-img" />
-              </a>
-              <a href="#" aria-label="LinkedIn">
-                <img src="/linkedin-2 1.png" alt="LinkedIn" className="social-icon-img" />
-              </a>
-              <a href="#" aria-label="Instagram">
-                <img src="/instagram-2 1.png" alt="Instagram" className="social-icon-img" />
-              </a>
-              <a href="#" aria-label="Email">
-                <img src="/email-2 1.png" alt="Email" className="social-icon-img" />
-              </a>
-            </div>
-          </div>
-
+           {/*  Go to Profile */}
           <div className="thankyou-visit">
-            <h3>Visit Our Website</h3>
-            <button onClick={() => navigate('/')}>Go to Homepage</button>
+            <h3>View Your Profile</h3>
+            <button onClick={() => navigate("/dashboard")}>
+              Go to Profile
+            </button>
           </div>
         </div>
       </div>
-    </div>
   );
 }

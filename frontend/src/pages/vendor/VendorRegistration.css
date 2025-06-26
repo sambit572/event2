@@ -36,7 +36,8 @@
 
 .vendor-register-form h2 {
   color: #0d0db1;
-  margin-bottom: 5px;
+  font-weight: bold;
+  margin-bottom: 10px;
   text-align: center;
   font-size: 22px;
   margin-left: 65px;
@@ -44,7 +45,7 @@
 
 .vendor-register-form p {
   font-size: 14px;
-  margin-bottom: 10px;
+  margin-bottom: 40px;
   color: #555;
   text-align: center;
   margin-left: 65px;
@@ -68,7 +69,10 @@
 .vendor-animation-container video {
   width: 100%;
   max-width: 500px;
-  height: 230px;
+  height: 430px;
+background: linear-gradient(135deg, #f7ca43, #ff9900, #ffb347);
+
+
   border-radius: 10px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   margin-top: 70px;

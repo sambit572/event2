@@ -144,12 +144,12 @@ export default function VendorRegister() {
                 </div>
               )}
 
-              <div className="social-signup-row">
+            {/*   <div className="social-signup-row">
                 <div className="google-signup-btn">
                   <img src="/GoogleImg.png" alt="Google Icon" />
                   <span>Sign up with Google</span>
                 </div>
-              </div>
+              </div> */}
 
               <label>
                 Full Name <span className="required-star">*</span>
@@ -236,7 +236,7 @@ export default function VendorRegister() {
 
             {/* Right: Animation */}
             <div className="vendor-animation-container">
-              <video src="/Animation.mp4" autoPlay muted loop playsInline />
+              <video src="/New Video.mp4" autoPlay muted loop playsInline />
             </div>
           </div>
         </div>

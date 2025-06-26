@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes, useNavigate,useLocation } from "react-router-dom";
+import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 
 // Core Components
 import Navbar from "./components/common/Navbar";
@@ -23,12 +23,9 @@ import VendorThankYou from "./pages/vendor/VendorThankYou";
 import VendorRegistration from "./pages/vendor/VendorRegistration";
 import VendorService from "./pages/vendor/VendorService";
 
-
-
 import AboutUs from "./pages/common/AboutUs";
 import HelpUs from "./pages/common/HelpUs";
 import HelpCenter from "./pages/common/HelpCenter";
-
 
 import ForgotPass from "./pages/customer/ForgotPass.jsx";
 import ResetPassword from "./pages/customer/ResetPassword.jsx";
@@ -39,25 +36,23 @@ import UserDetails from "./pages/customer/UserDetails.jsx";
 import DashboardServices from "./components/vendor/DashboardServices.jsx";
 
 // Vendor Pages
-
 import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
 
 // Common
 import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 
-
-
 const App = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Hide Footer on specific pages
+  const pagesWithoutFooter = ["/vendor/thank-you", "/admin", "/dashboard"];
 
   return (
     <>
-
-    {location.pathname !== "/admin" && <Navbar />}
-     {/*  <Navbar /> */}
+      {/* Conditionally render Navbar */}
+      {location.pathname !== "/admin" && <Navbar />}
 
       <main>
         <Routes>
@@ -103,14 +98,7 @@ const App = () => {
           <Route path="/about_us" element={<AboutUs />} />
           <Route path="/help_us" element={<HelpUs />} />
           <Route path="/help-Center" element={<HelpCenter />} />
-
-
           <Route path="/Wishlist" element={<Wishlist />}></Route>
-          <Route path="/forgotpassword" element={<ForgotPassword />}></Route>
-          <Route
-            path="/dashboardservices"
-            element={<DashboardServices />}
-          ></Route>
           <Route path="/profile" element={<Profile />}></Route>
           <Route path="/userdetails" element={<UserDetails />}></Route>
           <Route path="/admin" element={<AdminDashboard />} />
@@ -118,7 +106,9 @@ const App = () => {
       </main>
 
       <Chatbot />
-      <Footer />
+
+      {/* Conditionally render Footer */}
+      {!pagesWithoutFooter.includes(location.pathname) && <Footer />}
     </>
   );
 };
