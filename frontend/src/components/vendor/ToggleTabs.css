@@ -15,7 +15,6 @@
 }
 
 .tab-btn button {
-  padding: 10px 10px;
   border-radius: 6.2rem;
   z-index: 2;
   border: none;
@@ -24,7 +23,6 @@
   cursor: pointer;
   font-size: 13px;
   font-weight: 500;
-  margin-right: 40px;
   transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease,
     border-color 0.3s ease;
   margin-top: 10px;
