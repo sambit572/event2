@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 
 // Core Components
 import Navbar from "./components/common/Navbar";
@@ -21,7 +21,6 @@ import VendorLegalConsent from "./pages/vendor/VendorLegalConsent";
 import VendorPayment from "./pages/vendor/VendorPayment";
 import VendorThankYou from "./pages/vendor/VendorThankYou";
 import VendorRegistration from "./pages/vendor/VendorRegistration";
-
 import VendorService from "./pages/vendor/VendorService";
 
 import AboutUs from "./pages/common/AboutUs";
@@ -38,18 +37,23 @@ import DashboardServices from "./components/vendor/DashboardServices.jsx";
 import PopUp from "./components/customer/CustomerNegotiationModal";
 
 // Vendor Pages
-
 import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
 
 // Common
 import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
+import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 
 const App = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Hide Footer on specific pages
+  const pagesWithoutFooter = ["/vendor/thank-you", "/admin", "/dashboard"];
 
   return (
     <>
-      <Navbar />
+      {/* Conditionally render Navbar */}
+      {location.pathname !== "/admin" && <Navbar />}
 
       <main>
         <Routes>
@@ -95,21 +99,18 @@ const App = () => {
           <Route path="/about_us" element={<AboutUs />} />
           <Route path="/help_us" element={<HelpUs />} />
           <Route path="/help-Center" element={<HelpCenter />} />
-
           <Route path="/Wishlist" element={<Wishlist />}></Route>
-          <Route path="/forgotpassword" element={<ForgotPassword />}></Route>
-          <Route
-            path="/dashboardservices"
-            element={<DashboardServices />}
-          ></Route>
           <Route path="/profile" element={<Profile />}></Route>
           <Route path="/userdetails" element={<UserDetails />}></Route>
           <Route path="/pop-up" element={<PopUp />}></Route>
+          <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
       </main>
 
       <Chatbot />
-      <Footer />
+
+      {/* Conditionally render Footer */}
+      {!pagesWithoutFooter.includes(location.pathname) && <Footer />}
     </>
   );
 };

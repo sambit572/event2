@@ -15,7 +15,7 @@ export default function LegalButton() {
         <img src="/back.png" alt="Back" className="back-arrow-icon" />
         Back
       </button>
-      <button type="submit" className="submit-btn">Submit</button>
+      <button type="submit" className="submits-btn">Submit</button>
     </div>
   );
 }
