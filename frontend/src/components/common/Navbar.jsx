@@ -211,7 +211,7 @@ const Navbar = () => {
                 >
                   <FcAbout className="icon" /> About Us
                 </div>
-
+                
                 <div
                   className="dropdown-item"
                   onClick={() => navigate("/help_us")}
