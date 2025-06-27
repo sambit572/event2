@@ -20,7 +20,7 @@ const ResetPassword = () => {
 
         console.log("✅ Password reset successful:", response.data.message);
         alert("Password reset successful! You can now log in.");
-        navigate("/LoginRegister");
+        navigate("/login");
       } catch (error) {
         console.error(
           "❌ Error resetting password:",

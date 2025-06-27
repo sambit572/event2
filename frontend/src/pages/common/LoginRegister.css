@@ -13,7 +13,7 @@
 
 /* Modal box */
 .login-modal {
-  background-color: #f5efff;
+  background-color: #e5e5de;
   padding: 30px 25px;
   border-radius: 12px;
   width: 100%;
@@ -91,7 +91,7 @@
 
 /* Buttons */
 .otp-button {
-  background-color: #74047ee1;
+  background-color: darkgreen;
   color: white;
   padding: 10px 16px;
   margin-top: 10px;
@@ -110,7 +110,7 @@
 }
 
 .otp-button:hover {
-  background-color: #3b0340e1;
+  background-color: rgb(1, 61, 1);
 }
 
 /* Links */
@@ -160,7 +160,7 @@
   margin: 20px auto;
   width: 80px;
   height: 80px;
-  background-color: #a40bb2e1;
+  background-color: darkgreen;
   border-radius: 50%;
   position: relative;
   animation: popIn 0.6s ease-out;

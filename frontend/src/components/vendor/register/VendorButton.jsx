@@ -1,4 +1,4 @@
-import "./Button.css";
+import "./VendorButton.css";
 
 const Button = ({ handleBack, handleNext }) => {
   return (

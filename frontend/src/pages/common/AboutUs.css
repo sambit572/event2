@@ -34,7 +34,7 @@
 
 .aboutus-right p {
   font-size: 16px;
-  color: #555;
+  color:;
   margin-bottom: 20px;
 }
 
@@ -98,7 +98,7 @@
 
 .aboutus-right p {
   font-size: 16.5px;
-  color: #4a5568;
+  color: #001f3f;
   line-height: 1.7;
   margin-bottom: 25px;
 }
@@ -111,7 +111,7 @@
 
 .aboutus-points li {
   font-size: 15.8px;
-  color: #2d3748;
+  color: #001f3f;
   margin-bottom: 12px;
   display: flex;
   align-items: flex-start;
@@ -154,6 +154,26 @@
 .aboutus-right {
   width: 100%;
   height: auto;
+}
+
+/* Extra-large desktop view */
+@media screen and (min-width: 1440px) {
+  .aboutus-container {
+    padding: 60px 80px;
+  }
+
+  .aboutus-left {
+    width: 600px;
+    height: auto;
+  }
+
+  .aboutus-right {
+    width: 700px;
+  }
+
+  .services-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 
@@ -202,7 +222,7 @@
 .service-section h3 {
   font-size: 1.2rem;
   margin-bottom: 0.5rem;
-  color: #000000;
+  color: #001f3f;
 }
 
 .service-section ul {
@@ -251,22 +271,5 @@
   }
 }
 
-/* Extra-large desktop view */
-@media screen and (min-width: 1440px) {
-  .aboutus-container {
-    padding: 60px 80px;
-  }
 
-  .aboutus-left {
-    width: 600px;
-    height: auto;
-  }
 
-  .aboutus-right {
-    width: 700px;
-  }
-
-  .services-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}

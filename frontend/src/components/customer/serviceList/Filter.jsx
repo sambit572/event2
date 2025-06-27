@@ -119,7 +119,7 @@ const Filter = () => {
           <hr className="line" />
 
           <div className="filter-section">
-            <h4>Location</h4>
+            <h4 className="l">Location</h4>
 
             <div className="dropdown">
               <label htmlFor="state" className="state">

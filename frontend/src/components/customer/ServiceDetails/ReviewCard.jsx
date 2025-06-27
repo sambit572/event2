@@ -12,6 +12,7 @@ const ReviewCard = ({ review }) => {
           display: "flex",
           flexWrap: "wrap",
           alignItems: "center",
+          color: "#001f3f",
           gap: "10px",
           fontSize: "14px",
           marginBottom: "6px",
@@ -40,6 +41,7 @@ const ReviewCard = ({ review }) => {
         style={{
           display: "flex",
           gap: "6px",
+          color: "#001f3f",
           marginBottom: "8px",
           flexWrap: "wrap",
         }}
@@ -50,6 +52,7 @@ const ReviewCard = ({ review }) => {
             style={{
               width: "60px",
               height: "80px",
+              color: "#001f3f",
               backgroundColor: "#ccc",
               borderRadius: "6px",
               overflow: "hidden",
@@ -68,7 +71,7 @@ const ReviewCard = ({ review }) => {
           display: "flex",
           alignItems: "center",
           gap: "6px",
-          color: "#555",
+          color: "#001f3f",
           fontSize: "14px",
         }}
       >

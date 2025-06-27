@@ -49,7 +49,7 @@ function DashBoardSideBar({ isOpen }) {
                 checked={active}
                 onChange={() => setActive(!active)}
               />
-              <span>{active ? "Active" : "Inactive"}</span>
+              <span className="vendor-active">{active ? "Active" : "Inactive"}</span>
             </label>
           ) : (
             <span className="status-indicator">
@@ -110,7 +110,7 @@ function DashBoardSideBar({ isOpen }) {
             {bankDropdownOpen && (
               <div className="dropdown-content">
                 <div>
-                  <strong>Account Number:</strong>{" "}
+                  <strong className="vendor-accno">Account Number:</strong>{" "}
                   {editMode ? (
                     <input
                       type="text"
@@ -123,7 +123,7 @@ function DashBoardSideBar({ isOpen }) {
                   )}
                 </div>
                 <div>
-                  <strong>IFSC Code:</strong>{" "}
+                  <strong className="vendor-ifsc">IFSC Code:</strong>{" "}
                   {editMode ? (
                     <input
                       type="text"

@@ -6,16 +6,16 @@ function ToggleTabs({ activeTab, setActiveTab }) {
     <div className="tab-btn md:ml-8">
       <div className={`bg-slider ${activeTab}`}></div>
       <button
-        className={`button1 ${activeTab === "services" ? "active" : ""}`}
+        className={`${activeTab === "services" ? "active" : ""}`}
         onClick={() => setActiveTab("services")}
       >
-        My Services
+        SERVICES
       </button>
       <button
-        className={`button2 ${activeTab === "bookings" ? "active" : ""}`}
+        className={`${activeTab === "bookings" ? "active" : ""}`}
         onClick={() => setActiveTab("bookings")}
       >
-        My Bookings
+        BOOKINGS
       </button>
     </div>
   );
