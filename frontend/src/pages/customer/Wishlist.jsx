@@ -76,7 +76,7 @@ const Wishlist = () => {
 
   return (
     <div className="wishlist-container">
-      <h1 className=" sm:text-3xl md:text-4xl font-bold text-[#001f3f] mb-4 text-center">
+      <h1 className=" mt-10 sm:text-3xl md:text-4xl font-bold text-[#001f3f] mb-4 text-center">
         My Wishlist
       </h1>
 

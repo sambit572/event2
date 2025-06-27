@@ -24,12 +24,9 @@ import VendorRegistration from "./pages/vendor/VendorRegistration";
 
 import VendorService from "./pages/vendor/VendorService";
 
-
-
 import AboutUs from "./pages/common/AboutUs";
 import HelpUs from "./pages/common/HelpUs";
 import HelpCenter from "./pages/common/HelpCenter";
-
 
 import ForgotPass from "./pages/customer/ForgotPass.jsx";
 import ResetPassword from "./pages/customer/ResetPassword.jsx";
@@ -50,7 +47,7 @@ const App = () => {
 
   return (
     <>
-      <Navbar /> 
+      <Navbar />
 
       <main>
         <Routes>
@@ -60,9 +57,30 @@ const App = () => {
           <Route path="/categories" element={<CategoryCard />}></Route>
           <Route path="/reviews" element={<ReviewSlider />} />
           <Route path="/category/service" element={<ServiceDetails />} />
-          <Route path="/wishlist" element={<Wishlist />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/userdetails" element={<UserDetails />} />
+          <Route
+            path="/wishlist"
+            element={
+              <ProtectedRoute>
+                <Wishlist />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/userdetails"
+            element={
+              <ProtectedRoute>
+                <UserDetails />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/dashboardservices" element={<DashboardServices />} />
 
           {/* Vendor Routes */}
@@ -90,13 +108,11 @@ const App = () => {
             path="/reset-password/:resetToken"
             element={<ResetPassword />}
           />
-          
 
           {/* Misc */}
           <Route path="/about_us" element={<AboutUs />} />
           <Route path="/help_us" element={<HelpUs />} />
           <Route path="/help-Center" element={<HelpCenter />} />
-
         </Routes>
       </main>
 

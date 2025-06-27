@@ -49,6 +49,7 @@ const Navbar = () => {
         { withCredentials: true }
       );
       localStorage.removeItem("userFirstName");
+      localStorage.removeItem("currentlyLoggedIn");
       setUserFirstName(null);
       navigate("/", { replace: true });
     } catch (error) {

@@ -204,7 +204,7 @@ const Home = () => {
         console.log(response.data.data);
         const { user, accessToken } = response.data.data;
         if (user && accessToken) {
-          localStorage.setItem("currentlyLoggedIn", true);
+          localStorage.setItem("currentlyLoggedIn", "true");
           localStorage.setItem("userFirstName", user.fullName.split(" ")[0]);
         }
       } catch (error) {
@@ -226,7 +226,7 @@ const Home = () => {
       <div className="categories-head1 mb-[-15px]">
         <h1 className="align_center categories-head">Categories</h1>
       </div>
-      <p className="category-subheads  text-center ">
+      <p className="category-subheads text-center">
         Explore trusted professionals across categories and simplify your event
         planning.
       </p>
