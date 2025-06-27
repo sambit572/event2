@@ -49,6 +49,7 @@ const Navbar = () => {
         { withCredentials: true }
       );
       localStorage.removeItem("userFirstName");
+      localStorage.removeItem("currentlyLoggedIn");
       setUserFirstName(null);
       navigate("/", { replace: true });
     } catch (error) {
@@ -210,7 +211,7 @@ const Navbar = () => {
                 >
                   <FcAbout className="navbar_icon" /> About Us
                 </div>
-
+                
                 <div
                   className="dropdown-item"
                   onClick={() => navigate("/help_us")}
