@@ -13,13 +13,30 @@
 }
 
 /* Logo */
-.logo {
+/* .logo {
   cursor: pointer;
   text-decoration: none;
   color: #001f3f;
-  font-size: 22px;
-  font-weight: 700;
+  width: 100px;
+  background-color: transparent;
+} */
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  padding: 10px;
+  cursor: pointer;
 }
+
+.logo img {
+  height: 50px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
 .login {
   color: black;
   font-size: 19px;
@@ -449,6 +466,10 @@
 }
 
 @media (max-width: 431px) {
+  .navbar {
+    height: 115px;
+    width: 100%;
+  }
   .logo {
     width: 100%;
     text-align: center;
