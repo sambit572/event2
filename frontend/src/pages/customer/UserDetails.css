@@ -7,10 +7,12 @@
   margin: 60px auto;
   padding: 45px 35px;
   border-radius: 20px;
-  background-color: #fff;
+  
   backdrop-filter: blur(18px);
   border: 1px solid rgba(255, 255, 255, 0.3);
+  border: #001F3F 3px solid;
   box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+  background: #c0bcbc;
   color: #1f2937;
 }
 
@@ -20,7 +22,7 @@
 .user-details-container h3 {
   font-size: 30px;
   font-weight: 700;
-  background: linear-gradient(to right, #d946ef, #6366f1);
+  background: linear-gradient(45deg	,#004989,#001F3F);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   letter-spacing: 0.5px;
@@ -123,7 +125,7 @@
 }
 
 .save-btn {
-  background: linear-gradient(to right, #6366f1, #7c3aed);
+  background: #21a427;
   color: #fff;
   width: 150px;
 }

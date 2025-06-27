@@ -65,13 +65,13 @@
 .close-btn {
   position: relative;
   top: -7px;
-  left: 328px;
+  left: 300px;
   background: none;
   border: none;
-  font-size: 25px;
+  font-size: 40px;
   cursor: pointer;
   font-weight: bold;
-  color: #666;
+  color: #000000;
   transition: color 0.2s ease;
 }
 
@@ -140,7 +140,7 @@
   .booking-popup-box {
     max-width: 430px;
     padding: 22px;
-    
+
     top: 300px;
   }
 
@@ -152,7 +152,7 @@
     font-size: 1rem;
   }
 
-  .close-btn{
+  .close-btn {
     color: red;
   }
 }

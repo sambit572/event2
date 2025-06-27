@@ -82,7 +82,7 @@ const HelpCenter = () => {
       <div className="max-w-6xl mx-auto">
 
         {/* Language Selector */}
-        <div className="flex justify-end mb-6">
+        <div className="flex justify-end mb-10">
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
@@ -115,7 +115,7 @@ const HelpCenter = () => {
             </div>
             <p className="text-[#001f3f] mb-4">{content[language].chatDesc}</p>
             <div className='flex justify-center'>
-            <button className="bg-green-500 text-white px-5 py-2 rounded hover:bg-green-600 transition">
+            <button className="bg-green-500 text-black font-semibold mt-10 px-5 py-2 rounded transition">
               {content[language].chatBtn}
             </button>
             </div>
@@ -132,9 +132,9 @@ const HelpCenter = () => {
               </h2>
             </div>
             <p className="text-[#001f3f] mb-4">{content[language].callDesc}</p>
-            <div className='text-blue-700 text-base mb-1 mt-[-2px]'>{content[language].callNo}</div>
+            <div className='text-blue-700 font-semibold justify-center text-base ml-[80px] mb-10'>{content[language].callNo}</div>
             <div className="flex justify-center">
-              <button className="bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-600 transition">
+              <button className="bg-blue-500 text-black font-semibold px-5 py-2 rounded transition">
                 {content[language].callBtn}
               </button>
             </div>
@@ -142,17 +142,17 @@ const HelpCenter = () => {
           {/* Call */}
           <div className="bg-[#f7f7f7] p-6 rounded-lg shadow-md hover:shadow-xl transition">
             <div className="flex items-center gap-3 mb-4">
-              <div className="bg-purple-100 p-3 rounded-full">
-                <FaEnvelope className="text-purple-600 text-2xl" />
+              <div className="bg-red-100 p-3 rounded-full">
+                <FaEnvelope className="text-red-500 text-2xl" />
               </div>
               <h2 className="text-xl font-semibold text-[#001f3f]">
                 {content[language].emailTitle}
               </h2>
             </div>
             <p className="text-[#001f3f] mb-4">{content[language].emailDesc}</p>
-            <div className='text-purple-700 text-base mb-1 mt-[-2px]'>{content[language].emailId}</div>
+            <div className='text-red-500 font-semibold justify-center ml-14 text-base mb-10'>{content[language].emailId}</div>
             <div className='flex justify-center'>
-            <button className="bg-purple-500 text-white px-5 py-2 rounded hover:bg-purple-600 transition">
+            <button className=" text-black bg-red-400  font-semibold px-5 py-2 rounded transition">
               {content[language].emailBtn}
             </button>
             </div>

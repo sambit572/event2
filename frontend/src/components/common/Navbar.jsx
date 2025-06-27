@@ -24,7 +24,7 @@ const Navbar = () => {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showEllipsisDropdown, setShowEllipsisDropdown] = useState(false);
 
-  const [searchInput, setSearchInput] = useState("")
+  const [searchInput, setSearchInput] = useState("");
 
   const profileRef = useRef(null);
   const ellipsisRef = useRef(null);
@@ -49,6 +49,7 @@ const Navbar = () => {
         { withCredentials: true }
       );
       localStorage.removeItem("userFirstName");
+      localStorage.removeItem("currentlyLoggedIn");
       setUserFirstName(null);
       navigate("/", { replace: true });
     } catch (error) {
@@ -56,10 +57,9 @@ const Navbar = () => {
     }
   };
 
-  const handleSearch = () =>{
-    setSearchInput("")
-  }
-
+  const handleSearch = () => {
+    setSearchInput("");
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -160,14 +160,14 @@ const Navbar = () => {
                     </div>
                     <div className="dropdown-item hover:text-[#001f3f] hover:font-bold">
                       <FaHeart
-                        className="icon "
+                        className="navbar_icon "
                         style={{ marginRight: "4px" }}
                       />
                       <a href="./wishlist">Wishlist</a>
                     </div>
                     <div className="dropdown-item">
                       <FaSignOutAlt
-                        className="icon hover:text-[#001f3f] hover:font-bold"
+                        className="navbar_icon hover:text-[#001f3f] hover:font-bold"
                         style={{ marginRight: "4px" }}
                       />
                       <button
@@ -209,14 +209,14 @@ const Navbar = () => {
                   className="dropdown-item"
                   onClick={() => navigate("/about_us")}
                 >
-                  <FcAbout className="icon" /> About Us
+                  <FcAbout className="navbar_icon" /> About Us
                 </div>
-
+                
                 <div
                   className="dropdown-item"
                   onClick={() => navigate("/help_us")}
                 >
-                  <FaHandsHelping className="icon" /> Help Us
+                  <FaHandsHelping className="navbar_icon" /> Help Us
                 </div>
               </div>
             )}

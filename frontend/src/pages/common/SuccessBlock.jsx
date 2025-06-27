@@ -1,7 +1,9 @@
 import PropTypes from "prop-types";
 import "./LoginRegister.css"; // Reuse styles if already defined
 
+
 const SuccessBlock = ({ showSuccessIcon }) => {
+
   return (
     <div className="success-container">
       <h2 className="success-heading">Congratulations</h2>

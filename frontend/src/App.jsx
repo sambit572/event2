@@ -62,9 +62,30 @@ const App = () => {
           <Route path="/categories" element={<CategoryCard />}></Route>
           <Route path="/reviews" element={<ReviewSlider />} />
           <Route path="/category/service" element={<ServiceDetails />} />
-          <Route path="/wishlist" element={<Wishlist />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/userdetails" element={<UserDetails />} />
+          <Route
+            path="/wishlist"
+            element={
+              <ProtectedRoute>
+                <Wishlist />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/userdetails"
+            element={
+              <ProtectedRoute>
+                <UserDetails />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/dashboardservices" element={<DashboardServices />} />
 
           {/* Vendor Routes */}
