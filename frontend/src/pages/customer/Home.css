@@ -55,8 +55,8 @@ color: #001f3f;
 }
 .browse-all-btn {
   padding: 12px 32px;
-  background-color: rgb(255 162 0); 
-  color: #001f3f;
+   background: linear-gradient(45deg	,#004989,#001F3F);
+  color: #e5e5de;
   font-size: 16px;
   font-weight: 700;
   border: none;
