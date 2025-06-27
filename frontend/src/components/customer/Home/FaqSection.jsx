@@ -43,11 +43,6 @@ const faqData = [
     answer:
       "Currently, Eventsbridge is providing services exclusively in Odisha. However, we are actively working on expanding our platform to more cities and regions soon to serve a wider audience. Stay tuned for updates!",
   },
-  {
-    question: "Is Eventsbridge only available in certain cities?",
-    answer:
-      "Currently, Eventsbridge is providing services exclusively in Odisha, with plans to expand soon.",
-  },
 ];
 
 const FaqSection = () => {
@@ -64,7 +59,9 @@ const FaqSection = () => {
   return (
     <div className="faq-container">
       <h2 className="faq-title">Explore Our FAQs </h2>
-      <h3 className="faq-subtitle">Bridging the Gap Between You and Clarity </h3>
+      <h3 className="faq-subtitle">
+        Bridging the Gap Between You and Clarity{" "}
+      </h3>
 
       <div className="faq-columns">
         {columns.map((column, colIdxs) => (
