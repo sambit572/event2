@@ -49,9 +49,8 @@
 }
 .browse_all {
   display: flex;
-  margin-right: 20px;
   justify-content: end;
-  margin-right: 90px;
+  margin-right: 140px;
   margin-bottom: 0px;
 }
 .browse-all-btn {

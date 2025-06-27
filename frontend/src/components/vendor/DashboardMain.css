@@ -1,7 +1,7 @@
 .dashboard-hamburger {
   font-size: 28px;
   border: none;
-  color: #4527a0;
+  color: #6a1b9a;
   cursor: pointer;
   margin: 10px;
   z-index: 30;
@@ -15,11 +15,10 @@
   max-height: 100vh;
   overflow-y: auto;
   padding-right: 1rem;
+  scrollbar-color: #0d47a1 #f0f4ff;
 }
 
-.dashboard-hamburger:hover {
-  background: none;
-}
+
 
 .dashboard-container-box {
   display: flex;
@@ -37,7 +36,7 @@
   }
 
   .open {
-    color: whitesmoke;
+    color: white;
   }
   .main-contain {
     width: 30%;

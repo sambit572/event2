@@ -1,6 +1,7 @@
 /* ---------- DJ Details Section ---------- */
 .dj-details {
   margin-top: 20px;
+  color: #001f3f;
 }
 
 .dj-details h2 {
@@ -13,13 +14,13 @@
   margin-top: 20px;
   margin-bottom: 10px;
   font-size: 20px;
-  color: #444;
+  color: #001f3f;
 }
 
 .para1 {
   margin-bottom: 8px;
   font-size: 16px;
-  color: #333;
+  color: #001f3f;
 }
 
 .details-list {
@@ -32,7 +33,7 @@
 .details-list li {
   margin-bottom: 8px;
   font-size: 16px;
-  color: #444;
+  color: #001f3f;
 }
 
 /* ---------- Responsive Adjustments ---------- */

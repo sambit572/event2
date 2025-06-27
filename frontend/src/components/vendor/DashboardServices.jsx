@@ -57,13 +57,13 @@ const DashboardServices = () => {
         />
         <div className="image-buttons-dashboard">
           <button
-            className="edit flex gap-1"
+            className="vendor-edit-btn flex gap-1"
             onClick={() => setIsEditing(true)}
           >
-            <FaEdit /> Edit
+            <FaEdit className="mt-[2.9px]" /> Edit
           </button>
-          <button className="delete flex gap-1">
-            <FaTrash /> Delete
+          <button className="vendor-delete-btn flex gap-1">
+            <FaTrash className="mt-[2.9px]" /> Delete
           </button>
         </div>
       </div>

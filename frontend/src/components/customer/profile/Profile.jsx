@@ -69,7 +69,7 @@ function Profile() {
 
   return (
     <div
-      className="mb-[-148px] relative w-full min-h-screen flex flex-col md:flex-row  sm:mt-[200px] md:mt-[0px] bg-white xl:overflow-x-hidden sm:Class	CSS Equivalent
+      className="profile_section mb-[-148px] relative w-full min-h-screen flex flex-col md:flex-row bg-white xl:overflow-x-hidden sm:Class	CSS Equivalent
 "
     >
       <div className="profile-sidebar-fixed">

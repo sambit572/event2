@@ -1,7 +1,10 @@
 import React from "react";
 import "./CategoryCard.css";
+import { useNavigate } from "react-router-dom";
 
 const CategoryCard = ({ category }) => {
+  const navigate = useNavigate();
+
   return (
     // <a href={`/category/${category.id}`}>
     <a href="/category">

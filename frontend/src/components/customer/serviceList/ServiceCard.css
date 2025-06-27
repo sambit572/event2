@@ -1,10 +1,12 @@
 .totalService {
   display: flex;
+  
   /* background-color: aqua; */
 }
 .serviceCards {
   display: flex;
   width: 100%;
+  background: #e5e5de;
 
   /* background-color: #0c742b; */
 }

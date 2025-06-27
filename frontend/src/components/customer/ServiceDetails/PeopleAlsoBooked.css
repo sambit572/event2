@@ -1,6 +1,8 @@
 .similar-container {
   display: flex;
   flex-wrap: wrap;
+  background-color: #e5e5de;
+  border-radius: 5px;
 
   /* gap: 16px; */
   margin-top: 20px;
@@ -8,7 +10,7 @@
 }
 
 .similar-card {
-  background: linear-gradient(to bottom right, #ffffff, #f0f4ff);
+  background: #e5e5de;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
   border-radius: 18px;
   overflow: hidden;
@@ -42,7 +44,7 @@
   font-size: 16px;
   font-weight: 500;
   /* margin-top: 12px; */
-  color: #222;
+  color: #001f3f;
 }
 
 .price-block {
@@ -61,7 +63,7 @@
   align-items: center;
   font-weight: bold;
   font-size: 17px;
-  color: #000;
+  color: #001f3f;
 }
 
 .original-prices {
@@ -101,13 +103,13 @@
 
 .review-text {
   font-size: 14px;
-  color: #444;
+  color: #001f3f;
 }
 
 .viewBtn {
   border: 1px solid #222;
   background-color: #fff;
-  color: #222;
+  color: #001f3f;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -139,7 +141,7 @@
 .viewBtn.wishlisted {
   border: 1px solid red;
   background-color: white;
-  color: black;
+  color: #001f3f;
 }
 
 .viewBtn.wishlisted .wishIcon {
