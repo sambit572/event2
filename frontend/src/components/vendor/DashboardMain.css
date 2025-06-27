@@ -1,5 +1,6 @@
 .dashboard-hamburger {
   font-size: 28px;
+  font-weight: bold;
   border: none;
   color: #6a1b9a;
   cursor: pointer;
@@ -17,8 +18,6 @@
   padding-right: 1rem;
   scrollbar-color: #0d47a1 #f0f4ff;
 }
-
-
 
 .dashboard-container-box {
   display: flex;
@@ -58,6 +57,7 @@
 }
 /* Pop-up overlay */
 .popup-overlayfinal {
+  background: linear-gradient(135deg, #e5e5de 0%, #e5e5de 100%);
   position: fixed;
   top: 0;
   left: 0;
@@ -72,12 +72,12 @@
   animation: fadeIn 0.5s ease-in-out;
   padding: env(safe-area-inset-top) env(safe-area-inset-right)
     env(safe-area-inset-bottom) env(safe-area-inset-left);
-    
 }
 
 /* Pop-up container (consolidated from .popup-container and .popup-box) */
 .popup-container {
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  background: linear-gradient(135deg, #e5e5de 0%, #e5e5de 100%);
+
   border-radius: 16px; /* Slightly smaller radius for smaller screens */
   padding: 1.5rem; /* Reduced padding for smaller screens */
   width: 90vw;
@@ -87,7 +87,7 @@
   box-shadow: 0 15px 60px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 0, 0, 0.1);
   position: relative;
   animation: scaleIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
   border: 1px solid rgba(255, 255, 255, 0.2);
   scrollbar-width: thin; /* Firefox: Thin scrollbar */
   scrollbar-color: #888 #f8fafc; /* Firefox: Scrollbar colors */
@@ -114,7 +114,7 @@
 
 /* Pop-up title */
 .popup-title {
-  color: #000000;
+  color: #001f3f;
   font-size: 1.5rem;
   margin-bottom: 15px;
   display: flex;
@@ -125,8 +125,9 @@
 /* Pop-up content */
 .popup-content p {
   margin: 0.75rem 0;
+  border: #000000 2px solid;
   font-size: 1rem;
-  color: #374151;
+  color: #001f3f;
   line-height: 1.6;
   display: flex;
   justify-content: space-between;
@@ -141,7 +142,7 @@
 }
 
 .popup-content strong {
-  color: #000000;
+  color: #001f3f;
 }
 
 /* Pop-up actions */
@@ -168,22 +169,22 @@
 }
 
 .btn-accept {
-  background: #000000;
+  background: #4dc718;
   color: white;
 }
 
 .btn-accept:hover {
-  background: #333333; /* Slightly lighter for hover */
+  background: #56db04; /* Slightly lighter for hover */
   transform: translateY(-2px);
 }
 
 .btn-decline {
-  background: #000000;
+  background: #b92020;
   color: white;
 }
 
 .btn-decline:hover {
-  background: #333333;
+  background: #df0d0d;
   transform: translateY(-2px);
 }
 
@@ -217,8 +218,8 @@
     transform: scale(1);
   }
 }
-@media (max-width: 1024px){
-.popup-container {
+@media (max-width: 1024px) {
+  .popup-container {
     width: 85vw;
     max-width: 500px; /* Slightly smaller than desktop */
     padding: 1.4rem;
@@ -227,8 +228,8 @@
     margin-bottom: 700px;
   }
 }
-@media (max-width: 850px){
-   .popup-container {
+@media (max-width: 850px) {
+  .popup-container {
     width: 85vw;
     max-width: 500px; /* Slightly smaller than desktop */
     padding: 1.4rem;
@@ -294,7 +295,6 @@
     border-radius: 12px;
     margin-top: 100px;
     margin-bottom: 190px;
-    
   }
 
   .popup-title {
@@ -322,4 +322,3 @@
     min-width: 100%; /* Full-width buttons */
   }
 }
-

@@ -25,7 +25,7 @@
   font-size: 19px;
   font-weight: bold;
 }
-.login:hover .icon {
+.login:hover .navbar_icon {
   color: #fff;
 }
 .login:hover {
@@ -58,7 +58,6 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
   border-radius: 999px;
 }
-
 
 .search-bar .search-icon {
   color: black;
@@ -114,7 +113,7 @@
   padding: 0;
 }
 
-.profile-btn:hover .icon {
+.profile-btn:hover .navbar_icon {
   color: #fff;
 }
 .profile-btn > span {
@@ -132,12 +131,14 @@
   font-weight: bold;
   background: black;
 }
-.icon {
+.navbar_icon {
   font-size: 15px;
   margin-right: 5px;
   color: black;
 }
-
+.dropdown-item:hover .navbar_icon {
+  color: #fff;
+}
 .nav-items {
   display: flex;
   align-items: center;
@@ -206,8 +207,6 @@
   color: black;
 }
 
-
-
 .nested-submenu {
   margin-left: 15px;
   margin-top: 5px;
@@ -241,7 +240,6 @@
   background: #fff;
   color: #3b0340e1;
 }
-
 
 .ellipsis-menu .dropdown-item:hover {
   font-weight: bold;
@@ -305,6 +303,9 @@
     padding: 8px 12px;
   }
 
+  .nav-items:hover .navbar_icon {
+    color: #fff;
+  }
   .nav-items:hover .icons {
     color: #fff;
   }
@@ -315,7 +316,7 @@
     background: #001f3f;
   }
 
-  .login:hover .icon {
+  .login:hover .navbar_icon {
     color: #fff;
   }
   .login:hover {
