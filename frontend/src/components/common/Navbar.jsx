@@ -16,6 +16,8 @@ import { MdMiscellaneousServices, MdReviews } from "react-icons/md";
 import axios from "axios";
 import { useNavigate, Navigate } from "react-router-dom";
 import ReviewSlider from "../customer/Home/ReviewSlider.jsx";
+import ImageSlider from "./../customer/Home/ImageSlider";
+import logo from "../../assets/logo.png";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -90,7 +92,9 @@ const Navbar = () => {
     <div className="navbar">
       {/* Logo */}
       <div className="logo">
-        <span onClick={handleHomeClick}>EVENTSBRIDGE</span>
+        <span onClick={handleHomeClick}>
+          <img src={logo} alt="logo" />
+        </span>
       </div>
 
       <div className="search-and-nav-icons-container ">
@@ -211,7 +215,7 @@ const Navbar = () => {
                 >
                   <FcAbout className="navbar_icon" /> About Us
                 </div>
-                
+
                 <div
                   className="dropdown-item"
                   onClick={() => navigate("/help_us")}
