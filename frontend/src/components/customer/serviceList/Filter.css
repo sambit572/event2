@@ -1,6 +1,6 @@
 .filter {
   width: 280px;
-  max-height: 100%;
+  height: max-content;
   margin-left: 5px;
   margin-top: 17px;
   background: #eee;
