@@ -9,7 +9,7 @@ import SuccessBlock from "./SuccessBlock.jsx";
 import axios from "axios";
 import "./LoginRegister.css";
 
-const Login = ({ onClose }) => {
+const Login = ({ onClose, onSwitchToRegister }) => {
   const navigate = useNavigate();
   const [step, setStep] = useState("form"); // 'form', 'otp', 'success'
   const [showSuccessIcon, setShowSuccessIcon] = useState(false);
@@ -121,7 +121,9 @@ const Login = ({ onClose }) => {
 
   const renderStep = () => {
     if (step === "success") return <SuccessBlock showSuccessIcon={showSuccessIcon} />;
+
     if (step === "otp") return <OTPVerification setStep={setStep} />;
+
 
     return (
       <>
@@ -164,8 +166,8 @@ const Login = ({ onClose }) => {
         </button>
 
         <p className="signup-text">
-          Don’t have an account?{" "}
-          <span className="login-link" onClick={() => navigate("/register")}>
+          Don't have an account?{" "}
+          <span className="login-link" onClick={onSwitchToRegister}>
             Sign Up
           </span>
         </p>
@@ -191,6 +193,7 @@ const Login = ({ onClose }) => {
 
 Login.propTypes = {
   onClose: PropTypes.func,
+  onSwitchToRegister: PropTypes.func,
 };
 
 export default Login;
