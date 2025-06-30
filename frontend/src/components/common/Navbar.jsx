@@ -15,11 +15,12 @@ import {
 import { FcAbout } from "react-icons/fc";
 import { MdMiscellaneousServices, MdReviews } from "react-icons/md";
 import axios from "axios";
-import { useNavigate, useLocation } from "react-router-dom";
-import logo from "../../assets/logo.png"; 
+import { useNavigate, Navigate } from "react-router-dom";
+import ReviewSlider from "../customer/Home/ReviewSlider.jsx";
+import ImageSlider from "./../customer/Home/ImageSlider";
+import logo9 from "../../assets/logo9.png";
 
-
-const Navbar = ({ onOpenLogin, onOpenRegister }) => {
+const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [userFirstName, setUserFirstName] = useState(null);
@@ -121,7 +122,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
     <div className="navbar">
       <div className="logo">
         <span onClick={handleHomeClick}>
-          <img src={logo} alt="logo" />
+          <img src={logo9} alt="logo" />
         </span>
       </div>
 
@@ -142,8 +143,8 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
           <div className="nav-item profile-dropdown-container" ref={profileRef}>
             <div className="flex items-center gap-2 text-gray-700 cursor-pointer login">
               <span
-                className="flex items-center gap-2"
-                onClick={!userFirstName ? handleLoginClick : undefined}
+                className="flex items-center gap-2 max-[1024px]:flex-row max-[1024px]:text-[12px] max-[820px]:text-[11px]"
+                onClick={!userFirstName ? () => navigate("/login") : undefined}
               >
                 <FaUser className="text-lg" />
                 <span className="font-medium">
@@ -200,56 +201,18 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
             )}
           </div>
 
-          {/* Vendor Dropdown */}
-          {/* Vendor Dropdown - Same structure as Profile Dropdown */}
-<div className="nav-item profile-dropdown-container" ref={vendorRef}>
-  <div className="flex items-center gap-2 text-gray-700 cursor-pointer login">
-    <span
-      className="flex items-center gap-2"
-      onClick={() => setShowVendorDropdown((prev) => !prev)}
-    >
-      <FaStore className="text-lg" />
-      <span className="font-medium">
-        Be a Vendor
-      </span>
-      {showVendorDropdown ? (
-        <FaChevronUp className="text-sm" />
-      ) : (
-        <FaChevronDown className="text-sm" />
-      )}
-    </span>
-  </div>
-
-  {showVendorDropdown && (
-    <div className="dropdown-menu profile-menu">
-      <h4 className="login-h4">Welcome Vendor</h4>
-      <p className="login-p">Access your vendor tools and profile</p>
-      <div className="dropdown-header">
-        <span className="text-[#001f3f]">New Vendor?</span>
-        <button
-          className="bg-blue-500 hover:bg-blue-600"
-          onClick={handleVendorClick}
-        >
-          Register
-        </button>
-      </div>
-      <hr />
-      <div
-        className="dropdown-item"
-        onClick={() => navigate("/vendor/dashboard")}
-      >
-        📊 My Listings
-      </div>
-      <div
-        className="dropdown-item"
-        onClick={() => navigate("/vendor/help")}
-      >
-        ❓ Vendor Help
-      </div>
-    </div>
-  )}
-</div>
-
+          {/* Become Vendor */}
+          <div
+            className="nav-items  max-[1024px]:flex-row max-[1024px]:text-[12px] max-[820px]:text-[11px]"
+            onClick={() =>
+              !userFirstName ? navigate("/login") : navigate("/vendor/register")
+            }
+          >
+            <FaStore className="icons max-[1024px]:h-[18px] max-[1024px]:w-[18px]  max-[820px]:h-[15px]" />
+            <span className="font-medium text-[#001F3F] hover:text-white  font-semibold max-[1024px]:mt-[6px] max-[820px]:text-[11px] max-[820px]:w-max">
+              Be a Vendor
+            </span>
+          </div>
 
           {/* Three Dots Dropdown */}
           <div className="nav-item ellipsis-container" ref={ellipsisRef}>
