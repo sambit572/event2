@@ -35,6 +35,7 @@ import ImageSlider from "../../components/customer/Home/ImageSlider";
 
 import Milestones from "../../components/common/aboutus/Milestones";
 import AddsBanner from "../../components/customer/Home/AddsBanner";
+import BackToTop from "../common/BackToTop";
 
 const images = [
   {
@@ -180,6 +181,7 @@ const Home = () => {
           </div>
         ))}
       </div>
+      <BackToTop />
       <Milestones />
       <ReviewSlider />
       <FaqSection />
