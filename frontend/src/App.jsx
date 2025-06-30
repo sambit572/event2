@@ -1,5 +1,11 @@
 import React from "react";
-import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
+import {
+  Route,
+  Routes,
+  useNavigate,
+  BrowserRouter,
+  useLocation,
+} from "react-router-dom";
 
 // Core Components
 import Navbar from "./components/common/Navbar";
@@ -41,6 +47,7 @@ import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
 // Common
 import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
+import ScrollToTop from "./components/common/ScrollToTop";
 
 const App = () => {
   const navigate = useNavigate();
@@ -54,6 +61,7 @@ const App = () => {
       {/* Conditionally render Navbar */}
       {location.pathname !== "/admin" && <Navbar />}
 
+      <ScrollToTop />
       <main>
         <Routes>
           {/* Customer Routes */}
