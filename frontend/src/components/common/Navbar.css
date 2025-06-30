@@ -25,14 +25,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: transparent;
-  padding: 10px;
+  background: transparent;
+  padding-top: 10px;
   cursor: pointer;
 }
 
 .logo img {
-  height: 50px;
+  height: 200px;
   width: auto;
+  /* font-size: 50px; */
+
   display: block;
   object-fit: contain;
 }
@@ -110,6 +112,7 @@
 }
 .nav-item {
   display: flex;
+  /* flex-direction: row; */
   align-items: center;
   cursor: pointer;
   font-size: 15px;
@@ -377,7 +380,7 @@
 }
 @media (max-width: 820px) {
   .search-and-nav-icons-container {
-    width: calc(100% - 181px - 20px);
+    width: calc(100% - 20px - 20px);
   }
   .search-bar {
     margin-left: 0px;
@@ -436,23 +439,24 @@
 @media (max-width: 680px) {
   .navbar {
     display: flex;
-    flex-wrap: wrap;
-    height: 100px;
+    /* flex-wrap: wrap; */
+    height: 50px;
+    margin-top: 0px;
   }
   .search-bar {
     width: 40%;
   }
   .nav-icons {
     width: 100%;
-    margin-top: 10px;
-    justify-content: space-between;
+    /* margin-top: 10px; */
+    justify-content: end;
   }
 
   html {
     font-size: 85%;
   }
   .logo img {
-    height: 35px;
+    height: 180px;
   }
 
   .dropdown-menu {
@@ -465,21 +469,31 @@
   }
 }
 
-@media (max-width: 431px) {
+@media (max-width: 460px) {
   .navbar {
-    height: 115px;
+    /* padding: 0px; */
+
+    height: 60px;
     width: 100%;
   }
   .logo {
+    /* margin-top: 0px; */
+
     width: 100%;
     text-align: center;
+    /* margin-bottom: 0px; */
+  }
+  .logo img {
+    height: 180px;
   }
 
   .search-and-nav-icons-container {
     width: 100%;
     display: flex;
     flex-direction: row;
-    gap: 50px;
+
+    /* gap: 50px; */
+    /* margin-top: 0px; */
   }
 
   .dropdown-menu {
@@ -491,8 +505,14 @@
   .signOutButton {
     padding: 0;
   }
+  .font-medium {
+    display: none;
+  }
   .search-bar {
     width: 43%;
+  }
+  .search-icon {
+    display: none;
   }
 }
 
@@ -500,12 +520,18 @@
   .search-bar {
     width: 46%;
   }
+  .logo img {
+    height: 180px;
+  }
 }
 @media (max-width: 391px) {
   .search-bar {
     width: 47%;
     padding-right: 2px;
     padding-left: 11px;
+  }
+  .logo img {
+    height: 180px;
   }
 }
 

@@ -17,7 +17,7 @@ import axios from "axios";
 import { useNavigate, Navigate } from "react-router-dom";
 import ReviewSlider from "../customer/Home/ReviewSlider.jsx";
 import ImageSlider from "./../customer/Home/ImageSlider";
-import logo from "../../assets/logo.png";
+import logo9 from "../../assets/logo9.png";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -93,7 +93,7 @@ const Navbar = () => {
       {/* Logo */}
       <div className="logo">
         <span onClick={handleHomeClick}>
-          <img src={logo} alt="logo" />
+          <img src={logo9} alt="logo" />
         </span>
       </div>
 
@@ -117,7 +117,7 @@ const Navbar = () => {
           <div className="nav-item profile-dropdown-container" ref={profileRef}>
             <div className="flex items-center gap-2 text-gray-700 cursor-pointer login  ">
               <span
-                className="flex items-center gap-2 max-[1024px]:flex-col max-[1024px]:text-[12px] max-[820px]:text-[11px]"
+                className="flex items-center gap-2 max-[1024px]:flex-row max-[1024px]:text-[12px] max-[820px]:text-[11px]"
                 onClick={!userFirstName ? () => navigate("/login") : undefined}
               >
                 <FaUser className="text-lg" />
@@ -189,13 +189,13 @@ const Navbar = () => {
 
           {/* Become Vendor */}
           <div
-            className="nav-items  max-[1024px]:flex-col max-[1024px]:text-[12px] max-[820px]:text-[11px]"
+            className="nav-items  max-[1024px]:flex-row max-[1024px]:text-[12px] max-[820px]:text-[11px]"
             onClick={() =>
               !userFirstName ? navigate("/login") : navigate("/vendor/register")
             }
           >
             <FaStore className="icons max-[1024px]:h-[18px] max-[1024px]:w-[18px]  max-[820px]:h-[15px]" />
-            <span className=" text-[#001F3F] hover:text-white  font-semibold max-[1024px]:mt-[6px] max-[820px]:text-[11px] max-[820px]:w-max">
+            <span className="font-medium text-[#001F3F] hover:text-white  font-semibold max-[1024px]:mt-[6px] max-[820px]:text-[11px] max-[820px]:w-max">
               Be a Vendor
             </span>
           </div>
