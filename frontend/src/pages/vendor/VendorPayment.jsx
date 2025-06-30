@@ -32,10 +32,6 @@ export default function VendorPayment() {
     }));
   };
 
-  // <<<<<<< HEAD
-  //   const handleNext = () => {
-  //     navigate("/vendor/legal-consent");
-  //   };
   const handleBack = () => {
     navigate("/category/VendorService");
   };
@@ -201,7 +197,7 @@ export default function VendorPayment() {
             onChange={handleChange}
           />
         </div>
-        <Button handleBack={handleBack} handleNext={handleNext} />
+        <Button onBack={handleBack} onNext={handleNext} />
       </div>
     </div>
   );

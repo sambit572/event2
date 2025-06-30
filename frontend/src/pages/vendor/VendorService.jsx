@@ -546,9 +546,15 @@ function VendorService({ currentStep }) {
             />
           </div>
         </div>
-          <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "20px",
+          }}
+        >
           <div style={{ width: "100%", maxWidth: "750px" }}>
-           <Button onBack={handleBack} onNext={handleNext} />
+            <Button onBack={handleBack} onNext={handleNext} />
           </div>
         </div>
       </div>

@@ -19,7 +19,7 @@ import ReviewSlider from "../customer/Home/ReviewSlider.jsx";
 import ImageSlider from "./../customer/Home/ImageSlider";
 import logo from "../../assets/logo.png";
 
-const Navbar = () => {
+ const Navbar = () => {
   const navigate = useNavigate();
 
   const [userFirstName, setUserFirstName] = useState(null);
@@ -30,6 +30,16 @@ const Navbar = () => {
 
   const profileRef = useRef(null);
   const ellipsisRef = useRef(null);
+
+  const inputRef = useRef(null);
+
+  const handleSearchicon = (e) => {
+    e.stopPropagation(); // Prevent triggering parent onClick
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
+  
 
   const handleHomeClick = () => {
     if (location.pathname === "/") {
@@ -100,8 +110,9 @@ const Navbar = () => {
       <div className="search-and-nav-icons-container ">
         {/* Search Bar */}
         <div className="search-bar" onClick={handleSearch}>
-          <FaSearch className="search-icon" />
+          <FaSearch className="search-icon" onClick={handleSearchicon} />
           <input
+            ref={inputRef}
             type="text"
             placeholder="Search for Services and More"
             value={searchInput}
@@ -230,5 +241,6 @@ const Navbar = () => {
     </div>
   );
 };
+
 
 export default Navbar;
