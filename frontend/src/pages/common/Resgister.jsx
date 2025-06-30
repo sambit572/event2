@@ -40,12 +40,25 @@ const Register = ({ onClose }) => {
         { withCredentials: true }
       );
 
-      const { user } = response.data.data;
+
+      const  user  = response.data.data;
+      console.log(user);
+
 
       if (response.data.message === "user do exist") {
         setErrorMsg("User already exists. Please log in.");
       } else {
-        localStorage.setItem("userFirstName", user.fullName.split(" ")[0]);
+
+
+        let userFirstName ;
+
+        if (user.fullName.length == 1){
+          userFirstName = user.fullName;
+        }else{
+          userFirstName = user.fullName.split(" ")[0];
+        }
+
+        localStorage.setItem("userFirstName", userFirstName);
         localStorage.setItem("currentlyLoggedIn", "true");
         window.dispatchEvent(new Event("userLoggedIn"));
         navigate("/", { replace: true });
@@ -138,7 +151,7 @@ const Register = ({ onClose }) => {
 };
 
 Register.propTypes = {
-  onClose: PropTypes.func, // optional for modal
+  onClose: PropTypes.func, 
 };
 
 export default Register;

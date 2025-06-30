@@ -14,11 +14,13 @@ function Profile() {
   const [errorMsg, setErrorMsg] = useState("");
 
   const handlePasswordChangeSubmit = async () => {
-    try {
-      if (newPassword !== confirmPassword) {
-        return setErrorMsg("Passwords do not match");
-      }
+    setErrorMsg(""); // Reset on each submit
 
+    if (newPassword !== confirmPassword) {
+      return setErrorMsg("Passwords do not match");
+    }
+
+    try {
       const response = await axios.post(
         `${BACKEND_URL}/user/change-password`,
         { oldPassword, newPassword },
@@ -27,16 +29,29 @@ function Profile() {
 
       if (response.status === 200) {
         alert("Password changed successfully");
+        // Only reset after success
+        setShowPasswordModal(false);
+        setOldPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
       }
     } catch (error) {
       console.error("Password change error:", error);
-    }
 
-    setShowPasswordModal(false);
-    setOldPassword("");
-    setNewPassword("");
-    setConfirmPassword("");
+      // Try to show a clean error message from backend
+      const backendMsg =
+        error.response?.data?.message ||
+        "Failed to change password. Try again.";
+
+      console.log(backendMsg);
+
+      setErrorMsg(backendMsg); // ✅ Show it in UI
+
+      // Optional: don't alert here unless critical
+      // alert(backendMsg);
+    }
   };
+  
 
   useEffect(() => {
     const handleResize = () => {
