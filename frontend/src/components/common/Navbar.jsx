@@ -195,7 +195,7 @@ const Navbar = () => {
             }
           >
             <FaStore className="icons max-[1024px]:h-[18px] max-[1024px]:w-[18px]  max-[820px]:h-[15px]" />
-            <span className="font-medium text-[#001F3F] hover:text-white  font-semibold max-[1024px]:mt-[6px] max-[820px]:text-[11px] max-[820px]:w-max">
+            <span className="font-medium text-[#001F3F] hover:text-white max-[1024px]:mt-[6px] max-[820px]:text-[11px] max-[820px]:w-max">
               Be a Vendor
             </span>
           </div>
