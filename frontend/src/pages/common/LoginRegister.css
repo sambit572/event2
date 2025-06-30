@@ -31,7 +31,7 @@
   top: 8px;
   right: 12px;
   color: black;
-  background:none;
+  background: none;
   border: none;
 
   font-size: 30px;
@@ -245,31 +245,29 @@
     height: 500px;
   }
 
-  .login-input{
+  .login-input {
     margin-bottom: 8px;
   }
-  .signup-text{
+  .signup-text {
     position: relative;
     bottom: 10px;
   }
 }
 
-
-
-@media (max-width:820px) {
-  .login-modal{
+@media (max-width: 820px) {
+  .login-modal {
     top: -270px;
   }
 }
 
-@media (max-width:768px) {
-  .login-modal{
+@media (max-width: 768px) {
+  .login-modal {
     top: -200px;
   }
 }
 
-@media (min-width:540px) and (max-width:766px) {
-  .login-modal{
+@media (min-width: 540px) and (max-width: 766px) {
+  .login-modal {
     top: -20px;
   }
 }
@@ -291,29 +289,27 @@
   }
 }
 
-@media (max-width:420px) {
-
-  .login-modal{
+@media (max-width: 420px) {
+  .login-modal {
     top: -100px;
   }
-  .otp-button{
+  .otp-button {
     margin-left: 66px;
   }
-  
 }
 
-@media (max-width:390px) {
-  .login-modal{
+@media (max-width: 390px) {
+  .login-modal {
     top: -50px;
   }
 
-  .signup-text{
+  .signup-text {
     font-size: 12px;
   }
 }
 
-@media (max-width:344px) {
-  .login-modal{
+@media (max-width: 344px) {
+  .login-modal {
     top: -100px;
   }
 }

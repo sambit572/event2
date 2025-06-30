@@ -18,12 +18,12 @@
   content: "";
   position: absolute;
   inset: 0;
-  background-image: url('/milestone.jpg');
+  background-image: url("/milestone.jpg");
   background-size: cover;
-  background-position:center 48%;
-  color: rgba(255,193,7,0.15);
+  background-position: center 48%;
+  color: rgba(255, 193, 7, 0.15);
   background-repeat: no-repeat;
-  filter: blur(12px); /* adjust blur strength */
+  filter: blur(14px); /* adjust blur strength */
   z-index: -2;
 }
 
@@ -32,7 +32,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right #fff8e1 ,#ffecb3); 
+  background: linear-gradient(to right #fff8e1, #ffecb3);
   z-index: -1;
 }
 
@@ -43,7 +43,7 @@
   min-width: 150px;
   padding: 1rem;
   background: none;
-  color: #ffc107;
+  color: #f58300;
 }
 
 /* Milestone number styling */
