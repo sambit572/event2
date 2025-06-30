@@ -12,15 +12,6 @@
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Logo */
-/* .logo {
-  cursor: pointer;
-  text-decoration: none;
-  color: #001f3f;
-  width: 100px;
-  background-color: transparent;
-} */
-
 .logo {
   display: flex;
   align-items: center;
