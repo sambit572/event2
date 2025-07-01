@@ -289,7 +289,6 @@
 @media (max-width: 768px) {
   .signOutButton {
     border: none;
-    background-color: #f5efff;
     color: black;
     font-size: 17px;
     font-weight: 520;
@@ -490,8 +489,8 @@
 
   .dropdown-menu {
     width: 209px;
-    left: 185px !important;
-    top: 94px !important;
+    left: 164px !important;
+    top: 120px !important;
   }
 
   .signOutButton {

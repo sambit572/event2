@@ -32,6 +32,15 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
   const profileRef = useRef(null);
   const ellipsisRef = useRef(null);
 
+  const inputRef = useRef(null);
+
+  const handleSearchicon = (e) => {
+    e.stopPropagation(); // Prevent triggering parent onClick
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
+
   const handleHomeClick = () => {
     if (location.pathname === "/") {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -122,8 +131,9 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
       <div className="search-and-nav-icons-container ">
         {/* Search Bar */}
         <div className="search-bar" onClick={handleSearch}>
-          <FaSearch className="search-icon" />
+          <FaSearch className="search-icon" onClick={handleSearchicon} />
           <input
+            ref={inputRef}
             type="text"
             placeholder="Search for Services and More"
             value={searchInput}
