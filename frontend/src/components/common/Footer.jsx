@@ -42,7 +42,7 @@ function Footer() {
         <div className="footer-columns">
           <div>
             <h4>Contact</h4>
-            <p><img src="/gmail.png" alt="Email" className="icon" /> Eb@Example.Com</p>
+            <p><img src="/gmail.png" alt="Email" className="icon" />Support@eventsbridge.com</p>
             <p><img src="/phone-call.png" alt="Phone" className="icon" /> 123-456-7890</p>
             <p><img src="/placeholder.png" alt="Location" className="icon" /> Bhubaneswar, Odisha</p>
           </div>
