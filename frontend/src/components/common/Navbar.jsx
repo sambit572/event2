@@ -15,14 +15,14 @@ import {
 import { FcAbout } from "react-icons/fc";
 import { MdMiscellaneousServices, MdReviews } from "react-icons/md";
 import axios from "axios";
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate, Navigate, useLocation } from "react-router-dom";
 import ReviewSlider from "../customer/Home/ReviewSlider.jsx";
 import ImageSlider from "./../customer/Home/ImageSlider";
 import logo9 from "../../assets/logo9.png";
 
 const Navbar = ({ onOpenLogin, onOpenRegister }) => {
   const navigate = useNavigate();
-
+  const location = useLocation();
   const [userFirstName, setUserFirstName] = useState(null);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showEllipsisDropdown, setShowEllipsisDropdown] = useState(false);
@@ -240,14 +240,18 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
             {showEllipsisDropdown && (
               <div className="dropdown-menu ellipsis-menu">
                 <div
-                  className="dropdown-item"
+                  className={`dropdown-item ${
+                    location.pathname === "/about_us" ? "active" : ""
+                  }`}
                   onClick={() => navigate("/about_us")}
                 >
                   <FcAbout className="navbar_icon" /> About Us
                 </div>
 
                 <div
-                  className="dropdown-item"
+                  className={`dropdown-item ${
+                    location.pathname === "/help_us" ? "active" : ""
+                  }`}
                   onClick={() => navigate("/help_us")}
                 >
                   <FaHandsHelping className="navbar_icon" /> Help Us

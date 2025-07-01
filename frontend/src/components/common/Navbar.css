@@ -204,6 +204,16 @@
   cursor: pointer;
   margin-top: 10px;
 }
+/* .dropdown-item:focus {
+  font-weight: bold;
+  font-size: 15px;
+  background-color: #f3c12d !important;
+
+} */
+.dropdown-item.active {
+  background-color: #f8dd8b !important;
+}
+
 .dropdown-item a:hover {
   font-weight: bold;
   color: black;
@@ -211,6 +221,9 @@
 
 .dropdown-item a {
   color: #001f3f;
+  .dropdown-item:focus {
+    outline: none;
+  }
   text-decoration: none;
   font-size: 15px;
 }
@@ -490,7 +503,7 @@
   .dropdown-menu {
     width: 209px;
     left: 164px !important;
-    top: 120px !important;
+    top: 60px !important;
   }
 
   .signOutButton {
