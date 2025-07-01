@@ -80,7 +80,7 @@ function Footer() {
                 />
               </h4>
               <div className={`footer-dropdown-content ${openSections.contact ? 'show' : ''}`}>
-                <p><img src="/gmail.png" alt="Email" className="icon" /> Eb@Example.Com</p>
+                <p><img src="/gmail.png" alt="Email" className="icon" />Support@eventsbridge.com</p>
                 <p><img src="/phone-call.png" alt="Phone" className="icon" /> 123-456-7890</p>
                 <p><img src="/placeholder.png" alt="Location" className="icon" /> Bhubaneswar, Odisha</p>
               </div>
@@ -143,19 +143,19 @@ function Footer() {
       <div className="social-media-column">
         <h4>Follow Us</h4>
         <div className="social-media">
-          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+          <a href="https://www.facebook.com/profile.php?id=61578112702655" target="_blank" rel="noopener noreferrer">
           <img src="/facebook.png" alt="Facebook" className="social-icon" />
           </a>
-           <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+           <a href="https://x.com/EVENTSBRID78581" target="_blank" rel="noopener noreferrer">
           <img src="/twitter 1.png" alt="X" className="social-icon" />
           </a>
           <a href="https://www.instagram.com/eventsbridge__?igsh=MWVmNXNscWlodGVxNA%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer">
           <img src="/instagram.png" alt="Instagram" className="social-icon" />
           </a>
-           <a href="https://www.linkedin.com/company/eventsbridge-com/posts/?feedView=all" target="_blank" rel="noopener noreferrer">
+           <a href="https://www.linkedin.com/company/eventsbridge-com/" target="_blank" rel="noopener noreferrer">
           <img src="/linkedin.png" alt="LinkedIn" className="social-icon" />
           </a>
-          <a href="mailto:Eb@Example.Com" target="_blank" rel="noopener noreferrer">
+          <a href="mailto:Support@eventsbridge.com" target="_blank" rel="noopener noreferrer">
           <img src="/gmail.png" alt="Gmail" className="social-icon" />
           </a>
            <a href="https://wa.me/1234567890" target="_blank" rel="noopener noreferrer">
