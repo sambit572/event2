@@ -8,17 +8,20 @@ import PasswordInput from "../../utils/PasswordInput.jsx";
 import SuccessBlock from "./SuccessBlock.jsx";
 import axios from "axios";
 import "./LoginRegister.css";
+import ForgotPass from "../../pages/customer/ForgotPass.jsx";
 
 const Login = ({ onClose, onSwitchToRegister }) => {
   const navigate = useNavigate();
-  const [step, setStep] = useState("form"); // 'form', 'otp', 'success'
+  const [step, setStep] = useState("form");
   const [showSuccessIcon, setShowSuccessIcon] = useState(false);
+  const [showForgotModal, setShowForgotModal] = useState(false); // ✅ Added state
 
   const [formData, setFormData] = useState({
     phoneNo: "",
     email: "",
     password: "",
   });
+
   const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
@@ -111,7 +114,6 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
   const renderStep = () => {
     if (step === "success") return <SuccessBlock showSuccessIcon={showSuccessIcon} />;
-
     if (step === "otp") return <OTPVerification setStep={setStep} />;
 
     return (
@@ -146,7 +148,12 @@ const Login = ({ onClose, onSwitchToRegister }) => {
         />
 
         <div className="Login-forget-password-link">
-          <a href="/forgot-password">Forgot your password?</a>
+          <span
+            style={{ cursor: "pointer", color: "#007bff", textDecoration: "underline" }}
+            onClick={() => setShowForgotModal(true)} // ✅ Open modal
+          >
+            Forgot your password?
+          </span>
         </div>
 
         {errorMsg && <p className="error">{errorMsg}</p>}
@@ -176,6 +183,11 @@ const Login = ({ onClose, onSwitchToRegister }) => {
         <h2 className="login-title">Log In</h2>
         {renderStep()}
       </div>
+
+      {/* ✅ Forgot Password Modal */}
+      {showForgotModal && (
+        <ForgotPass onClose={() => setShowForgotModal(false)} />
+      )}
     </div>
   );
 };
