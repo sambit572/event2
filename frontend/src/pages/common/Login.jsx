@@ -94,10 +94,20 @@ const Login = ({ onClose }) => {
       );
 
       const { user } = res.data.data;
-      localStorage.setItem("currentlyLoggedIn", "true");
-      localStorage.setItem("userFirstName", user.fullName.split(" ")[0]);
-      window.dispatchEvent(new Event("userLoggedIn"));
+      const fullName = user.fullName || "";
+      const firstName = fullName.split(" ")[0];
+      const firstLetter = firstName?.charAt(0).toUpperCase() || "";
+      const profilePic = user.profilePic || "";
 
+      localStorage.setItem("currentlyLoggedIn", "true");
+      localStorage.setItem("userFullName", fullName);
+      localStorage.setItem("userFirstName", firstName);
+      localStorage.setItem("userInitial", firstLetter);
+      if (profilePic) {
+        localStorage.setItem("userProfilePic", profilePic);
+      }
+
+      window.dispatchEvent(new Event("userLoggedIn"));
       setStep("success");
     } catch (err) {
       const msg = err.response?.data?.message || err.message;
@@ -110,11 +120,9 @@ const Login = ({ onClose }) => {
   }
 
   const renderStep = () => {
-    if (step === "success")return <SuccessBlock showSuccessIcon={showSuccessIcon} />;
-
+    if (step === "success") return <SuccessBlock showSuccessIcon={showSuccessIcon} />;
     if (step === "otp") return <OTPVerification setStep={setStep} />;
 
-    
     return (
       <>
         <input
@@ -182,7 +190,7 @@ const Login = ({ onClose }) => {
 };
 
 Login.propTypes = {
-  onClose: PropTypes.func, // optional
+  onClose: PropTypes.func,
 };
 
 export default Login;
