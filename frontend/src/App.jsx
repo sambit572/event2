@@ -1,11 +1,5 @@
-import React from "react";
-import {
-  Route,
-  Routes,
-  useNavigate,
-  BrowserRouter,
-  useLocation,
-} from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 
 // Core Components
 import Navbar from "./components/common/Navbar";
@@ -14,7 +8,7 @@ import Chatbot from "./components/common/Chatbot";
 
 // Auth Modals
 import Login from "./pages/common/Login.jsx";
-import Register from "./pages/common/Resgister.jsx";
+import Register from "./pages/common/Register.jsx";
 
 // Customer Pages
 import Home from "./pages/customer/Home";
@@ -53,13 +47,41 @@ const App = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Modal states
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+
   // Hide Footer on specific pages
   const pagesWithoutFooter = ["/vendor/thank-you", "/admin", "/dashboard"];
+
+  const handleOpenLogin = () => {
+    setShowLoginModal(true);
+    setShowRegisterModal(false);
+    document.body.classList.add("modal-open");
+  };
+
+  const handleOpenRegister = () => {
+    setShowRegisterModal(true);
+    setShowLoginModal(false);
+    document.body.classList.add("modal-open");
+  };
+
+  const handleCloseModals = () => {
+    setShowLoginModal(false);
+    setShowRegisterModal(false);
+    // Re-enable body scroll
+    document.body.classList.remove("modal-open");
+  };
 
   return (
     <>
       {/* Conditionally render Navbar */}
-      {location.pathname !== "/admin" && <Navbar />}
+      {location.pathname !== "/admin" && (
+        <Navbar
+          onOpenLogin={handleOpenLogin}
+          onOpenRegister={handleOpenRegister}
+        />
+      )}
 
       <ScrollToTop />
       <main>
@@ -107,15 +129,7 @@ const App = () => {
           <Route path="/vendor/thank-you" element={<VendorThankYou />} />
           <Route path="/dashboard" element={<DashBoardMain />} />
 
-          {/* Auth Routes */}
-          <Route
-            path="/login"
-            element={<Login onClose={() => navigate(-1)} />}
-          />
-          <Route
-            path="/register"
-            element={<Register onClose={() => navigate(-1)} />}
-          />
+          {/* Password Reset Routes */}
           <Route path="/forgot-password" element={<ForgotPass />} />
           <Route
             path="/reset-password/:resetToken"
@@ -138,6 +152,21 @@ const App = () => {
 
       {/* Conditionally render Footer */}
       {!pagesWithoutFooter.includes(location.pathname) && <Footer />}
+
+      {/* Auth Modals */}
+      {showLoginModal && (
+        <Login
+          onClose={handleCloseModals}
+          onSwitchToRegister={handleOpenRegister}
+        />
+      )}
+
+      {showRegisterModal && (
+        <Register
+          onClose={handleCloseModals}
+          onSwitchToLogin={handleOpenLogin}
+        />
+      )}
     </>
   );
 };

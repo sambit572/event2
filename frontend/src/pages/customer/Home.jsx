@@ -52,51 +52,6 @@ const images = [
     tablet: cateringTablet,
     desktop: cateringDesktop,
   },
-  // {
-  //   mobile: image4Mobile,
-  //   tablet: image4Tablet,
-  //   desktop: image4Desktop,
-  // },
-  // {
-  //   mobile: image6Mobile,
-  //   tablet: image6Tablet,
-  //   desktop: image6Desktop,
-  // },
-  // {
-  //   mobile: image7Mobile,
-  //   tablet: image7Tablet,
-  //   desktop: image7Desktop,
-  // },
-  // {
-  //   mobile: image10Mobile,
-  //   tablet: image10Tablet,
-  //   desktop: image10Desktop,
-  // },
-  // {
-  //   mobile: image11Mobile,
-  //   tablet: image11Tablet,
-  //   desktop: image11Desktop,
-  // },
-  // {
-  //   mobile: image12Mobile,
-  //   tablet: image12Tablet,
-  //   desktop: image12Desktop,
-  // },
-  // {
-  //   mobile: image13Mobile,
-  //   tablet: image13Tablet,
-  //   desktop: image13Desktop,
-  // },
-  // {
-  //   mobile: image14Mobile,
-  //   tablet: image14Tablet,
-  //   desktop: image14Desktop,
-  // },
-  // {
-  //   mobile: image15Mobile,
-  //   tablet: image15Tablet,
-  //   desktop: image15Desktop,
-  // },
 ];
 
 const categories = [
@@ -232,7 +187,7 @@ const Home = () => {
       <p className="category-subheads text-center">
         Explore trusted professionals across categories and simplify your event
         planning.
-      </p>
+      </p> 
 
       {!showAll && categories.length > 6 && (
         <div className="browse_all">
