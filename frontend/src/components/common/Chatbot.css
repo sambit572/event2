@@ -2,8 +2,8 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
-  z-index: 99999;
-  font-family: 'Segoe UI', sans-serif;
+  z-index: 19;
+  font-family: "Segoe UI", sans-serif;
 }
 
 /* 🔵 Tooltip Box */
@@ -11,13 +11,13 @@
   position: absolute;
   bottom: 80px;
   right: 0;
-  background-color: #001F3F;
+  background-color: #001f3f;
   color: white;
   padding: 8px 14px;
   border-radius: 20px;
   font-size: 14px;
   white-space: nowrap;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   animation: fadeIn 0.5s ease;
 }
 
@@ -28,7 +28,7 @@
   right: 20px;
   border-width: 6px;
   border-style: solid;
-  border-color: #001F3F transparent transparent transparent;
+  border-color: #001f3f transparent transparent transparent;
 }
 
 /* 💬 Chat Icon */
@@ -91,7 +91,7 @@
 }
 
 .chat-header {
-  background: linear-gradient(45deg, #001F3F	,#004989);
+  background: linear-gradient(45deg, #001f3f, #004989);
   color: white;
   padding: 14px 16px;
   font-weight: 600;
@@ -156,8 +156,8 @@
   box-shadow: 0 0 0 2px #9b04af44;
 }
 
-.chat-footer .chat-input{
-  border: #001F3F 1px solid;
+.chat-footer .chat-input {
+  border: #001f3f 1px solid;
 }
 
 .chat-footer button {
@@ -165,7 +165,7 @@
   padding: 10px 18px;
   border-radius: 50px;
   border: none;
-  background: linear-gradient(45deg, #001F3F	,#004989);
+  background: linear-gradient(45deg, #001f3f, #004989);
   color: white;
   font-size: 14px;
   cursor: pointer;
@@ -174,26 +174,27 @@
 }
 
 .chat-footer button:hover {
-  background: linear-gradient(45deg, #001F3F	,#004989);
+  background: linear-gradient(45deg, #001f3f, #004989);
 }
 
 .chat-tooltip {
   position: absolute;
   bottom: 80px;
   right: 0;
-  background-color: #001F3F;
+  background-color: #001f3f;
   color: white;
   padding: 8px 14px;
   border-radius: 40px;
   font-size: 14px;
   white-space: nowrap;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   animation: breathe 2.5s ease-in-out infinite;
   transition: transform 0.3s ease;
 }
 
 @keyframes breathe {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
@@ -208,7 +209,7 @@
   right: 20px;
   border-width: 6px;
   border-style: solid;
-  border-color: #001F3F transparent transparent transparent;
+  border-color: #001f3f transparent transparent transparent;
 }
 
 /* FAQ Suggestions Section */
@@ -224,7 +225,7 @@
   border: none;
   border-radius: 20px;
   background-color: #f0e5ff;
-  color: #001F3F;
+  color: #001f3f;
   font-size: 13px;
   cursor: pointer;
   transition: background 0.3s ease;
@@ -245,7 +246,7 @@
 
 .chat-message.bot ul li {
   background-color: #f0f4ff;
-  border-left: 4px solid #001F3F;
+  border-left: 4px solid #001f3f;
   padding: 10px 12px;
   margin: 6px 0;
   border-radius: 6px;
@@ -285,4 +286,3 @@
 .chat-icon:hover {
   transform: scale(1.05);
 }
-

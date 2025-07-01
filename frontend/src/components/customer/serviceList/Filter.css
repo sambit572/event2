@@ -239,6 +239,7 @@ input[type="range"].thumb-right {
   }
 
   .filterBox.show {
+    z-index: 20;
     transform: translateX(0%);
   }
 
@@ -251,11 +252,11 @@ input[type="range"].thumb-right {
     height: auto;
     border: none;
     box-shadow: none;
-    margin-top: 60px;
+    margin-top: 80px;
   }
   .heading4 {
-  margin-top: 45px;
-}
+    margin-top: 45px;
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -285,17 +286,26 @@ input[type="range"].thumb-right {
   }
 
   .filter {
-    width: 100%;
-    height: auto;
-    border: none;
-    box-shadow: none;
+    margin-top: 90px;
+  }
+}
+@media screen and (max-width: 680px) {
+  .filter-toggle-btn {
+    top: 60px;
+
+    right: 20px;
+  }
+  .filter {
     margin-top: 60px;
   }
 }
-@media screen and (max-width: 440px) {
+@media screen and (max-width: 460px) {
   .filter-toggle-btn {
-    top: 110px;
+    top: 70px;
 
     right: 20px;
+  }
+  .filter {
+    margin-top: 70px;
   }
 }

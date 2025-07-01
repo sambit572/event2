@@ -241,8 +241,8 @@
 
 @media (max-width: 1024px) {
   .login-modal {
-    position: relative;
-    top: -29%;
+    /* top: 10px; */
+    /* left: 0; */
     height: 510px;
   }
 
@@ -255,31 +255,8 @@
   }
 }
 
-@media (max-width: 820px) {
-  .login-modal {
-    top: -26%;
-  }
-}
-
-@media (max-width: 768px) {
-  .login-modal {
-    top: -21%;
-  }
-}
-
-@media (min-width: 540px) and (max-width: 766px) {
-  .login-modal {
-    top: -8%;
-  }
-}
-
 /* Responsive */
 @media (max-width: 480px) {
-  .login-modal {
-    top: -19%;
-    width: 75%;
-  }
-
   .otp-input {
     width: 35px;
   }
@@ -291,36 +268,17 @@
 }
 
 @media (max-width: 420px) {
-  /* .login-modal {
-    top: -100px;
-  } */
   .otp-button {
     margin-left: 66px;
   }
 }
 
-@media (max-width: 390px) {
+@media (max-width: 400px) {
   .login-modal {
-    top: -16%;
+    top: 5%;
   }
 
   .signup-text {
     font-size: 12px;
-  }
-}
-
-@media (max-width: 380px) {
-  .login-modal {
-    top: -6%;
-  }
-}
-@media (max-width: 360px) {
-  .login-modal {
-    top: -10%;
-  }
-}
-@media (max-width: 344px) {
-  .login-modal {
-    top: -140px;
   }
 }
