@@ -5,7 +5,7 @@ import offers from "../../../assets/home/offers.jpeg";
 import wedding from "../../../assets/home/wedding.jpeg";
 import party from "../../../assets/home/party.jpeg";
 import tenthouse from "../../../assets/home/tenthouse.jpeg";
-import catering from "../../../assets/home/catering.png";
+import catering from "../../../assets/home/catering_service.jpg";
 import horseCart from "../../../assets/home/horseCart.jpeg";
 import magician from "../../../assets/home/magician.jpeg";
 import flowers from "../../../assets/home/flowers.jpeg";
