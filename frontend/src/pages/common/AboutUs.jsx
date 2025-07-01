@@ -8,14 +8,15 @@ import Team from "../../components/common/aboutus/Team";
 
 const AboutUs = () => {
   return (
+
     <div className="bg-white text-gray-800 px-4 sm:px-6 md:px-10 py-10 space-y-20">
       {/* First Section */}
       <div className="flex flex-col lg:flex-row items-center gap-10">
         <div className="w-full lg:w-1/2">
-          <img src={AboutUs_1} alt="About Us" className="w-100% rounded-xl shadow-md" />
+          <img src={AboutUs_1} alt="About Us" className="w-100% mt-10 rounded-xl shadow-md" />
         </div>
         <div className="w-full lg:w-1/2 space-y-4">
-          <h2 className="text-2xl md:text-3xl font-bold text-purple-700">
+          <h2 className="text-2xl mt-0 md:text-3xl font-bold text-[#001f3f]">
             Your dream events start's with right vendors
           </h2>
           <p className="text-sm md:text-base">
@@ -48,7 +49,7 @@ const AboutUs = () => {
       {/* Second Section (Reversed Layout) */}
       <div className="flex flex-col-reverse lg:flex-row items-center gap-10">
         <div className="w-full lg:w-1/2 space-y-4">
-          <h2 className="text-2xl md:text-3xl font-bold text-purple-700">
+          <h2 className="text-2xl  md:text-3xl font-bold text-[#001f3f]">
             We Bring Vendors & Customers Together
           </h2>
           <p className="text-sm md:text-base">
@@ -74,10 +75,10 @@ const AboutUs = () => {
       {/* Services Section */}
       <div className="flex flex-col lg:flex-row items-start gap-10">
         <div className="w-full lg:w-1/2">
-          <img src={AboutUs_3} alt="About Us" className="w-full rounded-xl shadow-md" />
+          <img src={AboutUs_3} alt="About Us" className="w-full mt-10 rounded-xl shadow-md" />
         </div>
         <div className="w-full lg:w-1/2 space-y-4">
-          <h2 className="text-2xl md:text-3xl font-bold text-purple-700">
+          <h2 className="text-2xl mb-0 md:text-3xl font-bold text-[#001f3f]">
             Your Perfect Event Starts with Eventsbridge
           </h2>
           <p>
@@ -91,7 +92,7 @@ const AboutUs = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
             <div>
-              <h3 className="font-semibold text-purple-700">🎵 Music & Entertainment</h3>
+              <h3 className="font-semibold text-[#001f3f]">🎵 Music & Entertainment</h3>
               <ul className="list-disc list-inside text-sm">
                 <li>DJs</li>
                 <li>Brass bands</li>
@@ -101,7 +102,7 @@ const AboutUs = () => {
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold text-purple-700">🎀 Decor & Setup</h3>
+              <h3 className="font-semibold text-[#001f3f]">🎀 Decor & Setup</h3>
               <ul className="list-disc list-inside text-sm">
                 <li>Tenthouse and themed decorations</li>
                 <li>Flower decorators</li>
@@ -109,21 +110,21 @@ const AboutUs = () => {
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold text-purple-700">🍽 Culinary Delights</h3>
+              <h3 className="font-semibold text-[#001f3f]">🍽 Culinary Delights</h3>
               <ul className="list-disc list-inside text-sm">
                 <li>Premium catering services</li>
                 <li>Diverse menus (regional, traditional, international)</li>
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold text-purple-700">📸 Capture Moments</h3>
+              <h3 className="font-semibold text-[#001f3f]">📸 Capture Moments</h3>
               <ul className="list-disc list-inside text-sm">
                 <li>Photographers</li>
                 <li>Videographers</li>
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold text-purple-700">🛐 Religious Services</h3>
+              <h3 className="font-semibold text-[#001f3f]">🛐 Religious Services</h3>
               <ul className="list-disc list-inside text-sm">
                 <li>Pandits</li>
                 <li>Fathers</li>
@@ -131,21 +132,21 @@ const AboutUs = () => {
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold text-purple-700">💄 Beauty & Grooming</h3>
+              <h3 className="font-semibold text-[#001f3f]">💄 Beauty & Grooming</h3>
               <ul className="list-disc list-inside text-sm">
                 <li>Professional makeup artists</li>
                 <li>Mehendi artists</li>
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold text-purple-700">🚗 Grand Entries</h3>
+              <h3 className="font-semibold text-[#001f3f]">🚗 Grand Entries</h3>
               <ul className="list-disc list-inside text-sm">
                 <li>Horse carts</li>
                 <li>Luxury grooming cars</li>
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold text-purple-700">🎆 Special Effects</h3>
+              <h3 className="font-semibold text-[#001f3f]">🎆 Special Effects</h3>
               <ul className="list-disc list-inside text-sm">
                 <li>Fireworks</li>
               </ul>
@@ -154,7 +155,7 @@ const AboutUs = () => {
         </div>
       </div>
 
-      <Team />
+      {/* <Team /> */}
     </div>
   );
 };

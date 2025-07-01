@@ -21,7 +21,7 @@ const UserDetails = () => {
 
   useEffect(() => {
     document.body.style.background =
-      "linear-gradient(to right, #d946ef, #6366f1)";
+      "linear-gradient(45deg	,#ffffff,#ffffff)";
 
     return () => {
       // Reset to default or transparent when this page is left
@@ -74,7 +74,7 @@ const UserDetails = () => {
   };
 
   return (
-    <div className="user-details-page">
+    <div className="  user-details-page">
       <div className="user-details-container">
         <h3 className="form-title">Fill Out Your Event Details</h3>
         <form className="user-form" onSubmit={handleSave}>

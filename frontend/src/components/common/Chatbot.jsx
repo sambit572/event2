@@ -13,6 +13,8 @@ const faqPromptContext = `
 You are a helpful assistant for EventsBridge, a platform for registering as a vendor , booking and organising different events, User can book the events which are registered by the vendors.
 Here are some example questions and their expected context-aware responses:
 
+
+
 Q: What is EventsBridge?
 A: EventsBridge is a platform that connects event organizers with attendees. It helps manage, promote, and register for events seamlessly.
 
@@ -103,7 +105,7 @@ const Chatbot = () => {
       {isOpen && (
         <div className="chat-popup">
           <div className="chat-header">
-            Ask AI
+            Ask E.B
             <span
               onClick={() => setIsOpen(false)}
               style={{ float: "right", cursor: "pointer" }}
@@ -147,6 +149,7 @@ const Chatbot = () => {
 
           <div className="chat-footer">
             <input
+            className="chat-input"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}

@@ -22,17 +22,16 @@
   height: 100%;
   object-fit: cover;
   transition: all 0.4s ease;
-
 }
 
 .courseCard::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   height: 250px;
   width: 100%;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.25), transparent 60%);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.25), transparent 60%);
   z-index: 1;
   pointer-events: none;
   border-top-left-radius: 10px;
@@ -80,7 +79,7 @@
 }
 
 .courseInfo::before {
-  content: '';
+  content: "";
   width: 8px;
   height: 8px;
   background: linear-gradient(to right, #e91e63, #800080);
@@ -102,8 +101,8 @@
   font-weight: 700;
   letter-spacing: 0.8px;
   text-transform: uppercase;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.3);
-  border: 1px solid rgba(255,255,255,0.3);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 /* Badge like NEW or POPULAR */
@@ -116,7 +115,7 @@
   font-weight: 600;
   border-radius: 50px;
   color: #fff;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   text-transform: uppercase;
   z-index: 3;
 }
@@ -167,7 +166,6 @@
   filter: brightness(80%);
 }
 
-
 .courseCard:hover .courseTaglineOverlay {
   opacity: 1;
   transform: translateY(0);
@@ -194,7 +192,6 @@
   }
 }
 
-
 /* Responsive tweaks */
 @media (max-width: 450px) {
   .courseCard {
@@ -213,7 +210,7 @@
     font-size: 13px;
   }
   .imageWrapper {
-  width: 100%;
-  height: 190px;
-}
+    width: 100%;
+    height: 190px;
+  }
 }

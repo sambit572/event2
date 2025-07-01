@@ -41,6 +41,7 @@ const ReviewList = () => {
       style={{
         maxWidth: "600px",
         margin: "0 auto",
+        color: "#001f3f",
       }}
     >
       {reviews.map((rev, i) => (

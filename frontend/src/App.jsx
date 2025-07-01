@@ -29,11 +29,11 @@ import HelpCenter from "./pages/common/HelpCenter";
 
 import ForgotPass from "./pages/customer/ForgotPass.jsx";
 import ResetPassword from "./pages/customer/ResetPassword.jsx";
-import ForgotPassword from "./pages/customer/ForgotPassword.jsx";
 import Wishlist from "./pages/customer/Wishlist.jsx";
 import Profile from "./components/customer/profile/Profile.jsx";
 import UserDetails from "./pages/customer/UserDetails.jsx";
 import DashboardServices from "./components/vendor/DashboardServices.jsx";
+import PopUp from "./components/customer/CustomerNegotiationModal";
 
 // Vendor Pages
 import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
@@ -41,6 +41,7 @@ import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
 // Common
 import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
+import BackToTop from "./pages/common/BackToTop";
 
 const App = () => {
   const navigate = useNavigate();
@@ -62,9 +63,30 @@ const App = () => {
           <Route path="/categories" element={<CategoryCard />}></Route>
           <Route path="/reviews" element={<ReviewSlider />} />
           <Route path="/category/service" element={<ServiceDetails />} />
-          <Route path="/wishlist" element={<Wishlist />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/userdetails" element={<UserDetails />} />
+          <Route
+            path="/wishlist"
+            element={
+              <ProtectedRoute>
+                <Wishlist />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/userdetails"
+            element={
+              <ProtectedRoute>
+                <UserDetails />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/dashboardservices" element={<DashboardServices />} />
 
           {/* Vendor Routes */}
@@ -92,7 +114,6 @@ const App = () => {
             path="/reset-password/:resetToken"
             element={<ResetPassword />}
           />
-          <Route path="/forgotpassword" element={<ForgotPassword />} />
 
           {/* Misc */}
           <Route path="/about_us" element={<AboutUs />} />
@@ -101,10 +122,11 @@ const App = () => {
           <Route path="/Wishlist" element={<Wishlist />}></Route>
           <Route path="/profile" element={<Profile />}></Route>
           <Route path="/userdetails" element={<UserDetails />}></Route>
+          <Route path="/pop-up" element={<PopUp />}></Route>
           <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
       </main>
-
+      {/* <BackToTop /> */}
       <Chatbot />
 
       {/* Conditionally render Footer */}

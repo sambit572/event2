@@ -286,19 +286,27 @@ export default function AdminDashboard() {
     key={i}
     className="group bg-white rounded-xl shadow-md transition-all duration-300 ease-in-out hover:shadow-2xl transform hover:-translate-y-1"
   >
-    <div
-      className={`
-        bg-[#f3c12d] 
-        group-hover:bg-[#001F3F]
-        p-4 flex justify-between items-center rounded-t-xl transition-colors duration-300
-      `}
-    >
-      <Icon className="w-8 h-8 text-white" />
-      <div className="text-right">
-        <p className="text-2xl font-bold text-white">{value}</p>
-        <p className="text-sm text-white">{title}</p>
-      </div>
-    </div>
+   <div
+  className={`
+    bg-[#f3c12d] 
+    group-hover:bg-[#001F3F]
+    p-4 flex justify-between items-center rounded-t-xl transition-colors duration-300
+  `}
+>
+  {/* ICON: starts black, becomes white on hover */}
+  <Icon className="w-8 h-8 text-black group-hover:text-white transition-colors duration-300" />
+
+  <div className="text-right">
+    {/* Texts: start black, become white on hover */}
+    <p className="text-2xl font-bold text-black group-hover:text-white transition-colors duration-300">
+      {value}
+    </p>
+    <p className="text-sm text-black group-hover:text-white transition-colors duration-300">
+      {title}
+    </p>
+  </div>
+</div>
+
   </div>
 ))}
           </div>

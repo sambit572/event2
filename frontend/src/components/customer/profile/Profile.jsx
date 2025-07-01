@@ -69,7 +69,7 @@ function Profile() {
 
   return (
     <div
-      className="mb-[-148px] relative w-full min-h-screen flex flex-col md:flex-row  sm:mt-[200px] md:mt-[0px] bg-white xl:overflow-x-hidden sm:Class	CSS Equivalent
+      className="profile_section mb-[-148px] relative w-full min-h-screen flex flex-col md:flex-row bg-white xl:overflow-x-hidden sm:Class	CSS Equivalent
 "
     >
       <div className="profile-sidebar-fixed">
@@ -149,7 +149,7 @@ function Profile() {
         </h2>
 
         <div className="w-1/2 ml-auto mr-[40px] flex justify-end items-center p-4 mt-[-20px]">
-          <select className="sortby-dropdown max-w-xs bg-purple-900 text-white p-2 font-semibold rounded-lg shadow">
+          <select className="sortby-dropdown max-w-xs bg-[#001F3F]  text-white p-2 font-semibold rounded-lg shadow">
             <option value="">Sort by</option>
             <option className="bg-white text-black" value="completed">
               Completed
@@ -182,7 +182,7 @@ function Profile() {
               </div>
               <div className="info-section">
                 <div className="user-booking-info-section">
-                  <h3 className="text-xl font-bold text-purple-800">
+                  <h3 className="text-xl font-bold text-[#001F3F]">
                     DJ Wedding Service
                   </h3>
                   <p className="text-black">
@@ -194,7 +194,7 @@ function Profile() {
                   <p className="text-sm text-black ">Event Date: 10/06/2025</p>
                   <a
                     href="#payment-details"
-                    className="text-purple-600 underline font-medium mt-2 block"
+                    className="text-[#001F3F] underline font-medium mt-2 block"
                   >
                     Payment Details
                   </a>

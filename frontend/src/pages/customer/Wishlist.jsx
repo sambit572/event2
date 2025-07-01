@@ -76,6 +76,10 @@ const Wishlist = () => {
 
   return (
     <div className="wishlist-container">
+      <h1 className=" mt-10 sm:text-3xl md:text-4xl font-bold text-[#001f3f] mb-4 text-center">
+        My Wishlist
+      </h1>
+
       {wishlistItems.map((item) => (
         <div className="wishlist-card" key={item.id}>
           <div className="wishlist-left">
@@ -93,7 +97,7 @@ const Wishlist = () => {
             <p className="wishlist-description">{item.description}</p>
             <div className='btn-columns'>
               <button className="wishlist-book-btn"><a href="userdetails">Book Now</a></button>
-            <button className="wishlist-remove-btn" onClick={() => handleDeleteClick(item.id)} >Remove</button>
+              <button className="wishlist-remove-btn" onClick={() => handleDeleteClick(item.id)} >Remove</button>
             </div>
           </div>
         </div>
