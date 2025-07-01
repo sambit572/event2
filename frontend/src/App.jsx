@@ -41,6 +41,7 @@ import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
 // Common
 import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
+import BackToTop from "./pages/common/BackToTop";
 
 const App = () => {
   const navigate = useNavigate();
@@ -125,7 +126,7 @@ const App = () => {
           <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
       </main>
-
+      {/* <BackToTop /> */}
       <Chatbot />
 
       {/* Conditionally render Footer */}
