@@ -1,11 +1,11 @@
-import Vendor from "../model/vendor.model.js";
+import Vendor from "../../model/vendor/vendor.model.js";
 
-import { ApiError } from "../utilities/ApiError.js";
-import { ApiResponse } from "../utilities/ApiResponse.js";
+import { ApiError } from "../../utilities/ApiError.js";
+import { ApiResponse } from "../../utilities/ApiResponse.js";
 import fs from "fs/promises";
 import path from "path";
-import { uploadOnCloudinary } from "../utilities/cloudinary.js";
-import { validateEmailDomain } from "../utilities/verifyDNS.js";
+import { uploadOnCloudinary } from "../../utilities/cloudinary.js";
+import { validateEmailDomain } from "../../utilities/verifyDNS.js";
 
 const registerVendor = async (req, res) => {
   try {
