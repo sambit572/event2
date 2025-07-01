@@ -35,6 +35,7 @@ import ImageSlider from "../../components/customer/Home/ImageSlider";
 
 import Milestones from "../../components/common/aboutus/Milestones";
 import AddsBanner from "../../components/customer/Home/AddsBanner";
+import BackToTop from "../common/BackToTop";
 
 const images = [
   {
@@ -187,7 +188,7 @@ const Home = () => {
       <p className="category-subheads text-center">
         Explore trusted professionals across categories and simplify your event
         planning.
-      </p> 
+      </p>
 
       {!showAll && categories.length > 6 && (
         <div className="browse_all">
@@ -208,6 +209,7 @@ const Home = () => {
           </div>
         ))}
       </div>
+      {/* <BackToTop /> */}
       <Milestones />
       <ReviewSlider />
       <FaqSection />

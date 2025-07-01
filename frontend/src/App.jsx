@@ -42,6 +42,7 @@ import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
 import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 import ScrollToTop from "./components/common/ScrollToTop";
+import BackToTop from "./pages/common/BackToTop";
 
 const App = () => {
   const navigate = useNavigate();
@@ -147,7 +148,7 @@ const App = () => {
           <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
       </main>
-
+      <BackToTop />
       <Chatbot />
 
       {/* Conditionally render Footer */}
