@@ -143,12 +143,24 @@ function Footer() {
       <div className="social-media-column">
         <h4>Follow Us</h4>
         <div className="social-media">
+          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
           <img src="/facebook.png" alt="Facebook" className="social-icon" />
-          <img src="/twitter 1.png" alt="Twitter" className="social-icon" />
+          </a>
+           <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+          <img src="/twitter 1.png" alt="X" className="social-icon" />
+          </a>
+          <a href="https://www.instagram.com/eventsbridge__?igsh=MWVmNXNscWlodGVxNA%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer">
           <img src="/instagram.png" alt="Instagram" className="social-icon" />
+          </a>
+           <a href="https://www.linkedin.com/company/eventsbridge-com/posts/?feedView=all" target="_blank" rel="noopener noreferrer">
           <img src="/linkedin.png" alt="LinkedIn" className="social-icon" />
+          </a>
+          <a href="mailto:Eb@Example.Com" target="_blank" rel="noopener noreferrer">
           <img src="/gmail.png" alt="Gmail" className="social-icon" />
+          </a>
+           <a href="https://wa.me/1234567890" target="_blank" rel="noopener noreferrer">
           <img src="/whatsapp.png" alt="Whatsapp" className="social-icon" />
+          </a>
         </div>
       </div>
 
