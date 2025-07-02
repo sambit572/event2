@@ -1,12 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-<<<<<<< HEAD
-import PropTypes from "prop-types";
-=======
 import UserProfileIcon from "../../pages/common/UserProfileIcon.jsx";
 
 
 
->>>>>>> f6cc2623ce73410e146a4e8d5531e5c884143d55
 import "./Navbar.css";
 import { CgProfile } from "react-icons/cg";
 import {
@@ -28,11 +24,7 @@ import ReviewSlider from "../customer/Home/ReviewSlider.jsx";
 import ImageSlider from "./../customer/Home/ImageSlider";
 import logo9 from "../../assets/logo9.png";
 
-<<<<<<< HEAD
-const Navbar = ({ onOpenLogin, onOpenRegister }) => {
-=======
 const Navbar = () => {
->>>>>>> f6cc2623ce73410e146a4e8d5531e5c884143d55
   const navigate = useNavigate();
 
   const [userFirstName, setUserFirstName] = useState(null);
@@ -52,10 +44,6 @@ const Navbar = () => {
       inputRef.current.focus();
     }
   };
-<<<<<<< HEAD
-=======
-
->>>>>>> f6cc2623ce73410e146a4e8d5531e5c884143d55
 
   const handleHomeClick = () => {
     if (location.pathname === "/") {
