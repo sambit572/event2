@@ -20,7 +20,7 @@ import axios from "axios";
 import { useNavigate, Navigate } from "react-router-dom";
 import ReviewSlider from "../customer/Home/ReviewSlider.jsx";
 import ImageSlider from "./../customer/Home/ImageSlider";
-import logo from "../../assets/logo.png";
+import logo9 from "../../assets/logo9.png";
 
 const Navbar = ({ onOpenLogin, onOpenRegister }) => {
   const navigate = useNavigate();
@@ -126,7 +126,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
       {/* Logo */}
       <div className="logo">
         <span onClick={handleHomeClick}>
-          <img src={logo} alt="logo" />
+          <img src={logo9} alt="logo" />
         </span>
       </div>
 
