@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import UserProfileIcon from "../../pages/common/UserProfileIcon.jsx";
+import PropTypes from "prop-types";
 
 import "./Navbar.css";
-import { CgProfile } from "react-icons/cg";
 import {
   FaSearch,
   FaUser,
@@ -17,30 +17,28 @@ import {
 import { FcAbout } from "react-icons/fc";
 import { MdMiscellaneousServices, MdReviews } from "react-icons/md";
 import axios from "axios";
-import { useNavigate, Navigate } from "react-router-dom";
-import ReviewSlider from "../customer/Home/ReviewSlider.jsx";
-import ImageSlider from "./../customer/Home/ImageSlider";
-import logo from "../../assets/logo.png";
+import { useNavigate, useLocation } from "react-router-dom";
+import logo from "../../assets/logo.png"; 
 
-const Navbar = () => {
+
+const Navbar = ({ onOpenLogin, onOpenRegister }) => {
   const navigate = useNavigate();
-
+  const location = useLocation();
   const [userFirstName, setUserFirstName] = useState(null);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showEllipsisDropdown, setShowEllipsisDropdown] = useState(false);
+  const [showVendorDropdown, setShowVendorDropdown] = useState(false);
 
   const [searchInput, setSearchInput] = useState("");
 
   const profileRef = useRef(null);
   const ellipsisRef = useRef(null);
-
+  const vendorRef = useRef(null);
   const inputRef = useRef(null);
 
   const handleSearchicon = (e) => {
-    e.stopPropagation(); // Prevent triggering parent onClick
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
+    e.stopPropagation();
+    if (inputRef.current) inputRef.current.focus();
   };
 
   const handleHomeClick = () => {
@@ -75,6 +73,24 @@ const Navbar = () => {
     setSearchInput("");
   };
 
+  const handleLoginClick = () => {
+    setShowProfileDropdown(false);
+    onOpenLogin();
+  };
+
+  const handleSignupClick = () => {
+    setShowProfileDropdown(false);
+    onOpenRegister();
+  };
+
+  const handleVendorClick = () => {
+    if (!userFirstName) {
+      onOpenLogin();
+    } else {
+      navigate("/vendor/register");
+    }
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (profileRef.current && !profileRef.current.contains(event.target)) {
@@ -82,6 +98,9 @@ const Navbar = () => {
       }
       if (ellipsisRef.current && !ellipsisRef.current.contains(event.target)) {
         setShowEllipsisDropdown(false);
+      }
+      if (vendorRef.current && !vendorRef.current.contains(event.target)) {
+        setShowVendorDropdown(false);
       }
     };
 
@@ -102,15 +121,13 @@ const Navbar = () => {
 
   return (
     <div className="navbar">
-      {/* Logo */}
       <div className="logo">
         <span onClick={handleHomeClick}>
           <img src={logo} alt="logo" />
         </span>
       </div>
 
-      <div className="search-and-nav-icons-container ">
-        {/* Search Bar */}
+      <div className="search-and-nav-icons-container">
         <div className="search-bar" onClick={handleSearch}>
           <FaSearch className="search-icon" onClick={handleSearchicon} />
           <input
@@ -118,35 +135,23 @@ const Navbar = () => {
             type="text"
             placeholder="Search for Services and More"
             value={searchInput}
-            onChange={(e) => {
-              setSearchInput(e.target.value);
-            }}
+            onChange={(e) => setSearchInput(e.target.value)}
           />
         </div>
 
-        {/* Nav Icons */}
         <div className="nav-icons">
           {/* Profile Dropdown */}
           <div className="nav-item profile-dropdown-container" ref={profileRef}>
             <div className="flex items-center gap-2 text-gray-700 cursor-pointer login">
               <span
-                className="flex items-center gap-2 max-[1024px]:flex-col max-[1024px]:text-[12px] max-[820px]:text-[11px]"
-                onClick={!userFirstName ? () => navigate("/login") : undefined}
+                className="flex items-center gap-2"
+                onClick={!userFirstName ? handleLoginClick : undefined}
               >
-                {!userFirstName ? (
-                  <>
-                    <CgProfile className="text-2xl" />
-                    <span className="font-medium">Login</span>
-                  </>
-                ) : (
-                  <>
-                    <UserProfileIcon />
-                    <span className="font-medium">{userFirstName}</span>
-                  </>
-                )}
+                <FaUser className="text-lg" />
+                <span className="font-medium">
+                  {userFirstName ? `${userFirstName}` : "Login"}
+                </span>
               </span>
-
-              {/* ⬇️ Always show dropdown toggle arrow */}
               <span onClick={handleToggleProfileDropdown}>
                 {showProfileDropdown ? (
                   <FaChevronUp className="text-sm" />
@@ -168,7 +173,7 @@ const Navbar = () => {
                       <span className="text-[#001f3f]">New Customer?</span>
                       <button
                         className="bg-blue-500 hover:bg-blue-600"
-                        onClick={() => navigate("/register")}
+                        onClick={handleSignupClick}
                       >
                         Sign Up
                       </button>
@@ -178,30 +183,18 @@ const Navbar = () => {
                 ) : (
                   <>
                     <div
-                      className="flex flex-row gap-1 mb-[10px] text-[#001f3f] hover:text-[#022f5d] hover:font-bold text-[15px]"
+                      className="dropdown-item"
                       onClick={() => navigate("/profile")}
                     >
-                      <FaUser style={{ marginRight: "8px" }} />
-                      My Profile
+                      <FaUser /> My Profile
                     </div>
-                    <div className="dropdown-item hover:text-[#001f3f] hover:font-bold">
-                      <FaHeart
-                        className="navbar_icon "
-                        style={{ marginRight: "4px" }}
-                      />
+                    <div className="dropdown-item">
+                      <FaHeart />
                       <a href="./wishlist">Wishlist</a>
                     </div>
                     <div className="dropdown-item">
-                      <FaSignOutAlt
-                        className="navbar_icon hover:text-[#001f3f] hover:font-bold"
-                        style={{ marginRight: "4px" }}
-                      />
-                      <button
-                        className="signOutButton hover:text-[#001f3f] hover:font-bold"
-                        onClick={handleLogout}
-                      >
-                        Sign Out
-                      </button>
+                      <FaSignOutAlt />
+                      <button onClick={handleLogout}>Sign Out</button>
                     </div>
                   </>
                 )}
@@ -209,18 +202,56 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Become Vendor */}
-          <div
-            className="nav-items  max-[1024px]:flex-col max-[1024px]:text-[12px] max-[820px]:text-[11px]"
-            onClick={() =>
-              !userFirstName ? navigate("/login") : navigate("/vendor/register")
-            }
-          >
-            <FaStore className="icons max-[1024px]:h-[18px] max-[1024px]:w-[18px]  max-[820px]:h-[15px]" />
-            <span className=" text-[#001F3F] hover:text-white  font-semibold max-[1024px]:mt-[6px] max-[820px]:text-[11px] max-[820px]:w-max">
-              Be a Vendor
-            </span>
-          </div>
+          {/* Vendor Dropdown */}
+          {/* Vendor Dropdown - Same structure as Profile Dropdown */}
+<div className="nav-item profile-dropdown-container" ref={vendorRef}>
+  <div className="flex items-center gap-2 text-gray-700 cursor-pointer login">
+    <span
+      className="flex items-center gap-2"
+      onClick={() => setShowVendorDropdown((prev) => !prev)}
+    >
+      <FaStore className="text-lg" />
+      <span className="font-medium">
+        Be a Vendor
+      </span>
+      {showVendorDropdown ? (
+        <FaChevronUp className="text-sm" />
+      ) : (
+        <FaChevronDown className="text-sm" />
+      )}
+    </span>
+  </div>
+
+  {showVendorDropdown && (
+    <div className="dropdown-menu profile-menu">
+      <h4 className="login-h4">Welcome Vendor</h4>
+      <p className="login-p">Access your vendor tools and profile</p>
+      <div className="dropdown-header">
+        <span className="text-[#001f3f]">New Vendor?</span>
+        <button
+          className="bg-blue-500 hover:bg-blue-600"
+          onClick={handleVendorClick}
+        >
+          Register
+        </button>
+      </div>
+      <hr />
+      <div
+        className="dropdown-item"
+        onClick={() => navigate("/vendor/dashboard")}
+      >
+        📊 My Listings
+      </div>
+      <div
+        className="dropdown-item"
+        onClick={() => navigate("/vendor/help")}
+      >
+        ❓ Vendor Help
+      </div>
+    </div>
+  )}
+</div>
+
 
           {/* Three Dots Dropdown */}
           <div className="nav-item ellipsis-container" ref={ellipsisRef}>
@@ -232,14 +263,18 @@ const Navbar = () => {
             {showEllipsisDropdown && (
               <div className="dropdown-menu ellipsis-menu">
                 <div
-                  className="dropdown-item"
+                  className={`dropdown-item ${
+                    location.pathname === "/about_us" ? "active" : ""
+                  }`}
                   onClick={() => navigate("/about_us")}
                 >
                   <FcAbout className="navbar_icon" /> About Us
                 </div>
 
                 <div
-                  className="dropdown-item"
+                  className={`dropdown-item ${
+                    location.pathname === "/help_us" ? "active" : ""
+                  }`}
                   onClick={() => navigate("/help_us")}
                 >
                   <FaHandsHelping className="navbar_icon" /> Help Us
@@ -251,6 +286,11 @@ const Navbar = () => {
       </div>
     </div>
   );
+};
+
+Navbar.propTypes = {
+  onOpenLogin: PropTypes.func.isRequired,
+  onOpenRegister: PropTypes.func.isRequired,
 };
 
 export default Navbar;
