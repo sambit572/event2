@@ -22,6 +22,7 @@ import VendorPayment from "./pages/vendor/VendorPayment";
 import VendorThankYou from "./pages/vendor/VendorThankYou";
 import VendorRegistration from "./pages/vendor/VendorRegistration";
 import VendorService from "./pages/vendor/VendorService";
+import VendorLogin from "./pages/vendor/VendorLogin.jsx";
 
 import AboutUs from "./pages/common/AboutUs";
 import HelpUs from "./pages/common/HelpUs";
@@ -123,6 +124,7 @@ const App = () => {
           <Route path="/userdetails" element={<UserDetails />}></Route>
           <Route path="/pop-up" element={<PopUp />}></Route>
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/vendor-login" element={<VendorLogin />} />
         </Routes>
       </main>
 

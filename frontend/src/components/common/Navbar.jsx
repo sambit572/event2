@@ -242,7 +242,7 @@ const Navbar = () => {
                 />
                 <span
                   className="text-[#001F3F] hover:text-white font-semibold max-[1024px]:mt-[6px] max-[820px]:text-[11px] max-[820px]:w-max"
-                  onClick={userFirstName ? () => navigate("/login") : undefined}
+                  onClick={userFirstName ? () => navigate("/vendor-login") : undefined}
                 >
                   Be a Vendor
                 </span>
