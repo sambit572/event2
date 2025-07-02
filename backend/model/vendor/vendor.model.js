@@ -50,18 +50,7 @@ const vendorSchema = new mongoose.Schema(
       enum: ["pending", "completed", "rejected"],
       default: "pending",
     },
-    services: {
-      type: [Schema.Types.ObjectId],
-      ref: "Service",
-    },
-    bankdetails: {
-      type: Schema.Types.ObjectId,
-      ref: "BankDetails",
-    },
-    legalConsent: {
-      type: Schema.Types.ObjectId,
-      ref: "Consent",
-    },
+    
   },
   {
     timestamps: true, // Adds createdAt and updatedAt timestamps automatically (retained for conciseness)

@@ -101,3 +101,10 @@
     gap: 12px;
   }
 }
+
+@media (max-width:380px) {
+  .faq-subtitle {
+    font-size: 12px;
+  }
+  
+}

@@ -111,7 +111,7 @@
 }
 .nav-item a {
   text-decoration: none;
-  color: black;
+  color: #001f3f;
   font-weight: 500;
 }
 
@@ -122,6 +122,10 @@
   font-size: 15px;
   font-weight: 520;
   padding: 0;
+}
+.nav-icons .user-pic {
+  font-size: 20px;
+  color: red;
 }
 
 .profile-btn:hover .navbar_icon {
@@ -141,14 +145,16 @@
   color: #f5efff;
   font-weight: bold;
   background: black;
+  font-size: 18px;
 }
 .navbar_icon {
   font-size: 15px;
   margin-right: 5px;
-  color: black;
+  color: #001f3f;
 }
 .dropdown-item:hover .navbar_icon {
-  color: #fff;
+  color: #001f3f;
+  font-size: 18px;
 }
 .nav-items {
   cursor: pointer;

@@ -30,7 +30,7 @@ const bankDetailsSchema = new Schema(
     },
     panCardPic: {
       type: String,
-      required:true,
+      required: true,
     },
   },
   { timestamps: true }
