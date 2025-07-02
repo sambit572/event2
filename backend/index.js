@@ -2,7 +2,6 @@ console.log("🚀 Initializing server...");
 
 import { config } from "dotenv";
 import "dotenv/config";
-import cors from "cors";
 import { app } from "./app.js";
 import { connectToDb } from "./db/db.js";
 import { createServer } from "http";
