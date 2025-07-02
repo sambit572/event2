@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import UserProfileIcon from "../../pages/common/UserProfileIcon.jsx";
-import UserProfileIcon from "../../pages/common/UserProfileIcon.jsx";
+
 
 import "./Navbar.css";
 import { CgProfile } from "react-icons/cg";
