@@ -121,10 +121,6 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
   const renderStep = () => {
     if (step === "success") return <SuccessBlock showSuccessIcon={showSuccessIcon} />;
-<<<<<<< HEAD
-
-=======
->>>>>>> f6cc2623ce73410e146a4e8d5531e5c884143d55
     if (step === "otp") return <OTPVerification setStep={setStep} />;
 
     return (
@@ -195,10 +191,6 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
 Login.propTypes = {
   onClose: PropTypes.func,
-<<<<<<< HEAD
-  onSwitchToRegister: PropTypes.func,
-=======
->>>>>>> f6cc2623ce73410e146a4e8d5531e5c884143d55
 };
 
 export default Login;
