@@ -1,6 +1,6 @@
 import express from "express";
 import { upload } from "../../middleware/multer.middleware.js";
-import { createService } from "../../controller/service.controller.js";
+import { createService } from "../../controller/vendor/service.controller.js";
 import {
   registerVendor,
   getVendorById,

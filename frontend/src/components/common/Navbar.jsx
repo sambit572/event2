@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import UserProfileIcon from "../../pages/common/UserProfileIcon.jsx";
 
-
-
 import "./Navbar.css";
 import { CgProfile } from "react-icons/cg";
 import {
@@ -44,7 +42,6 @@ const Navbar = () => {
       inputRef.current.focus();
     }
   };
-
 
   const handleHomeClick = () => {
     if (location.pathname === "/") {
@@ -129,7 +126,6 @@ const Navbar = () => {
 
         {/* Nav Icons */}
         <div className="nav-icons">
-
           {/* Profile Dropdown */}
           <div className="nav-item profile-dropdown-container" ref={profileRef}>
             <div className="flex items-center gap-2 text-gray-700 cursor-pointer login">
@@ -213,7 +209,6 @@ const Navbar = () => {
             )}
           </div>
 
-
           {/* Become Vendor */}
           <div
             className="nav-items  max-[1024px]:flex-col max-[1024px]:text-[12px] max-[820px]:text-[11px]"
@@ -257,6 +252,5 @@ const Navbar = () => {
     </div>
   );
 };
-
 
 export default Navbar;
