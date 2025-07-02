@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
+import PropTypes from "prop-types";
 import UserProfileIcon from "../../pages/common/UserProfileIcon.jsx";
-
-
-
 import "./Navbar.css";
 import { CgProfile } from "react-icons/cg";
 import {
@@ -22,9 +20,9 @@ import axios from "axios";
 import { useNavigate, Navigate } from "react-router-dom";
 import ReviewSlider from "../customer/Home/ReviewSlider.jsx";
 import ImageSlider from "./../customer/Home/ImageSlider";
-import logo9 from "../../assets/logo9.png";
+import logo from "../../assets/logo.png";
 
-const Navbar = () => {
+const Navbar = ({ onOpenLogin, onOpenRegister }) => {
   const navigate = useNavigate();
 
   const [userFirstName, setUserFirstName] = useState(null);
@@ -128,7 +126,7 @@ const Navbar = () => {
       {/* Logo */}
       <div className="logo">
         <span onClick={handleHomeClick}>
-          <img src={logo9} alt="logo" />
+          <img src={logo} alt="logo" />
         </span>
       </div>
 

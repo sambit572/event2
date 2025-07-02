@@ -191,6 +191,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
 Login.propTypes = {
   onClose: PropTypes.func,
+  onSwitchToRegister: PropTypes.func,
 };
 
 export default Login;
