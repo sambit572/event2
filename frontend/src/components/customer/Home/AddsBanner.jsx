@@ -22,7 +22,7 @@ const AddsBanner = () => {
         <img
           src={smallbanner}
           alt="Responsive"
-          className="w-full h-full object-cover rounded-lg"
+          className="w-full h-full object-fill rounded-lg"
         />
       </picture>
     </div>
