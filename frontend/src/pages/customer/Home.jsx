@@ -190,10 +190,7 @@ const Home = () => {
         Explore trusted professionals across categories and simplify your event
         planning.
       </h4>
-      {/* <p className="text-center">
-        Explore trusted professionals across categories and simplify your event
-        planning.
-      </p> 
+    
 
       {!showAll && categories.length > 6 && (
         <div className="browse_all">

@@ -13,6 +13,7 @@ const bankDetailsSchema = new Schema(
     accountNumber: {
       type: String,
       required: true,
+      unique : true
     },
     branchName: {
       type: String,

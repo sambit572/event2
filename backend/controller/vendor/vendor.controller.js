@@ -219,5 +219,16 @@ const updateVendor = async (req, res, next) => {
     );
   }
 };
+const checkServiceExists = async (req, res, next) => {
+  try {
+    // Your checkServiceExists logic here
+    
+  } catch (error) {
+    console.error("Error checking service existence:", error);
+    next(new ApiError(500, "An internal server error occurred while checking service."));
+  }
+};
 
-export { registerVendor, getVendorById, updateVendor };
+
+
+export { registerVendor, getVendorById, updateVendor,checkServiceExists };

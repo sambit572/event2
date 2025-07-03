@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
-import PropTypes from "prop-types";
+import UserProfileIcon from "../../pages/common/UserProfileIcon.jsx";
 import "./Navbar.css";
+import { CgProfile } from "react-icons/cg";
 import {
   FaSearch,
   FaUser,
@@ -23,22 +24,23 @@ import logo9 from "../../assets/logo9.png";
 
 const Navbar = ({ onOpenLogin, onOpenRegister }) => {
   const navigate = useNavigate();
-  const location = useLocation();
+
   const [userFirstName, setUserFirstName] = useState(null);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showEllipsisDropdown, setShowEllipsisDropdown] = useState(false);
-  const [showVendorDropdown, setShowVendorDropdown] = useState(false);
 
   const [searchInput, setSearchInput] = useState("");
 
   const profileRef = useRef(null);
   const ellipsisRef = useRef(null);
-  const vendorRef = useRef(null);
+
   const inputRef = useRef(null);
 
   const handleSearchicon = (e) => {
-    e.stopPropagation();
-    if (inputRef.current) inputRef.current.focus();
+    e.stopPropagation(); // Prevent triggering parent onClick
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   };
 
   const handleHomeClick = () => {
@@ -102,9 +104,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
       if (ellipsisRef.current && !ellipsisRef.current.contains(event.target)) {
         setShowEllipsisDropdown(false);
       }
-      if (vendorRef.current && !vendorRef.current.contains(event.target)) {
-        setShowVendorDropdown(false);
-      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -124,13 +123,15 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
 
   return (
     <div className="navbar">
+      {/* Logo */}
       <div className="logo">
         <span onClick={handleHomeClick}>
           <img src={logo9} alt="logo" />
         </span>
       </div>
 
-      <div className="search-and-nav-icons-container">
+      <div className="search-and-nav-icons-container ">
+        {/* Search Bar */}
         <div className="search-bar" onClick={handleSearch}>
           <FaSearch className="search-icon" onClick={handleSearchicon} />
           <input
@@ -138,23 +139,36 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
             type="text"
             placeholder="Search for Services and More"
             value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
+            onChange={(e) => {
+              setSearchInput(e.target.value);
+            }}
           />
         </div>
 
+        {/* Nav Icons */}
         <div className="nav-icons">
+
           {/* Profile Dropdown */}
           <div className="nav-item profile-dropdown-container" ref={profileRef}>
             <div className="flex items-center gap-2 text-gray-700 cursor-pointer login">
               <span
-                className="flex items-center gap-2 max-[1024px]:flex-col max-[1024px]:text-[12px] max-[820px]:text-[11px]"
+                className="flex items-center gap-2 max-[1024px]:flex-row max-[1024px]:text-[12px] max-[820px]:text-[11px]"
                 onClick={!userFirstName ? handleLoginClick : undefined}
               >
-                <FaUser className="text-lg" />
-                <span className="font-medium">
-                  {userFirstName ? `${userFirstName}` : "Login"}
-                </span>
+                {!userFirstName ? (
+                  <>
+                    <CgProfile className="text-2xl" />
+                    <span className="font-medium">Login</span>
+                  </>
+                ) : (
+                  <>
+                    <UserProfileIcon />
+                    <span className="font-medium">{userFirstName}</span>
+                  </>
+                )}
               </span>
+
+              {/* ⬇️ Always show dropdown toggle arrow */}
               <span onClick={handleToggleProfileDropdown}>
                 {showProfileDropdown ? (
                   <FaChevronUp className="text-sm" />
@@ -177,7 +191,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
                       <button
                         className="bg-blue-500 hover:bg-blue-600"
                         onClick={handleSignupClick}
-                        onClick={handleSignupClick}
                       >
                         Sign Up
                       </button>
@@ -187,18 +200,30 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
                 ) : (
                   <>
                     <div
-                      className="dropdown-item"
+                      className="flex flex-row gap-1 mb-[10px] text-[#001f3f] hover:text-[#022f5d] hover:font-bold text-[15px]"
                       onClick={() => navigate("/profile")}
                     >
-                      <FaUser /> My Profile
+                      <FaUser style={{ marginRight: "8px" }} />
+                      My Profile
                     </div>
-                    <div className="dropdown-item">
-                      <FaHeart />
+                    <div className="dropdown-item hover:text-[#001f3f] hover:font-bold">
+                      <FaHeart
+                        className="navbar_icon "
+                        style={{ marginRight: "4px" }}
+                      />
                       <a href="./wishlist">Wishlist</a>
                     </div>
                     <div className="dropdown-item">
-                      <FaSignOutAlt />
-                      <button onClick={handleLogout}>Sign Out</button>
+                      <FaSignOutAlt
+                        className="navbar_icon hover:text-[#001f3f] hover:font-bold"
+                        style={{ marginRight: "4px" }}
+                      />
+                      <button
+                        className="signOutButton hover:text-[#001f3f] hover:font-bold"
+                        onClick={handleLogout}
+                      >
+                        Sign Out
+                      </button>
                     </div>
                   </>
                 )}
@@ -206,9 +231,10 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
             )}
           </div>
 
+
           {/* Become Vendor */}
           <div
-            className="nav-items  max-[1024px]:flex-col max-[1024px]:text-[12px] max-[820px]:text-[11px]"
+            className="nav-items  max-[1024px]:flex-row max-[1024px]:text-[12px] max-[820px]:text-[11px]"
             onClick={handleVendorClick}
           >
             <FaStore className="icons max-[1024px]:h-[18px] max-[1024px]:w-[18px]  max-[820px]:h-[15px]" />
@@ -227,18 +253,14 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
             {showEllipsisDropdown && (
               <div className="dropdown-menu ellipsis-menu">
                 <div
-                  className={`dropdown-item ${
-                    location.pathname === "/about_us" ? "active" : ""
-                  }`}
+                  className="dropdown-item"
                   onClick={() => navigate("/about_us")}
                 >
                   <FcAbout className="navbar_icon" /> About Us
                 </div>
 
                 <div
-                  className={`dropdown-item ${
-                    location.pathname === "/help_us" ? "active" : ""
-                  }`}
+                  className="dropdown-item"
                   onClick={() => navigate("/help_us")}
                 >
                   <FaHandsHelping className="navbar_icon" /> Help Us
@@ -250,11 +272,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
       </div>
     </div>
   );
-};
-
-Navbar.propTypes = {
-  onOpenLogin: PropTypes.func.isRequired,
-  onOpenRegister: PropTypes.func.isRequired,
 };
 
 Navbar.propTypes = {

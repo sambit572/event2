@@ -12,7 +12,7 @@ import axios from "axios";
 import Spinner from "./../../components/common/Spinner";
 
 export default function VendorLegalConsent() {
-  const [signatureFile, setSignatureFile] = React.useState(null);
+  const [signatureFile, setSignatureFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const fileInputRef = React.useRef();
@@ -20,9 +20,9 @@ export default function VendorLegalConsent() {
   const location = useLocation();
 
   const [consents, setConsents] = React.useState({
-    iAgreeTC: true,
-    iAgreeCP: true,
-    iAgreeKYCVerifyUsingPanAndAdhar: true,
+    iAgreeTC: false,
+    iAgreeCP: false,
+    iAgreeKYCVerifyUsingPanAndAdhar: false,
   });
 
   const currentStepIndex = location.state?.currentStep || 3;

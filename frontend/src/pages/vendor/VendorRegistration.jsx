@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import StepProgress from "./StepProgress";
 import "./VendorRegistration.css";
 import axios from "axios";
@@ -7,20 +7,54 @@ import Spinner from "./../../components/common/Spinner";
 
 export default function VendorRegister() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
 
-  const [form, setForm] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    password: "",
-    confirmPassword: "",
-    profilePic: "",
-  });
+  const isEditMode = location.state?.apiResponse?.vendor?.id || 
+  sessionStorage.getItem('vendor_id');
+
+  const saveFormData = (stepNumber, data) => {
+    sessionStorage.setItem(`vendor_step_${stepNumber}`, JSON.stringify(data));
+  };
+  
+  const loadFormData = (stepNumber) => {
+    const saved = sessionStorage.getItem(`vendor_step_${stepNumber}`);
+    return saved ? JSON.parse(saved) : {};
+  };
+
+  
+ const [form, setForm] = useState(() => {
+  const savedData = loadFormData(1);
+  return {
+    fullName: savedData.fullName || "",
+    email: savedData.email || "",
+    phone: savedData.phone || "",
+    password: savedData.password || "",
+    confirmPassword: savedData.confirmPassword || "",
+    profilePic: savedData.profilePic || "",
+  };
+});
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // Add this after your last useState
+  useEffect(() => {
+    // ✅ Redirect if already completed
+    if (localStorage.getItem('step1Completed')) {
+      navigate("/category/VendorService");
+      return;
+    }
+  
+    // ✅ Save form data on change
+    const timeoutId = setTimeout(() => {
+      saveFormData(1, form);
+    }, 500);
+    return () => clearTimeout(timeoutId);
+  }, [form, navigate]);
+  
+
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -53,6 +87,23 @@ export default function VendorRegister() {
     setIsLoading(true);
     setError("");
 
+    if (isEditMode) {
+      console.log("Edit mode: Updating name only");
+      saveFormData(1, form);
+      localStorage.setItem('step1Completed', 'true');
+      
+      navigate("/category/VendorService", {
+        state: {
+          currentStep: 1,
+          vendorData: form,
+          apiResponse: location.state?.apiResponse || 
+                      JSON.parse(sessionStorage.getItem('api_response') || '{}'),
+        },
+      });
+      setIsLoading(false);
+      return;
+    }
+
     if (!validateForm()) {
       setIsLoading(false);
       return;
@@ -60,6 +111,7 @@ export default function VendorRegister() {
 
     setLoading(true);
 
+    
     try {
       if (form.confirmPassword !== form.password) {
         setError("Password not matching");
@@ -84,8 +136,9 @@ export default function VendorRegister() {
           },
         }
       );
-
+      
       console.log("Registration successful:", response.data);
+      saveFormData(1, form);
 
       navigate("/category/VendorService", {
         state: {
@@ -111,6 +164,7 @@ export default function VendorRegister() {
     }
     setIsLoading(false);
   };
+
 
   const StepIndex = location.state?.currentStep || 0;
 
@@ -160,6 +214,7 @@ export default function VendorRegister() {
                 value={form.fullName}
                 onChange={handleChange}
                 required
+
               />
 
               <label>
@@ -171,6 +226,8 @@ export default function VendorRegister() {
                 value={form.email}
                 onChange={handleChange}
                 required
+                disabled={isEditMode}
+                style={isEditMode ? { backgroundColor: '#f5f5f5', cursor: 'not-allowed' } : {}}
               />
 
               <label>
@@ -182,6 +239,8 @@ export default function VendorRegister() {
                 value={form.phone}
                 onChange={handleChange}
                 required
+                disabled={isEditMode} // DISABLE IF IN EDIT MODE
+  style={isEditMode ? { backgroundColor: '#f5f5f5', cursor: 'not-allowed' } : {}}
               />
 
               <label>

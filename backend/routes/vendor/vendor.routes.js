@@ -1,6 +1,6 @@
 import express from "express";
 import { upload } from "../../middleware/multer.middleware.js";
-import { createService } from "../../controller/service.controller.js";
+import { createService } from "../../controller/vendor/service.controller.js";
 import {
   registerVendor,
   getVendorById,
@@ -33,7 +33,8 @@ vendor_router.get("/:id", getVendorById);
 vendor_router.put("/:id", upload.single("profilePicture"), updateVendor);
 vendor_router
   .route("/create-service")
-  .post(upload.array("images", 5), createService);
+  .post(upload.array("media", 5), createService);
+  
 
 vendor_router.post(
   "/bank-details",
@@ -42,6 +43,7 @@ vendor_router.post(
 );
 // Get bank details by vendor ID
 vendor_router.get("/bank-details/:vendorId", getBankDetailsByVendor); // after vendor registration complete change
+
 // Update bank details by vendor ID
 vendor_router.put("/bank-details/:vendorId", updateBankDetails); // after vendor registration complete change
 // Delete bank details by vendor ID

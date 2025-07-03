@@ -1,6 +1,6 @@
 import { ApiError } from "../utilities/ApiError.js";
 import jwt from "jsonwebtoken";
-import { User } from "../model/user.model.js";
+import { User } from "../model/user/user.model.js";
 
 export const verifyJwt = async (req, res, next) => {
   try {

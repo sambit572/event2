@@ -1,4 +1,4 @@
-import { Consent } from "../../model/legalConsent.model.js";
+import { Consent } from "../../model/vendor/legalConsent.model.js";
 import {
   uploadOnCloudinary,
   deleteFromCloudinary,
