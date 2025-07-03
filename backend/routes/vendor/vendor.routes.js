@@ -1,10 +1,10 @@
 import express from "express";
 import { upload } from "../../middleware/multer.middleware.js";
+import { verifyVendorJwt } from "../../middleware/VendorAuth.middleware.js";
 
 // Vendor Core Controllers
 import {
   registerVendor,
-  getVendorById,
   updateVendor,
   loginVendor,
   vendorLogout,
@@ -12,6 +12,7 @@ import {
   resetVendorPassword,
   changeVendorPassword,
   vendorSilentLogin,
+  checkVendorEmailStatus,
 } from "../../controller/vendor/vendor.controller.js";
 
 // Service Controller
@@ -42,14 +43,14 @@ vendor_router.post(
   registerVendor
 );
 vendor_router.post("/login", loginVendor);
-vendor_router.post("/logout", vendorLogout);
+vendor_router.post("/logout",verifyVendorJwt, vendorLogout);
 vendor_router.post("/send-reset-link", sendVendorResetLink);
 vendor_router.post("/reset-password/:resetToken", resetVendorPassword);
-vendor_router.post("/change-password", changeVendorPassword);
-vendor_router.get("/silent-login", vendorSilentLogin);
+vendor_router.post("/change-password",verifyVendorJwt, changeVendorPassword);
+vendor_router.get("/silent-login",verifyVendorJwt, vendorSilentLogin);
+vendor_router.post("/check-email", checkVendorEmailStatus);
 
 // --- PROFILE ROUTES --- //
-vendor_router.get("/:id", getVendorById);
 vendor_router.put("/:id", upload.single("profilePicture"), updateVendor);
 
 // --- SERVICE ROUTES --- //

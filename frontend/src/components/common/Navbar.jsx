@@ -22,6 +22,8 @@ import { useNavigate, Navigate } from "react-router-dom";
 import ReviewSlider from "../customer/Home/ReviewSlider.jsx";
 import ImageSlider from "./../customer/Home/ImageSlider";
 import logo from "../../assets/logo.png";
+import { attemptVendorSilentLogin, checkVendorEmailStatus } from "../../utils/VendorAuth.jsx";
+import VendorEmailConfirmModal from "../vendor/VendorEmailConfirmModal.jsx";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -87,13 +89,35 @@ const Navbar = () => {
     onOpenRegister();
   };
 
-  const handleVendorClick = () => {
+  const handleVendorClick = async () => {
     if (!userFirstName) {
-      onOpenLogin();
+      onOpenLogin(); // force user to login first
+      return;
+    }
+
+    // 1. Try silent login with vendor token
+    const silentRes = await attemptVendorSilentLogin();
+    if (silentRes.success) {
+      navigate("/dashboard");
+      return;
+    }
+
+    // 2. Check email status for current user
+    const email = await axios.get("http://localhost:8000/user/get-email");
+    const emailStatus = await checkVendorEmailStatus(email);
+
+    console.log(emailStatus)
+
+    if (emailStatus.existsInVendor) {
+      navigate("/vendor-login"); // already a vendor
+    } else if (emailStatus.existsInUser) {
+      // prompt UI to confirm: "Use same email to register as vendor?"
+      <VendorEmailConfirmModal/>;
     } else {
       navigate("/vendor/register");
     }
   };
+  
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -164,7 +188,7 @@ const Navbar = () => {
                 ) : (
                   <>
                     <UserProfileIcon />
-                    <span className="font-medium">{userFirstName}</span>
+                    <span className="font-medium">{`Hi, ${userFirstName}`}</span>
                   </>
                 )}
               </span>
@@ -242,7 +266,7 @@ const Navbar = () => {
                 />
                 <span
                   className="text-[#001F3F] hover:text-white font-semibold max-[1024px]:mt-[6px] max-[820px]:text-[11px] max-[820px]:w-max"
-                  onClick={userFirstName ? () => navigate("/vendor-login") : undefined}
+                  onClick={handleVendorClick}
                 >
                   Be a Vendor
                 </span>

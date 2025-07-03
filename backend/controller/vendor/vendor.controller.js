@@ -11,6 +11,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
+import { User } from "../../model/user/user.model.js";
 
 const cookieOptions = {
   httpOnly: true,
@@ -93,34 +94,6 @@ const registerVendor = async (req, res) => {
     }
 
     return res.status(500).json(new ApiError(500, "Internal server error"));
-  }
-};
-
-const getVendorById = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-
-    // Find vendor by ID and exclude the password field
-    const vendor = await Vendor.findById(id).select("-password");
-    if (!vendor) {
-      return next(new ApiError(404, "Vendor not found."));
-    }
-
-    // Send successful response
-    res
-      .status(200)
-      .json(new ApiResponse(200, vendor, "Vendor retrieved successfully."));
-  } catch (error) {
-    console.error("Error retrieving vendor by ID:", error);
-    if (error.name === "CastError") {
-      return next(new ApiError(400, "Invalid vendor ID format."));
-    }
-    next(
-      new ApiError(
-        500,
-        "An internal server error occurred while retrieving vendor."
-      )
-    );
   }
 };
 
@@ -274,19 +247,21 @@ const loginVendor = async (req, res) => {
     );
 };
 
+// ✅ Logout Vendor
 const vendorLogout = async (req, res) => {
-  if (req.user && req.user._id) {
-    await Vendor.findByIdAndUpdate(req.user._id, {
+  if (req.vendor && req.vendor._id) {
+    await Vendor.findByIdAndUpdate(req.vendor._id, {
       $unset: { refreshToken: 1 },
     });
   }
   return res
     .status(200)
-    .clearCookie("accessToken", cookieOptions)
-    .clearCookie("refreshToken", cookieOptions)
+    .clearCookie("vendorAccessToken", cookieOptions)
+    .clearCookie("vendorRefreshToken", cookieOptions)
     .json(new ApiResponse(200, {}, "Vendor logged out"));
 };
 
+// ✅ Forgot Password
 const sendVendorResetLink = async (req, res) => {
   const { email } = req.body;
   const vendor = await Vendor.findOne({ email });
@@ -315,6 +290,7 @@ const sendVendorResetLink = async (req, res) => {
     .json(new ApiResponse(200, null, "Reset link sent to vendor email"));
 };
 
+// ✅ Reset Password
 const resetVendorPassword = async (req, res) => {
   const { resetToken } = req.params;
   const { newPassword } = req.body;
@@ -337,11 +313,12 @@ const resetVendorPassword = async (req, res) => {
     .json(new ApiResponse(200, null, "Vendor password reset successfully"));
 };
 
+// ✅ Change Password (requires auth, uses req.vendor from middleware)
 const changeVendorPassword = async (req, res) => {
   const { oldPassword, newPassword } = req.body;
-  const vendor = await Vendor.findById(req.user._id);
-  const valid = await bcrypt.compare(oldPassword, vendor.password);
+  const vendor = await Vendor.findById(req.vendor._id);
 
+  const valid = await bcrypt.compare(oldPassword, vendor.password);
   if (!valid)
     return res.status(400).json(new ApiError(400, "Incorrect old password"));
   if (oldPassword === newPassword)
@@ -357,14 +334,15 @@ const changeVendorPassword = async (req, res) => {
     .json(new ApiResponse(200, null, "Password changed successfully"));
 };
 
+// ✅ Silent Login (with vendor refresh token)
 const vendorSilentLogin = async (req, res) => {
-  const token = req.cookies.refreshToken;
+  const token = req.cookies.vendorRefreshToken;
   if (!token)
     return res.status(401).json(new ApiResponse(401, null, "No token"));
 
   let decoded;
   try {
-    decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
+    decoded = jwt.verify(token, process.env.VENDOR_REFRESH_TOKEN_SECRET);
   } catch (err) {
     return res
       .status(401)
@@ -378,8 +356,8 @@ const vendorSilentLogin = async (req, res) => {
   const { accessToken, refreshToken } = await generateVendorTokens(vendor._id);
   return res
     .status(200)
-    .cookie("accessToken", accessToken, cookieOptions)
-    .cookie("refreshToken", refreshToken, cookieOptions)
+    .cookie("vendorAccessToken", accessToken, cookieOptions)
+    .cookie("vendorRefreshToken", refreshToken, cookieOptions)
     .json(
       new ApiResponse(
         200,
@@ -389,9 +367,29 @@ const vendorSilentLogin = async (req, res) => {
     );
 };
 
+const checkVendorEmailStatus = async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ message: "Email is required" });
+  }
+
+  try {
+    const existsInVendor = await Vendor.exists({ email });
+    const existsInUser = await User.exists({ email });
+
+    return res.status(200).json({
+      existsInVendor: Boolean(existsInVendor),
+      existsInUser: Boolean(existsInUser),
+    });
+  } catch (error) {
+    console.error("Error checking email status:", error.message);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 export {
   registerVendor,
-  getVendorById,
   updateVendor,
   loginVendor,
   vendorLogout,
@@ -399,4 +397,5 @@ export {
   resetVendorPassword,
   changeVendorPassword,
   vendorSilentLogin,
+  checkVendorEmailStatus,
 };
