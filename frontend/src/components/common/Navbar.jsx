@@ -30,6 +30,7 @@ const Navbar = () => {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showEllipsisDropdown, setShowEllipsisDropdown] = useState(false);
   const [showVendorDropdown, setShowVendorDropdown] = useState(false);
+  const [VendorFirstName, setVendorFirstName] = useState(null);
 
   const [searchInput, setSearchInput] = useState("");
 
@@ -74,16 +75,21 @@ const Navbar = () => {
   };
 
   const vendorLogout = async (req, res) => {
-  if (req.user && req.user._id) {
-    await Vendor.findByIdAndUpdate(req.user._id, {
-      $unset: { refreshToken: 1 },
-    });
-  }
-  return res
-    .status(200)
-    .clearCookie("accessToken", cookieOptions)
-    .clearCookie("refreshToken", cookieOptions)
-    .json(new ApiResponse(200, {}, "Vendor logged out"));
+  try {
+      await axios.post(
+        "http://localhost:8000/vendor/logout",
+        {},
+        { withCredentials: true }
+      );
+      localStorage.removeItem("VendorFullName");
+      localStorage.removeItem("VendorFirstName");
+      localStorage.removeItem("VendorInitial");
+      localStorage.removeItem("VendorCurrentlyLoggedIn");
+      setVendorFirstName(null);
+      navigate("/", { replace: true });
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
 };
 
   const handleSearch = () => {
@@ -128,7 +134,9 @@ const Navbar = () => {
   useEffect(() => {
     const updateName = () => {
       const storedName = localStorage.getItem("userFirstName");
+      const storedVendor = localStorage.getItem("VendorFirstName");
       setUserFirstName(storedName);
+      setVendorFirstName(storedVendor);
     };
 
     updateName();
@@ -254,29 +262,44 @@ const Navbar = () => {
                   onClick={handleVendorClick}
                 />
                 <span
-                  className="text-[#001F3F] hover:text-white font-semibold max-[1024px]:mt-[6px] max-[820px]:text-[11px] max-[820px]:w-max"
-                  onClick={() => {
-                    if (!userFirstName) {
-                      const toastId = toast.custom((t) => (
-                        <div
-                          className={`${
-                            t.visible ? "animate-enter" : "animate-leave"
-                          } bg-white text-black px-4 py-3 rounded shadow-lg relative mt-20`}
-                        >
-                          <span>Please login as a user first.</span>
-                          <div className="toast-progress"></div>
-                        </div>
-                      ));
+  className="text-[#001F3F] hover:text-white font-semibold max-[1024px]:mt-[6px] max-[820px]:text-[11px] max-[820px]:w-max"
+  onClick={() => {
+    if (!userFirstName) {
+      const toastId = toast.custom((t) => (
+        <div
+          className={`${
+            t.visible ? "animate-enter" : "animate-leave"
+          } bg-white text-black px-4 py-3 rounded shadow-lg relative mt-20`}
+        >
+          <span>Please login as a user first.</span>
+          <div className="toast-progress"></div>
+        </div>
+      ));
+      setTimeout(() => toast.dismiss(toastId), 2000);
+    } else {
+      if(!VendorFirstName && userFirstName){
+        navigate("/vendor/register");
+      }
+      else{
+        setShowVendorDropdown((prev) => !prev);
+      }
+    }
+  }}
+>
+  {!VendorFirstName ? (
+    <>
+      <CgProfile className="text-2xl" />
+      <span className="font-medium">Be a Vendor</span>
+    </>
+  ) : (
+    <>
+      <span className="font-medium">
+        <UserProfileIcon />
+        {VendorFirstName}</span>
+    </>
+  )}
+</span>
 
-                      // ❗ Correct placement inside `if` and use the toastId
-                      setTimeout(() => toast.dismiss(toastId), 2000); // or 1000 for 1 sec
-                    } else {
-                      navigate("/vendor-login")
-                    }
-                  }}
-                >
-                  Be a Vendor
-                </span>
 
                 <span onClick={() => setShowVendorDropdown((prev) => !prev)}>
                   {showVendorDropdown ? (
@@ -345,7 +368,7 @@ const Navbar = () => {
                       }
                     }}
                   >
-                  Update Profile
+                  Change Password
                   </button>
                   <button
                     className= " bg-red-500 hover:bg-red-600"
@@ -366,7 +389,7 @@ const Navbar = () => {
                         // Auto dismiss after 3 seconds
                         setTimeout(() => toast.dismiss(toastId), 2000);
                       } else {
-                        {vendorLogout()}
+                        vendorLogout();
                       }
                     }}
                   >

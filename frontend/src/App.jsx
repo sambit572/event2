@@ -36,7 +36,7 @@ import Profile from "./components/customer/profile/Profile.jsx";
 import UserDetails from "./pages/customer/UserDetails.jsx";
 import DashboardServices from "./components/vendor/DashboardServices.jsx";
 import PopUp from "./components/customer/CustomerNegotiationModal";
-import VendorLogin from "./pages/vendor/VendorLogin.jsx";
+
 // Vendor Pages
 import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
 
