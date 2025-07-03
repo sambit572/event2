@@ -40,20 +40,12 @@ export default function VendorRegister() {
   const [error, setError] = useState("");
 
   // Add this after your last useState
-  useEffect(() => {
-    // ✅ Redirect if already completed
-    if (localStorage.getItem('step1Completed')) {
-      navigate("/category/VendorService");
-      return;
-    }
-  
-    // ✅ Save form data on change
-    const timeoutId = setTimeout(() => {
-      saveFormData(1, form);
-    }, 500);
-    return () => clearTimeout(timeoutId);
-  }, [form, navigate]);
-  
+useEffect(() => {
+  const timeoutId = setTimeout(() => {
+    saveFormData(1, form);
+  }, 500);
+  return () => clearTimeout(timeoutId);
+}, [form]);
 
 
   const handleChange = (e) => {
@@ -86,23 +78,6 @@ export default function VendorRegister() {
     e.preventDefault();
     setIsLoading(true);
     setError("");
-
-    if (isEditMode) {
-      console.log("Edit mode: Updating name only");
-      saveFormData(1, form);
-      localStorage.setItem('step1Completed', 'true');
-      
-      navigate("/category/VendorService", {
-        state: {
-          currentStep: 1,
-          vendorData: form,
-          apiResponse: location.state?.apiResponse || 
-                      JSON.parse(sessionStorage.getItem('api_response') || '{}'),
-        },
-      });
-      setIsLoading(false);
-      return;
-    }
 
     if (!validateForm()) {
       setIsLoading(false);
@@ -239,8 +214,6 @@ export default function VendorRegister() {
                 value={form.phone}
                 onChange={handleChange}
                 required
-                disabled={isEditMode} // DISABLE IF IN EDIT MODE
-  style={isEditMode ? { backgroundColor: '#f5f5f5', cursor: 'not-allowed' } : {}}
               />
 
               <label>
