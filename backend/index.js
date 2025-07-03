@@ -2,12 +2,11 @@ console.log("🚀 Initializing server...");
 
 import { config } from "dotenv";
 import "dotenv/config";
-import cors from "cors";
 import { app } from "./app.js";
 import { connectToDb } from "./db/db.js";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import NegotiationModel from "./model/NegotiationModel.js"; // ✅ import model
+import NegotiationModel from "./model/common/NegotiationModel.js";
 
 config({ path: "./env" });
 

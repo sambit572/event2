@@ -1,9 +1,9 @@
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 import bcrypt from "bcryptjs";
-import { User } from "../model/user.model.js";
-import { ApiError } from "../utilities/ApiError.js";
-import { ApiResponse } from "../utilities/ApiResponse.js";
+import { User } from "../../model/user/user.model.js";
+import { ApiError } from "../../utilities/ApiError.js";
+import { ApiResponse } from "../../utilities/ApiResponse.js";
 import jwt from "jsonwebtoken";
 import { isValidPhoneNumber } from "libphonenumber-js";
 
