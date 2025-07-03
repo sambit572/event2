@@ -540,3 +540,22 @@
     margin-left: 6px;
   }
 }
+
+.toast-progress {
+  margin-top: 10px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  background: linear-gradient(to right, #6600ff, #2f00ff, #3300ff);
+  animation: shrinkBar 2s linear forwards;
+}
+
+@keyframes shrinkBar {
+  0% {
+    width: 100%;
+  }
+  100% {
+    width: 0%;
+  }
+}
