@@ -80,10 +80,11 @@
   width: 100%;
   padding: 0.8rem 1rem;
   background-color: #f3c12d;
-  color: white;
+  color: rgb(0, 0, 0);
   border: none;
   border-radius: 8px;
   font-size: 1rem;
+  margin-bottom: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s;
@@ -102,7 +103,7 @@
 }
 
 .login-link {
-  color: #f3c12d;
+  color: #0073ff;
   font-weight: bold;
   cursor: pointer;
   transition: color 0.2s;

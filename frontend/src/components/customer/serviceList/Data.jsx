@@ -1,12 +1,12 @@
 import img1 from "../../../assets/service/sub-img1.avif";
 import img2 from "../../../assets/service/sub-img2.webp";
-import img3 from "../../../assets/service/sub-img3.jpg"
-import img4 from "../../../assets/service/sub-img4.jpg"
-import img5 from "../../../assets/service/sub-img5.jpg"
+import img3 from "../../../assets/service/sub-img3.jpg";
+import img4 from "../../../assets/service/sub-img4.jpg";
+import img5 from "../../../assets/service/sub-img5.jpg";
 const service = [
   {
     id: 1,
-    img: [img1, img2,img3,img4,img5],
+    img: [img1, img2, img3, img4, img5],
     title: " Elegant Beats Wedding DJ Package",
     description: "Experience With All Cultures & Traditions",
     address: {
@@ -16,6 +16,7 @@ const service = [
       area: "patia",
       pincode: 123344,
     },
+    vandor: "Aarav Mehta",
     rating: 4,
     reviews: 4000,
     price: "30,000",
@@ -24,7 +25,7 @@ const service = [
   },
   {
     id: 2,
-    img: [img1, img2,img3,img4,img5],
+    img: [img1, img2, img3, img4, img5],
     title: "DJ Service",
     description: "Experience With All Cultures & Traditions",
     address: {
@@ -34,6 +35,8 @@ const service = [
       area: "patia",
       pincode: 123344,
     },
+    vandor: "Sowmya Raghavan",
+
     rating: 4,
     reviews: 4000,
     price: 30000,
@@ -42,7 +45,7 @@ const service = [
   },
   {
     id: 3,
-    img: [img1, img2,img3,img4,img5],
+    img: [img1, img2, img3, img4, img5],
     title: "DJ Service",
     description: "Experience With All Cultures & Traditions",
     address: {
@@ -52,6 +55,8 @@ const service = [
       area: "barabati",
       pincode: 123346,
     },
+    vandor: "Harpreet Kaur Sidhu",
+
     rating: 4,
     reviews: 4000,
     price: 40000,
@@ -60,7 +65,7 @@ const service = [
   },
   {
     id: 4,
-    img: [img1, img2,img3,img4,img5],
+    img: [img1, img2, img3, img4, img5],
     title: "DJ Service",
     description: "Experience With All Cultures & Traditions",
     address: {
@@ -70,6 +75,8 @@ const service = [
       area: "barabati",
       pincode: 123346,
     },
+    vandor: "Ananya Banerjee",
+
     rating: 4,
     reviews: 4000,
     price: 40000,
@@ -78,7 +85,7 @@ const service = [
   },
   {
     id: 5,
-    img: [img1, img2,img3,img4,img5],
+    img: [img1, img2, img3, img4, img5],
     title: "DJ Service",
     description: "Experience With All Cultures & Traditions",
     address: {
@@ -88,6 +95,8 @@ const service = [
       area: "barabati",
       pincode: 123346,
     },
+    vandor: "Rohan Patil",
+
     rating: 4,
     reviews: 4000,
     price: 40000,
@@ -96,7 +105,7 @@ const service = [
   },
   {
     id: 6,
-    img: [img1, img2,img3,img4,img5],
+    img: [img1, img2, img3, img4, img5],
     title: "DJ Service",
     description: "Experience With All Cultures & Traditions",
     address: {
@@ -106,6 +115,8 @@ const service = [
       area: "barabati",
       pincode: 123346,
     },
+    vandor: "Meenakshi Sharma",
+
     rating: 4,
     reviews: 4000,
     price: 40000,
@@ -114,7 +125,7 @@ const service = [
   },
   {
     id: 7,
-    img: [img1, img2,img3,img4,img5],
+    img: [img1, img2, img3, img4, img5],
     title: "DJ Service",
     description: "Experience With All Cultures & Traditions",
     address: {
@@ -124,6 +135,8 @@ const service = [
       area: "barabati",
       pincode: 123346,
     },
+    vandor: "Aarav Mehta",
+
     rating: 4,
     reviews: 4000,
     price: 40000,
@@ -132,7 +145,7 @@ const service = [
   },
   {
     id: 8,
-    img: [img1, img2,img3,img4,img5],
+    img: [img1, img2, img3, img4, img5],
     title: "DJ Service",
     description: "Experience With All Cultures & Traditions",
     address: {
@@ -142,6 +155,8 @@ const service = [
       area: "barabati",
       pincode: 123346,
     },
+    vandor: "Aarav Mehta",
+
     rating: 4,
     reviews: 4000,
     price: 40000,
@@ -150,7 +165,7 @@ const service = [
   },
   {
     id: 9,
-    img: [img1, img2,img3,img4,img5],
+    img: [img1, img2, img3, img4, img5],
     title: "DJ Service",
     description: "Experience With All Cultures & Traditions",
     address: {
@@ -160,6 +175,8 @@ const service = [
       area: "barabati",
       pincode: 123346,
     },
+    vandor: "Aarav Mehta",
+
     rating: 4,
     reviews: 4000,
     price: 40000,
