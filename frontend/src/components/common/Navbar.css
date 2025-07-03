@@ -157,6 +157,7 @@
   font-size: 18px;
 }
 .nav-items {
+  cursor: pointer;
   display: flex;
   align-items: center;
 }

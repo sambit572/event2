@@ -9,11 +9,15 @@ import SuccessBlock from "./SuccessBlock.jsx";
 import axios from "axios";
 import "./LoginRegister.css";
 import ForgotPass from "../../pages/customer/ForgotPass.jsx";
+import ForgotPass from "../../pages/customer/ForgotPass.jsx";
 
+const Login = ({ onClose, onSwitchToRegister }) => {
 const Login = ({ onClose, onSwitchToRegister }) => {
   const navigate = useNavigate();
   const [step, setStep] = useState("form");
+  const [step, setStep] = useState("form");
   const [showSuccessIcon, setShowSuccessIcon] = useState(false);
+  const [showForgotModal, setShowForgotModal] = useState(false); // ✅ Added state
   const [showForgotModal, setShowForgotModal] = useState(false); // ✅ Added state
 
   const [formData, setFormData] = useState({
@@ -21,6 +25,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
     email: "",
     password: "",
   });
+
 
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -124,6 +129,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
   const renderStep = () => {
     if (step === "success") return <SuccessBlock showSuccessIcon={showSuccessIcon} />;
+    if (step === "success") return <SuccessBlock showSuccessIcon={showSuccessIcon} />;
     if (step === "otp") return <OTPVerification setStep={setStep} />;
 
 
@@ -165,6 +171,12 @@ const Login = ({ onClose, onSwitchToRegister }) => {
           >
             Forgot your password?
           </span>
+          <span
+            style={{ cursor: "pointer", color: "#007bff", textDecoration: "underline" }}
+            onClick={() => setShowForgotModal(true)} // ✅ Open modal
+          >
+            Forgot your password?
+          </span>
         </div>
 
         {errorMsg && <p className="error">{errorMsg}</p>}
@@ -173,6 +185,8 @@ const Login = ({ onClose, onSwitchToRegister }) => {
         </button>
 
         <p className="signup-text">
+          Don't have an account?{" "}
+          <span className="login-link" onClick={onSwitchToRegister}>
           Don't have an account?{" "}
           <span className="login-link" onClick={onSwitchToRegister}>
             Sign Up
@@ -199,11 +213,18 @@ const Login = ({ onClose, onSwitchToRegister }) => {
       {showForgotModal && (
         <ForgotPass onClose={() => setShowForgotModal(false)} />
       )}
+
+      {/* ✅ Forgot Password Modal */}
+      {showForgotModal && (
+        <ForgotPass onClose={() => setShowForgotModal(false)} />
+      )}
     </div>
   );
 };
 
 Login.propTypes = {
+  onClose: PropTypes.func,
+  onSwitchToRegister: PropTypes.func,
   onClose: PropTypes.func,
   onSwitchToRegister: PropTypes.func,
 };

@@ -21,7 +21,9 @@ import { useNavigate, Navigate } from "react-router-dom";
 import ReviewSlider from "../customer/Home/ReviewSlider.jsx";
 import ImageSlider from "./../customer/Home/ImageSlider";
 import logo9 from "../../assets/logo9.png";
+import logo9 from "../../assets/logo9.png";
 
+const Navbar = ({ onOpenLogin, onOpenRegister }) => {
 const Navbar = ({ onOpenLogin, onOpenRegister }) => {
   const navigate = useNavigate();
 
@@ -96,6 +98,27 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
     }
   };
 
+  // Handle login click - close dropdown and open modal
+  const handleLoginClick = () => {
+    setShowProfileDropdown(false);
+    onOpenLogin();
+  };
+
+  // Handle signup click - close dropdown and open modal
+  const handleSignupClick = () => {
+    setShowProfileDropdown(false);
+    onOpenRegister();
+  };
+
+  // Handle vendor click - open login modal if not logged in
+  const handleVendorClick = () => {
+    if (!userFirstName) {
+      onOpenLogin();
+    } else {
+      navigate("/vendor/register");
+    }
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (profileRef.current && !profileRef.current.contains(event.target)) {
@@ -127,6 +150,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
       <div className="logo">
         <span onClick={handleHomeClick}>
           <img src={logo9} alt="logo" />
+          <img src={logo9} alt="logo" />
         </span>
       </div>
 
@@ -152,6 +176,8 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
           <div className="nav-item profile-dropdown-container" ref={profileRef}>
             <div className="flex items-center gap-2 text-gray-700 cursor-pointer login">
               <span
+                className="flex items-center gap-2 max-[1024px]:flex-row max-[1024px]:text-[12px] max-[820px]:text-[11px]"
+                onClick={!userFirstName ? handleLoginClick : undefined}
                 className="flex items-center gap-2 max-[1024px]:flex-row max-[1024px]:text-[12px] max-[820px]:text-[11px]"
                 onClick={!userFirstName ? handleLoginClick : undefined}
               >
@@ -190,6 +216,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
                       <span className="text-[#001f3f]">New Customer?</span>
                       <button
                         className="bg-blue-500 hover:bg-blue-600"
+                        onClick={handleSignupClick}
                         onClick={handleSignupClick}
                       >
                         Sign Up
@@ -236,8 +263,11 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
           <div
             className="nav-items  max-[1024px]:flex-row max-[1024px]:text-[12px] max-[820px]:text-[11px]"
             onClick={handleVendorClick}
+            className="nav-items  max-[1024px]:flex-row max-[1024px]:text-[12px] max-[820px]:text-[11px]"
+            onClick={handleVendorClick}
           >
             <FaStore className="icons max-[1024px]:h-[18px] max-[1024px]:w-[18px]  max-[820px]:h-[15px]" />
+            <span className="font-medium text-[#001F3F] hover:text-white max-[1024px]:mt-[6px] max-[820px]:text-[11px] max-[820px]:w-max">
             <span className="font-medium text-[#001F3F] hover:text-white max-[1024px]:mt-[6px] max-[820px]:text-[11px] max-[820px]:w-max">
               Be a Vendor
             </span>
@@ -274,6 +304,10 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
   );
 };
 
+Navbar.propTypes = {
+  onOpenLogin: PropTypes.func.isRequired,
+  onOpenRegister: PropTypes.func.isRequired,
+};
 Navbar.propTypes = {
   onOpenLogin: PropTypes.func.isRequired,
   onOpenRegister: PropTypes.func.isRequired,

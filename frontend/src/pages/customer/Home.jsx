@@ -36,6 +36,7 @@ import ImageSlider from "../../components/customer/Home/ImageSlider";
 import Milestones from "../../components/common/aboutus/Milestones";
 import AddsBanner from "../../components/customer/Home/AddsBanner";
 import BackToTop from "../common/BackToTop";
+import BackToTop from "../common/BackToTop";
 
 const images = [
   {
@@ -56,6 +57,96 @@ const images = [
 ];
 
 const categories = [
+  {
+    title: "DJ Services",
+    image: image1,
+    tagline: "Beats That Breathe Fun",
+    icon: "🎧",
+  },
+  {
+    title: "Live Musical Band",
+    image: image2,
+    tagline: "Brass Beats the Best",
+    icon: "🎺",
+  },
+  {
+    title: "Venue Styling & Decor",
+    image: image3,
+    tagline: "Dream Drapes, Divine Vibes",
+    icon: "🎪",
+  },
+  {
+    title: "Photo & Video",
+    image: image4,
+    tagline: "Freeze Time with Frames",
+    icon: "📸",
+  },
+  {
+    title: "Hindu Priest",
+    image: image5,
+    tagline: "Mantras Meet Moments",
+    icon: "🕉",
+  },
+  {
+    title: "Magic Shows",
+    image: image6,
+    tagline: "Illusions that Amaze All",
+    icon: "🎩",
+  },
+  {
+    title: "Cultural Troupe",
+    image: image7,
+    tagline: "Echoes of Celebration",
+    icon: "🎤",
+  },
+  {
+    title: "Islamic Priest",
+    image: image8,
+    tagline: "Prayers that Guide Hearts",
+    icon: "🕌",
+  },
+  {
+    title: "Christian Priest",
+    image: image9,
+    tagline: "Grace in Every Verse",
+    icon: "⛪",
+  },
+  {
+    title: "Catering",
+    image: image10,
+    tagline: "Flavours that Speak Love",
+    icon: "🍽",
+  },
+  {
+    title: "Makeup & Mehendi Artist",
+    image: image11,
+    tagline: "Beauty in Every Brush",
+    icon: "💄",
+  },
+  {
+    title: "Floral Decor",
+    image: image12,
+    tagline: "Blooms that Whisper Joy",
+    icon: "💐",
+  },
+  {
+    title: "Wedding Transport",
+    image: image13,
+    tagline: "Royal Rides Await You",
+    icon: "🐎",
+  },
+  {
+    title: "Fireworks",
+    image: image14,
+    tagline: "Skies that Spark Magic",
+    icon: "🎆",
+  },
+  {
+    title: "Custom Invitation Design & Printing",
+    image: image15,
+    tagline: "Words That Welcome",
+    icon: "💌",
+  },
   {
     title: "DJ Services",
     image: image1,
@@ -206,6 +297,7 @@ const Home = () => {
       )}
       <div className="align_center category_section">
         {visibleCategories.map((category, index) => (
+          <div key={index}>
           <div key={index}>
             <CategoryCard category={category} />
           </div>
