@@ -22,6 +22,11 @@ import { useNavigate, Navigate } from "react-router-dom";
 import ReviewSlider from "../customer/Home/ReviewSlider.jsx";
 import ImageSlider from "./../customer/Home/ImageSlider";
 import logo from "../../assets/logo.png";
+import {
+  attemptVendorSilentLogin,
+  checkVendorEmailStatus,
+} from "../../utils/VendorAuth.jsx";
+import VendorEmailConfirmModal from "../vendor/VendorEmailConfirmModal.jsx";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -75,9 +80,10 @@ const Navbar = () => {
   };
 
   const vendorLogout = async (req, res) => {
-  try {
+    try {
+      console.log("Logging out vendor...");
       await axios.post(
-        "http://localhost:8000/vendor/logout",
+        "http://localhost:8000/vendors/logout",
         {},
         { withCredentials: true }
       );
@@ -90,7 +96,7 @@ const Navbar = () => {
     } catch (error) {
       console.error("Logout failed", error);
     }
-};
+  };
 
   const handleSearch = () => {
     setSearchInput("");
@@ -106,9 +112,30 @@ const Navbar = () => {
     onOpenRegister();
   };
 
-  const handleVendorClick = () => {
+  const handleVendorClick = async () => {
     if (!userFirstName) {
-      onOpenLogin();
+      onOpenLogin(); // force user to login first
+      return;
+    }
+
+    // 1. Try silent login with vendor token
+    const silentRes = await attemptVendorSilentLogin();
+    if (silentRes.success) {
+      navigate("/dashboard");
+      return;
+    }
+
+    // 2. Check email status for current user
+    const email = await axios.get("http://localhost:8000/user/get-email");
+    const emailStatus = await checkVendorEmailStatus(email);
+
+    console.log(emailStatus);
+
+    if (emailStatus.existsInVendor) {
+      navigate("/vendor-login"); // already a vendor
+    } else if (emailStatus.existsInUser) {
+      // prompt UI to confirm: "Use same email to register as vendor?"
+      <VendorEmailConfirmModal />;
     } else {
       navigate("/vendor/register");
     }
@@ -185,7 +212,7 @@ const Navbar = () => {
                 ) : (
                   <>
                     <UserProfileIcon />
-                    <span className="font-medium">{userFirstName}</span>
+                    <span className="font-medium">{`Hi, ${userFirstName}`}</span>
                   </>
                 )}
               </span>
@@ -262,44 +289,43 @@ const Navbar = () => {
                   onClick={handleVendorClick}
                 />
                 <span
-  className="text-[#001F3F] hover:text-white font-semibold max-[1024px]:mt-[6px] max-[820px]:text-[11px] max-[820px]:w-max"
-  onClick={() => {
-    if (!userFirstName) {
-      const toastId = toast.custom((t) => (
-        <div
-          className={`${
-            t.visible ? "animate-enter" : "animate-leave"
-          } bg-white text-black px-4 py-3 rounded shadow-lg relative mt-20`}
-        >
-          <span>Please login as a user first.</span>
-          <div className="toast-progress"></div>
-        </div>
-      ));
-      setTimeout(() => toast.dismiss(toastId), 2000);
-    } else {
-      if(!VendorFirstName && userFirstName){
-        navigate("/vendor/register");
-      }
-      else{
-        setShowVendorDropdown((prev) => !prev);
-      }
-    }
-  }}
->
-  {!VendorFirstName ? (
-    <>
-      <CgProfile className="text-2xl" />
-      <span className="font-medium">Be a Vendor</span>
-    </>
-  ) : (
-    <>
-      <span className="font-medium">
-        <UserProfileIcon />
-        {VendorFirstName}</span>
-    </>
-  )}
-</span>
-
+                  className="text-[#001F3F] hover:text-white font-semibold max-[1024px]:mt-[6px] max-[820px]:text-[11px] max-[820px]:w-max"
+                  onClick={() => {
+                    if (!userFirstName) {
+                      const toastId = toast.custom((t) => (
+                        <div
+                          className={`${
+                            t.visible ? "animate-enter" : "animate-leave"
+                          } bg-white text-black px-4 py-3 rounded shadow-lg relative mt-20`}
+                        >
+                          <span>Please login as a user first.</span>
+                          <div className="toast-progress"></div>
+                        </div>
+                      ));
+                      setTimeout(() => toast.dismiss(toastId), 2000);
+                    } else {
+                      if (!VendorFirstName && userFirstName) {
+                        navigate("/vendor/register");
+                      } else {
+                        setShowVendorDropdown((prev) => !prev);
+                      }
+                    }
+                  }}
+                >
+                  {!VendorFirstName ? (
+                    <>
+                      <CgProfile className="text-2xl" />
+                      <span className="font-medium">Be a Vendor</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="font-medium">
+                        <UserProfileIcon />
+                        {VendorFirstName}
+                      </span>
+                    </>
+                  )}
+                </span>
 
                 <span onClick={() => setShowVendorDropdown((prev) => !prev)}>
                   {showVendorDropdown ? (
@@ -318,7 +344,7 @@ const Navbar = () => {
                 <div className="dropdown-header">
                   <span className="text-[#001f3f]">New Vendor?</span>
                   <button
-                    className= " bg-black hover:bg-gray-800 text-white"
+                    className=" bg-black hover:bg-gray-800 text-white"
                     onClick={() => {
                       setShowVendorDropdown(false);
                       if (!userFirstName) {
@@ -344,9 +370,9 @@ const Navbar = () => {
                   </button>
                 </div>
                 <hr />
-                < div className="dropdown-header">
+                <div className="dropdown-header">
                   <button
-                    className= " bg-green-500 hover:bg-green-600"
+                    className=" bg-green-500 hover:bg-green-600"
                     onClick={() => {
                       setShowVendorDropdown(false);
                       if (!userFirstName) {
@@ -368,10 +394,10 @@ const Navbar = () => {
                       }
                     }}
                   >
-                  Change Password
+                    Change Password
                   </button>
                   <button
-                    className= " bg-red-500 hover:bg-red-600"
+                    className=" bg-red-500 hover:bg-red-600"
                     onClick={() => {
                       setShowVendorDropdown(false);
                       if (!userFirstName) {
@@ -393,11 +419,10 @@ const Navbar = () => {
                       }
                     }}
                   >
-                  SignOut
+                    SignOut
                   </button>
-                  </div>
                 </div>
-             
+              </div>
             )}
           </div>
 
