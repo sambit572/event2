@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import React, { useState, useEffect } from "react";
 import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 // Core Components
 import Navbar from "./components/common/Navbar";
@@ -24,6 +25,7 @@ import VendorPayment from "./pages/vendor/VendorPayment";
 import VendorThankYou from "./pages/vendor/VendorThankYou";
 import VendorRegistration from "./pages/vendor/VendorRegistration";
 import VendorService from "./pages/vendor/VendorService";
+import VendorLogin from "./pages/vendor/VendorLogin.jsx";
 
 import AboutUs from "./pages/common/AboutUs";
 import HelpUs from "./pages/common/HelpUs";
@@ -150,10 +152,27 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-          <Route path="/dashboardservices" element={<DashboardServices />} />
+          
+          <Route
+           path="/dashboardservices"
+            element={
+            <ProtectedRoute>
+              <DashboardServices />
+            </ProtectedRoute>
+            } />
 
           {/* Vendor Routes */}
-          <Route path="/vendor/register" element={<VendorRegistration />} />
+
+          <Route 
+          path="/vendor/register" 
+          element={
+           <ProtectedRoute>
+            <VendorRegistration />
+           </ProtectedRoute>
+          
+          } />
+
+
           <Route path="/category/VendorService" element={<VendorService />} />
           <Route path="/vendor/payment-info" element={<VendorPayment />} />
           <Route
@@ -161,6 +180,7 @@ const App = () => {
             element={<VendorLegalConsent />}
           />
           <Route path="/vendor/thank-you" element={<VendorThankYou />} />
+
           <Route path="/dashboard" element={<DashBoardMain />} />
 
           {/* Password Reset Routes */}
@@ -180,6 +200,7 @@ const App = () => {
           <Route path="/userdetails" element={<UserDetails />}></Route>
           <Route path="/pop-up" element={<PopUp />}></Route>
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/vendor-login" element={<VendorLogin/>} />
         </Routes>
       </main>
       {/* <BackToTop /> */}
@@ -188,36 +209,20 @@ const App = () => {
 
       {/* Conditionally render Footer */}
       {!pagesWithoutFooter.includes(location.pathname) && <Footer />}
+      <Toaster 
+      toastOptions={{
+          duration: 5000,
+          style: {
+            padding: '16px',
+            color: '#fff',
+            background: '#1f2937',
+            borderRadius: '8px',
+            position: 'relative',
+            overflow: 'hidden',
+          },
+        }}
+      position="top-right" reverseOrder={false} />
 
-      {/* Auth Modals */}
-      {showLoginModal && (
-        <Login 
-          onClose={handleCloseModals}
-          onSwitchToRegister={handleOpenRegister}
-        />
-      )}
-      
-      {showRegisterModal && (
-        <Register 
-          onClose={handleCloseModals}
-          onSwitchToLogin={handleOpenLogin}
-        />
-      )}
-
-      {/* Auth Modals */}
-      {showLoginModal && (
-        <Login
-          onClose={handleCloseModals}
-          onSwitchToRegister={handleOpenRegister}
-        />
-      )}
-
-      {showRegisterModal && (
-        <Register
-          onClose={handleCloseModals}
-          onSwitchToLogin={handleOpenLogin}
-        />
-      )}
     </>
   );
 };
