@@ -53,7 +53,7 @@ const App = () => {
   const [showRegisterModal, setShowRegisterModal] = useState(false);
 
   // Hide Footer on specific pages
-  const pagesWithoutFooter = ["/vendor/thank-you", "/admin", "/dashboard"];
+  const pagesWithoutFooter = ["/vendor/thank-you", "/admin", "/dashboard","/profile"];
 
   const handleOpenLogin = () => {
     setShowLoginModal(true);
