@@ -23,6 +23,7 @@ import VendorPayment from "./pages/vendor/VendorPayment";
 import VendorThankYou from "./pages/vendor/VendorThankYou";
 import VendorRegistration from "./pages/vendor/VendorRegistration";
 import VendorService from "./pages/vendor/VendorService";
+import VendorLogin from "./pages/vendor/VendorLogin.jsx";
 
 import AboutUs from "./pages/common/AboutUs";
 import HelpUs from "./pages/common/HelpUs";

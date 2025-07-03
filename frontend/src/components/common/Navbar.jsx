@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 
 import "./Navbar.css";
 import { CgProfile } from "react-icons/cg";
+
 import {
   FaSearch,
   FaUser,
@@ -16,7 +17,6 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 import { FcAbout } from "react-icons/fc";
-import { MdMiscellaneousServices, MdReviews } from "react-icons/md";
 import axios from "axios";
 import { useNavigate, Navigate } from "react-router-dom";
 import ReviewSlider from "../customer/Home/ReviewSlider.jsx";

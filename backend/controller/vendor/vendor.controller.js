@@ -7,6 +7,17 @@ import path from "path";
 import { uploadOnCloudinary } from "../../utilities/cloudinary.js";
 import { validateEmailDomain } from "../../utilities/verifyDNS.js";
 
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import crypto from "crypto";
+import nodemailer from "nodemailer";
+
+const cookieOptions = {
+  httpOnly: true,
+  secure: false,
+  sameSite: "Lax",
+};
+
 const registerVendor = async (req, res) => {
   try {
     const { fullName, email, phoneNumber, password } = req.body;
@@ -220,4 +231,172 @@ const updateVendor = async (req, res, next) => {
   }
 };
 
-export { registerVendor, getVendorById, updateVendor };
+const generateVendorTokens = async (vendorId) => {
+  const vendor = await Vendor.findById(vendorId);
+  const accessToken = vendor.generateAccessToken();
+  const refreshToken = vendor.generateRefreshToken();
+  vendor.refreshToken = refreshToken;
+  await vendor.save({ validateBeforeSave: false });
+  return { accessToken, refreshToken };
+};
+
+const loginVendor = async (req, res) => {
+  const { email, phoneNumber, password } = req.body;
+  if (!(email || phoneNumber) || !password)
+    return res
+      .status(400)
+      .json(new ApiError(400, "Email/Phone and password required"));
+
+  const vendor = await Vendor.findOne({
+    $or: [{ email }, { phoneNumber }],
+  });
+
+  if (!vendor)
+    return res.status(404).json(new ApiError(404, "Vendor not found"));
+  const valid = await vendor.comparePassword(password);
+  if (!valid)
+    return res.status(400).json(new ApiError(400, "Incorrect password"));
+
+  const { accessToken, refreshToken } = await generateVendorTokens(vendor._id);
+  const data = await Vendor.findById(vendor._id).select(
+    "-password -refreshToken -accessToken"
+  );
+  return res
+    .status(200)
+    .cookie("accessToken", accessToken, cookieOptions)
+    .cookie("refreshToken", refreshToken, cookieOptions)
+    .json(
+      new ApiResponse(
+        200,
+        { vendor: data, accessToken, refreshToken },
+        "Vendor logged in successfully"
+      )
+    );
+};
+
+const vendorLogout = async (req, res) => {
+  if (req.user && req.user._id) {
+    await Vendor.findByIdAndUpdate(req.user._id, {
+      $unset: { refreshToken: 1 },
+    });
+  }
+  return res
+    .status(200)
+    .clearCookie("accessToken", cookieOptions)
+    .clearCookie("refreshToken", cookieOptions)
+    .json(new ApiResponse(200, {}, "Vendor logged out"));
+};
+
+const sendVendorResetLink = async (req, res) => {
+  const { email } = req.body;
+  const vendor = await Vendor.findOne({ email });
+  if (!vendor)
+    return res.status(404).json(new ApiError(404, "Vendor not found"));
+
+  const resetToken = crypto.randomBytes(32).toString("hex");
+  vendor.resetPasswordToken = resetToken;
+  vendor.resetPasswordTokenExpires = Date.now() + 3600000;
+  await vendor.save();
+
+  const resetUrl = `${process.env.FRONTEND_URL}/vendor/reset-password/${resetToken}`;
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
+  });
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: vendor.email,
+    subject: "Vendor Password Reset",
+    html: `<p>Click <a href="${resetUrl}">here</a> to reset your password.</p>`,
+  };
+  await transporter.sendMail(mailOptions);
+  return res
+    .status(200)
+    .json(new ApiResponse(200, null, "Reset link sent to vendor email"));
+};
+
+const resetVendorPassword = async (req, res) => {
+  const { resetToken } = req.params;
+  const { newPassword } = req.body;
+
+  const vendor = await Vendor.findOne({
+    resetPasswordToken: resetToken,
+    resetPasswordTokenExpires: { $gt: Date.now() },
+  });
+
+  if (!vendor)
+    return res.status(400).json(new ApiError(400, "Token invalid or expired"));
+
+  vendor.password = newPassword;
+  vendor.resetPasswordToken = undefined;
+  vendor.resetPasswordTokenExpires = undefined;
+  await vendor.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, null, "Vendor password reset successfully"));
+};
+
+const changeVendorPassword = async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+  const vendor = await Vendor.findById(req.user._id);
+  const valid = await bcrypt.compare(oldPassword, vendor.password);
+
+  if (!valid)
+    return res.status(400).json(new ApiError(400, "Incorrect old password"));
+  if (oldPassword === newPassword)
+    return res
+      .status(400)
+      .json(new ApiError(400, "New password cannot be same as old"));
+
+  vendor.password = newPassword;
+  await vendor.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, null, "Password changed successfully"));
+};
+
+const vendorSilentLogin = async (req, res) => {
+  const token = req.cookies.refreshToken;
+  if (!token)
+    return res.status(401).json(new ApiResponse(401, null, "No token"));
+
+  let decoded;
+  try {
+    decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
+  } catch (err) {
+    return res
+      .status(401)
+      .json(new ApiResponse(401, null, "Invalid or expired token"));
+  }
+
+  const vendor = await Vendor.findById(decoded._id);
+  if (!vendor)
+    return res.status(404).json(new ApiError(404, "Vendor not found"));
+
+  const { accessToken, refreshToken } = await generateVendorTokens(vendor._id);
+  return res
+    .status(200)
+    .cookie("accessToken", accessToken, cookieOptions)
+    .cookie("refreshToken", refreshToken, cookieOptions)
+    .json(
+      new ApiResponse(
+        200,
+        { vendor, accessToken },
+        "Vendor login via refresh successful"
+      )
+    );
+};
+
+export {
+  registerVendor,
+  getVendorById,
+  updateVendor,
+  loginVendor,
+  vendorLogout,
+  sendVendorResetLink,
+  resetVendorPassword,
+  changeVendorPassword,
+  vendorSilentLogin,
+};
