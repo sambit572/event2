@@ -9,7 +9,7 @@ const CategoryCard = ({ category }) => {
     <div
       className="courseCard"
       onClick={() => {
-        navigate("/category");
+        navigate(`/category/${category.id}`);
       }}
     >
       <span className="brandLabel">EventsBridge</span>
