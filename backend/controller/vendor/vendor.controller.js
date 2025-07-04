@@ -83,12 +83,17 @@ const registerVendor = async (req, res) => {
     );
 
 
-    // 5. Return success response
-    return res
-      .status(200)
-      .cookie("vendorAccessToken", accessToken, cookieOptions)
-      .cookie("vendorRefreshToken", refreshToken, cookieOptions)
-      .json(new ApiResponse(200, newVendor, "Vendor registered successfully."));
+    const vendorData = await Vendor.findById(newVendor._id).select("-password -refreshToken");
+
+// Final response with clean data
+return res
+  .status(200)
+  .cookie("vendorAccessToken", accessToken, cookieOptions)
+  .cookie("vendorRefreshToken", refreshToken, cookieOptions)
+  .json(
+    new ApiResponse(200, vendorData, "Vendor registered successfully.")
+  );
+
   } catch (error) {
     console.error("Vendor registration error:", error);
 
@@ -395,6 +400,20 @@ const checkVendorEmailStatus = async (req, res) => {
   }
 };
 
+const getVendorProfile = async(req,res) => {
+  try {
+    const vendor = req.vendor; // Set in middleware
+
+    if (!vendor) {
+      return res.status(404).json({ success: false, message: "Vendor not found" });
+    }
+
+    res.status(200).json({ success: true, data: vendor });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server Error", error: error.message });
+  }
+};
+
 export {
   registerVendor,
   updateVendor,
@@ -405,4 +424,5 @@ export {
   changeVendorPassword,
   vendorSilentLogin,
   checkVendorEmailStatus,
+  getVendorProfile,
 };

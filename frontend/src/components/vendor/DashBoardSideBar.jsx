@@ -1,19 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./DashBoardSideBar.css";
 import { FaEdit } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 function DashBoardSideBar({ isOpen }) {
-  const [fullName, setFullName] = useState("Rudransh Dash");
-  const [email, setEmail] = useState("rudransh7381@gmail.com");
-  const [contact, setContact] = useState("+91 9692486267");
-  const [eventsHosted, setEventsHosted] = useState("3");
-  const [upiId, setUpiId] = useState("fake@sbi");
-  const [accountNumber, setAccountNumber] = useState("123456789");
-  const [ifscCode, setIfscCode] = useState("SBIN0001234");
+  const vendor = useSelector((state) => state.vendor.vendor);
+
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [contact, setContact] = useState("");
+  const [eventsHosted, setEventsHosted] = useState("");
+  const [upiId, setUpiId] = useState("");
+  const [accountNumber, setAccountNumber] = useState("");
+  const [ifscCode, setIfscCode] = useState("");
   const [bankDropdownOpen, setBankDropdownOpen] = useState(false);
   const [active, setActive] = useState(true);
 
   const [editMode, setEditMode] = useState(false);
+
+  // ✅ Fills local state from Redux vendor data
+  useEffect(() => {
+    if (vendor) {
+      setFullName(vendor.fullName || "");
+      setEmail(vendor.email || "");
+      setContact(vendor.contact || "");
+      setEventsHosted(vendor.eventsHosted?.toString() || "0");
+      setUpiId(vendor.upiId || "");
+      setAccountNumber(vendor.accountNumber || "");
+      setIfscCode(vendor.ifscCode || "");
+      setActive(vendor.active ?? true);
+    }
+  }, [vendor]);
 
   const handleToggleEdit = () => {
     setEditMode((prev) => !prev);
@@ -24,10 +41,15 @@ function DashBoardSideBar({ isOpen }) {
       <h2 className="dasgboardHeading">DASHBOARD</h2>
       <div className="sidebar-content">
         <img
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgDncc80LQVUNdxbfuSQwBxCFsyHOlQkG5zA&s"
-          alt="Profile"
-          className="profile-pic"
-        />
+  src={
+    vendor?.profilePicture
+      ? vendor.profilePicture
+      : `https://ui-avatars.com/api/?name=${encodeURIComponent(vendor?.fullName || "NA")}&background=0D8ABC&color=fff`
+  }
+  alt="Profile"
+  className="profile-pic"
+/>
+
 
         <ul className="custom-list-decor-dashboard">
           <li className="typography custom-font">
@@ -42,6 +64,7 @@ function DashBoardSideBar({ isOpen }) {
               fullName
             )}
           </li>
+
           {editMode ? (
             <label className="status-edit-toggle">
               <input
@@ -49,7 +72,9 @@ function DashBoardSideBar({ isOpen }) {
                 checked={active}
                 onChange={() => setActive(!active)}
               />
-              <span className="vendor-active">{active ? "Active" : "Inactive"}</span>
+              <span className="vendor-active">
+                {active ? "Active" : "Inactive"}
+              </span>
             </label>
           ) : (
             <span className="status-indicator">
@@ -74,6 +99,7 @@ function DashBoardSideBar({ isOpen }) {
               email
             )}
           </li>
+
           <li className="typography">
             {editMode ? (
               <input
@@ -86,7 +112,9 @@ function DashBoardSideBar({ isOpen }) {
               contact
             )}
           </li>
+
           <li className="typography">Events Hosted: {eventsHosted}</li>
+
           <li className="typography">
             {editMode ? (
               <input
@@ -99,6 +127,7 @@ function DashBoardSideBar({ isOpen }) {
               upiId
             )}
           </li>
+
           <li className="typography bank-dropdown">
             <div
               onClick={() => setBankDropdownOpen((prev) => !prev)}
@@ -140,7 +169,7 @@ function DashBoardSideBar({ isOpen }) {
           </li>
         </ul>
 
-        <button className="edit-buttons flex gap-1 " onClick={handleToggleEdit}>
+        <button className="edit-buttons flex gap-1" onClick={handleToggleEdit}>
           {editMode ? (
             "Save"
           ) : (

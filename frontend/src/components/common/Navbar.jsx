@@ -135,10 +135,10 @@ const Navbar = () => {
     }
 
     // 2. Check email status for current user
-    const email = await axios.get(`${BACKEND_URL}/user/get-email`, {
+    const res = await axios.get(`${BACKEND_URL}/user/get-email`, {
       withCredentials: true,
     });
-    const emailStatus = await checkVendorEmailStatus(email);
+    const emailStatus = await checkVendorEmailStatus(res.data.data.email);
 
     console.log("Email status from backend:", emailStatus);
 

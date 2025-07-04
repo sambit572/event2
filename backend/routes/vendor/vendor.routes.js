@@ -13,6 +13,7 @@ import {
   changeVendorPassword,
   vendorSilentLogin,
   checkVendorEmailStatus,
+  getVendorProfile,
 } from "../../controller/vendor/vendor.controller.js";
 
 // Service Controller
@@ -49,6 +50,8 @@ vendor_router.post("/reset-password/:resetToken", resetVendorPassword);
 vendor_router.post("/change-password",verifyVendorJwt, changeVendorPassword);
 vendor_router.get("/silent-login",verifyVendorJwt, vendorSilentLogin);
 vendor_router.post("/check-email", checkVendorEmailStatus);
+vendor_router.get("/me", verifyVendorJwt, getVendorProfile);
+
 
 // --- PROFILE ROUTES --- //
 vendor_router.put("/:id", upload.single("profilePicture"), updateVendor);
