@@ -5,6 +5,7 @@ import {
   loginUser,
   logoutUser,
   sendPasswordResetLink,
+  getUserEmail,
   resetPassword,
   changePassword,
   getUserProfile,
@@ -31,6 +32,7 @@ router.post("/reset-password/:resetToken", resetPassword);
 // 🔒 PROTECTED ROUTES (Require JWT)
 //
 router.post("/change-password", verifyJwt, changePassword);
+router.route("/get-email").get(verifyJwt, getUserEmail);
 router.get("/profile", verifyJwt, getUserProfile);
 
 

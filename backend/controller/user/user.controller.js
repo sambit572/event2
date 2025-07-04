@@ -390,6 +390,13 @@ const noNeedToLogin = async (req, res) => {
   }
 };
 
+const getUserEmail = async (req,res) =>{
+  const user = await User.findById(req.user._id);
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "Email fetched successfully"));
+}
+
 const getUserProfile = async (req, res) => {
   try {
     const currentUser = await User.findById(req.user._id);
@@ -415,5 +422,6 @@ export {
   resetPassword,
   changePassword,
   noNeedToLogin,
+  getUserEmail,
   getUserProfile,
 };

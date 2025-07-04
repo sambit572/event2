@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 // Core Components
 import Navbar from "./components/common/Navbar";
@@ -22,6 +23,7 @@ import VendorPayment from "./pages/vendor/VendorPayment";
 import VendorThankYou from "./pages/vendor/VendorThankYou";
 import VendorRegistration from "./pages/vendor/VendorRegistration";
 import VendorService from "./pages/vendor/VendorService";
+import VendorLogin from "./pages/vendor/VendorLogin.jsx";
 
 import AboutUs from "./pages/common/AboutUs";
 import HelpUs from "./pages/common/HelpUs";
@@ -41,6 +43,10 @@ import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
 // Common
 import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
+import { useDispatch } from "react-redux";
+import axios from "axios";
+import { setUser } from "./redux/UserSlice.js";
+import {setVendor} from "./redux/VendorSlice.js";
 
 const App = () => {
   const navigate = useNavigate();
@@ -48,6 +54,45 @@ const App = () => {
 
   // Hide Footer on specific pages
   const pagesWithoutFooter = ["/vendor/thank-you", "/admin", "/dashboard"];
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await axios.get("http://localhost:8000/user/get-email", {
+          withCredentials: true,
+        }); 
+        
+        // this specific route provide whole user object so nothing to worry 
+        
+        console.log("in app.jsx user dispatched:",res.data.data)
+        dispatch(setUser(res.data.data));
+      } catch (err) {
+        console.error("Auth check failed:", err.message);
+      }
+    };
+      checkAuth();
+  }, []);
+
+
+useEffect(() => {
+  const checkVendorAuth = async () => {
+    try {
+      const res = await axios.get("http://localhost:8000/vendor/me", {
+        withCredentials: true,
+      });
+
+      console.log("Vendor data received:", res.data.data);
+      dispatch(setVendor(res.data.data));
+    } catch (err) {
+      console.error("Vendor auth check failed:", err.message);
+    }
+  };
+
+  checkVendorAuth();
+}, []);
+
 
   return (
     <>
@@ -86,10 +131,27 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-          <Route path="/dashboardservices" element={<DashboardServices />} />
+          
+          <Route
+           path="/dashboardservices"
+            element={
+            <ProtectedRoute>
+              <DashboardServices />
+            </ProtectedRoute>
+            } />
 
           {/* Vendor Routes */}
-          <Route path="/vendor/register" element={<VendorRegistration />} />
+
+          <Route 
+          path="/vendor/register" 
+          element={
+           <ProtectedRoute>
+            <VendorRegistration />
+           </ProtectedRoute>
+          
+          } />
+
+
           <Route path="/category/VendorService" element={<VendorService />} />
           <Route path="/vendor/payment-info" element={<VendorPayment />} />
           <Route
@@ -97,6 +159,7 @@ const App = () => {
             element={<VendorLegalConsent />}
           />
           <Route path="/vendor/thank-you" element={<VendorThankYou />} />
+
           <Route path="/dashboard" element={<DashBoardMain />} />
 
           {/* Auth Routes */}
@@ -124,6 +187,7 @@ const App = () => {
           <Route path="/userdetails" element={<UserDetails />}></Route>
           <Route path="/pop-up" element={<PopUp />}></Route>
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/vendor-login" element={<VendorLogin/>} />
         </Routes>
       </main>
 
@@ -131,6 +195,20 @@ const App = () => {
 
       {/* Conditionally render Footer */}
       {!pagesWithoutFooter.includes(location.pathname) && <Footer />}
+      <Toaster 
+      toastOptions={{
+          duration: 5000,
+          style: {
+            padding: '16px',
+            color: '#fff',
+            background: '#1f2937',
+            borderRadius: '8px',
+            position: 'relative',
+            overflow: 'hidden',
+          },
+        }}
+      position="top-right" reverseOrder={false} />
+
     </>
   );
 };
