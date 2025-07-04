@@ -6,6 +6,7 @@ import { ApiError } from "../../utilities/ApiError.js";
 import { ApiResponse } from "../../utilities/ApiResponse.js";
 import jwt from "jsonwebtoken";
 import { isValidPhoneNumber } from "libphonenumber-js";
+import { sendEmail } from "../../utilities/sendEmail.js";
 
 const option = {
   httpOnly: true,
@@ -71,6 +72,25 @@ const registerUser = async (req, res) => {
     const createdUser = await User.findById(user._id).select(
       "-password -refreshToken -accessToken"
     );
+
+    // Send thank you email
+    await sendEmail({
+      to: email,
+      subject: "🎉 Welcome to EventsBridge - User Registration",
+      html: `
+    <h2>Hi ${fullName},</h2>
+    <p>Thank you for registering with <strong>EventsBridge</strong>!</p>
+    <p><strong>Your Details:</strong></p>
+    <ul>
+      <li><strong>Name:</strong> ${fullName}</li>
+      <li><strong>Email:</strong> ${email}</li>
+      <li><strong>Phone No:</strong> ${phoneNo}</li>
+    </ul>
+    <p>We're excited to have you onboard.</p>
+    <br/>
+    <p>Best regards,<br/>Team EventsBridge</p>
+  `,
+    });
 
     if (!createdUser) {
       return res.status(500).json(new ApiError(500, "Unable to create user"));
@@ -390,12 +410,12 @@ const noNeedToLogin = async (req, res) => {
   }
 };
 
-const getUserEmail = async (req,res) =>{
+const getUserEmail = async (req, res) => {
   const user = await User.findById(req.user._id);
   return res
     .status(200)
     .json(new ApiResponse(200, user, "Email fetched successfully"));
-}
+};
 
 export {
   registerUser,

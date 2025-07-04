@@ -6,7 +6,7 @@ import fs from "fs/promises";
 import path from "path";
 import { uploadOnCloudinary } from "../../utilities/cloudinary.js";
 import { validateEmailDomain } from "../../utilities/verifyDNS.js";
-
+import { sendEmail } from "../../utilities/sendEmail.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
@@ -81,6 +81,24 @@ const registerVendor = async (req, res) => {
     const { accessToken, refreshToken } = await generateVendorTokens(
       newVendor._id
     );
+
+    await sendEmail({
+      to: email,
+      subject: "🎉 Welcome to EventsBridge - Vendor Registration",
+      html: `
+    <h2>Hi ${fullName},</h2>
+    <p>Thank you for registering as a vendor on <strong>EventsBridge</strong>!</p>
+    <p><strong>Your Registration Details:</strong></p>
+    <ul>
+      <li><strong>Name:</strong> ${fullName}</li>
+      <li><strong>Email:</strong> ${email}</li>
+      <li><strong>Phone No:</strong> ${phoneNumber}</li>
+    </ul>
+    <p>We’re thrilled to have your services onboard!</p>
+    <br/>
+    <p>Warm regards,<br/>Team EventsBridge</p>
+  `,
+    });
 
     // 5. Return success response
     return res
@@ -397,17 +415,21 @@ const checkVendorEmailStatus = async (req, res) => {
   }
 };
 
-const getVendorProfile = async(req,res) => {
+const getVendorProfile = async (req, res) => {
   try {
     const vendor = req.vendor; // Set in middleware
 
     if (!vendor) {
-      return res.status(404).json({ success: false, message: "Vendor not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Vendor not found" });
     }
 
     res.status(200).json({ success: true, data: vendor });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Server Error", error: error.message });
+    res
+      .status(500)
+      .json({ success: false, message: "Server Error", error: error.message });
   }
 };
 
