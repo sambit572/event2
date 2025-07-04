@@ -1,5 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
+import path from "path";
 
 // Cloudinary Configuration
 cloudinary.config({
@@ -9,28 +10,25 @@ cloudinary.config({
 });
 
 // Upload File to Cloudinary
-const uploadOnCloudinary = async (localFilePath) => {
+const uploadOnCloudinary = async (localFilePath, folder = "profile_pics") => {
   try {
     if (!localFilePath) {
-      console.log("Error: LocalFilePath is missing");
+      console.log("❌ Local file path missing");
       return null;
     }
 
-    const uploadResult = await cloudinary.uploader
-      .upload(localFilePath, {
-        resource_type: "auto",
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    const uploadResult = await cloudinary.uploader.upload(localFilePath, {
+      resource_type: "auto",
+      folder, // optional folder like 'profile_pics'
+    });
 
-    // Remove the locally saved temporary file after upload
+    // Delete the local file after successful upload
     fs.unlinkSync(localFilePath);
     return uploadResult;
   } catch (error) {
-    console.error("Error during file upload:", error);
+    console.error("❌ Error during upload:", error);
 
-    // Remove locally saved temporary file if upload failed
+    // Clean up local file if upload fails
     if (fs.existsSync(localFilePath)) {
       fs.unlinkSync(localFilePath);
     }
@@ -42,19 +40,23 @@ const uploadOnCloudinary = async (localFilePath) => {
 const deleteFromCloudinary = async (avatarUrl) => {
   try {
     if (!avatarUrl) {
-      console.log("Error: avatarUrl is missing");
+      console.log("❌ Avatar URL is missing");
       return null;
     }
 
-    // Extract the public_id from the avatar URL
-    const publicId = avatarUrl.split("/").pop().split(".")[0]; // Example: "image_name.jpg"
+    // Extract full public_id (supporting folders) from URL
+    const urlParts = avatarUrl.split("/");
+    const fileWithExt = urlParts.pop();
+    const publicId = urlParts.slice(urlParts.indexOf("upload") + 1).join("/") + "/" + fileWithExt.split(".")[0];
 
-    await cloudinary.uploader.destroy(publicId);
-    console.log(`Deleted image with public_id: ${publicId}`);
+    const result = await cloudinary.uploader.destroy(publicId);
+    console.log(`✅ Deleted Cloudinary image: ${publicId}`);
+    return result;
   } catch (error) {
-    console.error("Error while deleting image from Cloudinary:", error);
+    console.error("❌ Error while deleting image:", error);
+    return null;
   }
 };
 
-// Export both functions
+// Export functions
 export { uploadOnCloudinary, deleteFromCloudinary };
