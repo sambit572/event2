@@ -82,18 +82,12 @@ const registerVendor = async (req, res) => {
       newVendor._id
     );
 
-
-    const vendorData = await Vendor.findById(newVendor._id).select("-password -refreshToken");
-
-// Final response with clean data
-return res
-  .status(200)
-  .cookie("vendorAccessToken", accessToken, cookieOptions)
-  .cookie("vendorRefreshToken", refreshToken, cookieOptions)
-  .json(
-    new ApiResponse(200, vendorData, "Vendor registered successfully.")
-  );
-
+    // 5. Return success response
+    return res
+      .status(200)
+      .cookie("vendorAccessToken", accessToken, cookieOptions)
+      .cookie("vendorRefreshToken", refreshToken, cookieOptions)
+      .json(new ApiResponse(200, newVendor, "Vendor registered successfully."));
   } catch (error) {
     console.error("Vendor registration error:", error);
 
@@ -354,7 +348,7 @@ const vendorSilentLogin = async (req, res) => {
 
   let decoded;
   try {
-    decoded = jwt.verify(token, process.env.VENDOR_REFRESH_TOKEN_SECRET);
+    decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
   } catch (err) {
     return res
       .status(401)
@@ -366,6 +360,9 @@ const vendorSilentLogin = async (req, res) => {
     return res.status(404).json(new ApiError(404, "Vendor not found"));
 
   const { accessToken, refreshToken } = await generateVendorTokens(vendor._id);
+
+  console.log("vendorSilentLogin working fine ");
+
   return res
     .status(200)
     .cookie("vendorAccessToken", accessToken, cookieOptions)

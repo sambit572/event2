@@ -9,14 +9,13 @@ import { setVendor } from "../../redux/VendorSlice";
 import VendorAutoFillConfirmModal from "../../components/vendor/VendorAutoFillConfirmModal";
 
 export default function VendorRegister() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
   const user = useSelector((state) => state.user.user);
   const [showAutofillModal, setShowAutofillModal] = useState(false);
   const [hasAutofilled, setHasAutofilled] = useState(false);
-
 
   const [form, setForm] = useState({
     fullName: "",
@@ -91,6 +90,7 @@ export default function VendorRegister() {
           headers: {
             "Content-Type": "multipart/form-data", // important
           },
+          withCredentials: true,
         }
       );
 
@@ -124,7 +124,6 @@ export default function VendorRegister() {
     setIsLoading(false);
   };
 
-
   const handleAutofill = () => {
     setForm((prev) => ({
       ...prev,
@@ -136,13 +135,10 @@ export default function VendorRegister() {
     setShowAutofillModal(false);
   };
 
-  
   const handleDecline = () => {
     setShowAutofillModal(false);
     setHasAutofilled(true);
   };
-  
-  
 
   useEffect(() => {
     if (user && user.email && !hasAutofilled) {
@@ -152,9 +148,6 @@ export default function VendorRegister() {
       console.log("❌ Modal not shown. Either user null or already autofilled");
     }
   }, [user, hasAutofilled]);
-  
-  
- 
 
   return (
     <>

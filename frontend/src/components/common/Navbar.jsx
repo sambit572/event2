@@ -135,10 +135,10 @@ const Navbar = () => {
     }
 
     // 2. Check email status for current user
-    const res = await axios.get(`${BACKEND_URL}/user/get-email`, {
+    const response = await axios.get(`${BACKEND_URL}/user/get-email`, {
       withCredentials: true,
     });
-    const emailStatus = await checkVendorEmailStatus(res.data.data.email);
+    const emailStatus = await checkVendorEmailStatus(response.data.data.email);
 
     console.log("Email status from backend:", emailStatus);
 
@@ -312,9 +312,7 @@ const Navbar = () => {
                       ));
                       setTimeout(() => toast.dismiss(toastId), 2000);
                     } else {
-                      if (!VendorFirstName && userFirstName) {
-                        handleVendorClick();
-                      }
+                      handleVendorClick(); // 🔥 Always trigger, regardless of VendorFirstName
                     }
                   }}
                 >
