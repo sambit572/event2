@@ -12,6 +12,7 @@ const ServiceDescription = ({ service }) => {
     address,
     rating,
     reviews,
+    description,
     price,
     originalPrice,
     discountPercent,
@@ -36,8 +37,7 @@ const ServiceDescription = ({ service }) => {
           <span className="discountPercent">{discountPercent}% off</span>
         </div>
         <p className="paragraph">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente
-          blanditiis enim quaerat eaque cum.
+      {description}
         </p>
       </Link>
       <div className="actionButtons">

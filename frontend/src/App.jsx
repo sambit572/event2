@@ -43,6 +43,7 @@ import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 import ScrollToTop from "./components/common/ScrollToTop";
 import BackToTop from "./pages/common/BackToTop";
+import FaqSection from "./components/customer/Home/FaqSection.jsx";
 
 const App = () => {
   const navigate = useNavigate();
@@ -141,6 +142,7 @@ const App = () => {
           <Route path="/about_us" element={<AboutUs />} />
           <Route path="/help_us" element={<HelpUs />} />
           <Route path="/help-Center" element={<HelpCenter />} />
+          <Route path="/faqs" element={  <FaqSection />}/>
           <Route path="/Wishlist" element={<Wishlist />}></Route>
           <Route path="/profile" element={<Profile />}></Route>
           <Route path="/userdetails" element={<UserDetails />}></Route>

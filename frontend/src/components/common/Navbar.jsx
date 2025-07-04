@@ -188,7 +188,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
                 ) : (
                   <>
                     <div
-                      className="flex flex-row gap-1 mb-[10px] text-[#001f3f] hover:text-[#022f5d] hover:font-bold text-[15px]"
+                      className="flex flex-row gap-1 mb-[10px] text-[#001f3f] hover:text-[#022f5d] hover:font-bold text-[15px] cursor-pointer"
                       onClick={() => navigate("/profile")}
                     >
                       <FaUser style={{ marginRight: "8px" }} />

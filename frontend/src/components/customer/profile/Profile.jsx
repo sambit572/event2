@@ -4,6 +4,7 @@ import PasswordInput from "../../../utils/PasswordInput.jsx";
 import axios from "axios";
 import { BACKEND_URL } from "../../../utils/constant.js";
 import "./Profile.css";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 function Profile() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -12,6 +13,7 @@ function Profile() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handlePasswordChangeSubmit = async () => {
     setErrorMsg(""); // Reset on each submit
@@ -51,7 +53,6 @@ function Profile() {
       // alert(backendMsg);
     }
   };
-  
 
   useEffect(() => {
     const handleResize = () => {
@@ -164,24 +165,36 @@ function Profile() {
         </h2>
 
         <div className="w-1/2 ml-auto mr-[40px] flex justify-end items-center p-4 mt-[-20px]">
-          <select className="sortby-dropdown max-w-xs bg-[#001F3F]  text-white p-2 font-semibold rounded-lg shadow">
-            <option value="">Sort by</option>
-            <option className="bg-white text-black" value="completed">
-              Completed
-            </option>
-            <option className="bg-white text-black" value="pending">
-              Pending
-            </option>
-            <option className="bg-white text-black" value="cancelled">
-              Cancelled
-            </option>
-            <option className="bg-white text-black" value="last1">
-              Last 3 months
-            </option>
-            <option className="bg-white text-black" value="last2">
-              Last 6 months
-            </option>
-          </select>
+          <div className="relative">
+            <select
+              className="sortby-dropdown appearance-none pr-6 max-w-xs bg-[#001F3F]  text-white p-2 font-semibold rounded-lg shadow"
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            >
+              <option value="">Sort by</option>
+              <option className="bg-white text-black" value="completed">
+                Completed
+              </option>
+              <option className="bg-white text-black" value="pending">
+                Pending
+              </option>
+              <option className="bg-white text-black" value="cancelled">
+                Cancelled
+              </option>
+              <option className="bg-white text-black" value="last1">
+                Last 3 months
+              </option>
+              <option className="bg-white text-black" value="last2">
+                Last 6 months
+              </option>
+            </select>
+            <div className="pointer-events-none absolute right-2 top-1/2 transform -translate-y-1/2">
+              {isDropdownOpen ? (
+                <FaChevronUp className="text-sm text-white" />
+              ) : (
+                <FaChevronDown className="text-sm text-white" />
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Cards Container with scroll detection */}

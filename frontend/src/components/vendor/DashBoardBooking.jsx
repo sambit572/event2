@@ -6,7 +6,6 @@ import "./DashBoardBooking.css";
 const DashBoardBooking = () => {
   const [clickedRow, setClickedRow] = useState(null);
   // const [sortDropdownOpen,setSortDropdownOpen]=useState(false)
-
   const handleRowClick = (booking) => {
     setClickedRow(clickedRow?.number === booking.number ? null : booking);
   };

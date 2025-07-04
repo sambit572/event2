@@ -8,6 +8,12 @@ const service = [
     id: 1,
     img: [img1, img2,img3,img4,img5],
     title: " Elegant Beats Wedding DJ Package",
+    description: "Experience With All Cultures & Traditions. Sapiente blanditiis enim quaerat eaque cum.",
+const service = [
+  {
+    id: 1,
+    img: [img1, img2,img3,img4,img5],
+    title: " Elegant Beats Wedding DJ Package",
     description: "Experience With All Cultures & Traditions",
     address: {
       country: "India",

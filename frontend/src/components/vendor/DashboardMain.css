@@ -31,7 +31,7 @@
   .dashboard-hamburger {
     display: flex;
     left: 0;
-    top: 90px;
+    top: 70px;
   }
 
   .open {
@@ -44,7 +44,7 @@
 
 @media (max-width: 431px) {
   .dashboard-hamburger {
-    top: 90px;
+    top: 50px;
   }
   .main-contain {
     width: 30%;
