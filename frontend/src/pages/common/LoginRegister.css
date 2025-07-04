@@ -24,8 +24,7 @@
   animation: fadeInScale 0.3s ease;
   max-height: 40vh;
   overflow-y: auto;
-  /* Removed height: 100vh */
-  /* It will now size naturally to its content */
+  scrollbar-width: none;
 }
 
 /* Close button */
@@ -152,7 +151,7 @@
 @media (max-height: 600px) {
   .login-modal {
     /* max-width: 300px; */
-    max-height: 90vh;
+    max-height: 95vh;
   }
 }
 
