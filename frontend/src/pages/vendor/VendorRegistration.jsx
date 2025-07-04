@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import StepProgress from "./StepProgress";
 import "./VendorRegistration.css";
 import axios from "axios";
@@ -11,54 +11,24 @@ import VendorAutoFillConfirmModal from "../../components/vendor/VendorAutoFillCo
 export default function VendorRegister() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
 
   const user = useSelector((state) => state.user.user);
   const [showAutofillModal, setShowAutofillModal] = useState(false);
   const [hasAutofilled, setHasAutofilled] = useState(false);
 
-  const user = useSelector((state) => state.user.user);
-  const [showAutofillModal, setShowAutofillModal] = useState(false);
-  const [hasAutofilled, setHasAutofilled] = useState(false);
-
-  const isEditMode = location.state?.apiResponse?.vendor?.id || 
-  sessionStorage.getItem('vendor_id');
-
-  const saveFormData = (stepNumber, data) => {
-    sessionStorage.setItem(`vendor_step_${stepNumber}`, JSON.stringify(data));
-  };
-  
-  const loadFormData = (stepNumber) => {
-    const saved = sessionStorage.getItem(`vendor_step_${stepNumber}`);
-    return saved ? JSON.parse(saved) : {};
-  };
-
-  
- const [form, setForm] = useState(() => {
-  const savedData = loadFormData(1);
-  return {
-    fullName: savedData.fullName || "",
-    email: savedData.email || "",
-    phone: savedData.phone || "",
-    password: savedData.password || "",
-    confirmPassword: savedData.confirmPassword || "",
-    profilePic: savedData.profilePic || "",
-  };
-});
+  const [form, setForm] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+    profilePic: "",
+  });
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-  // Add this after your last useState
-useEffect(() => {
-  const timeoutId = setTimeout(() => {
-    saveFormData(1, form);
-  }, 500);
-  return () => clearTimeout(timeoutId);
-}, [form]);
-
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -98,7 +68,6 @@ useEffect(() => {
 
     setLoading(true);
 
-    
     try {
       if (form.confirmPassword !== form.password) {
         setError("Password not matching");
@@ -124,8 +93,11 @@ useEffect(() => {
           withCredentials: true,
         }
       );
-      
+
       console.log("Registration successful:", response.data);
+
+      dispatch(setVendor(response.data.data))
+      console.log("Vendor data set in Redux:", response.data.data);
 
       navigate("/category/VendorService", {
         state: {
@@ -151,7 +123,6 @@ useEffect(() => {
     }
     setIsLoading(false);
   };
-
 
   const handleAutofill = () => {
     setForm((prev) => ({
@@ -231,7 +202,6 @@ useEffect(() => {
                 value={form.fullName}
                 onChange={handleChange}
                 required
-
               />
 
               <label>
@@ -243,8 +213,6 @@ useEffect(() => {
                 value={form.email}
                 onChange={handleChange}
                 required
-                disabled={isEditMode}
-                style={isEditMode ? { backgroundColor: '#f5f5f5', cursor: 'not-allowed' } : {}}
               />
 
               <label>
