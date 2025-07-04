@@ -1,7 +1,7 @@
 .dash-sidebar {
   height: 100vh;
   width: 270px;
- background:#004989;
+  background: #004989;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 
   color: #f5f5f5;
@@ -254,7 +254,8 @@ color: #ffc107;
   }
 
   .dasgboardHeading {
-    margin-top: 36px;
+    text-align: end;
+    margin-right: 10px;
   }
 
   .dash-sidebar.open {

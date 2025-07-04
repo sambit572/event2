@@ -7,10 +7,10 @@
 .faq-title {
   background: #f3c12d;
   color: rgb(0, 0, 0);
-  padding: 10px 30px;
-  font-size: 2rem;
+  padding: 10px;
+  font-size: 22px;
   font-weight: bold;
-  width: 360px;
+  width: 300px;
   margin: 40px auto;
   border: 6px double #001f3f;
   border-radius: 30px 10px 30px 10px;
@@ -99,10 +99,6 @@
 }
 
 @media (max-width: 576px) {
-  .faq-title {
-    font-size: 20px;
-  }
-
   .faq-question {
     font-size: 15px;
     padding: 12px;

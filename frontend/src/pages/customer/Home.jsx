@@ -2,31 +2,31 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
 import "./Home.css";
-import image1 from "../../assets/home/dj.png";
-import image2 from "../../assets/home/bass brand.png";
-import image3 from "../../assets/home/tenthouse.png";
-import image4 from "../../assets/home/wedding photographer.png";
-import image5 from "../../assets/home/pandit.png";
-import image6 from "../../assets/home/magician.png";
-import image7 from "../../assets/home/orchestra.png";
-import image8 from "../../assets/home/moulbi.png";
-import image9 from "../../assets/home/father.png";
-import image10 from "../../assets/home/catering.png";
-import image11 from "../../assets/home/bride mehendi & makeup.png";
-import image12 from "../../assets/home/flower decor.png";
-import image13 from "../../assets/home/car & horsecart decor.png";
-import image14 from "../../assets/home/fireworks.png";
-import image15 from "../../assets/home/cardsinvite.jpg";
+import image1 from "../../assets/home/categoriesImages/dj.png";
+import image2 from "../../assets/home/categoriesImages/bass brand.png";
+import image3 from "../../assets/home/categoriesImages/tenthouse.png";
+import image4 from "../../assets/home/categoriesImages/wedding photographer.png";
+import image5 from "../../assets/home/categoriesImages/pandit.png";
+import image6 from "../../assets/home/categoriesImages/magician.png";
+import image7 from "../../assets/home/categoriesImages/orchestra.png";
+import image8 from "../../assets/home/categoriesImages/moulbi.png";
+import image9 from "../../assets/home/categoriesImages/father.png";
+import image10 from "../../assets/aboutUs/CATERING.png";
+import image11 from "../../assets/home/categoriesImages/bride mehendi & makeup.png";
+import image12 from "../../assets/home/categoriesImages/flower decor.png";
+import image13 from "../../assets/home/categoriesImages/car & horsecart decor.png";
+import image14 from "../../assets/home/categoriesImages/fireworks.png";
+import image15 from "../../assets/home/categoriesImages/cardsinvite.jpg";
 
-import shaadiMobile from "../../assets/home/shaadiMobile.png";
-import shaadiTablet from "../../assets/home/shaadiTablet.png";
-import shaadiDesktop from "../../assets/home/shaadiDesktop.png";
-import christianMobile from "../../assets/home/christianMobile.png";
-import christianTablet from "../../assets/home/christianTablet.png";
-import christianDesktop from "../../assets/home/christianDesktop.png";
-import cateringMobile from "../../assets/home/cateringMobile.png";
-import cateringTablet from "../../assets/home/cateringTablet.png";
-import cateringDesktop from "../../assets/home/cateringDesktop.png";
+import shaadiMobile from "../../assets/home/sliderImages/shaadiMobile.png";
+import shaadiTablet from "../../assets/home/sliderImages/shaadiTablet.png";
+import shaadiDesktop from "../../assets/home/sliderImages/shaadiDesktop.png";
+import christianMobile from "../../assets/home/sliderImages/christianMobile.png";
+import christianTablet from "../../assets/home/sliderImages/christianTablet.png";
+import christianDesktop from "../../assets/home/sliderImages/christianDesktop.png";
+import cateringMobile from "../../assets/home/sliderImages/cateringMobile.png";
+import cateringTablet from "../../assets/home/sliderImages/cateringTablet.png";
+import cateringDesktop from "../../assets/home/sliderImages/cateringDesktop.png";
 
 import CategoryCard from "../../components/customer/Home/CategoryCard";
 import ReviewSlider from "../../components/customer/Home/ReviewSlider";
@@ -190,18 +190,21 @@ const Home = () => {
         planning.
       </p>
 
-      {!showAll && categories.length > 6 && (
-        <div className="browse_all">
+      {/* View All Button */}
+      <div className="flex justify-end w-full items-center mb-4">
+        {!showAll && categories.length > 6 && (
           <button
-            className="browse-all-btn"
+            className="browse-all-btn "
             onClick={() => setShowAll(true)}
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
           >
             View All <span className="arrow">{hovered ? "⇒" : "→"}</span>
           </button>
-        </div>
-      )}
+        )}
+      </div>
+
+      {/* Category Grid */}
       <div className="align_center category_section">
         {visibleCategories.map((category, index) => (
           <div key={index}>
@@ -209,6 +212,7 @@ const Home = () => {
           </div>
         ))}
       </div>
+
       {/* <BackToTop /> */}
       <Milestones />
       <ReviewSlider />
