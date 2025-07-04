@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./DashBoardSideBar.css";
 import { FaEdit } from "react-icons/fa";
+import UserProfileIcon from "../../pages/common/UserProfileIcon";
 
 function DashBoardSideBar({ isOpen }) {
   const [fullName, setFullName] = useState("Rudransh Dash");

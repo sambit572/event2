@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
+import UserProfileIcon from "../../pages/common/UserProfileIcon.jsx";
 import "./Navbar.css";
 import { CgProfile } from "react-icons/cg";
 import {
@@ -20,9 +21,12 @@ import { useNavigate, Navigate } from "react-router-dom";
 import ReviewSlider from "../customer/Home/ReviewSlider.jsx";
 import ImageSlider from "./../customer/Home/ImageSlider";
 import logo from "../../assets/logo.png";
+import { BACKEND_URL } from "../../utils/constant.js";
 
 const Navbar = () => {
   const navigate = useNavigate();
+
+  const [currentUser, setCurrentUser] = useState(null);
 
   const [userFirstName, setUserFirstName] = useState(null);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
@@ -41,6 +45,29 @@ const Navbar = () => {
       inputRef.current.focus();
     }
   };
+
+  const fetchUserProfile = async () => {
+    try {
+      const res = await axios.get("http://localhost:8000/user/profile", {
+        withCredentials: true,
+      });
+
+
+      if (res.data.success) {
+        setCurrentUser(res.data.data);
+      } else {
+        setCurrentUser(null);
+      }
+    } catch (err) {
+      console.error("Failed to fetch user profile", err);
+      setCurrentUser(null);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserProfile();
+  }, []);
+
 
 
   const handleHomeClick = () => {
@@ -141,7 +168,7 @@ const Navbar = () => {
                   </>
                 ) : (
                   <>
-                    <UserProfileIcon />
+                    <UserProfileIcon currentUser={currentUser} />
                     <span className="font-medium">{userFirstName}</span>
                   </>
                 )}
