@@ -17,7 +17,7 @@ export const verifyVendorJwt = async (req, res, next) => {
       throw new ApiError(401, "Unauthorized: Vendor token not found");
     }
 
-    const decoded = jwt.verify(token, process.env.VENDOR_ACCESS_TOKEN_SECRET);
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     const vendor = await Vendor.findById(decoded._id);
 
     if (!vendor) {

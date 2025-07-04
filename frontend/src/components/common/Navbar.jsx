@@ -26,9 +26,14 @@ import {
   attemptVendorSilentLogin,
   checkVendorEmailStatus,
 } from "../../utils/VendorAuth.jsx";
-import VendorEmailConfirmModal from "../vendor/VendorEmailConfirmModal.jsx";
+
+import { useDispatch, useSelector } from "react-redux";
+import { clearUser } from "../../redux/UserSlice.js";
+import { clearVendor } from "../../redux/VendorSlice.js";
+import { BACKEND_URL } from "../../utils/constant.js";
 
 const Navbar = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [userFirstName, setUserFirstName] = useState(null);
@@ -73,6 +78,8 @@ const Navbar = () => {
       localStorage.removeItem("userFirstName");
       localStorage.removeItem("currentlyLoggedIn");
       setUserFirstName(null);
+
+      dispatch(clearUser());
       navigate("/", { replace: true });
     } catch (error) {
       console.error("Logout failed", error);
@@ -92,6 +99,7 @@ const Navbar = () => {
       localStorage.removeItem("VendorInitial");
       localStorage.removeItem("VendorCurrentlyLoggedIn");
       setVendorFirstName(null);
+      dispatch(clearVendor());
       navigate("/", { replace: true });
     } catch (error) {
       console.error("Logout failed", error);
@@ -113,6 +121,7 @@ const Navbar = () => {
   };
 
   const handleVendorClick = async () => {
+    console.log("clicked vendor button ...");
     if (!userFirstName) {
       onOpenLogin(); // force user to login first
       return;
@@ -126,16 +135,15 @@ const Navbar = () => {
     }
 
     // 2. Check email status for current user
-    const email = await axios.get("http://localhost:8000/user/get-email");
+    const email = await axios.get(`${BACKEND_URL}/user/get-email`, {
+      withCredentials: true,
+    });
     const emailStatus = await checkVendorEmailStatus(email);
 
-    console.log(emailStatus);
+    console.log("Email status from backend:", emailStatus);
 
     if (emailStatus.existsInVendor) {
       navigate("/vendor-login"); // already a vendor
-    } else if (emailStatus.existsInUser) {
-      // prompt UI to confirm: "Use same email to register as vendor?"
-      <VendorEmailConfirmModal />;
     } else {
       navigate("/vendor/register");
     }
@@ -305,9 +313,7 @@ const Navbar = () => {
                       setTimeout(() => toast.dismiss(toastId), 2000);
                     } else {
                       if (!VendorFirstName && userFirstName) {
-                        navigate("/vendor/register");
-                      } else {
-                        setShowVendorDropdown((prev) => !prev);
+                        handleVendorClick();
                       }
                     }
                   }}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
@@ -43,6 +43,9 @@ import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
 // Common
 import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
+import { useDispatch } from "react-redux";
+import axios from "axios";
+import { setUser } from "./redux/UserSlice.js";
 
 const App = () => {
   const navigate = useNavigate();
@@ -50,6 +53,26 @@ const App = () => {
 
   // Hide Footer on specific pages
   const pagesWithoutFooter = ["/vendor/thank-you", "/admin", "/dashboard"];
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await axios.get("http://localhost:8000/user/get-email", {
+          withCredentials: true,
+        }); 
+        
+        // this specific route provide whole user object so nothing to worry 
+        
+        console.log("in app.jsx user dispatched:",res.data.data)
+        dispatch(setUser(res.data.data));
+      } catch (err) {
+        console.error("Auth check failed:", err.message);
+      }
+    };
+      checkAuth();
+  }, []);
 
   return (
     <>

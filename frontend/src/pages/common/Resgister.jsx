@@ -4,10 +4,14 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import PasswordInput from "../../utils/PasswordInput.jsx";
 import "./LoginRegister.css";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../redux/UserSlice.js";
+
 
 const Register = ({ onClose }) => {
   const navigate = useNavigate();
 
+  const dispatch = useDispatch()
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -44,6 +48,7 @@ const Register = ({ onClose }) => {
       const  user  = response.data.data;
       console.log(user);
 
+      dispatch(setUser(user))
 
       if (response.data.message === "user do exist") {
         setErrorMsg("User already exists. Please log in.");

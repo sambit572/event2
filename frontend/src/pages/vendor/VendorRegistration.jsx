@@ -1,13 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StepProgress from "./StepProgress";
 import "./VendorRegistration.css";
 import axios from "axios";
 import Spinner from "./../../components/common/Spinner";
+import { useDispatch, useSelector } from "react-redux";
+import { setVendor } from "../../redux/VendorSlice";
+import VendorAutoFillConfirmModal from "../../components/vendor/VendorAutoFillConfirmModal";
 
 export default function VendorRegister() {
+  const dispatch = useDispatch()
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+
+  const user = useSelector((state) => state.user.user);
+  const [showAutofillModal, setShowAutofillModal] = useState(false);
+  const [hasAutofilled, setHasAutofilled] = useState(false);
+
 
   const [form, setForm] = useState({
     fullName: "",
@@ -87,6 +96,8 @@ export default function VendorRegister() {
 
       console.log("Registration successful:", response.data);
 
+      dispatch(setVendor(response.data))
+
       navigate("/category/VendorService", {
         state: {
           currentStep: 1,
@@ -112,10 +123,47 @@ export default function VendorRegister() {
     setIsLoading(false);
   };
 
-  const StepIndex = location.state?.currentStep || 0;
+
+  const handleAutofill = () => {
+    setForm((prev) => ({
+      ...prev,
+      fullName: user.fullName || "",
+      email: user.email || "",
+      phone: user.phoneNo || "",
+    }));
+    setHasAutofilled(true);
+    setShowAutofillModal(false);
+  };
+
+  
+  const handleDecline = () => {
+    setShowAutofillModal(false);
+    setHasAutofilled(true);
+  };
+  
+  
+
+  useEffect(() => {
+    if (user && user.email && !hasAutofilled) {
+      console.log("✅ Showing modal for autofill");
+      setShowAutofillModal(true);
+    } else {
+      console.log("❌ Modal not shown. Either user null or already autofilled");
+    }
+  }, [user, hasAutofilled]);
+  
+  
+ 
 
   return (
     <>
+      {showAutofillModal && (
+        <VendorAutoFillConfirmModal
+          onAccept={handleAutofill}
+          onDecline={handleDecline}
+        />
+      )}
+
       <StepProgress currentStep={0} />
       {isLoading && <Spinner />}
       <div className="vendor-register-page">
@@ -144,7 +192,7 @@ export default function VendorRegister() {
                 </div>
               )}
 
-            {/*   <div className="social-signup-row">
+              {/*   <div className="social-signup-row">
                 <div className="google-signup-btn">
                   <img src="/GoogleImg.png" alt="Google Icon" />
                   <span>Sign up with Google</span>

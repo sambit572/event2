@@ -15,12 +15,14 @@ export const attemptVendorSilentLogin = async () => {
 };
 
 export const checkVendorEmailStatus = async (email) => {
+  console.log("inside check vendor email status ..")
   try {
     const response = await axios.post(
       "http://localhost:8000/vendors/check-email",
       { email },
       { withCredentials: true }
     );
+    console.log("response of email status of vendor :",response.data)
     return response.data;
   } catch (err) {
     return { error: err.response?.data?.message || "Email check failed" };
