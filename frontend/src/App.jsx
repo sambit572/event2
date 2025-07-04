@@ -167,6 +167,7 @@ useEffect(() => {
             path="/login"
             element={<Login onClose={() => navigate(-1)} />}
           />
+          
           <Route
             path="/register"
             element={<Register onClose={() => navigate(-1)} />}

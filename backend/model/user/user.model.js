@@ -27,6 +27,10 @@ const loginSchema = new Schema(
       required: true,
       minlength:8,
     },
+     profilePhoto: {
+      type: String,
+      default: "", 
+    },
     accessToken: {
       type: String,
     },

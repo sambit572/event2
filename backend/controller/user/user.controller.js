@@ -417,6 +417,23 @@ const getUserEmail = async (req, res) => {
     .json(new ApiResponse(200, user, "Email fetched successfully"));
 };
 
+const getUserProfile = async (req, res) => {
+  try {
+    const currentUser = await User.findById(req.user._id);
+
+    if (!currentUser) {
+      return res.status(404).json(new ApiError(404, "User not found"));
+    }
+
+    return res.status(200).json(
+      new ApiResponse(200, currentUser, "User profile fetched successfully")
+    );
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    return res.status(500).json(new ApiError(500, "Internal Server Error"));
+  }
+};
+
 export {
   registerUser,
   loginUser,
@@ -426,4 +443,5 @@ export {
   changePassword,
   noNeedToLogin,
   getUserEmail,
+  getUserProfile,
 };
