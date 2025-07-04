@@ -8,8 +8,11 @@ import PasswordInput from "../../utils/PasswordInput.jsx";
 import SuccessBlock from "../common/SuccessBlock.jsx";
 import axios from "axios";
 import "../common/LoginRegister.css";
+import { useDispatch } from "react-redux";
+import { setVendor } from "../../redux/VendorSlice.js";
 
 const VendorLogin = ({ onClose }) => {
+  const dispatch = useDispatch()
   const navigate = useNavigate();
   const [step, setStep] = useState("form"); // 'form', 'otp', 'success'
   const [showSuccessIcon, setShowSuccessIcon] = useState(false);
@@ -95,6 +98,7 @@ const VendorLogin = ({ onClose }) => {
 
       console.log(res.data.data)
       const { vendor } = res.data.data;
+      dispatch(setVendor(vendor))
       const fullName = vendor.fullName || "";
       const firstName = fullName.split(" ")[0];
       const firstLetter = firstName?.charAt(0).toUpperCase() || "";

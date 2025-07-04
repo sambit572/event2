@@ -78,9 +78,16 @@ const registerVendor = async (req, res) => {
       profilePicture: profilePictureUrl, // May be empty string
     });
 
+    const { accessToken, refreshToken } = await generateVendorTokens(
+      newVendor._id
+    );
+
+
     // 5. Return success response
     return res
       .status(200)
+      .cookie("vendorAccessToken", accessToken, cookieOptions)
+      .cookie("vendorRefreshToken", refreshToken, cookieOptions)
       .json(new ApiResponse(200, newVendor, "Vendor registered successfully."));
   } catch (error) {
     console.error("Vendor registration error:", error);
@@ -236,8 +243,8 @@ const loginVendor = async (req, res) => {
   );
   return res
     .status(200)
-    .cookie("accessToken", accessToken, cookieOptions)
-    .cookie("refreshToken", refreshToken, cookieOptions)
+    .cookie("vendorAccessToken", accessToken, cookieOptions)
+    .cookie("vendorRefreshToken", refreshToken, cookieOptions)
     .json(
       new ApiResponse(
         200,
