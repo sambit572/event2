@@ -96,7 +96,8 @@ export default function VendorRegister() {
 
       console.log("Registration successful:", response.data);
 
-      dispatch(setVendor(response.data));
+      dispatch(setVendor(response.data.data))
+      console.log("Vendor data set in Redux:", response.data.data);
 
       navigate("/category/VendorService", {
         state: {

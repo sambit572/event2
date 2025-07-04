@@ -46,6 +46,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { setUser } from "./redux/UserSlice.js";
+import {setVendor} from "./redux/VendorSlice.js";
 
 const App = () => {
   const navigate = useNavigate();
@@ -73,6 +74,25 @@ const App = () => {
     };
       checkAuth();
   }, []);
+
+
+useEffect(() => {
+  const checkVendorAuth = async () => {
+    try {
+      const res = await axios.get("http://localhost:8000/vendor/me", {
+        withCredentials: true,
+      });
+
+      console.log("Vendor data received:", res.data.data);
+      dispatch(setVendor(res.data.data));
+    } catch (err) {
+      console.error("Vendor auth check failed:", err.message);
+    }
+  };
+
+  checkVendorAuth();
+}, []);
+
 
   return (
     <>
@@ -147,6 +167,7 @@ const App = () => {
             path="/login"
             element={<Login onClose={() => navigate(-1)} />}
           />
+          
           <Route
             path="/register"
             element={<Register onClose={() => navigate(-1)} />}

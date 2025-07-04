@@ -397,6 +397,20 @@ const checkVendorEmailStatus = async (req, res) => {
   }
 };
 
+const getVendorProfile = async(req,res) => {
+  try {
+    const vendor = req.vendor; // Set in middleware
+
+    if (!vendor) {
+      return res.status(404).json({ success: false, message: "Vendor not found" });
+    }
+
+    res.status(200).json({ success: true, data: vendor });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server Error", error: error.message });
+  }
+};
+
 export {
   registerVendor,
   updateVendor,
@@ -407,4 +421,5 @@ export {
   changeVendorPassword,
   vendorSilentLogin,
   checkVendorEmailStatus,
+  getVendorProfile,
 };
