@@ -314,13 +314,12 @@ const Navbar = () => {
                 >
                   {!VendorFirstName ? (
                     <>
-                      <CgProfile className="text-2xl" />
                       <span className="font-medium">Be a Vendor</span>
                     </>
                   ) : (
                     <>
                       <span className="font-medium">
-                        <UserProfileIcon />
+                
                         {VendorFirstName}
                       </span>
                     </>
