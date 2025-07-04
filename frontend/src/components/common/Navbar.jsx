@@ -41,7 +41,7 @@ const Navbar = () => {
 
   const profileRef = useRef(null);
   const ellipsisRef = useRef(null);
-
+  const vendorRef = useRef(null);
   const inputRef = useRef(null);
 
   const handleSearchicon = (e) => {
@@ -107,56 +107,12 @@ const Navbar = () => {
     onOpenLogin();
   };
 
-  // Handle signup click - close dropdown and open modal
   const handleSignupClick = () => {
     setShowProfileDropdown(false);
     onOpenRegister();
   };
 
-  // Handle vendor click - open login modal if not logged in
-  const handleVendorClick = () => {
   const handleVendorClick = async () => {
-    if (!userFirstName) {
-      onOpenLogin(); // force user to login first
-      return;
-    }
-
-    // 1. Try silent login with vendor token
-    const silentRes = await attemptVendorSilentLogin();
-    if (silentRes.success) {
-      navigate("/dashboard");
-      return;
-    }
-
-    // 2. Check email status for current user
-    const email = await axios.get("http://localhost:8000/user/get-email");
-    const emailStatus = await checkVendorEmailStatus(email);
-
-    console.log(emailStatus);
-
-    if (emailStatus.existsInVendor) {
-      navigate("/vendor-login"); // already a vendor
-    } else if (emailStatus.existsInUser) {
-      // prompt UI to confirm: "Use same email to register as vendor?"
-      <VendorEmailConfirmModal />;
-    } else {
-      navigate("/vendor/register");
-    }
-  };
-
-  // Handle login click - close dropdown and open modal
-  const handleLoginClick = () => {
-    setShowProfileDropdown(false);
-    onOpenLogin();
-  };
-
-  // Handle signup click - close dropdown and open modal
-  const handleSignupClick = () => {
-    setShowProfileDropdown(false);
-    onOpenRegister();
-  };
-
-  const handleVendorClick = () => {
     if (!userFirstName) {
       onOpenLogin(); // force user to login first
       return;
@@ -193,6 +149,9 @@ const Navbar = () => {
       if (ellipsisRef.current && !ellipsisRef.current.contains(event.target)) {
         setShowEllipsisDropdown(false);
       }
+      if (vendorRef.current && !vendorRef.current.contains(event.target)) {
+        setShowVendorDropdown(false);
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -217,8 +176,7 @@ const Navbar = () => {
       {/* Logo */}
       <div className="logo">
         <span onClick={handleHomeClick}>
-          <img src={logo9} alt="logo" />
-          <img src={logo9} alt="logo" />
+          <img src={logo} alt="logo" />
         </span>
       </div>
 
@@ -239,7 +197,6 @@ const Navbar = () => {
 
         {/* Nav Icons */}
         <div className="nav-icons">
-
           {/* Profile Dropdown */}
           <div className="nav-item profile-dropdown-container" ref={profileRef}>
             <div className="flex items-center gap-2 text-gray-700 cursor-pointer login">

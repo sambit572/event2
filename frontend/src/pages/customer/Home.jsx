@@ -36,7 +36,7 @@ import ImageSlider from "../../components/customer/Home/ImageSlider";
 import Milestones from "../../components/common/aboutus/Milestones";
 import AddsBanner from "../../components/customer/Home/AddsBanner";
 import BackToTop from "../common/BackToTop";
-import BackToTop from "../common/BackToTop";
+
 
 const images = [
   {
@@ -298,7 +298,7 @@ const Home = () => {
       <div className="align_center category_section">
         {visibleCategories.map((category, index) => (
           <div key={index}>
-          <div key={index}>
+    
             <CategoryCard category={category} />
           </div>
         ))}

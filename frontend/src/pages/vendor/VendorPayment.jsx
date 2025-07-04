@@ -52,6 +52,9 @@ export default function VendorPayment() {
     navigate("/category/VendorService");
   }
   };
+
+  const isValidIFSC = (code) => /^[A-Z]{4}0[A-Z0-9]{6}$/.test(code);
+
   const handleNext = async () => {
     setIsLoading(true);
     const {
@@ -68,8 +71,9 @@ export default function VendorPayment() {
       !accountHolderName ||
       !accountNumber ||
       !branchName ||
-      !ifscCode ||
+      !ifscCode ||  !isValidIFSC(ifscCode) ||
       !panCardPic
+     
     ) {
       setIsLoading(false);
       setShowPopup(true);

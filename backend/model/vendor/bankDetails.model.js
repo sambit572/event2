@@ -21,7 +21,8 @@ const bankDetailsSchema = new Schema(
     },
     ifscCode: {
       type: String,
-      required: true,
+      required: [true, "IFSC code is required"],
+      match: [/^[A-Z]{4}0[A-Z0-9]{6}$/, "Invalid IFSC code format"],
     },
     gst: {
       type: String,

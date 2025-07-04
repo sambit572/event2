@@ -8,10 +8,7 @@ import axios from "axios";
 function VendorService({ currentStep }) {
   const navigate = useNavigate();
   useEffect(() => {
-    if (localStorage.getItem('step2Completed')) {
-      navigate('/vendor/payment-info');
-      return;
-    }
+   
     const checkIfServiceExists = async () => {
       try {
         const response = await axios.get('http://localhost:8000/category/VendorService');
