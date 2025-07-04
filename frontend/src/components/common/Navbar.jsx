@@ -26,10 +26,18 @@ import {
   attemptVendorSilentLogin,
   checkVendorEmailStatus,
 } from "../../utils/VendorAuth.jsx";
-import VendorEmailConfirmModal from "../vendor/VendorEmailConfirmModal.jsx";
+
+import { useDispatch, useSelector } from "react-redux";
+import { clearUser } from "../../redux/UserSlice.js";
+import { clearVendor } from "../../redux/VendorSlice.js";
+import { BACKEND_URL } from "../../utils/constant.js";
+
 
 const Navbar = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const [currentUser, setCurrentUser] = useState(null);
 
   const [userFirstName, setUserFirstName] = useState(null);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
@@ -50,6 +58,29 @@ const Navbar = () => {
       inputRef.current.focus();
     }
   };
+  const fetchUserProfile = async () => {
+    try {
+      const res = await axios.get("http://localhost:8000/user/profile", {
+        withCredentials: true,
+      });
+
+
+      if (res.data.success) {
+        setCurrentUser(res.data.data);
+      } else {
+        setCurrentUser(null);
+      }
+    } catch (err) {
+      console.error("Failed to fetch user profile", err);
+      setCurrentUser(null);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserProfile();
+  }, []);
+
+
 
   const handleHomeClick = () => {
     if (location.pathname === "/") {
@@ -73,6 +104,8 @@ const Navbar = () => {
       localStorage.removeItem("userFirstName");
       localStorage.removeItem("currentlyLoggedIn");
       setUserFirstName(null);
+
+      dispatch(clearUser());
       navigate("/", { replace: true });
     } catch (error) {
       console.error("Logout failed", error);
@@ -92,6 +125,7 @@ const Navbar = () => {
       localStorage.removeItem("VendorInitial");
       localStorage.removeItem("VendorCurrentlyLoggedIn");
       setVendorFirstName(null);
+      dispatch(clearVendor());
       navigate("/", { replace: true });
     } catch (error) {
       console.error("Logout failed", error);
@@ -113,6 +147,7 @@ const Navbar = () => {
   };
 
   const handleVendorClick = async () => {
+    console.log("clicked vendor button ...");
     if (!userFirstName) {
       onOpenLogin(); // force user to login first
       return;
@@ -126,16 +161,15 @@ const Navbar = () => {
     }
 
     // 2. Check email status for current user
-    const email = await axios.get("http://localhost:8000/user/get-email");
-    const emailStatus = await checkVendorEmailStatus(email);
+    const response = await axios.get(`${BACKEND_URL}/user/get-email`, {
+      withCredentials: true,
+    });
+    const emailStatus = await checkVendorEmailStatus(response.data.data.email);
 
-    console.log(emailStatus);
+    console.log("Email status from backend:", emailStatus);
 
     if (emailStatus.existsInVendor) {
       navigate("/vendor-login"); // already a vendor
-    } else if (emailStatus.existsInUser) {
-      // prompt UI to confirm: "Use same email to register as vendor?"
-      <VendorEmailConfirmModal />;
     } else {
       navigate("/vendor/register");
     }
@@ -211,7 +245,7 @@ const Navbar = () => {
                   </>
                 ) : (
                   <>
-                    <UserProfileIcon />
+                    <UserProfileIcon currentUser={currentUser} />
                     <span className="font-medium">{`Hi, ${userFirstName}`}</span>
                   </>
                 )}
@@ -304,23 +338,18 @@ const Navbar = () => {
                       ));
                       setTimeout(() => toast.dismiss(toastId), 2000);
                     } else {
-                      if (!VendorFirstName && userFirstName) {
-                        navigate("/vendor/register");
-                      } else {
-                        setShowVendorDropdown((prev) => !prev);
-                      }
+                      handleVendorClick(); // 🔥 Always trigger, regardless of VendorFirstName
                     }
                   }}
                 >
                   {!VendorFirstName ? (
                     <>
-                      <CgProfile className="text-2xl" />
                       <span className="font-medium">Be a Vendor</span>
                     </>
                   ) : (
                     <>
                       <span className="font-medium">
-                        <UserProfileIcon />
+                
                         {VendorFirstName}
                       </span>
                     </>

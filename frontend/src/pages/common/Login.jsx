@@ -8,8 +8,11 @@ import PasswordInput from "../../utils/PasswordInput.jsx";
 import SuccessBlock from "./SuccessBlock.jsx";
 import axios from "axios";
 import "./LoginRegister.css";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../redux/UserSlice.js";
 
 const Login = ({ onClose }) => {
+  const dispatch = useDispatch()
   const navigate = useNavigate();
   const [step, setStep] = useState("form"); // 'form', 'otp', 'success'
   const [showSuccessIcon, setShowSuccessIcon] = useState(false);
@@ -94,6 +97,7 @@ const Login = ({ onClose }) => {
       );
 
       const { user } = res.data.data;
+      dispatch(setUser(user));
       const fullName = user.fullName || "";
       const firstName = fullName.split(" ")[0];
       const firstLetter = firstName?.charAt(0).toUpperCase() || "";

@@ -78,9 +78,15 @@ const registerVendor = async (req, res) => {
       profilePicture: profilePictureUrl, // May be empty string
     });
 
+    const { accessToken, refreshToken } = await generateVendorTokens(
+      newVendor._id
+    );
+
     // 5. Return success response
     return res
       .status(200)
+      .cookie("vendorAccessToken", accessToken, cookieOptions)
+      .cookie("vendorRefreshToken", refreshToken, cookieOptions)
       .json(new ApiResponse(200, newVendor, "Vendor registered successfully."));
   } catch (error) {
     console.error("Vendor registration error:", error);
@@ -247,8 +253,8 @@ const loginVendor = async (req, res) => {
   );
   return res
     .status(200)
-    .cookie("accessToken", accessToken, cookieOptions)
-    .cookie("refreshToken", refreshToken, cookieOptions)
+    .cookie("vendorAccessToken", accessToken, cookieOptions)
+    .cookie("vendorRefreshToken", refreshToken, cookieOptions)
     .json(
       new ApiResponse(
         200,
@@ -353,7 +359,7 @@ const vendorSilentLogin = async (req, res) => {
 
   let decoded;
   try {
-    decoded = jwt.verify(token, process.env.VENDOR_REFRESH_TOKEN_SECRET);
+    decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
   } catch (err) {
     return res
       .status(401)
@@ -365,6 +371,9 @@ const vendorSilentLogin = async (req, res) => {
     return res.status(404).json(new ApiError(404, "Vendor not found"));
 
   const { accessToken, refreshToken } = await generateVendorTokens(vendor._id);
+
+  console.log("vendorSilentLogin working fine ");
+
   return res
     .status(200)
     .cookie("vendorAccessToken", accessToken, cookieOptions)
@@ -399,6 +408,20 @@ const checkVendorEmailStatus = async (req, res) => {
   }
 };
 
+const getVendorProfile = async(req,res) => {
+  try {
+    const vendor = req.vendor; // Set in middleware
+
+    if (!vendor) {
+      return res.status(404).json({ success: false, message: "Vendor not found" });
+    }
+
+    res.status(200).json({ success: true, data: vendor });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server Error", error: error.message });
+  }
+};
+
 export {
   registerVendor,
   updateVendor,
@@ -409,4 +432,5 @@ export {
   changeVendorPassword,
   vendorSilentLogin,
   checkVendorEmailStatus,
+  getVendorProfile,
 };

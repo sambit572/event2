@@ -18,4 +18,22 @@ const storage = multer.diskStorage({
   },
 });
 
-export const upload = multer({ storage });
+// ✅ File filter: Allow only JPG, JPEG, PNG
+const fileFilter = function (req, file, cb) {
+  const allowedTypes = /jpeg|jpg|png/;
+  const isMimeTypeValid = allowedTypes.test(file.mimetype);
+  const isExtValid = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+
+  if (isMimeTypeValid && isExtValid) {
+    cb(null, true);
+  } else {
+    cb(new Error("Only .jpg, .jpeg, .png image files are allowed"));
+  }
+};
+
+// ✅ File size limit: 2MB
+export const upload = multer({
+  storage,
+  fileFilter,
+  limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
+});
