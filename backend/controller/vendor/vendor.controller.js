@@ -82,7 +82,6 @@ const registerVendor = async (req, res) => {
       newVendor._id
     );
 
-
     // 5. Return success response
     return res
       .status(200)
@@ -349,7 +348,7 @@ const vendorSilentLogin = async (req, res) => {
 
   let decoded;
   try {
-    decoded = jwt.verify(token, process.env.VENDOR_REFRESH_TOKEN_SECRET);
+    decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
   } catch (err) {
     return res
       .status(401)
@@ -361,6 +360,9 @@ const vendorSilentLogin = async (req, res) => {
     return res.status(404).json(new ApiError(404, "Vendor not found"));
 
   const { accessToken, refreshToken } = await generateVendorTokens(vendor._id);
+
+  console.log("vendorSilentLogin working fine ");
+
   return res
     .status(200)
     .cookie("vendorAccessToken", accessToken, cookieOptions)
