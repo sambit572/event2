@@ -4,6 +4,7 @@ import PasswordInput from "../../../utils/PasswordInput.jsx";
 import axios from "axios";
 import { BACKEND_URL } from "../../../utils/constant.js";
 import "./Profile.css";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 function Profile({ onProfileChange }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -16,7 +17,7 @@ function Profile({ onProfileChange }) {
     fullName: "",
     email: "",
     phoneNo: "",
-    profilePhoto: ""
+    profilePhoto: "",
   });
 
   //  Sync profile image and other updates to navbar if needed
@@ -28,7 +29,7 @@ function Profile({ onProfileChange }) {
   };
 
   const handleImageChange = (imageUrl) => {
-    setProfileData(prev => ({ ...prev, profilePhoto: imageUrl }));
+    setProfileData((prev) => ({ ...prev, profilePhoto: imageUrl }));
     if (onProfileChange) {
       onProfileChange({ ...profileData, profilePhoto: imageUrl });
     }

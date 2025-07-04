@@ -7,10 +7,10 @@
 .faq-title {
   background: #f3c12d;
   color: rgb(0, 0, 0);
-  padding: 10px;
-  font-size: 22px;
+  padding: 12px 10px;
+  font-size: 2rem;
   font-weight: bold;
-  width: 300px;
+  width: 330px;
   margin: 40px auto;
   border: 6px double #001f3f;
   border-radius: 30px 10px 30px 10px;
