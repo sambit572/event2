@@ -99,10 +99,6 @@
 }
 
 @media (max-width: 576px) {
-  .faq-title {
-    font-size: 20px;
-  }
-
   .faq-question {
     font-size: 15px;
     padding: 12px;

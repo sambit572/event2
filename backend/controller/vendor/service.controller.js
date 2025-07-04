@@ -1,6 +1,6 @@
-import { Service } from "../model/service.model.js";
-import { uploadOnCloudinary } from "../utilities/cloudinary.js";
-import { ApiResponse } from "../utilities/ApiResponse.js";
+import { Service } from "../../model/vendor/service.model.js";
+import { uploadOnCloudinary } from "../../utilities/cloudinary.js";
+import { ApiResponse } from "../../utilities/ApiResponse.js";
 
 export const createService = async (req, res) => {
   try {
@@ -104,4 +104,3 @@ export const createService = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-  

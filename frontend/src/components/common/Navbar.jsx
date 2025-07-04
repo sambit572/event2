@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
+import UserProfileIcon from "../../pages/common/UserProfileIcon.jsx";
 import "./Navbar.css";
+import { CgProfile } from "react-icons/cg";
 import {
   FaSearch,
   FaUser,
@@ -145,18 +147,28 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
 
         {/* Nav Icons */}
         <div className="nav-icons">
+
           {/* Profile Dropdown */}
           <div className="nav-item profile-dropdown-container" ref={profileRef}>
-            <div className="flex items-center gap-2 text-gray-700 cursor-pointer login  ">
+            <div className="flex items-center gap-2 text-gray-700 cursor-pointer login">
               <span
                 className="flex items-center gap-2 max-[1024px]:flex-row max-[1024px]:text-[12px] max-[820px]:text-[11px]"
                 onClick={!userFirstName ? handleLoginClick : undefined}
               >
-                <FaUser className="text-lg" />
-                <span className="font-medium ">
-                  {userFirstName ? `${userFirstName}` : "Login"}
-                </span>
+                {!userFirstName ? (
+                  <>
+                    <CgProfile className="text-2xl" />
+                    <span className="font-medium">Login</span>
+                  </>
+                ) : (
+                  <>
+                    <UserProfileIcon />
+                    <span className="font-medium">{userFirstName}</span>
+                  </>
+                )}
               </span>
+
+              {/* ⬇️ Always show dropdown toggle arrow */}
               <span onClick={handleToggleProfileDropdown}>
                 {showProfileDropdown ? (
                   <FaChevronUp className="text-sm" />
@@ -207,7 +219,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
                         style={{ marginRight: "4px" }}
                       />
                       <button
-                        className="signOutButton hover:text-[#001f3f] hover:font-bold  "
+                        className="signOutButton hover:text-[#001f3f] hover:font-bold"
                         onClick={handleLogout}
                       >
                         Sign Out
@@ -218,6 +230,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
               </div>
             )}
           </div>
+
 
           {/* Become Vendor */}
           <div

@@ -24,9 +24,11 @@ const ServiceDescription = ({ service }) => {
     <section className="serviceDescription">
       <Link to="/category/service" className="link">
         <h3>{title}</h3>
+        <h5>{service.vandor}</h5>
         <p className="address">
           {address.area}, {address.city}, {address.state} - {address.pincode}
         </p>
+
         <div className="serviceRating">
           <span className="rate">{rating} ☆</span>
           <span className="review">{reviews} reviews</span>

@@ -1,21 +1,17 @@
-import { Consent } from "../model/legalConsent.model.js";
+import { Consent } from "../../model/vendor/legalConsent.model.js";
 import {
   uploadOnCloudinary,
   deleteFromCloudinary,
-} from "../utilities/cloudinary.js";
+} from "../../utilities/cloudinary.js";
 
-import { ApiResponse } from "../utilities/ApiResponse.js";
-import { ApiError } from "../utilities/ApiError.js";
+import { ApiResponse } from "../../utilities/ApiResponse.js";
+import { ApiError } from "../../utilities/ApiError.js";
 
 // Create legal consent
 export const createLegalConsent = async (req, res) => {
   try {
-    const {
-      vendorId,
-      iAgreeTC,
-      iAgreeCP,
-      iAgreeKYCVerifyUsingPanAndAdhar,
-    } = req.body;
+    const { vendorId, iAgreeTC, iAgreeCP, iAgreeKYCVerifyUsingPanAndAdhar } =
+      req.body;
 
     if (!req.file) {
       return res.status(400).json({
@@ -42,7 +38,7 @@ export const createLegalConsent = async (req, res) => {
       signature: cloudinaryResponse.secure_url, // Save Cloudinary URL
     });
 
-    console.log("consent backend working fine...")
+    console.log("consent backend working fine...");
     res.status(201).json({
       success: true,
       message: "Legal consent created successfully",
@@ -62,10 +58,16 @@ export const getLegalConsentByVendor = async (req, res) => {
     const consent = await Consent.findOne({ vendorId: vendorId });
 
     if (!consent) {
-      return res.status(404).json(new ApiError(404, "Legal consent can't be found"));
+      return res
+        .status(404)
+        .json(new ApiError(404, "Legal consent can't be found"));
     }
 
-    res.status(200).json(new ApiResponse(200, consent, "Legal consent fetched successfully"));
+    res
+      .status(200)
+      .json(
+        new ApiResponse(200, consent, "Legal consent fetched successfully")
+      );
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

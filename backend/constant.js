@@ -1,1 +1,1 @@
-export const DB_NAME = 'events_bridge_user_base'
+export const DB_NAME = 'events_bridge_user_base';

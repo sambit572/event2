@@ -11,11 +11,12 @@
   position: absolute;
   bottom: 80px;
   right: 0;
-  background-color: #001f3f;
-  color: white;
+  background-color: #00718e !important;
+  color: rgb(255, 255, 255) !important;
   padding: 8px 14px;
   border-radius: 20px;
-  font-size: 14px;
+  font-size: 18px;
+  font-weight: bold;
   white-space: nowrap;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   animation: fadeIn 0.5s ease;

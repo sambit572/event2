@@ -110,7 +110,8 @@ const Login = ({ onClose, onSwitchToRegister }) => {
   }
 
   const renderStep = () => {
-    if (step === "success") return <SuccessBlock showSuccessIcon={showSuccessIcon} />;
+    if (step === "success")
+      return <SuccessBlock showSuccessIcon={showSuccessIcon} />;
 
     if (step === "otp") return <OTPVerification setStep={setStep} />;
 
@@ -145,7 +146,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
           minLength={8}
         />
 
-        <div className="Login-forget-password-link">
+        <div className="Login-forget-password-link mb-2">
           <a href="/forgot-password">Forgot your password?</a>
         </div>
 

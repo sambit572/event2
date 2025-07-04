@@ -1,11 +1,11 @@
-import { BankDetails } from "../model/bankDetails.model.js";
+import { BankDetails } from "../../model/vendor/bankDetails.model.js";
 import {
   uploadOnCloudinary,
   deleteFromCloudinary,
-} from "../utilities/cloudinary.js";
+} from "../../utilities/cloudinary.js";
 
-import { ApiResponse } from "../utilities/ApiResponse.js";
-import { ApiError } from "../utilities/ApiError.js";
+import { ApiResponse } from "../../utilities/ApiResponse.js";
+import { ApiError } from "../../utilities/ApiError.js";
 
 // chnage "pan card pic upload" from regular to private in production as otherwise may violate indian law :
 

@@ -54,7 +54,12 @@ const App = () => {
   const [showRegisterModal, setShowRegisterModal] = useState(false);
 
   // Hide Footer on specific pages
-  const pagesWithoutFooter = ["/vendor/thank-you", "/admin", "/dashboard"];
+  const pagesWithoutFooter = [
+    "/vendor/thank-you",
+    "/admin",
+    "/dashboard",
+    "/profile",
+  ];
 
   const handleOpenLogin = () => {
     setShowLoginModal(true);
@@ -90,10 +95,10 @@ const App = () => {
         <Routes>
           {/* Customer Routes */}
           <Route path="/" element={<Home />} />
-          <Route path="/category" element={<ServiceList />} />
+          <Route path="/category/:categoryId" element={<ServiceList />} />
           {/* <Route path="/categories" element={<CategoryCard />}></Route> */}
           <Route path="/reviews" element={<ReviewSlider />} />
-          <Route path="/category/service" element={<ServiceDetails />} />
+          <Route path="/service/:serviceId" element={<ServiceDetails />} />
           <Route
             path="/wishlist"
             element={
@@ -122,7 +127,7 @@ const App = () => {
 
           {/* Vendor Routes */}
           <Route path="/vendor/register" element={<VendorRegistration />} />
-          <Route path="/category/VendorService" element={<VendorService />} />
+          {/* <Route path="/category/VendorService" element={<VendorService />} /> */}
           <Route path="/vendor/payment-info" element={<VendorPayment />} />
           <Route
             path="/vendor/legal-consent"
