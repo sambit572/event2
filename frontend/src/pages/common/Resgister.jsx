@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/UserSlice.js";
 
 
-const Register = ({ onClose, onSwitchToLogin }) => {
+const Register = ({ onClose }) => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch()
@@ -53,10 +53,20 @@ const Register = ({ onClose, onSwitchToLogin }) => {
       if (response.data.message === "user do exist") {
         setErrorMsg("User already exists. Please log in.");
       } else {
-        localStorage.setItem("userFirstName", user.fullName.split(" ")[0]);
+
+
+        let userFirstName ;
+
+        if (user.fullName.length == 1){
+          userFirstName = user.fullName;
+        }else{
+          userFirstName = user.fullName.split(" ")[0];
+        }
+
+        localStorage.setItem("userFirstName", userFirstName);
         localStorage.setItem("currentlyLoggedIn", "true");
         window.dispatchEvent(new Event("userLoggedIn"));
-        onClose(); // Close modal after successful registration
+        navigate("/", { replace: true });
       }
     } catch (error) {
       const msg =
@@ -135,7 +145,7 @@ const Register = ({ onClose, onSwitchToLogin }) => {
 
           <p className="signup-text">
             Already have an account?{" "}
-            <span className="login-link" onClick={onSwitchToLogin}>
+            <span className="login-link" onClick={() => navigate("/login")}>
               Log In
             </span>
           </p>
@@ -146,8 +156,7 @@ const Register = ({ onClose, onSwitchToLogin }) => {
 };
 
 Register.propTypes = {
-  onClose: PropTypes.func,
-  onSwitchToLogin: PropTypes.func,
+  onClose: PropTypes.func, 
 };
 
 export default Register;

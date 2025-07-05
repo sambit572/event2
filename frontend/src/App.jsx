@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 // Core Components
 import Navbar from "./components/common/Navbar";
@@ -8,7 +9,7 @@ import Chatbot from "./components/common/Chatbot";
 
 // Auth Modals
 import Login from "./pages/common/Login.jsx";
-import Register from "./pages/common/Register.jsx";
+import Register from "./pages/common/Resgister.jsx";
 
 // Customer Pages
 import Home from "./pages/customer/Home";
@@ -22,6 +23,7 @@ import VendorPayment from "./pages/vendor/VendorPayment";
 import VendorThankYou from "./pages/vendor/VendorThankYou";
 import VendorRegistration from "./pages/vendor/VendorRegistration";
 import VendorService from "./pages/vendor/VendorService";
+import VendorLogin from "./pages/vendor/VendorLogin.jsx";
 
 import AboutUs from "./pages/common/AboutUs";
 import HelpUs from "./pages/common/HelpUs";
@@ -47,19 +49,13 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import { setUser } from "./redux/UserSlice.js";
 import {setVendor} from "./redux/VendorSlice.js";
-import ScrollToTop from "./components/common/ScrollToTop";
-import BackToTop from "./pages/common/BackToTop";
 
 const App = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Modal states
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showRegisterModal, setShowRegisterModal] = useState(false);
-
   // Hide Footer on specific pages
-  const pagesWithoutFooter = ["/vendor/thank-you", "/admin", "/dashboard","/profile"];
+  const pagesWithoutFooter = ["/vendor/thank-you", "/admin", "/dashboard"];
 
   const dispatch = useDispatch();
 
@@ -109,36 +105,11 @@ useEffect(() => {
 }, []);
 
 
-  const handleOpenLogin = () => {
-    setShowLoginModal(true);
-    setShowRegisterModal(false);
-    document.body.classList.add("modal-open");
-  };
-
-  const handleOpenRegister = () => {
-    setShowRegisterModal(true);
-    setShowLoginModal(false);
-    document.body.classList.add("modal-open");
-  };
-
-  const handleCloseModals = () => {
-    setShowLoginModal(false);
-    setShowRegisterModal(false);
-    // Re-enable body scroll
-    document.body.classList.remove("modal-open");
-  };
-
   return (
     <>
       {/* Conditionally render Navbar */}
-      {location.pathname !== "/admin" && (
-        <Navbar
-          onOpenLogin={handleOpenLogin}
-          onOpenRegister={handleOpenRegister}
-        />
-      )}
+      {location.pathname !== "/admin" && <Navbar />}
 
-      <ScrollToTop />
       <main>
         <Routes>
           {/* Customer Routes */}
@@ -171,10 +142,27 @@ useEffect(() => {
               </ProtectedRoute>
             }
           />
-          <Route path="/dashboardservices" element={<DashboardServices />} />
+          
+          <Route
+           path="/dashboardservices"
+            element={
+            <ProtectedRoute>
+              <DashboardServices />
+            </ProtectedRoute>
+            } />
 
           {/* Vendor Routes */}
-          <Route path="/vendor/register" element={<VendorRegistration />} />
+
+          <Route 
+          path="/vendor/register" 
+          element={
+           <ProtectedRoute>
+            <VendorRegistration />
+           </ProtectedRoute>
+          
+          } />
+
+
           <Route path="/category/VendorService" element={<VendorService />} />
           <Route path="/vendor/payment-info" element={<VendorPayment />} />
           <Route
@@ -182,6 +170,7 @@ useEffect(() => {
             element={<VendorLegalConsent />}
           />
           <Route path="/vendor/thank-you" element={<VendorThankYou />} />
+
           <Route path="/dashboard" element={<DashBoardMain />} />
           <Route path="/vendor-login" element={<VendorLogin/>} />
 
@@ -210,28 +199,28 @@ useEffect(() => {
           <Route path="/userdetails" element={<UserDetails />}></Route>
           <Route path="/pop-up" element={<PopUp />}></Route>
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/vendor-login" element={<VendorLogin/>} />
         </Routes>
       </main>
-      <BackToTop />
+
       <Chatbot />
 
       {/* Conditionally render Footer */}
       {!pagesWithoutFooter.includes(location.pathname) && <Footer />}
+      <Toaster 
+      toastOptions={{
+          duration: 5000,
+          style: {
+            padding: '16px',
+            color: '#fff',
+            background: '#1f2937',
+            borderRadius: '8px',
+            position: 'relative',
+            overflow: 'hidden',
+          },
+        }}
+      position="top-right" reverseOrder={false} />
 
-      {/* Auth Modals */}
-      {showLoginModal && (
-        <Login
-          onClose={handleCloseModals}
-          onSwitchToRegister={handleOpenRegister}
-        />
-      )}
-
-      {showRegisterModal && (
-        <Register
-          onClose={handleCloseModals}
-          onSwitchToLogin={handleOpenLogin}
-        />
-      )}
     </>
   );
 };

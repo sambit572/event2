@@ -13,7 +13,6 @@ const bankDetailsSchema = new Schema(
     accountNumber: {
       type: String,
       required: true,
-      unique : true
     },
     branchName: {
       type: String,
@@ -21,8 +20,7 @@ const bankDetailsSchema = new Schema(
     },
     ifscCode: {
       type: String,
-      required: [true, "IFSC code is required"],
-      match: [/^[A-Z]{4}0[A-Z0-9]{6}$/, "Invalid IFSC code format"],
+      required: true,
     },
     gst: {
       type: String,

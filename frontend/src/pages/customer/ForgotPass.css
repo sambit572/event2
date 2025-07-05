@@ -1,23 +1,32 @@
+.custom-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  min-width: 100vw;
+  background: linear-gradient(135deg, rgb(230, 165, 130), #3247d4,  #001f3f);
+  background-size: 400% 400%;
+  background-position: 0% 50%;
+  animation: backgroundMove 12s ease infinite;
+}
+
 .custom-form {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 40px;
-  background:linear-gradient(to right, #f1ecad, #fdf47e);
+  background: #e5e5de;
   border-radius: 15px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   width: 350px;
-  max-width: 90vw;
 }
-
 
 .custom-heading {
   font-size: 1.8rem;
   font-weight: bold;
   margin-bottom: 20px;
-  color: #1f1263;
+  color: #001f3f;
   font-family: "Poppins", sans-serif;
-  text-align: center;
 }
 
 .custom-input {
@@ -25,31 +34,20 @@
   padding: 12px 15px;
   margin: 10px 0;
   border-radius: 10px;
-  border: 1px solid #200f73;
+  border: 1px solid #001f3f;
   font-size: 15px;
   font-weight: 500;
   outline: none;
-  box-sizing: border-box; /* Fix width calculation */
 }
 
-.custom-input:hover:not(:disabled) {
-  border: 1px solid #c9ba16;
-}
-
-.custom-input:focus {
-  border: 2px solid #22136d;
-}
-
-.custom-input:disabled {
-  background-color: #f0f0f0;
-  cursor: not-allowed;
-  opacity: 0.6;
+.custom-input:hover {
+  border: 1px solid #5034ba;
 }
 
 .custom-button {
   margin-top: 20px;
   padding: 12px 20px;
-  background-color: #22136d;
+  background-color: darkgreen;
   color: white;
   font-weight: bold;
   border: none;
@@ -57,91 +55,26 @@
   cursor: pointer;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease-in-out;
-  min-width: 150px; /* Prevent button shrinking */
 }
 
-.custom-button:hover:not(:disabled) {
-  background: #1185c8;
-  transform: translateY(-2px); /* Better hover effect */
-}
-
-.custom-button:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
+.custom-button:hover {
+  background: rgb(4, 77, 4);
+  font-size: 14px;
 }
 
 .subheading {
   font-size: 1.12rem;
   margin-bottom: 20px;
-  text-align: center;
-  color: #666;
 }
 
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 100vw;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
-
-.modal-close-button {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  background: transparent;
-  border: none;
-  font-size: 28px;
-  font-weight: bold;
-  color: #130751;
-  cursor: pointer;
-  z-index: 100; /* Increased z-index */
-  padding: 8px 12px; /* Larger click area */
-  border-radius: 50%;
-  transition: background-color 0.2s ease;
-  line-height: 1;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-close-button:hover {
-  background-color: rgba(0, 0, 0, 0.1);
-}
-
-.modal-box {
-  position: relative;
-}
-
-/* Form styling to ensure proper layout */
-.custom-form form {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Responsive design for smaller screens */
-@media (max-width: 480px) {
-  .custom-form {
-    padding: 20px;
-    width: 300px;
+@keyframes backgroundMove {
+  0% {
+    background-position: 0% 50%;
   }
-  
-  .custom-heading {
-    font-size: 1.5rem;
+  50% {
+    background-position: 100% 50%;
   }
-  
-  .subheading {
-    font-size: 1rem;
+  100% {
+    background-position: 0% 50%;
   }
 }

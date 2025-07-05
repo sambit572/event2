@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./VendorPayment.css";
 import StepProgress from "./StepProgress";
@@ -23,20 +23,6 @@ export default function VendorPayment() {
   });
 
   const [showPopup, setShowPopup] = useState(false);
-  useEffect(() => {
-    // Check if Step 2 (Service Details) is completed
-    const step2Completed = localStorage.getItem('step2Completed');
-    if (!step2Completed) {
-      navigate("/category/VendorService");
-    }
-  }, [navigate]);
-
-  useEffect(() => {
-    const savedData = sessionStorage.getItem('vendor_step_3');
-    if (savedData) {
-      setFormData(JSON.parse(savedData));
-    }
-  }, []);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -47,14 +33,8 @@ export default function VendorPayment() {
   };
 
   const handleBack = () => {
-    const step3Completed = localStorage.getItem('step3Completed');
-  if (!step3Completed) {
     navigate("/category/VendorService");
-  }
   };
-
-  const isValidIFSC = (code) => /^[A-Z]{4}0[A-Z0-9]{6}$/.test(code);
-
   const handleNext = async () => {
     setIsLoading(true);
     const {
@@ -71,9 +51,8 @@ export default function VendorPayment() {
       !accountHolderName ||
       !accountNumber ||
       !branchName ||
-      !ifscCode ||  !isValidIFSC(ifscCode) ||
+      !ifscCode ||
       !panCardPic
-     
     ) {
       setIsLoading(false);
       setShowPopup(true);
@@ -102,9 +81,6 @@ export default function VendorPayment() {
       );
 
       console.log("Success:", res.data);
-      sessionStorage.setItem('vendor_step_3', JSON.stringify(formData));
-      localStorage.setItem('step3Completed', 'true'); //VendorPayment Step Completed
-      navigate("/vendor/legal-consent", { state: { currentStep: 3 } });
       navigate("/vendor/legal-consent", { state: { currentStep: 3 } });
     } catch (err) {
       console.error("Upload failed:", err.response?.data || err.message);
@@ -221,10 +197,7 @@ export default function VendorPayment() {
             onChange={handleChange}
           />
         </div>
-        <Button 
-        onBack={handleBack}
-        onNext={handleNext} 
-        disableBack={localStorage.getItem('step3Completed') === 'true'} />
+        <Button onBack={handleBack} onNext={handleNext} />
       </div>
     </div>
   );
