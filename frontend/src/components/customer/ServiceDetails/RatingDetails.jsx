@@ -7,7 +7,7 @@ const RatingDetails = () => {
     totalRatings: 150,
     totalReviews: 87,
     breakdown: [
-      { label: "Execellent", count: 80, color: "#4caf50" },
+      { label: "5★", count: 80, color: "#4caf50" },
       { label: "4★", count: 40, color: "#8bc34a" },
       { label: "3★", count: 15, color: "#cddc39" },
       { label: "2★", count: 10, color: "#ffc107" },
@@ -18,32 +18,34 @@ const RatingDetails = () => {
   const maxCount = Math.max(...ratingsData.breakdown.map((r) => r.count));
 
   return (
-    <div style={{ display: "flex" }}>
-      <div
-        style={{
-          fontSize: "40px",
-          fontWeight: "bold",
-          color: "#007e33",
-          marginTop: "25px",
-        }}
-      >
-        {ratingsData.averageRating.toFixed(1)}
-        <span
+    <div style={{ display: "flex", flexWrap: "wrap", gap: "2rem" }}>
+      {/* Average Rating Section */}
+      <div style={{ minWidth: "120px" }}>
+        <div
           style={{
-            fontSize: "24px",
-            color: "green",
-            marginLeft: "5px",
+            fontSize: "40px",
+            fontWeight: "bold",
+            color: "#007e33",
           }}
         >
-          ★
-        </span>
-        <p style={{ color: "gray", fontSize: "15px", marginTop: "10px" }}>
-          <span>{ratingsData.totalRatings} Ratings, </span>
-          <span>{ratingsData.totalReviews} Reviews</span>
+          {ratingsData.averageRating.toFixed(1)}
+          <span
+            style={{
+              fontSize: "24px",
+              color: "green",
+              marginLeft: "6px",
+            }}
+          >
+            ★
+          </span>
+        </div>
+        <p style={{ color: "gray", fontSize: "14px", marginTop: "10px" }}>
+          {ratingsData.totalRatings} Ratings, {ratingsData.totalReviews} Reviews
         </p>
       </div>
 
-      <div style={{ width: "350px", marginLeft: "35px" }}>
+      {/* Breakdown Bars */}
+      <div style={{ flexGrow: 1, minWidth: "300px", maxWidth: "450px" }}>
         {ratingsData.breakdown.map((item, index) => (
           <RatingBar
             key={index}

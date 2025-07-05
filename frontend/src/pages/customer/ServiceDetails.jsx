@@ -1,31 +1,30 @@
 import React, { useState } from "react";
-import "./ServiceDetails.css";
-import djimg1 from "../../assets/service/sub-img1.avif";
-import djimg2 from "../../assets/service/sub-img2.webp";
-import djimg3 from "../../assets/service/sub-img3.jpg";
-import djimg4 from "../../assets/service/sub-img4.jpg";
-import djimg8 from "../../assets/service/sub-img4.jpg";
+import { useParams } from "react-router-dom";
 import { FaHeart } from "react-icons/fa6";
+
+import "./ServiceDetails.css";
+
+import { CategoryData } from "../../utils/CatogoryData.jsx";
 import { similarServiceData } from "../../components/customer/ServiceDetails/SimilarServiceData.jsx";
 
 import RatingDetails from "../../components/customer/ServiceDetails/RatingDetails.jsx";
 import SimilarProductCard from "../../components/customer/ServiceDetails/PeopleAlsoBooked.jsx";
 import DJServiceCard from "../../components/customer/ServiceDetails/ServiceCard.jsx";
-// import RatingBar from "../../components/customer/RatingBar.jsx";
-import ReviewList from "./../../components/customer/ServiceDetails/ReviewList";
+import ReviewList from "../../components/customer/ServiceDetails/ReviewList";
 
 const Service = () => {
-  const mediaList = [
-    { type: "image", src: djimg1 },
-    { type: "video", src: "https://www.youtube.com/embed/QRB1bNIc5G4" },
-    { type: "image", src: djimg2 },
-    { type: "image", src: djimg3 },
-    { type: "image", src: djimg4 },
-    { type: "image", src: djimg8 },
-  ];
+  const { serviceId } = useParams();
 
+  // Get the service object from CategoryData
+  const service = CategoryData.flatMap((cat) => cat.services).find(
+    (srv) => srv.id === serviceId
+  );
+
+  // If service not found
+  if (!service) return <p>Service not found</p>;
+
+  const mediaList = service.img.map((src) => ({ type: "image", src }));
   const [selectMedia, setSelectMedia] = useState(mediaList[0]);
-
   const [isWishlisted, setIsWishlisted] = useState(false);
 
   const handleClick = () => {
@@ -35,6 +34,7 @@ const Service = () => {
   return (
     <div className="dj">
       <div className="section_one">
+        {/* Left Section */}
         <div className="left-fixed">
           <div className="dj-img">
             <div className="thumbnail-list">
@@ -44,24 +44,12 @@ const Service = () => {
                   onClick={() => setSelectMedia(media)}
                   className="li1"
                 >
-                  {media.type === "image" ? (
-                    <img src={media.src} alt={`media-${index}`} />
-                  ) : (
-                    <iframe src={media.src} title="video-thumb" />
-                  )}
+                  <img src={media.src} alt={`media-${index}`} />
                 </div>
               ))}
             </div>
             <div className="big-image">
-              {selectMedia.type === "image" ? (
-                <img src={selectMedia.src} alt="Selected media" />
-              ) : (
-                <iframe
-                  src={selectMedia.src}
-                  title="selected-video"
-                  allowFullScreen
-                />
-              )}
+              <img src={selectMedia.src} alt="Selected media" />
             </div>
           </div>
 
@@ -88,8 +76,11 @@ const Service = () => {
           </div>
         </div>
 
+        {/* Right Section */}
         <div className="right-scrollable">
-          <DJServiceCard />
+          {/* Dynamic Service Info (replace DJServiceCard with actual content or pass props) */}
+          <DJServiceCard service={service} />
+
           <div className="why-choose">
             <h2>Why Choose Us?</h2>
             <ul>
@@ -109,6 +100,7 @@ const Service = () => {
         </div>
       </div>
 
+      {/* Similar Services */}
       <div className="view-dj-section">
         <h2 className="people-also-book">People Also Booked</h2>
         <div className="view-dj">

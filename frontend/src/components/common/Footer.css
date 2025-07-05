@@ -76,9 +76,10 @@
 }
 
 .footer-row {
+  justify-content: space-between;
+  align-items: flex-start;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   gap: 0;
   width: 100%;
   margin: 8px 0;
@@ -105,16 +106,21 @@
   max-height: 0;
   opacity: 0;
   overflow: hidden;
-  transition: max-height 0.5s ease-in-out, opacity 0.6s ease-in-out,
-    padding 0.3s ease-in-out;
-  padding: 0 0;
+  padding: 0;
+  margin: 0;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+  visibility: hidden;
+  height: auto;
 }
 
 .footer-dropdown-content.show {
-  max-height: 500px;
+  max-height: 500px; /* Enough to fit the content */
   opacity: 1;
   padding: 8px 0;
+  margin: 0;
+  visibility: visible;
 }
+
 
 .footer-dropdown-content p {
   color: white;
