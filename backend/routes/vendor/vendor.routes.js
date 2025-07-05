@@ -1,35 +1,17 @@
 import express from "express";
 import { upload } from "../../middleware/multer.middleware.js";
-import { verifyVendorJwt } from "../../middleware/VendorAuth.middleware.js";
-
-// Vendor Core Controllers
+import { createService } from "../../controller/vendor/service.controller.js";
 import {
   registerVendor,
+  getVendorById,
   updateVendor,
-  loginVendor,
-  vendorLogout,
-  sendVendorResetLink,
-  resetVendorPassword,
-  changeVendorPassword,
-  vendorSilentLogin,
-  checkVendorEmailStatus,
-  getVendorProfile,
-  updateVendorProfilePicture,
-  
 } from "../../controller/vendor/vendor.controller.js";
-
-// Service Controller
-import { createService } from "../../controller/vendor/service.controller.js";
-
-// Bank Details
 import {
   createBankDetails,
   deleteBankDetails,
   getBankDetailsByVendor,
   updateBankDetails,
 } from "../../controller/vendor/bankdetails.controller.js";
-
-// Legal Consent
 import {
   createLegalConsent,
   getLegalConsentByVendor,
@@ -39,61 +21,47 @@ import {
 
 const vendor_router = express.Router();
 
-// --- AUTH ROUTES --- //
+// --- Vendor Routes ---
 vendor_router.post(
   "/register",
   upload.single("profilePicture"),
   registerVendor
 );
-vendor_router.post("/login", loginVendor);
-vendor_router.post("/logout",verifyVendorJwt, vendorLogout);
-vendor_router.post("/send-reset-link", sendVendorResetLink);
-vendor_router.post("/reset-password/:resetToken", resetVendorPassword);
-vendor_router.post("/change-password",verifyVendorJwt, changeVendorPassword);
-vendor_router.get("/silent-login",verifyVendorJwt, vendorSilentLogin);
-vendor_router.post("/check-email", checkVendorEmailStatus);
-vendor_router.get("/me", verifyVendorJwt, getVendorProfile);
-
-
-// --- PROFILE ROUTES --- //
+// GET /api/vendors/:id - Get vendor details by their ID
+vendor_router.get("/:id", getVendorById);
+// PUT /api/vendors/:id -
 vendor_router.put("/:id", upload.single("profilePicture"), updateVendor);
+vendor_router
+  .route("/create-service")
+  .post(upload.array("images", 5), createService);
 
-// --- SERVICE ROUTES --- //
-vendor_router.post("/create-service", upload.array("images", 5), createService);
-
-// --- BANK DETAILS ROUTES --- //
 vendor_router.post(
   "/bank-details",
   upload.single("panCardPic"),
   createBankDetails
 );
-vendor_router.get("/bank-details/:vendorId", getBankDetailsByVendor);
-vendor_router.put("/bank-details/:vendorId", updateBankDetails);
-vendor_router.delete("/bank-details/:vendorId", deleteBankDetails);
+// Get bank details by vendor ID
+vendor_router.get("/bank-details/:vendorId", getBankDetailsByVendor); // after vendor registration complete change
+// Update bank details by vendor ID
+vendor_router.put("/bank-details/:vendorId", updateBankDetails); // after vendor registration complete change
+// Delete bank details by vendor ID
+vendor_router.delete("/bank-details/:vendorId", deleteBankDetails); // after vendor registration complete change
 
-// --- LEGAL CONSENT ROUTES --- //
+// --- Legal Consent Routes ---
 vendor_router.post(
   "/legal-consent",
   upload.single("signature"),
   createLegalConsent
 );
+// Get legal consent by vendor ID
 vendor_router.get("/legal-consent/:vendorId", getLegalConsentByVendor);
+// Update legal consent by vendor ID
 vendor_router.put(
   "/legal-consent/:vendorId",
   upload.single("signature"),
   updateLegalConsent
 );
+// Delete legal consent by vendor ID
 vendor_router.delete("/legal-consent/:vendorId", deleteLegalConsent);
-
-// --- UPLOAD PROFILE PICTURE ROUTE (NEW) --- //
-vendor_router.post(
-  "/upload-profile",
-  verifyVendorJwt,
-  upload.single("profilePicture"),
-  updateVendorProfilePicture
-  
-);
-
-
 
 export { vendor_router };

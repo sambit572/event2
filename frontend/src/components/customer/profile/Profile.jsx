@@ -4,17 +4,39 @@ import PasswordInput from "../../../utils/PasswordInput.jsx";
 import axios from "axios";
 import { BACKEND_URL } from "../../../utils/constant.js";
 import "./Profile.css";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
-function Profile() {
+function Profile({ onProfileChange }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+  const [profileData, setProfileData] = useState({
+    fullName: "",
+    email: "",
+    phoneNo: "",
+    profilePhoto: "",
+  });
+
+  //  Sync profile image and other updates to navbar if needed
+  const handleProfileUpdate = (updatedProfile) => {
+    setProfileData(updatedProfile);
+    if (onProfileChange) {
+      onProfileChange(updatedProfile);
+    }
+  };
+
+  const handleImageChange = (imageUrl) => {
+    setProfileData((prev) => ({ ...prev, profilePhoto: imageUrl }));
+    if (onProfileChange) {
+      onProfileChange({ ...profileData, profilePhoto: imageUrl });
+    }
+  };
 
   const handlePasswordChangeSubmit = async () => {
-    setErrorMsg(""); // Reset on each submit
+    setErrorMsg("");
 
     if (newPassword !== confirmPassword) {
       return setErrorMsg("Passwords do not match");
@@ -29,7 +51,6 @@ function Profile() {
 
       if (response.status === 200) {
         alert("Password changed successfully");
-        // Only reset after success
         setShowPasswordModal(false);
         setOldPassword("");
         setNewPassword("");
@@ -37,21 +58,12 @@ function Profile() {
       }
     } catch (error) {
       console.error("Password change error:", error);
-
-      // Try to show a clean error message from backend
       const backendMsg =
         error.response?.data?.message ||
         "Failed to change password. Try again.";
-
-      console.log(backendMsg);
-
-      setErrorMsg(backendMsg); // ✅ Show it in UI
-
-      // Optional: don't alert here unless critical
-      // alert(backendMsg);
+      setErrorMsg(backendMsg);
     }
   };
-  
 
   useEffect(() => {
     const handleResize = () => {
@@ -66,29 +78,27 @@ function Profile() {
     const observer = new IntersectionObserver(
       ([entry]) => {
         const sidebar = document.querySelector(".profile-sidebar-fixed");
-        if (entry.isIntersecting) {
-          sidebar.style.position = "relative";
-        } else {
-          sidebar.style.position = "sticky";
-          sidebar.style.top = "0";
+        if (sidebar) {
+          if (entry.isIntersecting) {
+            sidebar.style.position = "relative";
+          } else {
+            sidebar.style.position = "sticky";
+            sidebar.style.top = "0";
+          }
         }
       },
       { threshold: 0.1 }
     );
 
-    const footerEl = document.querySelector("footer"); // Add an id if needed
+    const footerEl = document.querySelector("footer");
     if (footerEl) observer.observe(footerEl);
 
     return () => observer.disconnect();
   }, []);
 
   return (
-    <div
-      className="profile_section mb-[-148px] relative w-full min-h-screen flex flex-col md:flex-row bg-white xl:overflow-x-hidden sm:Class	CSS Equivalent
-"
-    >
+    <div className="profile_section mb-[-148px] relative w-full min-h-screen flex flex-col md:flex-row bg-white xl:overflow-x-hidden">
       <div className="profile-sidebar-fixed">
-        {/* Hamburger Button */}
         <button
           className={`profile-hamburger ${isSidebarOpen ? "open" : ""}`}
           onClick={() => setIsSidebarOpen((prev) => !prev)}
@@ -96,75 +106,79 @@ function Profile() {
           {isSidebarOpen ? "✕" : "☰"}
         </button>
 
-        {/* Sidebar */}
         <UserSideBar
           isOpen={isSidebarOpen}
           setShowPasswordModal={setShowPasswordModal}
+          onImageChange={handleImageChange}
+          onProfileUpdate={handleProfileUpdate}
         />
 
-        {/* Main Content */}
-        <main className="flex-1 px-4 md:px-12 ">
-          {/* Password Modal */}
-          {showPasswordModal && (
-            <div className="modal-overlay">
-              <div className="modal-content">
-                <h3 className="text-lg font-semibold mb-4">Change Password</h3>
-                <PasswordInput
-                  name="oldPassword"
-                  type="password"
-                  placeholder="Current Password"
-                  value={oldPassword}
-                  onChange={(e) => setOldPassword(e.target.value)}
-                />
-                <PasswordInput
-                  name="newPassword"
-                  type="password"
-                  placeholder="New Password"
-                  value={newPassword}
-                  onChange={(e) => {
+        {showPasswordModal && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <h3 className="text-lg font-semibold mb-4">Change Password</h3>
+              <PasswordInput
+                name="oldPassword"
+                type="password"
+                placeholder="Current Password"
+                value={oldPassword}
+                onChange={(e) => setOldPassword(e.target.value)}
+              />
+              <PasswordInput
+                name="newPassword"
+                type="password"
+                placeholder="New Password"
+                value={newPassword}
+                onChange={(e) => {
+                  setErrorMsg("");
+                  setNewPassword(e.target.value);
+                }}
+              />
+              <PasswordInput
+                name="confirmPassword"
+                type="password"
+                placeholder="Confirm Password"
+                value={confirmPassword}
+                onChange={(e) => {
+                  setErrorMsg("");
+                  setConfirmPassword(e.target.value);
+                }}
+              />
+              {errorMsg && (
+                <p className="text-red-500 mt-2 text-sm">{errorMsg}</p>
+              )}
+              <div className="mt-4 flex justify-center gap-4">
+                <button
+                  onClick={handlePasswordChangeSubmit}
+                  className="bg-purple-700 text-white px-4 py-2 rounded"
+                >
+                  Submit
+                </button>
+                <button
+                  onClick={() => {
+                    setShowPasswordModal(false);
+                    setOldPassword("");
+                    setNewPassword("");
+                    setConfirmPassword("");
                     setErrorMsg("");
-                    setNewPassword(e.target.value);
                   }}
-                />
-                <PasswordInput
-                  name="confirmPassword"
-                  type="password"
-                  placeholder="Confirm Password"
-                  value={confirmPassword}
-                  onChange={(e) => {
-                    setErrorMsg("");
-                    setConfirmPassword(e.target.value);
-                  }}
-                />
-                {errorMsg && (
-                  <p className="text-red-500 mt-2 text-sm">{errorMsg}</p>
-                )}
-                <div className="mt-4 flex justify-center gap-4">
-                  <button
-                    onClick={handlePasswordChangeSubmit}
-                    className="bg-purple-700 text-white px-4 py-2 rounded"
-                  >
-                    Submit
-                  </button>
-                  <button
-                    onClick={() => setShowPasswordModal(false)}
-                    className="bg-gray-300 px-4 py-2 rounded"
-                  >
-                    Cancel
-                  </button>
-                </div>
+                  className="bg-gray-300 px-4 py-2 rounded"
+                >
+                  Cancel
+                </button>
               </div>
             </div>
-          )}
-        </main>
+          </div>
+        )}
       </div>
+
       <div className="profile-scrollable-content max-[430px]:flex-row">
         <h2 className="boking-text text-2xl md:text-3xl font-bold text-center mb-4">
           My Bookings
         </h2>
 
         <div className="w-1/2 ml-auto mr-[40px] flex justify-end items-center p-4 mt-[-20px]">
-          <select className="sortby-dropdown max-w-xs bg-[#001F3F]  text-white p-2 font-semibold rounded-lg shadow">
+          <select className="sortby-dropdown max-w-xs bg-[#001F3F] text-white p-2 font-semibold rounded-lg shadow">
             <option value="">Sort by</option>
             <option className="bg-white text-black" value="completed">
               Completed
@@ -184,7 +198,6 @@ function Profile() {
           </select>
         </div>
 
-        {/* Cards Container with scroll detection */}
         <div className="booking-card-container" id="bookingCards">
           {[1, 2, 3, 4, 5, 6].map((_, index) => (
             <div key={index} className="modern-booking-card">
@@ -206,7 +219,7 @@ function Profile() {
                   <p className="text-sm text-black mt-[-20px] mb-[8px]">
                     Booking Date: 10/06/2025
                   </p>
-                  <p className="text-sm text-black ">Event Date: 10/06/2025</p>
+                  <p className="text-sm text-black">Event Date: 10/06/2025</p>
                   <a
                     href="#payment-details"
                     className="text-[#001F3F] underline font-medium mt-2 block"

@@ -32,9 +32,9 @@
   padding: 6px 10px;
   border-radius: 6px;
   font-weight: 500;
-  border: 1px solid #001F3F;
+  border: 1px solid #001f3f;
   font-size: 14px;
-  background-color: #001F3F;
+  background-color: #001f3f;
   color: #fff;
 }
 
@@ -147,8 +147,8 @@
 }
 
 .booking-col-status.status-processing {
-  color: #ff9800;
-  background-color: #fff3e0;
+  color: #ffc600;
+  background-color: #fffae0;
   padding: 4px 8px;
   border-radius: 20px;
 }
@@ -285,7 +285,7 @@
 
   .dashboard-sort-dropdown {
     width: 23%;
-    margin-top: 10px; 
+    margin-top: 10px;
   }
 
   .booking-popup-inline {
@@ -301,7 +301,7 @@
     width: 270%;
   }
 
-  .dashboard-sort-dropdown{
+  .dashboard-sort-dropdown {
     width: 36%;
   }
 }

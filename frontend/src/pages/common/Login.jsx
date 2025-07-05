@@ -8,11 +8,8 @@ import PasswordInput from "../../utils/PasswordInput.jsx";
 import SuccessBlock from "./SuccessBlock.jsx";
 import axios from "axios";
 import "./LoginRegister.css";
-import { useDispatch } from "react-redux";
-import { setUser } from "../../redux/UserSlice.js";
 
-const Login = ({ onClose }) => {
-  const dispatch = useDispatch()
+const Login = ({ onClose, onSwitchToRegister }) => {
   const navigate = useNavigate();
   const [step, setStep] = useState("form"); // 'form', 'otp', 'success'
   const [showSuccessIcon, setShowSuccessIcon] = useState(false);
@@ -97,21 +94,10 @@ const Login = ({ onClose }) => {
       );
 
       const { user } = res.data.data;
-      dispatch(setUser(user));
-      const fullName = user.fullName || "";
-      const firstName = fullName.split(" ")[0];
-      const firstLetter = firstName?.charAt(0).toUpperCase() || "";
-      const profilePic = user.profilePic || "";
-
       localStorage.setItem("currentlyLoggedIn", "true");
-      localStorage.setItem("userFullName", fullName);
-      localStorage.setItem("userFirstName", firstName);
-      localStorage.setItem("userInitial", firstLetter);
-      if (profilePic) {
-        localStorage.setItem("userProfilePic", profilePic);
-      }
-
+      localStorage.setItem("userFirstName", user.fullName.split(" ")[0]);
       window.dispatchEvent(new Event("userLoggedIn"));
+
       setStep("success");
     } catch (err) {
       const msg = err.response?.data?.message || err.message;
@@ -124,7 +110,9 @@ const Login = ({ onClose }) => {
   }
 
   const renderStep = () => {
-    if (step === "success") return <SuccessBlock showSuccessIcon={showSuccessIcon} />;
+    if (step === "success")
+      return <SuccessBlock showSuccessIcon={showSuccessIcon} />;
+
     if (step === "otp") return <OTPVerification setStep={setStep} />;
 
     return (
@@ -158,7 +146,7 @@ const Login = ({ onClose }) => {
           minLength={8}
         />
 
-        <div className="Login-forget-password-link">
+        <div className="Login-forget-password-link mb-2">
           <a href="/forgot-password">Forgot your password?</a>
         </div>
 
@@ -168,8 +156,8 @@ const Login = ({ onClose }) => {
         </button>
 
         <p className="signup-text">
-          Don’t have an account?{" "}
-          <span className="login-link" onClick={() => navigate("/register")}>
+          Don't have an account?{" "}
+          <span className="login-link" onClick={onSwitchToRegister}>
             Sign Up
           </span>
         </p>
@@ -195,6 +183,7 @@ const Login = ({ onClose }) => {
 
 Login.propTypes = {
   onClose: PropTypes.func,
+  onSwitchToRegister: PropTypes.func,
 };
 
 export default Login;

@@ -1,16 +1,16 @@
 import React from "react";
 
-import banner from "../../../assets/home/banner.jpg";
-import smallbanner from "../../../assets/home/smallbanner.png";
-import mediumbanner from "../../../assets/home/mediumbanner.png";
-import largebanner from "../../../assets/home/largebanner.png";
+import comingSoon from "../../../assets/home/bannerImages/coming_soon.png";
+import smallbanner from "../../../assets/home/bannerImages/smallbanner.png";
+import mediumbanner from "../../../assets/home/bannerImages/mediumbanner.png";
+import largebanner from "../../../assets/home/bannerImages/largebanner.png";
 
 const AddsBanner = () => {
   return (
     <div className="w-full mt-[40px] h-60 sm:h-70 md:h-80 lg:h-90 xl:h-full">
       <picture>
         {/* Large screens (1024px and up) */}
-        <source srcSet={banner} media="(min-width: 1111px)" />
+        <source srcSet={comingSoon} media="(min-width: 1111px)" />
 
         {/* Medium screens (768px to 1023px) */}
         <source srcSet={largebanner} media="(min-width: 768px)" />
@@ -22,7 +22,7 @@ const AddsBanner = () => {
         <img
           src={smallbanner}
           alt="Responsive"
-          className="w-full h-full object-cover rounded-lg"
+          className="w-full h-full object-fill rounded-lg"
         />
       </picture>
     </div>

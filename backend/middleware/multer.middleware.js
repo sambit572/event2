@@ -4,36 +4,40 @@ import path from "path";
 
 const tempDir = path.join("public", "temp");
 
-// Ensure directory exists
+
 if (!fs.existsSync(tempDir)) {
   fs.mkdirSync(tempDir, { recursive: true });
 }
+
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, tempDir);
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname);
+    // Create a safe and unique filename
+    const ext = path.extname(file.originalname);
+    const base = path.basename(file.originalname, ext);
+    const safeName = `${base.replace(/\s+/g, "-")}-${Date.now()}${ext}`;
+    cb(null, safeName);
   },
 });
 
-// ✅ File filter: Allow only JPG, JPEG, PNG
-const fileFilter = function (req, file, cb) {
-  const allowedTypes = /jpeg|jpg|png/;
-  const isMimeTypeValid = allowedTypes.test(file.mimetype);
-  const isExtValid = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+// Adding file filter for image validation
+const fileFilter = (req, file, cb) => {
+  const allowedTypes = /jpeg|jpg|png|webp/;
+  const extName = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+  const mimeType = allowedTypes.test(file.mimetype);
 
-  if (isMimeTypeValid && isExtValid) {
+  if (extName && mimeType) {
     cb(null, true);
   } else {
-    cb(new Error("Only .jpg, .jpeg, .png image files are allowed"));
+    cb(new Error("Only image files (jpg, jpeg, png, webp) are allowed"));
   }
 };
 
-// ✅ File size limit: 2MB
 export const upload = multer({
   storage,
+  limits: { fileSize: 2 * 1024 * 1024 }, 
   fileFilter,
-  limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
 });
