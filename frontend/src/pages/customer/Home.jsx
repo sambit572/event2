@@ -2,21 +2,21 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
 import "./Home.css";
-import image1 from "../../assets/home/categoriesImages/dj.png";
-import image2 from "../../assets/home/categoriesImages/bass brand.png";
-import image3 from "../../assets/home/categoriesImages/tenthouse.png";
-import image4 from "../../assets/home/categoriesImages/wedding photographer.png";
-import image5 from "../../assets/home/categoriesImages/pandit.png";
-import image6 from "../../assets/home/categoriesImages/magician.png";
-import image7 from "../../assets/home/categoriesImages/orchestra.png";
-import image8 from "../../assets/home/categoriesImages/moulbi.png";
-import image9 from "../../assets/home/categoriesImages/father.png";
-import image10 from "../../assets/aboutUs/CATERING.png";
-import image11 from "../../assets/home/categoriesImages/bride mehendi & makeup.png";
-import image12 from "../../assets/home/categoriesImages/flower decor.png";
-import image13 from "../../assets/home/categoriesImages/car & horsecart decor.png";
-import image14 from "../../assets/home/categoriesImages/fireworks.png";
-import image15 from "../../assets/home/categoriesImages/cardsinvite.jpg";
+// import image1 from "../../assets/home/categoriesImages/dj.png";
+// import image2 from "../../assets/home/categoriesImages/bass brand.png";
+// import image3 from "../../assets/home/categoriesImages/tenthouse.png";
+// import image4 from "../../assets/home/categoriesImages/wedding photographer.png";
+// import image5 from "../../assets/home/categoriesImages/pandit.png";
+// import image6 from "../../assets/home/categoriesImages/magician.png";
+// import image7 from "../../assets/home/categoriesImages/orchestra.png";
+// import image8 from "../../assets/home/categoriesImages/moulbi.png";
+// import image9 from "../../assets/home/categoriesImages/father.png";
+// import image10 from "../../assets/aboutUs/CATERING.png";
+// import image11 from "../../assets/home/categoriesImages/bride mehendi & makeup.png";
+// import image12 from "../../assets/home/categoriesImages/flower decor.png";
+// import image13 from "../../assets/home/categoriesImages/car & horsecart decor.png";
+// import image14 from "../../assets/home/categoriesImages/fireworks.png";
+// import image15 from "../../assets/home/categoriesImages/cardsinvite.jpg";
 
 import shaadiMobile from "../../assets/home/sliderImages/shaadiMobile.png";
 import shaadiTablet from "../../assets/home/sliderImages/shaadiTablet.png";
@@ -150,7 +150,7 @@ const images = [
 const Home = () => {
   const [showAll, setShowAll] = useState(false);
   const [hovered, setHovered] = useState(false);
-  const visibleCategories = showAll ? categories : categories.slice(0, 4);
+  const visibleCategories = showAll ? categories : categories.slice(0, 6);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -192,7 +192,7 @@ const Home = () => {
 
       {/* View All Button */}
       <div className="flex justify-end w-full items-center mb-4">
-        {!showAll && categories.length > 4 && (
+        {!showAll && categories.length > 6 && (
           <button
             className="browse-all-btn "
             onClick={() => setShowAll(true)}

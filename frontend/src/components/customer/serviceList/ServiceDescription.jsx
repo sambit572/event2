@@ -38,9 +38,7 @@ const ServiceDescription = ({ service }) => {
           <span className="originalPrice">₹{originalPrice}</span>
           <span className="discountPercent">{discountPercent}% off</span>
         </div>
-        <p className="paragraph">
-      {description}
-        </p>
+        <p className="paragraph">{description}</p>
       </Link>
       <div className="actionButtons">
         <button
