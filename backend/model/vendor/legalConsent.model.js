@@ -21,6 +21,13 @@ const consetSchema = new Schema({
     type: String,
     required: true,
   },
-});
+  version: {
+    type: String,
+    default: "1.0",
+  },
+},
+
+{ timestamps: true }
+);
 
 export const Consent = model("Consent", consetSchema);

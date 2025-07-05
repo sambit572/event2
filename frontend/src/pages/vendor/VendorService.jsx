@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef ,useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import "./VendorService.css";
 import StepProgress from "./StepProgress";
@@ -7,6 +7,20 @@ import axios from "axios";
 
 function VendorService({ currentStep }) {
   const navigate = useNavigate();
+  useEffect(() => {
+   
+    const checkIfServiceExists = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/category/VendorService');
+        if (response.data.exists) {
+          navigate('/vendor/payment-info');
+        }
+      } catch (error) {
+        console.error('Error checking service:', error);
+      }
+    };
+    checkIfServiceExists();
+  }, [navigate]);
 
   const steps = [
     { label: "Registration", subLabel: "Step 1", icon: "/verify.png" },
@@ -62,7 +76,7 @@ function VendorService({ currentStep }) {
   const handleImageUpload = (e) => {
     try {
       const newFiles = Array.from(e.target.files);
-      const valid = ["image/jpeg", "image/jpg", "image/png", "image/gif"];
+      const valid = ["image/jpeg", "image/jpg", "image/png", "image/gif","video/mp4", "video/avi", "video/mov", "video/wmv", "video/flv", "video/webm"];
       const max = 5 * 1024 * 1024;
 
       for (let f of newFiles) {
@@ -106,7 +120,7 @@ function VendorService({ currentStep }) {
 
   const handleNext = async () => {
     console.log("next button clicked");
-
+    
     if (!validateForm()) {
       console.log("form is not validated wrong");
       return;
@@ -128,7 +142,7 @@ function VendorService({ currentStep }) {
       formData.append("locationOffered", locationSearchTerm);
 
       selectedFiles.forEach((file) => {
-        formData.append("images", file);
+        formData.append("media", file);
       });
 
       formData.append("days", days);
@@ -144,9 +158,9 @@ function VendorService({ currentStep }) {
           },
         }
       );
-
+      
       console.log(response);
-
+      localStorage.setItem('step2Completed', 'true');//VendorService Step Completed 
       navigate("/vendor/payment-info");
     } catch (error) {
       console.error("Error submitting service:", error);
@@ -164,7 +178,7 @@ function VendorService({ currentStep }) {
 
     // 2. Check if at least one image is uploaded
     if (previewImages.length === 0) {
-      alert("Please upload at least one service image");
+      alert("Please upload at least one service image or video");
       return false;
     }
 
@@ -293,65 +307,65 @@ function VendorService({ currentStep }) {
 
             {/* Service Image Upload */}
             <div className="ServiceImageUploadPreview">
-              <label htmlFor="service-images">Upload Service Images *</label>
+              <label htmlFor="service-images">Upload Service Images/Videos *</label>
               <input
                 type="file"
                 id="service-images"
-                accept="image/*"
+                accept="image/*,video/*"
                 multiple
                 onChange={handleImageUpload}
                 ref={fileInputRef}
                 required
               />
               {previewImages.length > 0 && (
-                <div className="preview-container">
-                  <div className="main-preview">
-                    <img
-                      src={previewImages[selectedImageIndex]}
-                      alt="Selected Preview"
-                    />
-                  </div>
-                  <div className="thumbnail-preview">
-                    {previewImages.map((img, idx) => (
-                      <div key={idx} className="thumbnail-wrapper">
-                        <img
-                          src={img}
-                          alt={`Thumb-${idx}`}
-                          className={selectedImageIndex === idx ? "active" : ""}
-                          onClick={() => setSelectedImageIndex(idx)}
-                        />
-                        <span
-                          className="image-close"
-                          onClick={(e) => {
-                            e.stopPropagation(); // So thumbnail image click doesn't trigger
-                            handleDeleteImage(idx);
-                            const updatedPreviews = [...previewImages];
-                            const updatedFiles = [...selectedFiles];
-
-                            updatedPreviews.splice(idx, 1);
-                            updatedFiles.splice(idx, 1);
-
-                            let newSelectedIndex = selectedImageIndex;
-
-                            if (selectedImageIndex === idx) {
-                              newSelectedIndex =
-                                updatedPreviews.length > 0 ? 0 : -1;
-                            } else if (selectedImageIndex > idx) {
-                              newSelectedIndex = selectedImageIndex - 1;
-                            }
-
-                            setPreviewImages(updatedPreviews);
-                            setSelectedFiles(updatedFiles);
-                            setSelectedImageIndex(newSelectedIndex);
-                          }}
-                        >
-                          ×
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+  <div className="preview-container">
+    <div className="main-preview">
+      {selectedFiles[selectedImageIndex]?.type?.startsWith('video/') ? (
+        <video
+          src={previewImages[selectedImageIndex]}
+          controls
+          style={{ maxWidth: '100%', maxHeight: '300px' }}
+        />
+      ) : (
+        <img
+          src={previewImages[selectedImageIndex]}
+          alt="Selected Preview"
+        />
+      )}
+    </div>
+    <div className="thumbnail-preview">
+      {previewImages.map((media, idx) => (
+        <div key={idx} className="thumbnail-wrapper">
+          {selectedFiles[idx]?.type?.startsWith('video/') ? (
+            <video
+              src={media}
+              className={selectedImageIndex === idx ? "active" : ""}
+              onClick={() => setSelectedImageIndex(idx)}
+              style={{ width: '60px', height: '60px', objectFit: 'cover' }}
+              muted
+            />
+          ) : (
+            <img
+              src={media}
+              alt={`Thumb-${idx}`}
+              className={selectedImageIndex === idx ? "active" : ""}
+              onClick={() => setSelectedImageIndex(idx)}
+            />
+          )}
+          <span
+            className="image-close"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDeleteImage(idx);
+            }}
+          >
+            ×
+          </span>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
             </div>
 
             {/* Price Range */}

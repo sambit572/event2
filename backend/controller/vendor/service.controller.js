@@ -104,3 +104,18 @@ export const createService = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export const checkServiceExists = async (req, res) => {
+  try {
+    const existingService = await Service.findOne().sort({ createdAt: -1 });
+    
+    if (existingService) {
+      return res.status(200).json({ exists: true });
+    } else {
+      return res.status(200).json({ exists: false });
+    }
+  } catch (error) {
+    console.error("Error checking service:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
