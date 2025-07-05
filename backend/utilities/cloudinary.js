@@ -1,60 +1,63 @@
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
 
-// Cloudinary Configuration
+// ✅ Cloudinary Configuration
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Upload File to Cloudinary
+// ✅ Upload File to Cloudinary (returns result or null)
 const uploadOnCloudinary = async (localFilePath) => {
   try {
     if (!localFilePath) {
-      console.log("Error: LocalFilePath is missing");
+      console.log("❌ Error: localFilePath is missing");
       return null;
     }
 
-    const uploadResult = await cloudinary.uploader
-      .upload(localFilePath, {
-        resource_type: "auto",
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    const result = await cloudinary.uploader.upload(localFilePath, {
+      resource_type: "auto",
+      folder: "vendors", // 👈 saves it under vendors/filename
+    });
 
-    // Remove the locally saved temporary file after upload
+    // Delete local file after upload
     fs.unlinkSync(localFilePath);
-    return uploadResult;
-  } catch (error) {
-    console.error("Error during file upload:", error);
 
-    // Remove locally saved temporary file if upload failed
+    return result; // includes url, public_id etc.
+  } catch (error) {
+    console.error("❌ Error during upload:", error);
+
     if (fs.existsSync(localFilePath)) {
-      fs.unlinkSync(localFilePath);
+      fs.unlinkSync(localFilePath); // cleanup temp file on error
     }
+
     return null;
   }
 };
 
-// Delete File from Cloudinary
+// ✅ Delete from Cloudinary using full avatar URL
 const deleteFromCloudinary = async (avatarUrl) => {
   try {
     if (!avatarUrl) {
-      console.log("Error: avatarUrl is missing");
+      console.log("❌ Error: avatarUrl is missing");
       return null;
     }
 
-    // Extract the public_id from the avatar URL
-    const publicId = avatarUrl.split("/").pop().split(".")[0]; // Example: "image_name.jpg"
+    // Extract vendor public_id from Cloudinary URL
+    // Example: https://res.cloudinary.com/<cloud_name>/image/upload/v123456/vendors/abc123.jpg
+    const parts = avatarUrl.split("/upload/")[1];
+    const publicIdWithExtension = parts.split(".")[0]; // vendors/abc123
 
-    await cloudinary.uploader.destroy(publicId);
-    console.log(`Deleted image with public_id: ${publicId}`);
+    await cloudinary.uploader.destroy(publicIdWithExtension);
+    console.log(`✅ Deleted image: ${publicIdWithExtension}`);
+
+    return { success: true };
   } catch (error) {
-    console.error("Error while deleting image from Cloudinary:", error);
+    console.error("❌ Cloudinary deletion error:", error);
+    return { success: false, error };
   }
 };
 
-// Export both functions
+// ✅ Exports
 export { uploadOnCloudinary, deleteFromCloudinary };

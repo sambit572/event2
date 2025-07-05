@@ -14,6 +14,8 @@ import {
   vendorSilentLogin,
   checkVendorEmailStatus,
   getVendorProfile,
+  updateVendorProfilePicture,
+  
 } from "../../controller/vendor/vendor.controller.js";
 
 // Service Controller
@@ -82,5 +84,16 @@ vendor_router.put(
   updateLegalConsent
 );
 vendor_router.delete("/legal-consent/:vendorId", deleteLegalConsent);
+
+// --- UPLOAD PROFILE PICTURE ROUTE (NEW) --- //
+vendor_router.post(
+  "/upload-profile",
+  verifyVendorJwt,
+  upload.single("profilePicture"),
+  updateVendorProfilePicture
+  
+);
+
+
 
 export { vendor_router };

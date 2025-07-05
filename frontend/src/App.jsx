@@ -57,6 +57,13 @@ const App = () => {
 
   const dispatch = useDispatch();
 
+    useEffect(() => {
+    const storedVendor = localStorage.getItem("vendor");
+    if (storedVendor) {
+      dispatch(setVendor(JSON.parse(storedVendor)));
+    }
+  }, []); 
+
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -79,12 +86,14 @@ const App = () => {
 useEffect(() => {
   const checkVendorAuth = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/vendor/me", {
+      const res = await axios.get("http://localhost:8000/vendors/me", {
         withCredentials: true,
       });
 
       console.log("Vendor data received:", res.data.data);
       dispatch(setVendor(res.data.data));
+
+      
     } catch (err) {
       console.error("Vendor auth check failed:", err.message);
     }

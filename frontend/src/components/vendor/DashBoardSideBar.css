@@ -279,3 +279,59 @@ color: #ffc107;
     width: 63vw;
   }
 }
+.upload-btn {
+  margin-top: 50px;
+  margin-bottom: 5px;
+  padding: 6px 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.upload-btn:hover {
+  background-color: #0056b3;
+}
+.remove-btn {
+  margin-top: 10px;
+  margin-bottom: 25px;
+  padding: 6px 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.profile-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.upload-btn,
+.remove-btn {
+  padding: 6px 14px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.upload-btn:hover,
+.remove-btn:hover {
+  background-color: #0056b3;
+}
+
+.upload-btn,
+.remove-btn {
+  font-size: 13px;
+  padding: 5px 10px;
+}
