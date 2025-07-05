@@ -32,9 +32,12 @@ import { clearUser } from "../../redux/UserSlice.js";
 import { clearVendor } from "../../redux/VendorSlice.js";
 import { BACKEND_URL } from "../../utils/constant.js";
 
+
 const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const [currentUser, setCurrentUser] = useState(null);
 
   const [userFirstName, setUserFirstName] = useState(null);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
@@ -55,6 +58,29 @@ const Navbar = () => {
       inputRef.current.focus();
     }
   };
+  const fetchUserProfile = async () => {
+    try {
+      const res = await axios.get("http://localhost:8000/user/profile", {
+        withCredentials: true,
+      });
+
+
+      if (res.data.success) {
+        setCurrentUser(res.data.data);
+      } else {
+        setCurrentUser(null);
+      }
+    } catch (err) {
+      console.error("Failed to fetch user profile", err);
+      setCurrentUser(null);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserProfile();
+  }, []);
+
+
 
   const handleHomeClick = () => {
     if (location.pathname === "/") {
@@ -219,7 +245,7 @@ const Navbar = () => {
                   </>
                 ) : (
                   <>
-                    <UserProfileIcon />
+                    <UserProfileIcon currentUser={currentUser} />
                     <span className="font-medium">{`Hi, ${userFirstName}`}</span>
                   </>
                 )}
