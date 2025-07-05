@@ -377,7 +377,7 @@
 }
 @media (max-width: 820px) {
   .search-and-nav-icons-container {
-    width: calc(100% - 181px - 20px);
+    width: calc(100% - 20px - 20px);
   }
   .search-bar {
     margin-left: 0px;

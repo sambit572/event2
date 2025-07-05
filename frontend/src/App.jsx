@@ -35,6 +35,8 @@ import UserDetails from "./pages/customer/UserDetails.jsx";
 import DashboardServices from "./components/vendor/DashboardServices.jsx";
 import PopUp from "./components/customer/CustomerNegotiationModal";
 
+import VendorLogin from "./pages/vendor/VendorLogin.jsx";
+
 // Vendor Pages
 import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
 
@@ -181,6 +183,7 @@ useEffect(() => {
           />
           <Route path="/vendor/thank-you" element={<VendorThankYou />} />
           <Route path="/dashboard" element={<DashBoardMain />} />
+          <Route path="/vendor-login" element={<VendorLogin/>} />
 
           {/* Auth Routes */}
           <Route

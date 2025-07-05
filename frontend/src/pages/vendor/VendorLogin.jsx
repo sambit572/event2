@@ -10,9 +10,10 @@ import axios from "axios";
 import "../common/LoginRegister.css";
 import { useDispatch } from "react-redux";
 import { setVendor } from "../../redux/VendorSlice.js";
+import { BACKEND_URL } from "../../utils/constant.js";
 
 const VendorLogin = ({ onClose }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [step, setStep] = useState("form"); // 'form', 'otp', 'success'
   const [showSuccessIcon, setShowSuccessIcon] = useState(false);
@@ -87,7 +88,7 @@ const VendorLogin = ({ onClose }) => {
 
     try {
       const res = await axios.post(
-        "http://localhost:8000/vendors/login",
+        `${BACKEND_URL}/vendors/login`,
         {
           email: formData.email,
           phoneNo: formData.phoneNo,
@@ -96,9 +97,9 @@ const VendorLogin = ({ onClose }) => {
         { withCredentials: true }
       );
 
-      console.log(res.data.data)
+      console.log(res.data.data);
       const { vendor } = res.data.data;
-      dispatch(setVendor(vendor))
+      dispatch(setVendor(vendor));
       const fullName = vendor.fullName || "";
       const firstName = fullName.split(" ")[0];
       const firstLetter = firstName?.charAt(0).toUpperCase() || "";
