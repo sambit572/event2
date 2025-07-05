@@ -125,9 +125,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
     <div className="navbar">
       {/* Logo */}
       <div className="logo">
-        <span onClick={handleHomeClick}>
-          <img src={logo9} alt="logo" />
-        </span>
+        <span onClick={handleHomeClick}>Eventsbridge</span>
       </div>
 
       <div className="search-and-nav-icons-container ">
@@ -147,7 +145,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
 
         {/* Nav Icons */}
         <div className="nav-icons">
-
           {/* Profile Dropdown */}
           <div className="nav-item profile-dropdown-container" ref={profileRef}>
             <div className="flex items-center gap-2 text-gray-700 cursor-pointer login">
@@ -230,7 +227,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
               </div>
             )}
           </div>
-
 
           {/* Become Vendor */}
           <div
