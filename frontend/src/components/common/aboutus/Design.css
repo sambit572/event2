@@ -27,7 +27,7 @@
   background-color: #fff;
   border-radius: 16px;
   border: #000 solid 2px;
-
+  padding: 20px;
   width: 140px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   font-size: 0.95rem;
@@ -41,40 +41,16 @@
 }
 
 /* Left side diagonal */
-.features-left .feature-1 {
-  top: 0;
-  left: -400px;
-}
-.features-left .feature-2 {
-  top: 130px;
-  left: -190px;
-}
-.features-left .feature-3 {
-  top: 160px;
-  left: -400px;
-}
-.features-left .feature-4 {
-  top: 290px;
-  left: -190px;
-}
+.features-left .feature-1 { top: 0; left: -400px; }
+.features-left .feature-2 { top: 130px; left: -190px; }
+.features-left .feature-3 { top: 160px; left: -400px; }
+.features-left .feature-4 { top: 290px; left: -190px; }
 
 /* Right side diagonal */
-.features-right .feature-1 {
-  top: 0;
-  right: -400px;
-}
-.features-right .feature-2 {
-  top: 130px;
-  right: -190px;
-}
-.features-right .feature-3 {
-  top: 150px;
-  right: -400px;
-}
-.features-right .feature-4 {
-  top: 290px;
-  right: -190px;
-}
+.features-right .feature-1 { top: 0; right: -400px; }
+.features-right .feature-2 { top: 130px; right: -190px; }
+.features-right .feature-3 { top: 150px; right: -400px; }
+.features-right .feature-4 { top: 290px; right: -190px; }
 
 /* Phone Styling */
 .phone-wrapper {
@@ -140,87 +116,8 @@
   transform: scale(1.05);
 }
 
+
 /* Mobile Responsive */
-
-@media screen and (max-width: 1180px) {
-  /* Left side diagonal */
-  .features-left .feature-1 {
-    top: 0;
-    left: -350px;
-  }
-  .features-left .feature-2 {
-    top: 130px;
-    left: -150px;
-  }
-  .features-left .feature-3 {
-    top: 160px;
-    left: -350px;
-  }
-  .features-left .feature-4 {
-    top: 290px;
-    left: -150px;
-  }
-
-  /* Right side diagonal */
-  .features-right .feature-1 {
-    top: 0;
-    right: -350px;
-  }
-  .features-right .feature-2 {
-    top: 130px;
-    right: -150px;
-  }
-  .features-right .feature-3 {
-    top: 150px;
-    right: -350px;
-  }
-  .features-right .feature-4 {
-    top: 290px;
-    right: -150px;
-  }
-}
-@media screen and (max-width: 960px) {
-  /* Left side diagonal */
-  .features-left .feature-1 {
-    top: 0;
-    left: -250px;
-  }
-  .features-left .feature-2 {
-    top: 130px;
-    left: -100px;
-  }
-  .features-left .feature-3 {
-    top: 160px;
-    left: -250px;
-  }
-  .features-left .feature-4 {
-    top: 290px;
-    left: -100px;
-  }
-
-  /* Right side diagonal */
-  .features-right .feature-1 {
-    top: 0;
-    right: -250px;
-  }
-  .features-right .feature-2 {
-    top: 130px;
-    right: -100px;
-  }
-  .features-right .feature-3 {
-    top: 150px;
-    right: -250px;
-  }
-  .features-right .feature-4 {
-    top: 290px;
-    right: -100px;
-  }
-  .phone-wrapper {
-    width: 160px;
-    height: 320px;
-    margin: 20px;
-  }
-}
 
 @media screen and (max-width: 820px) {
   .features-diagonal-layout {

@@ -11,8 +11,8 @@ const BookingPopup = ({ isOpen, onClose, booking }) => {
   return (
     <div className="booking-popup-box inline-popup">
       <button className="close-btn" onClick={onClose}>×</button>
-      <h2 className="popup-titles">Booking Details</h2>
-      <div className="popup-contents">
+      <h2 className="popup-title">Booking Details</h2>
+      <div className="popup-content">
         <div className="popup-row"><strong>Booked By:</strong> {booking.bookedBy}</div>
         <div className="popup-row"><strong>Event Location:</strong> {booking.location}</div>
         <div className="popup-row"><strong>Event Date:</strong> {booking.date}</div>

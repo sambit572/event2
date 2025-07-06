@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 // Core Components
 import Navbar from "./components/common/Navbar";
@@ -8,7 +9,7 @@ import Chatbot from "./components/common/Chatbot";
 
 // Auth Modals
 import Login from "./pages/common/Login.jsx";
-import Register from "./pages/common/Register.jsx";
+import Register from "./pages/common/Resgister.jsx";
 
 // Customer Pages
 import Home from "./pages/customer/Home";
@@ -22,6 +23,7 @@ import VendorPayment from "./pages/vendor/VendorPayment";
 import VendorThankYou from "./pages/vendor/VendorThankYou";
 import VendorRegistration from "./pages/vendor/VendorRegistration";
 import VendorService from "./pages/vendor/VendorService";
+import VendorLogin from "./pages/vendor/VendorLogin.jsx";
 
 import AboutUs from "./pages/common/AboutUs";
 import HelpUs from "./pages/common/HelpUs";
@@ -41,64 +43,75 @@ import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
 // Common
 import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
-import ScrollToTop from "./components/common/ScrollToTop";
-import BackToTop from "./pages/common/BackToTop";
-import FaqSection from "./components/customer/Home/FaqSection.jsx";
+import { useDispatch } from "react-redux";
+import axios from "axios";
+import { setUser } from "./redux/UserSlice.js";
+import { setVendor } from "./redux/VendorSlice.js";
 
 const App = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Modal states
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showRegisterModal, setShowRegisterModal] = useState(false);
-
   // Hide Footer on specific pages
-  const pagesWithoutFooter = [
-    "/vendor/thank-you",
-    "/admin",
-    "/dashboard",
-    "/profile",
-  ];
+  const pagesWithoutFooter = ["/vendor/thank-you", "/admin", "/dashboard"];
 
-  const handleOpenLogin = () => {
-    setShowLoginModal(true);
-    setShowRegisterModal(false);
-    document.body.classList.add("modal-open");
-  };
+  const dispatch = useDispatch();
 
-  const handleOpenRegister = () => {
-    setShowRegisterModal(true);
-    setShowLoginModal(false);
-    document.body.classList.add("modal-open");
-  };
+  useEffect(() => {
+    const storedVendor = localStorage.getItem("vendor");
+    if (storedVendor) {
+      dispatch(setVendor(JSON.parse(storedVendor)));
+    }
+  }, []);
 
-  const handleCloseModals = () => {
-    setShowLoginModal(false);
-    setShowRegisterModal(false);
-    // Re-enable body scroll
-    document.body.classList.remove("modal-open");
-  };
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await axios.get("${BACKEND_URL}/user/get-email", {
+          withCredentials: true,
+        });
+
+        // this specific route provide whole user object so nothing to worry
+
+        console.log("in app.jsx user dispatched:", res.data.data);
+        dispatch(setUser(res.data.data));
+      } catch (err) {
+        console.error("Auth check failed:", err.message);
+      }
+    };
+    checkAuth();
+  }, []);
+
+  useEffect(() => {
+    const checkVendorAuth = async () => {
+      try {
+        const res = await axios.get("${BACKEND_URL}/vendors/me", {
+          withCredentials: true,
+        });
+
+        console.log("Vendor data received:", res.data.data);
+        dispatch(setVendor(res.data.data));
+      } catch (err) {
+        console.error("Vendor auth check failed:", err.message);
+      }
+    };
+
+    checkVendorAuth();
+  }, []);
 
   return (
     <>
       {/* Conditionally render Navbar */}
-      {location.pathname !== "/admin" && (
-        <Navbar
-          onOpenLogin={handleOpenLogin}
-          onOpenRegister={handleOpenRegister}
-        />
-      )}
+      {location.pathname !== "/admin" && <Navbar />}
 
-      <ScrollToTop />
       <main>
         <Routes>
           {/* Customer Routes */}
           <Route path="/" element={<Home />} />
-          <Route path="/category/:categoryId" element={<ServiceList />} />
-          {/* <Route path="/categories" element={<CategoryCard />}></Route> */}
+          <Route path="/category" element={<ServiceList />} />
+          <Route path="/categories" element={<CategoryCard />}></Route>
           <Route path="/reviews" element={<ReviewSlider />} />
-          <Route path="/service/:serviceId" element={<ServiceDetails />} />
+          <Route path="/category/service" element={<ServiceDetails />} />
           <Route
             path="/wishlist"
             element={
@@ -123,20 +136,48 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-          <Route path="/dashboardservices" element={<DashboardServices />} />
+
+          <Route
+            path="/dashboardservices"
+            element={
+              <ProtectedRoute>
+                <DashboardServices />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Vendor Routes */}
-          <Route path="/vendor/register" element={<VendorRegistration />} />
-          {/* <Route path="/category/VendorService" element={<VendorService />} /> */}
+
+          <Route
+            path="/vendor/register"
+            element={
+              <ProtectedRoute>
+                <VendorRegistration />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route path="/category/VendorService" element={<VendorService />} />
           <Route path="/vendor/payment-info" element={<VendorPayment />} />
           <Route
             path="/vendor/legal-consent"
             element={<VendorLegalConsent />}
           />
           <Route path="/vendor/thank-you" element={<VendorThankYou />} />
-          <Route path="/dashboard" element={<DashBoardMain />} />
 
-          {/* Password Reset Routes */}
+          <Route path="/dashboard" element={<DashBoardMain />} />
+          <Route path="/vendor-login" element={<VendorLogin />} />
+
+          {/* Auth Routes */}
+          <Route
+            path="/login"
+            element={<Login onClose={() => navigate(-1)} />}
+          />
+
+          <Route
+            path="/register"
+            element={<Register onClose={() => navigate(-1)} />}
+          />
           <Route path="/forgot-password" element={<ForgotPass />} />
           <Route
             path="/reset-password/:resetToken"
@@ -147,34 +188,34 @@ const App = () => {
           <Route path="/about_us" element={<AboutUs />} />
           <Route path="/help_us" element={<HelpUs />} />
           <Route path="/help-Center" element={<HelpCenter />} />
-          <Route path="/faqs" element={  <FaqSection />}/>
           <Route path="/Wishlist" element={<Wishlist />}></Route>
           <Route path="/profile" element={<Profile />}></Route>
           <Route path="/userdetails" element={<UserDetails />}></Route>
           <Route path="/pop-up" element={<PopUp />}></Route>
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/vendor-login" element={<VendorLogin />} />
         </Routes>
       </main>
-      <BackToTop />
+
       <Chatbot />
 
       {/* Conditionally render Footer */}
       {!pagesWithoutFooter.includes(location.pathname) && <Footer />}
-
-      {/* Auth Modals */}
-      {showLoginModal && (
-        <Login
-          onClose={handleCloseModals}
-          onSwitchToRegister={handleOpenRegister}
-        />
-      )}
-
-      {showRegisterModal && (
-        <Register
-          onClose={handleCloseModals}
-          onSwitchToLogin={handleOpenLogin}
-        />
-      )}
+      <Toaster
+        toastOptions={{
+          duration: 5000,
+          style: {
+            padding: "16px",
+            color: "#fff",
+            background: "#1f2937",
+            borderRadius: "8px",
+            position: "relative",
+            overflow: "hidden",
+          },
+        }}
+        position="top-right"
+        reverseOrder={false}
+      />
     </>
   );
 };

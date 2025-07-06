@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import './ResetPassword.css';
+import "./ResetPassword.css";
 
 const ResetPassword = () => {
   const { resetToken } = useParams();
@@ -14,7 +14,7 @@ const ResetPassword = () => {
     if (confirmPassword === newPassword) {
       try {
         const response = await axios.post(
-          `http://localhost:8000/user/reset-password/${resetToken}`,
+          `${BACKEND_URL}/user/reset-password/${resetToken}`,
           { newPassword }
         );
 
@@ -40,7 +40,9 @@ const ResetPassword = () => {
     <div className="headpart">
       <form onSubmit={handleResetPassword} className="formpart">
         <h2 className="subhead">New Password</h2>
-        <p className="subheadingRP">Please create a new password that you do not use on any other website.</p>
+        <p className="subheadingRP">
+          Please create a new password that you do not use on any other website.
+        </p>
         <input
           type="password"
           placeholder="Create new password"

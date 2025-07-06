@@ -69,6 +69,23 @@
   transition: transform 0.3s ease;
 }
 
+.courseInfo {
+  font-size: 14px;
+  color: #555;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+
+.courseInfo::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background: linear-gradient(to right, #e91e63, #800080);
+  border-radius: 50%;
+}
+
 /* Gradient Label "EventsBridge" */
 .brandLabel {
   position: absolute;
@@ -86,6 +103,29 @@
   text-transform: uppercase;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Badge like NEW or POPULAR */
+.courseTag {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 50px;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  text-transform: uppercase;
+  z-index: 3;
+}
+
+.courseTag.new {
+  background: linear-gradient(to right, #00c853, #64dd17);
+}
+
+.courseTag.popular {
+  background: linear-gradient(to right, #ff6f00, #ff9800);
 }
 
 .taglineOverlay {

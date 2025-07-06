@@ -168,10 +168,10 @@
 .viewBtns.wishlisted .wishIcon {
   color: red;
 }
-.people-also-book {
-  font-weight: 700;
-  font-size: 20px;
-  color: #001f3f;
+.people-also-book{
+font-weight: 700;
+font-size: 20px;
+color: #001f3f;
 }
 .heartIcon {
   margin-top: 2px;
@@ -245,7 +245,6 @@
 
 /* Similar Service Section */
 .view-dj-section {
-  width: 100%;
   overflow: hidden;
 
   padding: 10px;
@@ -279,21 +278,11 @@
   }
 }
 
-@media (max-width: 420px) {
-  .viewBtns {
-    width: 130px;
-    padding: 4px 8px;
-  }
-  .buynow {
-    padding: 4px 8px;
-    width: 130px;
-  }
-}
 @media (max-width: 380px) {
-  .buttons {
+  .buttons{
     gap: 8px;
   }
-  .buynow {
+  .buynow{
     padding: 4px 8px;
     width: 160px;
   }

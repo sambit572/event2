@@ -60,7 +60,7 @@ const Filter = () => {
         className="filter-toggle-btn"
         onClick={() => setShowFilter(!showFilter)}
       >
-        {!showFilter && <IoFilterOutline className="filter-icon" />}
+         {!showFilter && <IoFilterOutline className="filter-icon" />}
         <span className="filter-text">{showFilter ? "Close" : "Filters"}</span>
         {showFilter && <RxCross2 className="close-icon" />}
       </button>
@@ -100,7 +100,7 @@ const Filter = () => {
               />
             </div>
           </div>
-          {/* <hr className="line" /> */}
+          <hr className="line" />
           <div>
             <h4 className="head4">Customer Rating</h4>
             {rating.map((rating) => (
@@ -116,7 +116,7 @@ const Filter = () => {
               </div>
             ))}
           </div>
-          {/* <hr className="line" /> */}
+          <hr className="line" />
 
           <div className="filter-section">
             <h4 className="l">Location</h4>
@@ -163,7 +163,7 @@ const Filter = () => {
               </div>
             )}
           </div>
-          {/* <hr className="line" /> */}
+          <hr className="line" />
           <div>
             <h4 className="head4">Date</h4>
             <input type="date" className="dateFilter" />

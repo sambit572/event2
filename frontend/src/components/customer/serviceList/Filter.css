@@ -190,7 +190,7 @@ input[type="range"].thumb-right {
 
 .filter-toggle-btn {
   display: none;
-  position: absolute;
+  position: fixed;
   top: 80px;
   right: 25px;
   z-index: 1001;
@@ -239,7 +239,6 @@ input[type="range"].thumb-right {
   }
 
   .filterBox.show {
-    z-index: 20;
     transform: translateX(0%);
   }
 
@@ -252,11 +251,11 @@ input[type="range"].thumb-right {
     height: auto;
     border: none;
     box-shadow: none;
-    margin-top: 80px;
+    margin-top: 60px;
   }
   .heading4 {
-    margin-top: 45px;
-  }
+  margin-top: 45px;
+}
 }
 
 @media screen and (max-width: 768px) {
@@ -286,26 +285,17 @@ input[type="range"].thumb-right {
   }
 
   .filter {
-    margin-top: 90px;
-  }
-}
-@media screen and (max-width: 680px) {
-  .filter-toggle-btn {
-    top: 60px;
-
-    right: 20px;
-  }
-  .filter {
+    width: 100%;
+    height: auto;
+    border: none;
+    box-shadow: none;
     margin-top: 60px;
   }
 }
-@media screen and (max-width: 460px) {
+@media screen and (max-width: 440px) {
   .filter-toggle-btn {
-    top: 70px;
+    top: 110px;
 
     right: 20px;
-  }
-  .filter {
-    margin-top: 70px;
   }
 }

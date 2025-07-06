@@ -8,8 +8,11 @@ import PasswordInput from "../../utils/PasswordInput.jsx";
 import SuccessBlock from "./SuccessBlock.jsx";
 import axios from "axios";
 import "./LoginRegister.css";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../redux/UserSlice.js";
 
-const Login = ({ onClose, onSwitchToRegister }) => {
+const Login = ({ onClose }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [step, setStep] = useState("form"); // 'form', 'otp', 'success'
   const [showSuccessIcon, setShowSuccessIcon] = useState(false);
@@ -84,7 +87,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
     try {
       const res = await axios.post(
-        "http://localhost:8000/user/login",
+        "${BACKEND_URL}/user/login",
         {
           email: formData.email,
           phoneNo: formData.phoneNo,
@@ -94,10 +97,21 @@ const Login = ({ onClose, onSwitchToRegister }) => {
       );
 
       const { user } = res.data.data;
-      localStorage.setItem("currentlyLoggedIn", "true");
-      localStorage.setItem("userFirstName", user.fullName.split(" ")[0]);
-      window.dispatchEvent(new Event("userLoggedIn"));
+      dispatch(setUser(user));
+      const fullName = user.fullName || "";
+      const firstName = fullName.split(" ")[0];
+      const firstLetter = firstName?.charAt(0).toUpperCase() || "";
+      const profilePic = user.profilePic || "";
 
+      localStorage.setItem("currentlyLoggedIn", "true");
+      localStorage.setItem("userFullName", fullName);
+      localStorage.setItem("userFirstName", firstName);
+      localStorage.setItem("userInitial", firstLetter);
+      if (profilePic) {
+        localStorage.setItem("userProfilePic", profilePic);
+      }
+
+      window.dispatchEvent(new Event("userLoggedIn"));
       setStep("success");
     } catch (err) {
       const msg = err.response?.data?.message || err.message;
@@ -112,7 +126,6 @@ const Login = ({ onClose, onSwitchToRegister }) => {
   const renderStep = () => {
     if (step === "success")
       return <SuccessBlock showSuccessIcon={showSuccessIcon} />;
-
     if (step === "otp") return <OTPVerification setStep={setStep} />;
 
     return (
@@ -146,7 +159,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
           minLength={8}
         />
 
-        <div className="Login-forget-password-link mb-2">
+        <div className="Login-forget-password-link">
           <a href="/forgot-password">Forgot your password?</a>
         </div>
 
@@ -156,8 +169,8 @@ const Login = ({ onClose, onSwitchToRegister }) => {
         </button>
 
         <p className="signup-text">
-          Don't have an account?{" "}
-          <span className="login-link" onClick={onSwitchToRegister}>
+          Don’t have an account?{" "}
+          <span className="login-link" onClick={() => navigate("/register")}>
             Sign Up
           </span>
         </p>
@@ -183,7 +196,6 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
 Login.propTypes = {
   onClose: PropTypes.func,
-  onSwitchToRegister: PropTypes.func,
 };
 
 export default Login;

@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import PropTypes from "prop-types";
 import UserProfileIcon from "../../pages/common/UserProfileIcon.jsx";
+import toast from "react-hot-toast";
+
 import "./Navbar.css";
 import { CgProfile } from "react-icons/cg";
+
 import {
   FaSearch,
   FaUser,
@@ -15,25 +17,38 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 import { FcAbout } from "react-icons/fc";
-import { MdMiscellaneousServices, MdReviews } from "react-icons/md";
 import axios from "axios";
-import { useNavigate, Navigate, useLocation } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import ReviewSlider from "../customer/Home/ReviewSlider.jsx";
 import ImageSlider from "./../customer/Home/ImageSlider";
-import logo9 from "../../assets/logo9.png";
+import logo from "../../assets/logo.png";
+import {
+  attemptVendorSilentLogin,
+  checkVendorEmailStatus,
+} from "../../utils/VendorAuth.jsx";
 
-const Navbar = ({ onOpenLogin, onOpenRegister }) => {
+import { useDispatch, useSelector } from "react-redux";
+import { clearUser } from "../../redux/UserSlice.js";
+import { clearVendor } from "../../redux/VendorSlice.js";
+import { BACKEND_URL } from "../../utils/constant.js";
+
+const Navbar = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
+
+  const [currentUser, setCurrentUser] = useState(null);
+
   const [userFirstName, setUserFirstName] = useState(null);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showEllipsisDropdown, setShowEllipsisDropdown] = useState(false);
+  const [showVendorDropdown, setShowVendorDropdown] = useState(false);
+  const [VendorFirstName, setVendorFirstName] = useState(null);
 
   const [searchInput, setSearchInput] = useState("");
 
   const profileRef = useRef(null);
   const ellipsisRef = useRef(null);
-
+  const vendorRef = useRef(null);
   const inputRef = useRef(null);
 
   const handleSearchicon = (e) => {
@@ -42,6 +57,26 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
       inputRef.current.focus();
     }
   };
+  const fetchUserProfile = async () => {
+    try {
+      const res = await axios.get("${BACKEND_URL}/user/profile", {
+        withCredentials: true,
+      });
+
+      if (res.data.success) {
+        setCurrentUser(res.data.data);
+      } else {
+        setCurrentUser(null);
+      }
+    } catch (err) {
+      console.error("Failed to fetch user profile", err);
+      setCurrentUser(null);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserProfile();
+  }, []);
 
   const handleHomeClick = () => {
     if (location.pathname === "/") {
@@ -65,6 +100,28 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
       localStorage.removeItem("userFirstName");
       localStorage.removeItem("currentlyLoggedIn");
       setUserFirstName(null);
+
+      dispatch(clearUser());
+      navigate("/", { replace: true });
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
+  };
+
+  const vendorLogout = async (req, res) => {
+    try {
+      console.log("Logging out vendor...");
+      await axios.post(
+        "http://localhost:8000/vendors/logout",
+        {},
+        { withCredentials: true }
+      );
+      localStorage.removeItem("VendorFullName");
+      localStorage.removeItem("VendorFirstName");
+      localStorage.removeItem("VendorInitial");
+      localStorage.removeItem("VendorCurrentlyLoggedIn");
+      setVendorFirstName(null);
+      dispatch(clearVendor());
       navigate("/", { replace: true });
     } catch (error) {
       console.error("Logout failed", error);
@@ -75,22 +132,40 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
     setSearchInput("");
   };
 
-  // Handle login click - close dropdown and open modal
   const handleLoginClick = () => {
     setShowProfileDropdown(false);
     onOpenLogin();
   };
 
-  // Handle signup click - close dropdown and open modal
   const handleSignupClick = () => {
     setShowProfileDropdown(false);
     onOpenRegister();
   };
 
-  // Handle vendor click - open login modal if not logged in
-  const handleVendorClick = () => {
+  const handleVendorClick = async () => {
+    console.log("clicked vendor button ...");
     if (!userFirstName) {
-      onOpenLogin();
+      onOpenLogin(); // force user to login first
+      return;
+    }
+
+    // 1. Try silent login with vendor token
+    const silentRes = await attemptVendorSilentLogin();
+    if (silentRes.success) {
+      navigate("/dashboard");
+      return;
+    }
+
+    // 2. Check email status for current user
+    const response = await axios.get(`${BACKEND_URL}/user/get-email`, {
+      withCredentials: true,
+    });
+    const emailStatus = await checkVendorEmailStatus(response.data.data.email);
+
+    console.log("Email status from backend:", emailStatus);
+
+    if (emailStatus.existsInVendor) {
+      navigate("/vendor-login"); // already a vendor
     } else {
       navigate("/vendor/register");
     }
@@ -104,6 +179,9 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
       if (ellipsisRef.current && !ellipsisRef.current.contains(event.target)) {
         setShowEllipsisDropdown(false);
       }
+      if (vendorRef.current && !vendorRef.current.contains(event.target)) {
+        setShowVendorDropdown(false);
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -113,7 +191,9 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
   useEffect(() => {
     const updateName = () => {
       const storedName = localStorage.getItem("userFirstName");
+      const storedVendor = localStorage.getItem("VendorFirstName");
       setUserFirstName(storedName);
+      setVendorFirstName(storedVendor);
     };
 
     updateName();
@@ -125,7 +205,9 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
     <div className="navbar">
       {/* Logo */}
       <div className="logo">
-        <span onClick={handleHomeClick}>Eventsbridge</span>
+        <span onClick={handleHomeClick}>
+          <img src={logo} alt="logo" />
+        </span>
       </div>
 
       <div className="search-and-nav-icons-container ">
@@ -149,8 +231,8 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
           <div className="nav-item profile-dropdown-container" ref={profileRef}>
             <div className="flex items-center gap-2 text-gray-700 cursor-pointer login">
               <span
-                className="flex items-center gap-2 max-[1024px]:flex-row max-[1024px]:text-[12px] max-[820px]:text-[11px]"
-                onClick={!userFirstName ? handleLoginClick : undefined}
+                className="flex items-center gap-2 max-[1024px]:flex-col max-[1024px]:text-[12px] max-[820px]:text-[11px]"
+                onClick={!userFirstName ? () => navigate("/login") : undefined}
               >
                 {!userFirstName ? (
                   <>
@@ -159,8 +241,8 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
                   </>
                 ) : (
                   <>
-                    <UserProfileIcon />
-                    <span className="font-medium">{userFirstName}</span>
+                    <UserProfileIcon currentUser={currentUser} />
+                    <span className="font-medium">{`Hi, ${userFirstName}`}</span>
                   </>
                 )}
               </span>
@@ -187,7 +269,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
                       <span className="text-[#001f3f]">New Customer?</span>
                       <button
                         className="bg-blue-500 hover:bg-blue-600"
-                        onClick={handleSignupClick}
+                        onClick={() => navigate("/register")}
                       >
                         Sign Up
                       </button>
@@ -197,7 +279,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
                 ) : (
                   <>
                     <div
-                      className="flex flex-row gap-1 mb-[10px] text-[#001f3f] hover:text-[#022f5d] hover:font-bold text-[15px] cursor-pointer"
+                      className="flex flex-row gap-1 mb-[10px] text-[#001f3f] hover:text-[#022f5d] hover:font-bold text-[15px]"
                       onClick={() => navigate("/profile")}
                     >
                       <FaUser style={{ marginRight: "8px" }} />
@@ -229,14 +311,141 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
           </div>
 
           {/* Become Vendor */}
-          <div
-            className="nav-items  max-[1024px]:flex-row max-[1024px]:text-[12px] max-[820px]:text-[11px]"
-            onClick={handleVendorClick}
-          >
-            <FaStore className="icons max-[1024px]:h-[18px] max-[1024px]:w-[18px]  max-[820px]:h-[15px]" />
-            <span className="font-medium text-[#001F3F] hover:text-white max-[1024px]:mt-[6px] max-[820px]:text-[11px] max-[820px]:w-max">
-              Be a Vendor
-            </span>
+          <div className="nav-item profile-dropdown-container" ref={vendorRef}>
+            <div className="nav-items max-[1024px]:flex-col max-[1024px]:text-[12px] max-[820px]:text-[11px] cursor-pointer">
+              <div className="flex items-center gap-2">
+                <FaStore
+                  className="icons max-[1024px]:h-[18px] max-[1024px]:w-[18px] max-[820px]:h-[15px]"
+                  onClick={handleVendorClick}
+                />
+                <span
+                  className="text-[#001F3F] hover:text-white font-semibold max-[1024px]:mt-[6px] max-[820px]:text-[11px] max-[820px]:w-max"
+                  onClick={() => {
+                    if (!userFirstName) {
+                      const toastId = toast.custom((t) => (
+                        <div
+                          className={`${
+                            t.visible ? "animate-enter" : "animate-leave"
+                          } bg-white text-black px-4 py-3 rounded shadow-lg relative mt-20`}
+                        >
+                          <span>Please login as a user first.</span>
+                          <div className="toast-progress"></div>
+                        </div>
+                      ));
+                      setTimeout(() => toast.dismiss(toastId), 2000);
+                    } else {
+                      handleVendorClick(); // 🔥 Always trigger, regardless of VendorFirstName
+                    }
+                  }}
+                >
+                  {!VendorFirstName ? (
+                    <>
+                      <span className="font-medium">Be a Vendor</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="font-medium">{VendorFirstName}</span>
+                    </>
+                  )}
+                </span>
+
+                <span onClick={() => setShowVendorDropdown((prev) => !prev)}>
+                  {showVendorDropdown ? (
+                    <FaChevronUp className="text-sm" />
+                  ) : (
+                    <FaChevronDown className="text-sm" />
+                  )}
+                </span>
+              </div>
+            </div>
+
+            {showVendorDropdown && (
+              <div className="dropdown-menu profile-menu">
+                <h4 className="login-h4">Welcome Vendor</h4>
+                <p className="login-p">Access your vendor tools and profile</p>
+                <div className="dropdown-header">
+                  <span className="text-[#001f3f]">New Vendor?</span>
+                  <button
+                    className=" bg-black hover:bg-gray-800 text-white"
+                    onClick={() => {
+                      setShowVendorDropdown(false);
+                      if (!userFirstName) {
+                        const toastId = toast.custom((t) => (
+                          <div
+                            className={`${
+                              t.visible ? "animate-enter" : "animate-leave"
+                            } bg-white text-black px-4 py-3 rounded shadow-lg relative mt-20`}
+                          >
+                            <span>Please register as a user first.</span>
+                            <div className="toast-progress"></div>
+                          </div>
+                        ));
+
+                        // Auto dismiss after 3 seconds
+                        setTimeout(() => toast.dismiss(toastId), 2000);
+                      } else {
+                        navigate("/vendor/register");
+                      }
+                    }}
+                  >
+                    Register
+                  </button>
+                </div>
+                <hr />
+                <div className="dropdown-header">
+                  <button
+                    className=" bg-green-500 hover:bg-green-600"
+                    onClick={() => {
+                      setShowVendorDropdown(false);
+                      if (!userFirstName) {
+                        const toastId = toast.custom((t) => (
+                          <div
+                            className={`${
+                              t.visible ? "animate-enter" : "animate-leave"
+                            } bg-white text-black px-4 py-3 rounded shadow-lg relative mt-20`}
+                          >
+                            <span>Please register as a user first.</span>
+                            <div className="toast-progress"></div>
+                          </div>
+                        ));
+
+                        // Auto dismiss after 3 seconds
+                        setTimeout(() => toast.dismiss(toastId), 2000);
+                      } else {
+                        navigate("/vendor/register");
+                      }
+                    }}
+                  >
+                    Change Password
+                  </button>
+                  <button
+                    className=" bg-red-500 hover:bg-red-600"
+                    onClick={() => {
+                      setShowVendorDropdown(false);
+                      if (!userFirstName) {
+                        const toastId = toast.custom((t) => (
+                          <div
+                            className={`${
+                              t.visible ? "animate-enter" : "animate-leave"
+                            } bg-white text-black px-4 py-3 rounded shadow-lg relative mt-20`}
+                          >
+                            <span>Please register as a user first.</span>
+                            <div className="toast-progress"></div>
+                          </div>
+                        ));
+
+                        // Auto dismiss after 3 seconds
+                        setTimeout(() => toast.dismiss(toastId), 2000);
+                      } else {
+                        vendorLogout();
+                      }
+                    }}
+                  >
+                    SignOut
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Three Dots Dropdown */}
@@ -249,18 +458,14 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
             {showEllipsisDropdown && (
               <div className="dropdown-menu ellipsis-menu">
                 <div
-                  className={`dropdown-item ${
-                    location.pathname === "/about_us" ? "active" : ""
-                  }`}
+                  className="dropdown-item"
                   onClick={() => navigate("/about_us")}
                 >
                   <FcAbout className="navbar_icon" /> About Us
                 </div>
 
                 <div
-                  className={`dropdown-item ${
-                    location.pathname === "/help_us" ? "active" : ""
-                  }`}
+                  className="dropdown-item"
                   onClick={() => navigate("/help_us")}
                 >
                   <FaHandsHelping className="navbar_icon" /> Help Us
@@ -272,11 +477,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
       </div>
     </div>
   );
-};
-
-Navbar.propTypes = {
-  onOpenLogin: PropTypes.func.isRequired,
-  onOpenRegister: PropTypes.func.isRequired,
 };
 
 export default Navbar;

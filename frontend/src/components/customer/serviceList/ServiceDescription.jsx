@@ -12,7 +12,6 @@ const ServiceDescription = ({ service }) => {
     address,
     rating,
     reviews,
-    description,
     price,
     originalPrice,
     discountPercent,
@@ -24,11 +23,9 @@ const ServiceDescription = ({ service }) => {
     <section className="serviceDescription">
       <Link to="/category/service" className="link">
         <h3>{title}</h3>
-        <h5>{service.vandor}</h5>
         <p className="address">
           {address.area}, {address.city}, {address.state} - {address.pincode}
         </p>
-
         <div className="serviceRating">
           <span className="rate">{rating} ☆</span>
           <span className="review">{reviews} reviews</span>
@@ -38,7 +35,10 @@ const ServiceDescription = ({ service }) => {
           <span className="originalPrice">₹{originalPrice}</span>
           <span className="discountPercent">{discountPercent}% off</span>
         </div>
-        <p className="paragraph">{description}</p>
+        <p className="paragraph">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente
+          blanditiis enim quaerat eaque cum.
+        </p>
       </Link>
       <div className="actionButtons">
         <button

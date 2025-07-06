@@ -26,6 +26,35 @@
   font-family: sans-serif;
 }
 
+/* Show hamburger only on small screens */
+@media (max-width: 768px) {
+  .dashboard-hamburger {
+    display: flex;
+    left: 0;
+    top: 90px;
+  }
+
+  .open {
+    color: white;
+  }
+  .main-contain {
+    width: 30%;
+  }
+}
+
+@media (max-width: 431px) {
+  .dashboard-hamburger {
+    top: 90px;
+  }
+  .main-contain {
+    width: 30%;
+  }
+}
+@media (max-width: 400px) {
+  .main-contain {
+    width: 30%;
+  }
+}
 /* Pop-up overlay */
 .popup-overlayfinal {
   background: linear-gradient(135deg, #e5e5de 0%, #e5e5de 100%);
@@ -229,18 +258,6 @@
 
 /* Tablet screens (max-width: 768px) */
 @media (max-width: 768px) {
-  .dashboard-hamburger {
-    display: flex;
-    left: 0;
-    top: 80px;
-  }
-
-  .open {
-    color: white;
-  }
-  .main-contain {
-    width: 30%;
-  }
   .popup-container {
     width: 85vw; /* Slightly smaller width for tablets */
     max-width: 450px; /* Reduced max-width */
@@ -303,11 +320,5 @@
     padding: 8px;
     font-size: 0.8rem;
     min-width: 100%; /* Full-width buttons */
-  }
-  .dashboard-hamburger {
-    top: 90px;
-  }
-  .main-contain {
-    width: 30%;
   }
 }

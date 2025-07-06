@@ -4,10 +4,13 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import PasswordInput from "../../utils/PasswordInput.jsx";
 import "./LoginRegister.css";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../redux/UserSlice.js";
 
-const Register = ({ onClose, onSwitchToLogin }) => {
+const Register = ({ onClose }) => {
   const navigate = useNavigate();
 
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -35,13 +38,15 @@ const Register = ({ onClose, onSwitchToLogin }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/user/signup",
+        "${BACKEND_URL}/user/signup",
         formData,
         { withCredentials: true }
       );
 
       const user = response.data.data;
       console.log(user);
+
+      dispatch(setUser(user));
 
       if (response.data.message === "user do exist") {
         setErrorMsg("User already exists. Please log in.");
@@ -57,7 +62,7 @@ const Register = ({ onClose, onSwitchToLogin }) => {
         localStorage.setItem("userFirstName", userFirstName);
         localStorage.setItem("currentlyLoggedIn", "true");
         window.dispatchEvent(new Event("userLoggedIn"));
-        onClose(); // Close modal after successful registration
+        navigate("/", { replace: true });
       }
     } catch (error) {
       const msg =
@@ -136,7 +141,7 @@ const Register = ({ onClose, onSwitchToLogin }) => {
 
           <p className="signup-text">
             Already have an account?{" "}
-            <span className="login-link" onClick={onSwitchToLogin}>
+            <span className="login-link" onClick={() => navigate("/login")}>
               Log In
             </span>
           </p>

@@ -2,12 +2,11 @@ import React, { useState } from "react";
 import BookingData from "./BookingData.js";
 import BookingPopup from "./BookingPopup.jsx";
 import "./DashBoardBooking.css";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 const DashBoardBooking = () => {
   const [clickedRow, setClickedRow] = useState(null);
   // const [sortDropdownOpen,setSortDropdownOpen]=useState(false)
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   const handleRowClick = (booking) => {
     setClickedRow(clickedRow?.number === booking.number ? null : booking);
   };
@@ -20,30 +19,15 @@ const DashBoardBooking = () => {
     <div className="dashboard-booking-page">
       <main className="dashboard-main-content">
         {/* Sort Dropdown */}
-        <div className="dashboard-controls relative inline-block">
-          <div className="relative">
-            <select
-              className="dashboard-sort-dropdown appearance-none pr-6"
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              // onBlur={() => setIsDropdownOpen(false)}
-            >
-              <option>Sort by</option>
-              <option value="status">Status</option>
-              <option value="serviceName">Service Name</option>
-              <option value="cancelled">Cancelled</option>
-              <option value="last3">Last 3 months</option>
-              <option value="last6">Last 6 months</option>
-            </select>
-
-            {/* Icon Overlay */}
-            <div className="pointer-events-none absolute right-2 top-1/2 transform -translate-y-1/2">
-              {isDropdownOpen ? (
-                <FaChevronUp className="text-sm text-white" />
-              ) : (
-                <FaChevronDown className="text-sm text-white" />
-              )}
-            </div>
-          </div>
+        <div className="dashboard-controls">
+          <select className="dashboard-sort-dropdown">
+            <option>Sort by</option>
+            <option value="status">Status</option>
+            <option value="serviceName">Service Name</option>
+            <option value="cancelled">Cancelled</option>
+            <option value="last3">Last 3 months</option>
+            <option value="last6">Last 6 months</option>
+          </select>
         </div>
 
         {/* Booking Table */}

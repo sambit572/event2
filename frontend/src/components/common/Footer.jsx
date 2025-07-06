@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import './Footer.css';
-import { useNavigate } from 'react-router-dom';
 
 function Footer() {
   const [openSections, setOpenSections] = useState({
@@ -26,7 +25,6 @@ function Footer() {
       }));
     }
   };
-  const navigate=useNavigate()
 
   return (
     <footer className="footer-enhanced">
@@ -34,8 +32,8 @@ function Footer() {
         <h3>Your one-stop platform for Booking Events effortlessly</h3>
         <p>EXPERIENCE EVENTSBIDGE APP ON MOBILE</p>
         <div className="app-buttons">
-          <img src="/App Store.png" alt="App Store" className='cursor-pointer' />
-          <img src="/Google_Play.png" alt="Google Play" className='cursor-pointer'/>
+          <img src="/App Store.png" alt="App Store" />
+          <img src="/Google_Play.png" alt="Google Play" />
         </div>
       </div>
 
@@ -44,28 +42,28 @@ function Footer() {
         <div className="footer-columns">
           <div>
             <h4>Contact</h4>
-             <a href="mailto:Support@eventsbridge.com" target="_blank" rel="noopener noreferrer"><p className='hover:text-[#ffc107]'><img src="/gmail.png" alt="Email" className="icon" /> Support@eventsbridge.com</p></a>
-            <p className='hover:text-[#ffc107] cursor-pointer' onClick={()=>navigate("/help-Center")}><img src="/phone-call.png" alt="Phone" className="icon" /> 123-456-7890</p>
-            <p className='hover:text-[#ffc107] cursor-pointer' onClick={()=>navigate("/help-Center")}><img src="/placeholder.png" alt="Location" className="icon" /> Bhubaneswar, Odisha</p>
+            <p><img src="/gmail.png" alt="Email" className="icon" /> Eb@Example.Com</p>
+            <p><img src="/phone-call.png" alt="Phone" className="icon" /> 123-456-7890</p>
+            <p><img src="/placeholder.png" alt="Location" className="icon" /> Bhubaneswar, Odisha</p>
           </div>
           <div>
             <h4>Quick Links</h4>
-            <p className='hover:text-[#ffc107] cursor-pointer'>Our Approach</p>
-            <p className='hover:text-[#ffc107] cursor-pointer'>About HostGator</p>
-            <p className='hover:text-[#ffc107] cursor-pointer' onClick={()=>navigate("/faqs")}>FAQs</p>
+            <p>Our Approach</p>
+            <p>About HostGator</p>
+            <p>FAQs</p>
           </div>
           <div>
             <h4>Privacy Policy</h4>
-            <p className='hover:text-[#ffc107]'>Terms and Conditions</p>
-            <p className='hover:text-[#ffc107]'>Refund Policy</p>
-            <p className='hover:text-[#ffc107]'>Legal Information</p>
+            <p>Terms and Conditions</p>
+            <p>Refund Policy</p>
+            <p>Legal Information</p>
           </div>
           <div>
             <h4>Company</h4>
-            <p className='hover:text-[#ffc107] cursor-pointer' onClick={()=>navigate("/about_us")}>About Us</p>
-            <p className='hover:text-[#ffc107] cursor-pointer' onClick={()=>navigate("/reviews")} >Awards & Reviews</p>
-            <p className='hover:text-[#ffc107]'>Services</p>
-            <p className='hover:text-[#ffc107] cursor-pointer' onClick={()=>navigate("/help-Center")} >Help Desk</p>
+            <p>About Us</p>
+            <p>Awards & Reviews</p>
+            <p>Services</p>
+            <p>Help Desk</p>
           </div>
         </div>
 
@@ -82,7 +80,7 @@ function Footer() {
                 />
               </h4>
               <div className={`footer-dropdown-content ${openSections.contact ? 'show' : ''}`}>
-                <p><img src="/gmail.png" alt="Email" className="icon" />Support@eventsbridge.com</p>
+                <p><img src="/gmail.png" alt="Email" className="icon" /> Eb@Example.Com</p>
                 <p><img src="/phone-call.png" alt="Phone" className="icon" /> 123-456-7890</p>
                 <p><img src="/placeholder.png" alt="Location" className="icon" /> Bhubaneswar, Odisha</p>
               </div>
@@ -145,24 +143,12 @@ function Footer() {
       <div className="social-media-column">
         <h4>Follow Us</h4>
         <div className="social-media">
-          <a href="https://www.facebook.com/profile.php?id=61578112702655" target="_blank" rel="noopener noreferrer">
           <img src="/facebook.png" alt="Facebook" className="social-icon" />
-          </a>
-           <a href="https://x.com/EVENTSBRID78581" target="_blank" rel="noopener noreferrer">
-          <img src="/twitter 1.png" alt="X" className="social-icon" />
-          </a>
-          <a href="https://www.instagram.com/eventsbridge__?igsh=MWVmNXNscWlodGVxNA%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer">
+          <img src="/twitter 1.png" alt="Twitter" className="social-icon" />
           <img src="/instagram.png" alt="Instagram" className="social-icon" />
-          </a>
-           <a href="https://www.linkedin.com/company/eventsbridge-com/" target="_blank" rel="noopener noreferrer">
           <img src="/linkedin.png" alt="LinkedIn" className="social-icon" />
-          </a>
-          <a href="mailto:Support@eventsbridge.com" target="_blank" rel="noopener noreferrer">
           <img src="/gmail.png" alt="Gmail" className="social-icon" />
-          </a>
-           <a href="https://wa.me/1234567890" target="_blank" rel="noopener noreferrer">
           <img src="/whatsapp.png" alt="Whatsapp" className="social-icon" />
-          </a>
         </div>
       </div>
 
