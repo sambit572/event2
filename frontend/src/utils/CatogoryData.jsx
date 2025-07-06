@@ -100,7 +100,7 @@ import mehendi4 from "../assets/service/makeup/mehendi4.jpg";
 import image1 from "../assets/home/categoriesImages/dj.png";
 import image2 from "../assets/home/categoriesImages/bass brand.png";
 import image3 from "../assets/home/categoriesImages/tenthouse.png";
-import image4 from "../assets/home/categoriesImages/wedding photographer.png";
+import image4 from "../assets/home/categoriesImages/photographer.png";
 import image5 from "../assets/home/categoriesImages/pandit.png";
 import image6 from "../assets/home/categoriesImages/magician.png";
 import image7 from "../assets/home/categoriesImages/orchestra.png";
@@ -109,9 +109,9 @@ import image9 from "../assets/home/categoriesImages/father.png";
 import image10 from "../assets/aboutUs/CATERING.png";
 import image11 from "../assets/home/categoriesImages/bride mehendi & makeup.png";
 import image12 from "../assets/home/categoriesImages/flower decor.png";
-import image13 from "../assets/home/categoriesImages/car & horsecart decor.png";
+import image13 from "../assets/home/categoriesImages/horse cart.png";
 import image14 from "../assets/home/categoriesImages/fireworks.png";
-import image15 from "../assets/home/categoriesImages/cardsinvite.jpg";
+import image15 from "../assets/home/categoriesImages/marriage card.png";
 
 export const CategoryData = [
   {
