@@ -230,7 +230,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
           <div className="nav-item profile-dropdown-container" ref={profileRef}>
             <div className="flex items-center gap-2 text-gray-700 cursor-pointer login">
               <span
-                className="flex items-center gap-2 max-[1024px]:flex-col max-[1024px]:text-[12px] max-[820px]:text-[11px]"
+                className="flex items-center gap-2 max-[1024px]:flex-row max-[1024px]:text-[12px] max-[820px]:text-[11px]"
                 onClick={!userFirstName ? () => navigate("/login") : undefined}
               >
                 {!userFirstName ? (

@@ -1,14 +1,17 @@
+import React from "react";
 import { IoIosStar } from "react-icons/io";
-import "./RatingSection.css"; // Separate CSS for better maintainability
+import "./RatingSection.css";
 
-const RatingSection = () => {
+const RatingSection = ({ ratingValue, totalRatings, totalReviews }) => {
   return (
     <div className="rating-section">
       <div className="rating-box">
-        <span className="rating-value">4</span>
+        <span className="rating-value">{ratingValue}</span>
         <IoIosStar className="star-icon" />
       </div>
-      <span className="rating-text">3901 ratings, 560 reviews</span>
+      <span className="rating-text">
+        {totalRatings} ratings, {totalReviews} reviews
+      </span>
     </div>
   );
 };
