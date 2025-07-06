@@ -39,6 +39,12 @@ const CategoryCard = ({ category }) => {
         {category.tagline && (
           <p className="courseTaglineResponsive">{category.tagline}</p>
         )}
+
+        {/* {category.badge && (
+          <span className={`courseTag ${category.badge.toLowerCase()}`}>
+            {category.badge}
+          </span>
+        )} */}
       </div>
     </div>
   );

@@ -8,8 +8,10 @@ function ForgotPass() {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "http://localhost:8000/user/forgot-password",
-        { email }
+        `${import.meta.env.VITE_BACKEND_URL}/user/forgot-password`,
+        {
+          email,
+        }
       );
       console.log(res.data.message);
       alert("Reset link sent successfully!");

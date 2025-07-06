@@ -53,6 +53,51 @@ const images = [
     tablet: cateringTablet,
     desktop: cateringDesktop,
   },
+  // {
+  //   mobile: image4Mobile,
+  //   tablet: image4Tablet,
+  //   desktop: image4Desktop,
+  // },
+  // {
+  //   mobile: image6Mobile,
+  //   tablet: image6Tablet,
+  //   desktop: image6Desktop,
+  // },
+  // {
+  //   mobile: image7Mobile,
+  //   tablet: image7Tablet,
+  //   desktop: image7Desktop,
+  // },
+  // {
+  //   mobile: image10Mobile,
+  //   tablet: image10Tablet,
+  //   desktop: image10Desktop,
+  // },
+  // {
+  //   mobile: image11Mobile,
+  //   tablet: image11Tablet,
+  //   desktop: image11Desktop,
+  // },
+  // {
+  //   mobile: image12Mobile,
+  //   tablet: image12Tablet,
+  //   desktop: image12Desktop,
+  // },
+  // {
+  //   mobile: image13Mobile,
+  //   tablet: image13Tablet,
+  //   desktop: image13Desktop,
+  // },
+  // {
+  //   mobile: image14Mobile,
+  //   tablet: image14Tablet,
+  //   desktop: image14Desktop,
+  // },
+  // {
+  //   mobile: image15Mobile,
+  //   tablet: image15Tablet,
+  //   desktop: image15Desktop,
+  // },
 ];
 
 // const categories = [
@@ -155,9 +200,12 @@ const Home = () => {
   useEffect(() => {
     const checkUser = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/user/", {
-          withCredentials: true,
-        });
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/user/`,
+          {
+            withCredentials: true,
+          }
+        );
         console.log(response.data.message);
 
         console.log(response.data.data);
@@ -213,7 +261,6 @@ const Home = () => {
         ))}
       </div>
 
-      {/* <BackToTop /> */}
       <Milestones />
       <ReviewSlider />
       <FaqSection />

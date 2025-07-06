@@ -39,12 +39,11 @@
   cursor: pointer;
   transition: color 0.2s;
 }
-
 .modal-close:hover {
   color: #000;
 }
 
-/* Title */
+/* Titles and Labels */
 .login-title {
   text-align: center;
   font-size: 1.8rem;
@@ -85,6 +84,7 @@
   font-size: 1rem;
   margin-bottom: 1rem;
   font-weight: 600;
+  font-size: 16px;
   cursor: pointer;
   transition: background-color 0.2s;
 }

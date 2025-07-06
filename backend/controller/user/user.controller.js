@@ -10,6 +10,7 @@ import {
   uploadOnCloudinary,
   deleteFromCloudinary,
 } from "../../utilities/cloudinary.js";
+import { sendEmail } from "../../utilities/sendEmail.js";
 
 const option = {
   httpOnly: true,
@@ -75,6 +76,25 @@ const registerUser = async (req, res) => {
     const createdUser = await User.findById(user._id).select(
       "-password -refreshToken"
     );
+
+    // Send thank you email
+    await sendEmail({
+      to: email,
+      subject: "🎉 Welcome to EventsBridge - User Registration",
+      html: `
+    <h2>Hi ${fullName},</h2>
+    <p>Thank you for registering with <strong>EventsBridge</strong>!</p>
+    <p><strong>Your Details:</strong></p>
+    <ul>
+      <li><strong>Name:</strong> ${fullName}</li>
+      <li><strong>Email:</strong> ${email}</li>
+      <li><strong>Phone No:</strong> ${phoneNo}</li>
+    </ul>
+    <p>We're excited to have you onboard.</p>
+    <br/>
+    <p>Best regards,<br/>Team EventsBridge</p>
+  `,
+    });
 
     if (!createdUser) {
       return res.status(500).json(new ApiError(500, "Unable to create user"));
@@ -177,25 +197,6 @@ const logoutUser = async (req, res) => {
 
 // ------------------ PROFILE CONTROLLERS ------------------
 
-const getUserProfile = async (req, res) => {
-  try {
-    const user = await User.findById(req.user._id).select(
-      "fullName email phoneNo profilePhoto eventsBooked"
-    );
-
-    if (!user) {
-      return res.status(404).json(new ApiError(404, "User not found"));
-    }
-
-    return res
-      .status(200)
-      .json(new ApiResponse(200, { user }, "Profile fetched successfully"));
-  } catch (error) {
-    console.error("Fetch profile error:", error);
-    return res.status(500).json(new ApiError(500, "Internal Server Error"));
-  }
-};
-
 const updateUserProfile = async (req, res) => {
   try {
     const { fullName, email, phoneNo } = req.body;
@@ -285,7 +286,9 @@ const removeProfilePhoto = async (req, res) => {
 
     // Check if user has a profile photo
     if (!user.profilePhoto) {
-      return res.status(400).json(new ApiError(400, "No profile photo to remove"));
+      return res
+        .status(400)
+        .json(new ApiError(400, "No profile photo to remove"));
     }
 
     // Delete the current profile photo from Cloudinary
@@ -454,7 +457,30 @@ const noNeedToLogin = async (req, res) => {
   }
 };
 
-// ------------------ EXPORTS ------------------
+const getUserEmail = async (req, res) => {
+  const user = await User.findById(req.user._id);
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "Email fetched successfully"));
+};
+const getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select(
+      "fullName email phoneNo profilePhoto eventsBooked"
+    );
+
+    if (!user) {
+      return res.status(404).json(new ApiError(404, "User not found"));
+    }
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, { user }, "Profile fetched successfully"));
+  } catch (error) {
+    console.error("Fetch profile error:", error);
+    return res.status(500).json(new ApiError(500, "Internal Server Error"));
+  }
+};
 
 export {
   registerUser,
@@ -464,8 +490,9 @@ export {
   resetPassword,
   changePassword,
   noNeedToLogin,
-  getUserProfile,
   updateUserProfile,
   updateUserAvatar,
   removeProfilePhoto,
+  getUserEmail,
+  getUserProfile,
 };

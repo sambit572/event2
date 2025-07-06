@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./UserSideBar.css";
 import { FaEdit, FaCamera, FaUpload, FaTrash } from "react-icons/fa";
 import axios from "axios";
-import { BACKEND_URL } from "../../../utils/constant.js";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 function UserSideBar({ isOpen, setShowPasswordModal }) {
   const [fullName, setFullName] = useState("");
@@ -15,7 +15,6 @@ function UserSideBar({ isOpen, setShowPasswordModal }) {
   const [profileLoading, setProfileLoading] = useState(true);
   const [showRemoveConfirm, setShowRemoveConfirm] = useState(false);
   const [removing, setRemoving] = useState(false);
-  
 
   // Fetching profile data on mount
   const fetchProfile = async () => {
@@ -100,7 +99,6 @@ function UserSideBar({ isOpen, setShowPasswordModal }) {
     }
 
     setUploading(true);
-
     try {
       const formData = new FormData();
       formData.append("profilePhoto", file);
@@ -205,17 +203,18 @@ function UserSideBar({ isOpen, setShowPasswordModal }) {
       await axios.delete(`${BACKEND_URL}/user/remove-profile-photo`, {
         withCredentials: true,
       });
-      
+
       // Refresh profile data
       await fetchProfile();
-      alert('Profile photo removed successfully!');
+      alert("Profile photo removed successfully!");
     } catch (err) {
-      console.error('Remove photo error:', err);
+      console.error("Remove photo error:", err);
       if (err.response) {
-        const errorMessage = err.response.data?.message || 'Failed to remove photo';
+        const errorMessage =
+          err.response.data?.message || "Failed to remove photo";
         alert(`Error: ${errorMessage}`);
       } else {
-        alert('Failed to remove photo. Please try again.');
+        alert("Failed to remove photo. Please try again.");
       }
     } finally {
       setRemoving(false);
@@ -237,19 +236,16 @@ function UserSideBar({ isOpen, setShowPasswordModal }) {
                 onClick={triggerPhotoUpload}
               />
             ) : (
-              <div 
+              <div
                 className="user-profile-pic profile-initials"
                 onClick={triggerPhotoUpload}
               >
                 {getInitials(fullName)}
               </div>
             )}
-            
+
             {/* Camera Icon Overlay */}
-            <div 
-              className="camera-icon-overlay" 
-              onClick={triggerPhotoUpload}
-            >
+            <div className="camera-icon-overlay" onClick={triggerPhotoUpload}>
               {uploading ? (
                 <FaUpload className="camera-icon spinning" />
               ) : (
@@ -267,11 +263,11 @@ function UserSideBar({ isOpen, setShowPasswordModal }) {
               style={{ display: "none" }}
               disabled={uploading}
             />
-            
+
             {/* Remove Photo Button - Only show if photo exists */}
             {profilePhoto && (
               <button
-                className={`remove-photo-btn ${removing ? 'removing' : ''}`}
+                className={`remove-photo-btn ${removing ? "removing" : ""}`}
                 onClick={() => setShowRemoveConfirm(true)}
                 disabled={uploading || removing}
               >
@@ -298,15 +294,15 @@ function UserSideBar({ isOpen, setShowPasswordModal }) {
               <h3>Remove Profile Photo</h3>
               <p>Are you sure you want to remove your profile photo?</p>
               <div className="remove-confirm-buttons">
-                <button 
-                  className="confirm-remove-btn" 
+                <button
+                  className="confirm-remove-btn"
                   onClick={handlePhotoRemove}
                   disabled={removing}
                 >
-                  {removing ? 'Removing...' : 'Yes Remove'}
+                  {removing ? "Removing..." : "Yes Remove"}
                 </button>
-                <button 
-                  className="cancel-remove-btn" 
+                <button
+                  className="cancel-remove-btn"
                   onClick={() => setShowRemoveConfirm(false)}
                   disabled={removing}
                 >
@@ -330,7 +326,6 @@ function UserSideBar({ isOpen, setShowPasswordModal }) {
               fullName || "N/A"
             )}
           </li>
-
           <li className="typography">
             {editMode ? (
               <input

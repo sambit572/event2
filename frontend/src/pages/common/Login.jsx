@@ -8,8 +8,11 @@ import PasswordInput from "../../utils/PasswordInput.jsx";
 import SuccessBlock from "./SuccessBlock.jsx";
 import axios from "axios";
 import "./LoginRegister.css";
-
-const Login = ({ onClose, onSwitchToRegister }) => {
+import { useDispatch } from "react-redux";
+import { setUser } from "../../redux/UserSlice.js";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const Login = ({ onClose }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [step, setStep] = useState("form"); // 'form', 'otp', 'success'
   const [showSuccessIcon, setShowSuccessIcon] = useState(false);
@@ -84,7 +87,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
     try {
       const res = await axios.post(
-        "http://localhost:8000/user/login",
+        `${BACKEND_URL}/user/login`,
         {
           email: formData.email,
           phoneNo: formData.phoneNo,
@@ -94,6 +97,12 @@ const Login = ({ onClose, onSwitchToRegister }) => {
       );
 
       const { user } = res.data.data;
+      dispatch(setUser(user));
+      const fullName = user.fullName || "";
+      const firstName = fullName.split(" ")[0];
+      const firstLetter = firstName?.charAt(0).toUpperCase() || "";
+      const profilePic = user.profilePic || "";
+
       localStorage.setItem("currentlyLoggedIn", "true");
       localStorage.setItem("userFirstName", user.fullName.split(" ")[0]);
       window.dispatchEvent(new Event("userLoggedIn"));
@@ -112,7 +121,6 @@ const Login = ({ onClose, onSwitchToRegister }) => {
   const renderStep = () => {
     if (step === "success")
       return <SuccessBlock showSuccessIcon={showSuccessIcon} />;
-
     if (step === "otp") return <OTPVerification setStep={setStep} />;
 
     return (
@@ -156,8 +164,8 @@ const Login = ({ onClose, onSwitchToRegister }) => {
         </button>
 
         <p className="signup-text">
-          Don't have an account?{" "}
-          <span className="login-link" onClick={onSwitchToRegister}>
+          Don’t have an account?{" "}
+          <span className="login-link" onClick={() => navigate("/register")}>
             Sign Up
           </span>
         </p>
@@ -183,7 +191,6 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
 Login.propTypes = {
   onClose: PropTypes.func,
-  onSwitchToRegister: PropTypes.func,
 };
 
 export default Login;

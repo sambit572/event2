@@ -71,7 +71,7 @@ export default function VendorPayment() {
       fd.append("panCardPic", panCardPic);
 
       const res = await axios.post(
-        "http://localhost:8000/vendors/bank-details",
+        `${import.meta.env.VITE_BACKEND_URL}/vendors/bank-details`,
         fd,
         {
           headers: {
