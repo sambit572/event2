@@ -9,31 +9,58 @@ if (!fs.existsSync(tempDir)) {
   fs.mkdirSync(tempDir, { recursive: true });
 }
 
+// ✅ Accept both image and video files
+const allowedMimeTypes = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/gif",
+  "video/mp4",
+  "video/webm",
+  "video/mov",
+  "video/avi",
+  "video/wmv",
+  "video/flv",
+];
+
+const allowedExtensions = [
+  ".jpeg",
+  ".jpg",
+  ".png",
+  ".gif",
+  ".mp4",
+  ".webm",
+  ".mov",
+  ".avi",
+  ".wmv",
+  ".flv",
+];
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, tempDir);
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname);
+    cb(null, Date.now() + "-" + file.originalname); // Unique filenames
   },
 });
 
-// ✅ File filter: Allow only JPG, JPEG, PNG
+// ✅ Filter: Images + Videos only
 const fileFilter = function (req, file, cb) {
-  const allowedTypes = /jpeg|jpg|png/;
-  const isMimeTypeValid = allowedTypes.test(file.mimetype);
-  const isExtValid = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+  const ext = path.extname(file.originalname).toLowerCase();
+  const isMimeTypeValid = allowedMimeTypes.includes(file.mimetype);
+  const isExtValid = allowedExtensions.includes(ext);
 
   if (isMimeTypeValid && isExtValid) {
     cb(null, true);
   } else {
-    cb(new Error("Only .jpg, .jpeg, .png image files are allowed"));
+    cb(new Error("Only image/video files are allowed (JPG, PNG, MP4, etc.)"));
   }
 };
 
-// ✅ File size limit: 2MB
+// ✅ File size limit: 10MB (reasonable for videos)
 export const upload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
 });

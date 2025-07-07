@@ -59,7 +59,18 @@ vendor_router.get("/me", verifyVendorJwt, getVendorProfile);
 vendor_router.put("/:id", upload.single("profilePicture"), updateVendor);
 
 // --- SERVICE ROUTES --- //
-vendor_router.post("/create-service", upload.array("images", 5), createService);
+vendor_router.post(
+  "/create-service",
+  (req, res, next) => {
+    upload.array("images", 10)(req, res, function (err) {
+      if (err) {
+        return res.status(400).json({ success: false, message: err.message });
+      }
+      next();
+    });
+  },
+  createService
+);
 
 // --- BANK DETAILS ROUTES --- //
 vendor_router.post(

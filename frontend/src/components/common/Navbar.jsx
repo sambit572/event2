@@ -97,7 +97,7 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       await axios.post(
-        "http://localhost:8000/user/logout",
+       ` ${BACKEND_URL}/user/logout`,
         {},
         { withCredentials: true }
       );
