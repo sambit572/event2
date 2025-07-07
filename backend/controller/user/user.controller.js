@@ -95,27 +95,6 @@ const registerUser = async (req, res) => {
     <p>Best regards,<br/>Team EventsBridge</p>
   `,
     });
-      "-password -refreshToken"
-    );
-
-    // Send thank you email
-    await sendEmail({
-      to: email,
-      subject: "🎉 Welcome to EventsBridge - User Registration",
-      html: `
-    <h2>Hi ${fullName},</h2>
-    <p>Thank you for registering with <strong>EventsBridge</strong>!</p>
-    <p><strong>Your Details:</strong></p>
-    <ul>
-      <li><strong>Name:</strong> ${fullName}</li>
-      <li><strong>Email:</strong> ${email}</li>
-      <li><strong>Phone No:</strong> ${phoneNo}</li>
-    </ul>
-    <p>We're excited to have you onboard.</p>
-    <br/>
-    <p>Best regards,<br/>Team EventsBridge</p>
-  `,
-    });
 
     if (!createdUser) {
       return res.status(500).json(new ApiError(500, "Unable to create user"));
