@@ -1,9 +1,12 @@
 import React from "react";
 
 import comingSoon from "../../../assets/home/bannerImages/coming_soon.png";
-import smallbanner from "../../../assets/home/bannerImages/smallbanner.png";
 import mediumbanner from "../../../assets/home/bannerImages/mediumbanner.png";
-import largebanner from "../../../assets/home/bannerImages/largebanner.png";
+import xmedium from "../../../assets/home/bannerImages/xmedium.png";
+import xxmedium from "../../../assets/home/bannerImages/xxmedium.png";
+import smallbanner from "../../../assets/home/bannerImages/smallbanner.png";
+
+// import largebanner from "../../../assets/home/bannerImages/largebanner.png";
 
 const AddsBanner = () => {
   return (
@@ -13,10 +16,10 @@ const AddsBanner = () => {
         <source srcSet={comingSoon} media="(min-width: 1111px)" />
 
         {/* Medium screens (768px to 1023px) */}
-        <source srcSet={largebanner} media="(min-width: 768px)" />
+        <source srcSet={mediumbanner} media="(min-width: 768px)" />
 
         {/* Small screens (640px to 767px) */}
-        <source srcSet={mediumbanner} media="(min-width: 640px)" />
+        <source srcSet={xxmedium} media="(min-width: 640px)" />
 
         {/* Mobile (less than 640px) */}
         <img
