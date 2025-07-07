@@ -207,7 +207,7 @@ const App = () => {
           <Route path="/vendor-login" element={<VendorLogin />} />
         </Routes>
       </main>
-      <BackToTop />
+
       <Chatbot />
 
       {/* Conditionally render Footer */}
