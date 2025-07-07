@@ -15,18 +15,17 @@ const UserProfileIcon = () => {
     const first = nameParts[0]?.[0] || "";
     const last = nameParts.length > 1 ? nameParts.at(-1)[0] : "";
     setInitials((first + last).toUpperCase());
-    
   }, [fullName]);
 
   const isImageValid = profilePhoto && profilePhoto.startsWith("http");
 
   return (
-    <div className="user-profile">
+    <div className="user-profile-icon">
       {isImageValid ? (
         <img
           src={profilePhoto}
           alt="Profile"
-          className="user-avatar-img"
+          className="w-10 h-10 rounded-full object-cover"
           title="Profile"
         />
       ) : (

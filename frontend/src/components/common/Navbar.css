@@ -11,16 +11,10 @@
   z-index: 1000;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
-
-/* Logo */
-/* .logo {
-  cursor: pointer;
-  text-decoration: none;
-  color: #001f3f;
-  width: 100px;
-  background-color: transparent;
-} */
-
+.font-medium {
+  font-size: 15px;
+  font-weight: 600;
+}
 .logo {
   display: flex;
   align-items: center;
@@ -57,14 +51,14 @@
 .search-bar {
   display: flex;
   align-items: center;
-  padding: 8px 14px;
+  padding-right: 5px;
   border-radius: 16px;
   width: 450px;
   max-width: 100%;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
   border: 1px solid #001f3f;
-  margin-left: 150px;
+  /* margin-left: 150px; */
 }
 
 .search-bar:focus-within {
@@ -83,6 +77,8 @@
 .search-bar .search-icon {
   color: black;
   font-size: 18px;
+  margin-right: 0;
+  margin-left: 5px;
 }
 .search-bar input {
   border: none;
@@ -114,6 +110,7 @@
 }
 .nav-item {
   display: flex;
+  /* flex-direction: row; */
   align-items: center;
   cursor: pointer;
   font-size: 15px;
@@ -167,6 +164,7 @@
   font-size: 18px;
 }
 .nav-items {
+  cursor: pointer;
   display: flex;
   align-items: center;
 }
@@ -308,7 +306,7 @@
 @media (max-width: 1280px) {
   .search-bar {
     width: 310px;
-    margin-left: 50px;
+    margin-right: 5px;
   }
 }
 
@@ -369,15 +367,11 @@
     right: 10px;
     width: 250px;
   }
-
-  .search-bar {
-    margin-left: -14px;
-  }
 }
 
 @media (max-width: 820px) {
   .search-and-nav-icons-container {
-    width: calc(100% - 181px - 20px);
+    width: calc(100% - 20px - 20px);
   }
   .search-bar {
     margin-left: 0px;
@@ -386,8 +380,6 @@
   .search-bar {
     display: flex;
     width: 50%;
-    margin-left: 8px;
-    margin-right: 8px;
   }
   .nav-icons {
     gap: 19px;
@@ -404,9 +396,8 @@
   }
   .search-bar {
     display: flex;
-    width: 45%;
-    margin-left: 8px;
-    margin-right: 8px;
+    width: 40%;
+    margin-right: 5px;
   }
   .search-bar input {
     width: 20%;
@@ -434,35 +425,29 @@
     flex-direction: column;
     gap: 4px;
   }
+  .logo {
+    font-size: 20px;
+    margin-right: 5px;
+  }
 }
 
 @media (max-width: 680px) {
   .navbar {
     display: flex;
-    flex-wrap: wrap;
-    height: 100px;
+    /* flex-wrap: wrap; */
+    height: 50px;
+    margin-top: 0px;
   }
   .search-bar {
     width: 40%;
+    margin-right: 5px;
   }
   .nav-icons {
     width: 100%;
-    margin-top: 10px;
-    justify-content: space-between;
+    /* margin-top: 10px; */
+    justify-content: end;
   }
 
-  html {
-    font-size: 85%;
-  }
-  /* .logo img {
-    height: 180px;
-  } */
-
-  /* .dropdown-menu {
-    width: calc(100% - 20px);
-    left: 10px !important;
-    right: 10px !important;
-  } */
   .ellipsis-menu {
     min-width: 10;
   }
@@ -471,6 +456,9 @@
 @media (max-width: 580px) {
   .logo {
     font-size: 25px;
+  }
+  .font-medium {
+    display: none;
   }
 }
 @media (max-width: 540px) {
@@ -481,11 +469,14 @@
 @media (max-width: 500px) {
   .logo {
     font-size: 15px;
+    margin-right: 5px;
   }
 }
 @media (max-width: 460px) {
   .navbar {
-    height: 115px;
+    /* padding: 0px; */
+
+    height: 60px;
     width: 100%;
   }
   /* .logo {
@@ -503,7 +494,9 @@
     width: 100%;
     display: flex;
     flex-direction: row;
-    gap: 50px;
+
+    /* gap: 50px; */
+    /* margin-top: 0px; */
   }
 
   .dropdown-menu {
@@ -514,6 +507,9 @@
 
   .signOutButton {
     padding: 0;
+  }
+  .font-medium {
+    display: none;
   }
   .search-bar {
     width: 43%;
@@ -535,7 +531,7 @@
   .search-bar {
     width: 47%;
     padding-right: 2px;
-    padding-left: 11px;
+    padding-right: 11px;
   }
   /* .logo img {
     height: 180px;
@@ -544,7 +540,8 @@
 
 @media (max-width: 376px) {
   .logo {
-    font-size: 18px;
+    font-size: 15px;
+    margin-right: 5px;
   }
 
   .login {
@@ -561,28 +558,9 @@
   }
 
   .search-bar {
-    padding-left: 7px;
+    padding-right: 7px;
   }
   .search-bar input {
     margin-left: 6px;
-  }
-}
-
-.toast-progress {
-  margin-top: 10px;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  height: 4px;
-  background: linear-gradient(to right, #6600ff, #2f00ff, #3300ff);
-  animation: shrinkBar 2s linear forwards;
-}
-
-@keyframes shrinkBar {
-  0% {
-    width: 100%;
-  }
-  100% {
-    width: 0%;
   }
 }

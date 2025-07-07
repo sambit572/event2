@@ -206,13 +206,12 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
     <div className="navbar">
       {/* Logo */}
       <div className="logo">
-        <span onClick={handleHomeClick}>Eventsbridge</span>
+        <span onClick={handleHomeClick}>EVENTSBRIDGE</span>
       </div>
 
       <div className="search-and-nav-icons-container ">
         {/* Search Bar */}
         <div className="search-bar" onClick={handleSearch}>
-          <FaSearch className="search-icon" onClick={handleSearchicon} />
           <input
             ref={inputRef}
             type="text"
@@ -222,6 +221,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
               setSearchInput(e.target.value);
             }}
           />
+          <FaSearch className="search-icon" onClick={handleSearchicon} />
         </div>
 
         {/* Nav Icons */}
@@ -312,7 +312,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
           {/* Become Vendor */}
           <div className="nav-item profile-dropdown-container" ref={vendorRef}>
             <div className="nav-items max-[1024px]:flex-col max-[1024px]:text-[12px] max-[820px]:text-[11px] cursor-pointer">
-              <div className="flex items-center gap-2">
+              <div className="flex align_center gap-2">
                 <FaStore
                   className="icons max-[1024px]:h-[18px] max-[1024px]:w-[18px] max-[820px]:h-[15px]"
                   onClick={handleVendorClick}
