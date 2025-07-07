@@ -26,7 +26,7 @@ const UserProfileIcon = () => {
         <img
           src={profilePhoto}
           alt="Profile"
-          className="user-avatar-img"
+          className="w-10 h-10 rounded-full object-cover"
           title="Profile"
         />
       ) : (

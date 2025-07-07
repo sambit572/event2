@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from "react";
-import React, { useState, useEffect } from "react";
 import "./UserSideBar.css";
 import { FaEdit, FaCamera, FaUpload, FaTrash } from "react-icons/fa";
-import { FaEdit, FaCamera, FaUpload, FaTrash } from "react-icons/fa";
+
 import axios from "axios";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 function UserSideBar({ isOpen, setShowPasswordModal }) {
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [contact, setContact] = useState("");
-  const [eventsBooked, setEventsBooked] = useState("0");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [contact, setContact] = useState("");
