@@ -38,7 +38,7 @@ const Register = ({ onClose }) => {
 
     try {
       const response = await axios.post(
-        "${BACKEND_URL}/user/signup",
+        `${BACKEND_URL}/user/signup`,
         formData,
         { withCredentials: true }
       );

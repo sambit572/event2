@@ -70,7 +70,7 @@ export default function VendorPayment() {
       fd.append("upiId", upiId);
       fd.append("panCardPic", panCardPic);
 
-      const res = await axios.post("${BACKEND_URL}/vendors/bank-details", fd, {
+      const res = await axios.post(`${BACKEND_URL}/vendors/bank-details`, fd, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

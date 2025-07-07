@@ -1,11 +1,12 @@
 // utils/vendorAuthUtils.js
 
 import axios from "axios";
+import { BACKEND_URL } from "./constant";
 
 export const attemptVendorSilentLogin = async () => {
   try {
     const response = await axios.get(
-      "http://localhost:8000/vendors/silent-login",
+      `${BACKEND_URL}/vendors/silent-login`,
       { withCredentials: true }
     );
     return { success: true, vendor: response.data.data.vendor };
@@ -18,7 +19,7 @@ export const checkVendorEmailStatus = async (email) => {
   console.log("inside check vendor email status ..")
   try {
     const response = await axios.post(
-      "http://localhost:8000/vendors/check-email",
+      `${BACKEND_URL}/vendors/check-email`,
       { email },
       { withCredentials: true }
     );

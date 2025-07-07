@@ -59,7 +59,7 @@ const Navbar = () => {
   };
   const fetchUserProfile = async () => {
     try {
-      const res = await axios.get("${BACKEND_URL}/user/profile", {
+      const res = await axios.get(`${BACKEND_URL}/user/profile`, {
         withCredentials: true,
       });
 
@@ -112,7 +112,7 @@ const Navbar = () => {
     try {
       console.log("Logging out vendor...");
       await axios.post(
-        "http://localhost:8000/vendors/logout",
+        `${BACKEND_URL}/vendors/logout`,
         {},
         { withCredentials: true }
       );
