@@ -6,7 +6,7 @@ import ToggleTabs from "./ToggleTabs.jsx";
 import "./DashboardMain.css";
 import { io } from "socket.io-client";
 
-const socket = io(import.meta.env.BACKEND_URL);
+const socket = io(import.meta.env.VITE_BACKEND_URL);
 
 const VENDOR_NAME = "Horse-Carriage Odisha"; // 🔁 Use dynamic vendor later
 

@@ -16,6 +16,26 @@
   font-size: 20px;
   color: #001f3f;
 }
+/* .dj-details {
+  background-color: #f9f9f9;
+  padding: 1.5rem;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  margin-top: 1.5rem;
+} */
+
+/* .para1 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: #444;
+} */
+
+.details-list {
+  margin-top: 0.75rem;
+  padding-left: 1.5rem;
+  list-style-type: disc;
+  color: #333;
+}
 
 .para1 {
   margin-bottom: 8px;

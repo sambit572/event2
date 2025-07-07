@@ -38,7 +38,7 @@ const Register = ({ onClose }) => {
 
     try {
       const response = await axios.post(
-        `${BACKEND_URL}/user/signup`,
+        `${import.meta.env.VITE_BACKEND_URL}/user/signup`,
         formData,
         { withCredentials: true }
       );

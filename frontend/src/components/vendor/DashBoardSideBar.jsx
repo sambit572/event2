@@ -62,7 +62,7 @@ function DashBoardSideBar({ isOpen }) {
 
       try {
         const res = await axios.post(
-          "${BACKEND_URL}/vendors/upload-profile",
+          `${import.meta.env.VITE_BACKEND_URL}/vendors/upload-profile`,
           formData,
           {
             headers: {

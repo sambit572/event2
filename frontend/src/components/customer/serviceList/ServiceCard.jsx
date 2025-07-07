@@ -25,7 +25,7 @@ const ServiceCard = ({ service }) => {
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
         >
-          <Link to="/category/service" className="link">
+          <Link to={`/service/${service.id}`} className="link">
             <img src={img[currentIndex]} alt="Main preview" />
           </Link>
 

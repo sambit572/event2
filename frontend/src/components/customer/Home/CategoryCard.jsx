@@ -6,10 +6,13 @@ const CategoryCard = ({ category }) => {
   const navigate = useNavigate();
 
   return (
-    // <a href={`/category/${category.id}`}>
-    <a href="/category">
-      <div className="courseCard">
-        <span className="brandLabel">EventsBridge</span>
+    <div
+      className="courseCard"
+      onClick={() => {
+        navigate(`/category/${category.id}`);
+      }}
+    >
+      <span className="brandLabel">EventsBridge</span>
 
         <div className="imageWrapper">
           <img

@@ -14,7 +14,9 @@ const ResetPassword = () => {
     if (confirmPassword === newPassword) {
       try {
         const response = await axios.post(
-          `${BACKEND_URL}/user/reset-password/${resetToken}`,
+          `${
+            import.meta.env.VITE_BACKEND_URL
+          }/user/reset-password/${resetToken}`,
           { newPassword }
         );
 

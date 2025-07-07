@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import PropTypes from "prop-types";
 import UserProfileIcon from "../../pages/common/UserProfileIcon.jsx";
 import toast from "react-hot-toast";
 
@@ -18,10 +19,9 @@ import {
 } from "react-icons/fa";
 import { FcAbout } from "react-icons/fc";
 import axios from "axios";
-import { useNavigate, Navigate } from "react-router-dom";
-import ReviewSlider from "../customer/Home/ReviewSlider.jsx";
-import ImageSlider from "./../customer/Home/ImageSlider";
-import logo from "../../assets/logo.png";
+import { useNavigate, Navigate, useLocation } from "react-router-dom";
+
+
 import {
   attemptVendorSilentLogin,
   checkVendorEmailStatus,
@@ -35,8 +35,12 @@ import { BACKEND_URL } from "../../utils/constant.js";
 const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+
 
   const [currentUser, setCurrentUser] = useState(null);
+
+
 
   const [userFirstName, setUserFirstName] = useState(null);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
@@ -205,9 +209,7 @@ const Navbar = () => {
     <div className="navbar">
       {/* Logo */}
       <div className="logo">
-        <span onClick={handleHomeClick}>
-          <img src={logo} alt="logo" />
-        </span>
+        <span onClick={handleHomeClick}>Eventsbridge</span>
       </div>
 
       <div className="search-and-nav-icons-container ">
@@ -231,7 +233,7 @@ const Navbar = () => {
           <div className="nav-item profile-dropdown-container" ref={profileRef}>
             <div className="flex items-center gap-2 text-gray-700 cursor-pointer login">
               <span
-                className="flex items-center gap-2 max-[1024px]:flex-col max-[1024px]:text-[12px] max-[820px]:text-[11px]"
+                className="flex items-center gap-2 max-[1024px]:flex-row max-[1024px]:text-[12px] max-[820px]:text-[11px]"
                 onClick={!userFirstName ? () => navigate("/login") : undefined}
               >
                 {!userFirstName ? (
@@ -279,7 +281,7 @@ const Navbar = () => {
                 ) : (
                   <>
                     <div
-                      className="flex flex-row gap-1 mb-[10px] text-[#001f3f] hover:text-[#022f5d] hover:font-bold text-[15px]"
+                      className="flex flex-row gap-1 mb-[10px] text-[#001f3f] hover:text-[#022f5d] hover:font-bold text-[15px] cursor-pointer"
                       onClick={() => navigate("/profile")}
                     >
                       <FaUser style={{ marginRight: "8px" }} />
@@ -458,14 +460,18 @@ const Navbar = () => {
             {showEllipsisDropdown && (
               <div className="dropdown-menu ellipsis-menu">
                 <div
-                  className="dropdown-item"
+                  className={`dropdown-item ${
+                    location.pathname === "/about_us" ? "active" : ""
+                  }`}
                   onClick={() => navigate("/about_us")}
                 >
                   <FcAbout className="navbar_icon" /> About Us
                 </div>
 
                 <div
-                  className="dropdown-item"
+                  className={`dropdown-item ${
+                    location.pathname === "/help_us" ? "active" : ""
+                  }`}
                   onClick={() => navigate("/help_us")}
                 >
                   <FaHandsHelping className="navbar_icon" /> Help Us

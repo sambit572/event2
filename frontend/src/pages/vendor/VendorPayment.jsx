@@ -70,11 +70,15 @@ export default function VendorPayment() {
       fd.append("upiId", upiId);
       fd.append("panCardPic", panCardPic);
 
-      const res = await axios.post(`${BACKEND_URL}/vendors/bank-details`, fd, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/vendors/bank-details`,
+        fd,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       console.log("Success:", res.data);
       navigate("/vendor/legal-consent", { state: { currentStep: 3 } });

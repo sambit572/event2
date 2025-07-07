@@ -7,9 +7,12 @@ function ForgotPass() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("${BACKEND_URL}/user/forgot-password", {
-        email,
-      });
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/user/forgot-password`,
+        {
+          email,
+        }
+      );
       console.log(res.data.message);
       alert("Reset link sent successfully!");
     } catch (error) {

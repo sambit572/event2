@@ -43,17 +43,27 @@ import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
 // Common
 import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
+
+import BackToTop from "./pages/common/BackToTop";
+import FaqSection from "./components/customer/Home/FaqSection.jsx";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { setUser } from "./redux/UserSlice.js";
 import { setVendor } from "./redux/VendorSlice.js";
+
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const App = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
   // Hide Footer on specific pages
-  const pagesWithoutFooter = ["/vendor/thank-you", "/admin", "/dashboard"];
+  const pagesWithoutFooter = [
+    "/vendor/thank-you",
+    "/admin",
+    "/dashboard",
+    "/profile",
+  ];
 
   const dispatch = useDispatch();
 
@@ -67,7 +77,7 @@ const App = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await axios.get("${BACKEND_URL}/user/get-email", {
+        const res = await axios.get(`${BACKEND_URL}/user/get-email`, {
           withCredentials: true,
         });
 
@@ -85,7 +95,7 @@ const App = () => {
   useEffect(() => {
     const checkVendorAuth = async () => {
       try {
-        const res = await axios.get("${BACKEND_URL}/vendors/me", {
+        const res = await axios.get(`${BACKEND_URL}/vendors/me`, {
           withCredentials: true,
         });
 
@@ -108,10 +118,10 @@ const App = () => {
         <Routes>
           {/* Customer Routes */}
           <Route path="/" element={<Home />} />
-          <Route path="/category" element={<ServiceList />} />
-          <Route path="/categories" element={<CategoryCard />}></Route>
+          <Route path="/category/:categoryId" element={<ServiceList />} />
+          {/* <Route path="/categories" element={<CategoryCard />}></Route> */}
           <Route path="/reviews" element={<ReviewSlider />} />
-          <Route path="/category/service" element={<ServiceDetails />} />
+          <Route path="/service/:serviceId" element={<ServiceDetails />} />
           <Route
             path="/wishlist"
             element={
@@ -188,6 +198,7 @@ const App = () => {
           <Route path="/about_us" element={<AboutUs />} />
           <Route path="/help_us" element={<HelpUs />} />
           <Route path="/help-Center" element={<HelpCenter />} />
+          <Route path="/faqs" element={<FaqSection />} />
           <Route path="/Wishlist" element={<Wishlist />}></Route>
           <Route path="/profile" element={<Profile />}></Route>
           <Route path="/userdetails" element={<UserDetails />}></Route>

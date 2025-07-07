@@ -71,7 +71,7 @@ const ReviewSlider = () => {
     <div className="review_section">
       <h1 className="heading_review">Our Reviews</h1>
 
-      <h3 className="subheading">Celebrated by Many, Loved by All.</h3>
+      <h3 className="subheadings">Celebrated by Many, Loved by All.</h3>
       <div className="review_wrapper" ref={containerRef}>
         <div
           className="review_container"

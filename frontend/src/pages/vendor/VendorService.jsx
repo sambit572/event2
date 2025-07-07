@@ -147,7 +147,7 @@ function VendorService({ currentStep }) {
       formData.append("mins", minutes);
 
       const response = await axios.post(
-        "${BACKEND_URL}/vendors/create-service",
+        `${import.meta.env.VITE_BACKEND_URL}/vendors/create-service`,
         formData,
         {
           headers: {
