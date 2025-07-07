@@ -46,7 +46,7 @@ export default function VendorLegalConsent() {
       formData.append("signature", signatureFile); // required by multer
 
       const res = await axios.post(
-        "http://localhost:8000/vendors/legal-consent",
+        "${BACKEND_URL}/vendors/legal-consent",
         formData,
         {
           headers: {

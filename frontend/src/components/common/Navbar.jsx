@@ -32,7 +32,6 @@ import { clearUser } from "../../redux/UserSlice.js";
 import { clearVendor } from "../../redux/VendorSlice.js";
 import { BACKEND_URL } from "../../utils/constant.js";
 
-
 const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -60,10 +59,9 @@ const Navbar = () => {
   };
   const fetchUserProfile = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/user/profile", {
+      const res = await axios.get("${BACKEND_URL}/user/profile", {
         withCredentials: true,
       });
-
 
       if (res.data.success) {
         setCurrentUser(res.data.data);
@@ -79,8 +77,6 @@ const Navbar = () => {
   useEffect(() => {
     fetchUserProfile();
   }, []);
-
-
 
   const handleHomeClick = () => {
     if (location.pathname === "/") {
@@ -348,10 +344,7 @@ const Navbar = () => {
                     </>
                   ) : (
                     <>
-                      <span className="font-medium">
-                
-                        {VendorFirstName}
-                      </span>
+                      <span className="font-medium">{VendorFirstName}</span>
                     </>
                   )}
                 </span>

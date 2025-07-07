@@ -12,7 +12,7 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/UserSlice.js";
 
 const Login = ({ onClose }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [step, setStep] = useState("form"); // 'form', 'otp', 'success'
   const [showSuccessIcon, setShowSuccessIcon] = useState(false);
@@ -87,7 +87,7 @@ const Login = ({ onClose }) => {
 
     try {
       const res = await axios.post(
-        "http://localhost:8000/user/login",
+        "${BACKEND_URL}/user/login",
         {
           email: formData.email,
           phoneNo: formData.phoneNo,
@@ -124,7 +124,8 @@ const Login = ({ onClose }) => {
   }
 
   const renderStep = () => {
-    if (step === "success") return <SuccessBlock showSuccessIcon={showSuccessIcon} />;
+    if (step === "success")
+      return <SuccessBlock showSuccessIcon={showSuccessIcon} />;
     if (step === "otp") return <OTPVerification setStep={setStep} />;
 
     return (

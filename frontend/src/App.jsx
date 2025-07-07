@@ -37,8 +37,6 @@ import UserDetails from "./pages/customer/UserDetails.jsx";
 import DashboardServices from "./components/vendor/DashboardServices.jsx";
 import PopUp from "./components/customer/CustomerNegotiationModal";
 
-
-
 // Vendor Pages
 import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
 
@@ -48,7 +46,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { setUser } from "./redux/UserSlice.js";
-import {setVendor} from "./redux/VendorSlice.js";
+import { setVendor } from "./redux/VendorSlice.js";
 
 const App = () => {
   const navigate = useNavigate();
@@ -59,51 +57,47 @@ const App = () => {
 
   const dispatch = useDispatch();
 
-    useEffect(() => {
+  useEffect(() => {
     const storedVendor = localStorage.getItem("vendor");
     if (storedVendor) {
       dispatch(setVendor(JSON.parse(storedVendor)));
     }
-  }, []); 
+  }, []);
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/user/get-email", {
+        const res = await axios.get("${BACKEND_URL}/user/get-email", {
           withCredentials: true,
-        }); 
-        
-        // this specific route provide whole user object so nothing to worry 
-        
-        console.log("in app.jsx user dispatched:",res.data.data)
+        });
+
+        // this specific route provide whole user object so nothing to worry
+
+        console.log("in app.jsx user dispatched:", res.data.data);
         dispatch(setUser(res.data.data));
       } catch (err) {
         console.error("Auth check failed:", err.message);
       }
     };
-      checkAuth();
+    checkAuth();
   }, []);
 
+  useEffect(() => {
+    const checkVendorAuth = async () => {
+      try {
+        const res = await axios.get("${BACKEND_URL}/vendors/me", {
+          withCredentials: true,
+        });
 
-useEffect(() => {
-  const checkVendorAuth = async () => {
-    try {
-      const res = await axios.get("http://localhost:8000/vendors/me", {
-        withCredentials: true,
-      });
+        console.log("Vendor data received:", res.data.data);
+        dispatch(setVendor(res.data.data));
+      } catch (err) {
+        console.error("Vendor auth check failed:", err.message);
+      }
+    };
 
-      console.log("Vendor data received:", res.data.data);
-      dispatch(setVendor(res.data.data));
-
-      
-    } catch (err) {
-      console.error("Vendor auth check failed:", err.message);
-    }
-  };
-
-  checkVendorAuth();
-}, []);
-
+    checkVendorAuth();
+  }, []);
 
   return (
     <>
@@ -142,26 +136,26 @@ useEffect(() => {
               </ProtectedRoute>
             }
           />
-          
+
           <Route
-           path="/dashboardservices"
+            path="/dashboardservices"
             element={
-            <ProtectedRoute>
-              <DashboardServices />
-            </ProtectedRoute>
-            } />
+              <ProtectedRoute>
+                <DashboardServices />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Vendor Routes */}
 
-          <Route 
-          path="/vendor/register" 
-          element={
-           <ProtectedRoute>
-            <VendorRegistration />
-           </ProtectedRoute>
-          
-          } />
-
+          <Route
+            path="/vendor/register"
+            element={
+              <ProtectedRoute>
+                <VendorRegistration />
+              </ProtectedRoute>
+            }
+          />
 
           <Route path="/category/VendorService" element={<VendorService />} />
           <Route path="/vendor/payment-info" element={<VendorPayment />} />
@@ -172,14 +166,14 @@ useEffect(() => {
           <Route path="/vendor/thank-you" element={<VendorThankYou />} />
 
           <Route path="/dashboard" element={<DashBoardMain />} />
-          <Route path="/vendor-login" element={<VendorLogin/>} />
+          <Route path="/vendor-login" element={<VendorLogin />} />
 
           {/* Auth Routes */}
           <Route
             path="/login"
             element={<Login onClose={() => navigate(-1)} />}
           />
-          
+
           <Route
             path="/register"
             element={<Register onClose={() => navigate(-1)} />}
@@ -199,7 +193,7 @@ useEffect(() => {
           <Route path="/userdetails" element={<UserDetails />}></Route>
           <Route path="/pop-up" element={<PopUp />}></Route>
           <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/vendor-login" element={<VendorLogin/>} />
+          <Route path="/vendor-login" element={<VendorLogin />} />
         </Routes>
       </main>
 
@@ -207,20 +201,21 @@ useEffect(() => {
 
       {/* Conditionally render Footer */}
       {!pagesWithoutFooter.includes(location.pathname) && <Footer />}
-      <Toaster 
-      toastOptions={{
+      <Toaster
+        toastOptions={{
           duration: 5000,
           style: {
-            padding: '16px',
-            color: '#fff',
-            background: '#1f2937',
-            borderRadius: '8px',
-            position: 'relative',
-            overflow: 'hidden',
+            padding: "16px",
+            color: "#fff",
+            background: "#1f2937",
+            borderRadius: "8px",
+            position: "relative",
+            overflow: "hidden",
           },
         }}
-      position="top-right" reverseOrder={false} />
-
+        position="top-right"
+        reverseOrder={false}
+      />
     </>
   );
 };

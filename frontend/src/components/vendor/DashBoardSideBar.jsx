@@ -61,7 +61,9 @@ function DashBoardSideBar({ isOpen }) {
       formData.append("profilePicture", file);
 
       try {
-        const res = await axios.post ("http://localhost:8000/vendors/upload-profile", formData,
+        const res = await axios.post(
+          "${BACKEND_URL}/vendors/upload-profile",
+          formData,
           {
             headers: {
               "Content-Type": "multipart/form-data",
@@ -76,39 +78,45 @@ function DashBoardSideBar({ isOpen }) {
     }
   };
 
-const handleRemoveImage = async () => {
-  try {
-    const formData = new FormData();
-    formData.append("removeProfilePicture", "true");
+  const handleRemoveImage = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("removeProfilePicture", "true");
 
-    const res = await axios.put(`http://localhost:8000/vendors/${vendor._id}`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-      withCredentials: true,
-    });
+      const res = await axios.put(
+        `http://localhost:8000/vendors/${vendor._id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true,
+        }
+      );
 
-    dispatch(setVendor(res.data.data));
-    setSelectedImage(null);
-    console.log("Profile image removed successfully.");
-  } catch (err) {
-    console.error("Image remove failed:", err);
-  }
-};
-
+      dispatch(setVendor(res.data.data));
+      setSelectedImage(null);
+      console.log("Profile image removed successfully.");
+    } catch (err) {
+      console.error("Image remove failed:", err);
+    }
+  };
 
   const handleSaveChanges = async () => {
     try {
-      const res = await axios.put(`http://localhost:8000/vendors/${vendor._id}`, {
-        vendorId: vendor._id,
-        fullName,
-        email,
-        contact,
-        upiId,
-        accountNumber,
-        ifscCode,
-        active,
-      });
+      const res = await axios.put(
+        `http://localhost:8000/vendors/${vendor._id}`,
+        {
+          vendorId: vendor._id,
+          fullName,
+          email,
+          contact,
+          upiId,
+          accountNumber,
+          ifscCode,
+          active,
+        }
+      );
       dispatch(setVendor(res.data.updatedVendor));
       console.log("Changes saved.");
     } catch (err) {
@@ -141,7 +149,9 @@ const handleRemoveImage = async () => {
             style={{ display: "none" }}
             onChange={handleImageChange}
           />
-          <button onClick={() => document.getElementById("profilePicInput").click()}>
+          <button
+            onClick={() => document.getElementById("profilePicInput").click()}
+          >
             Upload Photo
           </button>
           <button onClick={handleRemoveImage}>Remove Photo</button>
@@ -266,9 +276,13 @@ const handleRemoveImage = async () => {
         </ul>
 
         <button className="edit-buttons flex gap-1" onClick={handleToggleEdit}>
-          {editMode ? "Save" : <>
-            <FaEdit /> Edit
-          </>}
+          {editMode ? (
+            "Save"
+          ) : (
+            <>
+              <FaEdit /> Edit
+            </>
+          )}
         </button>
       </div>
     </div>

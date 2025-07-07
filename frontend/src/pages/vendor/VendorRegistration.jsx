@@ -84,7 +84,7 @@ export default function VendorRegister() {
       }
 
       const response = await axios.post(
-        "http://localhost:8000/vendors/register",
+        "${BACKEND_URL}/vendors/register",
         formData,
         {
           headers: {
@@ -96,7 +96,7 @@ export default function VendorRegister() {
 
       console.log("Registration successful:", response.data);
 
-      dispatch(setVendor(response.data.data))
+      dispatch(setVendor(response.data.data));
       console.log("Vendor data set in Redux:", response.data.data);
 
       navigate("/category/VendorService", {

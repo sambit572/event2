@@ -7,11 +7,10 @@ import "./LoginRegister.css";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/UserSlice.js";
 
-
 const Register = ({ onClose }) => {
   const navigate = useNavigate();
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -39,27 +38,24 @@ const Register = ({ onClose }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/user/signup",
+        "${BACKEND_URL}/user/signup",
         formData,
         { withCredentials: true }
       );
 
-
-      const  user  = response.data.data;
+      const user = response.data.data;
       console.log(user);
 
-      dispatch(setUser(user))
+      dispatch(setUser(user));
 
       if (response.data.message === "user do exist") {
         setErrorMsg("User already exists. Please log in.");
       } else {
+        let userFirstName;
 
-
-        let userFirstName ;
-
-        if (user.fullName.length == 1){
+        if (user.fullName.length == 1) {
           userFirstName = user.fullName;
-        }else{
+        } else {
           userFirstName = user.fullName.split(" ")[0];
         }
 
@@ -156,7 +152,7 @@ const Register = ({ onClose }) => {
 };
 
 Register.propTypes = {
-  onClose: PropTypes.func, 
+  onClose: PropTypes.func,
 };
 
 export default Register;
