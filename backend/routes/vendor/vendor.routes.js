@@ -60,6 +60,7 @@ vendor_router.put("/:id", upload.single("profilePicture"), updateVendor);
 // --- SERVICE ROUTES --- //
 vendor_router.post(
   "/create-service",
+  verifyVendorJwt,
   (req, res, next) => {
     upload.array("images", 10)(req, res, function (err) {
       if (err) {

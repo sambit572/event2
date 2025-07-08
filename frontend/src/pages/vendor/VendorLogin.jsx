@@ -201,4 +201,3 @@ VendorLogin.propTypes = {
 };
 
 export default VendorLogin;
-
