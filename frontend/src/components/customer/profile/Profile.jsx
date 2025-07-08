@@ -4,7 +4,6 @@ import PasswordInput from "../../../utils/PasswordInput.jsx";
 import axios from "axios";
 import { BACKEND_URL } from "../../../utils/constant.js";
 import "./Profile.css";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 function Profile({ onProfileChange }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);

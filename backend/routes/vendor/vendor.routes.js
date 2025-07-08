@@ -1,6 +1,6 @@
 import express from "express";
 import { upload } from "../../middleware/multer.middleware.js";
-import { createService } from "../../controller/vendor/service.controller.js";
+import { createService, getMyServices } from "../../controller/vendor/service.controller.js";
 import { verifyVendorJwt } from "../../middleware/VendorAuth.middleware.js";
 
 // Vendor Core Controllers
@@ -78,7 +78,7 @@ vendor_router.post(
   upload.single("panCardPic"),
   createBankDetails
 );
-vendor_router.get("/bank-details/:vendorId", getBankDetailsByVendor);
+vendor_router.get("/bank-details/bankDetails",verifyVendorJwt, getBankDetailsByVendor);
 vendor_router.put("/bank-details/:vendorId", updateBankDetails);
 vendor_router.delete("/bank-details/:vendorId", deleteBankDetails);
 vendor_router.get("/bank-details/:vendorId", getBankDetailsByVendor);
@@ -107,6 +107,10 @@ vendor_router.post(
   updateVendorProfilePicture
   
 );
+
+// services ROUTES
+
+vendor_router.get("/my-services", verifyVendorJwt, getMyServices);
 
 
 

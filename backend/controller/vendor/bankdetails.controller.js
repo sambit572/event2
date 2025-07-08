@@ -18,7 +18,6 @@ import { ApiError } from "../../utilities/ApiError.js";
 export const createBankDetails = async (req, res) => {
   try {
     const {
-      vendorid,
       accountHolderName,
       accountNumber,
       branchName,
@@ -45,7 +44,7 @@ export const createBankDetails = async (req, res) => {
     }
 
     const newDetails = await BankDetails.create({
-      vendorid,
+      vendorid: req.vendor._id,
       accountHolderName,
       accountNumber,
       branchName,
@@ -69,10 +68,13 @@ export const createBankDetails = async (req, res) => {
 // Getting bank details by vendor ID
 export const getBankDetailsByVendor = async (req, res) => {
   try {
-    const { vendorId } = req.params;
+    console.log("inside getBankDetailsByVendor");
+    console.log(req.vendor)
+    const vendorId = req.vendor._id;
 
-    const details = await BankDetails.findOne({ vendorid: vendorId });
+    const details = await BankDetails.findOne({ vendorId: vendorId });
 
+    console.log(details);
     if (!details) {
       return res
         .status(404)
@@ -83,7 +85,11 @@ export const getBankDetailsByVendor = async (req, res) => {
       .status(200)
       .json(new ApiResponse(200, details, "Bank details fetched successfully"));
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json(new ApiError(500, error.message));
+    console.error(
+      "error message as can not obtain bankdetails: ",
+      error.message
+    );
   }
 };
 

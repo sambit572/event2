@@ -11,7 +11,7 @@ import {
   deleteFromCloudinary,
 } from "../../utilities/cloudinary.js";
 import { sendEmail } from "../../utilities/sendEmail.js";
-
+import { validateEmailDomain } from "../../utilities/verifyDNS.js";
 const option = {
   httpOnly: true,
   secure: false,
@@ -129,6 +129,11 @@ const loginUser = async (req, res) => {
 
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return res.status(400).json(new ApiError(400, "Invalid email format"));
+    }
+
+    const isValidDns = await validateEmailDomain(email);
+    if (!isValidDns) {
+      return res.status(400).json(new ApiError(400, "Invalid email domain"));
     }
 
     if (phoneNo && !isValidPhoneNumber(phoneNo, "IN")) {

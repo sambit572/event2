@@ -4,6 +4,7 @@ import { FaEdit } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { setVendor } from "../../redux/VendorSlice"; // If you update vendor in Redux
 import axios from "axios";
+import { BACKEND_URL } from "../../utils/constant";
 
 function DashBoardSideBar({ isOpen }) {
   const vendor = useSelector((state) => state.vendor.vendor);
@@ -20,16 +21,34 @@ function DashBoardSideBar({ isOpen }) {
   const [active, setActive] = useState(true);
   const [editMode, setEditMode] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [bankDetails, setBankDetails] = useState(null);
 
   useEffect(() => {
+    const fetchBankDetails = async () => {
+      try {
+        const res = await axios.get(
+          `${BACKEND_URL}/vendors/bank-details/bankdetails`,
+          {
+            withCredentials: true,
+          }
+        );
+        console.log("🟢 Vendor bank details:", res.data?.data);
+        setBankDetails(res.data?.data);
+        setUpiId(bankDetails.upiId || "");
+        setAccountNumber(bankDetails.accountNumber || "");
+        setIfscCode(bankDetails.ifscCode || "");
+      } catch (err) {
+        console.error("Failed to fetch vendor bank details", err);
+      }
+    };
+
+    fetchBankDetails();
+
     if (vendor) {
       setFullName(vendor.fullName || "");
       setEmail(vendor.email || "");
       setContact(vendor.contact || "");
       setEventsHosted(vendor.eventsHosted?.toString() || "0");
-      setUpiId(vendor.upiId || "");
-      setAccountNumber(vendor.accountNumber || "");
-      setIfscCode(vendor.ifscCode || "");
       setActive(vendor.active ?? true);
     }
   }, [vendor]);
@@ -254,7 +273,7 @@ function DashBoardSideBar({ isOpen }) {
                       onChange={(e) => setAccountNumber(e.target.value)}
                     />
                   ) : (
-                    accountNumber
+                    `****${accountNumber?.slice(-4) || ""}`
                   )}
                 </div>
                 <div>

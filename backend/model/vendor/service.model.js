@@ -2,21 +2,22 @@ import { Schema, model } from "mongoose";
 
 const serviceSchema = new Schema(
   {
-    vendorid: {
+    vendorId: {
       type: Schema.Types.ObjectId,
       ref: "Vendor",
+      required: true,
     },
     serviceCategory: {
       type: String,
       required: true,
     },
     serviceImage: {
-      type: [String], 
+      type: [String],
       required: true,
     },
     priceRange: {
       type: String,
-      required: false, 
+      required: false,
     },
     minPrice: {
       type: Number,

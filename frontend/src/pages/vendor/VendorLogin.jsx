@@ -10,7 +10,7 @@ import axios from "axios";
 import "../common/LoginRegister.css";
 import { useDispatch } from "react-redux";
 import { setVendor } from "../../redux/VendorSlice.js";
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+import { BACKEND_URL } from "../../utils/constant.js";
 
 const VendorLogin = ({ onClose }) => {
   const dispatch = useDispatch();
