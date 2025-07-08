@@ -38,7 +38,7 @@
 }
 
 .login {
-  color: black;
+  color: #001f3f;
   font-size: 19px;
   font-weight: bold;
 }
@@ -160,6 +160,7 @@
 }
 .dropdown-item:hover .navbar_icon {
   color: #001f3f;
+  
   font-size: 18px;
 }
 .nav-items {
