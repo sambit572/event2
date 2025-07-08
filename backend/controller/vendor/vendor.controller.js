@@ -136,7 +136,10 @@ const updateVendor = async (req, res, next) => {
 
     // ✅ CASE 1: REMOVE PROFILE PICTURE if requested
     if (updateData.removeProfilePicture === "true") {
-      if (vendor.profilePicture && vendor.profilePicture.includes("cloudinary")) {
+      if (
+        vendor.profilePicture &&
+        vendor.profilePicture.includes("cloudinary")
+      ) {
         const publicId = vendor.profilePicture.split("/").pop().split(".")[0];
         await uploadOnCloudinary(null, publicId, true); // Custom delete support
       }
@@ -146,7 +149,10 @@ const updateVendor = async (req, res, next) => {
     // ✅ CASE 2: UPLOAD NEW IMAGE AND REPLACE OLD
     if (file) {
       // Delete old image from Cloudinary (if exists)
-      if (vendor.profilePicture && vendor.profilePicture.includes("cloudinary")) {
+      if (
+        vendor.profilePicture &&
+        vendor.profilePicture.includes("cloudinary")
+      ) {
         const publicId = vendor.profilePicture.split("/").pop().split(".")[0];
         await uploadOnCloudinary(null, publicId, true);
       }
@@ -166,7 +172,9 @@ const updateVendor = async (req, res, next) => {
 
     return res
       .status(200)
-      .json(new ApiResponse(200, updatedVendor, "Vendor updated successfully."));
+      .json(
+        new ApiResponse(200, updatedVendor, "Vendor updated successfully.")
+      );
   } catch (error) {
     console.error("Error updating vendor:", error);
 
@@ -198,7 +206,10 @@ const updateVendor = async (req, res, next) => {
     }
 
     next(
-      new ApiError(500, "An internal server error occurred during vendor update.")
+      new ApiError(
+        500,
+        "An internal server error occurred during vendor update."
+      )
     );
   }
 };
@@ -408,9 +419,9 @@ const getVendorProfile = async (req, res) => {
   }
 };
 
- const updateVendorProfilePicture = async (req, res, next) => {
+const updateVendorProfilePicture = async (req, res, next) => {
   try {
-    const id = req.vendor._id;  // 👈 Comes from JWT middleware
+    const id = req.vendor._id; // 👈 Comes from JWT middleware
     const file = req.file;
 
     if (!file) {
@@ -436,7 +447,11 @@ const getVendorProfile = async (req, res) => {
     vendor.profilePicture = cloudinaryResult.url;
     await vendor.save();
 
-    res.status(200).json(new ApiResponse(200, vendor, "Profile picture updated successfully."));
+    res
+      .status(200)
+      .json(
+        new ApiResponse(200, vendor, "Profile picture updated successfully.")
+      );
   } catch (error) {
     console.error("Error uploading profile:", error);
 
@@ -451,8 +466,6 @@ const getVendorProfile = async (req, res) => {
     next(new ApiError(500, "Internal server error during profile update."));
   }
 };
-
-
 
 export {
   registerVendor,

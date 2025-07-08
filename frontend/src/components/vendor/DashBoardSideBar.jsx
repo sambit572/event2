@@ -8,7 +8,8 @@ import axios from "axios";
 function DashBoardSideBar({ isOpen }) {
   const vendor = useSelector((state) => state.vendor.vendor);
   const dispatch = useDispatch();
-
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [contact, setContact] = useState("");
@@ -47,6 +48,9 @@ function DashBoardSideBar({ isOpen }) {
   const handleToggleEdit = () => {
     if (editMode) {
       handleSaveChanges();
+    } else {
+      // Trying to save, show password modal
+      setShowPasswordModal(true);
     }
     setEditMode((prev) => !prev);
   };
@@ -274,6 +278,19 @@ function DashBoardSideBar({ isOpen }) {
             )}
           </li>
         </ul>
+        {/* {showPasswordModal && (
+          <div className="modal">
+            <h3>Enter your password to confirm</h3>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+            />
+            <button onClick={handleConfirmPassword}>Confirm</button>
+            <button onClick={() => setShowPasswordModal(false)}>Cancel</button>
+          </div>
+        )} */}
 
         <button className="edit-buttons flex gap-1" onClick={handleToggleEdit}>
           {editMode ? (
