@@ -50,6 +50,7 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import { setUser } from "./redux/UserSlice.js";
 import { setVendor } from "./redux/VendorSlice.js";
+import ScrollToTop from "./components/common/ScrollToTop.jsx";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -111,8 +112,12 @@ const App = () => {
 
   return (
     <>
+
+      
       {/* Conditionally render Navbar */}
       {location.pathname !== "/admin" && <Navbar />}
+
+      <ScrollToTop />
 
       <main>
         <Routes>

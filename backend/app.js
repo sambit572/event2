@@ -4,6 +4,7 @@ import cors from "cors";
 import userRouter from "./routes/user/user.routes.js";
 import { vendor_router } from "./routes/vendor/vendor.routes.js";
 import { errorHandler } from "./middleware/error.middleware.js";
+import reviewRoutes from "./routes/review.routes.js";
 
 const app = express();
 
@@ -20,7 +21,7 @@ app.use(express.static("public"));
 app.use(express.json()); // ✅ Important
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
+app.use("/api/reviews", reviewRoutes);
 // ✅ Now register your routes
 app.use("/user", userRouter);
 app.use("/vendors", vendor_router);
