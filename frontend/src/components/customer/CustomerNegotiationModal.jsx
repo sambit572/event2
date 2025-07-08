@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import "./negotiationModal.css";
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:8000");
+const socket = io(import.meta.env.VITE_BACKEND_URL);
 
 const CustomerNegotiationModal = () => {
   const { state } = useLocation();
@@ -15,7 +15,8 @@ const CustomerNegotiationModal = () => {
   const [timeLeft, setTimeLeft] = useState(15 * 60); // 15 minutes
   const [callStarted, setCallStarted] = useState(false);
   const [callStatus, setCallStatus] = useState("Not Started");
-  const [proceededWithoutNegotiation, setProceededWithoutNegotiation] = useState(false);
+  const [proceededWithoutNegotiation, setProceededWithoutNegotiation] =
+    useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [venueInput, setVenueInput] = useState(venueLocation);
 
@@ -25,7 +26,9 @@ const CustomerNegotiationModal = () => {
   };
 
   const formatTime = (seconds) => {
-    const m = Math.floor(seconds / 60).toString().padStart(2, "0");
+    const m = Math.floor(seconds / 60)
+      .toString()
+      .padStart(2, "0");
     const s = (seconds % 60).toString().padStart(2, "0");
     return `${m}:${s}`;
   };
@@ -122,8 +125,16 @@ const CustomerNegotiationModal = () => {
 
   return (
     <div className="negotiation-overlay">
-      <div className="negotiation-modal" role="dialog" aria-labelledby="modal-title">
-        <button className="modal-close" onClick={onClose} aria-label="Close negotiation modal">
+      <div
+        className="negotiation-modal"
+        role="dialog"
+        aria-labelledby="modal-title"
+      >
+        <button
+          className="modal-close"
+          onClick={onClose}
+          aria-label="Close negotiation modal"
+        >
           ×
         </button>
 
@@ -147,7 +158,9 @@ const CustomerNegotiationModal = () => {
           </p>
           <p>
             <strong>Date Of Event:</strong>{" "}
-            {eventDate ? new Date(eventDate).toLocaleDateString() : "Not provided"}
+            {eventDate
+              ? new Date(eventDate).toLocaleDateString()
+              : "Not provided"}
           </p>
           <p>
             <strong>Listed Price:</strong> ₹{bookingDetails.CurrentAmount}
@@ -167,7 +180,8 @@ const CustomerNegotiationModal = () => {
                 aria-describedby="price-input-description"
               />
               <span id="price-input-description" className="sr-only">
-                Enter the price you wish to propose to the vendor in Indian Rupees.
+                Enter the price you wish to propose to the vendor in Indian
+                Rupees.
               </span>
             </div>
 

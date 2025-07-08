@@ -39,18 +39,19 @@
 }
 
 /* Modern styles */
-.popup-title {
+.popup-titles {
   color: rgb(47, 5, 87);
   text-align: center;
   font-weight: 600;
   position: relative;
-  top: -44px;
+  top: -60px;
 }
 
-.popup-content {
+.popup-contents {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  margin-top: -20px;
 }
 
 .popup-row {
@@ -64,8 +65,8 @@
 /* Close button */
 .close-btn {
   position: relative;
-  top: -7px;
-  left: 300px;
+  top: -20px;
+  left: 310px;
   background: none;
   border: none;
   font-size: 40px;
@@ -124,10 +125,9 @@
   .booking-popup-box {
     max-width: 420px;
     padding: 24px;
-    top: 40%;
   }
 
-  .popup-title {
+  .popup-titles {
     font-size: 1.5rem;
   }
 
@@ -144,7 +144,7 @@
     top: 300px;
   }
 
-  .popup-title {
+  .popup-titles {
     font-size: 1.4rem;
   }
 
@@ -164,7 +164,7 @@
     top: 308px;
   }
 
-  .popup-title {
+  .popup-titles {
     font-size: 1.3rem;
   }
 
@@ -174,9 +174,9 @@
   }
 
   .close-btn {
-    font-size: 22px;
-    top: 12px;
-    left: 5px;
+    font-size: 25px;
+    /* top: 12px;
+    left: 5px; */
     color: red;
   }
 }
@@ -190,7 +190,7 @@
     top: 320px;
   }
 
-  .popup-title {
+  .popup-titles {
     font-size: 1.2rem;
   }
 
@@ -213,8 +213,9 @@
     left: 200px;
   }
 
-  .popup-title {
+  .popup-titles {
     font-size: 1.1rem;
+    margin-top: 20px;
   }
 
   .popup-row {
@@ -224,8 +225,8 @@
 
   .close-btn {
     font-size: 20px;
-    top: 8px;
-    left: 260px;
+    top: -15px;
+    left: 255px;
     color: red;
   }
 }
@@ -238,7 +239,7 @@
     left: 185px;
   }
 
-  .popup-title {
+  .popup-titles {
     font-size: 0.95rem;
   }
 
@@ -254,7 +255,7 @@
 
 @media (max-width: 380px) {
   .close-btn {
-    left: 250px;
+    left: 230px;
     color: red;
   }
 }
@@ -266,7 +267,7 @@
     padding: 10px;
   }
 
-  .popup-title {
+  .popup-titles {
     font-size: 0.9rem;
   }
 

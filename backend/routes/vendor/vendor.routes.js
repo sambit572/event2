@@ -1,5 +1,6 @@
 import express from "express";
 import { upload } from "../../middleware/multer.middleware.js";
+import { createService, getMyServices } from "../../controller/vendor/service.controller.js";
 import { verifyVendorJwt } from "../../middleware/VendorAuth.middleware.js";
 
 // Vendor Core Controllers
@@ -14,10 +15,8 @@ import {
   vendorSilentLogin,
   checkVendorEmailStatus,
   getVendorProfile,
+  updateVendorProfilePicture,
 } from "../../controller/vendor/vendor.controller.js";
-
-// Service Controller
-import { createService } from "../../controller/vendor/service.controller.js";
 
 // Bank Details
 import {
@@ -26,6 +25,8 @@ import {
   getBankDetailsByVendor,
   updateBankDetails,
 } from "../../controller/vendor/bankdetails.controller.js";
+
+// Legal Consent
 
 // Legal Consent
 import {
@@ -38,26 +39,38 @@ import {
 const vendor_router = express.Router();
 
 // --- AUTH ROUTES --- //
+// --- AUTH ROUTES --- //
 vendor_router.post(
   "/register",
   upload.single("profilePicture"),
   registerVendor
 );
 vendor_router.post("/login", loginVendor);
-vendor_router.post("/logout",verifyVendorJwt, vendorLogout);
+vendor_router.post("/logout", verifyVendorJwt, vendorLogout);
 vendor_router.post("/send-reset-link", sendVendorResetLink);
 vendor_router.post("/reset-password/:resetToken", resetVendorPassword);
-vendor_router.post("/change-password",verifyVendorJwt, changeVendorPassword);
-vendor_router.get("/silent-login",verifyVendorJwt, vendorSilentLogin);
+vendor_router.post("/change-password", verifyVendorJwt, changeVendorPassword);
+vendor_router.get("/silent-login", verifyVendorJwt, vendorSilentLogin);
 vendor_router.post("/check-email", checkVendorEmailStatus);
 vendor_router.get("/me", verifyVendorJwt, getVendorProfile);
-
 
 // --- PROFILE ROUTES --- //
 vendor_router.put("/:id", upload.single("profilePicture"), updateVendor);
 
 // --- SERVICE ROUTES --- //
-vendor_router.post("/create-service", upload.array("images", 5), createService);
+vendor_router.post(
+  "/create-service",
+  (req, res, next) => {
+    upload.array("images", 10)(req, res, function (err) {
+      if (err) {
+        return res.status(400).json({ success: false, message: err.message });
+      }
+      next();
+    });
+  },
+  createService
+);
+
 
 // --- BANK DETAILS ROUTES --- //
 vendor_router.post(
@@ -65,6 +78,9 @@ vendor_router.post(
   upload.single("panCardPic"),
   createBankDetails
 );
+vendor_router.get("/bank-details/bankDetails",verifyVendorJwt, getBankDetailsByVendor);
+vendor_router.put("/bank-details/:vendorId", updateBankDetails);
+vendor_router.delete("/bank-details/:vendorId", deleteBankDetails);
 vendor_router.get("/bank-details/:vendorId", getBankDetailsByVendor);
 vendor_router.put("/bank-details/:vendorId", updateBankDetails);
 vendor_router.delete("/bank-details/:vendorId", deleteBankDetails);
@@ -82,5 +98,20 @@ vendor_router.put(
   updateLegalConsent
 );
 vendor_router.delete("/legal-consent/:vendorId", deleteLegalConsent);
+
+// --- UPLOAD PROFILE PICTURE ROUTE (NEW) --- //
+vendor_router.post(
+  "/upload-profile",
+  verifyVendorJwt,
+  upload.single("profilePicture"),
+  updateVendorProfilePicture
+  
+);
+
+// services ROUTES
+
+vendor_router.get("/my-services", verifyVendorJwt, getMyServices);
+
+
 
 export { vendor_router };

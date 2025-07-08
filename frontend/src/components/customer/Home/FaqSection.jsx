@@ -43,6 +43,11 @@ const faqData = [
     answer:
       "Currently, Eventsbridge is providing services exclusively in Odisha. However, we are actively working on expanding our platform to more cities and regions soon to serve a wider audience. Stay tuned for updates!",
   },
+  {
+    question: "What happens if a vendor cancels last minute?",
+    answer:
+      "We'll help you find a replacement right away. If none is available, you'll receive a full refund for that service.",
+  },
 ];
 
 const FaqSection = () => {

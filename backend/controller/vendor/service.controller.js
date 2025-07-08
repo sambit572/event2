@@ -79,6 +79,7 @@ export const createService = async (req, res) => {
     // Save service document to database
     console.log("Creating new service document in DB...");
     const newService = await Service.create({
+      vendorId: req.vendor._id,
       serviceCategory,
       serviceImage: imageUrls,
       priceRange,
@@ -104,3 +105,34 @@ export const createService = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export const checkServiceExists = async (req, res) => {
+  try {
+    const existingService = await Service.findOne().sort({ createdAt: -1 });
+
+    if (existingService) {
+      return res.status(200).json({ exists: true });
+    } else {
+      return res.status(200).json({ exists: false });
+    }
+  } catch (error) {
+    console.error("Error checking service:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getMyServices = async (req, res) => {
+  try {
+    const vendorId = req.vendor._id;
+    console.log("vendor obj from beckend inside my services: ",req.vendor)
+    const services = await Service.find({ vendorId: vendorId }).sort({
+      createdAt: -1,
+    });
+    console.log("services of current vendor fetched from database :",services)
+    res.status(200).json(new ApiResponse(200,services,"Services for the current vendor fetched successfully"));
+  } catch (err) {
+    console.error("Error fetching services:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+

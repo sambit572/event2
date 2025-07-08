@@ -27,11 +27,11 @@
   text-align: center;
 }
 
-.subheading {
+.subheadings {
   text-align: center;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 500;
-
+margin-top: -20px;
   margin-bottom: 40px;
   color: #3b0340e1;
   letter-spacing: 0.5px;

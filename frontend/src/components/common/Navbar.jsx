@@ -97,7 +97,7 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       await axios.post(
-        ` ${BACKEND_URL}/user/logout`,
+       ` ${BACKEND_URL}/user/logout`,
         {},
         { withCredentials: true }
       );
@@ -339,7 +339,9 @@ const Navbar = () => {
                   {!VendorFirstName ? (
                     <span className="font-medium hover:bg-[#001f3f] hover:text-white rounded px-2 py-1 transition-colors">Be a Vendor</span>
                   ) : (
-                    <span className="font-medium">{VendorFirstName}</span>
+                    <>
+                      <span className="font-medium">{VendorFirstName}</span>
+                    </>
                   )}
                 </span>
 
@@ -442,16 +444,18 @@ const Navbar = () => {
             {showEllipsisDropdown && (
               <div className="dropdown-menu ellipsis-menu">
                 <div
-                  className={`dropdown-item ${location.pathname === "/about_us" ? "active" : ""
-                    }`}
+                  className={`dropdown-item ${
+                    location.pathname === "/about_us" ? "active" : ""
+                  }`}
                   onClick={() => navigate("/about_us")}
                 >
                   <FcAbout className="navbar_icon" /> About Us
                 </div>
 
                 <div
-                  className={`dropdown-item ${location.pathname === "/help_us" ? "active" : ""
-                    }`}
+                  className={`dropdown-item ${
+                    location.pathname === "/help_us" ? "active" : ""
+                  }`}
                   onClick={() => navigate("/help_us")}
                 >
                   <FaHandsHelping className="navbar_icon" /> Help Us

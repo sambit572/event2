@@ -1,20 +1,26 @@
-import "./ServiceDetailsSection.css"; // Ensure CSS is imported
+import "./ServiceDetailsSection.css";
 
-const ServiceDetailsSection = () => {
+const ServiceDetailsSection = ({ title, category, idealFor, inclusions }) => {
   return (
     <div className="dj-details">
-      <h2>DJ Details</h2>
-      <p className="para1">DJ Name: Elegant Beats Wedding DJ Package</p>
-      <p className="para1">Category: Event Entertainment / DJ Services</p>
-      <p className="para1">Ideal For: Weddings, Engagements, Receptions</p>
+      <h2>Service Details</h2>
+      <p className="para1">
+        <strong>Service Name:</strong> {title}
+      </p>
+      <p className="para1">
+        <strong>Category:</strong> {category}
+      </p>
+      <p className="para1">
+        <strong>Ideal For:</strong> {idealFor}
+      </p>
 
       <h3>What’s Included:</h3>
       <ul className="details-list">
-        <li>1 Professional Wedding DJ</li>
-        <li>1 MC Host (can be the DJ)</li>
-        <li>Sound System & Lights</li>
-        <li>Pre-Wedding Music Planning Call</li>
-        <li>Ceremony + Reception + Party Coverage</li>
+        {inclusions && inclusions.length > 0 ? (
+          inclusions.map((item, index) => <li key={index}>{item}</li>)
+        ) : (
+          <li>No details provided.</li>
+        )}
       </ul>
     </div>
   );

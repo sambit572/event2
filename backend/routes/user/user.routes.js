@@ -5,16 +5,17 @@ import {
   loginUser,
   logoutUser,
   sendPasswordResetLink,
+  updateUserProfile,
+  updateUserAvatar,
+  removeProfilePhoto, // Add this import
   getUserEmail,
   resetPassword,
   changePassword,
   getUserProfile,
 } from "../../controller/user/user.controller.js";
 
-
-import { upload } from "../../middleware/multer.middleware.js";
 import { verifyJwt } from "../../middleware/auth.middleware.js";
-
+import { upload } from "../../middleware/multer.middleware.js";
 
 const router = Router();
 
@@ -35,5 +36,15 @@ router.post("/change-password", verifyJwt, changePassword);
 router.route("/get-email").get(verifyJwt, getUserEmail);
 router.get("/profile", verifyJwt, getUserProfile);
 
+router.get("/profile", verifyJwt, getUserProfile);
+router.put("/update-profile", verifyJwt, updateUserProfile);
+
+router.put(
+  "/upload-profile-photo",
+  verifyJwt,
+  upload.single("profilePhoto"),
+  updateUserAvatar
+);
+router.delete("/remove-profile-photo", verifyJwt, removeProfilePhoto);
 
 export default router;

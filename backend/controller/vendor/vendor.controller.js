@@ -6,7 +6,7 @@ import fs from "fs/promises";
 import path from "path";
 import { uploadOnCloudinary } from "../../utilities/cloudinary.js";
 import { validateEmailDomain } from "../../utilities/verifyDNS.js";
-
+import { sendEmail } from "../../utilities/sendEmail.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
@@ -82,6 +82,24 @@ const registerVendor = async (req, res) => {
       newVendor._id
     );
 
+    await sendEmail({
+      to: email,
+      subject: "🎉 Welcome to EventsBridge - Vendor Registration",
+      html: `
+    <h2>Hi ${fullName},</h2>
+    <p>Thank you for registering as a vendor on <strong>EventsBridge</strong>!</p>
+    <p><strong>Your Registration Details:</strong></p>
+    <ul>
+      <li><strong>Name:</strong> ${fullName}</li>
+      <li><strong>Email:</strong> ${email}</li>
+      <li><strong>Phone No:</strong> ${phoneNumber}</li>
+    </ul>
+    <p>We’re thrilled to have your services onboard!</p>
+    <br/>
+    <p>Warm regards,<br/>Team EventsBridge</p>
+  `,
+    });
+
     // 5. Return success response
     return res
       .status(200)
@@ -102,85 +120,64 @@ const registerVendor = async (req, res) => {
     return res.status(500).json(new ApiError(500, "Internal server error"));
   }
 };
-
 const updateVendor = async (req, res, next) => {
   try {
     const { id } = req.params;
     const updateData = req.body;
+    const file = req.file;
 
-    // Prevent direct password and confirmPassword updates via this route for security.
-    // Password updates should typically go through a separate route (e.g., /change-password).
     delete updateData.password;
     delete updateData.confirmPassword;
 
-    // Handle profile picture if uploaded for update
-    if (req.file) {
-      const oldVendor = await Vendor.findById(id);
-      if (oldVendor && oldVendor.profilePicture) {
-        // Construct full path to old profile picture for deletion
-        const oldProfilePictureFullPath = path.join(
-          __dirname,
-          "..",
-          oldVendor.profilePicture
-        );
-        try {
-          // Attempt to delete the old profile picture to avoid stale files
-          await fs.unlink(oldProfilePictureFullPath);
-          console.log(
-            `Deleted old profile picture: ${oldProfilePictureFullPath}`
-          );
-        } catch (unlinkError) {
-          console.warn(
-            `Could not delete old profile picture ${oldProfilePictureFullPath}: ${unlinkError.message}`
-          );
-          // Don't throw error if deletion fails, just log it.
-        }
-      }
-      updateData.profilePicture = path.join(
-        "uploads",
-        "profile-pictures",
-        req.file.filename
-      );
-    }
-
-    // Find and update the vendor by ID.
-    // 'new: true' returns the modified document rather than the original.
-    // 'runValidators: true' runs schema validators on the update operation.
-    const updatedVendor = await Vendor.findByIdAndUpdate(id, updateData, {
-      new: true,
-      runValidators: true,
-    }).select("-password"); // Exclude password from the returned document
-
-    // If vendor not found, return a 404 error
-    if (!updatedVendor) {
+    const vendor = await Vendor.findById(id);
+    if (!vendor) {
       return next(new ApiError(404, "Vendor not found for update."));
     }
 
-    // Send successful response
-    res
+    // ✅ CASE 1: REMOVE PROFILE PICTURE if requested
+    if (updateData.removeProfilePicture === "true") {
+      if (vendor.profilePicture && vendor.profilePicture.includes("cloudinary")) {
+        const publicId = vendor.profilePicture.split("/").pop().split(".")[0];
+        await uploadOnCloudinary(null, publicId, true); // Custom delete support
+      }
+      updateData.profilePicture = "";
+    }
+
+    // ✅ CASE 2: UPLOAD NEW IMAGE AND REPLACE OLD
+    if (file) {
+      // Delete old image from Cloudinary (if exists)
+      if (vendor.profilePicture && vendor.profilePicture.includes("cloudinary")) {
+        const publicId = vendor.profilePicture.split("/").pop().split(".")[0];
+        await uploadOnCloudinary(null, publicId, true);
+      }
+
+      const cloudinaryResult = await uploadOnCloudinary(file.path);
+      if (!cloudinaryResult?.url) {
+        return next(new ApiError(500, "Failed to upload profile image."));
+      }
+      updateData.profilePicture = cloudinaryResult.url;
+    }
+
+    // ✅ UPDATE the vendor
+    const updatedVendor = await Vendor.findByIdAndUpdate(id, updateData, {
+      new: true,
+      runValidators: true,
+    }).select("-password");
+
+    return res
       .status(200)
-      .json(
-        new ApiResponse(200, updatedVendor, "Vendor updated successfully.")
-      );
+      .json(new ApiResponse(200, updatedVendor, "Vendor updated successfully."));
   } catch (error) {
     console.error("Error updating vendor:", error);
 
-    // If a new file was uploaded during an update and an error occurred, delete it.
     if (req.file && req.file.path) {
       try {
         await fs.unlink(req.file.path);
-        console.log(
-          `Deleted newly uploaded file due to update error: ${req.file.path}`
-        );
       } catch (unlinkError) {
-        console.error(
-          "Error deleting new file after update error:",
-          unlinkError
-        );
+        console.error("Error deleting uploaded file:", unlinkError);
       }
     }
 
-    // Handle Mongoose validation errors during update
     if (error.name === "ValidationError") {
       const errorMessages = Object.values(error.errors).map(
         (err) => err.message
@@ -193,7 +190,6 @@ const updateVendor = async (req, res, next) => {
       );
     }
 
-    // Handle Mongoose duplicate key error during update (if trying to update to an existing email/phone)
     if (error.code === 11000) {
       const field = Object.keys(error.keyValue)[0];
       return next(
@@ -202,10 +198,7 @@ const updateVendor = async (req, res, next) => {
     }
 
     next(
-      new ApiError(
-        500,
-        "An internal server error occurred during vendor update."
-      )
+      new ApiError(500, "An internal server error occurred during vendor update.")
     );
   }
 };
@@ -397,19 +390,69 @@ const checkVendorEmailStatus = async (req, res) => {
   }
 };
 
-const getVendorProfile = async(req,res) => {
+const getVendorProfile = async (req, res) => {
   try {
     const vendor = req.vendor; // Set in middleware
 
     if (!vendor) {
-      return res.status(404).json({ success: false, message: "Vendor not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Vendor not found" });
     }
 
     res.status(200).json({ success: true, data: vendor });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Server Error", error: error.message });
+    res
+      .status(500)
+      .json({ success: false, message: "Server Error", error: error.message });
   }
 };
+
+ const updateVendorProfilePicture = async (req, res, next) => {
+  try {
+    const id = req.vendor._id;  // 👈 Comes from JWT middleware
+    const file = req.file;
+
+    if (!file) {
+      return next(new ApiError(400, "No file uploaded."));
+    }
+
+    const vendor = await Vendor.findById(id);
+    if (!vendor) {
+      return next(new ApiError(404, "Vendor not found."));
+    }
+
+    // Delete old image from Cloudinary (if exists)
+    if (vendor.profilePicture && vendor.profilePicture.includes("cloudinary")) {
+      const publicId = vendor.profilePicture.split("/").pop().split(".")[0];
+      await uploadOnCloudinary(null, publicId, true); // Delete old
+    }
+
+    const cloudinaryResult = await uploadOnCloudinary(file.path);
+    if (!cloudinaryResult?.url) {
+      return next(new ApiError(500, "Failed to upload new profile picture."));
+    }
+
+    vendor.profilePicture = cloudinaryResult.url;
+    await vendor.save();
+
+    res.status(200).json(new ApiResponse(200, vendor, "Profile picture updated successfully."));
+  } catch (error) {
+    console.error("Error uploading profile:", error);
+
+    if (req.file && req.file.path) {
+      try {
+        await fs.unlink(req.file.path);
+      } catch (unlinkError) {
+        console.error("Error deleting uploaded file:", unlinkError);
+      }
+    }
+
+    next(new ApiError(500, "Internal server error during profile update."));
+  }
+};
+
+
 
 export {
   registerVendor,
@@ -422,4 +465,5 @@ export {
   vendorSilentLogin,
   checkVendorEmailStatus,
   getVendorProfile,
+  updateVendorProfilePicture,
 };

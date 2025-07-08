@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import "./DashBoardSideBar.css";
 import { FaEdit } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setVendor } from "../../redux/VendorSlice"; // If you update vendor in Redux
+import axios from "axios";
+import { BACKEND_URL } from "../../utils/constant";
 
 function DashBoardSideBar({ isOpen }) {
   const vendor = useSelector((state) => state.vendor.vendor);
+  const dispatch = useDispatch();
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -15,25 +19,128 @@ function DashBoardSideBar({ isOpen }) {
   const [ifscCode, setIfscCode] = useState("");
   const [bankDropdownOpen, setBankDropdownOpen] = useState(false);
   const [active, setActive] = useState(true);
-
   const [editMode, setEditMode] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [bankDetails, setBankDetails] = useState(null);
 
-  // ✅ Fills local state from Redux vendor data
   useEffect(() => {
+    const fetchBankDetails = async () => {
+      try {
+        const res = await axios.get(
+          `${BACKEND_URL}/vendors/bank-details/bankdetails`,
+          {
+            withCredentials: true,
+          }
+        );
+        console.log("🟢 Vendor bank details:", res.data?.data);
+        setBankDetails(res.data?.data);
+        setUpiId(bankDetails.upiId || "");
+        setAccountNumber(bankDetails.accountNumber || "");
+        setIfscCode(bankDetails.ifscCode || "");
+      } catch (err) {
+        console.error("Failed to fetch vendor bank details", err);
+      }
+    };
+
+    fetchBankDetails();
+
     if (vendor) {
       setFullName(vendor.fullName || "");
       setEmail(vendor.email || "");
       setContact(vendor.contact || "");
       setEventsHosted(vendor.eventsHosted?.toString() || "0");
-      setUpiId(vendor.upiId || "");
-      setAccountNumber(vendor.accountNumber || "");
-      setIfscCode(vendor.ifscCode || "");
       setActive(vendor.active ?? true);
     }
   }, [vendor]);
 
+  const getInitialsAvatar = (name) => {
+    if (!name) return "NA";
+    const initials = name
+      .split(" ")
+      .map((n) => n[0]?.toUpperCase())
+      .join("")
+      .slice(0, 2);
+    return `https://ui-avatars.com/api/?name=${initials}&background=0D8ABC&color=fff`;
+  };
+
   const handleToggleEdit = () => {
+    if (editMode) {
+      handleSaveChanges();
+    }
     setEditMode((prev) => !prev);
+  };
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedImage(file);
+
+      const formData = new FormData();
+      formData.append("vendorId", vendor._id); // Adjust as per your backend
+      formData.append("profilePicture", file);
+
+      try {
+        const res = await axios.post(
+          `${import.meta.env.VITE_BACKEND_URL}/vendors/upload-profile`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+            withCredentials: true, // Ensure cookies are sent for session management
+          }
+        );
+        dispatch(setVendor(res.data.data));
+      } catch (err) {
+        console.error("Image upload failed:", err);
+      }
+    }
+  };
+
+  const handleRemoveImage = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("removeProfilePicture", "true");
+
+      const res = await axios.put(
+        `http://localhost:8000/vendors/${vendor._id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true,
+        }
+      );
+
+      dispatch(setVendor(res.data.data));
+      setSelectedImage(null);
+      console.log("Profile image removed successfully.");
+    } catch (err) {
+      console.error("Image remove failed:", err);
+    }
+  };
+
+  const handleSaveChanges = async () => {
+    try {
+      const res = await axios.put(
+        `http://localhost:8000/vendors/${vendor._id}`,
+        {
+          vendorId: vendor._id,
+          fullName,
+          email,
+          contact,
+          upiId,
+          accountNumber,
+          ifscCode,
+          active,
+        }
+      );
+      dispatch(setVendor(res.data.updatedVendor));
+      console.log("Changes saved.");
+    } catch (err) {
+      console.error("Error saving changes:", err);
+    }
   };
 
   return (
@@ -41,15 +148,33 @@ function DashBoardSideBar({ isOpen }) {
       <h2 className="dasgboardHeading">DASHBOARD</h2>
       <div className="sidebar-content">
         <img
-  src={
-    vendor?.profilePicture
-      ? vendor.profilePicture
-      : `https://ui-avatars.com/api/?name=${encodeURIComponent(vendor?.fullName || "NA")}&background=0D8ABC&color=fff`
-  }
-  alt="Profile"
-  className="profile-pic"
-/>
+          src={
+            selectedImage
+              ? URL.createObjectURL(selectedImage)
+              : vendor?.profilePicture
+              ? vendor.profilePicture
+              : getInitialsAvatar(fullName)
+          }
+          alt="Profile"
+          className="profile-pic"
+        />
 
+        {/* Upload & Remove Buttons */}
+        <div className="profile-buttons">
+          <input
+            type="file"
+            accept="image/*"
+            id="profilePicInput"
+            style={{ display: "none" }}
+            onChange={handleImageChange}
+          />
+          <button
+            onClick={() => document.getElementById("profilePicInput").click()}
+          >
+            Upload Photo
+          </button>
+          <button onClick={handleRemoveImage}>Remove Photo</button>
+        </div>
 
         <ul className="custom-list-decor-dashboard">
           <li className="typography custom-font">
@@ -148,7 +273,7 @@ function DashBoardSideBar({ isOpen }) {
                       onChange={(e) => setAccountNumber(e.target.value)}
                     />
                   ) : (
-                    accountNumber
+                    `****${accountNumber?.slice(-4) || ""}`
                   )}
                 </div>
                 <div>

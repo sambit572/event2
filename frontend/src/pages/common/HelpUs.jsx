@@ -1,12 +1,7 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import {
-  FaLock,
-  FaShieldAlt,
-  FaHeadset,
-  FaMobileAlt,
-} from 'react-icons/fa';
-import bgBanner from '../../assets/home/bgbanner.jpeg'; // Adjust path as needed
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { FaLock, FaShieldAlt, FaHeadset, FaMobileAlt } from "react-icons/fa";
+import bgBanner from "../../assets/helpUs/bgbanner.jpeg"; // Adjust path as needed
 
 const HelpUs = () => {
   const navigate = useNavigate();
@@ -15,7 +10,6 @@ const HelpUs = () => {
   return (
     <div className="bg-red from-purple-50 to-white min-h-screen py-12 px-4 sm:px-6 lg:px-10">
       <div className="max-w-7xl mx-auto space-y-20">
-
         {/* Top Section: Banner */}
         <div
           className="w-[100%] max-w-5xl min-h-[420px] relative bg-cover bg-center rounded-xl overflow-hidden shadow-lg mx-auto"
@@ -24,7 +18,6 @@ const HelpUs = () => {
           }}
         >
           <div className="absolute inset-0 bg-white/10 backdrop-blur-sm p-4 sm:p-6 lg:p-10 flex flex-col lg:flex-row items-center justify-between gap-6 z-10">
-
             {/* Left Content */}
             <div className="w-full lg:w-1/2 space-y-4 text-black max-w-[500px]">
               <h1 className="text-2xl sm:text-3xl font-extrabold text-[#001f3f] drop-shadow-sm">
@@ -32,18 +25,21 @@ const HelpUs = () => {
               </h1>
 
               <p className="text-[#001f3f] text-sm sm:text-base leading-relaxed">
-                We're always happy to help! Our team is available 24/7 to assist with event planning,
-                vendor support, or just friendly guidance.
+                We're always happy to help! Our team is available 24/7 to assist
+                with event planning, vendor support, or just friendly guidance.
               </p>
 
               <p className="text-[#001f3f] text-sm sm:text-base leading-relaxed md:block">
-                Our support team is just a message away. Whether you're planning your first event or managing a complex setup, we're here to simplify every step for you.
+                Our support team is just a message away. Whether you're planning
+                your first event or managing a complex setup, we're here to
+                simplify every step for you.
               </p>
 
               {showMore && (
                 <p className="text-sm sm:text-base leading-relaxed text-[#001f3f] transition-all duration-300 ease-in-out">
-                  You can reach us via live chat, email, or call. We’re committed to providing real-time
-                  support for your events with expert advice and quick solutions tailored to your needs.
+                  You can reach us via live chat, email, or call. We’re
+                  committed to providing real-time support for your events with
+                  expert advice and quick solutions tailored to your needs.
                 </p>
               )}
 
@@ -62,14 +58,18 @@ const HelpUs = () => {
 
         {/* Section Header */}
         <div className="text-center px-2">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#001f3f]">We’re here to support you</h1>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#001f3f]">
+            We’re here to support you
+          </h1>
         </div>
 
         {/* Features Grid */}
         <div className="grid grid-cols-1 border-[#001f3f] sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center px-2">
           <div className="bg-[#f7f7f7] p-6 rounded-lg shadow-md hover:shadow-xl transition">
             <FaLock className="text-4xl text-purple-600 mx-auto mb-4" />
-            <h3 className="font-bold text-[#001f3f] text-lg">100% SECURE PAYMENTS</h3>
+            <h3 className="font-bold text-[#001f3f] text-lg">
+              100% SECURE PAYMENTS
+            </h3>
             <p className="text-g text-[#001f3f] mt-2">
               Moving your card details to a much more secured place
             </p>
@@ -82,7 +82,7 @@ const HelpUs = () => {
             </p>
           </div>
           <div
-            onClick={() => navigate('/help-center')}
+            onClick={() => navigate("/help-center")}
             className="bg-[#f7f7f7] p-6 rounded-lg shadow-md hover:shadow-xl transition cursor-pointer"
           >
             <FaHeadset className="text-4xl text-yellow-500 mx-auto mb-4" />
@@ -102,32 +102,55 @@ const HelpUs = () => {
 
         {/* Wedding Help Section */}
         <div className="bg-[#f7f7f7] p-6 sm:p-8 rounded-xl shadow-xl">
-          <h2 className="text-2xl sm:text-3xl font-bold text-[#001f3f] mb-6 text-center">Wedding Planning Support</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-[#001f3f] mb-6 text-center">
+            Wedding Planning Support
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="p-4 border-l-4 border-yellow-500 bg-blue-50 rounded">
-              <h4 className="font-semibold text-[#001f3f]">Vendor Coordination</h4>
+              <h4 className="font-semibold text-[#001f3f]">
+                Vendor Coordination
+              </h4>
               <p className="text-sm text-[#001f3f]">
-                Need help managing caterers, decorators or photographers? We’ve got you covered.
+                Need help managing caterers, decorators or photographers? We’ve
+                got you covered.
               </p>
-              <a onClick={() => navigate('/help-center')} className="text-base text-blue-700 cursor-pointer">Connect Us</a>
+              <a
+                onClick={() => navigate("/help-center")}
+                className="text-base text-blue-700 cursor-pointer"
+              >
+                Connect Us
+              </a>
             </div>
             <div className="p-4 border-l-4 border-yellow-500 bg-blue-50 rounded">
               <h4 className="font-semibold text-[#001f3f]">Guest Management</h4>
               <p className="text-sm text-[#001f3f]">
-                Our team helps you track RSVPs, dietary preferences, and accommodations for guests.
+                Our team helps you track RSVPs, dietary preferences, and
+                accommodations for guests.
               </p>
-              <a onClick={() => navigate('/help-center')} className="text-base text-blue-700 cursor-pointer">Connect Us</a>
+              <a
+                onClick={() => navigate("/help-center")}
+                className="text-base text-blue-700 cursor-pointer"
+              >
+                Connect Us
+              </a>
             </div>
             <div className="p-4 border-l-4 border-yellow-500 bg-blue-50 rounded">
-              <h4 className="font-semibold text-[#001f3f]">Emergency Contact</h4>
+              <h4 className="font-semibold text-[#001f3f]">
+                Emergency Contact
+              </h4>
               <p className="text-sm text-[#001f3f]">
-                Available 24/7 for any unexpected wedding-day issues. Quick and calm solutions.
+                Available 24/7 for any unexpected wedding-day issues. Quick and
+                calm solutions.
               </p>
-              <a onClick={() => navigate('/help-center')} className="text-base text-blue-700 cursor-pointer">Connect Us</a>
+              <a
+                onClick={() => navigate("/help-center")}
+                className="text-base text-blue-700 cursor-pointer"
+              >
+                Connect Us
+              </a>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );

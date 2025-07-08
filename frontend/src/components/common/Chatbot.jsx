@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Chatbot.css";
-import chatIcon from "../../assets/home/logo.png";
+import chatIcon from "../../assets/serverLogo.png";
 
 const chatbotFAQs = [
   "What is EventsBridge?",
@@ -35,7 +35,7 @@ const Chatbot = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showTooltip, setShowTooltip] = useState(true);
+  // const [showTooltip, setShowTooltip] = useState(true);
 
   const key = import.meta.env.VITE_GEMINI_API_KEY;
 
@@ -90,7 +90,7 @@ const Chatbot = () => {
 
   return (
     <div className="chatbot-container">
-      {!isOpen && showTooltip && <div className="chat-tooltip">Ask me!</div>}
+      {!isOpen && <div className="chat-tooltip">Ask me!</div>}
 
       <img
         src={chatIcon}
@@ -98,7 +98,7 @@ const Chatbot = () => {
         className="chat-icon"
         onClick={() => {
           setIsOpen(!isOpen);
-          setShowTooltip(false);
+          // setShowTooltip(false);
         }}
       />
 
@@ -149,7 +149,7 @@ const Chatbot = () => {
 
           <div className="chat-footer">
             <input
-            className="chat-input"
+              className="chat-input"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
