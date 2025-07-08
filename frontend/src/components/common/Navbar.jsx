@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import UserProfileIcon from "../../pages/common/UserProfileIcon.jsx";
 import toast from "react-hot-toast";
-
+import "../../pages/vendor/VendorLogin.jsx";
 import "./Navbar.css";
 import { CgProfile } from "react-icons/cg";
 
@@ -249,7 +249,7 @@ const Navbar = () => {
                 )}
               </span>
 
-              {/* ⬇️ Always show dropdown toggle arrow */}
+              {/* ⬇ Always show dropdown toggle arrow */}
               <span onClick={handleToggleProfileDropdown}>
                 {showProfileDropdown ? (
                   <FaChevronUp className="text-sm" />
@@ -325,25 +325,19 @@ const Navbar = () => {
                   onClick={() => {
                     if (!userFirstName) {
                       const toastId = toast.custom((t) => (
-                        <div
-                          className={`${
-                            t.visible ? "animate-enter" : "animate-leave"
-                          } bg-white text-black px-4 py-3 rounded shadow-lg relative mt-20`}
-                        >
+                        <div className={`${t.visible ? "animate-enter" : "animate-leave"} bg-white text-black px-4 py-3 rounded shadow-lg relative mt-20`}>
                           <span>Please login as a user first.</span>
                           <div className="toast-progress"></div>
                         </div>
                       ));
                       setTimeout(() => toast.dismiss(toastId), 2000);
                     } else {
-                      handleVendorClick(); // 🔥 Always trigger, regardless of VendorFirstName
+                      handleVendorClick();
                     }
                   }}
                 >
                   {!VendorFirstName ? (
-                    <>
-                      <span className="font-medium">Be a Vendor</span>
-                    </>
+                    <span className="font-medium hover:bg-[#001f3f] hover:text-white rounded px-2 py-1 transition-colors">Be a Vendor</span>
                   ) : (
                     <>
                       <span className="font-medium">{VendorFirstName}</span>
@@ -362,93 +356,83 @@ const Navbar = () => {
             </div>
 
             {showVendorDropdown && (
-              <div className="dropdown-menu profile-menu">
-                <h4 className="login-h4">Welcome Vendor</h4>
-                <p className="login-p">Access your vendor tools and profile</p>
-                <div className="dropdown-header">
-                  <span className="text-[#001f3f]">New Vendor?</span>
-                  <button
-                    className=" bg-black hover:bg-gray-800 text-white"
-                    onClick={() => {
-                      setShowVendorDropdown(false);
-                      if (!userFirstName) {
-                        const toastId = toast.custom((t) => (
-                          <div
-                            className={`${
-                              t.visible ? "animate-enter" : "animate-leave"
-                            } bg-white text-black px-4 py-3 rounded shadow-lg relative mt-20`}
-                          >
-                            <span>Please register as a user first.</span>
-                            <div className="toast-progress"></div>
-                          </div>
-                        ));
+              <div className="absolute top-[75px] right-[50px] bg-[#e5e5de] rounded-lg border border-white shadow-[0_4px_12px_rgba(0,0,0,0.1)] p-4 z-[2000] w-[350px]">
+                <h4 className="text-lg font-semibold text-[#001F3F] mb-1">Welcome Vendor</h4>
+                <p className="text-gray-600 mb-3">Access your vendor tools and profile</p>
 
-                        // Auto dismiss after 3 seconds
-                        setTimeout(() => toast.dismiss(toastId), 2000);
-                      } else {
-                        navigate("/vendor/register");
-                      }
-                    }}
-                  >
-                    Register
-                  </button>
-                </div>
-                <hr />
-                <div className="dropdown-header">
-                  <button
-                    className=" bg-green-500 hover:bg-green-600"
-                    onClick={() => {
-                      setShowVendorDropdown(false);
-                      if (!userFirstName) {
-                        const toastId = toast.custom((t) => (
-                          <div
-                            className={`${
-                              t.visible ? "animate-enter" : "animate-leave"
-                            } bg-white text-black px-4 py-3 rounded shadow-lg relative mt-20`}
-                          >
-                            <span>Please register as a user first.</span>
-                            <div className="toast-progress"></div>
-                          </div>
-                        ));
+                {/* If NOT logged in → Show Register */}
+                {!VendorFirstName && (
+                  <>
+                    <div className="dropdown-header">
+                      <span className="text-[#001f3f] font-lg">New Vendor?</span>
+                    </div>
+                    <div className="flex flex-row gap-2 mt-2">
+                      {/* Register Button */}
+                      <button
+                        className="w-1/2 bg-black hover:bg-gray-800 text-white rounded px-3 py-2 transition-colors"
+                        onClick={() => {
+                          setShowVendorDropdown(false);
+                          if (!userFirstName) {
+                            const toastId = toast.custom((t) => (
+                              <div className={`${t.visible ? "animate-enter" : "animate-leave"} bg-white text-black rounded shadow-lg relative mt-20`}>
+                                <span>Please register as a user first.</span>
+                                <div className="toast-progress"></div>
+                              </div>
+                            ));
+                            setTimeout(() => toast.dismiss(toastId), 2000);
+                          } else {
+                            navigate("/vendor/register");
+                          }
+                        }}
+                      >
+                        Register
+                      </button>
 
-                        // Auto dismiss after 3 seconds
-                        setTimeout(() => toast.dismiss(toastId), 2000);
-                      } else {
-                        navigate("/vendor/register");
-                      }
-                    }}
-                  >
-                    Change Password
-                  </button>
-                  <button
-                    className=" bg-red-500 hover:bg-red-600"
-                    onClick={() => {
-                      setShowVendorDropdown(false);
-                      if (!userFirstName) {
-                        const toastId = toast.custom((t) => (
-                          <div
-                            className={`${
-                              t.visible ? "animate-enter" : "animate-leave"
-                            } bg-white text-black px-4 py-3 rounded shadow-lg relative mt-20`}
-                          >
-                            <span>Please register as a user first.</span>
-                            <div className="toast-progress"></div>
-                          </div>
-                        ));
+                      {/* Login Button */}
+                      <button
+                        className="w-1/2 bg-blue-500 font-bold text-white hover:bg-blue-800 rounded px-3 py-2 transition-colors"
+                        onClick={() => {
+                          setShowVendorDropdown(false); // ✅ Close the dropdown
+                          navigate("/vendor-login");    // ✅ Then go to login page or open modal
+                        }}
+                      >
+                        Login
+                      </button>
+                    </div>
 
-                        // Auto dismiss after 3 seconds
-                        setTimeout(() => toast.dismiss(toastId), 2000);
-                      } else {
-                        vendorLogout();
-                      }
-                    }}
-                  >
-                    SignOut
-                  </button>
-                </div>
+                  </>
+                )}
+
+                {/* If logged in → Show Change Password + Sign Out */}
+                {VendorFirstName && (
+                  <>
+                    <hr className="my-2" />
+                    <div className="flex flex-col gap-2">
+                      <button
+                        className="bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded"
+                        onClick={() => {
+                          setShowVendorDropdown(false);
+                          navigate("/vendor/change-password");
+                        }}
+                      >
+                        Change Password
+                      </button>
+                      <button
+                        className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded"
+                        onClick={() => {
+                          setShowVendorDropdown(false);
+                          vendorLogout();
+                        }}
+                      >
+                        Sign Out
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             )}
           </div>
+
 
           {/* Three Dots Dropdown */}
           <div className="nav-item ellipsis-container" ref={ellipsisRef}>

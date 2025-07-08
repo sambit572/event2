@@ -10,13 +10,17 @@ import axios from "axios";
 import "../common/LoginRegister.css";
 import { useDispatch } from "react-redux";
 import { setVendor } from "../../redux/VendorSlice.js";
+import { FiEyeOff, FiEye } from "react-icons/fi";
 import { BACKEND_URL } from "../../utils/constant.js";
+import { RxCross2 } from "react-icons/rx";
 
-const VendorLogin = ({ onClose }) => {
+const VendorLogin = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [step, setStep] = useState("form"); // 'form', 'otp', 'success'
+  const [step, setStep] = useState("form");
   const [showSuccessIcon, setShowSuccessIcon] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   const [formData, setFormData] = useState({
     phoneNo: "",
@@ -26,16 +30,36 @@ const VendorLogin = ({ onClose }) => {
   const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add("overflow-hidden");
+      document.getElementById("footer")?.classList.add("hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+      document.getElementById("footer")?.classList.remove("hidden");
+
+      // ✅ Navigate to home only if not going to /vendor/register
+      if (window.location.pathname !== "/vendor/register") {
+        navigate("/");
+      }
+    }
+
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+      document.getElementById("footer")?.classList.remove("hidden");
+    };
+  }, [isOpen, navigate]);
+
+  useEffect(() => {
     if (step === "success") {
       setShowSuccessIcon(false);
       const iconTimer = setTimeout(() => setShowSuccessIcon(true), 500);
-      const closeTimer = setTimeout(() => onClose?.(), 5000);
+      const closeTimer = setTimeout(() => setIsOpen(false), 5000);
       return () => {
         clearTimeout(iconTimer);
         clearTimeout(closeTimer);
       };
     }
-  }, [step, onClose]);
+  }, [step]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -43,14 +67,10 @@ const VendorLogin = ({ onClose }) => {
 
   function setupRecaptcha() {
     if (window.recaptchaVerifier) window.recaptchaVerifier.clear();
-    window.recaptchaVerifier = new RecaptchaVerifier(
-      auth,
-      "recaptcha-container",
-      {
-        size: "invisible",
-        callback: () => console.log("Recaptcha passed"),
-      }
-    );
+    window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
+      size: "invisible",
+      callback: () => console.log("Recaptcha passed"),
+    });
   }
 
   async function handleGetOTP(e) {
@@ -89,6 +109,7 @@ const VendorLogin = ({ onClose }) => {
     try {
       const res = await axios.post(
         `${BACKEND_URL}/vendors/login`,
+        `${BACKEND_URL}/vendors/login`,
         {
           email: formData.email,
           phoneNo: formData.phoneNo,
@@ -98,12 +119,15 @@ const VendorLogin = ({ onClose }) => {
       );
 
       console.log(res.data.data);
+      console.log(res.data.data);
       const { vendor } = res.data.data;
+      dispatch(setVendor(vendor));
       dispatch(setVendor(vendor));
       const fullName = vendor.fullName || "";
       const firstName = fullName.split(" ")[0];
       const firstLetter = firstName?.charAt(0).toUpperCase() || "";
       const profilePic = vendor.profilePic || "";
+
 
       localStorage.setItem("VendorCurrentlyLoggedIn", "true");
       localStorage.setItem("VendorFullName", fullName);
@@ -113,91 +137,122 @@ const VendorLogin = ({ onClose }) => {
         localStorage.setItem("VendorProfilePic", profilePic);
       }
 
-      navigate("/dashboard");
+
+      window.dispatchEvent(new Event("userLoggedIn"));
+      setStep("success");
     } catch (err) {
       const msg = err.response?.data?.message || err.message;
-      if (msg === "Vendor not found") {
-        setErrorMsg("Please register before login.");
-      } else {
-        setErrorMsg(`SignIn failed: ${msg}`);
-      }
+      setErrorMsg(msg === "User does not exist"
+        ? "Please register before login."
+        : `Login failed: ${msg}`);
     }
   }
 
   const renderStep = () => {
+    if (step === "success") return <SuccessBlock showSuccessIcon={showSuccessIcon} />;
     if (step === "otp") return <OTPVerification setStep={setStep} />;
 
     return (
-      <>
+      <form onSubmit={handleLogin} className="space-y-4 w-full relative">
         <input
           type="text"
-          className="login-input"
           name="phoneNo"
-          placeholder="+91 | Enter your phone number"
+          placeholder="+91 | Phone Number"
           value={formData.phoneNo}
           onChange={handleChange}
+          className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-[#001f3f]"
         />
-        <button className="otp-button" onClick={handleGetOTP}>
-          Get OTP
+        <button
+          type="button"
+          onClick={handleGetOTP}
+          className="w-[340px] ml-1.5 bg-yellow-500 text-[#001f3f] font-semibold py-2 rounded-md transition"
+        >
+          Send OTP
         </button>
 
         <input
           type="email"
           name="email"
-          className="login-input"
           placeholder="Enter email"
           value={formData.email}
           onChange={handleChange}
+          className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-[#001f3f]"
         />
 
-        <PasswordInput
-          name="password"
-          placeholder="Enter password"
-          value={formData.password}
-          onChange={handleChange}
-          minLength={8}
-        />
-
-        <div className="Login-forget-password-link">
-          <a href="/forgot-password">Forgot your password?</a>
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            name="password"
+            placeholder="Enter password"
+            value={formData.password}
+            onChange={handleChange}
+            minLength={8}
+            className="w-full border border-gray-300 px-4 py-2 pr-10 rounded-md focus:outline-none focus:ring-2 focus:ring-[#001f3f]"
+          />
+          <span
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-600 cursor-pointer"
+          >
+            {showPassword ? <FiEyeOff /> : <FiEye />}
+          </span>
         </div>
 
-        {errorMsg && <p className="error">{errorMsg}</p>}
-        <button className="otp-button" onClick={handleLogin}>
+        <div className="text-right text-sm">
+          <a href="/vendor/forgot-password" className="text-blue-600 hover:underline">
+            Forgot Your Password?
+          </a>
+        </div>
+
+        {errorMsg && <p className="text-red-600 text-sm">{errorMsg}</p>}
+
+        <button
+          type="submit"
+          className="w-[340px] ml-1.5 bg-yellow-500 text-[#001f3f] font-semibold py-2 rounded-md hover:bg-yellow-550 transition"
+        >
           Login
         </button>
 
-        <p className="signup-text">
+        <p className="text-center text-sm text-[#001f3f]">
           Don’t have an account?{" "}
           <span
-            className="login-link"
-            onClick={() => navigate("/vendor/register")}
+            onClick={() => {
+              setIsOpen(false);
+              navigate("/vendor/register");
+            }}
+            className="text-blue-600 cursor-pointer hover:underline"
           >
             Sign Up
           </span>
         </p>
-      </>
+      </form>
     );
   };
 
   return (
-    <div className="login-wrapper" onClick={onClose}>
-      <div className="login-modal" onClick={(e) => e.stopPropagation()}>
-        {onClose && (
-          <button className="modal-close" onClick={onClose}>
-            ×
-          </button>
-        )}
-        <div id="recaptcha-container"></div>
-        <h2 className="login-title">Vendor SignIn</h2>
+    <div
+      className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50"
+      onClick={() => setIsOpen(false)}
+    >
+      <div
+        className="bg-[#ededde] rounded-lg shadow-lg p-6 w-[400px] h-[475px] mt-14 max-w-md relative"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <span
+          onClick={() => setIsOpen(false)}
+          className="absolute top-3 right-3 text-gray-500 hover:text-[#001f3f] text-2xl cursor-pointer"
+        >
+          <RxCross2 />
+        </span>
+
+        <div id="recaptcha-container" />
+        <h2 className="text-2xl font-semibold text-center text-[#001f3f] mb-4">
+          Vendor Login
+        </h2>
+
         {renderStep()}
       </div>
     </div>
   );
-};
-
-VendorLogin.propTypes = {
-  onClose: PropTypes.func,
 };
 
 export default VendorLogin;

@@ -14,9 +14,10 @@
 }
 
 .login-modal {
-  background: #fff;
-  border-radius: 10px;
-  padding: 2rem;
+  position: relative;
+  background-color: #e5e5de;
+  padding: 30px 25px;
+  border-radius: 12px;
   width: 100%;
   max-width: 400px;
   position: relative;
@@ -31,14 +32,16 @@
 .modal-close {
   position: absolute;
   top: 10px;
-  right: 14px;
-  font-size: 1.5rem;
+  right: 15px;
   background: none;
   border: none;
-  color: #999;
+  font-size: 24px;
+  font-weight: bold;
   cursor: pointer;
-  transition: color 0.2s;
+  color: #333;
+  z-index: 100;
 }
+
 .modal-close:hover {
   color: #000;
 }
