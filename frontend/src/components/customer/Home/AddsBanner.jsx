@@ -5,6 +5,7 @@ import mediumbanner from "../../../assets/home/bannerImages/mediumbanner.png";
 import xmedium from "../../../assets/home/bannerImages/xmedium.png";
 import xxmedium from "../../../assets/home/bannerImages/xxmedium.png";
 import smallbanner from "../../../assets/home/bannerImages/smallbanner.png";
+import xsmallBanner from "../../../assets/home/bannerImages/xsmallBanner.png";
 
 // import largebanner from "../../../assets/home/bannerImages/largebanner.png";
 
@@ -21,9 +22,12 @@ const AddsBanner = () => {
         {/* Small screens (640px to 767px) */}
         <source srcSet={xxmedium} media="(min-width: 640px)" />
 
+        {/* Small screens (640px to 767px) */}
+        <source srcSet={smallbanner} media="(min-width: 500px)" />
+
         {/* Mobile (less than 640px) */}
         <img
-          src={smallbanner}
+          src={xsmallBanner}
           alt="Responsive"
           className="w-full h-full object-fill rounded-lg"
         />
