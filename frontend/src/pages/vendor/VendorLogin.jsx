@@ -109,7 +109,6 @@ const VendorLogin = () => {
     try {
       const res = await axios.post(
         `${BACKEND_URL}/vendors/login`,
-        `${BACKEND_URL}/vendors/login`,
         {
           email: formData.email,
           phoneNo: formData.phoneNo,
@@ -117,11 +116,8 @@ const VendorLogin = () => {
         },
         { withCredentials: true }
       );
-
-      console.log(res.data.data);
       console.log(res.data.data);
       const { vendor } = res.data.data;
-      dispatch(setVendor(vendor));
       dispatch(setVendor(vendor));
       const fullName = vendor.fullName || "";
       const firstName = fullName.split(" ")[0];
