@@ -69,7 +69,6 @@ vendor_router.post(
       next();
     });
   },
-  verifyVendorJwt,
   createService
 );
 
