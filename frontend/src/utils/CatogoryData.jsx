@@ -52,9 +52,9 @@ import dance5 from "../assets/service/orchestra/dance5.jpg";
 import dance6 from "../assets/service/orchestra/dance6.jpg";
 import dance7 from "../assets/service/orchestra/dance7.webp";
 
-import priest1 from "../assets/service/priest/islam1.jpg";
-import priest2 from "../assets/service/priest/islam2.jpg";
-import priest3 from "../assets/service/priest/lslam2.svg";
+import priest1 from "../assets/service/priest/moulbi1.webp";
+import priest2 from "../assets/service/priest/moulib2.avif";
+import priest3 from "../assets/service/priest/moulb3.jpg";
 import priest4 from "../assets/service/priest/christian1.jpg";
 import priest5 from "../assets/service/priest/christian2.jpg";
 
@@ -741,7 +741,7 @@ export const CategoryData = [
       },
       {
         id: "islam2",
-        img: [priest2, priest3, priest1, priest4, priest5],
+        img: [priest3, priest3, priest1, priest4, priest5],
         title: "Sk. Hyder Ali",
         description:
           "Ijāza-certified teacher in Quran and Islamic sciences. Offers both ceremonial guidance and deeper religious education upon request.",

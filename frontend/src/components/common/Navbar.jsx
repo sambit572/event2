@@ -46,16 +46,18 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
   const [VendorFirstName, setVendorFirstName] = useState(null);
 
   const [searchInput, setSearchInput] = useState("");
-
+  const [showMobileSearchBar, setShowMobileSearchBar] = useState(false);
   const profileRef = useRef(null);
   const ellipsisRef = useRef(null);
   const vendorRef = useRef(null);
   const inputRef = useRef(null);
 
   const handleSearchicon = (e) => {
-    e.stopPropagation(); // Prevent triggering parent onClick
-    if (inputRef.current) {
-      inputRef.current.focus();
+    e.stopPropagation();
+    if (window.innerWidth <= 768) {
+      setShowMobileSearchBar((prev) => !prev);
+    } else {
+      if (inputRef.current) inputRef.current.focus();
     }
   };
   const fetchUserProfile = async () => {
@@ -188,6 +190,21 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+  useEffect(() => {
+    const handleClickOutsideSearch = (e) => {
+      if (
+        inputRef.current &&
+        !inputRef.current.contains(e.target) &&
+        window.innerWidth <= 768
+      ) {
+        setShowMobileSearchBar(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutsideSearch);
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutsideSearch);
+  }, []);
 
   useEffect(() => {
     const updateName = () => {
@@ -202,172 +219,154 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
     return () => window.removeEventListener("userLoggedIn", updateName);
   }, []);
 
+  const placeholders = [
+    "Search for Services and more..",
+    "e.g, dj",
+    "e.g, tenthouse",
+    "e.g, cultural troupe",
+    "e.g, pandit",
+    "e.g, photographer",
+    "e.g, musical band",
+  ];
+  const [placeholder, setPlaceholder] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPlaceholder((prevIndex) => (prevIndex + 1) % placeholders.length);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
   return (
-    <div className="navbar">
-      {/* Logo */}
-      <div className="logo">
-        <span onClick={handleHomeClick}>Eventsbridge</span>
-      </div>
-
-      <div className="search-and-nav-icons-container ">
-        {/* Search Bar */}
-        <div className="search-bar" onClick={handleSearch}>
-          <FaSearch className="search-icon" onClick={handleSearchicon} />
-          <input
-            ref={inputRef}
-            type="text"
-            placeholder="Search for Services and More"
-            value={searchInput}
-            onChange={(e) => {
-              setSearchInput(e.target.value);
-            }}
-          />
+    <div>
+      <div className="navbar">
+        {/* Logo */}
+        <div className="logo">
+          <span onClick={handleHomeClick}>EventsBridge</span>
         </div>
 
-        {/* Nav Icons */}
-        <div className="nav-icons">
-          {/* Profile Dropdown */}
-          <div className="nav-item profile-dropdown-container" ref={profileRef}>
-            <div className="flex items-center gap-2 text-gray-700 cursor-pointer login">
-              <span
-                className="flex items-center gap-2 max-[1024px]:flex-row max-[1024px]:text-[12px] max-[820px]:text-[11px]"
-                onClick={!userFirstName ? () => navigate("/login") : undefined}
-              >
-                {!userFirstName ? (
-                  <>
-                    <CgProfile className="text-2xl" />
-                    <span className="font-medium">Login</span>
-                  </>
-                ) : (
-                  <>
-                    <UserProfileIcon currentUser={currentUser} />
-                    <span className="font-medium">{`Hi, ${userFirstName}`}</span>
-                  </>
-                )}
-              </span>
-
-              {/* ⬇️ Always show dropdown toggle arrow */}
-              <span onClick={handleToggleProfileDropdown}>
-                {showProfileDropdown ? (
-                  <FaChevronUp className="text-sm" />
-                ) : (
-                  <FaChevronDown className="text-sm" />
-                )}
-              </span>
+        <div className="search-and-nav-icons-container ">
+          {/* Search Bar */}
+          <div
+            className={`search-bar ${showMobileSearchBar ? "active" : ""}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div>
+              {(showMobileSearchBar || window.innerWidth > 768) && (
+                <input
+                  ref={inputRef}
+                  type="text"
+                  placeholder={placeholders[placeholder]}
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                />
+              )}
             </div>
-
-            {showProfileDropdown && (
-              <div className="dropdown-menu profile-menu">
-                {!userFirstName ? (
-                  <>
-                    <h4 className="login-h4">Welcome</h4>
-                    <p className="login-p">
-                      To access account and manage services
-                    </p>
-                    <div className="dropdown-header">
-                      <span className="text-[#001f3f]">New Customer?</span>
-                      <button
-                        className="bg-blue-500 hover:bg-blue-600"
-                        onClick={() => navigate("/register")}
-                      >
-                        Sign Up
-                      </button>
-                    </div>
-                    <hr />
-                  </>
-                ) : (
-                  <>
-                    <div
-                      className="flex flex-row gap-1 mb-[10px] text-[#001f3f] hover:text-[#022f5d] hover:font-bold text-[15px] cursor-pointer"
-                      onClick={() => navigate("/profile")}
-                    >
-                      <FaUser style={{ marginRight: "8px" }} />
-                      My Profile
-                    </div>
-                    <div className="dropdown-item hover:text-[#001f3f] hover:font-bold">
-                      <FaHeart
-                        className="navbar_icon "
-                        style={{ marginRight: "4px" }}
-                      />
-                      <a href="./wishlist">Wishlist</a>
-                    </div>
-                    <div className="dropdown-item">
-                      <FaSignOutAlt
-                        className="navbar_icon hover:text-[#001f3f] hover:font-bold"
-                        style={{ marginRight: "4px" }}
-                      />
-                      <button
-                        className="signOutButton hover:text-[#001f3f] hover:font-bold"
-                        onClick={handleLogout}
-                      >
-                        Sign Out
-                      </button>
-                    </div>
-                  </>
-                )}
-              </div>
-            )}
+            <div className="searchbarIcon">
+              <FaSearch className="search-icon" onClick={handleSearchicon} />
+            </div>
           </div>
 
-          {/* Become Vendor */}
-          <div className="nav-item profile-dropdown-container" ref={vendorRef}>
-            <div className="nav-items max-[1024px]:flex-col max-[1024px]:text-[12px] max-[820px]:text-[11px] cursor-pointer">
-              <div className="flex items-center gap-2">
-                <FaStore
-                  className="icons max-[1024px]:h-[18px] max-[1024px]:w-[18px] max-[820px]:h-[15px]"
-                  onClick={handleVendorClick}
-                />
+          {/* Nav Icons */}
+          <div className="nav-icons">
+            {/* Profile Dropdown */}
+            <div
+              className="nav-item profile-dropdown-container"
+              ref={profileRef}
+            >
+              <div className="flex items-center gap-2 text-gray-700 cursor-pointer login">
                 <span
-                  className="text-[#001F3F] hover:text-white font-semibold max-[1024px]:mt-[6px] max-[820px]:text-[11px] max-[820px]:w-max"
-                  onClick={() => {
-                    if (!userFirstName) {
-                      const toastId = toast.custom((t) => (
-                        <div
-                          className={`${
-                            t.visible ? "animate-enter" : "animate-leave"
-                          } bg-white text-black px-4 py-3 rounded shadow-lg relative mt-20`}
-                        >
-                          <span>Please login as a user first.</span>
-                          <div className="toast-progress"></div>
-                        </div>
-                      ));
-                      setTimeout(() => toast.dismiss(toastId), 2000);
-                    } else {
-                      handleVendorClick(); // 🔥 Always trigger, regardless of VendorFirstName
-                    }
-                  }}
+                  className="flex items-center gap-2 max-[1024px]:flex-row max-[1024px]:text-[12px] max-[820px]:text-[11px]"
+                  onClick={!userFirstName ? handleLoginClick : undefined}
                 >
-                  {!VendorFirstName ? (
+                  {!userFirstName ? (
                     <>
-                      <span className="font-medium">Be a Vendor</span>
+                      <CgProfile className="text-2xl" />
+                      <span className="font-medium">Login</span>
                     </>
                   ) : (
                     <>
-                      <span className="font-medium">{VendorFirstName}</span>
+                      <UserProfileIcon currentUser={currentUser} />
+                      <span className="font-medium">{`Hi, ${userFirstName}`}</span>
                     </>
                   )}
                 </span>
 
-                <span onClick={() => setShowVendorDropdown((prev) => !prev)}>
-                  {showVendorDropdown ? (
+                {/* ⬇️ Always show dropdown toggle arrow */}
+                <span onClick={handleToggleProfileDropdown}>
+                  {showProfileDropdown ? (
                     <FaChevronUp className="text-sm" />
                   ) : (
                     <FaChevronDown className="text-sm" />
                   )}
                 </span>
               </div>
+
+              {showProfileDropdown && (
+                <div className="dropdown-menu profile-menu">
+                  {!userFirstName ? (
+                    <>
+                      <h4 className="login-h4">Welcome</h4>
+                      <p className="login-p">
+                        To access account and manage services
+                      </p>
+                      <div className="dropdown-header">
+                        <span className="text-[#001f3f]">New Customer?</span>
+                        <button
+                          className="bg-blue-500 hover:bg-blue-600"
+                          onClick={handleSignupClick}
+                        >
+                          Sign Up
+                        </button>
+                      </div>
+                      <hr />
+                    </>
+                  ) : (
+                    <>
+                      <div
+                        className="flex flex-row gap-1 mb-[10px] text-[#001f3f] hover:text-[#022f5d] hover:font-bold text-[15px] cursor-pointer"
+                        onClick={() => navigate("/profile")}
+                      >
+                        <FaUser style={{ marginRight: "8px" }} />
+                        My Profile
+                      </div>
+                      <div className="dropdown-item hover:text-[#001f3f] hover:font-bold">
+                        <FaHeart
+                          className="navbar_icon "
+                          style={{ marginRight: "4px" }}
+                        />
+                        <a href="./wishlist">Wishlist</a>
+                      </div>
+                      <div className="dropdown-item">
+                        <FaSignOutAlt
+                          className="navbar_icon hover:text-[#001f3f] hover:font-bold"
+                          style={{ marginRight: "4px" }}
+                        />
+                        <button
+                          className="signOutButton hover:text-[#001f3f] hover:font-bold"
+                          onClick={handleLogout}
+                        >
+                          Sign Out
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
             </div>
 
-            {showVendorDropdown && (
-              <div className="dropdown-menu profile-menu">
-                <h4 className="login-h4">Welcome Vendor</h4>
-                <p className="login-p">Access your vendor tools and profile</p>
-                <div className="dropdown-header">
-                  <span className="text-[#001f3f]">New Vendor?</span>
-                  <button
-                    className=" bg-black hover:bg-gray-800 text-white"
+            {/* Become Vendor */}
+            <div
+              className="nav-item profile-dropdown-container"
+              ref={vendorRef}
+            >
+              <div className="nav-items max-[1024px]:flex-col max-[1024px]:text-[12px] max-[820px]:text-[11px] cursor-pointer">
+                <div className="flex items-center gap-2">
+                  <FaStore
+                    className="icons max-[1024px]:h-[18px] max-[1024px]:w-[18px] max-[820px]:h-[15px]"
+                    onClick={handleVendorClick}
+                  />
+                  <span
+                    className="text-[#001F3F] hover:text-white font-semibold max-[1024px]:mt-[6px] max-[820px]:text-[11px] max-[820px]:w-max"
                     onClick={() => {
-                      setShowVendorDropdown(false);
                       if (!userFirstName) {
                         const toastId = toast.custom((t) => (
                           <div
@@ -375,111 +374,179 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
                               t.visible ? "animate-enter" : "animate-leave"
                             } bg-white text-black px-4 py-3 rounded shadow-lg relative mt-20`}
                           >
-                            <span>Please register as a user first.</span>
+                            <span>Please login as a user first.</span>
                             <div className="toast-progress"></div>
                           </div>
                         ));
-
-                        // Auto dismiss after 3 seconds
                         setTimeout(() => toast.dismiss(toastId), 2000);
                       } else {
-                        navigate("/vendor/register");
+                        handleVendorClick(); // 🔥 Always trigger, regardless of VendorFirstName
                       }
                     }}
                   >
-                    Register
-                  </button>
-                </div>
-                <hr />
-                <div className="dropdown-header">
-                  <button
-                    className=" bg-green-500 hover:bg-green-600"
-                    onClick={() => {
-                      setShowVendorDropdown(false);
-                      if (!userFirstName) {
-                        const toastId = toast.custom((t) => (
-                          <div
-                            className={`${
-                              t.visible ? "animate-enter" : "animate-leave"
-                            } bg-white text-black px-4 py-3 rounded shadow-lg relative mt-20`}
-                          >
-                            <span>Please register as a user first.</span>
-                            <div className="toast-progress"></div>
-                          </div>
-                        ));
+                    {!VendorFirstName ? (
+                      <>
+                        <span className="font-medium">Be a Vendor</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="font-medium">{VendorFirstName}</span>
+                      </>
+                    )}
+                  </span>
 
-                        // Auto dismiss after 3 seconds
-                        setTimeout(() => toast.dismiss(toastId), 2000);
-                      } else {
-                        navigate("/vendor/register");
-                      }
-                    }}
-                  >
-                    Change Password
-                  </button>
-                  <button
-                    className=" bg-red-500 hover:bg-red-600"
-                    onClick={() => {
-                      setShowVendorDropdown(false);
-                      if (!userFirstName) {
-                        const toastId = toast.custom((t) => (
-                          <div
-                            className={`${
-                              t.visible ? "animate-enter" : "animate-leave"
-                            } bg-white text-black px-4 py-3 rounded shadow-lg relative mt-20`}
-                          >
-                            <span>Please register as a user first.</span>
-                            <div className="toast-progress"></div>
-                          </div>
-                        ));
-
-                        // Auto dismiss after 3 seconds
-                        setTimeout(() => toast.dismiss(toastId), 2000);
-                      } else {
-                        vendorLogout();
-                      }
-                    }}
-                  >
-                    SignOut
-                  </button>
+                  <span onClick={() => setShowVendorDropdown((prev) => !prev)}>
+                    {showVendorDropdown ? (
+                      <FaChevronUp className="text-sm" />
+                    ) : (
+                      <FaChevronDown className="text-sm" />
+                    )}
+                  </span>
                 </div>
               </div>
-            )}
-          </div>
 
-          {/* Three Dots Dropdown */}
-          <div className="nav-item ellipsis-container" ref={ellipsisRef}>
-            <FaEllipsisV
-              className="three-dot"
-              onClick={() => setShowEllipsisDropdown((prev) => !prev)}
-              style={{ cursor: "pointer" }}
-            />
-            {showEllipsisDropdown && (
-              <div className="dropdown-menu ellipsis-menu">
-                <div
-                  className={`dropdown-item ${
-                    location.pathname === "/about_us" ? "active" : ""
-                  }`}
-                  onClick={() => navigate("/about_us")}
-                >
-                  <FcAbout className="navbar_icon" /> About Us
-                </div>
+              {showVendorDropdown && (
+                <div className="dropdown-menu profile-menu">
+                  <h4 className="login-h4">Welcome Vendor</h4>
+                  <p className="login-p">
+                    Access your vendor tools and profile
+                  </p>
+                  <div className="dropdown-header">
+                    <span className="text-[#001f3f]">New Vendor?</span>
+                    <button
+                      className=" bg-black hover:bg-gray-800 text-white"
+                      onClick={() => {
+                        setShowVendorDropdown(false);
+                        if (!userFirstName) {
+                          const toastId = toast.custom((t) => (
+                            <div
+                              className={`${
+                                t.visible ? "animate-enter" : "animate-leave"
+                              } bg-white text-black px-4 py-3 rounded shadow-lg relative mt-20`}
+                            >
+                              <span>Please register as a user first.</span>
+                              <div className="toast-progress"></div>
+                            </div>
+                          ));
 
-                <div
-                  className={`dropdown-item ${
-                    location.pathname === "/help_us" ? "active" : ""
-                  }`}
-                  onClick={() => navigate("/help_us")}
-                >
-                  <FaHandsHelping className="navbar_icon" /> Help Us
+                          // Auto dismiss after 3 seconds
+                          setTimeout(() => toast.dismiss(toastId), 2000);
+                        } else {
+                          navigate("/vendor/register");
+                        }
+                      }}
+                    >
+                      Register
+                    </button>
+                  </div>
+                  <hr />
+                  <div className="dropdown-header">
+                    <button
+                      className=" bg-green-500 hover:bg-green-600"
+                      onClick={() => {
+                        setShowVendorDropdown(false);
+                        if (!userFirstName) {
+                          const toastId = toast.custom((t) => (
+                            <div
+                              className={`${
+                                t.visible ? "animate-enter" : "animate-leave"
+                              } bg-white text-black px-4 py-3 rounded shadow-lg relative mt-20`}
+                            >
+                              <span>Please register as a user first.</span>
+                              <div className="toast-progress"></div>
+                            </div>
+                          ));
+
+                          // Auto dismiss after 3 seconds
+                          setTimeout(() => toast.dismiss(toastId), 2000);
+                        } else {
+                          navigate("/vendor/register");
+                        }
+                      }}
+                    >
+                      Change Password
+                    </button>
+                    <button
+                      className=" bg-red-500 hover:bg-red-600"
+                      onClick={() => {
+                        setShowVendorDropdown(false);
+                        if (!userFirstName) {
+                          const toastId = toast.custom((t) => (
+                            <div
+                              className={`${
+                                t.visible ? "animate-enter" : "animate-leave"
+                              } bg-white text-black px-4 py-3 rounded shadow-lg relative mt-20`}
+                            >
+                              <span>Please register as a user first.</span>
+                              <div className="toast-progress"></div>
+                            </div>
+                          ));
+
+                          // Auto dismiss after 3 seconds
+                          setTimeout(() => toast.dismiss(toastId), 2000);
+                        } else {
+                          vendorLogout();
+                        }
+                      }}
+                    >
+                      SignOut
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
+
+            {/* Three Dots Dropdown */}
+            <div className="nav-item ellipsis-container" ref={ellipsisRef}>
+              <FaEllipsisV
+                className="three-dot"
+                onClick={() => setShowEllipsisDropdown((prev) => !prev)}
+                style={{ cursor: "pointer" }}
+              />
+              {showEllipsisDropdown && (
+                <div className="dropdown-menu ellipsis-menu">
+                  <div
+                    className={`dropdown-item ${
+                      location.pathname === "/about_us" ? "active" : ""
+                    }`}
+                    onClick={() => navigate("/about_us")}
+                  >
+                    <FcAbout className="navbar_icon" /> About Us
+                  </div>
+
+                  <div
+                    className={`dropdown-item ${
+                      location.pathname === "/help_us" ? "active" : ""
+                    }`}
+                    onClick={() => navigate("/help_us")}
+                  >
+                    <FaHandsHelping className="navbar_icon" /> Help Us
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
+
+      {showMobileSearchBar && window.innerWidth <= 768 && (
+        <div className="mobile-search-bar-container active">
+          <input
+            ref={inputRef}
+            type="text"
+            placeholder={placeholders[placeholder]}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            autoFocus
+          />
+        </div>
+      )}
     </div>
   );
 };
 
+Navbar.propTypes = {
+  onOpenLogin: PropTypes.func.isRequired,
+  onOpenRegister: PropTypes.func.isRequired,
+};
 export default Navbar;

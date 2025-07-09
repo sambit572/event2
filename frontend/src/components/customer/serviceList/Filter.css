@@ -9,15 +9,29 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
 }
-.filter h3 {
-  font-weight: bold;
-  margin-bottom: 12px;
-  color: #001f3f;
+.filter-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.2rem;
+  font-weight: 800;
+  background: #f5f7ff;
+  color: #1f2937;
+  padding: 14px 20px;
+  border-radius: 12px;
+  border-left: 6px solid #6366f1; /* Indigo highlight */
+  font-family: 'Poppins', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  transition: all 0.3s ease;
 }
+
 .filterBox {
   display: flex;
   width: 280px;
   height: 600px;
+  z-index: 1000;
 }
 .rating-option {
   margin: 8px 0;
@@ -190,10 +204,10 @@ input[type="range"].thumb-right {
 
 .filter-toggle-btn {
   display: none;
-  position: absolute;
+  position: fixed;
   top: 80px;
   right: 25px;
-  z-index: 1001;
+  z-index: 1100;
   background-color: #007bff;
   color: white;
   padding: 8px 12px;
@@ -221,6 +235,38 @@ input[type="range"].thumb-right {
   box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
   transform: scale(1.03);
 }
+.close-filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #007bff;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: 155px;
+  margin-bottom: 16px;
+  align-self: flex-end;
+  transition: all 0.3s ease;
+}
+
+.close-filter-btn .close-icon {
+  font-size: 20px;
+}
+
+.close-filter-btn .filter-text {
+  font-size: 16px;
+}
+
+.close-filter-btn:hover {
+  background-color: #0056b3;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+  transform: scale(1.03);
+}
+
 
 @media screen and (max-width: 1024px) {
   .filterBox {

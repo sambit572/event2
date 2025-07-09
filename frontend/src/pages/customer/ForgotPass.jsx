@@ -1,11 +1,17 @@
 import axios from "axios";
 import React, { useState } from "react";
 import "./ForgotPass.css";
-function ForgotPass() {
+function ForgotPass({ onClose }) {
   const [email, setEmail] = useState("");
-
+  const [loading, setLoading] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!email || !email.includes("@")) {
+      alert("Please enter a valid email address");
+      return;
+    }
+
+    setLoading(true);
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/user/forgot-password`,
@@ -15,33 +21,50 @@ function ForgotPass() {
       );
       console.log(res.data.message);
       alert("Reset link sent successfully!");
+      onClose();
     } catch (error) {
       console.error("Error sending reset link", error);
-      alert("Error sending reset link. Try again.");
+      if (error.response && error.response.data?.message) {
+        alert(`Error: ${error.response.data.message}`);
+      } else {
+        alert("Error sending reset link. Please try again.");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="custom-container">
-      <form onSubmit={handleSubmit} className="custom-form">
+    <div className="modal-overlay">
+      <div className="custom-form modal-box">
+        {/* ❌ Close button in top-right corner */}
+        <button
+          className="modal-close-button"
+          onClick={onClose}
+          type="button"
+          aria-label="Close modal"
+        >
+          &times;
+        </button>
         <h2 className="custom-heading">Forgot Password</h2>
         <p className="subheading">Enter your valid email address</p>
-        <input
-          type="email"
-          className="custom-input"
-          placeholder="Enter your email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <button type="submit" className="custom-button">
-          Send Reset Link
-        </button>
-      </form>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="email"
+            className="custom-input"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            disabled={loading}
+          />
+          <button type="submit" className="custom-button" disabled={loading}>
+            {loading ? "Sending..." : "Send Reset Link"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
-
-// Inline CSS Styles
 
 export default ForgotPass;

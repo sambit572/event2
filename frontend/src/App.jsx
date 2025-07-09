@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
@@ -9,7 +9,7 @@ import Chatbot from "./components/common/Chatbot";
 
 // Auth Modals
 import Login from "./pages/common/Login.jsx";
-import Register from "./pages/common/Resgister.jsx";
+import Register from "./pages/common/Register.jsx";
 
 // Customer Pages
 import Home from "./pages/customer/Home";
@@ -56,7 +56,9 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 const App = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
+  // Modal states
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
   // Hide Footer on specific pages
   const pagesWithoutFooter = [
     "/vendor/thank-you",
@@ -64,7 +66,24 @@ const App = () => {
     "/dashboard",
     "/profile",
   ];
+  const handleOpenLogin = () => {
+    setShowLoginModal(true);
+    setShowRegisterModal(false);
+    document.body.classList.add("modal-open");
+  };
 
+  const handleOpenRegister = () => {
+    setShowRegisterModal(true);
+    setShowLoginModal(false);
+    document.body.classList.add("modal-open");
+  };
+
+  const handleCloseModals = () => {
+    setShowLoginModal(false);
+    setShowRegisterModal(false);
+    // Re-enable body scroll
+    document.body.classList.remove("modal-open");
+  };
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -112,8 +131,12 @@ const App = () => {
   return (
     <>
       {/* Conditionally render Navbar */}
-      {location.pathname !== "/admin" && <Navbar />}
-
+      {location.pathname !== "/admin" && (
+        <Navbar
+          onOpenLogin={handleOpenLogin}
+          onOpenRegister={handleOpenRegister}
+        />
+      )}
       <main>
         <Routes>
           {/* Customer Routes */}
@@ -178,16 +201,6 @@ const App = () => {
           <Route path="/dashboard" element={<DashBoardMain />} />
           <Route path="/vendor-login" element={<VendorLogin />} />
 
-          {/* Auth Routes */}
-          <Route
-            path="/login"
-            element={<Login onClose={() => navigate(-1)} />}
-          />
-
-          <Route
-            path="/register"
-            element={<Register onClose={() => navigate(-1)} />}
-          />
           <Route path="/forgot-password" element={<ForgotPass />} />
           <Route
             path="/reset-password/:resetToken"
@@ -212,6 +225,20 @@ const App = () => {
 
       {/* Conditionally render Footer */}
       {!pagesWithoutFooter.includes(location.pathname) && <Footer />}
+      {/* Auth Modals */}
+      {showLoginModal && (
+        <Login
+          onClose={handleCloseModals}
+          onSwitchToRegister={handleOpenRegister}
+        />
+      )}
+
+      {showRegisterModal && (
+        <Register
+          onClose={handleCloseModals}
+          onSwitchToLogin={handleOpenLogin}
+        />
+      )}
       <Toaster
         toastOptions={{
           duration: 5000,
