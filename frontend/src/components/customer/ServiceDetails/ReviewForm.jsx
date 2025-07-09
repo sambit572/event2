@@ -41,7 +41,7 @@ const ReviewForm = ({ onNewReview }) => {
             <FaStar
               key={star}
               size={48}
-              color="#f9a825"
+              color= "rgb(0, 128, 0)" 
               onClick={() => handleRating(star)}
               style={{ cursor: "pointer" }}
             />
