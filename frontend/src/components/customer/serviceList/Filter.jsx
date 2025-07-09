@@ -6,7 +6,7 @@ import { IoFilterOutline } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
 
 const Filter = () => {
-  const rating = [4.9, 4.2, 3.5];
+  const rating = [4.9, 4, 3];
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(100000);
   const [showFilter, setShowFilter] = useState(false);
