@@ -104,23 +104,15 @@
 
 .footer-dropdown-content {
   max-height: 0;
-  opacity: 0;
   overflow: hidden;
-  padding: 0;
-  margin: 0;
-  transition: max-height 0.4s ease, opacity 0.3s ease;
-  visibility: hidden;
-  height: auto;
+  opacity: 0;
+  transition: all 0.3s ease;
 }
 
 .footer-dropdown-content.show {
-  max-height: 500px; /* Enough to fit the content */
+  max-height: 200px; /* adjust as needed */
   opacity: 1;
-  padding: 8px 0;
-  margin: 0;
-  visibility: visible;
 }
-
 
 .footer-dropdown-content p {
   color: white;
@@ -204,9 +196,58 @@
     display: none;
   }
 
+  .footer-grid-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .footer-col {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .footer-dropdown h4 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+
+  .footer-dropdown-content {
+    display: none;
+    padding-left: 10px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: white;
+  }
+
+  .footer-dropdown-content.show {
+    display: block;
+    background-color: #ffffff10;
+    padding: 8px 12px;
+    border-radius: 6px;
+  }
+
+  .footer-dropdown-content p {
+    margin: 4px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+  }
+
   .footer-columns-mobile-wrapper {
     display: flex;
+    align-items: center;
     padding-left: 25px;
+    width: 100%;
   }
 
   .app-buttons img {
@@ -221,9 +262,9 @@
     font-size: 12px;
   }
 
-  .footer-dropdown-content p {
+  /* .footer-dropdown-content p {
     font-size: 12px;
-  }
+  } */
 
   .social-icon {
     width: 20px;

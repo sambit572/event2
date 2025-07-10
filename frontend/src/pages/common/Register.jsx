@@ -7,7 +7,7 @@ import "./LoginRegister.css";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/UserSlice.js";
 
-const Register = ({ onClose }) => {
+const Register = ({ onClose, onSwitchToLogin }) => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -62,7 +62,7 @@ const Register = ({ onClose }) => {
         localStorage.setItem("userFirstName", userFirstName);
         localStorage.setItem("currentlyLoggedIn", "true");
         window.dispatchEvent(new Event("userLoggedIn"));
-        navigate("/", { replace: true });
+      onClose();
       }
     } catch (error) {
       const msg =
@@ -141,7 +141,7 @@ const Register = ({ onClose }) => {
 
           <p className="signup-text">
             Already have an account?{" "}
-            <span className="login-link" onClick={() => navigate("/login")}>
+            <span className="login-link" onClick={onSwitchToLogin}>
               Log In
             </span>
           </p>
@@ -152,7 +152,9 @@ const Register = ({ onClose }) => {
 };
 
 Register.propTypes = {
+
   onClose: PropTypes.func,
+  onSwitchToLogin: PropTypes.func,
 };
 
 export default Register;

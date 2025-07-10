@@ -22,7 +22,7 @@ const ServiceDescription = ({ service }) => {
   };
   return (
     <section className="serviceDescription">
-      <Link to="/category/service" className="link">
+       <Link to={`/service/${service.id}`} className="link">
         <h3>{title}</h3>
         <h5>{service.vandor}</h5>
         <p className="address">

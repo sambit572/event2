@@ -22,7 +22,8 @@
   height: 100vh;
   overflow-y: auto;
   /* position: absolute; */
-  z-index: 99999;
+
+  z-index: 1;
 }
 
 /* For screen widths between 1012px and 1350px */
