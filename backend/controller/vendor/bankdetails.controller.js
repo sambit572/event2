@@ -93,53 +93,34 @@ export const getBankDetailsByVendor = async (req, res) => {
   }
 };
 
+// controllers/bankDetailsController.js
+// Backend route (Express)
+
 export const updateBankDetails = async (req, res) => {
+  const { vendorId } = req.params;
+  const { tempAccountNumber, ifscCode, upiId } = req.body;
+  console.log("veddorId", vendorId);
   try {
-    const { vendorId } = req.params;
-    const updateData = { ...req.body };
-
-    const bankDetails = await BankDetails.findOne({ vendorid: vendorId });
-
-    if (!bankDetails) {
-      return res.status(404).json({
-        success: false,
-        message: "Bank details not found",
-      });
-    }
-
-    // If file uploaded, replace old image
-    if (req.file) {
-      await deleteFromCloudinary(bankDetails.panCardPic);
-
-      const cloudinaryResponse = await uploadOnCloudinary(req.file.path);
-
-      if (!cloudinaryResponse?.secure_url) {
-        return res.status(500).json({
-          success: false,
-          message: "Failed to upload PAN card to Cloudinary.",
-        });
-      }
-
-      updateData.panCardPic = cloudinaryResponse.secure_url;
-    }
-
-    const updated = await BankDetails.findOneAndUpdate(
-      { vendorid: vendorId },
-      updateData,
-      { new: true, validateModifiedOnly: true }
+    const updatedVendor = await BankDetails.findByIdAndUpdate(
+      vendorId,
+      {
+        $set: {
+          "bankDetails.upiId": upiId,
+          "bankDetails.accountNumber": tempAccountNumber,
+          "bankDetails.ifscCode": ifscCode,
+        },
+      },
+      { new: true }
     );
 
-    res.status(200).json({
-      success: true,
-      message: "Bank details updated successfully",
-      data: updated,
-    });
+    if (!updatedVendor) {
+      return res.status(404).json({ message: "Vendor not found" });
+    }
+
+    res.json({ updatedVendor });
   } catch (error) {
     console.error("Error updating bank details:", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal server error while updating bank details",
-    });
+    res.status(500).json({ message: "Server error" });
   }
 };
 

@@ -21,6 +21,8 @@ import {
   checkVendorEmailStatus,
   getVendorProfile,
   updateVendorProfilePicture,
+  verifyConfirmPassword,
+  // updateTheBankDetails,
 } from "../../controller/vendor/vendor.controller.js";
 
 // Bank Details
@@ -43,7 +45,7 @@ import {
 
 const vendor_router = express.Router();
 
-// --- AUTH ROUTES --- //
+
 // --- AUTH ROUTES --- //
 vendor_router.post(
   "/register",
@@ -99,8 +101,8 @@ vendor_router.get(
 );
 vendor_router.put("/bank-details/:vendorId", updateBankDetails);
 vendor_router.delete("/bank-details/:vendorId", deleteBankDetails);
-vendor_router.get("/bank-details/:vendorId", getBankDetailsByVendor);
-vendor_router.put("/bank-details/:vendorId", updateBankDetails);
+// vendor_router.get("/bank-details/:vendorId", getBankDetailsByVendor);
+
 vendor_router.delete("/bank-details/:vendorId", deleteBankDetails);
 
 // --- LEGAL CONSENT ROUTES --- //
@@ -124,5 +126,10 @@ vendor_router.post(
   upload.single("profilePicture"),
   updateVendorProfilePicture
 );
+vendor_router.post("/verify-password", verifyVendorJwt, verifyConfirmPassword);
+// router.post("/update-bank-details", verifyVendorJwt, updateTheBankDetails);
+// services ROUTES
+
+vendor_router.get("/my-services", verifyVendorJwt, getMyServices);
 
 export { vendor_router };

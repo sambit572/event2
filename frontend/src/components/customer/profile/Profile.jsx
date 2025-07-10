@@ -9,9 +9,11 @@ function Profile({ onProfileChange }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
+
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+
   const [profileData, setProfileData] = useState({
     fullName: "",
     email: "",

@@ -120,12 +120,13 @@ const registerVendor = async (req, res) => {
     return res.status(500).json(new ApiError(500, "Internal server error"));
   }
 };
-const updateVendor = async (req, res, next) => {
+export const updateVendor = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const updateData = req.body;
+    const updateData = { ...req.body };
     const file = req.file;
 
+    // Never allow password updates through this route
     delete updateData.password;
     delete updateData.confirmPassword;
 
@@ -134,19 +135,24 @@ const updateVendor = async (req, res, next) => {
       return next(new ApiError(404, "Vendor not found for update."));
     }
 
-    // ✅ CASE 1: REMOVE PROFILE PICTURE if requested
+    // Remove old profile picture from Cloudinary if requested
     if (updateData.removeProfilePicture === "true") {
-      if (vendor.profilePicture && vendor.profilePicture.includes("cloudinary")) {
+      if (
+        vendor.profilePicture &&
+        vendor.profilePicture.includes("cloudinary")
+      ) {
         const publicId = vendor.profilePicture.split("/").pop().split(".")[0];
         await uploadOnCloudinary(null, publicId, true); // Custom delete support
       }
       updateData.profilePicture = "";
     }
 
-    // ✅ CASE 2: UPLOAD NEW IMAGE AND REPLACE OLD
+    // Replace with new profile picture
     if (file) {
-      // Delete old image from Cloudinary (if exists)
-      if (vendor.profilePicture && vendor.profilePicture.includes("cloudinary")) {
+      if (
+        vendor.profilePicture &&
+        vendor.profilePicture.includes("cloudinary")
+      ) {
         const publicId = vendor.profilePicture.split("/").pop().split(".")[0];
         await uploadOnCloudinary(null, publicId, true);
       }
@@ -158,7 +164,8 @@ const updateVendor = async (req, res, next) => {
       updateData.profilePicture = cloudinaryResult.url;
     }
 
-    // ✅ UPDATE the vendor
+    // 🚫 Removed bank detail update logic from here
+
     const updatedVendor = await Vendor.findByIdAndUpdate(id, updateData, {
       new: true,
       runValidators: true,
@@ -166,10 +173,13 @@ const updateVendor = async (req, res, next) => {
 
     return res
       .status(200)
-      .json(new ApiResponse(200, updatedVendor, "Vendor updated successfully."));
+      .json(
+        new ApiResponse(200, updatedVendor, "Vendor updated successfully.")
+      );
   } catch (error) {
     console.error("Error updating vendor:", error);
 
+    // Clean up uploaded file if something goes wrong
     if (req.file && req.file.path) {
       try {
         await fs.unlink(req.file.path);
@@ -178,6 +188,7 @@ const updateVendor = async (req, res, next) => {
       }
     }
 
+    // Validation errors
     if (error.name === "ValidationError") {
       const errorMessages = Object.values(error.errors).map(
         (err) => err.message
@@ -190,6 +201,7 @@ const updateVendor = async (req, res, next) => {
       );
     }
 
+    // Duplicate field error (e.g., duplicate email)
     if (error.code === 11000) {
       const field = Object.keys(error.keyValue)[0];
       return next(
@@ -197,8 +209,11 @@ const updateVendor = async (req, res, next) => {
       );
     }
 
-    next(
-      new ApiError(500, "An internal server error occurred during vendor update.")
+    return next(
+      new ApiError(
+        500,
+        "An internal server error occurred during vendor update."
+      )
     );
   }
 };
@@ -408,9 +423,60 @@ const getVendorProfile = async (req, res) => {
   }
 };
 
- const updateVendorProfilePicture = async (req, res, next) => {
+const verifyConfirmPassword = async (req, res, next) => {
   try {
-    const id = req.vendor._id;  // 👈 Comes from JWT middleware
+    const { password } = req.body;
+    const vendor = await Vendor.findById(req.vendor._id); // check this line!
+
+    if (!vendor) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Vendor not found" });
+    }
+
+    const isMatch = await bcrypt.compare(password, vendor.password);
+    if (isMatch) {
+      return res.json({ success: true });
+    } else {
+      return res
+        .status(401)
+        .json({ success: false, message: "Incorrect password" });
+    }
+  } catch (error) {
+    console.error("❌ Backend error:", error);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+// const updateTheBankDetails = async (req, res, next) => {
+//   try {
+//     const { password, bankDetails } = req.body;
+
+//     const vendor = await Vendor.findById(req.vendor._id);
+//     if (!vendor) {
+//       return res
+//         .status(404)
+//         .json({ success: false, message: "Vendor not found" });
+//     }
+//   if (!isMatch) {
+//       return res.status(401).json({ success: false, message: 'Incorrect password' });
+//     }
+
+//     vendor.bankDetails = bankDetails;
+//     await vendor.save();
+
+//     return res.json({
+//       success: true,
+//       message: "Bank details updated successfully",
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
+const updateVendorProfilePicture = async (req, res, next) => {
+  try {
+    const id = req.vendor._id; // 👈 Comes from JWT middleware
     const file = req.file;
 
     if (!file) {
@@ -436,7 +502,11 @@ const getVendorProfile = async (req, res) => {
     vendor.profilePicture = cloudinaryResult.url;
     await vendor.save();
 
-    res.status(200).json(new ApiResponse(200, vendor, "Profile picture updated successfully."));
+    res
+      .status(200)
+      .json(
+        new ApiResponse(200, vendor, "Profile picture updated successfully.")
+      );
   } catch (error) {
     console.error("Error uploading profile:", error);
 
@@ -452,11 +522,8 @@ const getVendorProfile = async (req, res) => {
   }
 };
 
-
-
 export {
   registerVendor,
-  updateVendor,
   loginVendor,
   vendorLogout,
   sendVendorResetLink,
@@ -466,4 +533,6 @@ export {
   checkVendorEmailStatus,
   getVendorProfile,
   updateVendorProfilePicture,
+  verifyConfirmPassword,
+  // updateTheBankDetails,
 };
