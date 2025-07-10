@@ -4,12 +4,13 @@ import { FaTrash, FaEdit } from "react-icons/fa";
 import axios from "axios";
 import { BACKEND_URL } from "../../utils/constant.js";
 
+
+
 const DashboardServices = () => {
   const [services, setServices] = useState([]);
   const [editingIndex, setEditingIndex] = useState(null);
   const [selectedImages, setSelectedImages] = useState({});
   const [editedData, setEditedData] = useState({});
-  
 
   function formatDuration(totalMinutes) {
     const days = Math.floor(totalMinutes / (24 * 60));
@@ -45,7 +46,7 @@ const DashboardServices = () => {
         console.error("Failed to fetch vendor services", err);
       }
     };
-    
+
     fetchServices();
   }, []);
 
@@ -54,10 +55,75 @@ const DashboardServices = () => {
     setEditedData(services[index]); // copy current service data
   };
 
-  const handleSave = (index) => {
-    setEditingIndex(null);
-    // Optional: Save editedData to backend
+  const handleSave = async (index) => {
+    try {
+      const serviceId = services[index]._id;
+
+      const payload = {
+        serviceName: editedData.serviceName,
+        serviceDes: editedData.serviceDes,
+        serviceCategory: editedData.serviceCategory,
+        priceRange: editedData.priceRange,
+        locationOffered: editedData.locationOffered,
+        duration: editedData.duration,
+        serviceImage:
+          editedData.serviceImage?.length > 0
+            ? editedData.serviceImage
+            : services[index].serviceImage,
+      };
+
+      const res = await axios.put(
+        `${BACKEND_URL}/vendors/update-service/${serviceId}`,
+        payload,
+        { withCredentials: true }
+      );
+
+      console.log("✅ Service updated:", res.data);
+
+      // Replace updated service in local state
+      const updatedService = res.data.data;
+      const updatedList = [...services];
+      updatedList[index] = updatedService;
+      setServices(updatedList);
+
+      setEditingIndex(null);
+    } catch (error) {
+      console.error(
+        "❌ Failed to update service:",
+        error.response?.data || error.message
+      );
+      alert(error.response?.data?.message || "Update failed");
+    }
   };
+
+  const handleDelete = async (index) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this service?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const serviceId = services[index]._id;
+
+      const res = await axios.delete(
+        `${BACKEND_URL}/vendors/delete-service/${serviceId}`,
+        { withCredentials: true }
+      );
+
+      console.log("✅ Service deleted:", res.data);
+
+      const updatedList = [...services];
+      updatedList.splice(index, 1);
+      setServices(updatedList);
+    } catch (error) {
+      console.error(
+        "❌ Failed to delete service:",
+        error.response?.data || error.message
+      );
+      alert(error.response?.data?.message || "Delete failed");
+    }
+  };
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -110,7 +176,10 @@ const DashboardServices = () => {
                   >
                     <FaEdit className="mt-[2.9px]" /> Edit
                   </button>
-                  <button className="vendor-delete-btn flex gap-1">
+                  <button
+                    className="vendor-delete-btn flex gap-1"
+                    onClick={() => handleDelete(index)}
+                  >
                     <FaTrash className="mt-[2.9px]" /> Delete
                   </button>
                 </div>
@@ -122,17 +191,17 @@ const DashboardServices = () => {
                   <form className="edit-form-dashboard">
                     <input
                       type="text"
-                      name="title"
+                      name="serviceName"
                       value={editedData.serviceName}
                       onChange={handleChange}
-                      placeholder="Title"
+                      placeholder="Service Name"
                     />
                     <input
                       type="text"
-                      name="location"
+                      name="locationOffered"
                       value={editedData.locationOffered}
                       onChange={handleChange}
-                      placeholder="Location"
+                      placeholder="Location Offered"
                     />
                     <input
                       type="text"
@@ -143,10 +212,10 @@ const DashboardServices = () => {
                     />
                     <input
                       type="text"
-                      name="category"
+                      name="serviceCategory"
                       value={editedData.serviceCategory}
                       onChange={handleChange}
-                      placeholder="Category"
+                      placeholder="Service Category"
                     />
                     <input
                       type="text"
@@ -156,7 +225,7 @@ const DashboardServices = () => {
                       placeholder="Duration"
                     />
                     <textarea
-                      name="description"
+                      name="serviceDes"
                       value={editedData.serviceDes}
                       onChange={handleChange}
                       placeholder="Description"

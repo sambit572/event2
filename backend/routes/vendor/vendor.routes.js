@@ -1,6 +1,11 @@
 import express from "express";
 import { upload } from "../../middleware/multer.middleware.js";
-import { createService, getMyServices } from "../../controller/vendor/service.controller.js";
+import {
+  createService,
+  deleteService,
+  getMyServices,
+  updateService,
+} from "../../controller/vendor/service.controller.js";
 import { verifyVendorJwt } from "../../middleware/VendorAuth.middleware.js";
 
 // Vendor Core Controllers
@@ -58,11 +63,12 @@ vendor_router.get("/me", verifyVendorJwt, getVendorProfile);
 vendor_router.put("/:id", upload.single("profilePicture"), updateVendor);
 
 // --- SERVICE ROUTES --- //
+
 vendor_router.post(
   "/create-service",
   verifyVendorJwt,
   (req, res, next) => {
-    upload.array("images", 10)(req, res, function (err) {
+    upload.array("images", 5)(req, res, function (err) {
       if (err) {
         return res.status(400).json({ success: false, message: err.message });
       }
@@ -72,6 +78,13 @@ vendor_router.post(
   createService
 );
 
+vendor_router.route("/my-services").get(verifyVendorJwt, getMyServices);
+
+vendor_router.route("/update-service/:id").put(verifyVendorJwt, updateService);
+
+vendor_router
+  .route("/delete-service/:id")
+  .delete(verifyVendorJwt, deleteService);
 
 // --- BANK DETAILS ROUTES --- //
 vendor_router.post(
@@ -79,7 +92,11 @@ vendor_router.post(
   upload.single("panCardPic"),
   createBankDetails
 );
-vendor_router.get("/bank-details/bankDetails",verifyVendorJwt, getBankDetailsByVendor);
+vendor_router.get(
+  "/bank-details/bankDetails",
+  verifyVendorJwt,
+  getBankDetailsByVendor
+);
 vendor_router.put("/bank-details/:vendorId", updateBankDetails);
 vendor_router.delete("/bank-details/:vendorId", deleteBankDetails);
 vendor_router.get("/bank-details/:vendorId", getBankDetailsByVendor);
@@ -106,13 +123,6 @@ vendor_router.post(
   verifyVendorJwt,
   upload.single("profilePicture"),
   updateVendorProfilePicture
-  
 );
-
-// services ROUTES
-
-vendor_router.get("/my-services", verifyVendorJwt, getMyServices);
-
-
 
 export { vendor_router };

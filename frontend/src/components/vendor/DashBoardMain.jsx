@@ -5,17 +5,27 @@ import DashBoardBooking from "./DashBoardBooking.jsx";
 import ToggleTabs from "./ToggleTabs.jsx";
 import "./DashboardMain.css";
 import { io } from "socket.io-client";
+import { useNavigate } from "react-router-dom";
 
 const socket = io(import.meta.env.VITE_BACKEND_URL);
 
 const VENDOR_NAME = "Horse-Carriage Odisha"; // 🔁 Use dynamic vendor later
 
 function DashBoardMain() {
+  const navigate = useNavigate()
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("services");
   const [popupData, setPopupData] = useState(null);
   const [callStatus, setCallStatus] = useState("Inactive");
   const [callStarted, setCallStarted] = useState(false);
+
+  const [showAddServiceForm, setShowAddServiceForm] = useState(false);
+
+  const handleOpenAddService = () => {
+    navigate('/vendor/services/addServices');
+  };
+
+  
 
   useEffect(() => {
     // 🔌 Notify backend vendor is online
@@ -93,11 +103,21 @@ function DashBoardMain() {
       <div className="main-contain">
         <ToggleTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
-        {activeTab === "services" ? (
-          <DashboardServices />
-        ) : (
-          <DashBoardBooking />
-        )}
+        <button
+          className="flex items-center justify-center gap-2 text-center relative xl:right-[-950px] xl:top-[-70px] rounded-full bg-[#001f3f] font-semibold px-6 py-3 text-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 ease-in-out"
+          onClick={handleOpenAddService}
+        >
+          <span className="text-xl font-bold">+</span>
+          <span className="text-base tracking-wide">Add Services</span>
+        </button>
+
+        <div className="relative max-h-[70vh] overflow-y-auto">
+          {activeTab === "services" ? (
+            <DashboardServices />
+          ) : (
+            <DashBoardBooking />
+          )}
+        </div>
 
         {/* 🔽 Popup Block Added Below */}
         {popupData && (

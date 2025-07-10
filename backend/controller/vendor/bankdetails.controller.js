@@ -69,7 +69,7 @@ export const createBankDetails = async (req, res) => {
 export const getBankDetailsByVendor = async (req, res) => {
   try {
     console.log("inside getBankDetailsByVendor");
-    console.log(req.vendor)
+    // console.log(req.vendor)
     const vendorId = req.vendor._id;
 
     const details = await BankDetails.findOne({ vendorId: vendorId });

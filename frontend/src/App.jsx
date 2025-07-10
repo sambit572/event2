@@ -39,6 +39,7 @@ import PopUp from "./components/customer/CustomerNegotiationModal";
 
 // Vendor Pages
 import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
+import AddServiceInDashboard from "./components/vendor/AddServiceInDashboard.jsx";
 
 // Common
 import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
@@ -177,6 +178,10 @@ const App = () => {
 
           <Route path="/dashboard" element={<DashBoardMain />} />
           <Route path="/vendor-login" element={<VendorLogin />} />
+          <Route
+            path="/vendor/services/addServices"
+            element={<AddServiceInDashboard />}
+          />
 
           {/* Auth Routes */}
           <Route
@@ -204,7 +209,6 @@ const App = () => {
           <Route path="/userdetails" element={<UserDetails />}></Route>
           <Route path="/pop-up" element={<PopUp />}></Route>
           <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/vendor-login" element={<VendorLogin />} />
         </Routes>
       </main>
 

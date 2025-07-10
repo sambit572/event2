@@ -136,7 +136,7 @@ function DashBoardSideBar({ isOpen }) {
           active,
         }
       );
-      dispatch(setVendor(res.data.updatedVendor));
+      dispatch(setVendor(res.data.updatedVendor)); // check this line 
       console.log("Changes saved.");
     } catch (err) {
       console.error("Error saving changes:", err);
