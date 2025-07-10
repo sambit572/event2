@@ -7,152 +7,65 @@ import "./DashboardMain.css";
 import { io } from "socket.io-client";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { UseVendorProfile } from "./UseVendorProfile.jsx";
 
+const VENDOR_NAME = "Horse-Carriage Odisha";
 const socket = io(import.meta.env.VITE_BACKEND_URL);
-import { useSelector, useDispatch } from "react-redux";
-import { setVendor } from "../../redux/VendorSlice"; // If you update vendor in Redux
-
-const VENDOR_NAME = "Horse-Carriage Odisha"; // 🔁 Use dynamic vendor later
 
 function DashBoardMain() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { form, updateBank, updateVendor, updateField } = UseVendorProfile();
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("services");
   const [popupData, setPopupData] = useState(null);
-  const [callStatus, setCallStatus] = useState("Inactive");
-  const [callStarted, setCallStarted] = useState(false);
 
-  const [showAddServiceForm, setShowAddServiceForm] = useState(false);
-
-  const handleOpenAddService = () => {
-    navigate('/vendor/services/addServices');
-  };
-
-  
   const [confirmPasswordModal, setConfirmPasswordModal] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
   const [password, setPassword] = useState("");
-  const [tempAccountNumber, setTempAccountNumber] = useState("");
-  const [ifscCode, setIfscCode] = useState("");
-  const [tempIfscCode, setTempIfscCode] = useState("");
-  const [editMode, setEditMode] = useState(false);
-  const [accountNumber, setAccountNumber] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
 
-  const [upiId, setUpiId] = useState("");
-  const vendor = useSelector((state) => state.vendor.vendor);
-  const dispatch = useDispatch();
-  const [active, setActive] = useState(true);
+  // 🔁 Called when "Add Service" is clicked
+  const handleOpenAddService = () => {
+    navigate("/vendor/services/addServices");
+  };
 
+  // 🔐 Handle password confirmation
   const handleConfirmPassword = async () => {
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/vendors/verify-password`,
-        { password }, // ensure it's sent as an object
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
+        { password },
+        { withCredentials: true }
       );
 
       if (res.data.success) {
-        // ✅ Password is correct
-        setAccountNumber(tempAccountNumber);
-        setIfscCode(tempIfscCode);
-        handleSaveChanges();
-        setEditMode(false);
+        setIsVerified(true); // 👉 Triggers update in DashBoardSideBar
         setConfirmPasswordModal(false);
-        console.log("password correct");
+        console.log("✅ Password correct.");
       } else {
-        // ❌ Password is wrong
-        alert("❌ Incorrect password. Please try again.");
+        alert("❌ Incorrect password.");
       }
     } catch (err) {
-      const message = err.response?.data?.message || "Something went wrong";
-      alert(`❌ ${message}`);
-      console.error(err);
+      const msg = err.response?.data?.message || "Something went wrong";
+      alert(`❌ ${msg}`);
     }
   };
-  const updateVendorDetails = async () => {
-    try {
-      console.log("Saving vendor details:", vendor);
-      const res = await axios.put(
-        `${import.meta.env.VITE_BACKEND_URL}/vendors/${vendor._id}`,
-        {
-          vendorId: vendor._id,
-          fullName,
-          email,
-          phoneNumber,
-          active,
-        }
-      );
-      dispatch(setVendor(res.data.updatedVendor));
-      console.log("Vendor details saved.");
-    } catch (err) {
-      console.error("Error saving vendor details:", err);
-    }
-  };
-  const updateBankDetails = async () => {
-    if (!vendor) {
-      console.error("Vendor is not loaded yet!");
-      return;
-    }
 
-    try {
-      console.log("Sending bank details:", {
-        upiId,
-        tempAccountNumber,
-        ifscCode,
-      });
-
-      const res = await axios.put(
-        `${import.meta.env.VITE_BACKEND_URL}/vendors/bank-details/${
-          vendor._id
-        }`,
-        { upiId, tempAccountNumber, ifscCode },
-        { withCredentials: true }
-      );
-      console.log("Vendor API response:", res.data);
-
-      dispatch(setVendor(res.data.updatedVendor));
-      console.log("Bank details saved.");
-    } catch (err) {
-      console.error("Error saving bank details:", err);
-    }
-  };
-  const handleSaveChanges = async () => {
-    if (!vendor || !vendor._id) {
-      console.error("Vendor not loaded. Cannot save changes.");
-      return;
-    }
-
-    await updateVendorDetails();
-    await updateBankDetails();
-  };
-
+  // 📶 Socket setup
   useEffect(() => {
-    // 🔌 Notify backend vendor is online
     socket.emit("vendor-online", VENDOR_NAME);
 
-    // 📦 Receive pending negotiations
     socket.on("pending-negotiations", (requests) => {
-      if (requests && requests.length > 0) {
-        console.log("⏳ Received pending negotiations:", requests);
-        setPopupData(requests[0]); // Show first
+      if (requests?.length) {
+        setPopupData(requests[0]);
       } else {
-        console.log("✅ No pending requests");
         setPopupData(null);
       }
     });
 
-    // 🔄 Real-time update for new request
     socket.on("negotiation_to_vendor", (data) => {
       if (data.vendorName === VENDOR_NAME) {
-        console.log("📬 Real-time negotiation:", data);
         setPopupData(data);
       }
     });
@@ -163,13 +76,10 @@ function DashBoardMain() {
     };
   }, []);
 
+  // 💻 Sidebar responsive toggle
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth > 768) {
-        setIsSidebarOpen(true);
-      } else {
-        setIsSidebarOpen(false);
-      }
+      setIsSidebarOpen(window.innerWidth > 768);
     };
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -177,58 +87,39 @@ function DashBoardMain() {
   }, []);
 
   const handleResponse = (action) => {
-    if (!popupData || !popupData._id) return;
+    if (!popupData?._id) return;
 
     socket.emit("vendor_response", {
-      bookingId: popupData._id, // ✅ MongoDB ID
-      action: action, // ✅ "accept" or "decline"
-      vendorName: popupData.vendorName, // ✅ Must match backend
+      bookingId: popupData._id,
+      action,
+      vendorName: popupData.vendorName,
     });
 
-    setPopupData(null); // Hide current popup, next will come automatically
+    setPopupData(null);
   };
 
+  // ⏳ Auto-dismiss booking popup
   useEffect(() => {
     if (popupData) {
-      const timer = setTimeout(() => setPopupData(null), 3000000); // 30s auto-hide
+      const timer = setTimeout(() => setPopupData(null), 30000);
       return () => clearTimeout(timer);
     }
   }, [popupData]);
 
   return (
     <div className="dashboard-container-box">
-      {/* Hamburger / Cross button for mobile */}
       <button
         className={`dashboard-hamburger ${isSidebarOpen ? "open" : ""}`}
         onClick={() => setIsSidebarOpen((prev) => !prev)}
       >
         {isSidebarOpen ? "✕" : "☰"}
       </button>
+
       <DashBoardSideBar
-        active={active}
-        setActive={setActive}
-        fullName={fullName}
-        phoneNumber={phoneNumber}
-        upiId={upiId}
-        email={email}
-        setFullName={setFullName}
-        setPhoneNumber={setPhoneNumber}
-        setUpiId={setUpiId}
-        setEmail={setEmail}
-        accountNumber={accountNumber}
-        setAccountNumber={setAccountNumber}
-        setTempAccountNumber={setTempAccountNumber}
-        setIfscCode={setTempIfscCode}
-        setTempIfscCode={setTempIfscCode}
-        setEditMode={setEditMode}
-        tempAccountNumber={tempAccountNumber}
-        ifscCode={tempIfscCode}
-        tempIfscCode={tempIfscCode}
-        editMode={editMode}
         isOpen={isSidebarOpen}
         isVerified={isVerified}
         setConfirmPasswordModal={setConfirmPasswordModal}
-        handleSaveChanges={handleSaveChanges}
+        onSaveComplete={() => setIsVerified(false)} // ✅ Reset flag after update
       />
 
       <div className="main-contain">
@@ -250,6 +141,7 @@ function DashBoardMain() {
           )}
         </div>
 
+        {/* Password Confirmation Modal */}
         {confirmPasswordModal && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
@@ -281,6 +173,7 @@ function DashBoardMain() {
           </div>
         )}
 
+        {/* Negotiation Popup */}
         {popupData && (
           <div className="popup-overlayfinal">
             <div className="popup-container">
@@ -301,20 +194,16 @@ function DashBoardMain() {
                 <p>
                   <strong>Proposed Price:</strong> ₹{popupData.proposedPrice}
                 </p>
-
-                {popupData.proposedPrice &&
-                  Number(popupData.proposedPrice) <
-                    Number(popupData.originalPrice) && (
-                    <p>
-                      <strong>Enter Final Price:</strong>
-                      <input
-                        type="text"
-                        placeholder="Enter Your Final Price"
-                        className="VenueInput"
-                      />
-                    </p>
-                  )}
-
+                {popupData.proposedPrice < popupData.originalPrice && (
+                  <p>
+                    <strong>Enter Final Price:</strong>
+                    <input
+                      type="text"
+                      placeholder="Enter Your Final Price"
+                      className="VenueInput"
+                    />
+                  </p>
+                )}
                 <p>
                   <strong>Date:</strong>{" "}
                   {new Date(popupData.date).toLocaleDateString()}

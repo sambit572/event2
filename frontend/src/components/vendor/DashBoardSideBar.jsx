@@ -1,85 +1,50 @@
 import React, { useState, useEffect } from "react";
 import "./DashBoardSideBar.css";
 import { FaEdit } from "react-icons/fa";
-import { useSelector, useDispatch } from "react-redux";
-import { setVendor } from "../../redux/VendorSlice"; // If you update vendor in Redux
+import { useDispatch, useSelector } from "react-redux";
+import { UseVendorProfile } from "./UseVendorProfile.jsx";
 import axios from "axios";
-import { BACKEND_URL } from "../../utils/constant";
+import { setVendor } from "../../redux/VendorSlice.js";
 
+// Props updated: added onSaveComplete to notify parent after verified update
 function DashBoardSideBar({
   isOpen,
   isVerified,
   setConfirmPasswordModal,
-  setTempAccountNumber,
-  setTempIfscCode,
-  setEditMode,
-  tempAccountNumber,
-  accountNumber,
-  setAccountNumber,
-  tempIfscCode,
-  editMode,
-  ifscCode,
-  setIfscCode,
-  handleSaveChanges,
-  fullName,
-  phoneNumber,
-  upiId,
-  email,
-  setFullName,
-  setPhoneNumber,
-  setUpiId,
-  setEmail,
-  active,
-  setActive,
+  onSaveComplete,
 }) {
-  const vendor = useSelector((state) => state.vendor.vendor);
   const dispatch = useDispatch();
+  const vendor = useSelector((state) => state.vendor.vendor);
 
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [contact, setContact] = useState("");
-  const [eventsHosted, setEventsHosted] = useState("");
-  const [upiId, setUpiId] = useState("");
-  const [accountNumber, setAccountNumber] = useState("");
-  const [ifscCode, setIfscCode] = useState("");
-  const [bankDropdownOpen, setBankDropdownOpen] = useState(false);
-  const [active, setActive] = useState(true);
   const [editMode, setEditMode] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [bankDetails, setBankDetails] = useState(null);
-  // Temporary values shown while editing
+  const [bankDropdownOpen, setBankDropdownOpen] = useState(false);
 
+  const { form, updateField, updateVendor, updateBank } = UseVendorProfile();
+
+  // 🔁 Trigger actual save *only* when password is verified
   useEffect(() => {
-    const fetchBankDetails = async () => {
-      try {
-        const res = await axios.get(
-          `${BACKEND_URL}/vendors/bank-details/bankDetails`,
-          {
-            withCredentials: true,
-          }
-        );
-        const details = res.data?.data;
-        console.log("🟢 Vendor bank details:", details);
+    const updateAfterVerification = async () => {
+      if (isVerified && editMode) {
+        await updateVendor();
+        await updateBank();
+        setEditMode(false);
+        console.log("✅ Updated vendor + bank and turned off edit mode");
 
-        setBankDetails(details);
-        setUpiId(details?.upiId || "");
-        setAccountNumber(details?.accountNumber || "");
-        setIfscCode(details?.ifscCode || "");
-      } catch (err) {
-        console.error("Failed to fetch vendor bank details", err);
+        if (onSaveComplete) onSaveComplete(); // Let parent know
       }
     };
+    updateAfterVerification();
+  }, [isVerified]);
 
-    fetchBankDetails();
-
-    if (vendor) {
-      setFullName(vendor.fullName || "");
-      setEmail(vendor.email || "");
-      setPhoneNumber(vendor.phoneNumber || "");
-      setEventsHosted(vendor.eventsHosted?.toString() || "0");
-      setActive(vendor.active ?? true);
+  // 🔁 Edit toggle (calls for password confirmation on Save)
+  const handleToggleEdit = () => {
+    if (editMode) {
+      setConfirmPasswordModal(true); // Ask password on save
+    } else {
+      setEditMode(true); // Enter edit mode
     }
-  }, [vendor]);
+  };
 
   const getInitialsAvatar = (name) => {
     if (!name) return "NA";
@@ -90,33 +55,13 @@ function DashBoardSideBar({
       .slice(0, 2);
     return `https://ui-avatars.com/api/?name=${initials}&background=0D8ABC&color=fff`;
   };
-  const handleToggleEdit = () => {
-    if (editMode) {
-      // User clicked "Save" → verify password first
-      setConfirmPasswordModal(true);
-
-      if (isVerified) {
-        // Password is verified → now update real state
-        setAccountNumber(tempAccountNumber);
-        setIfscCode(tempIfscCode);
-        handleSaveChanges();
-        setEditMode(false);
-      }
-    } else {
-      // Entering edit mode → load temp state
-      setTempAccountNumber(accountNumber);
-      setTempIfscCode(ifscCode);
-      setEditMode(true);
-    }
-  };
 
   const handleImageChange = async (e) => {
     const file = e.target.files?.[0];
     if (file) {
       setSelectedImage(file);
-
       const formData = new FormData();
-      formData.append("vendorId", vendor._id); // Adjust as per your backend
+      formData.append("vendorId", vendor._id);
       formData.append("profilePicture", file);
 
       try {
@@ -124,10 +69,8 @@ function DashBoardSideBar({
           `${import.meta.env.VITE_BACKEND_URL}/vendors/upload-profile`,
           formData,
           {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-            withCredentials: true, // Ensure cookies are sent for session management
+            headers: { "Content-Type": "multipart/form-data" },
+            withCredentials: true,
           }
         );
         dispatch(setVendor(res.data.data));
@@ -146,46 +89,21 @@ function DashBoardSideBar({
         `${import.meta.env.VITE_BACKEND_URL}/vendors/${vendor._id}`,
         formData,
         {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          headers: { "Content-Type": "multipart/form-data" },
           withCredentials: true,
         }
       );
-
       dispatch(setVendor(res.data.data));
       setSelectedImage(null);
-      console.log("Profile image removed successfully.");
     } catch (err) {
       console.error("Image remove failed:", err);
-    }
-  };
-
-  const handleSaveChanges = async () => {
-    try {
-      const res = await axios.put(
-        `http://localhost:8000/vendors/${vendor._id}`,
-        {
-          vendorId: vendor._id,
-          fullName,
-          email,
-          contact,
-          upiId,
-          accountNumber,
-          ifscCode,
-          active,
-        }
-      );
-      dispatch(setVendor(res.data.updatedVendor)); // check this line 
-      console.log("Changes saved.");
-    } catch (err) {
-      console.error("Error saving changes:", err);
     }
   };
 
   return (
     <div className={`dash-sidebar ${isOpen ? "open" : ""}`}>
       <h2 className="dasgboardHeading">DASHBOARD</h2>
+
       <div className="sidebar-content">
         <img
           src={
@@ -193,13 +111,12 @@ function DashBoardSideBar({
               ? URL.createObjectURL(selectedImage)
               : vendor?.profilePicture
               ? vendor.profilePicture
-              : getInitialsAvatar(fullName)
+              : getInitialsAvatar(form.fullName)
           }
           alt="Profile"
           className="profile-pic"
         />
 
-        {/* Upload & Remove Buttons */}
         <div className="profile-buttons">
           <input
             type="file"
@@ -221,12 +138,12 @@ function DashBoardSideBar({
             {editMode ? (
               <input
                 type="text"
-                value={fullName}
+                value={form.fullName}
                 className="custom-li"
-                onChange={(e) => setFullName(e.target.value)}
+                onChange={(e) => updateField("fullName", e.target.value)}
               />
             ) : (
-              fullName
+              form.fullName
             )}
           </li>
 
@@ -234,21 +151,21 @@ function DashBoardSideBar({
             <label className="status-edit-toggle">
               <input
                 type="checkbox"
-                checked={active}
-                onChange={() => setActive(!active)}
+                checked={form.active}
+                onChange={() => updateField("active", !form.active)}
               />
               <span className="vendor-active">
-                {active ? "Active" : "Inactive"}
+                {form.active ? "Active" : "Inactive"}
               </span>
             </label>
           ) : (
             <span className="status-indicator">
               <span
                 className={`status-dot ${
-                  active ? "active-dot" : "inactive-dot"
+                  form.active ? "active-dot" : "inactive-dot"
                 }`}
               ></span>
-              {active ? "Active" : "Inactive"}
+              {form.active ? "Active" : "Inactive"}
             </span>
           )}
 
@@ -256,12 +173,12 @@ function DashBoardSideBar({
             {editMode ? (
               <input
                 type="email"
-                value={email}
+                value={form.email}
                 className="custom-li"
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => updateField("email", e.target.value)}
               />
             ) : (
-              email
+              form.email
             )}
           </li>
 
@@ -269,27 +186,29 @@ function DashBoardSideBar({
             {editMode ? (
               <input
                 type="text"
-                value={phoneNumber}
+                value={form.phoneNumber}
                 className="custom-li"
-                onChange={(e) => setPhoneNumber(e.target.value)}
+                onChange={(e) => updateField("phoneNumber", e.target.value)}
               />
             ) : (
-              phoneNumber
+              form.phoneNumber
             )}
           </li>
 
-          <li className="typography">Events Hosted: {eventsHosted}</li>
+          <li className="typography">
+            Events Hosted: {vendor?.eventsHosted ?? 0}
+          </li>
 
           <li className="typography">
             {editMode ? (
               <input
                 type="text"
-                value={upiId}
+                value={form.upiId}
                 className="custom-li"
-                onChange={(e) => setUpiId(e.target.value)}
+                onChange={(e) => updateField("upiId", e.target.value)}
               />
             ) : (
-              upiId
+              form.upiId
             )}
           </li>
 
@@ -309,11 +228,13 @@ function DashBoardSideBar({
                     <input
                       type="text"
                       style={{ color: "black" }}
-                      value={tempAccountNumber}
-                      onChange={(e) => setTempAccountNumber(e.target.value)}
+                      value={form.tempAccountNumber}
+                      onChange={(e) =>
+                        updateField("tempAccountNumber", e.target.value)
+                      }
                     />
                   ) : (
-                    `****${accountNumber?.slice(-4)}`
+                    `****${form.accountNumber?.slice(-4)}`
                   )}
                 </div>
                 <div>
@@ -322,11 +243,13 @@ function DashBoardSideBar({
                     <input
                       type="text"
                       style={{ color: "black" }}
-                      value={tempIfscCode}
-                      onChange={(e) => setTempIfscCode(e.target.value)}
+                      value={form.tempIfscCode}
+                      onChange={(e) =>
+                        updateField("tempIfscCode", e.target.value)
+                      }
                     />
                   ) : (
-                    ifscCode
+                    form.ifscCode
                   )}
                 </div>
               </div>
@@ -334,6 +257,7 @@ function DashBoardSideBar({
           </li>
         </ul>
 
+        {/* Edit / Save Button */}
         <button className="edit-buttons flex gap-1" onClick={handleToggleEdit}>
           {editMode ? (
             "Save"

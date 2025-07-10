@@ -13,6 +13,9 @@ import crypto from "crypto";
 import nodemailer from "nodemailer";
 import { User } from "../../model/user/user.model.js";
 
+
+
+
 const cookieOptions = {
   httpOnly: true,
   secure: false,
@@ -120,7 +123,9 @@ const registerVendor = async (req, res) => {
     return res.status(500).json(new ApiError(500, "Internal server error"));
   }
 };
-export const updateVendor = async (req, res, next) => {
+
+
+export const updateVendor = async (req, res) => {
   try {
     const { id } = req.params;
     const updateData = { ...req.body };
@@ -132,22 +137,24 @@ export const updateVendor = async (req, res, next) => {
 
     const vendor = await Vendor.findById(id);
     if (!vendor) {
-      return next(new ApiError(404, "Vendor not found for update."));
+      return res
+        .status(404)
+        .json(new ApiError(404, "Vendor not found for update."));
     }
 
-    // Remove old profile picture from Cloudinary if requested
+    // Handle profile picture removal
     if (updateData.removeProfilePicture === "true") {
       if (
         vendor.profilePicture &&
         vendor.profilePicture.includes("cloudinary")
       ) {
         const publicId = vendor.profilePicture.split("/").pop().split(".")[0];
-        await uploadOnCloudinary(null, publicId, true); // Custom delete support
+        await uploadOnCloudinary(null, publicId, true); // Custom delete method
       }
       updateData.profilePicture = "";
     }
 
-    // Replace with new profile picture
+    // Handle profile picture replacement
     if (file) {
       if (
         vendor.profilePicture &&
@@ -159,12 +166,15 @@ export const updateVendor = async (req, res, next) => {
 
       const cloudinaryResult = await uploadOnCloudinary(file.path);
       if (!cloudinaryResult?.url) {
-        return next(new ApiError(500, "Failed to upload profile image."));
+        return res
+          .status(500)
+          .json(new ApiError(500, "Failed to upload new profile picture."));
       }
+
       updateData.profilePicture = cloudinaryResult.url;
     }
 
-    // 🚫 Removed bank detail update logic from here
+    // 🚫 No bank update logic here
 
     const updatedVendor = await Vendor.findByIdAndUpdate(id, updateData, {
       new: true,
@@ -173,48 +183,49 @@ export const updateVendor = async (req, res, next) => {
 
     return res
       .status(200)
-      .json(
-        new ApiResponse(200, updatedVendor, "Vendor updated successfully.")
-      );
+      .json(new ApiResponse(200, updatedVendor, "Vendor updated successfully."));
   } catch (error) {
     console.error("Error updating vendor:", error);
 
-    // Clean up uploaded file if something goes wrong
-    if (req.file && req.file.path) {
+    // Clean up uploaded file if an error occurs
+    if (req.file?.path) {
       try {
         await fs.unlink(req.file.path);
       } catch (unlinkError) {
-        console.error("Error deleting uploaded file:", unlinkError);
+        console.error("Failed to delete uploaded file:", unlinkError);
       }
     }
 
-    // Validation errors
+    // Handle validation errors
     if (error.name === "ValidationError") {
-      const errorMessages = Object.values(error.errors).map(
-        (err) => err.message
-      );
-      return next(
-        new ApiError(
-          400,
-          `Validation failed during update: ${errorMessages.join(", ")}`
-        )
-      );
+      const messages = Object.values(error.errors).map((err) => err.message);
+      return res
+        .status(400)
+        .json(
+          new ApiError(
+            400,
+            `Validation failed during update: ${messages.join(", ")}`
+          )
+        );
     }
 
-    // Duplicate field error (e.g., duplicate email)
+    // Handle duplicate email or phone
     if (error.code === 11000) {
       const field = Object.keys(error.keyValue)[0];
-      return next(
-        new ApiError(409, `Another vendor already exists with this ${field}.`)
-      );
+      return res
+        .status(409)
+        .json(
+          new ApiError(
+            409,
+            `Another vendor already exists with this ${field}.`
+          )
+        );
     }
 
-    return next(
-      new ApiError(
-        500,
-        "An internal server error occurred during vendor update."
-      )
-    );
+    // Generic internal server error
+    return res
+      .status(500)
+      .json(new ApiError(500, "Internal server error during vendor update."));
   }
 };
 

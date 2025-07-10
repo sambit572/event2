@@ -44,7 +44,7 @@ export const createBankDetails = async (req, res) => {
     }
 
     const newDetails = await BankDetails.create({
-      vendorid: req.vendor._id,
+      vendorId: req.vendor._id,
       accountHolderName,
       accountNumber,
       branchName,
@@ -99,31 +99,30 @@ export const getBankDetailsByVendor = async (req, res) => {
 export const updateBankDetails = async (req, res) => {
   const { vendorId } = req.params;
   const { tempAccountNumber, ifscCode, upiId } = req.body;
-  console.log("veddorId", vendorId);
+
   try {
-    const updatedVendor = await BankDetails.findByIdAndUpdate(
-      vendorId,
+    const updatedBankDetails = await BankDetails.findOneAndUpdate(
+      { vendorId },
       {
         $set: {
-          "bankDetails.upiId": upiId,
-          "bankDetails.accountNumber": tempAccountNumber,
-          "bankDetails.ifscCode": ifscCode,
+          upiId,
+          accountNumber: tempAccountNumber,
+          ifscCode,
         },
       },
       { new: true }
     );
 
-    if (!updatedVendor) {
-      return res.status(404).json({ message: "Vendor not found" });
+    if (!updatedBankDetails) {
+      return res.status(404).json({ message: "Bank details not found" });
     }
 
-    res.json({ updatedVendor });
+    res.json({ success: true, data: updatedBankDetails });
   } catch (error) {
     console.error("Error updating bank details:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
-
 // Deleting bank details by vendor ID
 export const deleteBankDetails = async (req, res) => {
   try {

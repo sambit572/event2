@@ -7,7 +7,7 @@ export const createService = async (req, res) => {
   try {
     console.log("🔵 createService called");
     // console.log("Request body:", req.body);
-    console.log("Uploaded files count:", req.files ? req.files.length : 0);
+    // console.log("Uploaded files count:", req.files ? req.files.length : 0);
 
     const {
       serviceCategory,
@@ -125,7 +125,7 @@ export const checkServiceExists = async (req, res) => {
 export const getMyServices = async (req, res) => {
   try {
     const vendorId = req.vendor._id;
-    console.log("vendor obj from beckend inside my services: ", req.vendor);
+    // console.log("vendor obj from beckend inside my services: ", req.vendor);
     const services = await Service.find({ vendorId: vendorId }).sort({
       createdAt: -1,
     });
