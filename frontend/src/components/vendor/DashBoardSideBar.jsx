@@ -6,37 +6,59 @@ import { setVendor } from "../../redux/VendorSlice"; // If you update vendor in 
 import axios from "axios";
 import { BACKEND_URL } from "../../utils/constant";
 
-function DashBoardSideBar({ isOpen }) {
+function DashBoardSideBar({
+  isOpen,
+  isVerified,
+  setConfirmPasswordModal,
+  setTempAccountNumber,
+  setTempIfscCode,
+  setEditMode,
+  tempAccountNumber,
+  accountNumber,
+  setAccountNumber,
+  tempIfscCode,
+  editMode,
+  ifscCode,
+  setIfscCode,
+  handleSaveChanges,
+  fullName,
+  phoneNumber,
+  upiId,
+  email,
+  setFullName,
+  setPhoneNumber,
+  setUpiId,
+  setEmail,
+  active,
+  setActive,
+}) {
   const vendor = useSelector((state) => state.vendor.vendor);
   const dispatch = useDispatch();
 
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [contact, setContact] = useState("");
   const [eventsHosted, setEventsHosted] = useState("");
-  const [upiId, setUpiId] = useState("");
-  const [accountNumber, setAccountNumber] = useState("");
-  const [ifscCode, setIfscCode] = useState("");
+
   const [bankDropdownOpen, setBankDropdownOpen] = useState(false);
-  const [active, setActive] = useState(true);
-  const [editMode, setEditMode] = useState(false);
+
   const [selectedImage, setSelectedImage] = useState(null);
   const [bankDetails, setBankDetails] = useState(null);
+  // Temporary values shown while editing
 
   useEffect(() => {
     const fetchBankDetails = async () => {
       try {
         const res = await axios.get(
-          `${BACKEND_URL}/vendors/bank-details/bankdetails`,
+          `${BACKEND_URL}/vendors/bank-details/bankDetails`,
           {
             withCredentials: true,
           }
         );
-        console.log("🟢 Vendor bank details:", res.data?.data);
-        setBankDetails(res.data?.data);
-        setUpiId(bankDetails.upiId || "");
-        setAccountNumber(bankDetails.accountNumber || "");
-        setIfscCode(bankDetails.ifscCode || "");
+        const details = res.data?.data;
+        console.log("🟢 Vendor bank details:", details);
+
+        setBankDetails(details);
+        setUpiId(details?.upiId || "");
+        setAccountNumber(details?.accountNumber || "");
+        setIfscCode(details?.ifscCode || "");
       } catch (err) {
         console.error("Failed to fetch vendor bank details", err);
       }
@@ -47,7 +69,7 @@ function DashBoardSideBar({ isOpen }) {
     if (vendor) {
       setFullName(vendor.fullName || "");
       setEmail(vendor.email || "");
-      setContact(vendor.contact || "");
+      setPhoneNumber(vendor.phoneNumber || "");
       setEventsHosted(vendor.eventsHosted?.toString() || "0");
       setActive(vendor.active ?? true);
     }
@@ -62,12 +84,24 @@ function DashBoardSideBar({ isOpen }) {
       .slice(0, 2);
     return `https://ui-avatars.com/api/?name=${initials}&background=0D8ABC&color=fff`;
   };
-
   const handleToggleEdit = () => {
     if (editMode) {
-      handleSaveChanges();
+      // User clicked "Save" → verify password first
+      setConfirmPasswordModal(true);
+
+      if (isVerified) {
+        // Password is verified → now update real state
+        setAccountNumber(tempAccountNumber);
+        setIfscCode(tempIfscCode);
+        handleSaveChanges();
+        setEditMode(false);
+      }
+    } else {
+      // Entering edit mode → load temp state
+      setTempAccountNumber(accountNumber);
+      setTempIfscCode(ifscCode);
+      setEditMode(true);
     }
-    setEditMode((prev) => !prev);
   };
 
   const handleImageChange = async (e) => {
@@ -103,7 +137,7 @@ function DashBoardSideBar({ isOpen }) {
       formData.append("removeProfilePicture", "true");
 
       const res = await axios.put(
-        `http://localhost:8000/vendors/${vendor._id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/vendors/${vendor._id}`,
         formData,
         {
           headers: {
@@ -118,28 +152,6 @@ function DashBoardSideBar({ isOpen }) {
       console.log("Profile image removed successfully.");
     } catch (err) {
       console.error("Image remove failed:", err);
-    }
-  };
-
-  const handleSaveChanges = async () => {
-    try {
-      const res = await axios.put(
-        `http://localhost:8000/vendors/${vendor._id}`,
-        {
-          vendorId: vendor._id,
-          fullName,
-          email,
-          contact,
-          upiId,
-          accountNumber,
-          ifscCode,
-          active,
-        }
-      );
-      dispatch(setVendor(res.data.updatedVendor));
-      console.log("Changes saved.");
-    } catch (err) {
-      console.error("Error saving changes:", err);
     }
   };
 
@@ -229,12 +241,12 @@ function DashBoardSideBar({ isOpen }) {
             {editMode ? (
               <input
                 type="text"
-                value={contact}
+                value={phoneNumber}
                 className="custom-li"
-                onChange={(e) => setContact(e.target.value)}
+                onChange={(e) => setPhoneNumber(e.target.value)}
               />
             ) : (
-              contact
+              phoneNumber
             )}
           </li>
 
@@ -268,12 +280,12 @@ function DashBoardSideBar({ isOpen }) {
                   {editMode ? (
                     <input
                       type="text"
-                      value={accountNumber}
-                      className="custom-li"
-                      onChange={(e) => setAccountNumber(e.target.value)}
+                      style={{ color: "black" }}
+                      value={tempAccountNumber}
+                      onChange={(e) => setTempAccountNumber(e.target.value)}
                     />
                   ) : (
-                    `****${accountNumber?.slice(-4) || ""}`
+                    `****${accountNumber?.slice(-4)}`
                   )}
                 </div>
                 <div>
@@ -281,9 +293,9 @@ function DashBoardSideBar({ isOpen }) {
                   {editMode ? (
                     <input
                       type="text"
-                      value={ifscCode}
-                      className="custom-li"
-                      onChange={(e) => setIfscCode(e.target.value)}
+                      style={{ color: "black" }}
+                      value={tempIfscCode}
+                      onChange={(e) => setTempIfscCode(e.target.value)}
                     />
                   ) : (
                     ifscCode

@@ -1,6 +1,9 @@
 import express from "express";
 import { upload } from "../../middleware/multer.middleware.js";
-import { createService, getMyServices } from "../../controller/vendor/service.controller.js";
+import {
+  createService,
+  getMyServices,
+} from "../../controller/vendor/service.controller.js";
 import { verifyVendorJwt } from "../../middleware/VendorAuth.middleware.js";
 
 // Vendor Core Controllers
@@ -16,6 +19,8 @@ import {
   checkVendorEmailStatus,
   getVendorProfile,
   updateVendorProfilePicture,
+  verifyConfirmPassword,
+  // updateTheBankDetails,
 } from "../../controller/vendor/vendor.controller.js";
 
 // Bank Details
@@ -72,18 +77,21 @@ vendor_router.post(
   createService
 );
 
-
 // --- BANK DETAILS ROUTES --- //
 vendor_router.post(
   "/bank-details",
   upload.single("panCardPic"),
   createBankDetails
 );
-vendor_router.get("/bank-details/bankDetails",verifyVendorJwt, getBankDetailsByVendor);
+vendor_router.get(
+  "/bank-details/bankDetails",
+  verifyVendorJwt,
+  getBankDetailsByVendor
+);
 vendor_router.put("/bank-details/:vendorId", updateBankDetails);
 vendor_router.delete("/bank-details/:vendorId", deleteBankDetails);
-vendor_router.get("/bank-details/:vendorId", getBankDetailsByVendor);
-vendor_router.put("/bank-details/:vendorId", updateBankDetails);
+// vendor_router.get("/bank-details/:vendorId", getBankDetailsByVendor);
+
 vendor_router.delete("/bank-details/:vendorId", deleteBankDetails);
 
 // --- LEGAL CONSENT ROUTES --- //
@@ -106,13 +114,11 @@ vendor_router.post(
   verifyVendorJwt,
   upload.single("profilePicture"),
   updateVendorProfilePicture
-  
 );
-
+vendor_router.post("/verify-password", verifyVendorJwt, verifyConfirmPassword);
+// router.post("/update-bank-details", verifyVendorJwt, updateTheBankDetails);
 // services ROUTES
 
 vendor_router.get("/my-services", verifyVendorJwt, getMyServices);
-
-
 
 export { vendor_router };
