@@ -242,7 +242,7 @@
   transform: translateX(0);
 }
 .sortby-dropdown {
-
+  width: 130px;
   padding: 8px 12px;
   margin-right: -15px;
 }

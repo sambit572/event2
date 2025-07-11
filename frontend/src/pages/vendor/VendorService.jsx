@@ -4,9 +4,11 @@ import "./VendorService.css";
 import StepProgress from "./StepProgress";
 import Button from "../../components/vendor/register/VendorButton";
 import axios from "axios";
+import Spinner from "./../../components/common/Spinner";
 
 function VendorService({ currentStep }) {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const steps = [
     { label: "Registration", subLabel: "Step 1", icon: "/verify.png" },
@@ -62,8 +64,19 @@ function VendorService({ currentStep }) {
   const handleImageUpload = (e) => {
     try {
       const newFiles = Array.from(e.target.files);
-      const valid = ["image/jpeg", "image/jpg", "image/png", "image/gif"];
-      const max = 5 * 1024 * 1024;
+      const valid = [
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+        "image/gif",
+        "video/mp4",
+        "video/avi",
+        "video/mov",
+        "video/wmv",
+        "video/flv",
+        "video/webm",
+      ];
+      const max = 50 * 1024 * 1024;
 
       for (let f of newFiles) {
         if (!valid.includes(f.type)) return alert("JPEG/PNG/GIF only");
@@ -105,9 +118,11 @@ function VendorService({ currentStep }) {
   };
 
   const handleNext = async () => {
+    setIsLoading(true);
     console.log("next button clicked");
 
     if (!validateForm()) {
+      setIsLoading(false);
       console.log("form is not validated wrong");
       return;
     }
@@ -152,6 +167,7 @@ function VendorService({ currentStep }) {
       console.error("Error submitting service:", error);
       alert("Failed to submit service. Please try again.");
     }
+    setIsLoading(false);
   };
 
   // Comprehensive validation function
@@ -245,7 +261,7 @@ function VendorService({ currentStep }) {
   return (
     <>
       <StepProgress currentStep={1} />
-
+      {isLoading && <Spinner />}
       <div className="form-container">
         <div className="form-wrapper">
           {/* Left Side: Form Column */}
@@ -293,11 +309,13 @@ function VendorService({ currentStep }) {
 
             {/* Service Image Upload */}
             <div className="ServiceImageUploadPreview">
-              <label htmlFor="service-images">Upload Service Images *</label>
+              <label htmlFor="service-images">
+                Upload Service Images/Videos *
+              </label>
               <input
                 type="file"
                 id="service-images"
-                accept="image/*"
+                accept="image/,video/"
                 multiple
                 onChange={handleImageUpload}
                 ref={fileInputRef}
@@ -306,43 +324,53 @@ function VendorService({ currentStep }) {
               {previewImages.length > 0 && (
                 <div className="preview-container">
                   <div className="main-preview">
-                    <img
-                      src={previewImages[selectedImageIndex]}
-                      alt="Selected Preview"
-                    />
+                    {selectedFiles[selectedImageIndex]?.type?.startsWith(
+                      "video/"
+                    ) ? (
+                      <video
+                        src={previewImages[selectedImageIndex]}
+                        controls
+                        style={{ maxWidth: "100%", maxHeight: "300px" }}
+                      />
+                    ) : (
+                      <img
+                        src={previewImages[selectedImageIndex]}
+                        alt="Selected Preview"
+                      />
+                    )}
                   </div>
                   <div className="thumbnail-preview">
-                    {previewImages.map((img, idx) => (
+                    {previewImages.map((media, idx) => (
                       <div key={idx} className="thumbnail-wrapper">
-                        <img
-                          src={img}
-                          alt={`Thumb-${idx}`}
-                          className={selectedImageIndex === idx ? "active" : ""}
-                          onClick={() => setSelectedImageIndex(idx)}
-                        />
+                        {selectedFiles[idx]?.type?.startsWith("video/") ? (
+                          <video
+                            src={media}
+                            className={
+                              selectedImageIndex === idx ? "active" : ""
+                            }
+                            onClick={() => setSelectedImageIndex(idx)}
+                            style={{
+                              width: "60px",
+                              height: "60px",
+                              objectFit: "cover",
+                            }}
+                            muted
+                          />
+                        ) : (
+                          <img
+                            src={media}
+                            alt={`Thumb-${idx}`}
+                            className={
+                              selectedImageIndex === idx ? "active" : ""
+                            }
+                            onClick={() => setSelectedImageIndex(idx)}
+                          />
+                        )}
                         <span
                           className="image-close"
                           onClick={(e) => {
-                            e.stopPropagation(); // So thumbnail image click doesn't trigger
+                            e.stopPropagation();
                             handleDeleteImage(idx);
-                            const updatedPreviews = [...previewImages];
-                            const updatedFiles = [...selectedFiles];
-
-                            updatedPreviews.splice(idx, 1);
-                            updatedFiles.splice(idx, 1);
-
-                            let newSelectedIndex = selectedImageIndex;
-
-                            if (selectedImageIndex === idx) {
-                              newSelectedIndex =
-                                updatedPreviews.length > 0 ? 0 : -1;
-                            } else if (selectedImageIndex > idx) {
-                              newSelectedIndex = selectedImageIndex - 1;
-                            }
-
-                            setPreviewImages(updatedPreviews);
-                            setSelectedFiles(updatedFiles);
-                            setSelectedImageIndex(newSelectedIndex);
                           }}
                         >
                           ×

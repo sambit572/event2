@@ -1,26 +1,34 @@
 import { Schema, model } from "mongoose";
 
-const consetSchema = new Schema({
-  vendorId: {
-    type: Schema.Types.ObjectId,
-    ref: "vendor",
+
+const consetSchema = new Schema(
+  {
+    vendorId: {
+      type: Schema.Types.ObjectId,
+      ref: "vendor",
+    },
+    iAgreeTC: {
+      type: Boolean,
+      required: true,
+    },
+    iAgreeCP: {
+      type: Boolean,
+      required: true,
+    },
+    iAgreeKYCVerifyUsingPanAndAdhar: {
+      type: Boolean,
+      required: true,
+    },
+    version:{
+      type: String,
+      default:"1.0",
+    },
+    signature: {
+      type: String,
+      required: true,
+    },
   },
-  iAgreeTC: {
-    type: Boolean,
-    required: true,
-  },
-  iAgreeCP: {
-    type: Boolean,
-    required: true,
-  },
-  iAgreeKYCVerifyUsingPanAndAdhar: {
-    type: Boolean,
-    required: true,
-  },
-  signature: {
-    type: String,
-    required: true,
-  },
-});
+  { timestamps: true }
+);
 
 export const Consent = model("Consent", consetSchema);

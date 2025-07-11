@@ -27,3 +27,16 @@
   align-items: center;
   justify-content: center;
 }
+
+@media (max-width: 700px) {
+  .user-profile-icon {
+    width: 35px;
+    height: 32px;
+  }
+}
+@media (max-width: 500px) {
+  .user-profile-icon {
+    width: 25px;
+    height: 22px;
+  }
+}

@@ -11,7 +11,10 @@
   z-index: 1000;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
-
+.font-medium {
+  font-size: 15px;
+  font-weight: 600;
+}
 .logo {
   display: flex;
   align-items: center;
@@ -569,6 +572,7 @@
   }
   .search-bar {
     width: 40%;
+    margin-right: 5px;
   }
   .nav-icons {
     width: 100%;
@@ -601,6 +605,9 @@
   .logo {
     font-size: 25px;
   }
+  .font-medium {
+    display: none;
+  }
 }
 @media (max-width: 540px) {
   .logo {
@@ -610,6 +617,7 @@
 @media (max-width: 500px) {
   .logo {
     font-size: 15px;
+    margin-right: 5px;
   }
 }
 @media (max-width: 460px) {
@@ -682,7 +690,7 @@
   .search-bar {
     width: 47%;
     padding-right: 2px;
-    padding-left: 11px;
+    padding-right: 11px;
   }
   /* .logo img {
     height: 180px;
@@ -694,7 +702,8 @@
 
 @media (max-width: 376px) {
   .logo {
-    font-size: 18px;
+    font-size: 15px;
+    margin-right: 5px;
   }
 
   .login {
@@ -711,7 +720,7 @@
   }
 
   .search-bar {
-    padding-left: 7px;
+    padding-right: 7px;
   }
   .search-bar input {
     margin-left: 6px;
