@@ -232,39 +232,32 @@
   .dashboard-hamburger {
     display: flex;
     left: 0;
-    top: 80px;
+    top: 100px;
   }
 
   .open {
     color: white;
   }
   .main-contain {
-    width: 30%;
+    margin-top: 30px;
+    width: 100%;
   }
   .popup-container {
-    width: 85vw; /* Slightly smaller width for tablets */
-    max-width: 450px; /* Reduced max-width */
-    padding: 1.25rem; /* Slightly less padding */
-    max-height: 80vh; /* Ensure space for browser UI */
+    width: 85vw;
+    max-width: 450px;
+    padding: 1.25rem;
+    max-height: 80vh;
     border-radius: 14px;
     margin-bottom: 350px;
   }
 
   .popup-title {
-    font-size: 1.3rem; /* Smaller title */
+    font-size: 1.3rem;
   }
 
   .popup-content p {
-    font-size: 0.9rem; /* Smaller text */
+    font-size: 0.9rem;
     padding: 0.4rem 0.6rem;
-  }
-
-  .btn-accept,
-  .btn-decline,
-  .btn-close {
-    padding: 7px 14px;
-    font-size: 0.85rem;
-    min-width: 90px;
   }
 }
 
@@ -303,11 +296,5 @@
     padding: 8px;
     font-size: 0.8rem;
     min-width: 100%; /* Full-width buttons */
-  }
-  .dashboard-hamburger {
-    top: 90px;
-  }
-  .main-contain {
-    width: 30%;
   }
 }

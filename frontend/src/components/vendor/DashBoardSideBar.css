@@ -219,7 +219,7 @@ color: #ffc107;
 
 @media (max-width: 768px) {
   .dash-sidebar {
-    position: relative;
+    position: absolute;
     top: 0;
     left: 0;
     bottom: 0;
@@ -264,7 +264,7 @@ color: #ffc107;
 
   .profile-pic {
     margin-left: 42px;
-    margin-top: 56px;
+    margin-top: 76px;
     width: 140px;
     height: 130px;
   }
@@ -273,6 +273,9 @@ color: #ffc107;
 @media (max-width: 431px) {
   .sidebar-content {
     width: 57vw;
+  }
+  .profile-pic {
+    margin-top: 86px;
   }
 }
 @media (max-width: 391px) {

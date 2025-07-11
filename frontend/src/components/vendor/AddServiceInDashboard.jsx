@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../pages/vendor/VendorService.css";
+import Spinner from "./../../components/common/Spinner";
 
 import axios from "axios";
 
@@ -24,6 +25,7 @@ function AddServiceInDashboard() {
   const [minutes, setMinutes] = useState("");
   const [selectedDropdownValue, setSelectedDropdownValue] = useState("");
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fileInputRef = useRef(null);
 
@@ -109,9 +111,11 @@ function AddServiceInDashboard() {
 
   const handleAdd = async () => {
     console.log("Add button clicked");
-
+    setIsLoading(true);
     if (!validateForm()) {
+      setIsLoading(false);
       console.log("form is not validated wrong");
+
       return;
     }
 
@@ -157,6 +161,7 @@ function AddServiceInDashboard() {
       console.error("Error submitting service:", error);
       alert("Failed to submit service. Please try again.");
     }
+    setIsLoading(false);
   };
 
   // Comprehensive validation function
@@ -250,6 +255,7 @@ function AddServiceInDashboard() {
   return (
     <>
       <div className="form-container">
+        {isLoading && <Spinner />}
         <div className="form-wrapper">
           {/* Left Side: Form Column */}
           <div className="form-column">

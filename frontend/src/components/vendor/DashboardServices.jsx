@@ -4,8 +4,6 @@ import { FaTrash, FaEdit } from "react-icons/fa";
 import axios from "axios";
 import { BACKEND_URL } from "../../utils/constant.js";
 
-
-
 const DashboardServices = () => {
   const [services, setServices] = useState([]);
   const [editingIndex, setEditingIndex] = useState(null);
@@ -123,7 +121,6 @@ const DashboardServices = () => {
       alert(error.response?.data?.message || "Delete failed");
     }
   };
-  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -146,42 +143,44 @@ const DashboardServices = () => {
             selectedImages[index] || service.serviceImage?.[0];
 
           return (
-            <section key={index} className="service-box xl:ml-20 mb-10">
-              {/* Image Thumbnails */}
-              <div className="thumbnail-column-dashboard">
-                {service.serviceImage?.map((img, i) => (
-                  <img
-                    key={i}
-                    src={img}
-                    alt={`thumb-${i}`}
-                    className={`thumbnail ${
-                      selectedImage === img ? "selected" : ""
-                    }`}
-                    onClick={() => handleImageSelect(index, img)}
-                  />
-                ))}
-              </div>
+            <section key={index} className="service-box xl:ml-20  mb-10">
+              <div className="both_images_section">
+                {/* Image Thumbnails */}
+                <div className="thumbnail-column-dashboard">
+                  {service.serviceImage?.map((img, i) => (
+                    <img
+                      key={i}
+                      src={img}
+                      alt={`thumb-${i}`}
+                      className={`thumbnail ${
+                        selectedImage === img ? "selected" : ""
+                      }`}
+                      onClick={() => handleImageSelect(index, img)}
+                    />
+                  ))}
+                </div>
 
-              {/* Main Image and Action Buttons */}
-              <div className="main-image-and-buttons">
-                <img
-                  src={selectedImage}
-                  alt="Service"
-                  className="main-image-dashboard"
-                />
-                <div className="image-buttons-dashboard">
-                  <button
-                    className="vendor-edit-btn flex gap-1"
-                    onClick={() => handleEdit(index)}
-                  >
-                    <FaEdit className="mt-[2.9px]" /> Edit
-                  </button>
-                  <button
-                    className="vendor-delete-btn flex gap-1"
-                    onClick={() => handleDelete(index)}
-                  >
-                    <FaTrash className="mt-[2.9px]" /> Delete
-                  </button>
+                {/* Main Image and Action Buttons */}
+                <div className="main-image-and-buttons">
+                  <img
+                    src={selectedImage}
+                    alt="Service"
+                    className="main-image-dashboard"
+                  />
+                  <div className="image-buttons-dashboard">
+                    <button
+                      className="vendor-edit-btn flex gap-1"
+                      onClick={() => handleEdit(index)}
+                    >
+                      <FaEdit className="mt-[2.9px]" /> Edit
+                    </button>
+                    <button
+                      className="vendor-delete-btn flex gap-1"
+                      onClick={() => handleDelete(index)}
+                    >
+                      <FaTrash className="mt-[2.9px]" /> Delete
+                    </button>
+                  </div>
                 </div>
               </div>
 

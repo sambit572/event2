@@ -126,8 +126,8 @@ function DashBoardMain() {
         <ToggleTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
         <button
-          className="flex items-center justify-center gap-2 text-center relative xl:right-[-950px] xl:top-[-70px] rounded-full bg-[#001f3f] font-semibold px-6 py-3 text-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 ease-in-out"
           onClick={handleOpenAddService}
+          className="flex items-center ml-14 mb-8 gap-2 px-4 py-2 bg-slate-600 text-white rounded-md hover:bg-blue-700 transition duration-200"
         >
           <span className="text-xl font-bold">+</span>
           <span className="text-base tracking-wide">Add Services</span>
