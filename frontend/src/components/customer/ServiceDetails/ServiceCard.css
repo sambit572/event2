@@ -5,6 +5,7 @@
   border-radius: 2px;
   padding: 30px;
   background-color: #fff;
+  margin-top: 75px;
 }
 
 .dj-title {
@@ -21,10 +22,10 @@
   border: 0;
   border-top: 1px solid #ccc;
 }
-.serviceDetails-location{
-    margin-top: -25px;
-    margin-bottom: -10px;
-    color: #001f3f;
+.serviceDetails-location {
+  margin-top: -25px;
+  margin-bottom: -10px;
+  color: #001f3f;
 }
 
 /* Responsive Adjustments */
