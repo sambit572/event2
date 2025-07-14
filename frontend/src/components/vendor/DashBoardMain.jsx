@@ -5,37 +5,67 @@ import DashBoardBooking from "./DashBoardBooking.jsx";
 import ToggleTabs from "./ToggleTabs.jsx";
 import "./DashboardMain.css";
 import { io } from "socket.io-client";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { UseVendorProfile } from "./UseVendorProfile.jsx";
 
+const VENDOR_NAME = "Horse-Carriage Odisha";
 const socket = io(import.meta.env.VITE_BACKEND_URL);
 
-const VENDOR_NAME = "Horse-Carriage Odisha"; // 🔁 Use dynamic vendor later
-
 function DashBoardMain() {
+  const navigate = useNavigate();
+  const { form, updateBank, updateVendor, updateField } = UseVendorProfile();
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("services");
   const [popupData, setPopupData] = useState(null);
-  const [callStatus, setCallStatus] = useState("Inactive");
-  const [callStarted, setCallStarted] = useState(false);
 
+  const [confirmPasswordModal, setConfirmPasswordModal] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
+  const [password, setPassword] = useState("");
+
+  // 🔁 Called when "Add Service" is clicked
+  const handleOpenAddService = () => {
+    navigate("/vendor/services/addServices");
+  };
+
+  // 🔐 Handle password confirmation
+  const handleConfirmPassword = async () => {
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/vendors/verify-password`,
+        { password },
+        { withCredentials: true }
+      );
+
+      if (res.data.success) {
+        setIsVerified(true); // 👉 Triggers update in DashBoardSideBar
+        setConfirmPasswordModal(false);
+        console.log("✅ Password correct.");
+      } else {
+        alert("❌ Incorrect password.");
+      }
+    } catch (err) {
+      const msg = err.response?.data?.message || "Something went wrong";
+      alert(`❌ ${msg}`);
+    }
+  };
+
+  // 📶 Socket setup
   useEffect(() => {
-    // 🔌 Notify backend vendor is online
     socket.emit("vendor-online", VENDOR_NAME);
 
-    // 📦 Receive pending negotiations
     socket.on("pending-negotiations", (requests) => {
-      if (requests && requests.length > 0) {
-        console.log("⏳ Received pending negotiations:", requests);
-        setPopupData(requests[0]); // Show first
+      if (requests?.length) {
+        setPopupData(requests[0]);
       } else {
-        console.log("✅ No pending requests");
         setPopupData(null);
       }
     });
 
-    // 🔄 Real-time update for new request
     socket.on("negotiation_to_vendor", (data) => {
       if (data.vendorName === VENDOR_NAME) {
-        console.log("📬 Real-time negotiation:", data);
         setPopupData(data);
       }
     });
@@ -46,13 +76,10 @@ function DashBoardMain() {
     };
   }, []);
 
+  // 💻 Sidebar responsive toggle
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth > 768) {
-        setIsSidebarOpen(true);
-      } else {
-        setIsSidebarOpen(false);
-      }
+      setIsSidebarOpen(window.innerWidth > 768);
     };
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -60,27 +87,27 @@ function DashBoardMain() {
   }, []);
 
   const handleResponse = (action) => {
-    if (!popupData || !popupData._id) return;
+    if (!popupData?._id) return;
 
     socket.emit("vendor_response", {
-      bookingId: popupData._id, // ✅ MongoDB ID
-      action: action, // ✅ "accept" or "decline"
-      vendorName: popupData.vendorName, // ✅ Must match backend
+      bookingId: popupData._id,
+      action,
+      vendorName: popupData.vendorName,
     });
 
-    setPopupData(null); // Hide current popup, next will come automatically
+    setPopupData(null);
   };
 
+  // ⏳ Auto-dismiss booking popup
   useEffect(() => {
     if (popupData) {
-      const timer = setTimeout(() => setPopupData(null), 3000000); // 30s auto-hide
+      const timer = setTimeout(() => setPopupData(null), 30000);
       return () => clearTimeout(timer);
     }
   }, [popupData]);
 
   return (
     <div className="dashboard-container-box">
-      {/* Hamburger / Cross button for mobile */}
       <button
         className={`dashboard-hamburger ${isSidebarOpen ? "open" : ""}`}
         onClick={() => setIsSidebarOpen((prev) => !prev)}
@@ -88,18 +115,65 @@ function DashBoardMain() {
         {isSidebarOpen ? "✕" : "☰"}
       </button>
 
-      <DashBoardSideBar isOpen={isSidebarOpen} />
+      <DashBoardSideBar
+        isOpen={isSidebarOpen}
+        isVerified={isVerified}
+        setConfirmPasswordModal={setConfirmPasswordModal}
+        onSaveComplete={() => setIsVerified(false)} // ✅ Reset flag after update
+      />
 
       <div className="main-contain">
         <ToggleTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
-        {activeTab === "services" ? (
-          <DashboardServices />
-        ) : (
-          <DashBoardBooking />
+        <button
+          onClick={handleOpenAddService}
+          className="flex items-center ml-14 mb-2 gap-2 px-4 py-2 bg-slate-600 text-white rounded-md hover:bg-blue-700 transition duration-200"
+        >
+          <span className="text-xl font-bold">+</span>
+          <span className="text-base tracking-wide">Add Services</span>
+        </button>
+
+        <div className="relative max-h-[70vh] overflow-y-auto">
+          {activeTab === "services" ? (
+            <DashboardServices />
+          ) : (
+            <DashBoardBooking />
+          )}
+        </div>
+
+        {/* Password Confirmation Modal */}
+        {confirmPasswordModal && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
+              <h3 className="text-lg font-semibold mb-4 text-center">
+                Enter your password to confirm
+              </h3>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+                className="w-full px-3 py-2 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <div className="flex justify-end space-x-2">
+                <button
+                  onClick={handleConfirmPassword}
+                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+                >
+                  Confirm
+                </button>
+                <button
+                  onClick={() => setConfirmPasswordModal(false)}
+                  className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400 transition"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
         )}
 
-        {/* 🔽 Popup Block Added Below */}
+        {/* Negotiation Popup */}
         {popupData && (
           <div className="popup-overlayfinal">
             <div className="popup-container">
@@ -120,20 +194,16 @@ function DashBoardMain() {
                 <p>
                   <strong>Proposed Price:</strong> ₹{popupData.proposedPrice}
                 </p>
-
-                {popupData.proposedPrice &&
-                  Number(popupData.proposedPrice) <
-                    Number(popupData.originalPrice) && (
-                    <p>
-                      <strong>Enter Final Price:</strong>
-                      <input
-                        type="text"
-                        placeholder="Enter Your Final Price"
-                        className="VenueInput"
-                      />
-                    </p>
-                  )}
-
+                {popupData.proposedPrice < popupData.originalPrice && (
+                  <p>
+                    <strong>Enter Final Price:</strong>
+                    <input
+                      type="text"
+                      placeholder="Enter Your Final Price"
+                      className="VenueInput"
+                    />
+                  </p>
+                )}
                 <p>
                   <strong>Date:</strong>{" "}
                   {new Date(popupData.date).toLocaleDateString()}

@@ -260,8 +260,12 @@
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .custom-li {
@@ -270,7 +274,7 @@
   width: 100%;
   margin-left: 2px;
   border: 1px solid black;
-  background: linear-gradient(45deg, #004989, #001F3F);
+  background: linear-gradient(45deg, #004989, #001f3f);
   color: rgba(0, 0, 0, 0.732);
   font-weight: 550;
   transition: all 0.3s ease;
@@ -332,18 +336,23 @@
   min-width: 150px;
   min-height: 45px;
   margin-top: 12px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   letter-spacing: 0.5px;
 }
 
 .remove-photo-btn::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
   transition: left 0.5s ease;
 }
 
@@ -393,11 +402,11 @@
 }
 
 @keyframes spin {
-  from { 
-    transform: rotate(0deg); 
+  from {
+    transform: rotate(0deg);
   }
-  to { 
-    transform: rotate(360deg); 
+  to {
+    transform: rotate(360deg);
   }
 }
 
@@ -445,7 +454,7 @@
   margin: 0 0 20px 0;
   font-size: 20px;
   font-weight: 700;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   color: #ff6b6b;
 }
 
@@ -453,7 +462,7 @@
   margin: 0 0 30px 0;
   font-size: 15px;
   line-height: 1.6;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   color: rgba(255, 255, 255, 0.9);
 }
 
@@ -473,7 +482,7 @@
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   min-width: 100px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
@@ -491,14 +500,22 @@
 }
 
 .cancel-remove-btn {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.1) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
   color: white;
   border: 2px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
 }
 
 .cancel-remove-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.2) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0.2) 100%
+  );
   border-color: rgba(255, 255, 255, 0.5);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(255, 255, 255, 0.15);
@@ -509,7 +526,7 @@
   transform: translateY(0);
 }
 
-.remove-text{
+.remove-text {
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
@@ -524,17 +541,17 @@
     padding: 10px 18px;
     font-size: 12px;
   }
-  
+
   .remove-confirm-dialog {
     margin: 20px;
     padding: 25px;
   }
-  
+
   .remove-confirm-buttons {
     flex-direction: column;
     gap: 12px;
   }
-  
+
   .confirm-remove-btn,
   .cancel-remove-btn {
     width: 100%;
@@ -549,7 +566,7 @@
     left: 0;
     bottom: 0;
     width: 240px;
-    background: linear-gradient(45deg, #004989, #001F3F);
+    background: linear-gradient(45deg, #004989, #001f3f);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     transform: translateX(-100%);
@@ -558,23 +575,23 @@
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
     height: 100vh;
   }
-  
+
   .user-sidebar.open {
     transform: translateX(0);
   }
-  
+
   .ch-password {
     top: -70px;
   }
-  
+
   .edit-button {
     top: -80px;
   }
-  
+
   .custom-list-decor {
     top: -50px;
   }
-  
+
   .user-profile-pic,
   .profile-initials {
     margin-left: 26px;
@@ -583,14 +600,14 @@
     width: 140px;
     height: 140px;
   }
-  
+
   .camera-icon-overlay {
     width: 35px;
     height: 35px;
     bottom: 5px;
     right: 20px;
   }
-  
+
   .camera-icon {
     font-size: 16px;
   }
@@ -603,7 +620,7 @@
     left: 0;
     bottom: 0;
     width: 240px;
-    background: linear-gradient(45deg, #004989, #001F3F);
+    background: linear-gradient(45deg, #004989, #001f3f);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     transform: translateX(-100%);
@@ -616,19 +633,19 @@
   .user-sidebar.open {
     transform: translateX(0);
   }
-  
+
   .ch-password {
     top: -70px;
   }
-  
+
   .edit-button {
     top: -80px;
   }
-  
+
   .custom-list-decor {
     top: -50px;
   }
-  
+
   .user-profile-pic,
   .profile-initials {
     margin-left: 26px;
@@ -637,22 +654,22 @@
     width: 140px;
     height: 140px;
   }
-  
+
   .camera-icon-overlay {
     width: 35px;
     height: 35px;
     bottom: 5px;
     right: 20px;
   }
-  
+
   .remove-confirm-dialog {
     margin: 20px;
   }
-  
+
   .remove-confirm-buttons {
     flex-direction: column;
   }
-  
+
   .confirm-remove-btn,
   .cancel-remove-btn {
     width: 100%;

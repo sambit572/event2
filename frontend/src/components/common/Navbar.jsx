@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import UserProfileIcon from "../../pages/common/UserProfileIcon.jsx";
 import toast from "react-hot-toast";
-
+import "../../pages/vendor/VendorLogin.jsx";
 import "./Navbar.css";
 import { CgProfile } from "react-icons/cg";
 
@@ -34,8 +34,6 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 const Navbar = ({ onOpenLogin, onOpenRegister }) => {
   const navigate = useNavigate();
   const location = useLocation();
-
-  const dispatch = useDispatch();
 
   const [currentUser, setCurrentUser] = useState(null);
 
@@ -301,7 +299,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
               </div>
 
               {showProfileDropdown && (
-                <div className="dropdown-menu profile-menu">
+                <div className="vendor-dropdown-menu profile-menu">
                   {!userFirstName ? (
                     <>
                       <h4 className="login-h4">Welcome</h4>
@@ -406,7 +404,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
               </div>
 
               {showVendorDropdown && (
-                <div className="dropdown-menu profile-menu">
+                <div className="vendor-dropdown-menu profile-menu">
                   <h4 className="login-h4">Welcome Vendor</h4>
                   <p className="login-p">
                     Access your vendor tools and profile

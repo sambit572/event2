@@ -75,12 +75,6 @@
   }
 }
 
-@media (max-width: 540px) {
-  .tab-btn {
-    margin-left: -120px;
-  }
-}
-
 @media (max-width: 530px) {
   .tab-btn {
     width: 290px !important;
@@ -100,15 +94,7 @@
 }
 
 @media (max-width: 431px) {
-  .tab-btn {
-    position: relative;
-    right: 50px;
-    height: 55px;
-    margin-top: 20px;
-    width: 270px !important;
-  }
-
-  .tab-btn button {
+  */ .tab-btn button {
     font-size: 12px;
     width: max-content;
   }
@@ -128,9 +114,6 @@
 }
 
 @media (max-width: 380px) {
-  .tab-btn {
-    right: 60px;
-  }
   .tab-btn button {
     font-size: 11px;
   }

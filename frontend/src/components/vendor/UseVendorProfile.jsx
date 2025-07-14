@@ -1,0 +1,104 @@
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setVendor } from "../../redux/VendorSlice.js";
+import axios from "axios";
+
+export function UseVendorProfile() {
+  const vendor = useSelector((state) => state.vendor.vendor);
+  const dispatch = useDispatch();
+
+  const [form, setForm] = useState({
+    fullName: "",
+    email: "",
+    phoneNumber: "",
+    upiId: "",
+    accountNumber: "",
+    ifscCode: "",
+    tempAccountNumber: "",
+    tempIfscCode: "",
+    active: true,
+  });
+
+  const updateField = (field, value) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+
+  useEffect(() => {
+    const fetchBankDetails = async () => {
+      try {
+        const res = await axios.get(
+          `${
+            import.meta.env.VITE_BACKEND_URL
+          }/vendors/bank-details/bankDetails`,
+          { withCredentials: true }
+        );
+
+        const details = res.data.data;
+
+        setForm((prev) => ({
+          ...prev,
+          fullName: vendor.fullName || "",
+          email: vendor.email || "",
+          phoneNumber: vendor.phoneNumber || "",
+          upiId: details.upiId || "",
+          accountNumber: details.accountNumber || "",
+          ifscCode: details.ifscCode || "",
+          tempAccountNumber: details.accountNumber || "",
+          tempIfscCode: details.ifscCode || "",
+          active: vendor.active ?? true,
+        }));
+      } catch (err) {
+        console.error(
+          "Error fetching bank details:",
+          err.response?.data || err.message
+        );
+      }
+    };
+
+    if (vendor?._id) {
+      fetchBankDetails();
+    }
+  }, [vendor]);
+      
+
+
+  const updateVendor = async () => {
+    console.log("before updating the form data to be updated : ",form);
+    
+    const res = await axios.put(
+      `${import.meta.env.VITE_BACKEND_URL}/vendors/${vendor._id}`,
+      {
+        vendorId: vendor._id,
+        fullName: form.fullName,
+        email: form.email,
+        phoneNumber: form.phoneNumber,
+        active: form.active,
+      },
+      { withCredentials: true }
+    );
+    console.log("res from update vendor",res.data.data);
+    dispatch(setVendor(res.data.data));
+  };
+
+  const updateBank = async () => {
+    const res = await axios.put(
+      `${import.meta.env.VITE_BACKEND_URL}/vendors/bank-details/${vendor._id}`,
+      {
+        upiId: form.upiId,
+        tempAccountNumber: form.tempAccountNumber,
+        ifscCode: form.tempIfscCode,
+      },
+      { withCredentials: true }
+    );
+    console.log("updation done:",res)
+  };
+
+  return {
+    form,
+    updateField,
+    updateVendor,
+    updateBank,
+    vendor,
+  };
+}

@@ -2,9 +2,10 @@ import { Schema, model } from "mongoose";
 
 const bankDetailsSchema = new Schema(
   {
-    vendorid: {
+    vendorId: {
       type: Schema.Types.ObjectId,
       ref: "Vendor",
+      required:true,
     },
     accountHolderName: {
       type: String,
