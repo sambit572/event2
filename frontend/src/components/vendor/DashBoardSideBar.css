@@ -3,7 +3,7 @@
   width: 270px;
   background: #004989;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-
+  height: 100%;
   color: #f5f5f5;
   transition: width 0.3s ease;
 
@@ -15,7 +15,7 @@
   width: 60px;
 }
 
-.sidebar-content {
+.dashboard-sidebar-content {
   margin-top: 20px;
   display: flex;
   flex-direction: column;
@@ -23,7 +23,7 @@
   padding: 0 10px;
 }
 
-.sidebar-content a {
+.dashboard-sidebar-content a {
   text-decoration: none;
   color: white;
   padding: 8px;
@@ -32,7 +32,7 @@
   height: 510px;
 }
 
-.sidebar-content a:hover {
+.dashboard-sidebar-content a:hover {
   background-color: #34495e;
 }
 
@@ -49,12 +49,14 @@
   margin-left: 23px;
   margin-bottom: 10px;
   margin-top: 20px;
+  /* z-index: 10000; */
 }
 
 .custom-list-decor-dashboard {
   list-style: none;
   position: relative;
-  top: -20px;
+  margin-top: 30px;
+  /* top: -20px; */
 }
 
 .typography {
@@ -151,7 +153,7 @@ color: #ffc107;
   color: #ffc107;
   gap: 8px;
   font-weight: 700;
-  margin-left: 66px;
+  margin-left: 80px;
   margin-top: 10px;
 }
 
@@ -219,7 +221,7 @@ color: #ffc107;
 
 @media (max-width: 768px) {
   .dash-sidebar {
-    position: relative;
+    position: absolute;
     top: 0;
     left: 0;
     bottom: 0;
@@ -244,7 +246,7 @@ color: #ffc107;
     font-size: 14px;
   }
 
-  .sidebar-content {
+  .dashboard-sidebar-content {
     margin-top: -16px;
     display: flex;
     flex-direction: column;
@@ -264,19 +266,19 @@ color: #ffc107;
 
   .profile-pic {
     margin-left: 42px;
-    margin-top: 56px;
+    margin-top: 40px;
     width: 140px;
     height: 130px;
   }
 }
 
 @media (max-width: 431px) {
-  .sidebar-content {
+  .dashboard-sidebar-content {
     width: 57vw;
   }
 }
 @media (max-width: 391px) {
-  .sidebar-content {
+  .dashboard-sidebar-content {
     width: 63vw;
   }
 }

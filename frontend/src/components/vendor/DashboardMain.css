@@ -24,6 +24,7 @@
   background-color: white;
   height: 100vh;
   font-family: sans-serif;
+  margin-top: 70px;
 }
 
 /* Pop-up overlay */
@@ -111,7 +112,9 @@
 .popup-content p:hover {
   background: rgba(199, 193, 193, 0.8);
 }
-
+.main-contain {
+  width: 100%;
+}
 .popup-content strong {
   color: #001f3f;
 }
@@ -238,36 +241,45 @@
   .open {
     color: white;
   }
-  .main-contain {
-    width: 30%;
-  }
+
   .popup-container {
-    width: 85vw; /* Slightly smaller width for tablets */
-    max-width: 450px; /* Reduced max-width */
-    padding: 1.25rem; /* Slightly less padding */
-    max-height: 80vh; /* Ensure space for browser UI */
+    width: 85vw;
+    max-width: 450px;
+    padding: 1.25rem;
+    max-height: 80vh;
     border-radius: 14px;
     margin-bottom: 350px;
   }
 
   .popup-title {
-    font-size: 1.3rem; /* Smaller title */
+    font-size: 1.3rem;
   }
 
   .popup-content p {
-    font-size: 0.9rem; /* Smaller text */
+    font-size: 0.9rem;
     padding: 0.4rem 0.6rem;
   }
-
-  .btn-accept,
-  .btn-decline,
-  .btn-close {
-    padding: 7px 14px;
-    font-size: 0.85rem;
-    min-width: 90px;
+}
+@media (max-width: 680px) {
+  .dashboard-container-box {
+    margin-top: 40px;
+  }
+  .dashboard-hamburger {
+    display: flex;
+    left: 0;
+    top: 50px;
   }
 }
-
+@media (max-width: 460px) {
+  .dashboard-container-box {
+    margin-top: 50px;
+  }
+  .dashboard-hamburger {
+    display: flex;
+    left: 0;
+    top: 60px;
+  }
+}
 /* Phone screens (max-width: 430px) */
 @media (max-width: 432px) {
   .popup-container {
@@ -303,11 +315,5 @@
     padding: 8px;
     font-size: 0.8rem;
     min-width: 100%; /* Full-width buttons */
-  }
-  .dashboard-hamburger {
-    top: 90px;
-  }
-  .main-contain {
-    width: 30%;
   }
 }

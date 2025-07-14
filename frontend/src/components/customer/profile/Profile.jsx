@@ -4,15 +4,16 @@ import PasswordInput from "../../../utils/PasswordInput.jsx";
 import axios from "axios";
 import { BACKEND_URL } from "../../../utils/constant.js";
 import "./Profile.css";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 function Profile({ onProfileChange }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
+
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+
   const [profileData, setProfileData] = useState({
     fullName: "",
     email: "",
@@ -97,7 +98,7 @@ function Profile({ onProfileChange }) {
   }, []);
 
   return (
-    <div className="profile_section mb-[-148px] relative w-full min-h-screen flex flex-col md:flex-row bg-white xl:overflow-x-hidden">
+    <div className="profile_section  relative w-full  flex bg-white ">
       <div className="profile-sidebar-fixed">
         <button
           className={`profile-hamburger ${isSidebarOpen ? "open" : ""}`}
@@ -173,7 +174,7 @@ function Profile({ onProfileChange }) {
       </div>
 
       <div className="profile-scrollable-content max-[430px]:flex-row">
-        <h2 className="boking-text text-2xl md:text-3xl font-bold text-center mb-4">
+        <h2 className="boking-text  text-2xl md:text-3xl font-bold text-center mb-4">
           My Bookings
         </h2>
 
@@ -222,7 +223,7 @@ function Profile({ onProfileChange }) {
                   <p className="text-sm text-black">Event Date: 10/06/2025</p>
                   <a
                     href="#payment-details"
-                    className="text-[#001F3F] underline font-medium mt-2 block"
+                    className="text-[#001F3F] underline font-medium "
                   >
                     Payment Details
                   </a>

@@ -183,13 +183,6 @@
 
 /* Mobile (less than 768px) */
 @media (max-width: 767px) {
-  .booking-popup-box {
-    width: 80vw;
-    padding: 18px;
-    left: 230px;
-    top: 320px;
-  }
-
   .popup-titles {
     font-size: 1.2rem;
   }

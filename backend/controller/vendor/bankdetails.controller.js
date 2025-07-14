@@ -18,7 +18,6 @@ import { ApiError } from "../../utilities/ApiError.js";
 export const createBankDetails = async (req, res) => {
   try {
     const {
-      vendorid,
       accountHolderName,
       accountNumber,
       branchName,
@@ -45,7 +44,7 @@ export const createBankDetails = async (req, res) => {
     }
 
     const newDetails = await BankDetails.create({
-      vendorid,
+      vendorId: req.vendor._id,
       accountHolderName,
       accountNumber,
       branchName,
@@ -69,10 +68,13 @@ export const createBankDetails = async (req, res) => {
 // Getting bank details by vendor ID
 export const getBankDetailsByVendor = async (req, res) => {
   try {
-    const { vendorId } = req.params;
+    console.log("inside getBankDetailsByVendor");
+    // console.log(req.vendor)
+    const vendorId = req.vendor._id;
 
-    const details = await BankDetails.findOne({ vendorid: vendorId });
+    const details = await BankDetails.findOne({ vendorId: vendorId });
 
+    console.log(details);
     if (!details) {
       return res
         .status(404)
@@ -83,60 +85,44 @@ export const getBankDetailsByVendor = async (req, res) => {
       .status(200)
       .json(new ApiResponse(200, details, "Bank details fetched successfully"));
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json(new ApiError(500, error.message));
+    console.error(
+      "error message as can not obtain bankdetails: ",
+      error.message
+    );
   }
 };
+
+// controllers/bankDetailsController.js
+// Backend route (Express)
 
 export const updateBankDetails = async (req, res) => {
+  const { vendorId } = req.params;
+  const { tempAccountNumber, ifscCode, upiId } = req.body;
+
   try {
-    const { vendorId } = req.params;
-    const updateData = { ...req.body };
-
-    const bankDetails = await BankDetails.findOne({ vendorid: vendorId });
-
-    if (!bankDetails) {
-      return res.status(404).json({
-        success: false,
-        message: "Bank details not found",
-      });
-    }
-
-    // If file uploaded, replace old image
-    if (req.file) {
-      await deleteFromCloudinary(bankDetails.panCardPic);
-
-      const cloudinaryResponse = await uploadOnCloudinary(req.file.path);
-
-      if (!cloudinaryResponse?.secure_url) {
-        return res.status(500).json({
-          success: false,
-          message: "Failed to upload PAN card to Cloudinary.",
-        });
-      }
-
-      updateData.panCardPic = cloudinaryResponse.secure_url;
-    }
-
-    const updated = await BankDetails.findOneAndUpdate(
-      { vendorid: vendorId },
-      updateData,
-      { new: true, validateModifiedOnly: true }
+    const updatedBankDetails = await BankDetails.findOneAndUpdate(
+      { vendorId },
+      {
+        $set: {
+          upiId,
+          accountNumber: tempAccountNumber,
+          ifscCode,
+        },
+      },
+      { new: true }
     );
 
-    res.status(200).json({
-      success: true,
-      message: "Bank details updated successfully",
-      data: updated,
-    });
+    if (!updatedBankDetails) {
+      return res.status(404).json({ message: "Bank details not found" });
+    }
+
+    res.json({ success: true, data: updatedBankDetails });
   } catch (error) {
     console.error("Error updating bank details:", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal server error while updating bank details",
-    });
+    res.status(500).json({ message: "Server error" });
   }
 };
-
 // Deleting bank details by vendor ID
 export const deleteBankDetails = async (req, res) => {
   try {

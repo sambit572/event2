@@ -39,6 +39,7 @@ import PopUp from "./components/customer/CustomerNegotiationModal";
 
 // Vendor Pages
 import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
+import AddServiceInDashboard from "./components/vendor/AddServiceInDashboard.jsx";
 
 // Common
 import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
@@ -131,6 +132,7 @@ const App = () => {
 
   return (
     <>
+      <ScrollToTop />
       {/* Conditionally render Navbar */}
       {location.pathname !== "/admin" && (
         <Navbar
@@ -138,8 +140,6 @@ const App = () => {
           onOpenRegister={handleOpenRegister}
         />
       )}
-
-      <ScrollToTop />
 
       <main>
         <Routes>
@@ -204,6 +204,10 @@ const App = () => {
 
           <Route path="/dashboard" element={<DashBoardMain />} />
           <Route path="/vendor-login" element={<VendorLogin />} />
+          <Route
+            path="/vendor/services/addServices"
+            element={<AddServiceInDashboard />}
+          />
 
           <Route path="/forgot-password" element={<ForgotPass />} />
           <Route
@@ -221,7 +225,6 @@ const App = () => {
           <Route path="/userdetails" element={<UserDetails />}></Route>
           <Route path="/pop-up" element={<PopUp />}></Route>
           <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/vendor-login" element={<VendorLogin />} />
         </Routes>
       </main>
       <BackToTop />

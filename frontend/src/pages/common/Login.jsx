@@ -13,7 +13,7 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/UserSlice.js";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-const Login = ({ onClose,onSwitchToRegister }) => {
+const Login = ({ onClose, onSwitchToRegister }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [step, setStep] = useState("form"); // 'form', 'otp', 'success'
@@ -122,7 +122,8 @@ const Login = ({ onClose,onSwitchToRegister }) => {
   }
 
   const renderStep = () => {
-    if (step === "success") return <SuccessBlock showSuccessIcon={showSuccessIcon} />;
+    if (step === "success")
+      return <SuccessBlock showSuccessIcon={showSuccessIcon} />;
     if (step === "otp") return <OTPVerification setStep={setStep} />;
 
     return (
@@ -159,7 +160,7 @@ const Login = ({ onClose,onSwitchToRegister }) => {
         <div className="Login-forget-password-link mb-2">
           <span
             style={{ cursor: "pointer", color: "#007bff" }}
-            onClick={() => setShowForgotModal(true)} 
+            onClick={() => setShowForgotModal(true)}
           >
             Forgot your password?
           </span>
@@ -192,7 +193,7 @@ const Login = ({ onClose,onSwitchToRegister }) => {
         <h2 className="login-title">Log In</h2>
         {renderStep()}
       </div>
-        {showForgotModal && (
+      {showForgotModal && (
         <ForgotPass onClose={() => setShowForgotModal(false)} />
       )}
     </div>
