@@ -23,15 +23,15 @@ const SuccessBlock = ({ onClose }) => {
         <h3 className="success-welcome">
           Welcome to Eventsbridge
         </h3>
-
-        {/* Image */}
+{/* 
+        
         <div className="success-image-wrapper">
           <img
             src={success}
             alt="Namaste Icon"
             className="success-image"
           />
-        </div>
+        </div> */}
 
         {/* Thank You */}
         <h3 className="signup-text success-thankyou">

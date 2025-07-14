@@ -57,6 +57,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
     if (window.innerWidth <= 768) {
       setShowMobileSearchBar((prev) => !prev);
     } else {
+      setShowMobileSearchBar(true); // set true on desktop
       if (inputRef.current) inputRef.current.focus();
     }
   };
@@ -195,7 +196,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
       if (
         inputRef.current &&
         !inputRef.current.contains(e.target) &&
-        window.innerWidth <= 768
+        window.innerWidth > 768
       ) {
         setShowMobileSearchBar(false);
       }
@@ -240,14 +241,21 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
       <div className="navbar">
         {/* Logo */}
         <div className="logo">
-          <span onClick={handleHomeClick}>EventsBridge</span>
+          <span onClick={handleHomeClick}>EVENTSBRIDGE</span>
         </div>
 
         <div className="search-and-nav-icons-container ">
           {/* Search Bar */}
           <div
-            className={`search-bar ${showMobileSearchBar ? "active" : ""}`}
-            onClick={(e) => e.stopPropagation()}
+            className={`search-bar ${
+              showMobileSearchBar && window.innerWidth > 768 ? "active" : ""
+            }`}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (window.innerWidth > 768) {
+                setShowMobileSearchBar(true);
+              }
+            }}
           >
             <div>
               {(showMobileSearchBar || window.innerWidth > 768) && (
@@ -260,7 +268,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
                 />
               )}
             </div>
-            <div className="searchbarIcon">
+             <div className="searchbarIcon">
               <FaSearch className="search-icon" onClick={handleSearchicon} />
             </div>
           </div>
@@ -311,7 +319,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
                       <div className="dropdown-header">
                         <span className="text-[#001f3f]">New Customer?</span>
                         <button
-                          className="bg-blue-500 hover:bg-blue-600"
+                          className="bg-[#001f3f] hover:bg-gray-900"
                           onClick={handleSignupClick}
                         >
                           Sign Up
@@ -414,7 +422,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
                   <div className="dropdown-header">
                     <span className="text-[#001f3f]">New Vendor?</span>
                     <button
-                      className=" bg-black hover:bg-gray-800 text-white"
+                      className=" bg-[#001f3f] hover:bg-gray-800 text-white"
                       onClick={() => {
                         setShowVendorDropdown(false);
                         if (!userFirstName) {
@@ -442,7 +450,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
                   <hr />
                   <div className="dropdown-header">
                     <button
-                      className=" bg-green-500 hover:bg-green-600"
+                      className="vendor-changePassword"
                       onClick={() => {
                         setShowVendorDropdown(false);
                         if (!userFirstName) {
@@ -467,7 +475,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
                       Change Password
                     </button>
                     <button
-                      className=" bg-red-500 hover:bg-red-600"
+                      className="vendor-signout"
                       onClick={() => {
                         setShowVendorDropdown(false);
                         if (!userFirstName) {
