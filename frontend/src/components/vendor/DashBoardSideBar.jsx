@@ -1,39 +1,50 @@
 import React, { useState, useEffect } from "react";
 import "./DashBoardSideBar.css";
 import { FaEdit } from "react-icons/fa";
-import { useSelector, useDispatch } from "react-redux";
-import { setVendor } from "../../redux/VendorSlice"; // If you update vendor in Redux
+import { useDispatch, useSelector } from "react-redux";
+import { UseVendorProfile } from "./UseVendorProfile.jsx";
 import axios from "axios";
+import { setVendor } from "../../redux/VendorSlice.js";
 
-function DashBoardSideBar({ isOpen }) {
-  const vendor = useSelector((state) => state.vendor.vendor);
+// Props updated: added onSaveComplete to notify parent after verified update
+function DashBoardSideBar({
+  isOpen,
+  isVerified,
+  setConfirmPasswordModal,
+  onSaveComplete,
+}) {
   const dispatch = useDispatch();
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [contact, setContact] = useState("");
-  const [eventsHosted, setEventsHosted] = useState("");
-  const [upiId, setUpiId] = useState("");
-  const [accountNumber, setAccountNumber] = useState("");
-  const [ifscCode, setIfscCode] = useState("");
-  const [bankDropdownOpen, setBankDropdownOpen] = useState(false);
-  const [active, setActive] = useState(true);
+  const vendor = useSelector((state) => state.vendor.vendor);
+
   const [editMode, setEditMode] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [bankDropdownOpen, setBankDropdownOpen] = useState(false);
 
+  const { form, updateField, updateVendor, updateBank } = UseVendorProfile();
+
+  // 🔁 Trigger actual save *only* when password is verified
   useEffect(() => {
-    if (vendor) {
-      setFullName(vendor.fullName || "");
-      setEmail(vendor.email || "");
-      setContact(vendor.contact || "");
-      setEventsHosted(vendor.eventsHosted?.toString() || "0");
-      setUpiId(vendor.upiId || "");
-      setAccountNumber(vendor.accountNumber || "");
-      setIfscCode(vendor.ifscCode || "");
-      setActive(vendor.active ?? true);
+    const updateAfterVerification = async () => {
+      if (isVerified && editMode) {
+        await updateVendor();
+        await updateBank();
+        setEditMode(false);
+        console.log("✅ Updated vendor + bank and turned off edit mode");
+
+        if (onSaveComplete) onSaveComplete(); // Let parent know
+      }
+    };
+    updateAfterVerification();
+  }, [isVerified]);
+
+  // 🔁 Edit toggle (calls for password confirmation on Save)
+  const handleToggleEdit = () => {
+    if (editMode) {
+      setConfirmPasswordModal(true); // Ask password on save
+    } else {
+      setEditMode(true); // Enter edit mode
     }
-  }, [vendor]);
+  };
 
   const getInitialsAvatar = (name) => {
     if (!name) return "NA";
@@ -45,23 +56,12 @@ function DashBoardSideBar({ isOpen }) {
     return `https://ui-avatars.com/api/?name=${initials}&background=0D8ABC&color=fff`;
   };
 
-  const handleToggleEdit = () => {
-    if (editMode) {
-      handleSaveChanges();
-    } else {
-      // Trying to save, show password modal
-      setShowPasswordModal(true);
-    }
-    setEditMode((prev) => !prev);
-  };
-
   const handleImageChange = async (e) => {
     const file = e.target.files?.[0];
     if (file) {
       setSelectedImage(file);
-
       const formData = new FormData();
-      formData.append("vendorId", vendor._id); // Adjust as per your backend
+      formData.append("vendorId", vendor._id);
       formData.append("profilePicture", file);
 
       try {
@@ -69,10 +69,8 @@ function DashBoardSideBar({ isOpen }) {
           `${import.meta.env.VITE_BACKEND_URL}/vendors/upload-profile`,
           formData,
           {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-            withCredentials: true, // Ensure cookies are sent for session management
+            headers: { "Content-Type": "multipart/form-data" },
+            withCredentials: true,
           }
         );
         dispatch(setVendor(res.data.data));
@@ -88,49 +86,24 @@ function DashBoardSideBar({ isOpen }) {
       formData.append("removeProfilePicture", "true");
 
       const res = await axios.put(
-        `http://localhost:8000/vendors/${vendor._id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/vendors/${vendor._id}`,
         formData,
         {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          headers: { "Content-Type": "multipart/form-data" },
           withCredentials: true,
         }
       );
-
       dispatch(setVendor(res.data.data));
       setSelectedImage(null);
-      console.log("Profile image removed successfully.");
     } catch (err) {
       console.error("Image remove failed:", err);
-    }
-  };
-
-  const handleSaveChanges = async () => {
-    try {
-      const res = await axios.put(
-        `http://localhost:8000/vendors/${vendor._id}`,
-        {
-          vendorId: vendor._id,
-          fullName,
-          email,
-          contact,
-          upiId,
-          accountNumber,
-          ifscCode,
-          active,
-        }
-      );
-      dispatch(setVendor(res.data.updatedVendor));
-      console.log("Changes saved.");
-    } catch (err) {
-      console.error("Error saving changes:", err);
     }
   };
 
   return (
     <div className={`dash-sidebar ${isOpen ? "open" : ""}`}>
       <h2 className="dasgboardHeading">DASHBOARD</h2>
+
       <div className="sidebar-content">
         <img
           src={
@@ -138,13 +111,12 @@ function DashBoardSideBar({ isOpen }) {
               ? URL.createObjectURL(selectedImage)
               : vendor?.profilePicture
               ? vendor.profilePicture
-              : getInitialsAvatar(fullName)
+              : getInitialsAvatar(form.fullName)
           }
           alt="Profile"
           className="profile-pic"
         />
 
-        {/* Upload & Remove Buttons */}
         <div className="profile-buttons">
           <input
             type="file"
@@ -166,12 +138,12 @@ function DashBoardSideBar({ isOpen }) {
             {editMode ? (
               <input
                 type="text"
-                value={fullName}
+                value={form.fullName}
                 className="custom-li"
-                onChange={(e) => setFullName(e.target.value)}
+                onChange={(e) => updateField("fullName", e.target.value)}
               />
             ) : (
-              fullName
+              form.fullName
             )}
           </li>
 
@@ -179,21 +151,21 @@ function DashBoardSideBar({ isOpen }) {
             <label className="status-edit-toggle">
               <input
                 type="checkbox"
-                checked={active}
-                onChange={() => setActive(!active)}
+                checked={form.active}
+                onChange={() => updateField("active", !form.active)}
               />
               <span className="vendor-active">
-                {active ? "Active" : "Inactive"}
+                {form.active ? "Active" : "Inactive"}
               </span>
             </label>
           ) : (
             <span className="status-indicator">
               <span
                 className={`status-dot ${
-                  active ? "active-dot" : "inactive-dot"
+                  form.active ? "active-dot" : "inactive-dot"
                 }`}
               ></span>
-              {active ? "Active" : "Inactive"}
+              {form.active ? "Active" : "Inactive"}
             </span>
           )}
 
@@ -201,12 +173,12 @@ function DashBoardSideBar({ isOpen }) {
             {editMode ? (
               <input
                 type="email"
-                value={email}
+                value={form.email}
                 className="custom-li"
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => updateField("email", e.target.value)}
               />
             ) : (
-              email
+              form.email
             )}
           </li>
 
@@ -214,27 +186,29 @@ function DashBoardSideBar({ isOpen }) {
             {editMode ? (
               <input
                 type="text"
-                value={contact}
+                value={form.phoneNumber}
                 className="custom-li"
-                onChange={(e) => setContact(e.target.value)}
+                onChange={(e) => updateField("phoneNumber", e.target.value)}
               />
             ) : (
-              contact
+              form.phoneNumber
             )}
           </li>
 
-          <li className="typography">Events Hosted: {eventsHosted}</li>
+          <li className="typography">
+            Events Hosted: {vendor?.eventsHosted ?? 0}
+          </li>
 
           <li className="typography">
             {editMode ? (
               <input
                 type="text"
-                value={upiId}
+                value={form.upiId}
                 className="custom-li"
-                onChange={(e) => setUpiId(e.target.value)}
+                onChange={(e) => updateField("upiId", e.target.value)}
               />
             ) : (
-              upiId
+              form.upiId
             )}
           </li>
 
@@ -253,12 +227,14 @@ function DashBoardSideBar({ isOpen }) {
                   {editMode ? (
                     <input
                       type="text"
-                      value={accountNumber}
-                      className="custom-li"
-                      onChange={(e) => setAccountNumber(e.target.value)}
+                      style={{ color: "black" }}
+                      value={form.tempAccountNumber}
+                      onChange={(e) =>
+                        updateField("tempAccountNumber", e.target.value)
+                      }
                     />
                   ) : (
-                    accountNumber
+                    `****${form.accountNumber?.slice(-4)}`
                   )}
                 </div>
                 <div>
@@ -266,12 +242,14 @@ function DashBoardSideBar({ isOpen }) {
                   {editMode ? (
                     <input
                       type="text"
-                      value={ifscCode}
-                      className="custom-li"
-                      onChange={(e) => setIfscCode(e.target.value)}
+                      style={{ color: "black" }}
+                      value={form.tempIfscCode}
+                      onChange={(e) =>
+                        updateField("tempIfscCode", e.target.value)
+                      }
                     />
                   ) : (
-                    ifscCode
+                    form.ifscCode
                   )}
                 </div>
               </div>
@@ -292,6 +270,7 @@ function DashBoardSideBar({ isOpen }) {
           </div>
         )} */}
 
+        {/* Edit / Save Button */}
         <button className="edit-buttons flex gap-1" onClick={handleToggleEdit}>
           {editMode ? (
             "Save"

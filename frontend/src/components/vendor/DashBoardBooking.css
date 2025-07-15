@@ -6,18 +6,18 @@
   min-height: 100vh;
 }
 .booking-rows-scroll {
-  max-height: 50vh; /* or adjust based on your layout */
+  max-height: 100%; /* or adjust based on your layout */
   overflow-y: auto;
   margin-top: 0.5rem; /* space between header and rows */
 }
 
 .dashboard-main-content {
   flex: 1;
-  padding: 20px;
+  padding: 0px 20px;
 
   background-color: #fff;
   width: 70vw;
-  height: 70vh;
+  height: 10;
   margin-left: 50px;
 }
 
@@ -236,6 +236,11 @@
     grid-column: span 3;
   }
 
+  .dashboard-sort-dropdown {
+    width: 100% !important;
+    margin-top: 10px;
+  }
+
   /* .tab-buttons {
     margin-left: 30px;
   } */
@@ -258,8 +263,7 @@
   }
 
   .dashboard-main-content {
-    margin-left: -200px;
-    width: 300%;
+    width: 100%;
   }
 
   .booking-col-number {
@@ -282,11 +286,11 @@
     position: relative;
     right: 10px;
   }
-
+  /* 
   .dashboard-sort-dropdown {
     width: 23%;
     margin-top: 10px;
-  }
+  } */
 
   .booking-popup-inline {
     position: relative;
@@ -295,27 +299,8 @@
     grid-column: span 3;
   }
 }
-@media (max-width: 590px) {
-  .dashboard-main-content {
-    margin-left: -200px;
-    width: 270%;
-  }
-
-  .dashboard-sort-dropdown {
-    width: 36%;
-  }
-}
 
 @media (max-width: 480px) {
-  .dashboard-main-content {
-    /* max-width: 340px; */
-    width: 280%;
-    /* padding: 10px; */
-    /* margin-right: 54px; */
-    position: relative;
-    /* right: 89px; */
-  }
-
   .dashboard-booking-row {
     display: grid;
     grid-template-columns: 50px 1fr 70px;
@@ -338,12 +323,6 @@
   .booking-col-status {
     text-align: right;
     font-weight: bold;
-  }
-
-  .dashboard-sort-dropdown {
-    width: 41%;
-    margin-top: 10px;
-    margin-right: 0;
   }
 
   .booking-popup-inline {
@@ -359,22 +338,6 @@
 }
 
 @media (max-width: 393px) {
-  .dashboard-main-content {
-    width: 280%;
-    /* max-width: 320px; */
-    padding: 10px;
-    position: relative;
-    /* right: 121px; */
-  }
-
-  .dashboard-booking-row {
-    display: grid;
-    grid-template-columns: 50px 1fr 70px;
-    /* Number | Middle | Status */
-    gap: 8px;
-    width: 300px;
-  }
-
   .booking-col-number {
     text-align: left;
     font-weight: bold;
@@ -391,11 +354,11 @@
     font-weight: bold;
   }
 
-  .dashboard-sort-dropdown {
+  /* .dashboard-sort-dropdown {
     width: 49%;
     margin-top: 10px;
     margin-right: 0;
-  }
+  } */
 
   .booking-popup-inline {
     position: relative;

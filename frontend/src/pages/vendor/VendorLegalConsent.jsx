@@ -62,9 +62,10 @@ export default function VendorLegalConsent() {
         "Consent submission failed:",
         error?.response?.data || error.message
       );
-      setIsLoading(false);
+
       alert("Failed to submit consent. Please try again.");
     }
+    setIsLoading(false);
   };
 
   return (

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import UserProfileIcon from "../../pages/common/UserProfileIcon.jsx";
 import toast from "react-hot-toast";
-
+import "../../pages/vendor/VendorLogin.jsx";
 import "./Navbar.css";
 import { CgProfile } from "react-icons/cg";
 
@@ -19,7 +19,7 @@ import {
 } from "react-icons/fa";
 import { FcAbout } from "react-icons/fc";
 import axios from "axios";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, Navigate, useLocation } from "react-router-dom";
 
 import {
   attemptVendorSilentLogin,
@@ -31,11 +31,28 @@ import { clearUser } from "../../redux/UserSlice.js";
 import { clearVendor } from "../../redux/VendorSlice.js";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
+const CATEGORIES = [
+  "dj",
+  "band",
+  "tenthouse",
+  "photographer",
+  "pandit",
+  "magic",
+  "cultural-troupe",
+  "islamic",
+  "christian",
+  "catering",
+  "makeup",
+  "floral",
+  "transport",
+  "fireworks",
+  "card-design",
+];
+
 const Navbar = ({ onOpenLogin, onOpenRegister }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-
-  const dispatch = useDispatch();
 
   const [currentUser, setCurrentUser] = useState(null);
 
@@ -44,6 +61,8 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
   const [showEllipsisDropdown, setShowEllipsisDropdown] = useState(false);
   const [showVendorDropdown, setShowVendorDropdown] = useState(false);
   const [VendorFirstName, setVendorFirstName] = useState(null);
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   const [searchInput, setSearchInput] = useState("");
   const [showMobileSearchBar, setShowMobileSearchBar] = useState(false);
@@ -51,6 +70,93 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
   const ellipsisRef = useRef(null);
   const vendorRef = useRef(null);
   const inputRef = useRef(null);
+
+  const RELATED_TERMS = {};
+
+  const mapAliases = (aliases, category) => {
+    aliases.forEach((alias) => {
+      RELATED_TERMS[alias.toLowerCase()] = category;
+    });
+  };
+
+  // 🔁 Define keyword groups
+  mapAliases(["photo", "photos", "photography", "picture"], "photographer");
+  mapAliases(["dj", "deejay"], "dj");
+  mapAliases(["band", "music", "musician"], "band");
+  mapAliases(["tent", "tenthouse", "tents"], "tenthouse");
+  mapAliases(["pandit", "priest", "brahmin", "brahman", "pujari"], "pandit");
+  mapAliases(["magic", "magician", "illusionist"], "magic");
+  mapAliases(["cater", "catering", "caterers", "food", "buffet"], "catering");
+  mapAliases(
+    ["makeup", "beauty", "beautician", "makeupartist", "parlour"],
+    "makeup"
+  );
+  mapAliases(["floral", "flowers", "flower", "decor", "florist"], "floral");
+  mapAliases(["transport", "car", "vehicle", "cab"], "transport");
+  mapAliases(["fireworks", "firework", "crackers", "pataka"], "fireworks");
+  mapAliases(
+    ["card", "invitation", "invite", "invites", "cards"],
+    "card-design"
+  );
+  mapAliases(["church", "christian", "weddingchurch"], "christian");
+  mapAliases(
+    ["islam", "muslim", "imam", "maulbi", "moulbi", "muslim priest"],
+    "islamic"
+  );
+  mapAliases(
+    ["culture", "troupe", "artist", "folk", "dance", "group dance"],
+    "cultural-troupe"
+  );
+
+  const handleInputFocus = () => {
+    const localHistory =
+      JSON.parse(localStorage.getItem("searchHistory")) || [];
+    if (localHistory.length > 0) {
+      setSuggestions(localHistory);
+      setShowSuggestions(true);
+    }
+  };
+  const fetchDynamicSuggestions = async (query) => {
+    try {
+      if (query.trim().length <= 1) {
+        const localHistory =
+          JSON.parse(localStorage.getItem("searchHistory")) || [];
+        setSuggestions(localHistory.slice(0, 5));
+        setShowSuggestions(true);
+        return;
+      }
+
+      const res = await axios.get(
+        `${BACKEND_URL}/vendors/search-suggestions?query=${query}`
+      );
+
+      const backendSuggestions = res.data.data || [];
+
+      const localHistory =
+        JSON.parse(localStorage.getItem("searchHistory")) || [];
+
+      const matchingCategories = CATEGORIES.filter((cat) =>
+        cat.toLowerCase().includes(query.toLowerCase())
+      );
+
+      const matchingHistory = localHistory.filter((term) =>
+        term.toLowerCase().includes(query.toLowerCase())
+      );
+
+      const combined = [
+        ...new Set([
+          ...backendSuggestions,
+          ...matchingCategories,
+          ...matchingHistory,
+        ]),
+      ].slice(0, 5);
+
+      setSuggestions(combined);
+      setShowSuggestions(true);
+    } catch (err) {
+      console.error("Error fetching backend suggestions:", err);
+    }
+  };
 
   const handleSearchicon = (e) => {
     e.stopPropagation();
@@ -132,8 +238,41 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
     }
   };
 
-  const handleSearch = () => {
-    setSearchInput("");
+  const handleSearch = (e) => {
+    if (e.key === "Enter" && searchInput.trim()) {
+      const term = searchInput.trim().toLowerCase();
+
+      // 🔁 Save search history in localStorage
+      let history = JSON.parse(localStorage.getItem("searchHistory")) || [];
+      history.unshift(term); // add to top
+      history = [...new Set(history)].slice(0, 5); // remove duplicates, limit to 5
+      localStorage.setItem("searchHistory", JSON.stringify(history));
+
+      // ✅ If user searched for a known category, go to /category/categoryName
+      let matchedCategory = CATEGORIES.find((cat) =>
+        term.includes(cat.toLowerCase())
+      );
+
+      // Try matching related words if no direct category match
+      if (!matchedCategory) {
+        const words = term.split(/\s+/);
+        for (let word of words) {
+          const cleaned = word.toLowerCase();
+          if (RELATED_TERMS[cleaned]) {
+            matchedCategory = RELATED_TERMS[cleaned];
+            break;
+          }
+        }
+      }
+
+      if (matchedCategory) {
+        navigate(`/category/${matchedCategory.toLowerCase()}`);
+      } else {
+        navigate(`/search-results?query=${encodeURIComponent(term)}`);
+      }
+
+      setSearchInput(""); // clear input box
+    }
   };
 
   const handleLoginClick = () => {
@@ -247,31 +386,76 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
         <div className="search-and-nav-icons-container ">
           {/* Search Bar */}
           <div
-            className={`search-bar ${
-              showMobileSearchBar && window.innerWidth > 768 ? "active" : ""
-            }`}
+            className={`search-bar ${showMobileSearchBar ? "active" : ""}`}
             onClick={(e) => {
-              e.stopPropagation();
-              if (window.innerWidth > 768) {
-                setShowMobileSearchBar(true);
-              }
+              handleSearchicon(e);
+              e.stopPropagation(); // Prevent event bubbling
             }}
           >
-            <div>
-              {(showMobileSearchBar || window.innerWidth > 768) && (
-                <input
-                  ref={inputRef}
-                  type="text"
-                  placeholder={placeholders[placeholder]}
-                  value={searchInput}
-                  onChange={(e) => setSearchInput(e.target.value)}
-                />
-              )}
-            </div>
-             <div className="searchbarIcon">
+            {(showMobileSearchBar || window.innerWidth > 768) && (
+              <input
+                ref={inputRef}
+                type="text"
+                placeholder="Search for Services and More"
+                value={searchInput}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setSearchInput(value);
+
+                  if (value.trim().length > 1) {
+                    fetchDynamicSuggestions(value);
+                  } else {
+                    setShowSuggestions(false);
+                  }
+
+                  const localHistory =
+                    JSON.parse(localStorage.getItem("searchHistory")) || [];
+                  const matchingCategories = CATEGORIES.filter((cat) =>
+                    cat.toLowerCase().includes(value.toLowerCase())
+                  );
+
+                  const matchingHistory = localHistory.filter((term) =>
+                    term.toLowerCase().includes(value.toLowerCase())
+                  );
+
+                  const combinedSuggestions = [
+                    ...new Set([...matchingCategories, ...matchingHistory]),
+                  ].slice(0, 5);
+                  setSuggestions(combinedSuggestions);
+                  setShowSuggestions(true);
+                }}
+                onFocus={handleInputFocus}
+                onKeyDown={handleSearch}
+              />
+            )}
+            <div className="searchbarIcon">
               <FaSearch className="search-icon" onClick={handleSearchicon} />
             </div>
           </div>
+
+          {showSuggestions && (
+            <div className="suggestions-dropdown">
+              {suggestions.length > 0 ? (
+                suggestions.map((suggestion, index) => (
+                  <div
+                    key={index}
+                    className="suggestion-item"
+                    onClick={() => {
+                      setSearchInput(suggestion);
+                      inputRef.current.focus();
+                      setShowSuggestions(false);
+                    }}
+                  >
+                    {suggestion}
+                  </div>
+                ))
+              ) : (
+                <div className="suggestion-item no-results">
+                  No results found
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Nav Icons */}
           <div className="nav-icons">
@@ -309,7 +493,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
               </div>
 
               {showProfileDropdown && (
-                <div className="dropdown-menu profile-menu">
+                <div className="vendor-dropdown-menu profile-menu">
                   {!userFirstName ? (
                     <>
                       <h4 className="login-h4">Welcome</h4>
@@ -414,7 +598,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
               </div>
 
               {showVendorDropdown && (
-                <div className="dropdown-menu profile-menu">
+                <div className="vendor-dropdown-menu profile-menu">
                   <h4 className="login-h4">Welcome Vendor</h4>
                   <p className="login-p">
                     Access your vendor tools and profile

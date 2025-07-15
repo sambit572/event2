@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./UserSideBar.css";
 import { FaEdit, FaCamera, FaUpload, FaTrash } from "react-icons/fa";
+
 import axios from "axios";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -313,8 +314,8 @@ function UserSideBar({ isOpen, setShowPasswordModal }) {
           </div>
         )}
 
-        <ul className="custom-list-decor">
-          <li className="typography custom-font">
+        <ul className="custom-list-decor ">
+          <li className="typography custom-font ">
             {editMode ? (
               <input
                 type="text"

@@ -21,7 +21,7 @@
   width: 130px;
   border-radius: 12px;
   border-left: 6px solid #007bff; /* Indigo highlight */
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: 10px;
@@ -32,7 +32,7 @@
   display: flex;
   width: 280px;
   height: 600px;
-  z-index: 1000;
+  z-index: 0;
 }
 .rating-option {
   margin: 8px 0;
@@ -266,7 +266,6 @@ input[type="range"].thumb-right {
   box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
   transform: scale(1.03);
 }
-
 
 @media screen and (max-width: 1024px) {
   .filterBox {

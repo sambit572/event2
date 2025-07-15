@@ -11,6 +11,7 @@ import RatingDetails from "../../components/customer/ServiceDetails/RatingDetail
 import SimilarProductCard from "../../components/customer/ServiceDetails/PeopleAlsoBooked.jsx";
 import DJServiceCard from "../../components/customer/ServiceDetails/ServiceCard.jsx";
 import ReviewList from "../../components/customer/ServiceDetails/ReviewList";
+import ReviewForm from "../../components/customer/ServiceDetails/ReviewForm.jsx";
 
 const Service = () => {
   const { serviceId } = useParams();
@@ -26,6 +27,9 @@ const Service = () => {
   const mediaList = service.img.map((src) => ({ type: "image", src }));
   const [selectMedia, setSelectMedia] = useState(mediaList[0]);
   const [isWishlisted, setIsWishlisted] = useState(false);
+
+  // ✅ For syncing new review from ReviewForm to ReviewList
+  const [latestReview, setLatestReview] = useState(null);
 
   const handleClick = () => {
     setIsWishlisted(!isWishlisted);
@@ -78,7 +82,7 @@ const Service = () => {
 
         {/* Right Section */}
         <div className="right-scrollable">
-          {/* Dynamic Service Info (replace DJServiceCard with actual content or pass props) */}
+          {/* Dynamic Service Info */}
           <DJServiceCard service={service} />
 
           <div className="why-choose">
@@ -89,13 +93,31 @@ const Service = () => {
               <li>Experience With All Cultures & Traditions</li>
               <li>Custom Packages & Friendly Support</li>
             </ul>
-          </div>
+          </div> 
+
+          
 
           <div className="reviews">
             <h3>DJ Ratings & Reviews</h3>
             <RatingDetails />
             <hr />
-            <ReviewList />
+
+            {/* ✅ Update latestReview on submission */}
+             <h4 style={{ marginTop: "30px", fontWeight: "bold" }}>
+              Write a Review
+            </h4>
+            <ReviewForm onNewReview={(review) => setLatestReview(review)} />
+
+             {/* ✅ Pass latestReview to ReviewList */}
+            <ReviewList newReview={latestReview} />
+
+             
+
+
+            
+
+           
+           
           </div>
         </div>
       </div>

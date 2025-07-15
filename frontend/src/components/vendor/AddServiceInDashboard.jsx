@@ -1,21 +1,12 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import "./VendorService.css";
-import StepProgress from "./StepProgress";
-import Button from "../../components/vendor/register/VendorButton";
-import axios from "axios";
+import "../../pages/vendor/VendorService.css";
 import Spinner from "./../../components/common/Spinner";
 
-function VendorService({ currentStep }) {
-  const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
+import axios from "axios";
 
-  const steps = [
-    { label: "Registration", subLabel: "Step 1", icon: "/verify.png" },
-    { label: "Service Details", subLabel: "Step 2", icon: "/service.png" },
-    { label: "Payment", subLabel: "Step 3", icon: "/payment.png" },
-    { label: "Legal Consents", subLabel: "Step 4", icon: "/legal.png" },
-  ];
+function AddServiceInDashboard() {
+  const navigate = useNavigate();
 
   // All state variables
   const [categorySearchTerm, setCategorySearchTerm] = useState("");
@@ -34,6 +25,7 @@ function VendorService({ currentStep }) {
   const [minutes, setMinutes] = useState("");
   const [selectedDropdownValue, setSelectedDropdownValue] = useState("");
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fileInputRef = useRef(null);
 
@@ -76,7 +68,7 @@ function VendorService({ currentStep }) {
         "video/flv",
         "video/webm",
       ];
-      const max = 50 * 1024 * 1024;
+      const max = 5 * 1024 * 1024;
 
       for (let f of newFiles) {
         if (!valid.includes(f.type)) return alert("JPEG/PNG/GIF only");
@@ -113,17 +105,17 @@ function VendorService({ currentStep }) {
     }
   };
 
-  const handleBack = () => {
-    navigate("/vendor/register");
+  const handleCancel = () => {
+    navigate("/dashboard");
   };
 
-  const handleNext = async () => {
+  const handleAdd = async () => {
+    console.log("Add button clicked");
     setIsLoading(true);
-    console.log("next button clicked");
-
     if (!validateForm()) {
       setIsLoading(false);
       console.log("form is not validated wrong");
+
       return;
     }
 
@@ -157,14 +149,14 @@ function VendorService({ currentStep }) {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-          withCredentials:true,
-        },
-
+          withCredentials: true,
+        }
       );
 
       console.log(response);
 
-      navigate("/vendor/payment-info");
+      alert("service added successfully");
+      navigate("/dashboard");
     } catch (error) {
       console.error("Error submitting service:", error);
       alert("Failed to submit service. Please try again.");
@@ -262,9 +254,8 @@ function VendorService({ currentStep }) {
 
   return (
     <>
-      <StepProgress currentStep={1} />
-      {isLoading && <Spinner />}
       <div className="form-container">
+        {isLoading && <Spinner />}
         <div className="form-wrapper">
           {/* Left Side: Form Column */}
           <div className="form-column">
@@ -583,8 +574,19 @@ function VendorService({ currentStep }) {
             marginTop: "20px",
           }}
         >
-          <div style={{ width: "100%", maxWidth: "750px" }}>
-            <Button onBack={handleBack} onNext={handleNext} />
+          <div className="flex flex-row gap-4 ml-5">
+            <button
+              className="bg-[#001f3f] font-semibold hover:bg-blue-600 ease-in-out"
+              onClick={handleAdd}
+            >
+              Add
+            </button>
+            <button
+              className="bg-[#001f3f] font-semibold hover:bg-red-600 ease-in-out"
+              onClick={handleCancel}
+            >
+              Cancel
+            </button>
           </div>
         </div>
       </div>
@@ -592,4 +594,4 @@ function VendorService({ currentStep }) {
   );
 }
 
-export default VendorService;
+export default AddServiceInDashboard;

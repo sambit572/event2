@@ -120,35 +120,38 @@ const registerVendor = async (req, res) => {
     return res.status(500).json(new ApiError(500, "Internal server error"));
   }
 };
-const updateVendor = async (req, res, next) => {
+
+export const updateVendor = async (req, res) => {
   try {
     const { id } = req.params;
-    const updateData = req.body;
+    const updateData = { ...req.body };
     const file = req.file;
 
+    // Never allow password updates through this route
     delete updateData.password;
     delete updateData.confirmPassword;
 
     const vendor = await Vendor.findById(id);
     if (!vendor) {
-      return next(new ApiError(404, "Vendor not found for update."));
+      return res
+        .status(404)
+        .json(new ApiError(404, "Vendor not found for update."));
     }
 
-    // ✅ CASE 1: REMOVE PROFILE PICTURE if requested
+    // Handle profile picture removal
     if (updateData.removeProfilePicture === "true") {
       if (
         vendor.profilePicture &&
         vendor.profilePicture.includes("cloudinary")
       ) {
         const publicId = vendor.profilePicture.split("/").pop().split(".")[0];
-        await uploadOnCloudinary(null, publicId, true); // Custom delete support
+        await uploadOnCloudinary(null, publicId, true); // Custom delete method
       }
       updateData.profilePicture = "";
     }
 
-    // ✅ CASE 2: UPLOAD NEW IMAGE AND REPLACE OLD
+    // Handle profile picture replacement
     if (file) {
-      // Delete old image from Cloudinary (if exists)
       if (
         vendor.profilePicture &&
         vendor.profilePicture.includes("cloudinary")
@@ -159,12 +162,16 @@ const updateVendor = async (req, res, next) => {
 
       const cloudinaryResult = await uploadOnCloudinary(file.path);
       if (!cloudinaryResult?.url) {
-        return next(new ApiError(500, "Failed to upload profile image."));
+        return res
+          .status(500)
+          .json(new ApiError(500, "Failed to upload new profile picture."));
       }
+
       updateData.profilePicture = cloudinaryResult.url;
     }
 
-    // ✅ UPDATE the vendor
+    // 🚫 No bank update logic here
+
     const updatedVendor = await Vendor.findByIdAndUpdate(id, updateData, {
       new: true,
       runValidators: true,
@@ -178,39 +185,42 @@ const updateVendor = async (req, res, next) => {
   } catch (error) {
     console.error("Error updating vendor:", error);
 
-    if (req.file && req.file.path) {
+    // Clean up uploaded file if an error occurs
+    if (req.file?.path) {
       try {
         await fs.unlink(req.file.path);
       } catch (unlinkError) {
-        console.error("Error deleting uploaded file:", unlinkError);
+        console.error("Failed to delete uploaded file:", unlinkError);
       }
     }
 
+    // Handle validation errors
     if (error.name === "ValidationError") {
-      const errorMessages = Object.values(error.errors).map(
-        (err) => err.message
-      );
-      return next(
-        new ApiError(
-          400,
-          `Validation failed during update: ${errorMessages.join(", ")}`
-        )
-      );
+      const messages = Object.values(error.errors).map((err) => err.message);
+      return res
+        .status(400)
+        .json(
+          new ApiError(
+            400,
+            `Validation failed during update: ${messages.join(", ")}`
+          )
+        );
     }
 
+    // Handle duplicate email or phone
     if (error.code === 11000) {
       const field = Object.keys(error.keyValue)[0];
-      return next(
-        new ApiError(409, `Another vendor already exists with this ${field}.`)
-      );
+      return res
+        .status(409)
+        .json(
+          new ApiError(409, `Another vendor already exists with this ${field}.`)
+        );
     }
 
-    next(
-      new ApiError(
-        500,
-        "An internal server error occurred during vendor update."
-      )
-    );
+    // Generic internal server error
+    return res
+      .status(500)
+      .json(new ApiError(500, "Internal server error during vendor update."));
   }
 };
 
@@ -419,6 +429,57 @@ const getVendorProfile = async (req, res) => {
   }
 };
 
+const verifyConfirmPassword = async (req, res, next) => {
+  try {
+    const { password } = req.body;
+    const vendor = await Vendor.findById(req.vendor._id); // check this line!
+
+    if (!vendor) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Vendor not found" });
+    }
+
+    const isMatch = await bcrypt.compare(password, vendor.password);
+    if (isMatch) {
+      return res.json({ success: true });
+    } else {
+      return res
+        .status(401)
+        .json({ success: false, message: "Incorrect password" });
+    }
+  } catch (error) {
+    console.error("❌ Backend error:", error);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+// const updateTheBankDetails = async (req, res, next) => {
+//   try {
+//     const { password, bankDetails } = req.body;
+
+//     const vendor = await Vendor.findById(req.vendor._id);
+//     if (!vendor) {
+//       return res
+//         .status(404)
+//         .json({ success: false, message: "Vendor not found" });
+//     }
+//   if (!isMatch) {
+//       return res.status(401).json({ success: false, message: 'Incorrect password' });
+//     }
+
+//     vendor.bankDetails = bankDetails;
+//     await vendor.save();
+
+//     return res.json({
+//       success: true,
+//       message: "Bank details updated successfully",
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
 const updateVendorProfilePicture = async (req, res, next) => {
   try {
     const id = req.vendor._id; // 👈 Comes from JWT middleware
@@ -466,10 +527,101 @@ const updateVendorProfilePicture = async (req, res, next) => {
     next(new ApiError(500, "Internal server error during profile update."));
   }
 };
+// ✅  Get Vendor Search Suggestions
+export const getSearchSuggestions = async (req, res) => {
+  try {
+    const { query } = req.query;
+
+    if (!query || query.trim().length < 1) {
+      return res
+        .status(400)
+        .json(new ApiError(400, "Search query is required"));
+    }
+
+    const searchTerm = query.trim().toLowerCase();
+
+    const matches = await Service.aggregate([
+      {
+        $match: {
+          $or: [
+            { serviceName: { $regex: searchTerm, $options: "i" } },
+            { serviceCategory: { $regex: searchTerm, $options: "i" } },
+            { locationOffered: { $regex: searchTerm, $options: "i" } },
+          ],
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          serviceName: 1,
+          serviceCategory: 1,
+          locationOffered: 1,
+        },
+      },
+      {
+        $limit: 15,
+      },
+    ]);
+
+    const serviceNames = new Set();
+    const categories = new Set();
+    const locations = new Set();
+
+    for (const match of matches) {
+      if (
+        match.serviceName &&
+        match.serviceName.toLowerCase().includes(searchTerm)
+      ) {
+        serviceNames.add(match.serviceName);
+      }
+
+      if (
+        match.serviceCategory &&
+        match.serviceCategory.toLowerCase().includes(searchTerm)
+      ) {
+        categories.add(match.serviceCategory);
+      }
+
+      if (
+        match.locationOffered &&
+        match.locationOffered.toLowerCase().includes(searchTerm)
+      ) {
+        locations.add(match.locationOffered);
+      }
+    }
+
+    const suggestions = [];
+
+    [...serviceNames].forEach((label) =>
+      suggestions.push({ label, type: "service" })
+    );
+    [...categories].forEach((label) =>
+      suggestions.push({ label, type: "category" })
+    );
+    [...locations].forEach((label) =>
+      suggestions.push({ label, type: "location" })
+    );
+
+    if (suggestions.length === 0) {
+      return res.status(200).json(
+        new ApiResponse(200, [], "No suggestions found for this search.")
+      );
+    }
+
+    return res.status(200).json(
+      new ApiResponse(200, suggestions, "Search suggestions fetched")
+    );
+  } catch (error) {
+    console.error("Suggestion error:", error.message);
+    return res
+      .status(500)
+      .json(new ApiError(500, "Internal Server Error"));
+  }
+};
+
 
 export {
   registerVendor,
-  updateVendor,
   loginVendor,
   vendorLogout,
   sendVendorResetLink,
@@ -479,4 +631,6 @@ export {
   checkVendorEmailStatus,
   getVendorProfile,
   updateVendorProfilePicture,
+  verifyConfirmPassword,
+  // updateTheBankDetails,
 };

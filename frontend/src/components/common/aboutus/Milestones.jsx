@@ -39,10 +39,10 @@ const Milestones = () => {
       ([entry]) => {
         if (entry.isIntersecting && !hasAnimated) {
           setHasAnimated(true);
-          animateCount(3000, setServices);
-          animateCount(5, setYears);
-          animateCount(99, setClients);
-          animateCount(99, setSatisfaction);
+          animateCount(100, setServices);
+          animateCount(1, setYears);
+          animateCount(50, setClients);
+          animateCount(50, setSatisfaction);
         }
       },
       { threshold: 0.5 }

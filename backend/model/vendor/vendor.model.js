@@ -60,6 +60,10 @@ const vendorSchema = new mongoose.Schema(
     resetPasswordTokenExpires: {
       type: Date,
     },
+    active: {
+      type: Boolean,
+      default: true, // or false, up to you
+    },
   },
   {
     timestamps: true,
