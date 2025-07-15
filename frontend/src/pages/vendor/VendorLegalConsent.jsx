@@ -19,10 +19,10 @@ export default function VendorLegalConsent() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [consents, setConsents] = React.useState({
-    iAgreeTC: true,
-    iAgreeCP: true,
-    iAgreeKYCVerifyUsingPanAndAdhar: true,
+  const [consents, setConsents] = useState({
+    iAgreeTC: false,
+    iAgreeCP: false,
+    iAgreeKYCVerifyUsingPanAndAdhar: false,
   });
 
   const currentStepIndex = location.state?.currentStep || 3;
