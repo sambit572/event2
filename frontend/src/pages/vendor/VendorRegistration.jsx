@@ -99,6 +99,23 @@ export default function VendorRegister() {
       dispatch(setVendor(response.data.data));
       console.log("Vendor data set in Redux:", response.data.data);
 
+      const vendor = response.data.data;
+
+      const fullName = vendor.fullName || "";
+      const firstName = fullName.split(" ")[0];
+      const firstLetter = firstName?.charAt(0).toUpperCase() || "";
+      const profilePic = vendor.profilePic || "";
+
+      localStorage.setItem("VendorCurrentlyLoggedIn", "true");
+      localStorage.setItem("VendorFullName", fullName);
+      localStorage.setItem("VendorFirstName", firstName);
+      localStorage.setItem("VendorInitial", firstLetter);
+      if (profilePic) {
+        localStorage.setItem("VendorProfilePic", profilePic);
+      }
+
+      window.dispatchEvent(new Event("userLoggedIn"));
+
       navigate("/category/VendorService", {
         state: {
           currentStep: 1,
