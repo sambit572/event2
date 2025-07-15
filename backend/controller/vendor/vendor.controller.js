@@ -527,6 +527,98 @@ const updateVendorProfilePicture = async (req, res, next) => {
     next(new ApiError(500, "Internal server error during profile update."));
   }
 };
+// ✅  Get Vendor Search Suggestions
+export const getSearchSuggestions = async (req, res) => {
+  try {
+    const { query } = req.query;
+
+    if (!query || query.trim().length < 1) {
+      return res
+        .status(400)
+        .json(new ApiError(400, "Search query is required"));
+    }
+
+    const searchTerm = query.trim().toLowerCase();
+
+    const matches = await Service.aggregate([
+      {
+        $match: {
+          $or: [
+            { serviceName: { $regex: searchTerm, $options: "i" } },
+            { serviceCategory: { $regex: searchTerm, $options: "i" } },
+            { locationOffered: { $regex: searchTerm, $options: "i" } },
+          ],
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          serviceName: 1,
+          serviceCategory: 1,
+          locationOffered: 1,
+        },
+      },
+      {
+        $limit: 15,
+      },
+    ]);
+
+    const serviceNames = new Set();
+    const categories = new Set();
+    const locations = new Set();
+
+    for (const match of matches) {
+      if (
+        match.serviceName &&
+        match.serviceName.toLowerCase().includes(searchTerm)
+      ) {
+        serviceNames.add(match.serviceName);
+      }
+
+      if (
+        match.serviceCategory &&
+        match.serviceCategory.toLowerCase().includes(searchTerm)
+      ) {
+        categories.add(match.serviceCategory);
+      }
+
+      if (
+        match.locationOffered &&
+        match.locationOffered.toLowerCase().includes(searchTerm)
+      ) {
+        locations.add(match.locationOffered);
+      }
+    }
+
+    const suggestions = [];
+
+    [...serviceNames].forEach((label) =>
+      suggestions.push({ label, type: "service" })
+    );
+    [...categories].forEach((label) =>
+      suggestions.push({ label, type: "category" })
+    );
+    [...locations].forEach((label) =>
+      suggestions.push({ label, type: "location" })
+    );
+
+    if (suggestions.length === 0) {
+      return res.status(200).json(
+        new ApiResponse(200, [], "No suggestions found for this search.")
+      );
+    }
+
+    return res.status(200).json(
+      new ApiResponse(200, suggestions, "Search suggestions fetched")
+    );
+  } catch (error) {
+    console.error("Suggestion error:", error.message);
+    return res
+      .status(500)
+      .json(new ApiError(500, "Internal Server Error"));
+  }
+};
+
 
 export {
   registerVendor,

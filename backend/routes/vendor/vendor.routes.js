@@ -22,6 +22,7 @@ import {
   getVendorProfile,
   updateVendorProfilePicture,
   verifyConfirmPassword,
+  getSearchSuggestions, 
   // updateTheBankDetails,
 } from "../../controller/vendor/vendor.controller.js";
 
@@ -32,8 +33,6 @@ import {
   getBankDetailsByVendor,
   updateBankDetails,
 } from "../../controller/vendor/bankdetails.controller.js";
-
-// Legal Consent
 
 // Legal Consent
 import {
@@ -128,6 +127,7 @@ vendor_router.post("/verify-password", verifyVendorJwt, verifyConfirmPassword);
 // router.post("/update-bank-details", verifyVendorJwt, updateTheBankDetails);
 // services ROUTES
 
+vendor_router.get("/search-suggestions", getSearchSuggestions);// ---  DYNAMIC SEARCH SUGGESTIONS ROUTE --- //
 vendor_router.get("/my-services", verifyVendorJwt, getMyServices);
 
 export { vendor_router };
