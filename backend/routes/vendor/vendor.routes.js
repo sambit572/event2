@@ -89,6 +89,7 @@ vendor_router
 vendor_router.post(
   "/bank-details",
   upload.single("panCardPic"),
+  verifyVendorJwt,
   createBankDetails
 );
 vendor_router.get(
