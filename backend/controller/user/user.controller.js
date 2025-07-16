@@ -1,3 +1,4 @@
+import { OAuth2Client } from "google-auth-library";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 import bcrypt from "bcryptjs";
@@ -11,12 +12,13 @@ import {
   deleteFromCloudinary,
 } from "../../utilities/cloudinary.js";
 import { sendEmail } from "../../utilities/sendEmail.js";
-import { validateEmailDomain } from "../../utilities/verifyDNS.js";
+
 const option = {
   httpOnly: true,
   secure: false,
   sameSite: "Lax",
 };
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
@@ -26,7 +28,7 @@ const generateAccessAndRefreshTokens = async (userId) => {
 
     user.refreshToken = refreshToken;
     await user.save({ validateBeforeSave: false });
-
+    console.log(`generateAccessAndRefreshTokens generates access token : ${accessToken}`)
     return { accessToken, refreshToken };
   } catch (error) {
     console.error(`Error generating tokens: ${error}`);
@@ -39,7 +41,8 @@ const generateAccessAndRefreshTokens = async (userId) => {
 const registerUser = async (req, res) => {
   try {
     const { fullName, email, phoneNo, password } = req.body;
-
+    console.log("Reaching Register user in backend");
+    
     if (!fullName || !email || !password || !phoneNo) {
       return res.status(400).json(new ApiError(400, "All fields are required"));
     }
@@ -131,11 +134,6 @@ const loginUser = async (req, res) => {
       return res.status(400).json(new ApiError(400, "Invalid email format"));
     }
 
-    const isValidDns = await validateEmailDomain(email);
-    if (!isValidDns) {
-      return res.status(400).json(new ApiError(400, "Invalid email domain"));
-    }
-
     if (phoneNo && !isValidPhoneNumber(phoneNo, "IN")) {
       return res.status(400).json(new ApiError(400, "Invalid phone number"));
     }
@@ -199,6 +197,59 @@ const logoutUser = async (req, res) => {
     return res.status(500).json(new ApiError(500, "Internal Server Error"));
   }
 };
+
+// ---------- GOOGLE OAUTH CONTROLLER ----------
+const googleAuth = async (req, res) => {
+  try {
+    const { token } = req.body;
+
+    // 1. verify token with Google
+    const ticket = await googleClient.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const { email, name, picture } = ticket.getPayload();
+
+    // 2. find or create user
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = await User.create({
+        fullName: name,
+        email,
+        profilePhoto: picture,
+        password: crypto.randomBytes(16).toString("hex"), // placeholder password
+      });
+    }
+
+    // 3. issue tokens
+    const { accessToken, refreshToken } =
+      await generateAccessAndRefreshTokens(user._id);
+
+    const safeUser = await User.findById(user._id).select(
+      "-password -refreshToken"
+    );
+
+    // 4. respond
+    return res
+      .status(200)
+      .cookie("accessToken", accessToken, option)
+      .cookie("refreshToken", refreshToken, option)
+      .json(
+        new ApiResponse(
+          200,
+          { user: safeUser, accessToken, refreshToken },
+          "Google login success"
+        )
+      );
+  } catch (error) {
+    console.error("Google Auth Error:", error);
+    return res
+      .status(500)
+      .json(new ApiError(500, "Google login failed"));
+  }
+};
+
+
 
 // ------------------ PROFILE CONTROLLERS ------------------
 
@@ -500,4 +551,5 @@ export {
   removeProfilePhoto,
   getUserEmail,
   getUserProfile,
+  googleAuth,
 };
