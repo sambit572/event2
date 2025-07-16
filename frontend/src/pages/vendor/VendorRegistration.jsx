@@ -167,7 +167,7 @@ export default function VendorRegister() {
   }, [user, hasAutofilled]);
 
   return (
-    <>
+    <div>
       {showAutofillModal && (
         <VendorAutoFillConfirmModal
           onAccept={handleAutofill}
@@ -300,6 +300,6 @@ export default function VendorRegister() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

@@ -11,6 +11,7 @@ import "./LoginRegister.css";
 import ForgotPass from "../../pages/customer/ForgotPass.jsx";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/UserSlice.js";
+
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const Login = ({ onClose, onSwitchToRegister }) => {
@@ -26,6 +27,12 @@ const Login = ({ onClose, onSwitchToRegister }) => {
     password: "",
   });
   const [errorMsg, setErrorMsg] = useState("");
+
+  useEffect(() => {
+    if (showForgotModal) {
+      setStep("form");
+    }
+  }, [showForgotModal]);
 
   useEffect(() => {
     if (step === "success") {
@@ -160,7 +167,10 @@ const Login = ({ onClose, onSwitchToRegister }) => {
         <div className="Login-forget-password-link mb-2">
           <span
             style={{ cursor: "pointer", color: "#007bff" }}
-            onClick={() => setShowForgotModal(true)}
+            onClick={() => {
+              setShowForgotModal(true);
+              setStep("form");
+            }}
           >
             Forgot your password?
           </span>
@@ -182,8 +192,15 @@ const Login = ({ onClose, onSwitchToRegister }) => {
   };
 
   return (
-    <div className="login-wrapper" onClick={onClose}>
-      <div className="login-modal" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="login-wrapper"
+      onClick={(e) => {
+        if (e.target.classList.contains("login-wrapper")) {
+          onClose?.();
+        }
+      }}
+    >
+      <div className="login-modal">
         {onClose && (
           <button className="modal-close" onClick={onClose}>
             ×
@@ -193,6 +210,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
         <h2 className="login-title">Log In</h2>
         {renderStep()}
       </div>
+
       {showForgotModal && (
         <ForgotPass onClose={() => setShowForgotModal(false)} />
       )}
