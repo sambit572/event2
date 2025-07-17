@@ -1,5 +1,4 @@
 import Vendor from "../../model/vendor/vendor.model.js";
-
 import { ApiError } from "../../utilities/ApiError.js";
 import { ApiResponse } from "../../utilities/ApiResponse.js";
 import fs from "fs/promises";
@@ -18,7 +17,11 @@ const cookieOptions = {
   secure: false,
   sameSite: "Lax",
 };
-
+const updateProgress = async (vendorId, step) => {
+  await Vendor.findByIdAndUpdate(vendorId, {
+    registrationProgress: step,
+  });
+};
 const registerVendor = async (req, res) => {
   try {
     const { fullName, email, phoneNumber, password } = req.body;
@@ -76,6 +79,7 @@ const registerVendor = async (req, res) => {
       phoneNumber,
       password,
       profilePicture: profilePictureUrl, // May be empty string
+      registrationProgress: 1,
     });
 
     const { accessToken, refreshToken } = await generateVendorTokens(
@@ -118,6 +122,90 @@ const registerVendor = async (req, res) => {
     }
 
     return res.status(500).json(new ApiError(500, "Internal server error"));
+  }
+};
+
+//  Save Service Details
+// This function is called after the vendor has registered and logged in
+const saveServiceDetails = async (req, res) => {
+  try {
+    const vendorId = req.vendor._id;
+    const { serviceName, serviceCategory, locationOffered } = req.body;
+
+    if (!serviceName || !serviceCategory || !locationOffered) {
+      return res.status(400).json(new ApiError(400, "Missing required fields"));
+    }
+
+    await Service.create({ vendor: vendorId, ...req.body });
+    await updateProgress(vendorId, 2);
+    return res.status(200).json(new ApiResponse(200, null, "Service saved"));
+  } catch (err) {
+    return res.status(500).json(new ApiError(500, err.message));
+  }
+};
+
+// Save Bank Details
+// This function is called after the vendor has added their service details
+const saveBankDetails = async (req, res) => {
+  try {
+    const vendorId = req.vendor._id;
+    const fd = req.body;
+
+    if (!req.file || !fd.accountHolderName || !fd.ifscCode) {
+      return res.status(400).json(new ApiError(400, "All required fields must be filled"));
+    }
+
+    const vendor = await Vendor.findById(vendorId);
+    if (!vendor) return res.status(404).json(new ApiError(404, "Vendor not found"));
+
+    vendor.bankDetails = {
+      accountHolderName: fd.accountHolderName,
+      accountNumber: fd.accountNumber,
+      branchName: fd.branchName,
+      ifscCode: fd.ifscCode,
+      gst: fd.gst,
+      upiId: fd.upiId,
+    };
+
+    const upload = await uploadOnCloudinary(req.file.path);
+    vendor.panCardUrl = upload?.url;
+    await vendor.save();
+    await updateProgress(vendorId, 3);
+
+    return res.status(200).json(new ApiResponse(200, vendor, "Bank details saved"));
+  } catch (err) {
+    return res.status(500).json(new ApiError(500, err.message));
+  }
+};
+
+// Submit Legal Consent
+// This function is called after the vendor has added their bank details
+const submitLegalConsent = async (req, res) => {
+  try {
+    const vendorId = req.vendor._id;
+    const { iAgreeTC, iAgreeCP, iAgreeKYCVerifyUsingPanAndAdhar } = req.body;
+    const file = req.file;
+
+    if (!file) {
+      return res.status(400).json(new ApiError(400, "Signature file required"));
+    }
+
+    const vendor = await Vendor.findById(vendorId);
+    if (!vendor) return res.status(404).json(new ApiError(404, "Vendor not found"));
+
+    const upload = await uploadOnCloudinary(file.path);
+    vendor.legalConsent = {
+      iAgreeTC: iAgreeTC === "true",
+      iAgreeCP: iAgreeCP === "true",
+      iAgreeKYCVerifyUsingPanAndAdhar: iAgreeKYCVerifyUsingPanAndAdhar === "true",
+      signatureUrl: upload?.url,
+    };
+
+    vendor.registrationProgress = 4;
+    await vendor.save();
+    return res.status(200).json(new ApiResponse(200, vendor, "Consent submitted"));
+  } catch (err) {
+    return res.status(500).json(new ApiError(500, err.message));
   }
 };
 
@@ -619,9 +707,45 @@ export const getSearchSuggestions = async (req, res) => {
   }
 };
 
+// dashboard
+export const getVendorDashboard = async (req, res) => {
+  try {
+    const currentStep = req.vendor.registrationStep;
+
+    if (!currentStep || currentStep < 5) {
+      // Vendor hasn't finished registration
+      return res.status(200).json({
+        incomplete: true,
+        redirectTo:
+          currentStep === 1
+            ? "/vendor/service-info"
+            : currentStep === 2
+            ? "/vendor/payment-info"
+            : currentStep === 3
+            ? "/vendor/legal-consent"
+            : "/vendor/thank-you", // step 4 done
+      });
+    }
+
+    // Registration complete, show dashboard
+    return res.status(200).json({
+      incomplete: false,
+      message: `Welcome to your dashboard, ${req.vendor.businessName || req.vendor.name}`,
+      vendor: req.vendor,
+    });
+  } catch (err) {
+    console.error("Dashboard error:", err);
+    return res.status(500).json({ message: "Dashboard loading failed" });
+  }
+};
+
+
 
 export {
   registerVendor,
+  saveServiceDetails,
+  saveBankDetails,
+  submitLegalConsent,
   loginVendor,
   vendorLogout,
   sendVendorResetLink,
@@ -633,4 +757,5 @@ export {
   updateVendorProfilePicture,
   verifyConfirmPassword,
   // updateTheBankDetails,
+  
 };

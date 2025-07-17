@@ -1,12 +1,10 @@
 import express from "express";
 import { upload } from "../../middleware/multer.middleware.js";
+import { verifyVendorRegistrationComplete } from "../../middleware/verifyVendorProgress.js";
 import {
-  createService,
-  deleteService,
-  getMyServices,
-  updateService,
-} from "../../controller/vendor/service.controller.js";
-import { verifyVendorJwt } from "../../middleware/VendorAuth.middleware.js";
+  authenticateVendor,
+  verifyVendorJwt,
+} from "../../middleware/VendorAuth.middleware.js";
 
 // Vendor Core Controllers
 import {
@@ -22,7 +20,8 @@ import {
   getVendorProfile,
   updateVendorProfilePicture,
   verifyConfirmPassword,
-  getSearchSuggestions, 
+  getSearchSuggestions,
+  getVendorDashboard,
   // updateTheBankDetails,
 } from "../../controller/vendor/vendor.controller.js";
 
@@ -41,6 +40,14 @@ import {
   updateLegalConsent,
   deleteLegalConsent,
 } from "../../controller/vendor/legal.controller.js";
+
+// Services
+import {
+  createService,
+  deleteService,
+  getMyServices,
+  updateService,
+} from "../../controller/vendor/service.controller.js";
 
 const vendor_router = express.Router();
 
@@ -76,11 +83,8 @@ vendor_router.post(
   },
   createService
 );
-
 vendor_router.route("/my-services").get(verifyVendorJwt, getMyServices);
-
 vendor_router.route("/update-service/:id").put(verifyVendorJwt, updateService);
-
 vendor_router
   .route("/delete-service/:id")
   .delete(verifyVendorJwt, deleteService);
@@ -98,9 +102,6 @@ vendor_router.get(
   getBankDetailsByVendor
 );
 vendor_router.put("/bank-details/:vendorId", updateBankDetails);
-vendor_router.delete("/bank-details/:vendorId", deleteBankDetails);
-// vendor_router.get("/bank-details/:vendorId", getBankDetailsByVendor);
-
 vendor_router.delete("/bank-details/:vendorId", deleteBankDetails);
 
 // --- LEGAL CONSENT ROUTES --- //
@@ -125,10 +126,16 @@ vendor_router.post(
   updateVendorProfilePicture
 );
 vendor_router.post("/verify-password", verifyVendorJwt, verifyConfirmPassword);
-// router.post("/update-bank-details", verifyVendorJwt, updateTheBankDetails);
-// services ROUTES
 
-vendor_router.get("/search-suggestions", getSearchSuggestions);// ---  DYNAMIC SEARCH SUGGESTIONS ROUTE --- //
-vendor_router.get("/my-services", verifyVendorJwt, getMyServices);
+// --- DYNAMIC SEARCH SUGGESTIONS ROUTE --- //
+vendor_router.get("/search-suggestions", getSearchSuggestions);
+
+// --- DASHBOARD ROUTE --- //
+vendor_router.get(
+  "/dashboard",
+  verifyVendorToken, // existing auth check
+  verifyVendorRegistrationComplete, // <- restrict incomplete vendors
+  getVendorDashboard
+);
 
 export { vendor_router };
