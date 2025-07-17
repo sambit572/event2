@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../utils/firebase.js";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
@@ -13,6 +12,7 @@ import { setVendor } from "../../redux/VendorSlice.js";
 import { FiEyeOff, FiEye } from "react-icons/fi";
 import { BACKEND_URL } from "../../utils/constant.js";
 import { RxCross2 } from "react-icons/rx";
+import VendorForgotPass from "./VendorForgetPass.jsx"; //  NEW
 
 const VendorLogin = () => {
   const dispatch = useDispatch();
@@ -36,8 +36,6 @@ const VendorLogin = () => {
     } else {
       document.body.classList.remove("overflow-hidden");
       document.getElementById("footer")?.classList.remove("hidden");
-
-      // ✅ Navigate to home only if not going to /vendor/register
       if (window.location.pathname !== "/vendor/register") {
         navigate("/");
       }
@@ -121,7 +119,6 @@ const VendorLogin = () => {
         },
         { withCredentials: true }
       );
-      console.log(res.data.data);
       const { vendor } = res.data.data;
       dispatch(setVendor(vendor));
       const fullName = vendor.fullName || "";
@@ -153,83 +150,93 @@ const VendorLogin = () => {
     if (step === "success")
       return <SuccessBlock showSuccessIcon={showSuccessIcon} />;
     if (step === "otp") return <OTPVerification setStep={setStep} />;
-
     return (
-      <form onSubmit={handleLogin} className="space-y-4 w-full relative">
-        <input
-          type="text"
-          name="phoneNo"
-          placeholder="+91 | Phone Number"
-          value={formData.phoneNo}
-          onChange={handleChange}
-          className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-[#001f3f]"
-        />
-        <button
-          type="button"
-          onClick={handleGetOTP}
-          className="w-[340px] ml-1.5 bg-yellow-500 text-[#001f3f] font-semibold py-2 rounded-md transition"
+      <>
+        <form
+          onSubmit={handleLogin}
+          className={`space-y-4 w-full relative ${
+            step === "forgot" ? "opacity-40 pointer-events-none" : ""
+          }`}
         >
-          Send OTP
-        </button>
-
-        <input
-          type="email"
-          name="email"
-          placeholder="Enter email"
-          value={formData.email}
-          onChange={handleChange}
-          className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-[#001f3f]"
-        />
-
-        <div className="relative">
           <input
-            type={showPassword ? "text" : "password"}
-            name="password"
-            placeholder="Enter password"
-            value={formData.password}
+            type="text"
+            name="phoneNo"
+            placeholder="+91 | Phone Number"
+            value={formData.phoneNo}
             onChange={handleChange}
-            minLength={8}
-            className="w-full border border-gray-300 px-4 py-2 pr-10 rounded-md focus:outline-none focus:ring-2 focus:ring-[#001f3f]"
+            className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-[#001f3f]"
           />
-          <span
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-600 cursor-pointer"
+          <button
+            type="button"
+            onClick={handleGetOTP}
+            className="w-[340px] ml-1.5 bg-yellow-500 text-[#001f3f] font-semibold py-2 rounded-md transition"
           >
-            {showPassword ? <FiEyeOff /> : <FiEye />}
-          </span>
-        </div>
+            Send OTP
+          </button>
 
-        <div className="text-right text-sm">
-          <a
-            href="/vendor/forgot-password"
-            className="text-blue-600 hover:underline"
+          <input
+            type="email"
+            name="email"
+            placeholder="Enter email"
+            value={formData.email}
+            onChange={handleChange}
+            className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-[#001f3f]"
+          />
+
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              placeholder="Enter password"
+              value={formData.password}
+              onChange={handleChange}
+              minLength={8}
+              className="w-full border border-gray-300 px-4 py-2 pr-10 rounded-md focus:outline-none focus:ring-2 focus:ring-[#001f3f]"
+            />
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-600 cursor-pointer"
+            >
+              {showPassword ? <FiEyeOff /> : <FiEye />}
+            </span>
+          </div>
+
+          <div className="text-right text-sm">
+            <span
+              onClick={() => setStep("forgot")}
+              className="text-blue-600 hover:underline cursor-pointer"
+            >
+              Forgot Your Password?
+            </span>
+          </div>
+
+          {errorMsg && <p className="text-red-600 text-sm">{errorMsg}</p>}
+
+          <button
+            type="submit"
+            className="w-[340px] ml-1.5 bg-yellow-500 text-[#001f3f] font-semibold py-2 rounded-md hover:bg-yellow-550 transition"
           >
-            Forgot Your Password?
-          </a>
-        </div>
+            Login
+          </button>
 
-        {errorMsg && <p className="text-red-600 text-sm">{errorMsg}</p>}
+          <p className="text-center text-sm text-[#001f3f]">
+            Don’t have an account?{" "}
+            <span
+              onClick={() => {
+                setIsOpen(false);
+                navigate("/vendor/register");
+              }}
+              className="text-blue-600 cursor-pointer hover:underline"
+            >
+              Sign Up
+            </span>
+          </p>
+        </form>
 
-        <button
-          type="submit"
-          className="w-[340px] ml-1.5 bg-yellow-500 text-[#001f3f] font-semibold py-2 rounded-md hover:bg-yellow-550 transition"
-        >
-          Login
-        </button>
-
-        <p className="text-center text-sm text-[#001f3f]">
-          Don’t have an account?{" "}
-          <span
-            onClick={() => {
-              setIsOpen(false);
-              navigate("/vendor/register");
-            }}
-            className="text-blue-600 cursor-pointer hover:underline"
-          >
-            Sign Up
-          </span>
-        </p>
-      </form>
+        {step === "forgot" && (
+          <VendorForgotPass onClose={() => setStep("form")} />
+        )}
+      </>
     );
   };
 

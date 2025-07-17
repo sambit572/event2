@@ -1,9 +1,9 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import "./ResetPassword.css";
+import "./VendorResetPass.css"; 
 
-const ResetPassword = () => {
+const VendorResetPassword = () => {
   const { resetToken } = useParams();
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -14,27 +14,22 @@ const ResetPassword = () => {
     if (confirmPassword === newPassword) {
       try {
         const response = await axios.post(
-          `${
-            import.meta.env.VITE_BACKEND_URL
-          }/user/reset-password/${resetToken}`,
+          `${import.meta.env.VITE_BACKEND_URL}/vendors/reset-password/${resetToken}`,
           { newPassword }
         );
 
-        console.log("✅ Password reset successful:", response.data.message);
-        alert("Password reset successful! You can now log in.");
-        navigate("/login");
+        console.log("✅ Vendor password reset successful:", response.data.message);
+        alert("Password reset successful! Please login.");
+        navigate("/"); 
       } catch (error) {
-        console.error(
-          "❌ Error resetting password:",
-          error.response?.data || error
-        );
+        console.error("❌ Error resetting password:", error.response?.data || error);
         alert(
           error.response?.data?.message ||
             "Error resetting password. Try again."
         );
       }
     } else {
-      alert("your password does not match, please re-enter!!");
+      alert("Your password does not match, please re-enter!");
     }
   };
 
@@ -69,4 +64,4 @@ const ResetPassword = () => {
   );
 };
 
-export default ResetPassword;
+export default VendorResetPassword;
