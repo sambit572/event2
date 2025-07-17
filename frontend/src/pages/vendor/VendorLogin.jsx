@@ -95,6 +95,7 @@ const VendorLogin = () => {
         window.recaptchaVerifier
       );
       window.confirmationResult = confirmationResult;
+      console.log("OTP sent successfully : ",confirmationResult)
       setStep("otp");
     } catch (err) {
       console.error("OTP error:", err);
@@ -114,7 +115,7 @@ const VendorLogin = () => {
       const res = await axios.post(
         `${BACKEND_URL}/vendors/login`,
         {
-          email: formData.email,
+          email: formData.email.toLowerCase(),
           phoneNo: formData.phoneNo,
           password: formData.password,
         },

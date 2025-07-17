@@ -4,7 +4,9 @@ import {
   createService,
   deleteService,
   getMyServices,
+  updateAvailability,
   updateService,
+  updateServiceImageFirst,
 } from "../../controller/vendor/service.controller.js";
 import { verifyVendorJwt } from "../../middleware/VendorAuth.middleware.js";
 
@@ -84,6 +86,17 @@ vendor_router.route("/update-service/:id").put(verifyVendorJwt, updateService);
 vendor_router
   .route("/delete-service/:id")
   .delete(verifyVendorJwt, deleteService);
+
+vendor_router
+  .route("/update-availability/:id")
+  .patch(verifyVendorJwt, updateAvailability);
+
+
+vendor_router.post(
+  "/upload-new-service-image/:id",
+  upload.array("images", 5),
+  updateServiceImageFirst
+);
 
 // --- BANK DETAILS ROUTES --- //
 vendor_router.post(
