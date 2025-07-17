@@ -1,35 +1,30 @@
+/* ✅ Backdrop that darkens the screen */
 .login-wrapper {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%; /* better on mobile */
-  background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(12px);
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4); /* transparent black */
   display: flex;
   justify-content: center;
-  /* align-items: center; */
-
-  z-index: 9999; /* Ensure it's above everything */
-  overflow-y: auto; /* Allow scrolling if content is too tall */
-  padding: 20px;
-  box-sizing: border-box;
+  align-items: center;
+  z-index: 9999;
 }
 
+/* ✅ Popup modal box */
 .login-modal {
-  position: relative;
-  background-color: #e5e5de;
-  padding: 30px 25px;
-  border-radius: 12px;
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  max-height: 90vh;
   width: 100%;
-  max-width: 500px;
-  max-height: 500px; /* Prevent modal from being too tall */
+  max-width: 400px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
   overflow-y: auto;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  animation: modalSlideIn 0.3s ease-out;
-  scrollbar-width: none;
+  position: relative;
 }
+
 
 @keyframes modalSlideIn {
   from {
@@ -44,7 +39,7 @@
 /* Close button */
 .modal-close {
   position: absolute;
-  top: 10px;
+  top: 20px;
   right: 15px;
   background: none;
   border: none;
@@ -59,10 +54,36 @@
   color: #000;
 }
 
+.success-image-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.success-image {
+  width: 80%;
+  max-width: 200px;
+  object-fit: contain;
+  animation: fadeIn 1s ease-in-out;
+}
+.success-welcome {
+  font-size: 1.25rem;
+  text-align: center;
+  color: #001f3f;
+  margin-top: 10px;
+}
+
+.success-thankyou {
+  font-weight: bold;
+  margin-top: 15px;
+}
+
 /* Titles and Labels */
 .login-title {
   text-align: center;
   font-size: 1.8rem;
+  margin-top: 20px;
   margin-bottom: 1.5rem;
   color: #333;
 }
@@ -70,33 +91,33 @@
 /* Inputs */
 .login-input {
   width: 100%;
-  padding: 0.35rem 1rem;
+  padding: 8px;
   margin-bottom: 1rem;
-  border: 1px solid #ddd;
+  border: 1px solid #001f3f;
   border-radius: 8px;
   font-size: 1rem;
   transition: border-color 0.2s;
 }
 
 .login-input:focus {
-  border-color: #f3c12d;
+  border-color: #001f3f;
   outline: none;
 }
 
 /* Password input component should match above */
-.password-input {
+/* .password-input {
   width: 100%;
   margin-bottom: 1rem;
   margin-top: 0px;
   padding: 8px;
-}
+} */
 
 /* Register button */
 .otp-button {
   width: 100%;
   /* padding: 0.8rem 1rem; */
-  background-color: #f3c12d;
-  color: rgb(0, 0, 0);
+  background-color: #0073ff;
+  color: white;
   border: none;
   border-radius: 8px;
   font-size: 1rem;
@@ -107,7 +128,7 @@
 }
 
 .otp-button:hover {
-  background-color: #e0ac1d;
+  background-color: #001f3f;
 }
 
 /* Signup redirect */
@@ -119,16 +140,14 @@
 }
 
 .login-link {
-  color: #0073ff;
+  color: #0371f8;
   text-decoration: none;
   font-weight: bold;
   cursor: pointer;
   transition: color 0.2s;
 }
 
-.login-link:hover {
-  color: #dca902;
-}
+
 
 /* Error message */
 .error {

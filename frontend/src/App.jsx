@@ -61,6 +61,8 @@ const App = () => {
   // Modal states
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [showVendorLoginModal, setShowVendorLoginModal] = useState(false);
+
   // Hide Footer on specific pages
   const pagesWithoutFooter = [
     "/vendor/thank-you",
@@ -79,10 +81,15 @@ const App = () => {
     setShowLoginModal(false);
     document.body.classList.add("modal-open");
   };
+  const handleOpenVendorLogin = () => {
+  setShowVendorLoginModal(true);
+  document.body.classList.add("modal-open");
+};
 
   const handleCloseModals = () => {
     setShowLoginModal(false);
     setShowRegisterModal(false);
+    setShowVendorLoginModal(false);
     // Re-enable body scroll
     document.body.classList.remove("modal-open");
   };
@@ -138,6 +145,7 @@ const App = () => {
         <Navbar
           onOpenLogin={handleOpenLogin}
           onOpenRegister={handleOpenRegister}
+          onOpenVendorLogin={handleOpenVendorLogin}
         />
       )}
 

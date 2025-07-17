@@ -27,3 +27,15 @@
     @apply flex items-center;
   }
 }
+
+@keyframes toast-wiggle {
+  0% { transform: translateY(0); }
+  25% { transform: translateY(-1px); }
+  50% { transform: translateY(1px); }
+  75% { transform: translateY(-1px); }
+  100% { transform: translateY(0); }
+}
+
+.animate-toast-wiggle {
+  animation: toast-wiggle 0.4s ease-in-out;
+}

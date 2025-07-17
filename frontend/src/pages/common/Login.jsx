@@ -5,6 +5,7 @@ import { auth } from "../../utils/firebase.js";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import OTPVerification from "./OTPVerification.jsx";
 import PasswordInput from "../../utils/PasswordInput.jsx";
+import { FiEyeOff, FiEye } from "react-icons/fi";
 import SuccessBlock from "./SuccessBlock.jsx";
 import axios from "axios";
 import "./LoginRegister.css";
@@ -19,6 +20,8 @@ const Login = ({ onClose, onSwitchToRegister }) => {
   const [step, setStep] = useState("form"); // 'form', 'otp', 'success'
   const [showSuccessIcon, setShowSuccessIcon] = useState(false);
   const [showForgotModal, setShowForgotModal] = useState(false);
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const [formData, setFormData] = useState({
     phoneNo: "",
@@ -129,7 +132,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
     return (
       <>
         <input
-          type="text"
+          type="number"
           className="login-input"
           name="phoneNo"
           placeholder="+91 | Enter your phone number"
@@ -149,15 +152,34 @@ const Login = ({ onClose, onSwitchToRegister }) => {
           onChange={handleChange}
         />
 
-        <PasswordInput
+        {/* <PasswordInput
           name="password"
           placeholder="Enter password"
           value={formData.password}
           onChange={handleChange}
           minLength={8}
-        />
+        /> */}
 
-        <div className="Login-forget-password-link mb-2">
+        <div className="relative w-full mb-4">
+          <input
+            type={showPassword ? "text" : "password"}
+            name="password"
+            placeholder="Enter password"
+            value={formData.password}
+            onChange={handleChange}
+            minLength={8}
+            required
+            className="w-full px-2 pr-10 py-2 border border-[#001f3f] rounded-md focus:outline-none"
+          />
+          <span
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
+          >
+            {showPassword ? <FiEyeOff /> : <FiEye />}
+          </span>
+        </div>
+
+        <div className="Login-forget-password-link mb-5  mt-5">
           <span
             style={{ cursor: "pointer", color: "#007bff" }}
             onClick={() => setShowForgotModal(true)}
@@ -173,10 +195,11 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
         <p className="signup-text">
           Don’t have an account?{" "}
-          <span className="login-link" onClick={onSwitchToRegister}>
+          <span className="login-link cursor-pointer font-semibold text-blue-600 hover:underline" onClick={onSwitchToRegister}>
             Sign Up
           </span>
         </p>
+
       </>
     );
   };

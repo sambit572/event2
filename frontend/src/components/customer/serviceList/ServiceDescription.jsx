@@ -20,6 +20,11 @@ const ServiceDescription = ({ service }) => {
   const handleClick = () => {
     setIsWishlisted(!isWishlisted);
   };
+
+   const handleBookNow = () => {
+    navigate("./UserDetails"); // ✅ Navigate on click
+  };
+
   return (
     <section className="serviceDescription">
        <Link to={`/service/${service.id}`} className="link">
@@ -59,7 +64,7 @@ const ServiceDescription = ({ service }) => {
           </div>
         </button>
 
-        <button className="bookBtn">
+        <button className="bookBtn" onClick={handleBookNow}>
           <span>Book Now</span>
         </button>
       </div>
