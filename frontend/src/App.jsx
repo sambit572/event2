@@ -211,7 +211,7 @@ const App = () => {
           <Route path="/vendor/thank-you" element={<VendorThankYou />} />
 
           <Route path="/dashboard" element={<DashBoardMain />} />
-          <Route path="/vendor-login" element={<VendorLogin />} />
+          {/* <Route path="/vendor-login" element={<VendorLogin />} /> */}
           <Route
             path="/vendor/services/addServices"
             element={<AddServiceInDashboard />}
@@ -238,8 +238,7 @@ const App = () => {
       <BackToTop />
       <Chatbot />
 
-      {/* Conditionally render Footer */}
-      {!pagesWithoutFooter.includes(location.pathname) && <Footer />}
+  
       {/* Auth Modals */}
       {showLoginModal && (
         <Login
@@ -254,6 +253,14 @@ const App = () => {
           onSwitchToLogin={handleOpenLogin}
         />
       )}
+     
+      {showVendorLoginModal && (
+        <VendorLogin
+          onClose={handleCloseModals}
+          onSwitchToLogin={handleOpenVendorLogin}
+        />)}
+    {/* Conditionally render Footer */}
+      {!pagesWithoutFooter.includes(location.pathname) && <Footer />}
       <Toaster
         toastOptions={{
           duration: 5000,

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import UserProfileIcon from "../../pages/common/UserProfileIcon.jsx";
 import toast from "react-hot-toast";
-import "../../pages/vendor/VendorLogin.jsx";
+// import "../../pages/vendor/VendorLogin.jsx";
 import "./Navbar.css";
 import { CgProfile } from "react-icons/cg";
 
@@ -31,7 +31,7 @@ import { clearUser } from "../../redux/UserSlice.js";
 import { clearVendor } from "../../redux/VendorSlice.js";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-const Navbar = ({ onOpenLogin, onOpenRegister }) => {
+const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -146,7 +146,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
   const handleVendorClick = async () => {
     console.log("clicked vendor button ...");
     if (!userFirstName) {
-      onOpenLogin(); // force user to login first
+      onOpenVendorLogin(); // force user to login first
       return;
     }
 
@@ -166,7 +166,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
     console.log("Email status from backend:", emailStatus);
 
     if (emailStatus.existsInVendor) {
-      navigate("/vendor-login"); // already a vendor
+      onOpenVendorLogin(); // already a vendor
     } else {
       navigate("/vendor/register");
     }
@@ -352,7 +352,10 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
             </div>
 
             {/* Become Vendor */}
-            <div className="nav-item profile-dropdown-container" ref={vendorRef}>
+            <div
+              className="nav-item profile-dropdown-container"
+              ref={vendorRef}
+            >
               <div className="nav-items max-[1024px]:flex-col max-[1024px]:text-[12px] max-[820px]:text-[11px] cursor-pointer">
                 <div className="flex items-center gap-1">
                   <FaStore
@@ -362,23 +365,29 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
                   <span
                     className="text-[#001F3F] hover:text-white font-semibold max-[1024px]:mt-[6px] max-[820px]:text-[11px] max-[820px]:w-max"
                     onClick={() => {
+                      setShowVendorDropdown(false);
                       if (!userFirstName) {
                         const toastId = toast.custom((t) => (
-                                <div
-                                  className={`${t.visible ? "animate-toast-wiggle" : "animate-leave"
-                                    } fixed top-4 right-10 z-50 mt-12`}
-                                >
-                                  {/* Toast Box */}
-                                  <div className="relative bg-white border-10 border-[#001f3f] text-black px-6 py-3 rounded-xl w-fit max-w-sm">
-                                    {/* Triangle */}
-                                    <div className="absolute -top-2 right-4 w-0 h-0 border-l-8 border-r-8 border-b-[10px] border-l-transparent border-r-transparent"></div>
+                          <div
+                            className={`${
+                              t.visible
+                                ? "animate-toast-wiggle"
+                                : "animate-leave"
+                            } fixed top-4 right-10 z-50 mt-12`}
+                          >
+                            {/* Toast Box */}
+                            <div className="relative bg-white border-10 border-[#001f3f] text-black px-6 py-3 rounded-xl w-fit max-w-sm">
+                              {/* Triangle */}
+                              <div className="absolute -top-2 right-4 w-0 h-0 border-l-8 border-r-8 border-b-[10px] border-l-transparent border-r-transparent"></div>
 
-                                    {/* Toast Message */}
-                                    <span className="font-semibold block">Please register as a user first.</span>
-                                  </div>
-                                </div>
-                              ));
-                        
+                              {/* Toast Message */}
+                              <span className="font-semibold block">
+                                Please register as a user first.
+                              </span>
+                            </div>
+                          </div>
+                        ));
+
                         setTimeout(() => toast.dismiss(toastId), 2000);
                       } else {
                         handleVendorClick();
@@ -386,7 +395,9 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
                     }}
                   >
                     {!VendorFirstName ? (
-                      <span className="font-medium hover:bg-[#001f3f]  hover rounded px-2 py-1 transition-colors">Be a Vendor</span>
+                      <span className="font-medium hover:bg-[#001f3f]  hover rounded px-2 py-1 transition-colors">
+                        Be a Vendor
+                      </span>
                     ) : (
                       <>
                         <span className="font-medium">{VendorFirstName}</span>
@@ -406,14 +417,20 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
 
               {showVendorDropdown && (
                 <div className="absolute top-[75px] right-[50px] bg-[#e5e5de] rounded-lg border border-white shadow-[0_4px_12px_rgba(0,0,0,0.1)] p-4 z-[2000] w-[350px]">
-                  <h4 className="text-lg font-semibold text-[#001F3F] text-center mb-1">Welcome Vendor</h4>
-                  <p className="text-gray-600 text-center mb-3">Access your vendor tools and profile</p>
+                  <h4 className="text-lg font-semibold text-[#001F3F] text-center mb-1">
+                    Welcome Vendor
+                  </h4>
+                  <p className="text-gray-600 text-center mb-3">
+                    Access your vendor tools and profile
+                  </p>
 
                   {/* If NOT logged in → Show Register */}
                   {!VendorFirstName && (
                     <>
                       <div className="dropdown-header">
-                        <span className="text-[#001f3f] font-lg">New Vendor?</span>
+                        <span className="text-[#001f3f] font-lg">
+                          New Vendor?
+                        </span>
                       </div>
                       <div className="flex flex-row gap-2 mt-2">
                         {/* Register Button */}
@@ -424,8 +441,11 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
                             if (!userFirstName) {
                               const toastId = toast.custom((t) => (
                                 <div
-                                  className={`${t.visible ? "animate-toast-wiggle" : "animate-leave"
-                                    } fixed top-4 right-10 z-50 mt-12`}
+                                  className={`${
+                                    t.visible
+                                      ? "animate-toast-wiggle"
+                                      : "animate-leave"
+                                  } fixed top-4 right-10 z-50 mt-12`}
                                 >
                                   {/* Toast Box */}
                                   <div className="relative bg-white border-[#001f3f] text-black px-6 py-3 rounded-xl w-fit max-w-sm">
@@ -433,7 +453,9 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
                                     <div className="absolute -top-2 right-4 w-0 h-0 border-l-8 border-r-8 border-b-[10px] border-l-transparent border-r-transparent"></div>
 
                                     {/* Toast Message */}
-                                    <span className="font-semibold block">Please register as a user first.</span>
+                                    <span className="font-semibold block">
+                                      Please register as a user first.
+                                    </span>
                                   </div>
                                 </div>
                               ));
@@ -456,8 +478,11 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
                             if (!userFirstName) {
                               const toastId = toast.custom((t) => (
                                 <div
-                                  className={`${t.visible ? "animate-toast-wiggle" : "animate-leave"
-                                    } fixed top-4 right-10 z-50 mt-12`}
+                                  className={`${
+                                    t.visible
+                                      ? "animate-toast-wiggle"
+                                      : "animate-leave"
+                                  } fixed top-4 right-10 z-50 mt-12`}
                                 >
                                   {/* Toast Box */}
                                   <div className="relative bg-white border-[#001f3f] text-black px-6 py-3 rounded-xl w-fit max-w-sm">
@@ -465,14 +490,16 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
                                     <div className="absolute -top-2 right-4 w-0 h-0 border-l-8 border-r-8 border-b-[10px] border-l-transparent border-r-transparent"></div>
 
                                     {/* Toast Message */}
-                                    <span className="font-semibold block">Please register as a user first.</span>
+                                    <span className="font-semibold block">
+                                      Please register as a user first.
+                                    </span>
                                   </div>
                                 </div>
                               ));
 
                               setTimeout(() => toast.dismiss(toastId), 2000);
                             } else {
-                              navigate("/vendor-login");// ✅ Go to vendor register if user is logged in
+                              handleVendorClick();
                             }
 
                             // ✅ Always go to login (or open modal)
@@ -481,7 +508,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
                           Login
                         </button>
                       </div>
-
                     </>
                   )}
 
@@ -525,16 +551,18 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
               {showEllipsisDropdown && (
                 <div className="dropdown-menu ellipsis-menu">
                   <div
-                    className={`dropdown-item ${location.pathname === "/about_us" ? "active" : ""
-                      }`}
+                    className={`dropdown-item ${
+                      location.pathname === "/about_us" ? "active" : ""
+                    }`}
                     onClick={() => navigate("/about_us")}
                   >
                     <FcAbout className="navbar_icon" /> About Us
                   </div>
 
                   <div
-                    className={`dropdown-item ${location.pathname === "/help_us" ? "active" : ""
-                      }`}
+                    className={`dropdown-item ${
+                      location.pathname === "/help_us" ? "active" : ""
+                    }`}
                     onClick={() => navigate("/help_us")}
                   >
                     <FaHandsHelping className="nav-icon" /> Help Us
@@ -565,6 +593,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
 Navbar.propTypes = {
   onOpenLogin: PropTypes.func.isRequired,
   onOpenRegister: PropTypes.func.isRequired,
-
+    onOpenVendorLogin: PropTypes.func.isRequired,
 };
 export default Navbar;
