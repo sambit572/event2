@@ -36,6 +36,7 @@ import Profile from "./components/customer/profile/Profile.jsx";
 import UserDetails from "./pages/customer/UserDetails.jsx";
 import DashboardServices from "./components/vendor/DashboardServices.jsx";
 import PopUp from "./components/customer/CustomerNegotiationModal";
+import VendorResetPassword from "./pages/vendor/VendorResetPass.jsx";
 
 // Vendor Pages
 import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
@@ -58,15 +59,37 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 const App = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  // Modal states
+  // Modal states for user
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
+
+  // Modal states for vendor
+  const [showVendorRegisterModal, setShowVendorRegisterModal] = useState(false);
+  const [showVendorLoginModal, setShowVendorLoginModal] = useState(false);
+
+  const handleOpenVendorRegister = () => {
+    setShowVendorRegisterModal(true);
+    document.body.classList.add("modal-open");
+  };
+
+  const handleOpenVendorLogin = () => {
+    setShowVendorLoginModal(true);
+    document.body.classList.add("modal-open");
+  };
+
+  const handleCloseVendorModals = () => {
+    setShowVendorRegisterModal(false);
+    setShowVendorLoginModal(false);
+    document.body.classList.remove("modal-open");
+  };
+
   // Hide Footer on specific pages
   const pagesWithoutFooter = [
     "/vendor/thank-you",
     "/admin",
     "/dashboard",
     "/profile",
+    "/reset-password",
   ];
   const handleOpenLogin = () => {
     setShowLoginModal(true);
@@ -138,10 +161,12 @@ const App = () => {
         <Navbar
           onOpenLogin={handleOpenLogin}
           onOpenRegister={handleOpenRegister}
+          onOpenVendorRegister={handleOpenVendorRegister}
+          onOpenVendorLogin={handleOpenVendorLogin}
         />
       )}
 
-      <main>
+      <main className="custom-mt mt-[50px]  sm:mt-[70px] md:mt-[60px]">
         <Routes>
           {/* Customer Routes */}
           <Route path="/" element={<Home />} />
@@ -214,6 +239,10 @@ const App = () => {
             path="/reset-password/:resetToken"
             element={<ResetPassword />}
           />
+          <Route
+            path="/vendor/reset-password/:resetToken"
+            element={<VendorResetPassword />}
+          />
 
           {/* Misc */}
           <Route path="/about_us" element={<AboutUs />} />
@@ -231,7 +260,9 @@ const App = () => {
       <Chatbot />
 
       {/* Conditionally render Footer */}
-      {!pagesWithoutFooter.includes(location.pathname) && <Footer />}
+      {!pagesWithoutFooter.some((path) =>
+        location.pathname.startsWith(path)
+      ) && <Footer />}
       {/* Auth Modals */}
       {showLoginModal && (
         <Login
@@ -246,6 +277,15 @@ const App = () => {
           onSwitchToLogin={handleOpenLogin}
         />
       )}
+
+      {showVendorRegisterModal && (
+        <VendorRegistration onClose={handleCloseVendorModals} />
+      )}
+
+      {showVendorLoginModal && (
+        <VendorLogin onClose={handleCloseVendorModals} />
+      )}
+
       <Toaster
         toastOptions={{
           duration: 5000,

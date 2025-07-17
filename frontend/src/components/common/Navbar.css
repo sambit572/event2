@@ -26,8 +26,8 @@
   transition: transform 0.3s ease;
 }
 .logo span {
-   color: #001f3f;
-   font-weight: bold;
+  color: #001f3f;
+  font-weight: bold;
   display: inline-block;
   text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.2);
 }
@@ -57,7 +57,7 @@
   border: 1px solid #001f3f;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   transition: width 0.4s ease-in-out, box-shadow 0.3s ease,
-  border-radius 0.3s ease;
+    border-radius 0.3s ease;
   cursor: pointer;
   /* position: relative; */
 }
@@ -701,9 +701,6 @@
 }
 @media (max-width: 460px) {
   .navbar {
-    /* padding: 0px; */
-
-    height: 60px;
     width: 100%;
   }
   .search-bar input{
