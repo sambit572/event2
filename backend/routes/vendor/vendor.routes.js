@@ -9,10 +9,9 @@ import {
   updateService,
   updateServiceImageFirst,
 } from "../../controller/vendor/service.controller.js";
-import { verifyVendorJwt } from "../../middleware/VendorAuth.middleware.js";
-  authenticateVendor,
-  verifyVendorJwt,
-} from "../../middleware/VendorAuth.middleware.js";
+import { verifyVendorJwt,authenticateVendor, } from "../../middleware/VendorAuth.middleware.js";
+  
+
 
 // Vendor Core Controllers
 import {
