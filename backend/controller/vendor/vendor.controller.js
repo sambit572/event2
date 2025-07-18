@@ -104,6 +104,8 @@ const registerVendor = async (req, res) => {
   `,
     });
 
+    
+
     // 5. Return success response
     return res
       .status(200)
@@ -122,90 +124,6 @@ const registerVendor = async (req, res) => {
     }
 
     return res.status(500).json(new ApiError(500, "Internal server error"));
-  }
-};
-
-//  Save Service Details
-// This function is called after the vendor has registered and logged in
-const saveServiceDetails = async (req, res) => {
-  try {
-    const vendorId = req.vendor._id;
-    const { serviceName, serviceCategory, locationOffered } = req.body;
-
-    if (!serviceName || !serviceCategory || !locationOffered) {
-      return res.status(400).json(new ApiError(400, "Missing required fields"));
-    }
-
-    await Service.create({ vendor: vendorId, ...req.body });
-    await updateProgress(vendorId, 2);
-    return res.status(200).json(new ApiResponse(200, null, "Service saved"));
-  } catch (err) {
-    return res.status(500).json(new ApiError(500, err.message));
-  }
-};
-
-// Save Bank Details
-// This function is called after the vendor has added their service details
-const saveBankDetails = async (req, res) => {
-  try {
-    const vendorId = req.vendor._id;
-    const fd = req.body;
-
-    if (!req.file || !fd.accountHolderName || !fd.ifscCode) {
-      return res.status(400).json(new ApiError(400, "All required fields must be filled"));
-    }
-
-    const vendor = await Vendor.findById(vendorId);
-    if (!vendor) return res.status(404).json(new ApiError(404, "Vendor not found"));
-
-    vendor.bankDetails = {
-      accountHolderName: fd.accountHolderName,
-      accountNumber: fd.accountNumber,
-      branchName: fd.branchName,
-      ifscCode: fd.ifscCode,
-      gst: fd.gst,
-      upiId: fd.upiId,
-    };
-
-    const upload = await uploadOnCloudinary(req.file.path);
-    vendor.panCardUrl = upload?.url;
-    await vendor.save();
-    await updateProgress(vendorId, 3);
-
-    return res.status(200).json(new ApiResponse(200, vendor, "Bank details saved"));
-  } catch (err) {
-    return res.status(500).json(new ApiError(500, err.message));
-  }
-};
-
-// Submit Legal Consent
-// This function is called after the vendor has added their bank details
-const submitLegalConsent = async (req, res) => {
-  try {
-    const vendorId = req.vendor._id;
-    const { iAgreeTC, iAgreeCP, iAgreeKYCVerifyUsingPanAndAdhar } = req.body;
-    const file = req.file;
-
-    if (!file) {
-      return res.status(400).json(new ApiError(400, "Signature file required"));
-    }
-
-    const vendor = await Vendor.findById(vendorId);
-    if (!vendor) return res.status(404).json(new ApiError(404, "Vendor not found"));
-
-    const upload = await uploadOnCloudinary(file.path);
-    vendor.legalConsent = {
-      iAgreeTC: iAgreeTC === "true",
-      iAgreeCP: iAgreeCP === "true",
-      iAgreeKYCVerifyUsingPanAndAdhar: iAgreeKYCVerifyUsingPanAndAdhar === "true",
-      signatureUrl: upload?.url,
-    };
-
-    vendor.registrationProgress = 4;
-    await vendor.save();
-    return res.status(200).json(new ApiResponse(200, vendor, "Consent submitted"));
-  } catch (err) {
-    return res.status(500).json(new ApiError(500, err.message));
   }
 };
 
@@ -542,32 +460,6 @@ const verifyConfirmPassword = async (req, res, next) => {
   }
 };
 
-// const updateTheBankDetails = async (req, res, next) => {
-//   try {
-//     const { password, bankDetails } = req.body;
-
-//     const vendor = await Vendor.findById(req.vendor._id);
-//     if (!vendor) {
-//       return res
-//         .status(404)
-//         .json({ success: false, message: "Vendor not found" });
-//     }
-//   if (!isMatch) {
-//       return res.status(401).json({ success: false, message: 'Incorrect password' });
-//     }
-
-//     vendor.bankDetails = bankDetails;
-//     await vendor.save();
-
-//     return res.json({
-//       success: true,
-//       message: "Bank details updated successfully",
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
 const updateVendorProfilePicture = async (req, res, next) => {
   try {
     const id = req.vendor._id; // 👈 Comes from JWT middleware
@@ -691,46 +583,57 @@ export const getSearchSuggestions = async (req, res) => {
     );
 
     if (suggestions.length === 0) {
-      return res.status(200).json(
-        new ApiResponse(200, [], "No suggestions found for this search.")
-      );
+      return res
+        .status(200)
+        .json(
+          new ApiResponse(200, [], "No suggestions found for this search.")
+        );
     }
 
-    return res.status(200).json(
-      new ApiResponse(200, suggestions, "Search suggestions fetched")
-    );
+    return res
+      .status(200)
+      .json(new ApiResponse(200, suggestions, "Search suggestions fetched"));
   } catch (error) {
     console.error("Suggestion error:", error.message);
-    return res
-      .status(500)
-      .json(new ApiError(500, "Internal Server Error"));
+    return res.status(500).json(new ApiError(500, "Internal Server Error"));
   }
 };
 
 // dashboard
 export const getVendorDashboard = async (req, res) => {
+  console.log("📍 getVendorDashboard called");
   try {
-    const currentStep = req.vendor.registrationStep;
+    const currentStep = req.vendor.registrationProgress;
+    const currentPath = req.query.currentPath;
 
-    if (!currentStep || currentStep < 5) {
-      // Vendor hasn't finished registration
+    console.log("📍 Current frontend path:", currentPath);
+    console.log("🧠 Vendor DB progress:", currentStep);
+
+    // Optional logic based on currentPath
+    // You can use a map or regex to validate allowed paths for each step
+
+    if (!currentStep || currentStep < 4) {
+      let redirectTo = "";
+
+      if (currentStep === 1) {
+        redirectTo = "/category/VendorService";
+      } 
+       if (currentStep === 2) {
+        redirectTo = "/vendor/payment-info";
+      }
+       if (currentStep === 3) {
+        redirectTo = "/vendor/legal-consent";
+      } 
+
       return res.status(200).json({
         incomplete: true,
-        redirectTo:
-          currentStep === 1
-            ? "/vendor/service-info"
-            : currentStep === 2
-            ? "/vendor/payment-info"
-            : currentStep === 3
-            ? "/vendor/legal-consent"
-            : "/vendor/thank-you", // step 4 done
+        redirectTo,
       });
     }
 
-    // Registration complete, show dashboard
     return res.status(200).json({
       incomplete: false,
-      message: `Welcome to your dashboard, ${req.vendor.businessName || req.vendor.name}`,
+      message: `Welcome to your dashboard, ${req.vendor.fullName}`,
       vendor: req.vendor,
     });
   } catch (err) {
@@ -739,13 +642,8 @@ export const getVendorDashboard = async (req, res) => {
   }
 };
 
-
-
 export {
   registerVendor,
-  saveServiceDetails,
-  saveBankDetails,
-  submitLegalConsent,
   loginVendor,
   vendorLogout,
   sendVendorResetLink,
@@ -757,5 +655,4 @@ export {
   updateVendorProfilePicture,
   verifyConfirmPassword,
   // updateTheBankDetails,
-  
 };

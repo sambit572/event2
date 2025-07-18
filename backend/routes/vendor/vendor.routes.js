@@ -1,6 +1,6 @@
 import express from "express";
 import { upload } from "../../middleware/multer.middleware.js";
-import { verifyVendorRegistrationComplete } from "../../middleware/verifyVendorProgress.js";
+import { verifyVendorRegistrationComplete } from "../../middleware/verifyVendorProgress.middleware.js";
 import {
   createService,
   deleteService,
@@ -48,13 +48,7 @@ import {
   deleteLegalConsent,
 } from "../../controller/vendor/legal.controller.js";
 
-// Services
-import {
-  createService,
-  deleteService,
-  getMyServices,
-  updateService,
-} from "../../controller/vendor/service.controller.js";
+
 
 const vendor_router = express.Router();
 
@@ -150,9 +144,8 @@ vendor_router.get("/search-suggestions", getSearchSuggestions);
 
 // --- DASHBOARD ROUTE --- //
 vendor_router.get(
-  "/dashboard",
-  verifyVendorToken, // existing auth check
-  verifyVendorRegistrationComplete, // <- restrict incomplete vendors
+  "/currentStep-status",
+  verifyVendorJwt, // existing auth check
   getVendorDashboard
 );
 

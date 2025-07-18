@@ -54,6 +54,10 @@ export const createBankDetails = async (req, res) => {
       panCardPic: cloudinaryResponse.secure_url, // Save Cloudinary URL
     });
 
+    await Vendor.findByIdAndUpdate(req.vendor._id, {
+      $set: { registrationProgress: 3 },
+    });
+
     res.status(201).json({
       success: true,
       message: "Bank details created successfully",
