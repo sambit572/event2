@@ -15,21 +15,20 @@ const loginSchema = new Schema(
       trim: true,
       unique: true,
     },
-    phoneNo:{
-      type:String,
-      required:true,
-      trim:true,
-      unique:true,
-
+    phoneNo: {
+      type: String,
+      required: true,
+      trim: true,
+      unique: true,
     },
     password: {
       type: String,
       required: true,
-      minlength:8,
+      minlength: 8,
     },
-     profilePhoto: {
+    profilePhoto: {
       type: String,
-      default: "", 
+      default: "",
     },
     accessToken: {
       type: String,

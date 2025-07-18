@@ -553,14 +553,14 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
               className="nav-item profile-dropdown-container"
               ref={vendorRef}
             >
-              <div className="nav-items max-[1024px]:flex-col max-[1024px]:text-[12px] max-[820px]:text-[11px] cursor-pointer">
-                <div className="flex items-center gap-2">
+              <div className="nav-items  max-[1024px]:flex-col max-[1024px]:text-[12px] max-[820px]:text-[11px] cursor-pointer">
+                <div className="flex items-center gap-2 ">
                   <FaStore
                     className="icons max-[1024px]:h-[18px] max-[1024px]:w-[18px] max-[820px]:h-[15px]"
                     onClick={handleVendorClick}
                   />
                   <span
-                    className="text-[#001F3F] hover:text-white font-semibold  max-[820px]:text-[11px] max-[820px]:w-max"
+                    className="text-[#001F3F]  font-semibold  max-[820px]:text-[11px] max-[820px]:w-max"
                     onClick={() => {
                       if (!userFirstName) {
                         const toastId = toast.custom((t) => (
