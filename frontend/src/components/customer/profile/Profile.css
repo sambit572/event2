@@ -204,12 +204,12 @@
   height: fit-content;
   box-sizing: border-box;
   width: 240px;
-  margin-top: 50px;
+  /* margin-top: 50px; */
 }
 .profile-scrollable-content {
   width: 100%;
 
-  margin-top: 70px;
+  /* margin-top: 70px; */
 }
 /* Sidebar Base */
 

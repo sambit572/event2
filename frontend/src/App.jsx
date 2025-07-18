@@ -72,11 +72,6 @@ const App = () => {
     document.body.classList.add("modal-open");
   };
 
-  const handleOpenVendorLogin = () => {
-    setShowVendorLoginModal(true);
-    document.body.classList.add("modal-open");
-  };
-
   const handleCloseVendorModals = () => {
     setShowVendorRegisterModal(false);
     setShowVendorLoginModal(false);
@@ -102,10 +97,15 @@ const App = () => {
     setShowLoginModal(false);
     document.body.classList.add("modal-open");
   };
+  const handleOpenVendorLogin = () => {
+    setShowVendorLoginModal(true);
+    document.body.classList.add("modal-open");
+  };
 
   const handleCloseModals = () => {
     setShowLoginModal(false);
     setShowRegisterModal(false);
+    setShowVendorLoginModal(false);
     // Re-enable body scroll
     document.body.classList.remove("modal-open");
   };
@@ -228,7 +228,7 @@ const App = () => {
           <Route path="/vendor/thank-you" element={<VendorThankYou />} />
 
           <Route path="/dashboard" element={<DashBoardMain />} />
-          <Route path="/vendor-login" element={<VendorLogin />} />
+          {/* <Route path="/vendor-login" element={<VendorLogin />} /> */}
           <Route
             path="/vendor/services/addServices"
             element={<AddServiceInDashboard />}
@@ -283,9 +283,13 @@ const App = () => {
       )}
 
       {showVendorLoginModal && (
-        <VendorLogin onClose={handleCloseVendorModals} />
+        <VendorLogin
+          onClose={handleCloseModals}
+          onSwitchToLogin={handleOpenVendorLogin}
+        />
       )}
-
+      {/* Conditionally render Footer */}
+      {!pagesWithoutFooter.includes(location.pathname) && <Footer />}
       <Toaster
         toastOptions={{
           duration: 5000,
