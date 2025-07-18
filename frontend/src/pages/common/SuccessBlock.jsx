@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import successGif from "../../assets/home/categoriesImages/Namaste.gif";
+import namaste from "../../assets/home/categoriesImages/Namaste.gif";
 import "./LoginRegister.css"; // Reuse same styles for consistent layout
 
 const SuccessBlock = ({ onClose }) => {
@@ -18,12 +18,12 @@ const SuccessBlock = ({ onClose }) => {
         <p className="font-semibold text-1xl text-center mt-5 text-[#001f3f]">
           You Are Logged In Successfully !!
         </p>
-        
+
 
         {/* Image */}
         <div className="success-image-wrapper">
           <img
-            src={successGif}
+            src={namaste}
             alt="Success Animation"
             className="success-image"
           />

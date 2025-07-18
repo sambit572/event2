@@ -63,7 +63,7 @@
 .success-image {
   width: 90%;
   margin-bottom: 10px;
-  max-width: 270px;
+  max-width: 250px;
   object-fit: contain;
   animation: fadeIn 1s ease-in-out;
 }
