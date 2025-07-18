@@ -179,11 +179,22 @@
 
 /* ✅ Responsive height & margin for various screen widths */
 
+@media (max-width: 1280px) and (max-height: 800px) {
+  .login-modal {
+    max-width: 400px;
+    max-height: 65vh;
+    margin-top: -10vh;
+  }
+  .modal-close {
+    margin-right: 1rem;
+  }
+}
+
 @media (max-width: 1024px) and (max-height:1366px) {
   .login-modal {
     max-width: 380px;
-    max-height: 80vh;
-    margin-top: -59vh;
+    max-height: 50vh;
+    margin-top: -5vh;
   }
   .modal-close {
     margin-right: 1rem;
@@ -193,8 +204,8 @@
 @media (max-width: 1024px) and (max-height:600px) {
   .login-modal {
     max-width: 380px;
-    max-height: 80vh;
-    margin-top: -17vh;
+    max-height: 85vh;
+    margin-top: -10vh;
   }
   .modal-close {
     margin-right: 1rem;
@@ -204,8 +215,8 @@
 @media (max-width: 912px) {
   .login-modal {
     max-width: 360px;
-    max-height: 55vh;
-    margin-top: -59vh;
+    max-height: 40vh;
+    margin-top: -6vh;
   }
   .modal-close {
     margin-right: 1rem;
@@ -215,8 +226,8 @@
 @media (max-width: 820px) {
   .login-modal {
     max-width: 360px;
-    max-height: 55vh;
-    margin-top: -53vh;
+    max-height: 42vh;
+    margin-top: -6vh;
   }
   .modal-close {
     margin-right: 1rem;
@@ -228,7 +239,7 @@
   .login-modal {
     max-width: 340px;
     max-height: 47vh;
-    margin-top: -48vh;
+    margin-top: -5vh;
   }
   .modal-close {
     margin-right: 1rem;
@@ -239,7 +250,7 @@
   .login-modal {
     max-width: 320px;
     max-height: 80vh;
-    margin-top: -23vh;
+    margin-top: -7vh;
   }
   .modal-close {
     margin-right: 1rem;
@@ -259,8 +270,8 @@
 @media (max-width: 430px) {
   .login-modal {
     max-width: 300px;
-    max-height: 46vh;
-    margin-top: -34vh;
+    max-height: 48vh;
+    margin-top: -4vh;
   }
   .modal-close {
     margin-right: 1rem;
@@ -271,7 +282,7 @@
   .login-modal {
     max-width: 315px;
     max-height: 50vh;
-    margin-top: -38vh;
+    margin-top: -4vh;
   }
   .modal-close {
     margin-right: 1rem;
@@ -282,7 +293,7 @@
   .login-modal {
     max-width: 300px;
     max-height: 70vh;
-    margin-top: -25vh;
+    margin-top: -5vh;
   }
   .modal-close {
     margin-right: 1.5rem;
@@ -294,7 +305,7 @@
   .login-modal {
     max-width: 300px;
     max-height: 100vh;
-    margin-top: -20vh;
+    margin-top: -5vh;
   }
   .modal-close {
     margin-right: 1.5rem;

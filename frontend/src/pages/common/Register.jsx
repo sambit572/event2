@@ -163,7 +163,7 @@ const Register = ({ onClose, onSwitchToLogin }) => {
               onChange={(e) => setConfirmPassword(e.target.value)}
               minLength={8}
               required
-              className="w-full px-4 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-2 pr-10 py-2 border border-[#001f3f] rounded-md focus:outline-none"
             />
             <span
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
