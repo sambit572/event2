@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
+import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../utils/firebase.js";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import OTPVerification from "../common/OTPVerification.jsx";
-import PasswordInput from "../../utils/PasswordInput.jsx";
 import SuccessBlock from "../common/SuccessBlock.jsx";
 import axios from "axios";
 import "../common/LoginRegister.css";
@@ -14,42 +14,40 @@ import { FiEyeOff, FiEye } from "react-icons/fi";
 import { RxCross2 } from "react-icons/rx";
 import { BACKEND_URL } from "../../utils/constant.js";
 
-const VendorLogin = () => {
+const VendorLogin = ({ onClose, onSwitchToLogin }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [step, setStep] = useState("form");
   const [showSuccessIcon, setShowSuccessIcon] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [isOpen, setIsOpen] = useState(true);
-  const [formData, setFormData] = useState({ phoneNo: "", email: "", password: "" });
+  const [formData, setFormData] = useState({
+    phoneNo: "",
+    email: "",
+    password: "",
+  });
   const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
-    if (isOpen) {
-      document.body.classList.add("overflow-hidden");
-      document.getElementById("footer")?.classList.add("hidden");
-    } else {
+    document.body.classList.add("overflow-hidden");
+    document.getElementById("footer")?.classList.add("hidden");
+
+    return () => {
       document.body.classList.remove("overflow-hidden");
       document.getElementById("footer")?.classList.remove("hidden");
-      if (window.location.pathname !== "/vendor/register") {
-        navigate("/");
-      }
-    }
-    return () => {
     };
-  }, [isOpen, navigate]);
+  }, []);
 
   useEffect(() => {
     if (step === "success") {
       setShowSuccessIcon(false);
       const iconTimer = setTimeout(() => setShowSuccessIcon(true), 500);
-      const closeTimer = setTimeout(() => setIsOpen(false), 5000);
+      const closeTimer = setTimeout(() => onClose?.(), 3000);
       return () => {
         clearTimeout(iconTimer);
         clearTimeout(closeTimer);
       };
     }
-  }, [step]);
+  }, [step, onClose]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -57,21 +55,30 @@ const VendorLogin = () => {
 
   function setupRecaptcha() {
     if (window.recaptchaVerifier) window.recaptchaVerifier.clear();
-    window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
-      size: "invisible",
-      callback: () => console.log("Recaptcha passed"),
-    });
+    window.recaptchaVerifier = new RecaptchaVerifier(
+      auth,
+      "recaptcha-container",
+      {
+        size: "invisible",
+        callback: () => console.log("Recaptcha passed"),
+      }
+    );
   }
 
   async function handleGetOTP(e) {
     e.preventDefault();
     const phone = formData.phoneNo.replace(/\D/g, "");
     const phoneNumber = "+91" + phone;
-    if (!/^\+91\d{10}$/.test(phoneNumber)) return setErrorMsg("Invalid Indian phone number.");
+    if (!/^\+91\d{10}$/.test(phoneNumber))
+      return setErrorMsg("Invalid Indian phone number.");
 
     try {
       setupRecaptcha();
-      const confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier);
+      const confirmationResult = await signInWithPhoneNumber(
+        auth,
+        phoneNumber,
+        window.recaptchaVerifier
+      );
       window.confirmationResult = confirmationResult;
       setStep("otp");
     } catch (err) {
@@ -82,10 +89,13 @@ const VendorLogin = () => {
   async function handleLogin(e) {
     e.preventDefault();
     setErrorMsg("");
-    if (!formData.email && !formData.phoneNo) return setErrorMsg("Enter email or phone to log in.");
+    if (!formData.email && !formData.phoneNo)
+      return setErrorMsg("Enter email or phone to log in.");
 
     try {
-      const res = await axios.post(`${BACKEND_URL}/vendors/login`, formData, { withCredentials: true });
+      const res = await axios.post(`${BACKEND_URL}/vendors/login`, formData, {
+        withCredentials: true,
+      });
       const { vendor } = res.data.data;
       dispatch(setVendor(vendor));
 
@@ -104,12 +114,17 @@ const VendorLogin = () => {
       setStep("success");
     } catch (err) {
       const msg = err.response?.data?.message || err.message;
-      setErrorMsg(msg === "User does not exist" ? "Please register before login." : `Login failed: ${msg}`);
+      setErrorMsg(
+        msg === "User does not exist"
+          ? "Please register before login."
+          : `Login failed: ${msg}`
+      );
     }
   }
 
   const renderStep = () => {
-    if (step === "success") return <SuccessBlock showSuccessIcon={showSuccessIcon} />;
+    if (step === "success")
+      return <SuccessBlock showSuccessIcon={showSuccessIcon} />;
     if (step === "otp") return <OTPVerification setStep={setStep} />;
     if (step === "form") {
       return (
@@ -154,16 +169,26 @@ const VendorLogin = () => {
             </span>
           </div>
 
-          <div className="Login-forget-password-link ">
+          <div className="Login-forget-password-link">
             <a href="/vendor/forgot-password">Forgot your password?</a>
           </div>
 
           {errorMsg && <p className="error">{errorMsg}</p>}
 
-          <button type="submit" className="otp-button">Login</button>
-
+          <button type="submit" className="otp-button" onClick={handleLogin}>
+            Login
+          </button>
           <p className="signup-text">
-            Don’t have an account? <span className="login-link" onClick={() => { setIsOpen(false); navigate("/vendor/register"); }}>Sign Up</span>
+            Don’t have an account?{" "}
+            <span
+              className="login-link"
+              onClick={() => {
+                onClose(); // ✅ Close modal properly
+                navigate("/vendor/register"); // ✅ Then navigate
+              }}
+            >
+              Sign Up
+            </span>
           </p>
         </form>
       );
@@ -171,21 +196,25 @@ const VendorLogin = () => {
     return null;
   };
 
-  return step === "success" ? (
-    <div className="login-wrapper"><SuccessBlock showSuccessIcon={showSuccessIcon} /></div>
-  ) : (
-    isOpen && (
-      <div className="login-wrapper" onClick={() => setIsOpen(false)}>
-        <div className="login-modal" onClick={(e) => e.stopPropagation()}>
-          <button className="modal-close" onClick={() => setIsOpen(false)}><RxCross2 /></button>
-          <div id="recaptcha-container"></div>
-          <h2 className="login-title">Vendor Login</h2>
-          {renderStep()}
-        </div>
+  const modalContent = (
+    <div className="login-wrapper" onClick={onClose}>
+      <div className="login-modal" onClick={(e) => e.stopPropagation()}>
+        <button className="modal-close" onClick={onClose}>
+          <RxCross2 />
+        </button>
+        <div id="recaptcha-container"></div>
+        <h2 className="login-title">Vendor Login</h2>
+        {renderStep()}
       </div>
-    )
+    </div>
   );
+
+  return ReactDOM.createPortal(modalContent, document.body);
 };
 
-VendorLogin.propTypes = {};
+VendorLogin.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  onSwitchToLogin: PropTypes.func,
+};
+
 export default VendorLogin;
