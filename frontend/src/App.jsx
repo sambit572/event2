@@ -90,8 +90,7 @@ const App = () => {
     "/admin",
     "/dashboard",
     "/profile",
-    "/reset-password", 
-    
+    "/reset-password",
   ];
   const handleOpenLogin = () => {
     setShowLoginModal(true);
@@ -168,7 +167,7 @@ const App = () => {
         />
       )}
 
-      <main>
+      <main className="custom-mt mt-[50px]  sm:mt-[70px] md:mt-[60px]">
         <Routes>
           {/* Customer Routes */}
           <Route path="/" element={<Home />} />
@@ -260,7 +259,9 @@ const App = () => {
       <Chatbot />
 
       {/* Conditionally render Footer */}
-     {!pagesWithoutFooter.some((path) => location.pathname.startsWith(path)) && <Footer />}
+      {!pagesWithoutFooter.some((path) =>
+        location.pathname.startsWith(path)
+      ) && <Footer />}
       {/* Auth Modals */}
       {showLoginModal && (
         <Login
