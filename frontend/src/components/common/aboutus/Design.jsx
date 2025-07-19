@@ -1,12 +1,12 @@
 import React from "react";
 import "./design.css";
 import chatIcon from "../../../assets/aboutUs/logo.png";
-import offers from "../../../assets/aboutUs/offers.jpeg";
+import offers from "../../../assets/aboutUs/offer.jpeg";
 import wedding from "../../../assets/aboutUs/wedding.jpeg";
 import party from "../../../assets/aboutUs/party.jpeg";
 import tenthouse from "../../../assets/aboutUs/tenthouse.jpeg";
 import catering from "../../../assets/aboutUs/catering_service.jpg";
-import horseCart from "../../../assets/aboutUs/horseCart.jpeg";
+import horseCart from "../../../assets/aboutUs/horsecart.jpeg";
 import magician from "../../../assets/aboutUs/magician.jpeg";
 import flowers from "../../../assets/aboutUs/flowers.jpeg";
 
