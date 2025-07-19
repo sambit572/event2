@@ -840,7 +840,7 @@ export const CategoryData = [
   },
   {
     id: "catering",
-    title: "Catering",
+    title: "Food & Catering",
     image: image10,
     tagline: "Flavours that Speak Love",
     icon: "🍽️",
