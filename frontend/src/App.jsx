@@ -55,8 +55,8 @@ import { setVendor } from "./redux/VendorSlice.js";
 import ScrollToTop from "./components/common/ScrollToTop.jsx";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-import ReviewSlider from "./components/customer/home/ReviewSlider";
-import FaqSection from "./components/customer/home/FaqSection";
+import ReviewSlider from "./components/customer/Home/ReviewSlider.jsx";
+import FaqSection from "./components/customer/Home/FaqSection.jsx";
 
 const App = () => {
   const navigate = useNavigate();
