@@ -41,8 +41,19 @@ function VendorService({ currentStep }) {
     "DJ",
     "Orchestra",
     "Food Catering",
-    "Florist",
     "Tent House",
+    "Live Musical Band",
+    "Photographer",
+    "Magic Shows",
+    "Hindu Priest",
+    "Cultural Troupe",
+    "Islamic Priest",
+    "Christian Priest",
+    "Makeup & Mehendi Artist",
+    "Floral Decor",
+    "Wedding Transport",
+    "Fireworks",
+    "Custom Invitation Design & Printing",
   ];
   const allLocations = [
     "Bhubaneswar",
@@ -157,9 +168,8 @@ function VendorService({ currentStep }) {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-          withCredentials:true,
-        },
-
+          withCredentials: true,
+        }
       );
 
       console.log(response);
