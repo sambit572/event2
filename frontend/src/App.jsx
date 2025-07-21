@@ -15,7 +15,7 @@ import Register from "./pages/common/Register.jsx";
 import Home from "./pages/customer/Home";
 import ServiceList from "./pages/customer/ServiceList";
 // import CategoryCard from "./components/customer/Home/CategoryCard.jsx";
-// import ReviewSlider from "./components/customer/Home/ReviewSlider.jsx";
+
 import ServiceDetails from "./pages/customer/ServiceDetails";
 
 import VendorLegalConsent from "./pages/vendor/VendorLegalConsent";
@@ -55,6 +55,8 @@ import { setVendor } from "./redux/VendorSlice.js";
 import ScrollToTop from "./components/common/ScrollToTop.jsx";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+import ReviewSlider from "./components/customer/home/ReviewSlider";
+import FaqSection from "./components/customer/home/FaqSection";
 
 const App = () => {
   const navigate = useNavigate();
