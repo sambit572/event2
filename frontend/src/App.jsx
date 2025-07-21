@@ -259,10 +259,6 @@ const App = () => {
       <BackToTop />
       <Chatbot />
 
-      {/* Conditionally render Footer */}
-      {!pagesWithoutFooter.some((path) =>
-        location.pathname.startsWith(path)
-      ) && <Footer />}
       {/* Auth Modals */}
       {showLoginModal && (
         <Login
