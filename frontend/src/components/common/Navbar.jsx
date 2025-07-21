@@ -20,7 +20,7 @@ import {
 import { FcAbout } from "react-icons/fc";
 import axios from "axios";
 import { useNavigate, Navigate, useLocation } from "react-router-dom";
-import { FaCartShopping } from "react-icons/fa6";
+
 import {
   attemptVendorSilentLogin,
   checkVendorEmailStatus,
@@ -71,7 +71,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
   const vendorRef = useRef(null);
   const inputRef = useRef(null);
   const mobileSearchRef = useRef(null);
-  const searchBarRef = useRef(null);
+  const suggestionRef = useRef(null);
 
   const RELATED_TERMS = {};
 
@@ -169,42 +169,33 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
       if (inputRef.current) inputRef.current.focus();
     }
   };
-  const handleSearch = (e) => {
-    if (e.key === "Enter" && searchInput.trim()) {
-      const term = searchInput.trim().toLowerCase();
 
-      // 🔁 Save search history in localStorage
-      let history = JSON.parse(localStorage.getItem("searchHistory")) || [];
-      history.unshift(term); // add to top
-      history = [...new Set(history)].slice(0, 5); // remove duplicates, limit to 5
-      localStorage.setItem("searchHistory", JSON.stringify(history));
+  // new function added
+  const handleSearchNavigate = (text) => {
+    if (!text.trim()) return;
 
-      // ✅ If user searched for a known category, go to /category/categoryName
-      let matchedCategory = CATEGORIES.find((cat) =>
-        term.includes(cat.toLowerCase())
+    const searchText = text.toLowerCase().trim();
+
+    // Check for direct alias mapping
+    const matchedCategory = RELATED_TERMS[searchText];
+
+    if (matchedCategory) {
+      navigate(`/category/${matchedCategory}`);
+    } else {
+      // Try partial match within the search text
+      const foundCategory = Object.keys(RELATED_TERMS).find((key) =>
+        searchText.includes(key)
       );
 
-      // Try matching related words if no direct category match
-      if (!matchedCategory) {
-        const words = term.split(/\s+/);
-        for (let word of words) {
-          const cleaned = word.toLowerCase();
-          if (RELATED_TERMS[cleaned]) {
-            matchedCategory = RELATED_TERMS[cleaned];
-            break;
-          }
-        }
-      }
-
-      if (matchedCategory) {
-        navigate(`/category/${matchedCategory.toLowerCase()}`);
+      if (foundCategory) {
+        navigate(`/category/${RELATED_TERMS[foundCategory]}`);
       } else {
-        navigate(`/search-results?query=${encodeURIComponent(term)}`);
+        // Fallback: full search results
+        navigate(`/search-results?q=${encodeURIComponent(searchText)}`);
       }
-
-      setSearchInput(""); // clear input box
     }
   };
+
   const fetchUserProfile = async () => {
     try {
       const res = await axios.get(`${BACKEND_URL}/user/profile`, {
@@ -276,42 +267,42 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
     }
   };
 
-  // const handleSearch = (e) => {
-  //   if (e.key === "Enter" && searchInput.trim()) {
-  //     const term = searchInput.trim().toLowerCase();
+  const handleSearch = (e) => {
+    if (e.key === "Enter" && searchInput.trim()) {
+      const term = searchInput.trim().toLowerCase();
 
-  //     // 🔁 Save search history in localStorage
-  //     let history = JSON.parse(localStorage.getItem("searchHistory")) || [];
-  //     history.unshift(term); // add to top
-  //     history = [...new Set(history)].slice(0, 5); // remove duplicates, limit to 5
-  //     localStorage.setItem("searchHistory", JSON.stringify(history));
+      // 🔁 Save search history in localStorage
+      let history = JSON.parse(localStorage.getItem("searchHistory")) || [];
+      history.unshift(term); // add to top
+      history = [...new Set(history)].slice(0, 5); // remove duplicates, limit to 5
+      localStorage.setItem("searchHistory", JSON.stringify(history));
 
-  //     // ✅ If user searched for a known category, go to /category/categoryName
-  //     let matchedCategory = CATEGORIES.find((cat) =>
-  //       term.includes(cat.toLowerCase())
-  //     );
+      // ✅ If user searched for a known category, go to /category/categoryName
+      let matchedCategory = CATEGORIES.find((cat) =>
+        term.includes(cat.toLowerCase())
+      );
 
-  //     // Try matching related words if no direct category match
-  //     if (!matchedCategory) {
-  //       const words = term.split(/\s+/);
-  //       for (let word of words) {
-  //         const cleaned = word.toLowerCase();
-  //         if (RELATED_TERMS[cleaned]) {
-  //           matchedCategory = RELATED_TERMS[cleaned];
-  //           break;
-  //         }
-  //       }
-  //     }
+      // Try matching related words if no direct category match
+      if (!matchedCategory) {
+        const words = term.split(/\s+/);
+        for (let word of words) {
+          const cleaned = word.toLowerCase();
+          if (RELATED_TERMS[cleaned]) {
+            matchedCategory = RELATED_TERMS[cleaned];
+            break;
+          }
+        }
+      }
 
-  //     if (matchedCategory) {
-  //       navigate(`/category/${matchedCategory.toLowerCase()}`);
-  //     } else {
-  //       navigate(`/search-results?query=${encodeURIComponent(term)}`);
-  //     }
+      if (matchedCategory) {
+        navigate(`/category/${matchedCategory.toLowerCase()}`);
+      } else {
+        navigate(`/search-results?query=${encodeURIComponent(term)}`);
+      }
 
-  //     setSearchInput(""); // clear input box
-  //   }
-  // };
+      setSearchInput(""); // clear input box
+    }
+  };
 
   const handleLoginClick = () => {
     setShowProfileDropdown(false);
@@ -353,33 +344,28 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
   };
 
   useEffect(() => {
-    const handleClickOutsideSearch = (e) => {
-      const clickedOutsideDesktop =
-        searchBarRef.current && !searchBarRef.current.contains(e.target);
-
-      const clickedOutsideMobile =
-        mobileSearchRef.current && !mobileSearchRef.current.contains(e.target);
-
-      if (
-        showMobileSearchBar &&
-        (clickedOutsideDesktop || clickedOutsideMobile)
-      ) {
-        setShowMobileSearchBar(false);
+    const handleClickOutside = (event) => {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setShowProfileDropdown(false);
+      }
+      if (ellipsisRef.current && !ellipsisRef.current.contains(event.target)) {
+        setShowEllipsisDropdown(false);
+      }
+      if (vendorRef.current && !vendorRef.current.contains(event.target)) {
+        setShowVendorDropdown(false);
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutsideSearch);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutsideSearch);
-    };
-  }, [showMobileSearchBar]);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const handleClickOutsideSearch = (e) => {
       if (
         mobileSearchRef.current &&
         !mobileSearchRef.current.contains(e.target) &&
-        window.innerWidth > 768
+        window.innerWidth <= 768
       ) {
         setShowMobileSearchBar(false);
       }
@@ -388,6 +374,25 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
     document.addEventListener("mousedown", handleClickOutsideSearch);
     return () => {
       document.removeEventListener("mousedown", handleClickOutsideSearch);
+    };
+  }, []);
+
+  // click anywhere to close search bar
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        suggestionRef.current &&
+        !suggestionRef.current.contains(event.target)
+      ) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -431,11 +436,10 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
         <div className="search-and-nav-icons-container ">
           {/* Search Bar */}
           <div
-            ref={searchBarRef}
             className={`search-bar ${showMobileSearchBar ? "active" : ""}`}
             onClick={(e) => {
               handleSearchicon(e);
-              e.stopPropagation();
+              e.stopPropagation(); // Prevent event bubbling
             }}
           >
             {(showMobileSearchBar || window.innerWidth > 768) && (
@@ -448,10 +452,14 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                   const value = e.target.value;
                   setSearchInput(value);
 
+                  // If input is empty or only spaces, hide suggestions
+                  if (value.trim() === "") {
+                    setShowSuggestions(false);
+                    return;
+                  }
+
                   if (value.trim().length > 1) {
                     fetchDynamicSuggestions(value);
-                  } else {
-                    setShowSuggestions(false);
                   }
 
                   const localHistory =
@@ -471,16 +479,29 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                   setShowSuggestions(true);
                 }}
                 onFocus={handleInputFocus}
-                onKeyDown={handleSearch}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    setShowSuggestions(false); // ✅ closes dropdown
+                  }
+                  handleSearch(e); // ✅ keep your existing search logic
+                }}
               />
             )}
             <div className="searchbarIcon">
-              <FaSearch className="search-icon" onClick={handleSearchicon} />
+              <FaSearch
+                className="search-icon"
+                onClick={() => {
+                  console.log("Search icon clicked with:", searchInput);
+                  if (searchInput.trim() !== "") {
+                    handleSearchNavigate(searchInput);
+                  }
+                }}
+              />
             </div>
           </div>
 
           {showSuggestions && (
-            <div className="suggestions-dropdown">
+            <div className="suggestions-dropdown" ref={suggestionRef}>
               {suggestions.length > 0 ? (
                 suggestions.map((suggestion, index) => (
                   <div
@@ -528,7 +549,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                   )}
                 </span>
 
-                {/* ⬇️ Always show dropdown toggle arrow */}
+                {/* ⬇ Always show dropdown toggle arrow */}
                 <span onClick={handleToggleProfileDropdown}>
                   {showProfileDropdown ? (
                     <FaChevronUp className="text-sm" />
@@ -780,12 +801,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                 </div>
               )}
             </div>
-            <div className="navbarCart" onClick={() => navigate("/your-cart")}>
-              <div className="navbarCartIcon">
-                <FaCartShopping />
-              </div>
-              <div className="navbarCartText">Cart</div>
-            </div>
+
             {/* Three Dots Dropdown */}
             <div className="nav-item ellipsis-container" ref={ellipsisRef}>
               <FaEllipsisV
@@ -799,10 +815,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                     className={`dropdown-item ${
                       location.pathname === "/about_us" ? "active" : ""
                     }`}
-                    onClick={() => {
-                      setShowEllipsisDropdown(!showEllipsisDropdown);
-                      navigate("/about_us");
-                    }}
+                    onClick={() => navigate("/about_us")}
                   >
                     <FcAbout className="navbar_icon" /> About Us
                   </div>
@@ -811,10 +824,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                     className={`dropdown-item ${
                       location.pathname === "/help_us" ? "active" : ""
                     }`}
-                    onClick={() => {
-                      setShowEllipsisDropdown(!showEllipsisDropdown);
-                      navigate("/help_us");
-                    }}
+                    onClick={() => navigate("/help_us")}
                   >
                     <FaHandsHelping className="nav-icon" /> Help Us
                   </div>
