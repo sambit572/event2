@@ -53,6 +53,7 @@ import axios from "axios";
 import { setUser } from "./redux/UserSlice.js";
 import { setVendor } from "./redux/VendorSlice.js";
 import ScrollToTop from "./components/common/ScrollToTop.jsx";
+import AddToCart from "./components/customer/YourCart/AddToCart.jsx";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -245,6 +246,7 @@ const App = () => {
           />
 
           {/* Misc */}
+          <Route path="/your-cart" element={<AddToCart />} />
           <Route path="/about_us" element={<AboutUs />} />
           <Route path="/help_us" element={<HelpUs />} />
           <Route path="/help-Center" element={<HelpCenter />} />

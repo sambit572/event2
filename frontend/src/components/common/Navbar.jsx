@@ -20,7 +20,7 @@ import {
 import { FcAbout } from "react-icons/fc";
 import axios from "axios";
 import { useNavigate, Navigate, useLocation } from "react-router-dom";
-
+import { FaCartShopping } from "react-icons/fa6";
 import {
   attemptVendorSilentLogin,
   checkVendorEmailStatus,
@@ -71,6 +71,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
   const vendorRef = useRef(null);
   const inputRef = useRef(null);
   const mobileSearchRef = useRef(null);
+  const searchBarRef = useRef(null);
 
   const RELATED_TERMS = {};
 
@@ -316,28 +317,33 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
   };
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (profileRef.current && !profileRef.current.contains(event.target)) {
-        setShowProfileDropdown(false);
-      }
-      if (ellipsisRef.current && !ellipsisRef.current.contains(event.target)) {
-        setShowEllipsisDropdown(false);
-      }
-      if (vendorRef.current && !vendorRef.current.contains(event.target)) {
-        setShowVendorDropdown(false);
+    const handleClickOutsideSearch = (e) => {
+      const clickedOutsideDesktop =
+        searchBarRef.current && !searchBarRef.current.contains(e.target);
+
+      const clickedOutsideMobile =
+        mobileSearchRef.current && !mobileSearchRef.current.contains(e.target);
+
+      if (
+        showMobileSearchBar &&
+        (clickedOutsideDesktop || clickedOutsideMobile)
+      ) {
+        setShowMobileSearchBar(false);
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    document.addEventListener("mousedown", handleClickOutsideSearch);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutsideSearch);
+    };
+  }, [showMobileSearchBar]);
 
   useEffect(() => {
     const handleClickOutsideSearch = (e) => {
       if (
         mobileSearchRef.current &&
         !mobileSearchRef.current.contains(e.target) &&
-        window.innerWidth <= 768
+        window.innerWidth > 768
       ) {
         setShowMobileSearchBar(false);
       }
@@ -389,10 +395,11 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
         <div className="search-and-nav-icons-container ">
           {/* Search Bar */}
           <div
+            ref={searchBarRef}
             className={`search-bar ${showMobileSearchBar ? "active" : ""}`}
             onClick={(e) => {
               handleSearchicon(e);
-              e.stopPropagation(); // Prevent event bubbling
+              e.stopPropagation();
             }}
           >
             {(showMobileSearchBar || window.innerWidth > 768) && (
@@ -690,7 +697,12 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
                 </div>
               )}
             </div>
-
+            <div className="navbarCart" onClick={() => navigate("/your-cart")}>
+              <div className="navbarCartIcon">
+                <FaCartShopping />
+              </div>
+              <div className="navbarCartText">Cart</div>
+            </div>
             {/* Three Dots Dropdown */}
             <div className="nav-item ellipsis-container" ref={ellipsisRef}>
               <FaEllipsisV
