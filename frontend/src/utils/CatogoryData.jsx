@@ -404,7 +404,7 @@ export const CategoryData = [
   },
   {
     id: "photographer",
-    title: "Photo & Video",
+    title: "Photo & Video Shoot",
     image: image4,
     tagline: "Freeze Time with Frames",
     icon: "📸",
@@ -907,7 +907,7 @@ export const CategoryData = [
   },
   {
     id: "makeup",
-    title: "Makeup & Mehendi Artist",
+    title: "Beauty Makeover",
     image: image11,
     tagline: "Beauty in Every Brush",
     icon: "💄",
@@ -1041,7 +1041,7 @@ export const CategoryData = [
   },
   {
     id: "transport",
-    title: "Wedding Transport",
+    title: "Wedding Carraige",
     image: image13,
     tagline: "Royal Rides Await You",
     icon: "🚗",
@@ -1175,7 +1175,7 @@ export const CategoryData = [
   },
   {
     id: "card-design",
-    title: "Custom Invitation Design & Printing",
+    title: "Card Design & Printing",
     image: image15,
     tagline: "Words That Welcome",
     icon: "💌",

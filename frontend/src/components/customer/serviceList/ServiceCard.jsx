@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../../customer/serviceList/ServiceCard.css";
+import "./ServiceCard.css";
 import { Link } from "react-router-dom";
 import { FaHeart, FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import ServiceDescription from "./ServiceDescription";
