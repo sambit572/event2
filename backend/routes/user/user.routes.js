@@ -7,11 +7,12 @@ import {
   sendPasswordResetLink,
   updateUserProfile,
   updateUserAvatar,
-  removeProfilePhoto, // Add this import
+  removeProfilePhoto,
   getUserEmail,
   resetPassword,
   changePassword,
   getUserProfile,
+  googleAuth,
 } from "../../controller/user/user.controller.js";
 
 import { verifyJwt } from "../../middleware/auth.middleware.js";
@@ -26,6 +27,7 @@ router.get("/", noNeedToLogin);
 router.post("/signup", registerUser);
 router.post("/login", loginUser);
 router.post("/logout", logoutUser);
+router.post("/auth/google", googleAuth); 
 router.post("/forgot-password", sendPasswordResetLink);
 router.post("/reset-password/:resetToken", resetPassword);
 

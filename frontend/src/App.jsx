@@ -14,8 +14,7 @@ import Register from "./pages/common/Register.jsx";
 // Customer Pages
 import Home from "./pages/customer/Home";
 import ServiceList from "./pages/customer/ServiceList";
-import CategoryCard from "./components/customer/home/CategoryCard.jsx";
-import ReviewSlider from "./components/customer/home/ReviewSlider.jsx";
+import ReviewSlider from "./components/customer/Home/ReviewSlider.jsx";
 import ServiceDetails from "./pages/customer/ServiceDetails";
 
 import VendorLegalConsent from "./pages/vendor/VendorLegalConsent";
@@ -47,7 +46,7 @@ import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 
 import BackToTop from "./pages/common/BackToTop";
-import FaqSection from "./components/customer/home/FaqSection.jsx";
+import FaqSection from "./components/customer/Home/FaqSection.jsx";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { setUser } from "./redux/UserSlice.js";
