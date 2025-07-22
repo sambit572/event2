@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import UserProfileIcon from "../../pages/common/UserProfileIcon.jsx";
 import toast from "react-hot-toast";
-import "../../pages/vendor/VendorLogin.jsx";
+// import "../../pages/vendor/VendorLogin.jsx";
 import "./Navbar.css";
 import { CgProfile } from "react-icons/cg";
 
@@ -49,7 +49,7 @@ const CATEGORIES = [
   "card-design",
 ];
 
-const Navbar = ({ onOpenLogin, onOpenRegister }) => {
+const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -70,6 +70,8 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
   const ellipsisRef = useRef(null);
   const vendorRef = useRef(null);
   const inputRef = useRef(null);
+  const mobileSearchRef = useRef(null);
+  const suggestionRef = useRef(null);
 
   const RELATED_TERMS = {};
 
@@ -163,9 +165,39 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
     if (window.innerWidth <= 768) {
       setShowMobileSearchBar((prev) => !prev);
     } else {
+      setShowMobileSearchBar(true); // set true on desktop
       if (inputRef.current) inputRef.current.focus();
     }
   };
+
+  // new function added
+const handleSearchNavigate = (text) => {
+  if (!text.trim()) return;
+
+  const searchText = text.toLowerCase().trim();
+
+  // Check for direct alias mapping
+  const matchedCategory = RELATED_TERMS[searchText];
+
+  if (matchedCategory) {
+    navigate(`/category/${matchedCategory}`);
+  } else {
+    // Try partial match within the search text
+    const foundCategory = Object.keys(RELATED_TERMS).find((key) =>
+      searchText.includes(key)
+    );
+
+    if (foundCategory) {
+      navigate(`/category/${RELATED_TERMS[foundCategory]}`);
+    } else {
+      // Fallback: full search results
+      navigate(`/search-results?q=${encodeURIComponent(searchText)}`);
+    }
+  }
+};
+
+
+  
   const fetchUserProfile = async () => {
     try {
       const res = await axios.get(`${BACKEND_URL}/user/profile`, {
@@ -287,7 +319,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
   const handleVendorClick = async () => {
     console.log("clicked vendor button ...");
     if (!userFirstName) {
-      onOpenLogin(); // force user to login first
+      onOpenVendorLogin(); // force user to login first
       return;
     }
 
@@ -307,7 +339,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
     console.log("Email status from backend:", emailStatus);
 
     if (emailStatus.existsInVendor) {
-      navigate("/vendor-login"); // already a vendor
+      onOpenVendorLogin(); // already a vendor
     } else {
       navigate("/vendor/register");
     }
@@ -329,11 +361,12 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
   useEffect(() => {
     const handleClickOutsideSearch = (e) => {
       if (
-        inputRef.current &&
-        !inputRef.current.contains(e.target) &&
+        mobileSearchRef.current &&
+        !mobileSearchRef.current.contains(e.target) &&
         window.innerWidth <= 768
       ) {
         setShowMobileSearchBar(false);
@@ -341,9 +374,30 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
     };
 
     document.addEventListener("mousedown", handleClickOutsideSearch);
-    return () =>
+    return () => {
       document.removeEventListener("mousedown", handleClickOutsideSearch);
+    };
   }, []);
+
+  // click anywhere to close search bar
+
+  useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (
+      suggestionRef.current &&
+      !suggestionRef.current.contains(event.target)
+    ) {
+      setShowSuggestions(false);
+    }
+  };
+
+  document.addEventListener("mousedown", handleClickOutside);
+
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, []);
+
 
   useEffect(() => {
     const updateName = () => {
@@ -379,7 +433,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
       <div className="navbar">
         {/* Logo */}
         <div className="logo">
-          <span onClick={handleHomeClick}>EventsBridge</span>
+          <span onClick={handleHomeClick}>EVENTSBRIDGE</span>
         </div>
 
         <div className="search-and-nav-icons-container ">
@@ -395,16 +449,20 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
               <input
                 ref={inputRef}
                 type="text"
-                placeholder="Search for Services and More"
+                placeholder={placeholders[placeholder]}
                 value={searchInput}
                 onChange={(e) => {
                   const value = e.target.value;
                   setSearchInput(value);
 
+                  // If input is empty or only spaces, hide suggestions
+                  if (value.trim() === "") {
+                    setShowSuggestions(false);
+                    return;
+                  }
+
                   if (value.trim().length > 1) {
                     fetchDynamicSuggestions(value);
-                  } else {
-                    setShowSuggestions(false);
                   }
 
                   const localHistory =
@@ -424,16 +482,29 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
                   setShowSuggestions(true);
                 }}
                 onFocus={handleInputFocus}
-                onKeyDown={handleSearch}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    setShowSuggestions(false); // ✅ closes dropdown
+                  }
+                  handleSearch(e); // ✅ keep your existing search logic
+                }}
               />
             )}
             <div className="searchbarIcon">
-              <FaSearch className="search-icon" onClick={handleSearchicon} />
+              <FaSearch
+                className="search-icon"
+                onClick={() => {
+                  console.log("Search icon clicked with:", searchInput);
+                  if (searchInput.trim() !== "") {
+                    handleSearchNavigate(searchInput);
+                  }
+                }}
+              />
             </div>
           </div>
 
           {showSuggestions && (
-            <div className="suggestions-dropdown">
+            <div className="suggestions-dropdown" ref={suggestionRef}>
               {suggestions.length > 0 ? (
                 suggestions.map((suggestion, index) => (
                   <div
@@ -492,7 +563,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
               </div>
 
               {showProfileDropdown && (
-                <div className="vendor-dropdown-menu profile-menu">
+                <div className="dropdown-menu profile-menu">
                   {!userFirstName ? (
                     <>
                       <h4 className="login-h4">Welcome</h4>
@@ -502,7 +573,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
                       <div className="dropdown-header">
                         <span className="text-[#001f3f]">New Customer?</span>
                         <button
-                          className="bg-blue-500 hover:bg-blue-600"
+                          className="bg-[#001f3f] hover:bg-gray-900"
                           onClick={handleSignupClick}
                         >
                           Sign Up
@@ -513,7 +584,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
                   ) : (
                     <>
                       <div
-                        className="flex flex-row gap-1 mb-[10px] text-[#001f3f] hover:text-[#022f5d] hover:font-bold text-[15px] cursor-pointer"
+                        className="flex flex-row gap-1 mb-[10px] text-[#001f3f] text-center hover:text-[#022f5d] hover:font-bold text-[15px] cursor-pointer"
                         onClick={() => navigate("/profile")}
                       >
                         <FaUser style={{ marginRight: "8px" }} />
@@ -549,46 +620,51 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
               className="nav-item profile-dropdown-container"
               ref={vendorRef}
             >
-              <div className="nav-items  max-[1024px]:flex-col max-[1024px]:text-[12px] max-[820px]:text-[11px] cursor-pointer">
-                <div className="flex items-center gap-2">
+              <div className="nav-items max-[1024px]:flex-col max-[1024px]:text-[12px] max-[820px]:text-[11px] cursor-pointer">
+                <div className="flex items-center gap-1">
                   <FaStore
                     className="icons max-[1024px]:h-[18px] max-[1024px]:w-[18px] max-[820px]:h-[15px]"
                     onClick={handleVendorClick}
                   />
                   <span
-                    className="text-[#001F3F] font-semibold max-[1024px]:mt-[6px] max-[820px]:text-[11px] max-[820px]:w-max"
+                    className="text-[#001F3F]  font-semibold  max-[820px]:text-[11px] max-[820px]:w-max"
                     onClick={() => {
+                      setShowVendorDropdown(false);
                       if (!userFirstName) {
                         const toastId = toast.custom((t) => (
                           <div
                             className={`${
-                              t.visible ? "animate-enter" : "animate-leave"
-                            } bg-white text-black px-4 py-3 rounded shadow-lg relative mt-20`}
+                              t.visible
+                                ? "animate-toast-wiggle"
+                                : "animate-leave"
+                            } fixed top-4 right-10 z-50 mt-12`}
                           >
-                            <span>Please login as a user first.</span>
-                            <div className="toast-progress"></div>
+                            {/* Toast Box */}
+                            <div className="relative bg-white border-10 border-[#001f3f] text-black px-6 py-3 rounded-xl w-fit max-w-sm">
+                              {/* Triangle */}
+                              <div className="absolute -top-2 right-4 w-0 h-0 border-l-8 border-r-8 border-b-[10px] border-l-transparent border-r-transparent"></div>
+
+                              {/* Toast Message */}
+                              <span className="font-semibold block">
+                                Please register as a user first.
+                              </span>
+                            </div>
                           </div>
                         ));
+
                         setTimeout(() => toast.dismiss(toastId), 2000);
                       } else {
-                        handleVendorClick(); // 🔥 Always trigger, regardless of VendorFirstName
+                        handleVendorClick();
                       }
                     }}
                   >
                     {!VendorFirstName ? (
-                      <>
-                         {/* Tailwind's hover: classes do not bubble through inner
-                        elements unless they inherit the color or are explicitly
-                        styled */}
-                        <span className="font-medium  hover:text-white">
-                          Be a Vendor
-                        </span>
-                      </>
+                      <span className="font-medium hover:bg-[#001f3f]  hover rounded px-2 py-1 transition-colors">
+                        Be a Vendor
+                      </span>
                     ) : (
                       <>
-                        <span className="font-medium hover:text-white">
-                          {VendorFirstName}
-                        </span>
+                        <span className="font-medium">{VendorFirstName}</span>
                       </>
                     )}
                   </span>
@@ -604,92 +680,127 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
               </div>
 
               {showVendorDropdown && (
-                <div className="vendor-dropdown-menu profile-menu">
-                  <h4 className="login-h4">Welcome Vendor</h4>
-                  <p className="login-p">
+                <div className="absolute top-[75px] right-[50px] bg-[#e5e5de] rounded-lg border border-white shadow-[0_4px_12px_rgba(0,0,0,0.1)] p-4 z-[2000] w-[350px]">
+                  <h4 className="text-lg font-semibold text-[#001F3F] text-center mb-1">
+                    Welcome Vendor
+                  </h4>
+                  <p className="text-gray-600 text-center mb-3">
                     Access your vendor tools and profile
                   </p>
-                  <div className="dropdown-header">
-                    <span className="text-[#001f3f]">New Vendor?</span>
-                    <button
-                      className=" bg-black hover:bg-gray-800 text-white"
-                      onClick={() => {
-                        setShowVendorDropdown(false);
-                        if (!userFirstName) {
-                          const toastId = toast.custom((t) => (
-                            <div
-                              className={`${
-                                t.visible ? "animate-enter" : "animate-leave"
-                              } bg-white text-black px-4 py-3 rounded shadow-lg relative mt-20`}
-                            >
-                              <span>Please register as a user first.</span>
-                              <div className="toast-progress"></div>
-                            </div>
-                          ));
 
-                          // Auto dismiss after 3 seconds
-                          setTimeout(() => toast.dismiss(toastId), 2000);
-                        } else {
-                          navigate("/vendor/register");
-                        }
-                      }}
-                    >
-                      Register
-                    </button>
-                  </div>
-                  <hr />
-                  <div className="dropdown-header">
-                    <button
-                      className=" bg-green-500 hover:bg-green-600"
-                      onClick={() => {
-                        setShowVendorDropdown(false);
-                        if (!userFirstName) {
-                          const toastId = toast.custom((t) => (
-                            <div
-                              className={`${
-                                t.visible ? "animate-enter" : "animate-leave"
-                              } bg-white text-black px-4 py-3 rounded shadow-lg relative mt-20`}
-                            >
-                              <span>Please register as a user first.</span>
-                              <div className="toast-progress"></div>
-                            </div>
-                          ));
+                  {/* If NOT logged in → Show Register */}
+                  {!VendorFirstName && (
+                    <>
+                      <div className="dropdown-header">
+                        <span className="text-[#001f3f] font-lg">
+                          New Vendor?
+                        </span>
+                      </div>
+                      <div className="flex flex-row gap-2 mt-2">
+                        {/* Register Button */}
+                        <button
+                          className="w-1/2 bg-black hover:bg-gray-800 text-white rounded px-3 py-2 transition-colors"
+                          onClick={() => {
+                            setShowVendorDropdown(false);
+                            if (!userFirstName) {
+                              const toastId = toast.custom((t) => (
+                                <div
+                                  className={`${
+                                    t.visible
+                                      ? "animate-toast-wiggle"
+                                      : "animate-leave"
+                                  } fixed top-4 right-10 z-50 mt-12`}
+                                >
+                                  {/* Toast Box */}
+                                  <div className="relative bg-white border-[#001f3f] text-black px-6 py-3 rounded-xl w-fit max-w-sm">
+                                    {/* Triangle */}
+                                    <div className="absolute -top-2 right-4 w-0 h-0 border-l-8 border-r-8 border-b-[10px] border-l-transparent border-r-transparent"></div>
 
-                          // Auto dismiss after 3 seconds
-                          setTimeout(() => toast.dismiss(toastId), 2000);
-                        } else {
-                          navigate("/vendor/register");
-                        }
-                      }}
-                    >
-                      Change Password
-                    </button>
-                    <button
-                      className=" bg-red-500 hover:bg-red-600"
-                      onClick={() => {
-                        setShowVendorDropdown(false);
-                        if (!userFirstName) {
-                          const toastId = toast.custom((t) => (
-                            <div
-                              className={`${
-                                t.visible ? "animate-enter" : "animate-leave"
-                              } bg-white text-black px-4 py-3 rounded shadow-lg relative mt-20`}
-                            >
-                              <span>Please register as a user first.</span>
-                              <div className="toast-progress"></div>
-                            </div>
-                          ));
+                                    {/* Toast Message */}
+                                    <span className="font-semibold block">
+                                      Please register as a user first.
+                                    </span>
+                                  </div>
+                                </div>
+                              ));
 
-                          // Auto dismiss after 3 seconds
-                          setTimeout(() => toast.dismiss(toastId), 2000);
-                        } else {
-                          vendorLogout();
-                        }
-                      }}
-                    >
-                      SignOut
-                    </button>
-                  </div>
+                              setTimeout(() => toast.dismiss(toastId), 2000);
+                            } else {
+                              navigate("/vendor/register");
+                            }
+                          }}
+                        >
+                          Register
+                        </button>
+
+                        {/* Login Button */}
+                        <button
+                          className="w-1/2 bg-blue-500 font-bold text-white hover:bg-blue-800 rounded px-3 py-2 transition-colors"
+                          onClick={() => {
+                            setShowVendorDropdown(false); // ✅ Close the dropdown
+
+                            if (!userFirstName) {
+                              const toastId = toast.custom((t) => (
+                                <div
+                                  className={`${
+                                    t.visible
+                                      ? "animate-toast-wiggle"
+                                      : "animate-leave"
+                                  } fixed top-4 right-10 z-50 mt-12`}
+                                >
+                                  {/* Toast Box */}
+                                  <div className="relative bg-white border-[#001f3f] text-black px-6 py-3 rounded-xl w-fit max-w-sm">
+                                    {/* Triangle */}
+                                    <div className="absolute -top-2 right-4 w-0 h-0 border-l-8 border-r-8 border-b-[10px] border-l-transparent border-r-transparent"></div>
+
+                                    {/* Toast Message */}
+                                    <span className="font-semibold block">
+                                      Please register as a user first.
+                                    </span>
+                                  </div>
+                                </div>
+                              ));
+
+                              setTimeout(() => toast.dismiss(toastId), 2000);
+                            } else {
+                              handleVendorClick();
+                            }
+
+                            // ✅ Always go to login (or open modal)
+                          }}
+                        >
+                          Login
+                        </button>
+                      </div>
+                    </>
+                  )}
+
+                  {/* If logged in → Show Change Password + Sign Out */}
+                  {VendorFirstName && (
+                    <>
+                      <hr className="my-2" />
+                      <div className="flex flex-col gap-2">
+                        <button
+                          className="bg-blue-500 hover:bg-blue-600 text-white py-3 px-3 rounded"
+                          onClick={() => {
+                            setShowVendorDropdown(false);
+                            navigate("/vendor/change-password");
+                          }}
+                        >
+                          Change Password
+                        </button>
+                        <button
+                          className="bg-red-500 hover:bg-red-600 text-white py-3 px-3 rounded"
+                          onClick={() => {
+                            setShowVendorDropdown(false);
+                            vendorLogout();
+                          }}
+                        >
+                          Sign Out
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </div>
               )}
             </div>
@@ -718,7 +829,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
                     }`}
                     onClick={() => navigate("/help_us")}
                   >
-                    <FaHandsHelping className="navbar_icon" /> Help Us
+                    <FaHandsHelping className="nav-icon" /> Help Us
                   </div>
                 </div>
               )}
@@ -728,7 +839,10 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
       </div>
 
       {showMobileSearchBar && window.innerWidth <= 768 && (
-        <div className="mobile-search-bar-container active">
+        <div
+          ref={mobileSearchRef}
+          className="mobile-search-bar-container active"
+        >
           <input
             ref={inputRef}
             type="text"
@@ -746,5 +860,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
 Navbar.propTypes = {
   onOpenLogin: PropTypes.func.isRequired,
   onOpenRegister: PropTypes.func.isRequired,
+  onOpenVendorLogin: PropTypes.func.isRequired,
 };
 export default Navbar;

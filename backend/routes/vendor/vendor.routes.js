@@ -1,6 +1,5 @@
 import express from "express";
 import { upload } from "../../middleware/multer.middleware.js";
-import { verifyVendorRegistrationComplete } from "../../middleware/verifyVendorProgress.middleware.js";
 import {
   createService,
   deleteService,
@@ -9,7 +8,7 @@ import {
   updateService,
   updateServiceImageFirst,
 } from "../../controller/vendor/service.controller.js";
-import { verifyVendorJwt,authenticateVendor, } from "../../middleware/VendorAuth.middleware.js";
+import { verifyVendorJwt } from "../../middleware/VendorAuth.middleware.js";
   
 
 
