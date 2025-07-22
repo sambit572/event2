@@ -57,8 +57,8 @@ import AddToCart from "./components/customer/YourCart/AddToCart.jsx";
 import DashboardEnforcement from "./utils/DashboardEnforcement.jsx";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-import ReviewSlider from "./components/customer/Home/ReviewSlider.jsx";
-import FaqSection from "./components/customer/Home/FaqSection.jsx";
+import ReviewSlider from "./components/customer/home/ReviewSlider.jsx";
+import FaqSection from "./components/customer/home/FaqSection.jsx";
 
 const App = () => {
   const navigate = useNavigate();
