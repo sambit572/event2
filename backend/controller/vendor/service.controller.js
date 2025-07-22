@@ -2,6 +2,7 @@ import { Service } from "../../model/vendor/service.model.js";
 import { deleteFromCloudinary, uploadOnCloudinary } from "../../utilities/cloudinary.js";
 import { ApiResponse } from "../../utilities/ApiResponse.js";
 import { ApiError } from "../../utilities/ApiError.js";
+import Vendor from "../../model/vendor/vendor.model.js";
 
 export const createService = async (req, res) => {
   try {
@@ -76,7 +77,7 @@ export const createService = async (req, res) => {
         .status(400)
         .json({ message: "Please upload at least one image" });
     }
-
+     
     // Save service document to database
     console.log("Creating new service document in DB...");
     const newService = await Service.create({
