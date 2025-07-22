@@ -166,6 +166,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
       setShowMobileSearchBar((prev) => !prev);
     } else {
       setShowMobileSearchBar(true); // set true on desktop
+      setShowMobileSearchBar(true); // set true on desktop
       if (inputRef.current) inputRef.current.focus();
     }
   };
@@ -362,9 +363,12 @@ const handleSearchNavigate = (text) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+
   useEffect(() => {
     const handleClickOutsideSearch = (e) => {
       if (
+        mobileSearchRef.current &&
+        !mobileSearchRef.current.contains(e.target) &&
         mobileSearchRef.current &&
         !mobileSearchRef.current.contains(e.target) &&
         window.innerWidth <= 768
@@ -375,7 +379,9 @@ const handleSearchNavigate = (text) => {
 
     document.addEventListener("mousedown", handleClickOutsideSearch);
     return () => {
+    return () => {
       document.removeEventListener("mousedown", handleClickOutsideSearch);
+    };
     };
   }, []);
 
@@ -434,6 +440,7 @@ const handleSearchNavigate = (text) => {
         {/* Logo */}
         <div className="logo">
           <span onClick={handleHomeClick}>EVENTSBRIDGE</span>
+          <span onClick={handleHomeClick}>EVENTSBRIDGE</span>
         </div>
 
         <div className="search-and-nav-icons-container ">
@@ -449,6 +456,7 @@ const handleSearchNavigate = (text) => {
               <input
                 ref={inputRef}
                 type="text"
+                placeholder={placeholders[placeholder]}
                 placeholder={placeholders[placeholder]}
                 value={searchInput}
                 onChange={(e) => {
@@ -574,6 +582,7 @@ const handleSearchNavigate = (text) => {
                         <span className="text-[#001f3f]">New Customer?</span>
                         <button
                           className="bg-[#001f3f] hover:bg-gray-900"
+                          className="bg-[#001f3f] hover:bg-gray-900"
                           onClick={handleSignupClick}
                         >
                           Sign Up
@@ -627,6 +636,7 @@ const handleSearchNavigate = (text) => {
                     onClick={handleVendorClick}
                   />
                   <span
+                    className="text-[#001F3F]  font-semibold  max-[820px]:text-[11px] max-[820px]:w-max"
                     className="text-[#001F3F]  font-semibold  max-[820px]:text-[11px] max-[820px]:w-max"
                     onClick={() => {
                       setShowVendorDropdown(false);
@@ -839,6 +849,10 @@ const handleSearchNavigate = (text) => {
       </div>
 
       {showMobileSearchBar && window.innerWidth <= 768 && (
+        <div
+          ref={mobileSearchRef}
+          className="mobile-search-bar-container active"
+        >
         <div
           ref={mobileSearchRef}
           className="mobile-search-bar-container active"

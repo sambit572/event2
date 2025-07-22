@@ -1,26 +1,49 @@
 import PropTypes from "prop-types";
-import "./LoginRegister.css"; // Reuse styles if already defined
+// import success from "../../assets/home/categoriesImages/NAMASTE-IMAGE.png";
+import "./LoginRegister.css"; // Reuse same styles for consistent layout
 
-
-const SuccessBlock = ({ showSuccessIcon }) => {
-
+const SuccessBlock = ({ onClose }) => {
   return (
-    <div className="success-container">
-      <h2 className="success-heading">Congratulations</h2>
-      <p>Welcome 🎉 to Eventsbridge</p>
+    <div className="login-wrapper" onClick={onClose}>
+      <div className="login-modal" onClick={(e) => e.stopPropagation()}>
+        {/* Close Button */}
+        <button className="modal-close" onClick={onClose}>
+          ×
+        </button>
 
-      {showSuccessIcon && <div className="success-icon"></div>}
+        {/* Title */}
+        <h2 className="login-title">Congratulations!</h2>
 
-      <h3 className="success-heading">Thank you!</h3>
-      <p className="success-message">
-        You have logged in successfully !! 
-      </p>
+        {/* Subtitle */}
+        <p className="signup-text" style={{ marginBottom: "12px" }}>
+          You Are Logged In Successfully !!
+        </p>
+
+        {/* Welcome Text */}
+        <h3 className="success-welcome">
+          Welcome to Eventsbridge
+        </h3>
+{/* 
+        
+        <div className="success-image-wrapper">
+          <img
+            src={success}
+            alt="Namaste Icon"
+            className="success-image"
+          />
+        </div> */}
+
+        {/* Thank You */}
+        <h3 className="signup-text success-thankyou">
+          Thank you
+        </h3>
+      </div>
     </div>
   );
 };
 
 SuccessBlock.propTypes = {
-  showSuccessIcon: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
 };
 
 export default SuccessBlock;

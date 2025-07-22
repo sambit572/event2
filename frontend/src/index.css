@@ -26,4 +26,10 @@
   .align_center {
     @apply flex items-center;
   }
+
+  @media (min-width: 640px) and (max-width: 680px) {
+    .custom-mt {
+      margin-top: 50px !important;
+    }
+  }
 }
