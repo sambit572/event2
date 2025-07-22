@@ -125,7 +125,7 @@ function DashBoardMain() {
       <div className="main-contain">
         <ToggleTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
-        <div className="relative w-full min-h-screen">
+        <div className="relative w-full">
           <button
             className="
       flex items-center ml-12 justify-center gap-2 text-center

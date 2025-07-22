@@ -1,5 +1,5 @@
-import dj from "../../../assets/service/djImg/dj img 2.jpg"
-import band from "../../../assets/service/band-img/band 7.webp"
+import dj from "../../../assets/service/djImg/dj-img 2.jpg"
+import band from "../../../assets/service/band-img/band-7.webp"
 import cat from "../../../assets/service/catering/catering1.jpeg"
 import photo from "../../../assets/service/photographer/camera2.jpg"
 import tent from "../../../assets/service/tent-img/tent1.jpg"

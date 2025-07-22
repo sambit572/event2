@@ -6,6 +6,7 @@ import PasswordInput from "../../utils/PasswordInput.jsx";
 import "./LoginRegister.css";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/UserSlice.js";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 const Register = ({ onClose, onSwitchToLogin }) => {
   const navigate = useNavigate();
@@ -20,6 +21,9 @@ const Register = ({ onClose, onSwitchToLogin }) => {
 
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -62,7 +66,7 @@ const Register = ({ onClose, onSwitchToLogin }) => {
         localStorage.setItem("userFirstName", userFirstName);
         localStorage.setItem("currentlyLoggedIn", "true");
         window.dispatchEvent(new Event("userLoggedIn"));
-      onClose();
+        onClose();
       }
     } catch (error) {
       const msg =
@@ -115,23 +119,59 @@ const Register = ({ onClose, onSwitchToLogin }) => {
             required
           />
 
-          <PasswordInput
+          {/* <PasswordInput
             name="password"
             placeholder="Create password"
             value={formData.password}
             onChange={handleChange}
             required
             minLength={8}
-          />
+          /> */}
+          <div className="relative w-full mb-4">
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              placeholder="Enter password"
+              value={formData.password}
+              onChange={handleChange}
+              minLength={8}
+              required
+              className="w-full px-2 pr-10 py-2 border border-[#001f3f] rounded-md focus:outline-none"
+            />
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
+            >
+              {showPassword ? <FiEyeOff /> : <FiEye />}
+            </span>
+          </div>
 
-          <PasswordInput
+          {/* <PasswordInput
             name="confirmPassword"
             placeholder="Confirm password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
             minLength={8}
-          />
+          /> */}
+          <div className="relative w-full mb-4">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              name="confirmPassword"
+              placeholder="Confirm password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              minLength={8}
+              required
+              className="w-full px-2 pr-10 py-2 border border-[#001f3f] rounded-md focus:outline-none"
+            />
+            <span
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
+            >
+              {showConfirmPassword ? <FiEyeOff /> : <FiEye />}
+            </span>
+          </div>
 
           {errorMsg && <p className="error">{errorMsg}</p>}
 

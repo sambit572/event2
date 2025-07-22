@@ -3,19 +3,19 @@ import img2 from "../assets/service/sub-img2.webp";
 import img3 from "../assets/service/sub-img3.jpg";
 import img4 from "../assets/service/sub-img4.jpg";
 import img5 from "../assets/service/sub-img5.jpg";
-import img6 from "../assets/service/djImg/dj ima1.jpeg";
-import img7 from "../assets/service/djImg/dj img 2.jpg";
-import img8 from "../assets/service/djImg/dj img 3.png";
-import img9 from "../assets/service/djImg/dj img 4.webp";
-import img10 from "../assets/service/djImg/dj img 5.webp";
+import img6 from "../assets/service/djImg/dj-img1.jpeg";
+import img7 from "../assets/service/djImg/dj-img 2.jpg";
+import img8 from "../assets/service/djImg/dj-img 3.png";
+import img9 from "../assets/service/djImg/dj-img 4.webp";
+import img10 from "../assets/service/djImg/dj-img 5.webp";
 
-import band1 from "../assets/service/band-img/band 1.jpg";
-import band2 from "../assets/service/band-img/band 2.jpg";
+import band1 from "../assets/service/band-img/band-1.jpg";
+import band2 from "../assets/service/band-img/band-2.jpg";
 import band3 from "../assets/service/band-img/band3.jpg";
-import band4 from "../assets/service/band-img/band 4.avif";
-import band5 from "../assets/service/band-img/band 5.webp";
-import band6 from "../assets/service/band-img/band 6.jpg";
-import band7 from "../assets/service/band-img/band 7.webp";
+import band4 from "../assets/service/band-img/band-4.avif";
+import band5 from "../assets/service/band-img/band-5.webp";
+import band6 from "../assets/service/band-img/band-6.jpg";
+import band7 from "../assets/service/band-img/band-7.webp";
 
 import tent1 from "../assets/service/tent-img/tent1.jpg";
 import tent2 from "../assets/service/tent-img/tent2.jpeg";
@@ -98,7 +98,7 @@ import mehendi3 from "../assets/service/makeup/mehendi3.jpg";
 import mehendi4 from "../assets/service/makeup/mehendi4.jpg";
 
 import image1 from "../assets/home/categoriesImages/dj.png";
-import image2 from "../assets/home/categoriesImages/bass brand.png";
+import image2 from "../assets/home/categoriesImages/bass-brand.png";
 import image3 from "../assets/home/categoriesImages/tenthouse.png";
 import image4 from "../assets/home/categoriesImages/photographer.png";
 import image5 from "../assets/home/categoriesImages/pandit.png";
@@ -107,11 +107,11 @@ import image7 from "../assets/home/categoriesImages/orchestra.png";
 import image8 from "../assets/home/categoriesImages/moulbi.png";
 import image9 from "../assets/home/categoriesImages/father.png";
 import image10 from "../assets/aboutUs/CATERING.png";
-import image11 from "../assets/home/categoriesImages/bride mehendi & makeup.png";
-import image12 from "../assets/home/categoriesImages/flower decor.png";
-import image13 from "../assets/home/categoriesImages/horse cart.png";
+import image11 from "../assets/home/categoriesImages/bride-mehendi-&-makeup.png";
+import image12 from "../assets/home/categoriesImages/flower-decor.png";
+import image13 from "../assets/home/categoriesImages/horse-cart.png";
 import image14 from "../assets/home/categoriesImages/fireworks.png";
-import image15 from "../assets/home/categoriesImages/marriage card.png";
+import image15 from "../assets/home/categoriesImages/marriage-card.png";
 
 export const CategoryData = [
   {
@@ -404,7 +404,7 @@ export const CategoryData = [
   },
   {
     id: "photographer",
-    title: "Photo & Video",
+    title: "Photo & Video Shoot",
     image: image4,
     tagline: "Freeze Time with Frames",
     icon: "📸",
@@ -840,7 +840,7 @@ export const CategoryData = [
   },
   {
     id: "catering",
-    title: "Catering",
+    title: "Food & Catering",
     image: image10,
     tagline: "Flavours that Speak Love",
     icon: "🍽️",
@@ -907,7 +907,7 @@ export const CategoryData = [
   },
   {
     id: "makeup",
-    title: "Makeup & Mehendi Artist",
+    title: "Beauty Makeover",
     image: image11,
     tagline: "Beauty in Every Brush",
     icon: "💄",
@@ -1041,7 +1041,7 @@ export const CategoryData = [
   },
   {
     id: "transport",
-    title: "Wedding Transport",
+    title: "Wedding Carraige",
     image: image13,
     tagline: "Royal Rides Await You",
     icon: "🚗",
@@ -1175,7 +1175,7 @@ export const CategoryData = [
   },
   {
     id: "card-design",
-    title: "Custom Invitation Design & Printing",
+    title: "Card Design & Printing",
     image: image15,
     tagline: "Words That Welcome",
     icon: "💌",
