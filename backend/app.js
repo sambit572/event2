@@ -5,6 +5,8 @@ import userRouter from "./routes/user/user.routes.js";
 import { vendor_router } from "./routes/vendor/vendor.routes.js";
 import { errorHandler } from "./middleware/error.middleware.js";
 import reviewRoutes from "./routes/review.routes.js";
+import test_router from "./routes/agenda/agenda.routes.js";
+import startAgenda from "./agenda/startAgenda.js";
 
 const app = express();
 
@@ -21,10 +23,25 @@ app.use(express.static("public"));
 app.use(express.json()); // ✅ Important
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+
+// use to start Agenda engine
+(async () => {
+  try {
+    await startAgenda();
+  } catch (err) {
+    console.error("❌ Agenda init failed:", err);
+  }
+})();
+
+
+
 app.use("/api/reviews", reviewRoutes);
 // ✅ Now register your routes
 app.use("/user", userRouter);
 app.use("/vendors", vendor_router);
+
+app.use("/test", test_router);
 
 // Health check route
 app.get("/", (req, res) => {
