@@ -14,8 +14,8 @@ import Register from "./pages/common/Register.jsx";
 // Customer Pages
 import Home from "./pages/customer/Home";
 import ServiceList from "./pages/customer/ServiceList";
-import CategoryCard from "./components/customer/Home/CategoryCard.jsx";
-import ReviewSlider from "./components/customer/Home/ReviewSlider.jsx";
+// import CategoryCard from "./components/customer/Home/CategoryCard.jsx";
+
 import ServiceDetails from "./pages/customer/ServiceDetails";
 
 import VendorLegalConsent from "./pages/vendor/VendorLegalConsent";
@@ -47,15 +47,18 @@ import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 
 import BackToTop from "./pages/common/BackToTop";
-import FaqSection from "./components/customer/Home/FaqSection.jsx";
+// import FaqSection from "./components/customer/Home/FaqSection.jsx";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { setUser } from "./redux/UserSlice.js";
 import { setVendor } from "./redux/VendorSlice.js";
 import ScrollToTop from "./components/common/ScrollToTop.jsx";
+import AddToCart from "./components/customer/YourCart/AddToCart.jsx";
 import DashboardEnforcement from "./utils/DashboardEnforcement.jsx";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+import ReviewSlider from "./components/customer/Home/ReviewSlider.jsx";
+import FaqSection from "./components/customer/Home/FaqSection.jsx";
 
 const App = () => {
   const navigate = useNavigate();
@@ -70,11 +73,6 @@ const App = () => {
 
   const handleOpenVendorRegister = () => {
     setShowVendorRegisterModal(true);
-    document.body.classList.add("modal-open");
-  };
-
-  const handleOpenVendorLogin = () => {
-    setShowVendorLoginModal(true);
     document.body.classList.add("modal-open");
   };
 
@@ -103,10 +101,15 @@ const App = () => {
     setShowLoginModal(false);
     document.body.classList.add("modal-open");
   };
+  const handleOpenVendorLogin = () => {
+    setShowVendorLoginModal(true);
+    document.body.classList.add("modal-open");
+  };
 
   const handleCloseModals = () => {
     setShowLoginModal(false);
     setShowRegisterModal(false);
+    setShowVendorLoginModal(false);
     // Re-enable body scroll
     document.body.classList.remove("modal-open");
   };
@@ -227,7 +230,7 @@ const App = () => {
               <DashBoardMain />
             </DashboardEnforcement>
         } />
-          <Route path="/vendor-login" element={<VendorLogin />} />
+          {/* <Route path="/vendor-login" element={<VendorLogin />} /> */}
           <Route
             path="/vendor/services/addServices"
             element={<AddServiceInDashboard />}
@@ -244,6 +247,7 @@ const App = () => {
           />
 
           {/* Misc */}
+          <Route path="/your-cart" element={<AddToCart />} />
           <Route path="/about_us" element={<AboutUs />} />
           <Route path="/help_us" element={<HelpUs />} />
           <Route path="/help-Center" element={<HelpCenter />} />
@@ -258,10 +262,6 @@ const App = () => {
       <BackToTop />
       <Chatbot />
 
-      {/* Conditionally render Footer */}
-      {!pagesWithoutFooter.some((path) =>
-        location.pathname.startsWith(path)
-      ) && <Footer />}
       {/* Auth Modals */}
       {showLoginModal && (
         <Login
@@ -282,9 +282,13 @@ const App = () => {
       )}
 
       {showVendorLoginModal && (
-        <VendorLogin onClose={handleCloseVendorModals} />
+        <VendorLogin
+          onClose={handleCloseModals}
+          onSwitchToLogin={handleOpenVendorLogin}
+        />
       )}
-
+      {/* Conditionally render Footer */}
+      {!pagesWithoutFooter.includes(location.pathname) && <Footer />}
       <Toaster
         toastOptions={{
           duration: 5000,

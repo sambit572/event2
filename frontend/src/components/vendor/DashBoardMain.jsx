@@ -125,7 +125,7 @@ function DashBoardMain() {
       <div className="main-contain">
         <ToggleTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
-        <div className="relative w-full min-h-screen">
+        <div className="relative w-full">
           <button
             className="flex items-center justify-center gap-2 text-center relative xl:right-[-950px] xl:top-[-70px] rounded-full bg-[#001f3f] font-semibold px-6 py-3 text-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 ease-in-out"
             onClick={handleOpenAddService}

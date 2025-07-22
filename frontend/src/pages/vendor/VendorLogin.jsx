@@ -1,27 +1,27 @@
 import { useState, useEffect } from "react";
+import ReactDOM from "react-dom";
+import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../utils/firebase.js";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import OTPVerification from "../common/OTPVerification.jsx";
-import PasswordInput from "../../utils/PasswordInput.jsx";
 import SuccessBlock from "../common/SuccessBlock.jsx";
 import axios from "axios";
 import "../common/LoginRegister.css";
 import { useDispatch } from "react-redux";
 import { setVendor } from "../../redux/VendorSlice.js";
 import { FiEyeOff, FiEye } from "react-icons/fi";
-import { BACKEND_URL } from "../../utils/constant.js";
 import { RxCross2 } from "react-icons/rx";
 import VendorForgotPass from "./VendorForgetPass.jsx"; //  NEW
+import { BACKEND_URL } from "../../utils/constant.js";
 
-const VendorLogin = () => {
+const VendorLogin = ({ onClose, onSwitchToLogin }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [step, setStep] = useState("form");
   const [showSuccessIcon, setShowSuccessIcon] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
-
   const [formData, setFormData] = useState({
     phoneNo: "",
     email: "",
@@ -45,19 +45,19 @@ const VendorLogin = () => {
       document.body.classList.remove("overflow-hidden");
       document.getElementById("footer")?.classList.remove("hidden");
     };
-  }, [isOpen, navigate]);
+  }, []);
 
   useEffect(() => {
     if (step === "success") {
       setShowSuccessIcon(false);
       const iconTimer = setTimeout(() => setShowSuccessIcon(true), 500);
-      const closeTimer = setTimeout(() => setIsOpen(false), 5000);
+      const closeTimer = setTimeout(() => onClose?.(), 3000);
       return () => {
         clearTimeout(iconTimer);
         clearTimeout(closeTimer);
       };
     }
-  }, [step]);
+  }, [step, onClose]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -79,11 +79,8 @@ const VendorLogin = () => {
     e.preventDefault();
     const phone = formData.phoneNo.replace(/\D/g, "");
     const phoneNumber = "+91" + phone;
-
-    if (!/^\+91\d{10}$/.test(phoneNumber)) {
-      setErrorMsg("Invalid Indian phone number.");
-      return;
-    }
+    if (!/^\+91\d{10}$/.test(phoneNumber))
+      return setErrorMsg("Invalid Indian phone number.");
 
     try {
       setupRecaptcha();
@@ -96,7 +93,6 @@ const VendorLogin = () => {
       console.log("OTP sent successfully : ",confirmationResult)
       setStep("otp");
     } catch (err) {
-      console.error("OTP error:", err);
       setErrorMsg("OTP send failed. Try again.");
     }
   }
@@ -104,10 +100,8 @@ const VendorLogin = () => {
   async function handleLogin(e) {
     e.preventDefault();
     setErrorMsg("");
-
-    if (!formData.email && !formData.phoneNo) {
+    if (!formData.email && !formData.phoneNo)
       return setErrorMsg("Enter email or phone to log in.");
-    }
 
     try {
       const res = await axios.post(
@@ -121,6 +115,7 @@ const VendorLogin = () => {
       );
       const { vendor } = res.data.data;
       dispatch(setVendor(vendor));
+
       const fullName = vendor.fullName || "";
       const firstName = fullName.split(" ")[0];
       const firstLetter = firstName?.charAt(0).toUpperCase() || "";
@@ -130,9 +125,7 @@ const VendorLogin = () => {
       localStorage.setItem("VendorFullName", fullName);
       localStorage.setItem("VendorFirstName", firstName);
       localStorage.setItem("VendorInitial", firstLetter);
-      if (profilePic) {
-        localStorage.setItem("VendorProfilePic", profilePic);
-      }
+      if (profilePic) localStorage.setItem("VendorProfilePic", profilePic);
 
       window.dispatchEvent(new Event("userLoggedIn"));
       setStep("success");
@@ -150,27 +143,18 @@ const VendorLogin = () => {
     if (step === "success")
       return <SuccessBlock showSuccessIcon={showSuccessIcon} />;
     if (step === "otp") return <OTPVerification setStep={setStep} />;
-    return (
-      <>
-        <form
-          onSubmit={handleLogin}
-          className={`space-y-4 w-full relative ${
-            step === "forgot" ? "opacity-40 pointer-events-none" : ""
-          }`}
-        >
+    if (step === "form") {
+      return (
+        <form className="login-form" onSubmit={handleLogin}>
           <input
-            type="text"
+            type="number"
             name="phoneNo"
             placeholder="+91 | Phone Number"
             value={formData.phoneNo}
             onChange={handleChange}
-            className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-[#001f3f]"
+            className="login-input"
           />
-          <button
-            type="button"
-            onClick={handleGetOTP}
-            className="w-[340px] ml-1.5 bg-yellow-500 text-[#001f3f] font-semibold py-2 rounded-md transition"
-          >
+          <button type="button" onClick={handleGetOTP} className="otp-button">
             Send OTP
           </button>
 
@@ -180,10 +164,10 @@ const VendorLogin = () => {
             placeholder="Enter email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-[#001f3f]"
+            className="login-input"
           />
 
-          <div className="relative">
+          <div className="relative w-full mb-4">
             <input
               type={showPassword ? "text" : "password"}
               name="password"
@@ -191,80 +175,63 @@ const VendorLogin = () => {
               value={formData.password}
               onChange={handleChange}
               minLength={8}
-              className="w-full border border-gray-300 px-4 py-2 pr-10 rounded-md focus:outline-none focus:ring-2 focus:ring-[#001f3f]"
+              required
+              className="w-full px-4 pr-10 py-2 border border-[#001f3f] rounded-md focus:outline-none"
             />
             <span
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-600 cursor-pointer"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
             >
               {showPassword ? <FiEyeOff /> : <FiEye />}
             </span>
           </div>
 
-          <div className="text-right text-sm">
-            <span
-              onClick={() => setStep("forgot")}
-              className="text-blue-600 hover:underline cursor-pointer"
-            >
-              Forgot Your Password?
-            </span>
+          <div className="Login-forget-password-link">
+            <a href="/vendor/forgot-password">Forgot your password?</a>
           </div>
 
-          {errorMsg && <p className="text-red-600 text-sm">{errorMsg}</p>}
+          {errorMsg && <p className="error">{errorMsg}</p>}
 
-          <button
-            type="submit"
-            className="w-[340px] ml-1.5 bg-yellow-500 text-[#001f3f] font-semibold py-2 rounded-md hover:bg-yellow-550 transition"
-          >
+          <button type="submit" className="otp-button" onClick={handleLogin}>
             Login
           </button>
-
-          <p className="text-center text-sm text-[#001f3f]">
+          <p className="signup-text">
             Don’t have an account?{" "}
             <span
+              className="login-link"
               onClick={() => {
-                setIsOpen(false);
-                navigate("/vendor/register");
+                onClose(); // ✅ Close modal properly
+                navigate("/vendor/register"); // ✅ Then navigate
               }}
-              className="text-blue-600 cursor-pointer hover:underline"
             >
               Sign Up
             </span>
           </p>
         </form>
-
-        {step === "forgot" && (
-          <VendorForgotPass onClose={() => setStep("form")} />
-        )}
-      </>
-    );
+      );
+    }
+    return null;
   };
 
-  return (
-    <div
-      className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50"
-      onClick={() => setIsOpen(false)}
-    >
-      <div
-        className="bg-[#ededde] rounded-lg shadow-lg p-6 w-[400px] h-[475px] mt-14 max-w-md relative"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <span
-          onClick={() => setIsOpen(false)}
-          className="absolute top-3 right-3 text-gray-500 hover:text-[#001f3f] text-2xl cursor-pointer"
-        >
+  const modalContent = (
+    <div className="login-wrapper" onClick={onClose}>
+      <div className="login-modal" onClick={(e) => e.stopPropagation()}>
+        <button className="modal-close" onClick={onClose}>
           <RxCross2 />
-        </span>
-
-        <div id="recaptcha-container" />
-        <h2 className="text-2xl font-semibold text-center text-[#001f3f] mb-4">
-          Vendor Login
-        </h2>
-
+        </button>
+        <div id="recaptcha-container"></div>
+        <h2 className="login-title">Vendor Login</h2>
         {renderStep()}
       </div>
     </div>
   );
+
+  return ReactDOM.createPortal(modalContent, document.body);
+};
+
+VendorLogin.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  onSwitchToLogin: PropTypes.func,
 };
 
 export default VendorLogin;

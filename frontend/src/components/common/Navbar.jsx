@@ -171,33 +171,31 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
   };
 
   // new function added
-const handleSearchNavigate = (text) => {
-  if (!text.trim()) return;
+  const handleSearchNavigate = (text) => {
+    if (!text.trim()) return;
 
-  const searchText = text.toLowerCase().trim();
+    const searchText = text.toLowerCase().trim();
 
-  // Check for direct alias mapping
-  const matchedCategory = RELATED_TERMS[searchText];
+    // Check for direct alias mapping
+    const matchedCategory = RELATED_TERMS[searchText];
 
-  if (matchedCategory) {
-    navigate(`/category/${matchedCategory}`);
-  } else {
-    // Try partial match within the search text
-    const foundCategory = Object.keys(RELATED_TERMS).find((key) =>
-      searchText.includes(key)
-    );
-
-    if (foundCategory) {
-      navigate(`/category/${RELATED_TERMS[foundCategory]}`);
+    if (matchedCategory) {
+      navigate(`/category/${matchedCategory}`);
     } else {
-      // Fallback: full search results
-      navigate(`/search-results?q=${encodeURIComponent(searchText)}`);
+      // Try partial match within the search text
+      const foundCategory = Object.keys(RELATED_TERMS).find((key) =>
+        searchText.includes(key)
+      );
+
+      if (foundCategory) {
+        navigate(`/category/${RELATED_TERMS[foundCategory]}`);
+      } else {
+        // Fallback: full search results
+        navigate(`/search-results?q=${encodeURIComponent(searchText)}`);
+      }
     }
-  }
-};
+  };
 
-
-  
   const fetchUserProfile = async () => {
     try {
       const res = await axios.get(`${BACKEND_URL}/user/profile`, {
@@ -382,22 +380,21 @@ const handleSearchNavigate = (text) => {
   // click anywhere to close search bar
 
   useEffect(() => {
-  const handleClickOutside = (event) => {
-    if (
-      suggestionRef.current &&
-      !suggestionRef.current.contains(event.target)
-    ) {
-      setShowSuggestions(false);
-    }
-  };
+    const handleClickOutside = (event) => {
+      if (
+        suggestionRef.current &&
+        !suggestionRef.current.contains(event.target)
+      ) {
+        setShowSuggestions(false);
+      }
+    };
 
-  document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
 
-  return () => {
-    document.removeEventListener("mousedown", handleClickOutside);
-  };
-}, []);
-
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     const updateName = () => {
@@ -552,7 +549,7 @@ const handleSearchNavigate = (text) => {
                   )}
                 </span>
 
-                {/* ⬇️ Always show dropdown toggle arrow */}
+                {/* ⬇ Always show dropdown toggle arrow */}
                 <span onClick={handleToggleProfileDropdown}>
                   {showProfileDropdown ? (
                     <FaChevronUp className="text-sm" />

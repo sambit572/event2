@@ -2,23 +2,23 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./Home.css";
 
-import shaadiMobile from "../../assets/home/sliderImages/shaadiMobile.png";
-import shaadiTablet from "../../assets/home/sliderImages/shaadiTablet.png";
-import shaadiDesktop from "../../assets/home/sliderImages/shaadiDesktop.png";
-import christianMobile from "../../assets/home/sliderImages/christianMobile.png";
-import christianTablet from "../../assets/home/sliderImages/christianTablet.png";
-import christianDesktop from "../../assets/home/sliderImages/christianDesktop.png";
-import cateringMobile from "../../assets/home/sliderImages/cateringMobile.png";
-import cateringTablet from "../../assets/home/sliderImages/cateringTablet.png";
-import cateringDesktop from "../../assets/home/sliderImages/cateringDesktop.png";
+import shaadiMobile from "../../assets/home/sliderImages/shaadi-mobile.png";
+import shaadiTablet from "../../assets/home/sliderImages/shaadi-tablet.png";
+import shaadiDesktop from "../../assets/home/sliderImages/shaadi-desktop.png";
+import christianMobile from "../../assets/home/sliderImages/christian-mobile.png";
+import christianTablet from "../../assets/home/sliderImages/christian-tablet.png";
+import christianDesktop from "../../assets/home/sliderImages/christian-desktop.png";
+import cateringMobile from "../../assets/home/sliderImages/catering-mobile.png";
+import cateringTablet from "../../assets/home/sliderImages/catering-tablet.png";
+import cateringDesktop from "../../assets/home/sliderImages/catering-desktop.png";
 
-import CategoryCard from "../../components/customer/Home/CategoryCard";
-import ReviewSlider from "../../components/customer/Home/ReviewSlider";
-import FaqSection from "../../components/customer/Home/FaqSection";
-import ImageSlider from "../../components/customer/Home/ImageSlider";
+import CategoryCard from "../../components/customer/home/CategoryCard.jsx";
+import ReviewSlider from "../../components/customer/home/ReviewSlider.jsx";
+import FaqSection from "../../components/customer/home/FaqSection.jsx";
+import ImageSlider from "../../components/customer/home/ImageSlider.jsx";
 
 import Milestones from "../../components/common/aboutus/Milestones";
-import AddsBanner from "../../components/customer/Home/AddsBanner";
+import AddsBanner from "../../components/customer/home/AddsBanner.jsx";
 import categories from "../../utils/CatogoryData.jsx";
 
 const images = [
