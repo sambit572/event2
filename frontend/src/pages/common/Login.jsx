@@ -15,7 +15,7 @@ import { setUser } from "../../redux/UserSlice.js";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-const Login = ({ onClose }) => {
+const Login = ({ onClose, onSwitchToRegister }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [step, setStep] = useState("form"); // 'form', 'otp', 'success', 'google-phone'
@@ -335,7 +335,7 @@ const Login = ({ onClose }) => {
           Don't have an account?{" "}
           <span
             className="login-link cursor-pointer font-semibold text-blue-600 hover:underline"
-            onClick={() => navigate("/register")}
+            onClick={onSwitchToRegister}
           >
             Sign Up
           </span>

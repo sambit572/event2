@@ -48,7 +48,6 @@
 
 .step-circle.active {
   background: rgb(145, 227, 91);
-;
 }
 
 .step-sub-label {
@@ -59,17 +58,6 @@
   padding: 0.3rem 0.6rem;
   border-radius: 8px;
 }
-
-/* Line Between Steps */
-.line {
-  position: absolute;
-  top: 55px;
-  right: -50%;
-  left:50%;
-  height: 2px;
- 
-}
-
 
 /* Fixed line connection */
 .step-wrapper:not(:last-child)::after {

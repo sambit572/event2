@@ -6,7 +6,7 @@ import ServiceCard from "./../../components/customer/servicelist/ServiceCard";
 import { useNavigate, useParams } from "react-router-dom";
 import categories from "../../utils/CatogoryData.jsx";
 
-const ServiceList = () => {
+const ServiceList = ({ onSwitchToLogin }) => {
   const { categoryId } = useParams();
   const navigate = useNavigate();
 
@@ -18,7 +18,7 @@ const ServiceList = () => {
       <div className="serviceCardDetails">
         {category.services.map((service, idx) => (
           <div className="singleServiceCard" key={idx}>
-            <ServiceCard service={service} />
+            <ServiceCard service={service} onSwitchToLogin={onSwitchToLogin} />
           </div>
         ))}
       </div>

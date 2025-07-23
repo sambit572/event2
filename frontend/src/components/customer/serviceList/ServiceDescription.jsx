@@ -4,8 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { FaHeart } from "react-icons/fa6";
 
-const ServiceDescription = ({ service }) => {
-  const navigate = useNavigate(); 
+const ServiceDescription = ({ service, onSwitchToLogin }) => {
+  const navigate = useNavigate();
   const [isWishlisted, setIsWishlisted] = useState(false);
 
   const {
@@ -22,13 +22,19 @@ const ServiceDescription = ({ service }) => {
     setIsWishlisted(!isWishlisted);
   };
 
-   const handleBookNow = () => {
-    navigate("./UserDetails"); // ✅ Navigate on click
+  const handleBookNow = () => {
+    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
+
+    if (isLoggedIn) {
+      navigate("/userdetails");
+    } else {
+      onSwitchToLogin(true); // ✅ this opens your login popup
+    }
   };
 
   return (
     <section className="serviceDescription">
-       <Link to={`/service/${service.id}`} className="link">
+      <Link to={`/service/${service.id}`} className="link">
         <h3>{title}</h3>
         <h5>{service.vandor}</h5>
         <p className="address">

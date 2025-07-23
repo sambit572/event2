@@ -170,7 +170,10 @@ const App = () => {
         <Routes>
           {/* Customer Routes */}
           <Route path="/" element={<Home />} />
-          <Route path="/category/:categoryId" element={<ServiceList />} />
+          <Route
+            path="/category/:categoryId"
+            element={<ServiceList onSwitchToLogin={handleOpenLogin} />}
+          />
           {/* <Route path="/categories" element={<CategoryCard />}></Route> */}
           <Route path="/reviews" element={<ReviewSlider />} />
           <Route path="/service/:serviceId" element={<ServiceDetails />} />

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { FaHeart, FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import ServiceDescription from "./ServiceDescription";
 
-const ServiceCard = ({ service }) => {
+const ServiceCard = ({ service, onSwitchToLogin }) => {
   const { img } = service;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [hovered, setHovered] = useState(false);
@@ -54,7 +54,7 @@ const ServiceCard = ({ service }) => {
           ))}
         </div>
       </div>
-      <ServiceDescription service={service} />
+      <ServiceDescription service={service} onSwitchToLogin={onSwitchToLogin} />
     </div>
   );
 };
