@@ -532,6 +532,9 @@
   .search-bar {
     margin-right: 20px;
   }
+  .font-medium {
+    display: none;
+  }
 }
 
 @media (max-width: 860px) {
