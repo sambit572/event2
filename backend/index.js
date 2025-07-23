@@ -7,7 +7,6 @@ import { connectToDb } from "./db/db.js";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import NegotiationModel from "./model/common/NegotiationModel.js";
-
 config({ path: "./env" });
 
 // Create HTTP server
@@ -92,6 +91,7 @@ connectToDb()
     server.listen(port, () => {
       console.log(`✅ Server running on port ${port}`);
     });
+   
   })
   .catch((err) => {
     console.error(`❌ DB connection failed: ${err}`);

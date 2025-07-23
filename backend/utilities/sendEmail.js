@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { text } from "stream/consumers";
 
 export const sendEmail = async ({ to, subject, html, attachments }) => {
   try {
@@ -16,11 +17,23 @@ export const sendEmail = async ({ to, subject, html, attachments }) => {
       },
     });
 
+    const wrappedHtml = `
+  <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #ffffff;">
+    <h2 style="color: #0d6efd;">EventsBridge</h2>
+    ${html}
+    <hr style="margin-top: 30px;" />
+    <p style="font-size: 12px; color: #888;">This email was sent automatically by EventsBridge. Please do not reply directly to this email.</p>
+  </div>
+`;
+
+const plainText = html.replace(/<[^>]+>/g, '');
+
     const mailOptions = {
       from: `"EventsBridge" <${process.env.EMAIL_USER}>`,
       to,
       subject,
-      html,
+      html:wrappedHtml,
+      text:plainText,
       ...(attachments && { attachments }), // ✅ safely include if exists
     };
 
