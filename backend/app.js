@@ -7,6 +7,8 @@ import { errorHandler } from "./middleware/error.middleware.js";
 import reviewRoutes from "./routes/review.routes.js";
 import test_router from "./routes/agenda/agenda.routes.js";
 import startAgenda from "./agenda/startAgenda.js";
+import "./cronjobs/startCronjobs.js"; 
+
 
 const app = express();
 
