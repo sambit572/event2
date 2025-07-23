@@ -227,7 +227,13 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
   };
 
   const handleToggleProfileDropdown = () => {
-    setShowProfileDropdown((prev) => !prev);
+    setShowProfileDropdown((prev) => {
+      if (!prev) {
+        setShowVendorDropdown(false);
+        setShowEllipsisDropdown(false);
+      }
+      return !prev;
+    });
   };
 
   const handleLogout = async () => {
@@ -343,7 +349,27 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
       navigate("/vendor/register");
     }
   };
+  useEffect(() => {
+    const handleClickOutsideAll = (event) => {
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(event.target) &&
+        vendorRef.current &&
+        !vendorRef.current.contains(event.target) &&
+        ellipsisRef.current &&
+        !ellipsisRef.current.contains(event.target)
+      ) {
+        setShowProfileDropdown(false);
+        setShowVendorDropdown(false);
+        setShowEllipsisDropdown(false);
+      }
+    };
 
+    document.addEventListener("mousedown", handleClickOutsideAll);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutsideAll);
+    };
+  }, []);
   useEffect(() => {
     const handleClickOutsideSearch = (e) => {
       const clickedOutsideDesktop =
@@ -616,7 +642,13 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                   <span
                     className="text-[#001F3F]  font-semibold  max-[820px]:text-[11px] max-[820px]:w-max"
                     onClick={() => {
-                      setShowVendorDropdown(false);
+                      setShowVendorDropdown((prev) => {
+                        if (!prev) {
+                          setShowProfileDropdown(false);
+                          setShowEllipsisDropdown(false);
+                        }
+                        return !prev;
+                      });
                       if (!userFirstName) {
                         const toastId = toast.custom((t) => (
                           <div
@@ -656,7 +688,18 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                     )}
                   </span>
 
-                  <span onClick={() => setShowVendorDropdown((prev) => !prev)}>
+                  <span
+                    onClick={() => {
+                      setShowVendorDropdown((prev) => {
+                        if (!prev) {
+                          setShowProfileDropdown(false);
+                          setShowEllipsisDropdown(false);
+                        }
+                        return !prev;
+                      });
+                    }}
+                  >
+                    {" "}
                     {showVendorDropdown ? (
                       <FaChevronUp className="text-sm" />
                     ) : (
@@ -667,7 +710,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
               </div>
 
               {showVendorDropdown && (
-                <div className="absolute top-[75px] right-[50px] bg-[#e5e5de] rounded-lg border border-white shadow-[0_4px_12px_rgba(0,0,0,0.1)] p-4 z-[2000] w-[350px]">
+                <div className="vendor_dropdown-menu absolute top-[75px]  right-[50px] bg-[#e5e5de] rounded-lg border border-white shadow-[0_4px_12px_rgba(0,0,0,0.1)] p-4 z-[2000] w-[278px] ">
                   <h4 className="text-lg font-semibold text-[#001F3F] text-center mb-1">
                     Welcome Vendor
                   </h4>
@@ -801,7 +844,15 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
             <div className="nav-item ellipsis-container" ref={ellipsisRef}>
               <FaEllipsisV
                 className="three-dot"
-                onClick={() => setShowEllipsisDropdown((prev) => !prev)}
+                onClick={() => {
+                  setShowEllipsisDropdown((prev) => {
+                    if (!prev) {
+                      setShowVendorDropdown(false);
+                      setShowProfileDropdown(false);
+                    }
+                    return !prev;
+                  });
+                }}
                 style={{ cursor: "pointer" }}
               />
               {showEllipsisDropdown && (
@@ -810,7 +861,10 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                     className={`dropdown-item ${
                       location.pathname === "/about_us" ? "active" : ""
                     }`}
-                    onClick={() => navigate("/about_us")}
+                    onClick={() => {
+                      navigate("/about_us");
+                      setShowEllipsisDropdown(!showEllipsisDropdown);
+                    }}
                   >
                     <FcAbout className="navbar_icon" /> About Us
                   </div>
@@ -819,7 +873,10 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                     className={`dropdown-item ${
                       location.pathname === "/help_us" ? "active" : ""
                     }`}
-                    onClick={() => navigate("/help_us")}
+                    onClick={() => {
+                      navigate("/help_us");
+                      setShowEllipsisDropdown(!showEllipsisDropdown);
+                    }}
                   >
                     <FaHandsHelping className="nav-icon" /> Help Us
                   </div>
