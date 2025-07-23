@@ -1,6 +1,11 @@
 import { Router } from "express";
 
-import { scheduleDummyReminder, scheduleVendorReminder } from "../../controller/common/agendaTest.controller.js";
+import {
+  scheduleDummyReminder,
+  schedulePDFGeneration,
+  scheduleReviewRequest,
+  scheduleVendorReminder,
+} from "../../controller/common/agendaTest.controller.js";
 
 const test_router = Router();
 
@@ -8,5 +13,9 @@ const test_router = Router();
 test_router.post("/reminder", scheduleDummyReminder);
 
 test_router.post("/vendor-reminder", scheduleVendorReminder);
+
+test_router.post("/review-request", scheduleReviewRequest);
+
+test_router.post("/booking-pdf", schedulePDFGeneration);
 
 export default test_router;
