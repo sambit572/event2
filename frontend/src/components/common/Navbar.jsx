@@ -494,13 +494,15 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                   setSuggestions(combinedSuggestions);
                   setShowSuggestions(true);
                 }}
-                onFocus={handleInputFocus}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    setShowSuggestions(false); // ✅ closes dropdown
-                  }
-                  handleSearch(e); // ✅ keep your existing search logic
-                }}
+                autoFocus
+
+                // onFocus={handleInputFocus}
+                // onKeyDown={(e) => {
+                //   if (e.key === "Enter") {
+                //     setShowSuggestions(false); // ✅ closes dropdown
+                //   }
+                //   handleSearch(e); // ✅ keep your existing search logic
+                // }}
               />
             )}
             <div className="searchbarIcon">
@@ -555,12 +557,12 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                   {!userFirstName ? (
                     <>
                       <CgProfile className="text-2xl" />
-                      <span className="font-medium">Login</span>
+                      <span className="font-medium vendorNameText">Login</span>
                     </>
                   ) : (
                     <>
                       <UserProfileIcon currentUser={currentUser} />
-                      <span className="font-medium">{`Hi, ${userFirstName}`}</span>
+                      <span className="font-medium vendorNameText">{`Hi, ${userFirstName}`}</span>
                     </>
                   )}
                 </span>
@@ -678,12 +680,14 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                     }}
                   >
                     {!VendorFirstName ? (
-                      <span className="font-medium hover:bg-[#001f3f]  hover rounded px-2 py-1 transition-colors">
+                      <span className="font-medium vendorNameText hover:bg-[#001f3f]  hover rounded px-2 py-1 transition-colors">
                         Be a Vendor
                       </span>
                     ) : (
                       <>
-                        <span className="font-medium">{VendorFirstName}</span>
+                        <span className="font-medium vendorNameText">
+                          {VendorFirstName}
+                        </span>
                       </>
                     )}
                   </span>

@@ -14,8 +14,9 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/UserSlice.js";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+import ForgotPass from "./../customer/ForgotPass";
 
-const Login = ({ onClose }) => {
+const Login = ({ onClose, onSwitchToRegister }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [step, setStep] = useState("form"); // 'form', 'otp', 'success', 'google-phone'
@@ -195,8 +196,7 @@ const Login = ({ onClose }) => {
   };
 
   const renderStep = () => {
-    if (step === "success")
-      return <SuccessBlock showSuccessIcon={showSuccessIcon} />;
+    if (step === "success") return <SuccessBlock onClose={onClose} />;
 
     if (step === "otp") return <OTPVerification setStep={setStep} />;
 
@@ -256,12 +256,10 @@ const Login = ({ onClose }) => {
         <GoogleLogin
           onSuccess={handleGoogleSuccess}
           onError={() => setErrorMsg("Google login failed.")}
-          useOneTap
+          width="100%"
           text="signup_with"
           shape="rectangular"
           logo_alignment="center"
-          scope="profile email"
-          width="100%"
         />
 
         <div className="flex items-center my-4">
@@ -318,8 +316,11 @@ const Login = ({ onClose }) => {
           </span>
         </div>
 
-        <div className="Login-forget-password-link mb-5  mt-5">
-          <a href="/forgot-password">Forgot your password?</a>
+        <div
+          className="Login-forget-password-link mb-5 cursor-pointer mt-5"
+          onClick={() => setShowForgotModal(true)}
+        >
+          Forgot your password?
         </div>
 
         {errorMsg && <p className="error">{errorMsg}</p>}
@@ -337,7 +338,7 @@ const Login = ({ onClose }) => {
           Don't have an account?{" "}
           <span
             className="login-link cursor-pointer font-semibold text-blue-600 hover:underline"
-            onClick={() => navigate("/register")}
+            onClick={onSwitchToRegister}
           >
             Sign Up
           </span>
@@ -358,6 +359,9 @@ const Login = ({ onClose }) => {
         <h2 className="login-title">Log In</h2>
         {renderStep()}
       </div>
+      {showForgotModal && (
+        <ForgotPass onClose={() => setShowForgotModal(false)} />
+      )}
     </div>
   );
 };

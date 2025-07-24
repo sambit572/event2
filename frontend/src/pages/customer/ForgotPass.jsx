@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
-import "./ForgotPass.css";
+// import "./ForgotPass.css";
+
 function ForgotPass({ onClose }) {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -35,30 +36,50 @@ function ForgotPass({ onClose }) {
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="custom-form modal-box">
-        {/* ❌ Close button in top-right corner */}
+    <div
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4"
+      onClick={onClose}
+    >
+      <div
+        className="relative w-full max-w-md p-6 sm:p-8 rounded-lg shadow-lg h-auto sm:h-auto bg-gradient-to-r from-[#f1ecad] to-[#fdf47e]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close Button */}
         <button
-          className="modal-close-button"
+          className="absolute top-4 bg-yellow-300 right-4 text-gray-800 text-2xl font-bold focus:outline-none"
           onClick={onClose}
-          type="button"
           aria-label="Close modal"
+          type="button"
         >
           &times;
         </button>
-        <h2 className="custom-heading">Forgot Password</h2>
-        <p className="subheading">Enter your valid email address</p>
-        <form onSubmit={handleSubmit}>
+
+        {/* Heading */}
+        <h2 className="text-2xl font-semibold text-center mb-2 text-black">
+          Forgot Password
+        </h2>
+
+        {/* Subheading */}
+        <p className="text-base text-center text-gray-600 mb-4">
+          Enter your valid email address
+        </p>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="email"
-            className="custom-input"
+            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-yellow-400"
             placeholder="Enter your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
             disabled={loading}
           />
-          <button type="submit" className="custom-button" disabled={loading}>
+          <button
+            type="submit"
+            className="w-full bg-[#ffbf00] hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded transition disabled:opacity-70"
+            disabled={loading}
+          >
             {loading ? "Sending..." : "Send Reset Link"}
           </button>
         </form>
