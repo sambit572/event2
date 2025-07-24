@@ -321,7 +321,8 @@ const generateMonthlyReport = async () => {
 
     // Send to all admins
     const adminEmails = [
-      "jyotinayak961@gmail.com" /* Replace with actual admin email */
+     /*  "jyotinayak961@gmail.com",
+      "shreya31.rout1999@gmail.com" */ /* Replace with actual admin email */
     ];
 
     for (const email of adminEmails) {
