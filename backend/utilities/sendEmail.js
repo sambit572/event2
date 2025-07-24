@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import { text } from "stream/consumers";
+
 
 export const sendEmail = async ({ to, subject, html, attachments }) => {
   try {
