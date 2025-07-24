@@ -15,7 +15,7 @@ import { setUser } from "../../redux/UserSlice.js";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-const Login = ({ onClose, onSwitchToRegister }) => {
+const Login = ({ onClose }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [step, setStep] = useState("form"); // 'form', 'otp', 'success', 'google-phone'
@@ -256,10 +256,12 @@ const Login = ({ onClose, onSwitchToRegister }) => {
         <GoogleLogin
           onSuccess={handleGoogleSuccess}
           onError={() => setErrorMsg("Google login failed.")}
-          width="100%"
+          useOneTap
           text="signup_with"
           shape="rectangular"
           logo_alignment="center"
+          scope="profile email"
+          width="100%"
         />
 
         <div className="flex items-center my-4">
@@ -335,7 +337,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
           Don't have an account?{" "}
           <span
             className="login-link cursor-pointer font-semibold text-blue-600 hover:underline"
-            onClick={onSwitchToRegister}
+            onClick={() => navigate("/register")}
           >
             Sign Up
           </span>

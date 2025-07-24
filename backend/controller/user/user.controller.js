@@ -24,24 +24,36 @@ const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const generateProfilePicture = (fullName) => {
   const firstName = fullName.split(" ")[0];
   const initial = firstName.charAt(0).toUpperCase();
-  
+
   // Create a data URL for SVG with the initial
   const colors = [
-    '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FECA57',
-    '#FF9FF3', '#54A0FF', '#5F27CD', '#00D2D3', '#FF9F43',
-    '#10AC84', '#EE5A6F', '#C44569', '#F8B500', '#6C5CE7'
+    "#FF6B6B",
+    "#4ECDC4",
+    "#45B7D1",
+    "#96CEB4",
+    "#FECA57",
+    "#FF9FF3",
+    "#54A0FF",
+    "#5F27CD",
+    "#00D2D3",
+    "#FF9F43",
+    "#10AC84",
+    "#EE5A6F",
+    "#C44569",
+    "#F8B500",
+    "#6C5CE7",
   ];
-  
+
   // Use the first character's char code to consistently pick a color
   const colorIndex = initial.charCodeAt(0) % colors.length;
   const backgroundColor = colors[colorIndex];
-  
+
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
     <circle cx="50" cy="50" r="50" fill="${backgroundColor}"/>
     <text x="50" y="50" text-anchor="middle" dy="0.35em" font-family="Arial, sans-serif" font-size="40" fill="white" font-weight="bold">${initial}</text>
   </svg>`;
-  
-  return `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
+
+  return `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
 };
 
 const generateAccessAndRefreshTokens = async (userId) => {
@@ -52,7 +64,9 @@ const generateAccessAndRefreshTokens = async (userId) => {
 
     user.refreshToken = refreshToken;
     await user.save({ validateBeforeSave: false });
-    console.log(`generateAccessAndRefreshTokens generates access token : ${accessToken}`)
+    console.log(
+      `generateAccessAndRefreshTokens generates access token : ${accessToken}`
+    );
     return { accessToken, refreshToken };
   } catch (error) {
     console.error(`Error generating tokens: ${error}`);
@@ -66,7 +80,7 @@ const registerUser = async (req, res) => {
   try {
     const { fullName, email, phoneNo, password } = req.body;
     console.log("Reaching Register user in backend");
-    
+
     if (!fullName || !email || !password || !phoneNo) {
       return res.status(400).json(new ApiError(400, "All fields are required"));
     }
@@ -240,7 +254,7 @@ const googleAuth = async (req, res) => {
       audience: process.env.GOOGLE_CLIENT_ID,
     });
     const { email, name, picture } = ticket.getPayload();
-
+    console.log("Google profile picture URL:", picture);
     // 2. find or create user
     let user = await User.findOne({ email });
     let isNewUser = false;
@@ -248,25 +262,34 @@ const googleAuth = async (req, res) => {
     if (!user) {
       // For new users, phone number is required
       if (!phoneNo) {
-        return res.status(400).json(new ApiError(400, "Phone number is required for new users"));
+        return res
+          .status(400)
+          .json(new ApiError(400, "Phone number is required for new users"));
       }
 
       // Validate phone number format
       if (!isValidPhoneNumber(phoneNo, "IN")) {
-        return res.status(400).json(new ApiError(400, "Invalid phone number format"));
+        return res
+          .status(400)
+          .json(new ApiError(400, "Invalid phone number format"));
       }
 
       // Check if phone number already exists
       const existingUserWithPhone = await User.findOne({ phoneNo });
       if (existingUserWithPhone) {
-        return res.status(400).json(new ApiError(400, "Phone number already registered"));
+        return res
+          .status(400)
+          .json(new ApiError(400, "Phone number already registered"));
       }
 
       user = await User.create({
         fullName: name,
         email,
         phoneNo,
-        profilePhoto: picture || generateProfilePicture(name), // Use Google picture or generate default
+        profilePhoto:
+          picture && picture.trim() !== ""
+            ? picture
+            : generateProfilePicture(name),
         password: crypto.randomBytes(16).toString("hex"), // placeholder password
       });
       isNewUser = true;
@@ -294,37 +317,49 @@ const googleAuth = async (req, res) => {
       if (phoneNo && phoneNo !== user.phoneNo) {
         // Validate phone number format
         if (!isValidPhoneNumber(phoneNo, "IN")) {
-          return res.status(400).json(new ApiError(400, "Invalid phone number format"));
+          return res
+            .status(400)
+            .json(new ApiError(400, "Invalid phone number format"));
         }
 
         // Check if phone number already exists for another user
-        const existingUserWithPhone = await User.findOne({ 
-          phoneNo, 
-          _id: { $ne: user._id } 
+        const existingUserWithPhone = await User.findOne({
+          phoneNo,
+          _id: { $ne: user._id },
         });
         if (existingUserWithPhone) {
-          return res.status(400).json(new ApiError(400, "Phone number already registered"));
+          return res
+            .status(400)
+            .json(new ApiError(400, "Phone number already registered"));
         }
 
         user.phoneNo = phoneNo;
       }
 
       // Update profile photo logic
-      if (picture) {
-        // If Google has a picture, use it
+      // Update profile photo logic
+      if (picture && picture.trim() !== "") {
+        // If Google has a valid picture, use it
         user.profilePhoto = picture;
-      } else if (!user.profilePhoto) {
-        // If no Google picture and no existing profile photo, generate one
+      } else if (
+        !user.profilePhoto ||
+        user.profilePhoto.startsWith("data:image/svg+xml")
+      ) {
+        // If no Google picture and no existing profile photo (or it's generated), create one
         user.profilePhoto = generateProfilePicture(user.fullName);
       }
-
+      // If user has a custom uploaded photo, don't change it
       await user.save();
     }
 
     // 3. issue tokens
-    const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(user._id);
+    const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
+      user._id
+    );
 
-    const safeUser = await User.findById(user._id).select("-password -refreshToken");
+    const safeUser = await User.findById(user._id).select(
+      "-password -refreshToken"
+    );
 
     // 4. respond
     return res
@@ -340,7 +375,9 @@ const googleAuth = async (req, res) => {
       );
   } catch (error) {
     console.error("Google Auth Error:", error);
-    return res.status(500).json(new ApiError(500, "Google authentication failed"));
+    return res
+      .status(500)
+      .json(new ApiError(500, "Google authentication failed"));
   }
 };
 
@@ -355,9 +392,13 @@ const updateUserProfile = async (req, res) => {
     }
 
     const user = await User.findById(req.user._id);
-    
+
     // If the fullName changed and user has a generated profile picture (data URL), update it
-    if (fullName !== user.fullName && user.profilePhoto && user.profilePhoto.startsWith('data:image/svg+xml')) {
+    if (
+      fullName !== user.fullName &&
+      user.profilePhoto &&
+      user.profilePhoto.startsWith("data:image/svg+xml")
+    ) {
       user.profilePhoto = generateProfilePicture(fullName);
     }
 
@@ -396,7 +437,10 @@ const updateUserAvatar = async (req, res) => {
     }
 
     // Delete old avatar from Cloudinary if it exists and is not a generated one
-    if (user.profilePhoto && !user.profilePhoto.startsWith('data:image/svg+xml')) {
+    if (
+      user.profilePhoto &&
+      !user.profilePhoto.startsWith("data:image/svg+xml")
+    ) {
       await deleteFromCloudinary(user.profilePhoto);
     }
 
@@ -448,7 +492,7 @@ const removeProfilePhoto = async (req, res) => {
     }
 
     // Delete the current profile photo from Cloudinary if it's not a generated one
-    if (!user.profilePhoto.startsWith('data:image/svg+xml')) {
+    if (!user.profilePhoto.startsWith("data:image/svg+xml")) {
       await deleteFromCloudinary(user.profilePhoto);
     }
 

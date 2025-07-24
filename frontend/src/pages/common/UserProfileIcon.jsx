@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "./UserProfileIcon.css";
 import { useSelector } from "react-redux";
 
 const UserProfileIcon = () => {
@@ -20,21 +19,20 @@ const UserProfileIcon = () => {
   const isImageValid = profilePhoto && profilePhoto.startsWith("http");
 
   return (
-    <div className="user-profile-icon">
+    <div
+      className="w-10 h-10 md:w-[40px] md:h-[40px] sm:w-[35px] sm:h-[32px] max-sm:w-[25px] max-sm:h-[22px] rounded-full overflow-hidden flex items-center justify-center bg-gray-300 cursor-pointer"
+      title="Profile"
+    >
       {isImageValid ? (
         <img
           src={profilePhoto}
           alt="Profile"
-          className="w-10 h-10 rounded-full object-cover"
-          title="Profile"
+          className="w-full h-full object-cover"
         />
       ) : (
-        <div
-          className="w-10 h-10 rounded-full bg-blue-800 text-white flex items-center justify-center font-semibold text-sm uppercase select-none"
-          title="Profile"
-        >
+        <span className="text-white bg-blue-600 w-full h-full flex items-center justify-center font-semibold text-sm uppercase select-none">
           {initials || "?"}
-        </div>
+        </span>
       )}
     </div>
   );
