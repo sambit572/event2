@@ -18,17 +18,15 @@ const generateMonthlyReport = async () => {
     if (!fs.existsSync(reportsDir)) fs.mkdirSync(reportsDir);
 
     const filePath = path.join(reportsDir, "MonthlyReport.pdf");
-    const doc = new PDFDocument();
+    const doc = new PDFDocument({ margin: 50 });
 
     doc.pipe(fs.createWriteStream(filePath));
 
     const start = moment().subtract(30, "days").toDate();
     const now = new Date();
 
-    // 1. New Users
+    // Fetch data
     const newUsers = await User.countDocuments({ createdAt: { $gte: start } });
-
-    // 2. New Vendors
     const newVendors = await Vendor.countDocuments({
       registrationStep: 5,
       createdAt: { $gte: start },
@@ -38,63 +36,325 @@ const generateMonthlyReport = async () => {
       createdAt: { $gte: start },
     });
 
-    // 3. Reviews
     const reviews = await Review.find({
       createdAt: { $gte: moment().startOf("month").toDate() },
     });
     const averageRating =
       reviews.length > 0
-        ? (
-            reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
-          ).toFixed(2)
-        : "N/A";
+        ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(2)
+        : "0.0";
 
-    // 👇 Logo
+    // Helper functions for drawing
+    const drawBox = (x, y, width, height, fillColor = null, strokeColor = "#e0e0e0") => {
+      if (fillColor) {
+        doc.rect(x, y, width, height).fillAndStroke(fillColor, strokeColor);
+      } else {
+        doc.rect(x, y, width, height).stroke(strokeColor);
+      }
+    };
+
+    const drawRoundedBox = (x, y, width, height, radius = 5, fillColor = "#f8f9fa", strokeColor = "#dee2e6") => {
+      doc.roundedRect(x, y, width, height, radius).fillAndStroke(fillColor, strokeColor);
+    };
+
+    // Colors
+    const colors = {
+      primary: "#2c3e50",
+      secondary: "#34495e", 
+      accent: "#3498db",
+      success: "#27ae60",
+      warning: "#f39c12",
+      danger: "#e74c3c",
+      light: "#ecf0f1",
+      text: "#2d3436",
+      muted: "#7f8c8d"
+    };
+
+    // Page setup
+    const pageWidth = doc.page.width;
+    const margin = 50;
+    const contentWidth = pageWidth - (margin * 2);
+
+    // Compact Header - reduced height
+    drawRoundedBox(margin, 30, contentWidth, 65, 8, colors.primary);
+    
+    // Logo section (if exists) - smaller logo
     const logoPath = path.join(__dirname, "..", "assets", "serverLogo.png");
     if (fs.existsSync(logoPath)) {
-      doc.image(logoPath, { fit: [120, 120], align: "center" });
-      doc.moveDown(1.5);
+      doc.image(logoPath, margin + 15, 40, { fit: [40, 40] });
     }
 
-    // 🔥 PDF Content
-    doc.fontSize(20).text(" Monthly Admin Report", { align: "center" });
-    doc.moveDown();
-    doc
-      .fontSize(12)
-      .text(
-        `Period: ${moment(start).format("DD MMM")} - ${moment(now).format(
-          "DD MMM YYYY"
-        )}`
-      );
-    doc.moveDown();
+    // Header text - better alignment and smaller fonts
+    doc.font("Helvetica-Bold")
+       .fontSize(20)
+       .fillColor("white")
+       .text("EventsBridge", margin + 65, 45);
+    
+    doc.font("Helvetica")
+       .fontSize(12)
+       .text("Monthly Performance Report", margin + 65, 67);
 
-    doc.text(` New Users: ${newUsers}`);
-    doc.text(` New Vendors: ${newVendors}`);
-    doc.text(` Incomplete Vendor Registrations: ${incompleteVendors}`);
-    doc.text(
-      ` Reviews Submitted: ${reviews.length} (Avg Rating: ${averageRating})`
-    );
+    // Date range in top right - better positioning
+    doc.font("Helvetica")
+       .fontSize(10)
+       .text(`${moment(start).format("MMM DD")} - ${moment(now).format("MMM DD, YYYY")}`, 
+              contentWidth - 140, 55, { width: 140, align: "right" });
+
+    doc.y = 115; // Reduced space after header
+
+    // Performance Overview Section - reduced spacing
+    doc.font("Helvetica-Bold")
+       .fontSize(16)
+       .fillColor(colors.secondary)
+       .text("Performance Overview", margin, doc.y);
+
+    doc.y += 18; // Reduced spacing
+
+    // Compact metrics cards - smaller dimensions
+    const cardWidth = (contentWidth - 12) / 2;
+    const cardHeight = 70; // Reduced height
+    const cardSpacing = 12; // Reduced spacing
+    const cardStartY = doc.y;
+
+    // Row 1: New Users and Completed Vendors
+    // Card 1: New Users - compact version
+    const card1X = margin;
+    const card1Y = cardStartY;
+    drawRoundedBox(card1X, card1Y, cardWidth, cardHeight, 6, "#e8f5e8", colors.success);
+    
+    doc.font("Helvetica-Bold")
+       .fontSize(28) // Reduced from 32
+       .fillColor(colors.success)
+       .text(newUsers.toString(), card1X + 15, card1Y + 8);
+    
+    doc.font("Helvetica")
+       .fontSize(11) // Reduced from 13
+       .fillColor(colors.text)
+       .text("New Users", card1X + 15, card1Y + 40);
+    
+    doc.fontSize(9) // Reduced from 10
+       .fillColor(colors.muted)
+       .text("Last 30 days", card1X + 15, card1Y + 54);
+
+    // Card 2: New Vendors (Top Right) - compact
+    const card2X = margin + cardWidth + cardSpacing;
+    const card2Y = cardStartY;
+    drawRoundedBox(card2X, card2Y, cardWidth, cardHeight, 6, "#e8f4fd", colors.accent);
+    
+    doc.font("Helvetica-Bold")
+       .fontSize(28)
+       .fillColor(colors.accent)
+       .text(newVendors.toString(), card2X + 15, card2Y + 8);
+    
+    doc.font("Helvetica")
+       .fontSize(11)
+       .fillColor(colors.text)
+       .text("Completed Vendors", card2X + 15, card2Y + 40);
+    
+    doc.fontSize(9)
+       .fillColor(colors.muted)
+       .text("Fully registered", card2X + 15, card2Y + 54);
+
+    // Row 2: Incomplete Vendors and Average Rating - compact
+    const row2Y = cardStartY + cardHeight + cardSpacing;
+
+    // Card 3: Incomplete Vendors (Bottom Left)
+    const card3X = margin;
+    const card3Y = row2Y;
+    drawRoundedBox(card3X, card3Y, cardWidth, cardHeight, 6, "#fef3e2", colors.warning);
+    
+    doc.font("Helvetica-Bold")
+       .fontSize(28)
+       .fillColor(colors.warning)
+       .text(incompleteVendors.toString(), card3X + 15, card3Y + 8);
+    
+    doc.font("Helvetica")
+       .fontSize(11)
+       .fillColor(colors.text)
+       .text("Incomplete Vendors", card3X + 15, card3Y + 40);
+    
+    doc.fontSize(9)
+       .fillColor(colors.muted)
+       .text("Need attention", card3X + 15, card3Y + 54);
+
+    // Card 4: Average Rating (Bottom Right)
+    const card4X = margin + cardWidth + cardSpacing;
+    const card4Y = row2Y;
+    const ratingColor = parseFloat(averageRating) >= 4 ? colors.success : 
+                       parseFloat(averageRating) >= 3 ? colors.warning : colors.danger;
+    const ratingBg = parseFloat(averageRating) >= 4 ? "#e8f5e8" : 
+                    parseFloat(averageRating) >= 3 ? "#fef3e2" : "#fde8e8";
+    
+    drawRoundedBox(card4X, card4Y, cardWidth, cardHeight, 6, ratingBg, ratingColor);
+    
+    doc.font("Helvetica-Bold")
+       .fontSize(28)
+       .fillColor(ratingColor)
+       .text(averageRating, card4X + 15, card4Y + 8);
+    
+    doc.font("Helvetica")
+       .fontSize(11)
+       .fillColor(colors.text)
+       .text("Average Rating", card4X + 15, card4Y + 40);
+    
+    doc.fontSize(9)
+       .fillColor(colors.muted)
+       .text(`${reviews.length} reviews`, card4X + 15, card4Y + 54);
+
+    // Set Y position after all cards - reduced spacing
+    doc.y = row2Y + cardHeight + 25;
+
+    // Detailed Analytics Table - compact version
+    doc.font("Helvetica-Bold")
+       .fontSize(16)
+       .fillColor(colors.secondary)
+       .text("Detailed Analytics", margin, doc.y);
+
+    doc.y += 18;
+
+    // Compact table setup
+    const tableStartY = doc.y;
+    const rowHeight = 32; // Reduced from 40
+    const tableWidth = contentWidth;
+    
+    // Table header - compact
+    drawRoundedBox(margin, tableStartY, tableWidth, rowHeight, 6, colors.secondary);
+    
+    doc.font("Helvetica-Bold")
+       .fontSize(11) // Reduced from 13
+       .fillColor("white");
+    
+    const col1Width = tableWidth * 0.45;
+    const col2Width = tableWidth * 0.28;
+    const col3Width = tableWidth * 0.27;
+    
+    // Center-align header text vertically
+    const headerTextY = tableStartY + (rowHeight - 11) / 2;
+    doc.text("Metric", margin + 15, headerTextY); // Reduced padding
+    doc.text("Current Period", margin + col1Width + 12, headerTextY);
+    doc.text("Status", margin + col1Width + col2Width + 12, headerTextY);
+
+    // Simplified table data for space efficiency
+    const tableData = [
+      { metric: "User Registrations", value: `${newUsers} users`, status: newUsers > 10 ? "Excellent" : newUsers > 5 ? "Good" : "Low" },
+      { metric: "Vendor Completions", value: `${newVendors} vendors`, status: newVendors > 5 ? "Excellent" : newVendors > 2 ? "Good" : "Low" },
+      { metric: "Pending Registrations", value: `${incompleteVendors} pending`, status: incompleteVendors < 5 ? "Good" : "High" },
+      { metric: "Review Quality", value: `${averageRating}/5.0`, status: parseFloat(averageRating) >= 4 ? "Excellent" : parseFloat(averageRating) >= 3 ? "Good" : "Poor" }
+    ];
+
+    let currentRowY = tableStartY + rowHeight;
+
+    tableData.forEach((row, index) => {
+      const isEven = index % 2 === 0;
+      const bgColor = isEven ? "#f8f9fa" : "#ffffff";
+      
+      drawBox(margin, currentRowY, tableWidth, rowHeight, bgColor, "#e9ecef");
+      
+      doc.font("Helvetica")
+         .fontSize(10) // Reduced from 12
+         .fillColor(colors.text);
+      
+      // Center-align text vertically in each row
+      const textY = currentRowY + (rowHeight - 10) / 2;
+      
+      doc.text(row.metric, margin + 15, textY);
+      doc.text(row.value, margin + col1Width + 12, textY);
+      
+      // Status with color coding
+      const statusColor = row.status.includes("Excellent") ? colors.success :
+                         row.status.includes("Good") || row.status.includes("High") ? colors.accent :
+                         row.status.includes("Low") ? colors.warning : colors.danger;
+      
+      doc.fillColor(statusColor)
+         .text(row.status, margin + col1Width + col2Width + 12, textY);
+      
+      currentRowY += rowHeight;
+    });
+
+    // Set Y position after table
+    doc.y = currentRowY + 20;
+    // Compact Key Insights box
+    drawRoundedBox(margin, doc.y, contentWidth, 45, 6, "#f1f3f4", "#d0d7de"); // Reduced height
+    
+    doc.font("Helvetica-Bold")
+       .fontSize(12) // Reduced from 14
+       .fillColor(colors.secondary)
+       .text("Key Insights", margin + 15, doc.y + 10); // Reduced padding
+    
+    doc.font("Helvetica")
+       .fontSize(10) // Reduced from 11
+       .fillColor(colors.text);
+    
+    const insights = `Growth: ${((newUsers + newVendors) / 30 * 100).toFixed(1)}% | Completion: ${newVendors > 0 ? ((newVendors / (newVendors + incompleteVendors)) * 100).toFixed(1) : 0}% | Engagement: ${reviews.length > 15 ? 'High' : reviews.length > 8 ? 'Medium' : 'Low'}`;
+    
+    doc.text(insights, margin + 15, doc.y + 25, { width: contentWidth - 30 }); // Shortened text
+
+    // Compact Footer with better positioning
+    const footerY = doc.page.height - 80; // Reduced from 120
+    doc.y = footerY;
+    
+    // Footer divider line
+    drawBox(margin, footerY, contentWidth, 1, colors.light);
+    
+    // Compact footer layout
+    doc.font("Helvetica")
+       .fontSize(9) // Reduced from 10
+       .fillColor(colors.muted);
+    
+    // Three-column footer layout for better space usage
+    doc.text("Generated by EventsBridge", margin, footerY + 12);
+    doc.text(`${moment().format("MMM DD, YYYY HH:mm")}`, margin, footerY + 25); // Shortened timestamp
+    
+    doc.text("Confidential - Internal Use", 
+             margin, footerY + 12, { 
+               width: contentWidth, 
+               align: "right" 
+             });
+    
+    doc.text("© 2025 EventsBridge", 
+             margin, footerY + 38, { 
+               width: contentWidth, 
+               align: "center" 
+             });
 
     doc.end();
 
-    // 📧 Send to all admins
+    // Send to all admins
     const adminEmails = [
-      "admin1@gmail.com" /* Replace with actual admin email , if more than one add them here one by one*/
-
+      "jyotinayak961@gmail.com" /* Replace with actual admin email */
     ];
 
     for (const email of adminEmails) {
       await sendEmail({
         to: email,
-        subject: "📄 Monthly Performance Report – EventsBridge",
-        html: `<p>Hello Admin,<br/><br/>Please find the attached monthly performance report for EventsBridge.</p>`,
+        subject: "Monthly Performance Report - EventsBridge",
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #2c3e50;">Monthly Performance Report</h2>
+            <p>Hello Admin,</p>
+            <p>Please find the attached monthly performance report for EventsBridge covering the period from <strong>${moment(start).format("MMM DD")}</strong> to <strong>${moment(now).format("MMM DD, YYYY")}</strong>.</p>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <h3 style="color: #34495e; margin-top: 0;">Quick Summary:</h3>
+              <ul style="list-style: none; padding: 0;">
+                <li style="padding: 5px 0;"><strong>New Users:</strong> ${newUsers}</li>
+                <li style="padding: 5px 0;"><strong>New Vendors:</strong> ${newVendors}</li>
+                <li style="padding: 5px 0;"><strong>Average Rating:</strong> ${averageRating}/5.0</li>
+                <li style="padding: 5px 0;"><strong>Total Reviews:</strong> ${reviews.length}</li>
+              </ul>
+            </div>
+            
+            <p>For detailed analytics and insights, please refer to the attached PDF report.</p>
+            <p>Best regards,<br>EventsBridge System</p>
+          </div>
+        `,
         attachments: [{ filename: "MonthlyReport.pdf", path: filePath }],
       });
     }
 
-    console.log("✅ Monthly Report generated and sent to all admins.");
+    console.log("Monthly Report generated and sent to all admins.");
   } catch (error) {
-    console.error("❌ Failed to generate or send report:", error);
+    console.error("Failed to generate or send report:", error);
   }
 };
 
