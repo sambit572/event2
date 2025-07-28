@@ -18,8 +18,14 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
     originalPrice,
     discountPercent,
   } = service;
-  const handleClick = () => {
-    setIsWishlisted(!isWishlisted);
+  const handleWishlist = () => {
+    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
+
+    if (isLoggedIn) {
+      setIsWishlisted(!isWishlisted);
+    } else {
+      onSwitchToLogin(true); // ✅ this opens your login popup
+    }
   };
 
   const handleBookNow = () => {
@@ -55,7 +61,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
       <div className="actionButtons">
         <button
           className={`viewBtn ${isWishlisted ? "wishlisted" : ""}`}
-          onClick={handleClick}
+          onClick={handleWishlist}
         >
           <div>
             {isWishlisted && <FaHeart className="wishIcon" color="red" />}

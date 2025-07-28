@@ -16,6 +16,7 @@ import ReviewForm from "../../components/customer/ServiceDetails/ReviewForm.jsx"
 const Service = ({ onSwitchToLogin }) => {
   const navigate = useNavigate();
   const { serviceId } = useParams();
+
   const handleBookNow = () => {
     const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
 
@@ -40,8 +41,14 @@ const Service = ({ onSwitchToLogin }) => {
   // ✅ For syncing new review from ReviewForm to ReviewList
   const [latestReview, setLatestReview] = useState(null);
 
-  const handleClick = () => {
-    setIsWishlisted(!isWishlisted);
+  const handleWishlist = () => {
+    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
+
+    if (isLoggedIn) {
+      setIsWishlisted(!isWishlisted);
+    } else {
+      onSwitchToLogin(true); // ✅ this opens your login popup
+    }
   };
 
   return (
@@ -69,7 +76,7 @@ const Service = ({ onSwitchToLogin }) => {
           <div className="buttons">
             <button
               className={`viewBtns ${isWishlisted ? "wishlisted" : ""}`}
-              onClick={handleClick}
+              onClick={handleWishlist}
             >
               <div>
                 {isWishlisted && <FaHeart className="wishIcon" color="red" />}

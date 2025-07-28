@@ -75,6 +75,7 @@
   max-width: 550px;
   max-height: 90vh;
   overflow-y: auto;
+  scrollbar-width: none;
   box-shadow: 0 15px 60px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 0, 0, 0.1);
   position: relative;
   animation: scaleIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
