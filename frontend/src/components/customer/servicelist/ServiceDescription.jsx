@@ -1,0 +1,88 @@
+import React from "react";
+import "./ServiceDescription.css";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { FaHeart } from "react-icons/fa6";
+
+const ServiceDescription = ({ service, onSwitchToLogin }) => {
+  const navigate = useNavigate();
+  const [isWishlisted, setIsWishlisted] = useState(false);
+
+  const {
+    title,
+    address,
+    rating,
+    reviews,
+    description,
+    price,
+    originalPrice,
+    discountPercent,
+  } = service;
+  const handleWishlist = () => {
+    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
+
+    if (isLoggedIn) {
+      setIsWishlisted(!isWishlisted);
+    } else {
+      onSwitchToLogin(true); // ✅ this opens your login popup
+    }
+  };
+
+  const handleBookNow = () => {
+    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
+
+    if (isLoggedIn) {
+      navigate("/userdetails");
+    } else {
+      onSwitchToLogin(true); // ✅ this opens your login popup
+    }
+  };
+
+  return (
+    <section className="serviceDescription">
+      <Link to={`/service/${service.id}`} className="link">
+        <h3>{title}</h3>
+        <h5>{service.vandor}</h5>
+        <p className="address">
+          {address.area}, {address.city}, {address.state} - {address.pincode}
+        </p>
+
+        <div className="serviceRating">
+          <span className="rate">{rating} ☆</span>
+          <span className="review">{reviews} reviews</span>
+        </div>
+        <div className="servicePrice">
+          <span className="price">₹{price}</span>
+          <span className="originalPrice">₹{originalPrice}</span>
+          <span className="discountPercent">{discountPercent}% off</span>
+        </div>
+        <p className="paragraph">{description}</p>
+      </Link>
+      <div className="actionButtons">
+        <button
+          className={`viewBtn ${isWishlisted ? "wishlisted" : ""}`}
+          onClick={handleWishlist}
+        >
+          <div>
+            {isWishlisted && <FaHeart className="wishIcon" color="red" />}
+          </div>
+          <div>
+            {isWishlisted ? (
+              "Wishlisted"
+            ) : (
+              <span className="wishlist-text">
+                <span className="plusSign">+</span> Wishlist
+              </span>
+            )}
+          </div>
+        </button>
+
+        <button className="bookBtn" onClick={handleBookNow}>
+          <span>Book Now</span>
+        </button>
+      </div>
+    </section>
+  );
+};
+
+export default ServiceDescription;

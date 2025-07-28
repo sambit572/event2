@@ -1,0 +1,107 @@
+.slider-container {
+  position: relative;
+  width: 100%;
+  padding-top: 10px;
+  z-index: 1;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  background-color: #f4f4f4;
+}
+.slide {
+  width: 100%;
+  height: 750px;
+  object-fit: fill;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.4s ease;
+  filter: brightness(0.75);
+}
+
+.slider-container:hover .slide {
+  filter: brightness(0.65);
+}
+.slick-prev,
+.slick-next {
+  display: none !important;
+}
+
+.slick-dots li {
+  position: relative;
+  width: 10px !important;
+  height: 4px !important;
+  border-radius: 5px;
+  background-color: white !important;
+  /* overflow: hidden; */
+}
+.slick-dots li.slick-active {
+  width: 40px !important;
+  height: 4px !important;
+}
+/* Create the animated bar */
+.slick-dots li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0%;
+  background-color: black;
+  transition: width 5s linear; /* Adjust this duration to match autoplay speed */
+  z-index: 1;
+}
+
+/* Trigger animation on active dot */
+.slick-dots li.slick-active::before {
+  width: 100%;
+}
+
+.slick-dots li button {
+  opacity: 0;
+}
+
+@media (max-width: 1224px) {
+  .slide {
+    height: 500px;
+  }
+}
+@media (max-width: 768px) {
+  .slider-container {
+    margin-top: 70px;
+  }
+}
+@media (max-width: 800px) {
+  .slide {
+    height: 400px;
+  }
+}
+@media (max-width: 680px) {
+  .slider-container {
+    margin-top: 49px;
+  }
+}
+@media (max-width: 600px) {
+  .slide {
+    height: 300px;
+  }
+}
+@media (max-width: 540px) {
+  .slider-container {
+    margin-top: 49px;
+  }
+}
+@media (max-width: 460px) {
+  .slide {
+    height: 250px;
+  }
+}
+
+@media (max-width: 430px) {
+  .slider-container {
+    margin-top: 50px;
+  }
+}
+@media (max-width: 415px) {
+  .slider-container {
+    margin-top: 50px;
+  }
+}
