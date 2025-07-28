@@ -153,6 +153,13 @@ const App = () => {
     checkVendorAuth();
   }, []);
 
+  useEffect(() => {
+    const openLoginListener = () => handleOpenLogin();
+    window.addEventListener("openLoginModal", openLoginListener);
+    return () =>
+      window.removeEventListener("openLoginModal", openLoginListener);
+  }, []);
+
   return (
     <>
       <ScrollToTop />
