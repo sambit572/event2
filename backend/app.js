@@ -7,6 +7,8 @@ import { errorHandler } from "./middleware/error.middleware.js";
 import reviewRoutes from "./routes/review.routes.js";
 import test_router from "./routes/agenda/agenda.routes.js";
 import startAgenda from "./agenda/startAgenda.js";
+import "./cronjobs/startCronjobs.js";
+import feedbackRoutes from "./routes/common/feedback.routes.js";
 
 const app = express();
 
@@ -42,6 +44,10 @@ app.use("/user", userRouter);
 app.use("/vendors", vendor_router);
 
 app.use("/test", test_router);
+
+
+// ✅ Register your feedback route
+app.use("/feedback", feedbackRoutes);
 
 // Health check route
 app.get("/", (req, res) => {

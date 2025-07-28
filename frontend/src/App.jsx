@@ -56,6 +56,9 @@ import ScrollToTop from "./components/common/ScrollToTop.jsx";
 import AddToCart from "./components/customer/YourCart/AddToCart.jsx";
 import DashboardEnforcement from "./utils/DashboardEnforcement.jsx";
 
+
+//Feedback
+import Feedback from "./pages/common/Feedback.jsx";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 import ReviewSlider from "./components/customer/home/ReviewSlider.jsx";
 import FaqSection from "./components/customer/home/FaqSection.jsx";
@@ -252,6 +255,7 @@ const App = () => {
           <Route path="/help_us" element={<HelpUs />} />
           <Route path="/help-Center" element={<HelpCenter />} />
           <Route path="/faqs" element={<FaqSection />} />
+          <Route path="/feedback" element={<Feedback />} /> {/* Feedback */}
           <Route path="/Wishlist" element={<Wishlist />}></Route>
           <Route path="/profile" element={<Profile />}></Route>
           <Route path="/userdetails" element={<UserDetails />}></Route>

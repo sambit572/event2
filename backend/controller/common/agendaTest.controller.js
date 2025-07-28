@@ -29,12 +29,7 @@ export const scheduleDummyReminder = async (req, res) => {
 
 export const scheduleVendorReminder = async (req, res) => {
   try {
-    const {
-      vendorEmail,
-      vendorName,
-      eventTitle,
-      eventDate, 
-    } = req.body;
+    const { vendorEmail, vendorName, eventTitle, eventDate } = req.body;
 
     if (!vendorEmail || !vendorName || !eventTitle || !eventDate) {
       return res.status(400).json({ message: "All fields are required" });
@@ -58,5 +53,62 @@ export const scheduleVendorReminder = async (req, res) => {
     return res
       .status(500)
       .json({ message: "Failed to schedule vendor reminder" });
+  }
+};
+
+export const scheduleReviewRequest = async (req, res) => {
+  try {
+    const { userEmail, userName, vendorName, eventTitle, eventDate } = req.body;
+
+    // ✅ For real: use `dayjs(eventDate).add(2, 'day')`
+    const runAt = dayjs().add(30, "second").toDate(); // test now
+
+    await agenda.schedule(runAt, "send review request", {
+      userEmail,
+      userName,
+      vendorName,
+      eventTitle,
+      eventDate,
+    });
+
+    return res
+      .status(200)
+      .json({ message: `Review request scheduled for ${runAt}` });
+  } catch (err) {
+    console.error("❌ Failed to schedule review request:", err);
+    return res.status(500).json({ message: "Failed to schedule" });
+  }
+};
+
+export const schedulePDFGeneration = async (req, res) => {
+  try {
+    const {
+      bookingId,
+      userName,
+      userEmail,
+      vendorName,
+      eventTitle,
+      eventDate,
+      totalAmount,
+    } = req.body;
+
+    const runAt = dayjs().add(30, "second").toDate(); // for testing
+
+    await agenda.schedule(runAt, "generate booking pdf", {
+      bookingId,
+      userName,
+      userEmail,
+      vendorName,
+      eventTitle,
+      eventDate,
+      totalAmount,
+    });
+
+    return res.status(200).json({
+      message: `PDF job scheduled for ${runAt}`,
+    });
+  } catch (err) {
+    console.error("❌ Failed to schedule PDF job:", err);
+    return res.status(500).json({ message: "Failed to schedule PDF job" });
   }
 };

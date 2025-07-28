@@ -10,3 +10,7 @@ const startAgenda = async () => {
 };
 
 export default startAgenda;
+
+// frontend connection not there
+// review link not working
+// timing increase to 48h from 30s
