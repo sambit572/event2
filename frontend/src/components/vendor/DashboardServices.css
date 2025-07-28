@@ -2,8 +2,13 @@
 
 /* ========== Main Content Area ========== */
 .content-area {
-  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 20px;
+
+  
+  
 }
 .both_images_section {
   display: flex;
@@ -11,6 +16,7 @@
 }
 .details {
   font-family: "Montserrat";
+  width: 400px;
 }
 
 .details-h2 {
@@ -22,10 +28,10 @@
 .service-box {
   display: flex;
   /* background-color: #00897b !important; */
-  overflow-y: auto;
   width: 90%;
-  gap: 20px;
+  gap: 10px;
   border-radius: 8px;
+  margin-left: 40px;
   padding: 16px;
   background-color: #ffffff; /* very soft yellow */
   border-left: 5px solid #ffc107;
@@ -35,8 +41,9 @@
 /* Thumbnail column on left, vertically stacked */
 .thumbnail-column-dashboard {
   display: flex;
+  margin-left: -105px;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   align-items: center;
   flex-shrink: 0;
 }
@@ -79,7 +86,7 @@
 .image-buttons-dashboard {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 5px;
   width: 100%;
 }
 
@@ -149,8 +156,8 @@
   width: 350px;
   flex-direction: column;
   gap: 12px;
-  margin-top: 5px;
-  padding: 18px;
+  margin-top: 0px;
+  padding: 10px;
   background: #ffffff;
   border: 2px solid #3cb0ff;
   border-radius: 12px;
@@ -172,7 +179,7 @@
 
 .edit-form-dashboard input,
 .edit-form-dashboard textarea {
-  padding: 12px 14px;
+  padding: 5px;
   font-size: 15px;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -198,7 +205,7 @@
 /* Save Button with Glow Effect */
 .edit-form-dashboard button {
   align-self: flex-start;
-  padding: 10px 22px;
+  padding: 10px;
   font-size: 15px;
   background-color: #0d47a1;
   box-shadow: 0 4px 12px rgba(13, 71, 161, 0.3);
@@ -212,37 +219,371 @@
 
 .edit-form-dashboard button:hover {
   background-color: #1565c0;
-  box-shadow: 0 6px 15px rgba(21, 101, 192, 0.5);
   transform: translateY(-2px);
 }
 
-/* ========== Responsive Design ========== */
+.availability-toggle-wrapper {
+  position: relative;
+  top: -215px;
+  right: -785px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  z-index: 10;
+}
 
-/* Tablets (width <= 1024px) */
+.toggle-switch {
+  position: relative;
+  width: 50px;
+  height: 24px;
+  border-radius: 9999px;
+  cursor: pointer;
+  padding: 2px;
+  transition: background-color 0.3s ease;
+}
+
+.toggle-switch input {
+  display: none;
+}
+
+.toggle-dot {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border-radius: 9999px;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.toggle-dot.active {
+  transform: translateX(26px);
+}
+
+.availability-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #001f3f;
+  white-space: nowrap;
+}
+
+
 @media (max-width: 1024px) {
-  .thumbnail {
-    height: 35px;
+  .service-box {
+    width: 100%;
+    height: 1000px;
+    margin: 20px 20px;
+    padding: 12px;
   }
 
-  .service-box {
-    height: 490px;
+  .image-form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    align-items: center;
+  }
+
+  .main-image-dashboard {
+    width: 100%;
+    max-width: 450px;
   }
 
   .edit-form-dashboard {
     position: relative;
-    bottom: 490px;
-    width: 600px;
-    height: 540px;
+    top: 12px;
+    width: 100%;
+    max-width: 450px;
+    height: auto;
   }
+
   .edit-form-dashboard button {
-    margin-top: 20px;
+    margin-top: 18px;
   }
+
   .image-buttons-dashboard {
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
     position: relative;
-    top: 70px;
-    margin-left: 24px;
+    top: 12px;
+    margin-left: 0;
+  }
+
+  .edit,
+  .delete {
+    padding: 10px 18px;
+    font-size: 15px;
+  }
+
+  .details {
+    position: relative;
+    width: 100%;
+    max-width: 450px;
+    left: 0;
+    font-size: 15px;
+    gap: 14px;
+  }
+
+  .details-h2 {
+    font-weight: 600;
+    display: block;
+  }
+}
+
+@media (max-width: 912px) {
+  .service-box {
+    width: 100%;
+    height: 1050px;
+    margin: 20px 20px;
+    padding: 14px;
+    overflow-y: scroll;
+    scrollbar-width: none;
+  }
+
+  .image-form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    align-items: center;
+  }
+
+  .main-image-dashboard {
+    width: 100%;
+    max-width: 440px;
+  }
+
+  .edit-form-dashboard {
+    position: relative;
+    top: 12px;
+    width: 100%;
+    max-width: 440px;
+    height: auto;
+  }
+
+  .edit-form-dashboard button {
+    margin-top: 18px;
+  }
+
+  .image-buttons-dashboard {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+    position: relative;
+    top: 12px;
+    margin-left: -30px;
+  }
+
+  .edit,
+  .delete {
+    padding: 10px 17px;
+    font-size: 15px;
+  }
+
+  .details {
+    position: relative;
+    width: 100%;
+    max-width: 440px;
+    left: 0;
+    font-size: 15px;
+    gap: 14px;
+  }
+
+  .details-h2 {
+    font-weight: 600;
+    display: block;
+  }
+
+   .availability-toggle-wrapper {
+    top: 12px;
+    right: 16px;
+    gap: 6px;
+  }
+
+  .availability-label {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 853px) {
+  .service-box {
+    width: 100%;
+    height: auto;
+    margin: 18px 18px;
+    padding: 12px;
+  }
+
+  .image-form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .main-image-dashboard {
+    width: 100%;
+    max-width: 430px;
+  }
+
+  .edit-form-dashboard {
+    position: relative;
+    top: 10px;
+    width: 100%;
+    max-width: 430px;
+    height: auto;
+  }
+
+  .edit-form-dashboard button {
+    margin-top: 16px;
+  }
+
+  .image-buttons-dashboard {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    position: relative;
+    top: 10px;
+    margin-left: 0;
+  }
+
+  .edit,
+  .delete {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  .details {
+    position: relative;
+    width: 100%;
+    max-width: 430px;
+    left: 0;
+    font-size: 14px;
+    gap: 12px;
+  }
+
+  .details-h2 {
+    font-weight: 600;
+    display: block;
+  }
+}
+
+@media (max-width: 820px) {
+  .service-box {
+    width: 100%;
+    height: 600px;
+    margin: 18px 18px;
+    padding: 12px;
+  }
+
+  .image-form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .main-image-dashboard {
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .edit-form-dashboard {
+    position: relative;
+    top: 10px;
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+  }
+
+  .edit-form-dashboard button {
+    margin-top: 16px;
+  }
+
+  .image-buttons-dashboard {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    position: relative;
+    top: 10px;
+    margin-left: 0;
+  }
+
+  .edit,
+  .delete {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  .details {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    left: 0;
+    font-size: 14px;
+    gap: 12px;
+  }
+
+  .details-h2 {
+    font-weight: 600;
+    display: block;
+  }
+
+  .availability-toggle-wrapper {
+    top: 12px;
+    right: 16px;
+    gap: 6px;
+  }
+
+  .availability-label {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .service-box {
+    width: 100%;
+    height: 800px;
+    margin: 20px 10px;
+    padding: 10px;
+  }
+
+  .image-form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .main-image-dashboard {
+    width: 100%;
+    max-width: 350px;
+  }
+
+  .edit-form-dashboard {
+    position: relative;
+    top: 10px;
+    width: 100%;
+    max-width: 350px;
+    height: auto;
+  }
+
+  .edit-form-dashboard button {
+    margin-top: 15px;
+  }
+
+  .image-buttons-dashboard {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    position: relative;
+    top: 10px;
+    margin-left: 0;
   }
 
   .edit,
@@ -252,178 +593,302 @@
   }
 
   .details {
-    /* position: relative; */
-    top: -200px;
-
-    font-size: 15px;
+    position: relative;
+    width: 100%;
+    max-width: 350px;
+    left: 0;
+    font-size: 14px;
+    gap: 12px;
   }
 
   .details-h2 {
     font-weight: 500;
+    display: block;
+  }
+
+   .availability-toggle-wrapper {
+    top: 12px;
+    right: 16px;
+    gap: 6px;
+  }
+
+  .availability-label {
+    font-size: 12px;
   }
 }
 
-/* Mobile Devices (width <= 768px) */
-@media (max-width: 768px) {
+
+@media (min-width: 550px) and (max-width: 650px) {
   .service-box {
     width: 100%;
-    height: 438px;
+    margin: 18px;
+    padding: 12px;
   }
-}
 
-/* Extra Small Devices (width <= 480px) */
-@media (max-width: 570px) {
-  .dashboard-container {
-    width: 100vw;
-
-    height: 100vh;
+  .image-form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
   }
-  .image-buttons-dashboard {
-    width: 150%;
 
-    top: 100px;
-  }
-  .service-box {
-    height: 355px;
-
-    position: relative;
+  .main-image-dashboard,
+  .edit-form-dashboard,
+  .details {
+    width: 100%;
+    max-width: 340px;
   }
 
   .edit-form-dashboard {
-    width: 300px;
-    padding: 15px;
+    position: relative;
+    top: 10px;
+    height: auto;
   }
 
-  .main-image-dashboard {
-    width: 250px;
-    height: 150px;
-    /* margin-top: px; */
+  .edit-form-dashboard button {
+    margin-top: 16px;
   }
 
-  .thumbnail {
-    width: 40px;
-    height: 28px;
+  .image-buttons-dashboard {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    position: relative;
+    top: 10px;
+    margin-left: 0;
   }
 
-  .booking-card {
-    font-size: 14px;
-    padding: 15px;
-  }
-
-  .booking-card h2 {
-    font-size: 20px;
+  .edit,
+  .delete {
+    padding: 8px 14px;
+    font-size: 13.5px;
   }
 
   .details {
-    font-size: 15px;
+    position: relative;
+    font-size: 13.5px;
+    gap: 12px;
+    left: 0;
   }
 
-  .details h2 {
-    font-size: 17px;
+  .details-h2 {
+    font-weight: 600;
+    display: block;
+  }
+}
+
+@media (max-width: 540px) {
+  .service-box {
+    display: block;
+  }
+  .main-image-dashboard,
+  .edit-form-dashboard
+  {
+    max-width: 340px;
+  }
+  .details {
+    max-width: 340px;
+    margin-top: 10px;
   }
 
-  .thumbnail-column-dashboard {
-    left: -134px;
+  .edit,
+  .delete {
+    padding: 8px 15px;
+    font-size: 14px;
+  }
+  .image-buttons-dashboard {
+    flex-direction: row;
+    margin-left: -10px;
+    margin-top: -10px;
   }
 }
 
 @media (max-width: 480px) {
-  .dashboard-container {
-    /* overflow-y: auto; */
-    width: 100vw;
-    height: 100vh;
+  .main-image-dashboard,
+  .edit-form-dashboard,
+  .details {
+    max-width: 320px;
   }
 
-  .service-box {
-    flex-direction: column;
-    width: 100%;
-    height: 500px;
+  .edit,
+  .delete {
+    padding: 8px 14px;
+    font-size: 13px;
   }
+}
+
+@media (max-width: 430px) {
+  .service-box {
+    display: block;
+    height: 400px;
+  }
+  .main-image-dashboard {
+    width: 100%;
+    margin: 20px;
+    text-align: left;
+  }
+  .thumbnail-column-dashboard {
+    margin: 20px;
+    text-align: left;
+  }
+
   .image-buttons-dashboard {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 10px;
+    margin-top: -10px;
+    margin-left: 0;
+  }
+
+  .image-buttons-dashboard .thumbnail {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .edit-form-dashboard {
+    max-width: 300px;
     width: 100%;
-    /* background-color: #00897b; */
-    top: 250px;
-  }
-  .edit-form-dashboard {
-    width: 280px;
-    padding: 15px;
-    height: 550px;
+    margin: 12px auto 0;
+    text-align: left;
+    position: relative;
+    top: 0;
   }
 
-  .main-image-dashboard {
-    width: 350px;
-    height: 142px;
-    /* margin-top: 40px; */
-  }
-
-  .thumbnail {
-    width: 40px;
-    height: 28px;
-  }
-
-  .booking-card {
-    font-size: 14px;
-    padding: 15px;
-  }
-
-  .booking-card h2 {
-    font-size: 20px;
-  }
-
-  .details {
-    font-size: 14px;
-  }
-
-  .details h2 {
-    font-size: 16px;
-  }
-
-  .details strong {
-    font-size: 14px;
-  }
-}
-
-@media (max-width: 380px) {
-  .service-box {
-    height: 550px;
-  }
-
-  .edit-form-dashboard {
-    width: 280px;
-    padding: 15px;
-  }
   .edit-form-dashboard button {
-    margin-top: 0px;
-  }
-  .main-image-dashboard {
-    max-width: 90%;
-    margin-top: 40px;
-  }
-
-  .thumbnail {
-    width: 40px;
-    height: 28px;
-    margin-left: 20px;
-  }
-
-  .booking-card {
-    font-size: 14px;
-    padding: 15px;
-  }
-
-  .booking-card h2 {
-    font-size: 20px;
+    margin-top: 14px;
+    align-self: flex-start;
   }
 
   .details {
-    font-size: 14px;
+    max-width: 300px;
+    width: 100%;
+    margin: 12px auto 0;
+    text-align: left;
+    position: relative;
+    gap: 10px;
+    font-size: 13px;
   }
 
-  .details h2 {
-    font-size: 16px;
+  .edit,
+  .delete {
+    padding: 7px 13px;
+    font-size: 13px;
   }
 
-  .details strong {
-    font-size: 14px;
+  .details-h2 {
+    display: block;
+    font-weight: 500;
+  }
+
+  .availability-toggle-wrapper {
+    top: 22px;
+    right: 12px; /* Slightly less padding on smaller screen */
+    gap: 4px;
+  }
+
+  .availability-label {
+    font-size: 11px; /* Slightly smaller for very small screen */
   }
 }
+
+@media (max-width: 414px) {
+  .service-box {
+    display: block;
+    height: 400px;
+  }
+
+  .main-image-dashboard {
+    width: 100%;
+    margin: 20px;
+    text-align: left;
+  }
+
+  .thumbnail-column-dashboard {
+    margin: 20px;
+    text-align: left;
+  }
+
+  .image-buttons-dashboard {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 10px;
+    margin-top: -10px;
+    margin-left: 0;
+  }
+
+  .image-buttons-dashboard .thumbnail {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .edit-form-dashboard {
+    max-width: 290px;
+    width: 100%;
+    margin: 12px auto 0;
+    text-align: left;
+    position: relative;
+    top: 0;
+  }
+
+  .edit-form-dashboard button {
+    margin-top: 14px;
+    align-self: flex-start;
+  }
+
+  .details {
+    max-width: 290px;
+    width: 100%;
+    margin: 12px auto 0;
+    text-align: left;
+    position: relative;
+    gap: 10px;
+    font-size: 12.5px;
+  }
+
+  .edit,
+  .delete {
+    padding: 6px 12px;
+    font-size: 12.5px;
+  }
+
+  .details-h2 {
+    display: block;
+    font-weight: 500;
+  }
+
+  .availability-toggle-wrapper {
+    top: -2px;
+    right: -240px;
+    gap: 4px;
+  }
+
+  .availability-label {
+    font-size: 10.5px;
+  }
+}
+
+
+@media (max-width: 375px) {
+  .edit-form-dashboard {
+    max-width: 300px;
+    width: 100%;
+    height: 650px;
+    margin: 12px auto 0;
+    text-align: left;
+    position: relative;
+    top: 0;
+  }
+}
+
+
+
+
+
