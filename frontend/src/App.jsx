@@ -53,6 +53,7 @@ import { setUser } from "./redux/UserSlice.js";
 import { setVendor } from "./redux/VendorSlice.js";
 import ScrollToTop from "./components/common/ScrollToTop.jsx";
 import AddToCart from "./components/customer/YourCart/AddToCart.jsx";
+import ErrorPage from "./pages/common/ErrorPage.jsx";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -258,6 +259,7 @@ const App = () => {
           <Route path="/userdetails" element={<UserDetails />}></Route>
           <Route path="/pop-up" element={<PopUp />}></Route>
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="*" element={<ErrorPage />} />
         </Routes>
       </main>
       <BackToTop />
