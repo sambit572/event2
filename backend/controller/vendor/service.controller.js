@@ -1,5 +1,8 @@
 import { Service } from "../../model/vendor/service.model.js";
-import { deleteFromCloudinary, uploadOnCloudinary } from "../../utilities/cloudinary.js";
+import {
+  deleteFromCloudinary,
+  uploadOnCloudinary,
+} from "../../utilities/cloudinary.js";
 import { ApiResponse } from "../../utilities/ApiResponse.js";
 import { ApiError } from "../../utilities/ApiError.js";
 
@@ -147,8 +150,7 @@ export const getMyServices = async (req, res) => {
 
 export const updateService = async (req, res) => {
   try {
-
-    console.log("inside update service..")
+    console.log("inside update service..");
 
     const vendorId = req.vendor._id;
     const serviceId = req.params.id;
@@ -245,5 +247,36 @@ export const deleteService = async (req, res) => {
     return res
       .status(500)
       .json(new ApiError(500, "Internal server error", [], error.stack));
+  }
+};
+
+export const getServicesByCategory = async (req, res) => {
+  try {
+    const { category } = req.params;
+    const services = await Service.find({
+      serviceCategory: { $regex: category, $options: "i" },
+    }).sort({ createdAt: -1 });
+
+    return res.status(200).json({ success: true, data: services });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+export const getServiceById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const service = await Service.findById(id);
+
+    if (!service) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Service not found" });
+    }
+
+    return res.status(200).json({ success: true, data: service });
+  } catch (err) {
+    console.error("Error fetching service by ID:", err);
+    return res.status(500).json({ success: false, message: "Server error" });
   }
 };

@@ -8,16 +8,24 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
   const navigate = useNavigate();
   const [isWishlisted, setIsWishlisted] = useState(false);
 
-  const {
-    title,
-    address,
-    rating,
-    reviews,
-    description,
-    price,
-    originalPrice,
-    discountPercent,
-  } = service;
+  // Dynamic fields from either mock or backend
+  const id = service._id || service.id;
+  const title = service.serviceName || service.title || "Untitled Service";
+  const vendor = service.vandor || service.vendorId || "Unknown Vendor";
+  const description = service.serviceDes || service.description || "";
+  const location =
+    service.locationOffered ||
+    (service.address
+      ? `${service.address.area}, ${service.address.city}, ${service.address.state} - ${service.address.pincode}`
+      : "Location not provided");
+
+  const rating = service.rating || "★";
+  const reviews = service.reviews || 0;
+
+  // Handle pricing logic
+  const price = service.price || service.priceRange || "N/A";
+  const originalPrice = service.originalPrice;
+  const discountPercent = service.discountPercent;
   const handleClick = () => {
     setIsWishlisted(!isWishlisted);
   };
@@ -34,12 +42,9 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
 
   return (
     <section className="serviceDescription">
-      <Link to={`/service/${service.id}`} className="link">
+      <Link to={`/service/${id}`} className="link">
         <h3>{title}</h3>
-        <h5>{service.vandor}</h5>
-        <p className="address">
-          {address.area}, {address.city}, {address.state} - {address.pincode}
-        </p>
+           <p className="address">{location}</p>
 
         <div className="serviceRating">
           <span className="rate">{rating} ☆</span>
@@ -47,8 +52,12 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
         </div>
         <div className="servicePrice">
           <span className="price">₹{price}</span>
-          <span className="originalPrice">₹{originalPrice}</span>
-          <span className="discountPercent">{discountPercent}% off</span>
+         {originalPrice && (
+            <>
+              <span className="originalPrice">₹{originalPrice}</span>
+              <span className="discountPercent">{discountPercent}% off</span>
+            </>
+          )}
         </div>
         <p className="paragraph">{description}</p>
       </Link>

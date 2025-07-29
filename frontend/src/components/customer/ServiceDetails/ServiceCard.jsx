@@ -9,45 +9,42 @@ const ServiceCard = ({ service }) => {
   if (!service) return null;
 
   const {
-    title,
-    description,
-    address,
-    price,
-    originalPrice,
-    discountPercent,
-    rating,
-    reviews,
+    serviceName,
+    serviceDes,
+    locationOffered,
+    priceRange,
+    duration,
+    serviceCategory,
   } = service;
-
+ console.log("Fetched Service:", service);
   return (
     <div className="dj-service-card">
-      <h2 className="dj-title">{title}</h2>
-      <p className="serviceDetails-location">
-        {address.area}, {address.city}, {address.state}, {address.country}
+        <h2 className="dj-title">{serviceName || "DJ Test Title"}</h2>
+
+      <p className="serviceDetails-location ">
+        <strong>Location:</strong> {locationOffered}
+      </p>
+     <p className="serviceDetails-category">
+        <strong>Category:</strong> {serviceCategory}
       </p>
 
-      <PriceSection
-        price={service.price}
-        originalPrice={service.originalPrice}
-        discountPercent={service.discountPercent}
-      />
+      <p className="serviceDetails-price text-black">
+        <strong className="text-black ">Price Range:</strong> 
+        
+        ₹{priceRange}
+      </p>
 
-      <RatingSection
-        ratingValue={service.rating}
-        totalRatings={service.reviews}
-        totalReviews={Math.round(service.reviews * 0.8)} // or replace with actual
-      />
+         <div className="service-description">
+        <strong>Description:</strong>
+        <p className="text-black" >{serviceDes}</p>
+      </div>
 
-      <ServiceDescription description={description} />
-
-      <hr className="dj-divider" />
-
-      <ServiceDetailsSection
+      {/* <ServiceDetailsSection
         title={service.title}
         category={service.category}
         idealFor={service.idealFor}
         inclusions={service.inclusions}
-      />
+      /> */}
     </div>
   );
 };
