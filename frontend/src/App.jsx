@@ -14,7 +14,6 @@ import Register from "./pages/common/Register.jsx";
 // Customer Pages
 import Home from "./pages/customer/Home";
 import ServiceList from "./pages/customer/ServiceList";
-// import CategoryCard from "./components/customer/Home/CategoryCard.jsx";
 
 import ServiceDetails from "./pages/customer/ServiceDetails";
 
@@ -34,7 +33,7 @@ import ResetPassword from "./pages/customer/ResetPassword.jsx";
 import Wishlist from "./pages/customer/Wishlist.jsx";
 import Profile from "./components/customer/profile/Profile.jsx";
 import UserDetails from "./pages/customer/UserDetails.jsx";
-import DashboardServices from "./components/vendor/DashboardServices.jsx";
+
 import PopUp from "./components/customer/CustomerNegotiationModal";
 import VendorResetPassword from "./pages/vendor/VendorResetPass.jsx";
 
@@ -47,7 +46,7 @@ import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 
 import BackToTop from "./pages/common/BackToTop";
-// import FaqSection from "./components/customer/Home/FaqSection.jsx";
+
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { setUser } from "./redux/UserSlice.js";
@@ -65,7 +64,6 @@ import FaqSection from "./components/customer/home/FaqSection.jsx";
 import ErrorPage from "./pages/common/ErrorPage.jsx";
 
 const App = () => {
-  const navigate = useNavigate();
   const location = useLocation();
   // Modal states for user
   const [showLoginModal, setShowLoginModal] = useState(false);
