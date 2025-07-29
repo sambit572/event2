@@ -10,13 +10,7 @@ function VendorService({ currentStep }) {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
-  const steps = [
-    { label: "Registration", subLabel: "Step 1", icon: "/verify.png" },
-    { label: "Service Details", subLabel: "Step 2", icon: "/service.png" },
-    { label: "Payment", subLabel: "Step 3", icon: "/payment.png" },
-    { label: "Legal Consents", subLabel: "Step 4", icon: "/legal.png" },
-  ];
-
+ 
   // All state variables
   const [categorySearchTerm, setCategorySearchTerm] = useState("");
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
