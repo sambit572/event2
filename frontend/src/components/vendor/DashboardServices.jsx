@@ -53,82 +53,81 @@ const DashboardServices = () => {
     setNewImages([]); // reset new images on each edit
   };
 
- const handleSave = async (index) => {
-   try {
-     const serviceId = services[index]._id;
-     const existingImages = editedData.serviceImage || [];
+  const handleSave = async (index) => {
+    try {
+      const serviceId = services[index]._id;
+      const existingImages = editedData.serviceImage || [];
 
-     // ✅ Validate image count (old + new)
-     const totalImages = existingImages.length + newImages.length;
-     if (totalImages > 5) {
-       alert(
-         `You can upload a maximum of 5 images.\nYou already have ${
-           existingImages.length
-         } images.\nPlease remove ${totalImages - 5} image(s) before saving.`
-       );
-       return;
-     }
+      // ✅ Validate image count (old + new)
+      const totalImages = existingImages.length + newImages.length;
+      if (totalImages > 5) {
+        alert(
+          `You can upload a maximum of 5 images.\nYou already have ${existingImages.length
+          } images.\nPlease remove ${totalImages - 5} image(s) before saving.`
+        );
+        return;
+      }
 
-     let uploadedUrls = [];
+      let uploadedUrls = [];
 
-     // ✅ Only upload if new images exist
-     if (newImages.length > 0) {
-       const formData = new FormData();
-       newImages.forEach((file) => {
-         formData.append("images", file);
-       });
+      // ✅ Only upload if new images exist
+      if (newImages.length > 0) {
+        const formData = new FormData();
+        newImages.forEach((file) => {
+          formData.append("images", file);
+        });
 
-       const res = await axios.post(
-         `${BACKEND_URL}/vendors/upload-new-service-image/${serviceId}`,
-         formData,
-         {
-           withCredentials: true,
-           headers: { "Content-Type": "multipart/form-data" },
-         }
-       );
+        const res = await axios.post(
+          `${BACKEND_URL}/vendors/upload-new-service-image/${serviceId}`,
+          formData,
+          {
+            withCredentials: true,
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        );
 
-       // ✅ Handle response as array of URLs
-       if (Array.isArray(res.data?.data)) {
-         uploadedUrls = res.data.data;
-       } else if (typeof res.data?.data === "string") {
-         uploadedUrls.push(res.data.data); // fallback for single upload
-       }
-     }
+        // ✅ Handle response as array of URLs
+        if (Array.isArray(res.data?.data)) {
+          uploadedUrls = res.data.data;
+        } else if (typeof res.data?.data === "string") {
+          uploadedUrls.push(res.data.data); // fallback for single upload
+        }
+      }
 
-     // ✅ Combine old and new image URLs
-     const allImages = [...existingImages, ...uploadedUrls];
+      // ✅ Combine old and new image URLs
+      const allImages = [...existingImages, ...uploadedUrls];
 
-     // ✅ Construct payload for update
-     const payload = {
-       serviceName: editedData.serviceName,
-       serviceDes: editedData.serviceDes,
-       serviceCategory: editedData.serviceCategory,
-       priceRange: editedData.priceRange,
-       locationOffered: editedData.locationOffered,
-       duration: editedData.duration,
-       serviceImage: allImages,
-     };
+      // ✅ Construct payload for update
+      const payload = {
+        serviceName: editedData.serviceName,
+        serviceDes: editedData.serviceDes,
+        serviceCategory: editedData.serviceCategory,
+        priceRange: editedData.priceRange,
+        locationOffered: editedData.locationOffered,
+        duration: editedData.duration,
+        serviceImage: allImages,
+      };
 
-     const updateRes = await axios.put(
-       `${BACKEND_URL}/vendors/update-service/${serviceId}`,
-       payload,
-       { withCredentials: true }
-     );
+      const updateRes = await axios.put(
+        `${BACKEND_URL}/vendors/update-service/${serviceId}`,
+        payload,
+        { withCredentials: true }
+      );
 
-     // ✅ Update frontend state
-     const updatedService = updateRes.data.data;
-     const updatedList = [...services];
-     updatedList[index] = updatedService;
-     setServices(updatedList);
-     setEditingIndex(null);
-   } catch (error) {
-     console.error(
-       "❌ Failed to update service:",
-       error.response?.data || error.message
-     );
-     alert(error.response?.data?.message || "Update failed");
-   }
- };
+      // ✅ Update frontend state
+      const updatedService = updateRes.data.data;
+      const updatedList = [...services];
+      updatedList[index] = updatedService;
+      setServices(updatedList);
+      setEditingIndex(null);
+    } catch (error) {
+      console.error(
+        "❌ Failed to update service:",
+        error.response?.data || error.message
+      );
+      alert(error.response?.data?.message || "Update failed");
+    }
+  };
 
 
   const handleDelete = async (index) => {
@@ -157,7 +156,16 @@ const DashboardServices = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setEditedData((prev) => ({ ...prev, [name]: value }));
+
+    if (name === "serviceDes") {
+      const wordCount = value.trim().split(/\s+/).filter(Boolean).length;
+      if (wordCount > 500) return;
+    }
+
+    setEditedData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleImageSelect = (index, imgUrl) => {
@@ -175,8 +183,7 @@ const DashboardServices = () => {
       editedData.serviceImage.length + newImages.length + files.length;
     if (totalSelected > 5) {
       alert(
-        `You can only upload up to 5 images in total. Remove ${
-          totalSelected - 5
+        `You can only upload up to 5 images in total. Remove ${totalSelected - 5
         } image(s).`
       );
       return;
@@ -235,6 +242,28 @@ const DashboardServices = () => {
 
           return (
             <section key={index} className="service-box xl:ml-20 mb-10">
+              <div className="availability-toggle-wrapper">
+                {/* Toggle Switch */}
+                <label
+                  className={`toggle-switch ${service.available ? "bg-blue-500" : "bg-gray-300"}`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={service.available}
+                    onChange={() => handleToggleAvailability(index)}
+                    className="sr-only"
+                  />
+                  <span
+                    className={`toggle-dot ${service.available ? "active" : ""}`}
+                  />
+                </label>
+
+                {/* Availability Label */}
+                <span className="availability-label">
+                  {service.available ? "Available" : "Unavailable"}
+                </span>
+              </div>
+
               <div className="both_images_section">
                 <div className="thumbnail-column-dashboard">
                   {service.serviceImage?.map((img, i) => (
@@ -242,9 +271,8 @@ const DashboardServices = () => {
                       key={i}
                       src={img}
                       alt={`thumb-${i}`}
-                      className={`thumbnail ${
-                        selectedImage === img ? "selected" : ""
-                      }`}
+                      className={`thumbnail ${selectedImage === img ? "selected" : ""
+                        }`}
                       onClick={() => handleImageSelect(index, img)}
                     />
                   ))}
@@ -316,77 +344,75 @@ const DashboardServices = () => {
                       value={editedData.serviceDes}
                       onChange={handleChange}
                       placeholder="Description"
+                      maxLength={500}
                     />
 
-                    <div className="flex flex-wrap gap-2 mt-4">
-                      <div className="flex flex-wrap gap-3 mt-2">
-                        {/* Existing Images */}
-                        {editedData.serviceImage?.map((img, i) => (
-                          <div
-                            key={`existing-${i}`}
-                            className="relative w-20 h-20"
+
+                    <div className="flex flex-nowrap overflow-x-auto items-center gap-3">
+                      {/* Existing Images */}
+                      {editedData.serviceImage?.map((img, i) => (
+                        <div key={`existing-${i}`} className="relative w-14 h-14 shrink-0">
+                          <img
+                            src={img}
+                            alt={`thumb-${i}`}
+                            className="w-full h-full object-cover rounded"
+                          />
+                          <button
+                            type="button"
+                            className="absolute top-0 right-0 !text-red-600 !p-[3px] !text-[10px] !bg-white !rounded-full leading-none"
+                            onClick={() => {
+                              const updatedImgs = [...editedData.serviceImage];
+                              updatedImgs.splice(i, 1);
+                              setEditedData((prev) => ({
+                                ...prev,
+                                serviceImage: updatedImgs,
+                              }));
+                            }}
                           >
-                            <img
-                              src={img}
-                              alt={`thumb-${i}`}
-                              className="w-full h-full object-cover rounded"
-                            />
-                            <button
-                              type="button"
-                              className="absolute top-0 right-0 !text-red-600 !p-[5px] !text-xs !w-fit !bg-white !rounded-full"
-                              onClick={() => {
-                                const updatedImgs = [
-                                  ...editedData.serviceImage,
-                                ];
-                                updatedImgs.splice(i, 1);
-                                setEditedData((prev) => ({
-                                  ...prev,
-                                  serviceImage: updatedImgs,
-                                }));
-                              }}
-                            >
-                              ✕
-                            </button>
-                          </div>
-                        ))}
+                            ✕
+                          </button>
+                        </div>
+                      ))}
 
-                        {/* New Image Previews */}
-                        {newImagePreviews.map((url, i) => (
-                          <div key={`new-${i}`} className="relative w-20 h-20">
-                            <img
-                              src={url}
-                              alt={`new-preview-${i}`}
-                              className="w-full h-full object-cover rounded"
-                            />
-                            <button
-                              type="button"
-                              className="absolute top-0 right-0 !text-red-600 !p-[5px] !text-xs !w-fit !bg-white !rounded-full"
-                              onClick={() => {
-                                // Remove both preview + actual file
-                                const updatedPreviews = [...newImagePreviews];
-                                const updatedFiles = [...newImages];
-                                updatedPreviews.splice(i, 1);
-                                updatedFiles.splice(i, 1);
-                                setNewImages(updatedFiles);
-                                setNewImagePreviews(updatedPreviews);
-                              }}
-                            >
-                              ✕
-                            </button>
-                          </div>
-                        ))}
-                      </div>
+                      {/* New Image Previews */}
+                      {newImagePreviews.map((url, i) => (
+                        <div key={`new-${i}`} className="relative w-14 h-14 shrink-0">
+                          <img
+                            src={url}
+                            alt={`new-preview-${i}`}
+                            className="w-full h-full object-cover rounded"
+                          />
+                          <button
+                            type="button"
+                            className="absolute top-0 right-0 !text-red-600 !p-[3px] !text-[10px] !bg-white !rounded-full leading-none"
+                            onClick={() => {
+                              const updatedPreviews = [...newImagePreviews];
+                              const updatedFiles = [...newImages];
+                              updatedPreviews.splice(i, 1);
+                              updatedFiles.splice(i, 1);
+                              setNewImages(updatedFiles);
+                              setNewImagePreviews(updatedPreviews);
+                            }}
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ))}
 
-                      <label className="w-20 h-20 border-2 border-dashed border-gray-400 rounded flex items-center justify-center cursor-pointer">
-                        <FaPlus className="text-gray-500" />
-                        <input
-                          type="file"
-                          accept="image/*"
-                          className="hidden"
-                          onChange={handleImageUpload}
-                        />
-                      </label>
+                      {/* Upload Button (show only if total images < 5) */}
+                      {(editedData.serviceImage.length + newImagePreviews.length < 5) && (
+                        <label className="w-14 h-14 border-2 border-dashed border-gray-400 rounded flex items-center justify-center cursor-pointer shrink-0">
+                          <FaPlus className="text-gray-500 text-xs" />
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={handleImageUpload}
+                          />
+                        </label>
+                      )}
                     </div>
+
 
                     <button type="button" onClick={() => handleSave(index)}>
                       Save
@@ -419,46 +445,6 @@ const DashboardServices = () => {
                 )}
               </div>
 
-              <div className="flex relative xl:top-[-175px] items-center gap-3 mt-4">
-                <label
-                  className={`relative w-[60px] h-[30px] rounded-full cursor-pointer transition-colors duration-300 ${
-                    service.available
-                      ? "bg-green-500"
-                      : "border-2 border-gray-400"
-                  }`}
-                >
-                  <input
-                    type="checkbox"
-                    checked={service.available}
-                    onChange={() => handleToggleAvailability(index)}
-                    className="sr-only"
-                  />
-                  <span
-                    className={`absolute inset-0 flex items-center justify-center text-white text-xs font-semibold transition-opacity duration-300 ${
-                      service.available ? "opacity-100" : "opacity-0"
-                    }`}
-                  >
-                    ON
-                  </span>
-                  <span
-                    className={`absolute inset-0 flex items-center justify-center text-gray-700 text-xs font-semibold transition-opacity duration-300 ${
-                      service.available ? "opacity-0" : "opacity-100"
-                    }`}
-                  >
-                    OFF
-                  </span>
-                  <span
-                    className={`absolute top-[3px] left-[3px] w-[24px] h-[24px] bg-white rounded-full transition-transform duration-300 ${
-                      service.available ? "translate-x-[30px]" : "translate-x-0"
-                    }`}
-                  />
-                </label>
-                <span className="text-sm font-medium">
-                  {service.available
-                    ? "Service Available"
-                    : "Service Not Available"}
-                </span>
-              </div>
             </section>
           );
         })
@@ -469,7 +455,5 @@ const DashboardServices = () => {
   );
 
 };
-
-
 
 export default DashboardServices;
