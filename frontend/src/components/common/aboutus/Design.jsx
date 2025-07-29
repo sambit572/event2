@@ -1,11 +1,11 @@
 import React from "react";
 import "./design.css";
 import chatIcon from "../../../assets/serverLogo.png";
-import offers from "../../../assets/aboutus/offer.jpeg";
+import offers from "../../../assets/aboutus/offer_img.jpeg";
 import wedding from "../../../assets/aboutUs/wedding.jpeg";
 import party from "../../../assets/aboutus/party.jpeg";
 import tenthouse from "../../../assets/aboutus/tenthouse.jpeg";
-import catering from "../../../assets/aboutus/catering_service.jpg";
+import catering from "../../../assets/aboutus/catering_service_img.jpg";
 import horseCart from "../../../assets/aboutus/horsecart.jpeg";
 import magician from "../../../assets/aboutus/magician.jpeg";
 import flowers from "../../../assets/aboutus/flowers.jpeg";
