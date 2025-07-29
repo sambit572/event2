@@ -14,43 +14,45 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const isProduction = process.env.NODE_ENV === "production"; // ✅ Detect environment
+
 // ✅ Middleware
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
   })
 );
 
 app.use(
   helmet({
-    contentSecurityPolicy: false, // disable strict CSP if using external scripts
+    contentSecurityPolicy: false,
     crossOriginEmbedderPolicy: false,
   })
 );
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// ✅ Serve static frontend files
-app.use(express.static(path.join(__dirname, "build")));
-
-// ✅ API Routes (these come BEFORE SPA fallback)
+// ✅ API Routes
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/user", userRouter);
 app.use("/api/vendors", vendor_router);
 
-// ✅ Health Check (optional but keep it separate from frontend)
+// ✅ Health Check
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
     message: "Server is running and healthy!",
+    environment: isProduction ? "production" : "development",
     timestamp: new Date().toISOString(),
   });
 });
 
+// ✅ 404 Handler for Unknown API Routes
 app.use("/api/*", (req, res) =>
   res.status(404).json({ success: false, message: "API endpoint not found" })
 );
@@ -58,13 +60,16 @@ app.use("/api/*", (req, res) =>
 // ✅ Error Handler (AFTER routes)
 app.use(errorHandler);
 
-// ✅ SPA Fallback: Send index.html for non-API routes
-app.get("*", (req, res, next) => {
-  if (req.originalUrl.startsWith("/api")) return next();
-  res.sendFile(path.join(__dirname, "build", "index.html"));
-});
+// ✅ Serve Vite build only in Production
+if (isProduction) {
+  const frontendPath = path.join(__dirname, "../frontend/dist");
+  app.use(express.static(frontendPath));
 
-
-
+  // SPA Fallback for non-API routes
+  app.get("*", (req, res, next) => {
+    if (req.originalUrl.startsWith("/api")) return next();
+    res.sendFile(path.join(frontendPath, "index.html"));
+  });
+}
 
 export { app };
