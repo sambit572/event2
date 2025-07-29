@@ -106,7 +106,7 @@ import image6 from "../assets/home/categoriesImages/magician.png";
 import image7 from "../assets/home/categoriesImages/orchestra.png";
 import image8 from "../assets/home/categoriesImages/moulbi.png";
 import image9 from "../assets/home/categoriesImages/father.png";
-import image10 from "../assets/aboutUs/catering_img.png";
+import image10 from "../assets/aboutus/catering_img.png";
 import image11 from "../assets/home/categoriesImages/bride-mehendi-&-makeup.png";
 import image12 from "../assets/home/categoriesImages/flower-decor.png";
 import image13 from "../assets/home/categoriesImages/horse-cart.png";

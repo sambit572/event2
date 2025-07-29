@@ -2,7 +2,7 @@ import React from "react";
 import "./design.css";
 import chatIcon from "../../../assets/serverLogo.png";
 import offers from "../../../assets/aboutus/offer_img.jpeg";
-import wedding from "../../../assets/aboutUs/wedding.jpeg";
+import wedding from "../../../assets/aboutus/wedding.jpeg";
 import party from "../../../assets/aboutus/party.jpeg";
 import tenthouse from "../../../assets/aboutus/tenthouse.jpeg";
 import catering from "../../../assets/aboutus/catering_service_img.jpg";
