@@ -15,36 +15,40 @@ const ServiceCard = ({ service }) => {
     priceRange,
     duration,
     serviceCategory,
+    rating,
+    reviews,
   } = service;
- console.log("Fetched Service:", service);
+
+  const totalReviews = reviews?.length || 0;
+  const averageRating = rating || 0;
+
   return (
-    <div className="dj-service-card">
-        <h2 className="dj-title">{serviceName || "DJ Test Title"}</h2>
+    <div className="dj-service-card p-4 bg-white rounded-lg border border-gray-200">
+      <h2 className="dj-title text-xl font-semibold text-gray-800 mb-2">
+        {serviceName || "DJ Test Title"}
+      </h2>
 
-      <p className="serviceDetails-location ">
-        <strong>Location:</strong> {locationOffered}
-      </p>
-     <p className="serviceDetails-category">
-        <strong>Category:</strong> {serviceCategory}
+      <p className="serviceDetails-location text-sm text-black mb-2">
+        {locationOffered}
       </p>
 
-      <p className="serviceDetails-price text-black">
-        <strong className="text-black ">Price Range:</strong> 
-        
+      <p className="serviceDetails-price text-lg font-bold text-black mb-3">
         ₹{priceRange}
       </p>
 
-         <div className="service-description">
-        <strong>Description:</strong>
-        <p className="text-black" >{serviceDes}</p>
+      {/* ⭐ Rating and Reviews Section */}
+      <div className="flex items-center gap-2 mb-3">
+        <span className="bg-green-600 text-white px-2 py-1 rounded-full text-sm font-semibold">
+         {averageRating.toFixed(1)} ★
+          </span>
+        <span className="text-gray-500 text-sm">
+          ({totalReviews} reviews)
+        </span>
       </div>
 
-      {/* <ServiceDetailsSection
-        title={service.title}
-        category={service.category}
-        idealFor={service.idealFor}
-        inclusions={service.inclusions}
-      /> */}
+      <div className="service-description">
+        <p className="text-black text-sm">{serviceDes}</p>
+      </div>
     </div>
   );
 };
