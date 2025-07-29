@@ -8,6 +8,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { setVendor } from "../../redux/VendorSlice";
 import VendorAutoFillConfirmModal from "../../components/vendor/VendorAutoFillConfirmModal";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
+
+
 export default function VendorRegister() {
   const dispatch = useDispatch();
   const navigate = useNavigate();

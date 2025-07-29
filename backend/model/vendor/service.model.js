@@ -39,6 +39,12 @@ const serviceSchema = new Schema(
       type: String,
       required: true,
     },
+
+    // ✅ Add this new field
+    available: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true }
 );

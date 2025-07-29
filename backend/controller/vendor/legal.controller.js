@@ -6,6 +6,7 @@ import {
 
 import { ApiResponse } from "../../utilities/ApiResponse.js";
 import { ApiError } from "../../utilities/ApiError.js";
+import Vendor from "../../model/vendor/vendor.model.js";
 
 // Create legal consent
 export const createLegalConsent = async (req, res) => {
@@ -39,6 +40,15 @@ export const createLegalConsent = async (req, res) => {
     });
 
     console.log("consent backend working fine...");
+
+
+    await Vendor.findByIdAndUpdate(vendorId, {
+      $set: {
+        registrationProgress: 4, // or 5 based on your final step logic
+        isRegistrationComplete: true, // 🔐 useful for middleware and admin filtering
+      },
+    });
+
     res.status(201).json({
       success: true,
       message: "Legal consent created successfully",
