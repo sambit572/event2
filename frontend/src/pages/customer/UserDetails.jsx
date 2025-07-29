@@ -1,9 +1,40 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./UserDetails.css";
+import { useNavigate } from "react-router-dom";
 
 const stateDistricts = {
-  Odisha: ["Angul","Balangir","Balasore","Bargarh","Bhadrak","Boudh","Cuttack","Debagarh","Dhenkanal","Gajapati","Ganjam","Jagatsinghpur","Jajpur","Jharsuguda","Kalahandi","Kandhamal","Kendrapara","Kendujhar","Khordha","Koraput","Malkangiri","Mayurbhanj","Nabarangpur","Nayagarh","Nuapada","Puri","Rayagada","Sambalpur","Subarnapur","Sundargarh",
+  Odisha: [
+    "Angul",
+    "Balangir",
+    "Balasore",
+    "Bargarh",
+    "Bhadrak",
+    "Boudh",
+    "Cuttack",
+    "Debagarh",
+    "Dhenkanal",
+    "Gajapati",
+    "Ganjam",
+    "Jagatsinghpur",
+    "Jajpur",
+    "Jharsuguda",
+    "Kalahandi",
+    "Kandhamal",
+    "Kendrapara",
+    "Kendujhar",
+    "Khordha",
+    "Koraput",
+    "Malkangiri",
+    "Mayurbhanj",
+    "Nabarangpur",
+    "Nayagarh",
+    "Nuapada",
+    "Puri",
+    "Rayagada",
+    "Sambalpur",
+    "Subarnapur",
+    "Sundargarh",
   ],
   Gujarat: ["Ahmedabad", "Surat", "Vadodara"],
   Maharashtra: ["Mumbai Suburban", "Pune", "Nagpur"],
@@ -18,7 +49,17 @@ const districtCities = {
   Bargarh: ["Bargarh", "Kantabanji", "Sohela", "Barpali"],
   Bhadrak: ["Bhadrak", "Dhamnagar", "Basudebpur", "Erei"],
   Boudh: ["Boudh"],
-  Cuttack: ["Cuttack","Choudwar","Athagad","Banki","Charibatia","Dadhapatna","Kanheipur","Nuapatna","Ramgarh",],
+  Cuttack: [
+    "Cuttack",
+    "Choudwar",
+    "Athagad",
+    "Banki",
+    "Charibatia",
+    "Dadhapatna",
+    "Kanheipur",
+    "Nuapatna",
+    "Ramgarh",
+  ],
   Debagarh: ["Debagarh"],
   Dhenkanal: ["Dhenkanal", "Indipur", "Bhuban", "Kamakshyanagar"],
   Gajapati: ["Paralakhemundi", "Kashinagar"],
@@ -153,9 +194,10 @@ const districtCities = {
 };
 
 const UserDetails = () => {
+  const navigate = useNavigate();
+
   const [userName, setUserName] = useState("");
   const [showPopup, setShowPopup] = useState(false);
-
   const [formData, setFormData] = useState({
     phone: "",
     altPhone: "",
@@ -167,7 +209,7 @@ const UserDetails = () => {
     district: "",
     city: "",
     pincode: "",
-    country: "",
+    // country: "",
   });
 
   useEffect(() => {
@@ -217,18 +259,34 @@ const UserDetails = () => {
     const { pincode } = formData;
     const pincodeRegex = /^\d{6}$/;
 
-    if (!pincodeRegex.test(pincode)) {
+    if (!pincodeRegex.test(String(pincode))) {
       alert("Pincode must be exactly 6 digits.");
       return;
     }
 
     const allFieldsFilled =
       userName.trim() !== "" &&
-      Object.values(formData).every((value) => value.trim() !== "");
+      Object.values(formData).every((value) => String(value).trim() !== "");
+    // console.log(allFieldsFilled);
+
+    // const allFieldsFilled =
+    //   userName.trim() !== "" &&
+    //   Object.entries(formData).every(([key, value]) => {
+    //     const trimmedValue = String(value).trim();
+    //     if (trimmedValue === "") {
+    //       console.log(`${key} is empty`);
+    //       return false;
+    //     }
+    //     return true;
+    // //   });
+
+    // console.log("userName:", userName.trim());
+    // console.log("formData:", formData);
 
     if (allFieldsFilled) {
       setShowPopup(true);
       setTimeout(() => setShowPopup(false), 3000);
+      navigate("/pop-up");
     } else {
       alert("Please fill in all fields before saving.");
     }
@@ -243,8 +301,8 @@ const UserDetails = () => {
       alert("Geolocation is not supported by your browser.");
       return;
     }
-  // Check if API key is available
-  if (!import.meta.env.VITE_GOOGLE_API_KEY) {
+    // Check if API key is available
+    if (!import.meta.env.VITE_GOOGLE_API_KEY) {
       alert("Google API key is not configured.");
       console.error("VITE_GOOGLE_API_KEY is not set in environment variables");
       return;
@@ -265,8 +323,7 @@ const UserDetails = () => {
             }
           );
           console.log("Data fetched from API : ", data);
-          
-          
+
           if (data.status === "OK") {
             const addressComponents = data.results[0].address_components;
 

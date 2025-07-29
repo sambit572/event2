@@ -44,7 +44,7 @@
   justify-content: space-between;
   border-radius: 16px;
   max-height: 60px;
-  width: 380px;
+  width: 320px;
   max-width: 100%;
   margin-left: 150px;
   background-color: transparent;
@@ -57,7 +57,7 @@
 }
 
 .search-bar.active {
-  /* width: 420px; */
+  /* width: 220px; */
   border-radius: 999px;
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
 }
@@ -426,12 +426,12 @@
 }
 
 .search-bar {
-  width: 380px;
+  width: 350px;
   transition: width 0.4s ease;
 }
 
 .search-bar.active {
-  width: 450px;
+  width: 400px;
   margin-left: 150px;
 }
 
@@ -451,12 +451,21 @@
   cursor: pointer;
 }
 
-@media (min-width: 1025px) {
-  /* .search-bar:hover {
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-    border-radius: 999px;
-  } */
+@media (max-width: 1280px) {
+  .search-bar {
+    width: 300px;
+    transition: width 0.4s ease;
+    margin-left: 20px;
+  }
+
+  .search-bar.active {
+    width: 35s0px;
+    margin-left: 20px;
+    /* margin-left: 150px; */
+  }
+}
+/* @media (max-width: 1025px) {
+
 
   .nav-item .login:hover {
     background-color: #001f3f;
@@ -502,25 +511,23 @@
     font-weight: 800;
   }
 
-  /* .dropdown-menu {
-    right: 10px;
-    width: 250px;
-  } */
 
-  /* .search-bar {
-    margin-left: 50px;
-  } */
-}
+} */
 
 @media (max-width: 1024px) {
   .search-bar {
-    width: 310px;
+    width: 200px;
     transition: width 0.4s ease;
     margin-left: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }
+  .search-bar input {
+    width: 100px;
   }
 
   .search-bar.active {
-    width: 400px;
+    width: 260px;
     margin-left: 0px;
     margin-right: 25px;
   }
@@ -530,7 +537,20 @@
 }
 @media (max-width: 900px) {
   .search-bar {
-    margin-right: 20px;
+    width: 200px;
+    transition: width 0.4s ease;
+    margin-left: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }
+  .search-bar input {
+    width: 100px;
+  }
+
+  .search-bar.active {
+    width: 300px;
+    margin-left: 0px;
+    margin-right: 25px;
   }
   .vendorNameText {
     display: none;
@@ -560,13 +580,13 @@
     display: flex;
     border: 1px solid #001f3f;
     margin-left: -27px;
-    width: 260px;
+    width: 220px;
     margin-right: 8px;
     height: 36px;
   }
   .search-bar.active {
     margin-left: -32px;
-    width: 258px;
+    width: 280px;
     margin-right: 20px;
   }
   .nav-icons {
@@ -922,9 +942,7 @@
   /* .searchbarIcon .search-icon {
     margin-left: -15px;
   } */
-  .search-and-nav-icons-container {
-    /* margin-left: -190px; */
-  }
+
   .nav-icons {
     margin-left: -13px;
   }

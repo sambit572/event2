@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FaHeart } from "react-icons/fa6";
 
 import "./ServiceDetails.css";
@@ -13,9 +13,19 @@ import DJServiceCard from "../../components/customer/ServiceDetails/ServiceCard.
 import ReviewList from "../../components/customer/ServiceDetails/ReviewList";
 import ReviewForm from "../../components/customer/ServiceDetails/ReviewForm.jsx";
 
-const Service = () => {
+const Service = ({ onSwitchToLogin }) => {
+  const navigate = useNavigate();
   const { serviceId } = useParams();
 
+  const handleBookNow = () => {
+    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
+
+    if (isLoggedIn) {
+      navigate("/userdetails");
+    } else {
+      onSwitchToLogin(true); // ✅ this opens your login popup
+    }
+  };
   // Get the service object from CategoryData
   const service = CategoryData.flatMap((cat) => cat.services).find(
     (srv) => srv.id === serviceId
@@ -31,8 +41,14 @@ const Service = () => {
   // ✅ For syncing new review from ReviewForm to ReviewList
   const [latestReview, setLatestReview] = useState(null);
 
-  const handleClick = () => {
-    setIsWishlisted(!isWishlisted);
+  const handleWishlist = () => {
+    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
+
+    if (isLoggedIn) {
+      setIsWishlisted(!isWishlisted);
+    } else {
+      onSwitchToLogin(true); // ✅ this opens your login popup
+    }
   };
 
   return (
@@ -60,7 +76,7 @@ const Service = () => {
           <div className="buttons">
             <button
               className={`viewBtns ${isWishlisted ? "wishlisted" : ""}`}
-              onClick={handleClick}
+              onClick={handleWishlist}
             >
               <div>
                 {isWishlisted && <FaHeart className="wishIcon" color="red" />}
@@ -76,7 +92,9 @@ const Service = () => {
               </div>
             </button>
 
-            <button className="buynow">Book Now</button>
+            <button className="buynow" onClick={handleBookNow}>
+              Book Now
+            </button>
           </div>
         </div>
 
@@ -93,9 +111,7 @@ const Service = () => {
               <li>Experience With All Cultures & Traditions</li>
               <li>Custom Packages & Friendly Support</li>
             </ul>
-          </div> 
-
-          
+          </div>
 
           <div className="reviews">
             <h3>DJ Ratings & Reviews</h3>
@@ -103,21 +119,13 @@ const Service = () => {
             <hr />
 
             {/* ✅ Update latestReview on submission */}
-             <h4 style={{ marginTop: "30px", fontWeight: "bold" }}>
+            <h4 style={{ marginTop: "30px", fontWeight: "bold" }}>
               Write a Review
             </h4>
             <ReviewForm onNewReview={(review) => setLatestReview(review)} />
 
-             {/* ✅ Pass latestReview to ReviewList */}
+            {/* ✅ Pass latestReview to ReviewList */}
             <ReviewList newReview={latestReview} />
-
-             
-
-
-            
-
-           
-           
           </div>
         </div>
       </div>

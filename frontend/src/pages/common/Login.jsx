@@ -256,7 +256,6 @@ const Login = ({ onClose, onSwitchToRegister }) => {
         <GoogleLogin
           onSuccess={handleGoogleSuccess}
           onError={() => setErrorMsg("Google login failed.")}
-          width="100%"
           text="signup_with"
           shape="rectangular"
           logo_alignment="center"

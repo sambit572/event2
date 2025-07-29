@@ -154,6 +154,13 @@ const App = () => {
     checkVendorAuth();
   }, []);
 
+  useEffect(() => {
+    const openLoginListener = () => handleOpenLogin();
+    window.addEventListener("openLoginModal", openLoginListener);
+    return () =>
+      window.removeEventListener("openLoginModal", openLoginListener);
+  }, []);
+
   return (
     <>
       <ScrollToTop />
@@ -177,7 +184,10 @@ const App = () => {
           />
           {/* <Route path="/categories" element={<CategoryCard />}></Route> */}
           <Route path="/reviews" element={<ReviewSlider />} />
-          <Route path="/service/:serviceId" element={<ServiceDetails />} />
+          <Route
+            path="/service/:serviceId"
+            element={<ServiceDetails onSwitchToLogin={handleOpenLogin} />}
+          />
           <Route
             path="/wishlist"
             element={

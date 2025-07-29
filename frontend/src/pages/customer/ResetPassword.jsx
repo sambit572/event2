@@ -22,7 +22,11 @@ const ResetPassword = () => {
 
         console.log("✅ Password reset successful:", response.data.message);
         alert("Password reset successful! You can now log in.");
-        navigate("/login");
+        navigate("/"); // Redirect to homepage
+        setTimeout(() => {
+          // Trigger login modal
+          window.dispatchEvent(new Event("openLoginModal"));
+        }, 500);
       } catch (error) {
         console.error(
           "❌ Error resetting password:",
@@ -42,9 +46,7 @@ const ResetPassword = () => {
     <div className="headpart">
       <form onSubmit={handleResetPassword} className="formpart">
         <h2 className="subhead">New Password</h2>
-        <p className="subheadingRP">
-          Please create a new password.
-        </p>
+        <p className="subheadingRP">Please create a new password.</p>
         <input
           type="password"
           placeholder="Create new password"
