@@ -117,3 +117,27 @@
     gap: 12px;
   }
 }
+@media (max-width: 576px) {
+  .faq-question {
+    font-size: 15px;
+    padding: 12px;
+  }
+
+  .faq-answer {
+    font-size: 13px;
+    padding: 12px;
+  }
+
+  .faq-columns {
+    gap: 10px;
+  }
+
+  .faq-column {
+    gap: 12px;
+  }
+}
+@media (max-width: 375px) {
+  .faq-title {
+    width: 290px;
+  }
+}

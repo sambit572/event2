@@ -5,7 +5,7 @@ import AboutUs_1 from "../../assets/aboutUs/AboutUs_1.jpeg";
 import Aboutus_2 from "../../assets/aboutUs/Aboutus_2.png";
 import Design from "../../components/common/aboutus/Design";
 import ServiceFeature from "./ServiceFeature";
-import frame from "../../assets/home/categoriesImages/frame_image.png";
+import frame from "../../assets/home/categoriesImages/pandit.png";
 
 const Card = ({ title, description, image }) => {
   const [open, setOpen] = useState(false);

@@ -1,5 +1,8 @@
 import { Service } from "../../model/vendor/service.model.js";
-import { deleteFromCloudinary, uploadOnCloudinary } from "../../utilities/cloudinary.js";
+import {
+  deleteFromCloudinary,
+  uploadOnCloudinary,
+} from "../../utilities/cloudinary.js";
 import { ApiResponse } from "../../utilities/ApiResponse.js";
 import { ApiError } from "../../utilities/ApiError.js";
 import Vendor from "../../model/vendor/vendor.model.js";
@@ -77,7 +80,7 @@ export const createService = async (req, res) => {
         .status(400)
         .json({ message: "Please upload at least one image" });
     }
-     
+
     // Save service document to database
     console.log("Creating new service document in DB...");
     const newService = await Service.create({
@@ -153,8 +156,7 @@ export const getMyServices = async (req, res) => {
 
 export const updateService = async (req, res) => {
   try {
-
-    console.log("inside update service..")
+    console.log("inside update service..");
 
     const vendorId = req.vendor._id;
     const serviceId = req.params.id;
@@ -292,39 +294,106 @@ export const updateAvailability = async (req, res) => {
   }
 };
 
-export const updateServiceImageFirst = async (req,res)=>{
-
+export const updateServiceImageFirst = async (req, res) => {
   const imageUrls = [];
-    if (req.files && req.files.length > 0) {
-      console.log("Uploading images to Cloudinary...");
-      for (const file of req.files) {
-        console.log(
-          "Processing file:",
-          file.originalname,
-          "at path:",
-          file.path
-        );
-        const cloudRes = await uploadOnCloudinary(file.path);
-        console.log(
-          "Cloudinary response for",
-          file.originalname,
-          ":",
-          cloudRes
-        );
-        if (cloudRes?.secure_url) {
-          console.log("✅ Image uploaded successfully:", cloudRes.secure_url);
-          imageUrls.push(cloudRes.secure_url);
-        } else {
-          console.error("❌ Failed to upload image:", file.originalname);
-        }
+  if (req.files && req.files.length > 0) {
+    console.log("Uploading images to Cloudinary...");
+    for (const file of req.files) {
+      console.log("Processing file:", file.originalname, "at path:", file.path);
+      const cloudRes = await uploadOnCloudinary(file.path);
+      console.log("Cloudinary response for", file.originalname, ":", cloudRes);
+      if (cloudRes?.secure_url) {
+        console.log("✅ Image uploaded successfully:", cloudRes.secure_url);
+        imageUrls.push(cloudRes.secure_url);
+      } else {
+        console.error("❌ Failed to upload image:", file.originalname);
       }
-      console.log("Final image URLs:", imageUrls);
-
-      return res.status(200).json(new ApiResponse(200,imageUrls,"Images are upload to cloudinary only "))
-    } else {
-      console.error("❌ No images uploaded");
-      return res
-        .status(400)
-        .json({ message: "Please upload at least one image" });
     }
-}
+    console.log("Final image URLs:", imageUrls);
+
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(200, imageUrls, "Images are upload to cloudinary only ")
+      );
+  } else {
+    console.error("❌ No images uploaded");
+    return res
+      .status(400)
+      .json({ message: "Please upload at least one image" });
+  }
+};
+
+export const getServicesByCategory = async (req, res) => {
+  try {
+    const { category } = req.params;
+
+    const services = await Service.aggregate([
+      {
+        $match: {
+          serviceCategory: { $regex: category, $options: "i" },
+        },
+      },
+      {
+        $sort: { createdAt: -1 },
+      },
+      {
+        $lookup: {
+          from: "vendors",
+          localField: "vendorId",
+          foreignField: "_id",
+          as: "vendorDetails",
+        },
+      },
+      {
+        $unwind: {
+          path: "$vendorDetails",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          serviceName: 1,
+          serviceDes: 1,
+          serviceCategory: 1,
+          priceRange: 1,
+          minPrice: 1,
+          serviceImage: 1,
+          duration: 1,
+          locationOffered: 1,
+          address: 1,
+          vendorId: 1,
+          vendorName: "$vendorDetails.fullName",
+          vendorEmail: "$vendorDetails.email",
+          rating: 1,
+          reviews: 1,
+          available: 1,
+        },
+      },
+    ]);
+
+    return res.status(200).json({ success: true, data: services });
+  } catch (err) {
+    console.error("Error in getServicesByCategory:", err);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+export const getServiceById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const service = await Service.findById(id);
+
+    if (!service) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Service not found" });
+    }
+
+    return res.status(200).json({ success: true, data: service });
+  } catch (err) {
+    console.error("Error fetching service by ID:", err);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+};
