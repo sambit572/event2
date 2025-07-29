@@ -62,6 +62,7 @@ import Feedback from "./pages/common/Feedback.jsx";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 import ReviewSlider from "./components/customer/home/ReviewSlider.jsx";
 import FaqSection from "./components/customer/home/FaqSection.jsx";
+import ErrorPage from "./pages/common/ErrorPage.jsx";
 
 const App = () => {
   const navigate = useNavigate();
@@ -205,11 +206,7 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-
-        
-
           {/* Vendor Routes */}
-
           <Route
             path="/vendor/register"
             element={
@@ -218,7 +215,6 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-
           <Route path="/category/VendorService" element={<VendorService />} />
           <Route path="/vendor/payment-info" element={<VendorPayment />} />
           <Route
@@ -226,19 +222,19 @@ const App = () => {
             element={<VendorLegalConsent />}
           />
           <Route path="/vendor/thank-you" element={<VendorThankYou />} />
-
-          <Route path="/dashboard" element={
-            <DashboardEnforcement>
-
-              <DashBoardMain />
-            </DashboardEnforcement>
-        } />
+          <Route
+            path="/dashboard"
+            element={
+              <DashboardEnforcement>
+                <DashBoardMain />
+              </DashboardEnforcement>
+            }
+          />
           {/* <Route path="/vendor-login" element={<VendorLogin />} /> */}
           <Route
             path="/vendor/services/addServices"
             element={<AddServiceInDashboard />}
           />
-
           <Route path="/forgot-password" element={<ForgotPass />} />
           <Route
             path="/reset-password/:resetToken"
@@ -248,7 +244,6 @@ const App = () => {
             path="/vendor/reset-password/:resetToken"
             element={<VendorResetPassword />}
           />
-
           {/* Misc */}
           <Route path="/your-cart" element={<AddToCart />} />
           <Route path="/about_us" element={<AboutUs />} />
@@ -261,6 +256,7 @@ const App = () => {
           <Route path="/userdetails" element={<UserDetails />}></Route>
           <Route path="/pop-up" element={<PopUp />}></Route>
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="*" element={<ErrorPage />} />
         </Routes>
       </main>
       <BackToTop />

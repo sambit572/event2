@@ -93,19 +93,20 @@ export const createService = async (req, res) => {
     });
     console.log("✅ Service created successfully:", newService);
 
-    await Vendor.findByIdAndUpdate(req.vendor._id, {
-      $set: { registrationProgress: 2 },
-    });
-
-    return res
-      .status(200)
-      .json(
-        new ApiResponse(
-          200,
-          newService,
-          "Service created and saved succesfully"
-        )
-      );
+    if (req.vendor.isRegistrationComplete === false){
+      await Vendor.findByIdAndUpdate(req.vendor._id, {
+        $set: { registrationProgress: 2 },
+      });
+    }
+      return res
+        .status(200)
+        .json(
+          new ApiResponse(
+            200,
+            newService,
+            "Service created and saved succesfully"
+          )
+        );
   } catch (error) {
     console.error("❌ Service creation error:", error);
     res.status(500).json({ message: "Internal server error" });
