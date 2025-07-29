@@ -4,7 +4,7 @@ import fs from "fs";
 import { sendEmail } from "../../utilities/sendEmail.js";
 import { User } from "../../model/user/user.model.js";
 import Vendor from "../../model/vendor/vendor.model.js";
-import Review from "../../model/common/ReviewModel.js";
+import Review from "../../model/common/review.model.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
