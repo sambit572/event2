@@ -4,8 +4,8 @@ import Vendor from "../../model/vendor/vendor.model.js";
 import { sendEmail } from "../../utilities/sendEmail.js"; 
 
 export default function monthlyFeedback() {
- 
-  // cron.schedule("* * * * *", async () => { For testing purpose
+  //  For testing purpose
+  // cron.schedule("* * * * *", async () => { 
    // Run on 1st of every month at 10:00 AM
     cron.schedule("0 10 1 * *", async () => {
     try {

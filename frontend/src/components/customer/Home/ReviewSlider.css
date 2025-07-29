@@ -193,3 +193,23 @@ margin-top: -20px;
 .review_form button:hover {
   background-color: #e0af24;
 }
+
+.initials_avatar {
+  position: absolute;
+  top: -50px;
+  width: 105px;
+  height: 105px;
+  border-radius: 50%;
+  background-color: #3a3a3a;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  border: 3px solid #c3d21c;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
