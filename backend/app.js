@@ -15,16 +15,18 @@ const app = express();
 // ✅ Set up all middleware BEFORE the routes
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   })
 );
-app.use(express.static("public"));
+
+app.use(express.static("public")); 
 app.use(express.json()); // ✅ Important
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
 
 
 // use to start Agenda engine
