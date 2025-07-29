@@ -10,10 +10,10 @@
 .heading_review {
   background: #f3c12d;
   color: rgb(0, 0, 0);
-  padding: 10px 30px;
+  padding: 5px 10px;
   font-size: 2rem;
   font-weight: bold;
-  width: 350px;
+  width: 300px;
   margin: 40px auto;
   border: 6px double #001f3f;
   border-radius: 30px 10px 30px 10px;
@@ -31,7 +31,7 @@
   text-align: center;
   font-size: 1.2rem;
   font-weight: 500;
-margin-top: -20px;
+  margin-top: -20px;
   margin-bottom: 40px;
   color: #3b0340e1;
   letter-spacing: 0.5px;
@@ -132,11 +132,10 @@ margin-top: -20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
 }
 
-@media (max-width:380px) {
+@media (max-width: 380px) {
   .review_card {
     width: 250px;
   }
-  
 }
 
 .review_form {

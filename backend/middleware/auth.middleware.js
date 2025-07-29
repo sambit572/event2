@@ -9,6 +9,11 @@ export const verifyJwt = async (req, res, next) => {
 
     if (!token) {
       const authHeader = req.header("Authorization");
+
+      if (!authHeader) {
+        throw new ApiError(401, "Unauthorized: Authorization header missing");
+      }
+
       token = authHeader?.startsWith("Bearer ")
         ? authHeader.split(" ")[1]
         : undefined;
@@ -37,7 +42,3 @@ export const verifyJwt = async (req, res, next) => {
       .json({ message: error.message || "Invalid access token" });
   }
 };
-
-
-
-

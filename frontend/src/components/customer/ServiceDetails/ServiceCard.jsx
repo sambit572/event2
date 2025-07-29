@@ -9,45 +9,46 @@ const ServiceCard = ({ service }) => {
   if (!service) return null;
 
   const {
-    title,
-    description,
-    address,
-    price,
-    originalPrice,
-    discountPercent,
+    serviceName,
+    serviceDes,
+    locationOffered,
+    priceRange,
+    duration,
+    serviceCategory,
     rating,
     reviews,
   } = service;
 
+  const totalReviews = reviews?.length || 0;
+  const averageRating = rating || 0;
+
   return (
-    <div className="dj-service-card">
-      <h2 className="dj-title">{title}</h2>
-      <p className="serviceDetails-location">
-        {address.area}, {address.city}, {address.state}, {address.country}
+    <div className="dj-service-card p-4 bg-white rounded-lg border border-gray-200">
+      <h2 className="dj-title text-xl font-semibold text-gray-800 mb-2">
+        {serviceName || "DJ Test Title"}
+      </h2>
+
+      <p className="serviceDetails-location text-sm text-black mb-2">
+        {locationOffered}
       </p>
 
-      <PriceSection
-        price={service.price}
-        originalPrice={service.originalPrice}
-        discountPercent={service.discountPercent}
-      />
+      <p className="serviceDetails-price text-lg font-bold text-black mb-3">
+        ₹{priceRange}
+      </p>
 
-      <RatingSection
-        ratingValue={service.rating}
-        totalRatings={service.reviews}
-        totalReviews={Math.round(service.reviews * 0.8)} // or replace with actual
-      />
+      {/* ⭐ Rating and Reviews Section */}
+      <div className="flex items-center gap-2 mb-3">
+        <span className="bg-green-600 text-white px-2 py-1 rounded-full text-sm font-semibold">
+         {averageRating.toFixed(1)} ★
+          </span>
+        <span className="text-gray-500 text-sm">
+          ({totalReviews} reviews)
+        </span>
+      </div>
 
-      <ServiceDescription description={description} />
-
-      <hr className="dj-divider" />
-
-      <ServiceDetailsSection
-        title={service.title}
-        category={service.category}
-        idealFor={service.idealFor}
-        inclusions={service.inclusions}
-      />
+      <div className="service-description">
+        <p className="text-black text-sm">{serviceDes}</p>
+      </div>
     </div>
   );
 };
