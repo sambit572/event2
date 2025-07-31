@@ -127,9 +127,9 @@ function DashBoardMain() {
 
         <div className="relative w-full mt-4">
   <button
-    className="absolute top-[-30px] right-4 md:top-[-60px] md:right-[10px] 
+    className="absolute top-[-40px] right-4 md:top-[-60px] md:right-[10px] 
       flex items-center justify-center gap-2 
-      rounded-[10px] bg-[#2251c9] font-semibold text-[#fff] px-4 py-2"
+      rounded-[10px] bg-[#001f3f] font-semibold text-[#fff] px-4 py-2"
     onClick={handleOpenAddService}
   >
     <span className="text-xl font-bold">+</span>
