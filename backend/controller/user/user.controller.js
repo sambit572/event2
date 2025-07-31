@@ -15,10 +15,48 @@ import { sendEmail } from "../../utilities/sendEmail.js";
 
 const option = {
   httpOnly: true,
-  secure: false,
+  secure: false, // for localhost
+  // secure : true, // for production
   sameSite: "Lax",
+  maxAge: 10 * 24 * 60 * 60 * 1000, // 10 days
 };
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+// Helper function to generate profile picture URL with first name initial
+const generateProfilePicture = (fullName) => {
+  const firstName = fullName.split(" ")[0];
+  const initial = firstName.charAt(0).toUpperCase();
+
+  // Create a data URL for SVG with the initial
+  const colors = [
+    "#FF6B6B",
+    "#4ECDC4",
+    "#45B7D1",
+    "#96CEB4",
+    "#FECA57",
+    "#FF9FF3",
+    "#54A0FF",
+    "#5F27CD",
+    "#00D2D3",
+    "#FF9F43",
+    "#10AC84",
+    "#EE5A6F",
+    "#C44569",
+    "#F8B500",
+    "#6C5CE7",
+  ];
+
+  // Use the first character's char code to consistently pick a color
+  const colorIndex = initial.charCodeAt(0) % colors.length;
+  const backgroundColor = colors[colorIndex];
+
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+    <circle cx="50" cy="50" r="50" fill="${backgroundColor}"/>
+    <text x="50" y="50" text-anchor="middle" dy="0.35em" font-family="Arial, sans-serif" font-size="40" fill="white" font-weight="bold">${initial}</text>
+  </svg>`;
+
+  return `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
+};
 
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
@@ -72,6 +110,7 @@ const registerUser = async (req, res) => {
       email: email.toLowerCase(),
       phoneNo,
       password,
+      profilePhoto: generateProfilePicture(fullName), // Generate default profile picture
     });
 
     const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
@@ -156,6 +195,12 @@ const loginUser = async (req, res) => {
       return res.status(400).json(new ApiError(400, "Incorrect password"));
     }
 
+    // Generate profile picture if user doesn't have one
+    if (!user.profilePhoto) {
+      user.profilePhoto = generateProfilePicture(user.fullName);
+      await user.save({ validateBeforeSave: false });
+    }
+
     const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
       user._id
     );
@@ -203,7 +248,7 @@ const logoutUser = async (req, res) => {
 // ---------- GOOGLE OAUTH CONTROLLER ----------
 const googleAuth = async (req, res) => {
   try {
-    const { token } = req.body;
+    const { token, phoneNo } = req.body; // Accept phoneNo from frontend
 
     // 1. verify token with Google
     const ticket = await googleClient.verifyIdToken({
@@ -211,16 +256,102 @@ const googleAuth = async (req, res) => {
       audience: process.env.GOOGLE_CLIENT_ID,
     });
     const { email, name, picture } = ticket.getPayload();
-
+    console.log("Google profile picture URL:", picture);
     // 2. find or create user
     let user = await User.findOne({ email });
+    let isNewUser = false;
+
     if (!user) {
+      // For new users, phone number is required
+      if (!phoneNo) {
+        return res
+          .status(400)
+          .json(new ApiError(400, "Phone number is required for new users"));
+      }
+
+      // Validate phone number format
+      if (!isValidPhoneNumber(phoneNo, "IN")) {
+        return res
+          .status(400)
+          .json(new ApiError(400, "Invalid phone number format"));
+      }
+
+      // Check if phone number already exists
+      const existingUserWithPhone = await User.findOne({ phoneNo });
+      if (existingUserWithPhone) {
+        return res
+          .status(400)
+          .json(new ApiError(400, "Phone number already registered"));
+      }
+
       user = await User.create({
         fullName: name,
         email,
-        profilePhoto: picture,
+        phoneNo,
+        profilePhoto:
+          picture && picture.trim() !== ""
+            ? picture
+            : generateProfilePicture(name),
         password: crypto.randomBytes(16).toString("hex"), // placeholder password
       });
+      isNewUser = true;
+
+      // Send welcome email for new users
+      await sendEmail({
+        to: email,
+        subject: "🎉 Welcome to EventsBridge - Google Registration",
+        html: `
+          <h2>Hi ${name},</h2>
+          <p>Thank you for signing up with <strong>EventsBridge</strong> using Google!</p>
+          <p><strong>Your Details:</strong></p>
+          <ul>
+            <li><strong>Name:</strong> ${name}</li>
+            <li><strong>Email:</strong> ${email}</li>
+            <li><strong>Phone No:</strong> ${phoneNo}</li>
+          </ul>
+          <p>We're excited to have you onboard.</p>
+          <br/>
+          <p>Best regards,<br/>Team EventsBridge</p>
+        `,
+      });
+    } else {
+      // For existing users, update phone number if provided
+      if (phoneNo && phoneNo !== user.phoneNo) {
+        // Validate phone number format
+        if (!isValidPhoneNumber(phoneNo, "IN")) {
+          return res
+            .status(400)
+            .json(new ApiError(400, "Invalid phone number format"));
+        }
+
+        // Check if phone number already exists for another user
+        const existingUserWithPhone = await User.findOne({
+          phoneNo,
+          _id: { $ne: user._id },
+        });
+        if (existingUserWithPhone) {
+          return res
+            .status(400)
+            .json(new ApiError(400, "Phone number already registered"));
+        }
+
+        user.phoneNo = phoneNo;
+      }
+
+      // Update profile photo logic
+      // Update profile photo logic
+      if (picture && picture.trim() !== "") {
+        // If Google has a valid picture, use it
+        user.profilePhoto = picture;
+      } else if (
+        !user.profilePhoto ||
+        user.profilePhoto.startsWith("data:image/svg+xml")
+      ) {
+        // If no Google picture and no existing profile photo (or it's generated), create one
+        user.profilePhoto = generateProfilePicture(user.fullName);
+      }
+      // If user has a custom uploaded photo, don't change it
+      await user.save();
     }
 
     // 3. issue tokens
@@ -240,13 +371,15 @@ const googleAuth = async (req, res) => {
       .json(
         new ApiResponse(
           200,
-          { user: safeUser, accessToken, refreshToken },
-          "Google login success"
+          { user: safeUser, accessToken, refreshToken, isNewUser },
+          isNewUser ? "Google signup successful" : "Google login successful"
         )
       );
   } catch (error) {
     console.error("Google Auth Error:", error);
-    return res.status(500).json(new ApiError(500, "Google login failed"));
+    return res
+      .status(500)
+      .json(new ApiError(500, "Google authentication failed"));
   }
 };
 
@@ -260,9 +393,20 @@ const updateUserProfile = async (req, res) => {
       return res.status(400).json(new ApiError(400, "All fields are required"));
     }
 
+    const user = await User.findById(req.user._id);
+
+    // If the fullName changed and user has a generated profile picture (data URL), update it
+    if (
+      fullName !== user.fullName &&
+      user.profilePhoto &&
+      user.profilePhoto.startsWith("data:image/svg+xml")
+    ) {
+      user.profilePhoto = generateProfilePicture(fullName);
+    }
+
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
-      { fullName, email, phoneNo },
+      { fullName, email, phoneNo, profilePhoto: user.profilePhoto },
       { new: true, runValidators: true }
     ).select("fullName email phoneNo profilePhoto eventsBooked");
 
@@ -294,8 +438,11 @@ const updateUserAvatar = async (req, res) => {
       return res.status(404).json(new ApiError(404, "User not found"));
     }
 
-    // Delete old avatar from Cloudinary if it exists
-    if (user.profilePhoto) {
+    // Delete old avatar from Cloudinary if it exists and is not a generated one
+    if (
+      user.profilePhoto &&
+      !user.profilePhoto.startsWith("data:image/svg+xml")
+    ) {
       await deleteFromCloudinary(user.profilePhoto);
     }
 
@@ -346,13 +493,18 @@ const removeProfilePhoto = async (req, res) => {
         .json(new ApiError(400, "No profile photo to remove"));
     }
 
-    // Delete the current profile photo from Cloudinary
-    await deleteFromCloudinary(user.profilePhoto);
+    // Delete the current profile photo from Cloudinary if it's not a generated one
+    if (!user.profilePhoto.startsWith("data:image/svg+xml")) {
+      await deleteFromCloudinary(user.profilePhoto);
+    }
 
-    // Update user's profile photo to null in database
+    // Generate a new default profile picture instead of removing completely
+    const newProfilePhoto = generateProfilePicture(user.fullName);
+
+    // Update user's profile photo to the generated one
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
-      { $unset: { profilePhoto: 1 } },
+      { profilePhoto: newProfilePhoto },
       { new: true, runValidators: true }
     ).select("fullName email phoneNo profilePhoto eventsBooked");
 
@@ -362,7 +514,7 @@ const removeProfilePhoto = async (req, res) => {
         new ApiResponse(
           200,
           { user: updatedUser },
-          "Profile photo removed successfully"
+          "Profile photo reset to default successfully"
         )
       );
   } catch (error) {
@@ -481,36 +633,99 @@ const changePassword = async (req, res) => {
 
 const noNeedToLogin = async (req, res) => {
   try {
-    const token = req.cookies.refreshToken;
-    if (!token)
-      return res.status(401).json(new ApiResponse(401, "Token missing"));
+    const accessTokenFromCookie = req.cookies.accessToken;
+    const refreshTokenFromCookie = req.cookies.refreshToken;
 
-    let decoded;
-    try {
-      decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
-    } catch (err) {
-      return res
-        .status(401)
-        .json(new ApiResponse(401, null, "Token expired or invalid"));
+    let decodedAccess = null;
+    let decodedRefresh = null;
+
+    // 1️⃣ Check if access token exists & is valid
+    if (accessTokenFromCookie) {
+      try {
+        decodedAccess = jwt.verify(
+          accessTokenFromCookie,
+          process.env.ACCESS_TOKEN_SECRET
+        );
+      } catch (err) {
+        console.log("Access token expired or invalid.", err);
+      }
     }
 
-    const user = await User.findById(decoded._id);
-    if (!user) return res.status(404).json(new ApiError(404, "User not found"));
+    // 2️⃣ If access token is valid
+    if (decodedAccess) {
+      const user = await User.findById(decodedAccess._id);
+      if (!user)
+        return res.status(404).json(new ApiError(404, "User not found"));
 
-    const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
-      user._id
-    );
+      // If refresh token is missing or invalid → generate a new one
+      let newRefreshToken = refreshTokenFromCookie;
+      if (refreshTokenFromCookie) {
+        try {
+          decodedRefresh = jwt.verify(
+            refreshTokenFromCookie,
+            process.env.REFRESH_TOKEN_SECRET
+          );
+        } catch (err) {
+          console.log("Refresh token invalid, regenerating...");
+          newRefreshToken = user.generateRefreshToken();
+          user.refreshToken = newRefreshToken;
+          await user.save();
+        }
+      } else {
+        // No refresh token in cookie at all → generate a new one
+        newRefreshToken = user.generateRefreshToken();
+        user.refreshToken = newRefreshToken;
+        await user.save();
+      }
 
+      return res
+        .status(200)
+        .cookie("refreshToken", newRefreshToken, option)
+        .json(new ApiResponse(200, user, "Session valid (access token ok)"));
+    }
+
+    // 3️⃣ If access token missing/expired → check refresh token
+    if (refreshTokenFromCookie) {
+      try {
+        decodedRefresh = jwt.verify(
+          refreshTokenFromCookie,
+          process.env.REFRESH_TOKEN_SECRET
+        );
+      } catch (err) {
+        console.log("Refresh token expired or invalid.", err);
+      }
+
+      if (decodedRefresh) {
+        const user = await User.findById(decodedRefresh._id);
+        if (!user)
+          return res.status(404).json(new ApiError(404, "User not found"));
+
+        // Issue a new access token
+        const newAccessToken = await user.generateAccessToken();
+
+        return res
+          .status(200)
+          .cookie("accessToken", newAccessToken, option)
+          .json(
+            new ApiResponse(
+              200,
+              { user, accessToken: newAccessToken },
+              "Access token refreshed"
+            )
+          );
+      }
+    }
+
+    // 4️⃣ Both tokens invalid → force login
     return res
-      .status(200)
-      .cookie("accessToken", accessToken, option)
-      .cookie("refreshToken", refreshToken, option)
-      .json(new ApiResponse(200, { user, accessToken }, "Session refreshed"));
+      .status(401)
+      .json(new ApiResponse(401, null, "Session expired, please login"));
   } catch (error) {
     console.error("noNeedToLogin error:", error);
     return res.status(500).json(new ApiError(500, "Internal Server Error"));
   }
 };
+
 
 const getUserEmail = async (req, res) => {
   const user = await User.findById(req.user._id);
@@ -518,6 +733,7 @@ const getUserEmail = async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, user, "Email fetched successfully"));
 };
+
 const getUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select(
@@ -526,6 +742,12 @@ const getUserProfile = async (req, res) => {
 
     if (!user) {
       return res.status(404).json(new ApiError(404, "User not found"));
+    }
+
+    // Generate profile picture if user doesn't have one
+    if (!user.profilePhoto) {
+      user.profilePhoto = generateProfilePicture(user.fullName);
+      await user.save({ validateBeforeSave: false });
     }
 
     return res

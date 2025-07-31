@@ -22,7 +22,12 @@ const ResetPassword = () => {
 
         console.log("✅ Password reset successful:", response.data.message);
         alert("Password reset successful! You can now log in.");
-        navigate("/login");
+       
+        navigate("/"); // Redirect to homepage
+        setTimeout(() => {
+          // Trigger login modal
+          window.dispatchEvent(new Event("openLoginModal"));
+        }, 500);
       } catch (error) {
         console.error(
           "❌ Error resetting password:",

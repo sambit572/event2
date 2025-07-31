@@ -10,13 +10,7 @@ function VendorService({ currentStep }) {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
-  const steps = [
-    { label: "Registration", subLabel: "Step 1", icon: "/verify.png" },
-    { label: "Service Details", subLabel: "Step 2", icon: "/service.png" },
-    { label: "Payment", subLabel: "Step 3", icon: "/payment.png" },
-    { label: "Legal Consents", subLabel: "Step 4", icon: "/legal.png" },
-  ];
-
+ 
   // All state variables
   const [categorySearchTerm, setCategorySearchTerm] = useState("");
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
@@ -39,21 +33,20 @@ function VendorService({ currentStep }) {
 
   const categories = [
     "DJ",
-    "Orchestra",
-    "Food Catering",
-    "Tent House",
-    "Live Musical Band",
-    "Photographer",
-    "Magic Shows",
-    "Hindu Priest",
-    "Cultural Troupe",
-    "Islamic Priest",
-    "Christian Priest",
-    "Makeup & Mehendi Artist",
-    "Floral Decor",
-    "Wedding Transport",
-    "Fireworks",
-    "Custom Invitation Design & Printing",
+    "BAND",
+    "CATERING",
+    "FLORAL",
+    "TENTHOUSE",
+    "PHOTOGRAPHER",
+    "PANDIT",
+    "MAGIC",
+    "CULTURAL-TROUPE",
+    "ISLAMIC",
+    "CHRISTIAN",
+    "MAKEUP",
+    "TRANSPORT",
+    "FIREWORKS",
+    "CARD-DESIGN",
   ];
   const allLocations = [
     "Bhubaneswar",

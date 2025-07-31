@@ -4,11 +4,13 @@ import fs from "fs";
 import { sendEmail } from "../../utilities/sendEmail.js";
 import { User } from "../../model/user/user.model.js";
 import Vendor from "../../model/vendor/vendor.model.js";
-import Review from "../../model/common/ReviewModel.js";
+import Review from "../../model/common/review.model.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
 const generateMonthlyReport = async () => {
+  let filePath = null; // Track file path for cleanup
+  
   try {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
@@ -17,7 +19,9 @@ const generateMonthlyReport = async () => {
     // Ensure directory exists
     if (!fs.existsSync(reportsDir)) fs.mkdirSync(reportsDir);
 
-    const filePath = path.join(reportsDir, "MonthlyReport.pdf");
+    // Create unique filename with timestamp to avoid conflicts
+    const timestamp = moment().format("YYYY-MM-DD_HH-mm-ss");
+    filePath = path.join(reportsDir, `MonthlyReport_${timestamp}.pdf`);
     const doc = new PDFDocument({ margin: 50 });
 
     doc.pipe(fs.createWriteStream(filePath));
@@ -317,45 +321,119 @@ const generateMonthlyReport = async () => {
                align: "center" 
              });
 
-    doc.end();
+    // Wait for PDF generation to complete
+    await new Promise((resolve, reject) => {
+      doc.on('end', resolve);
+      doc.on('error', reject);
+      doc.end();
+    });
+
+    // Wait a bit to ensure file is completely written
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // Verify file exists before attempting to send
+    if (!fs.existsSync(filePath)) {
+      throw new Error("PDF file was not created successfully");
+    }
+
+    console.log(`Monthly Report PDF generated at: ${filePath}`);
 
     // Send to all admins
     const adminEmails = [
-     /*  "jyotinayak961@gmail.com",
-      "shreya31.rout1999@gmail.com" */ /* Replace with actual admin email */
+      // "jyotinayak961@gmail.com",
+      // "shreya31.rout1999@gmail.com" /* Replace with actual admin email */
     ];
 
+    // Track successful email sends
+    let emailsSent = 0;
+    const emailErrors = [];
+
     for (const email of adminEmails) {
-      await sendEmail({
-        to: email,
-        subject: "Monthly Performance Report - EventsBridge",
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #2c3e50;">Monthly Performance Report</h2>
-            <p>Hello Admin,</p>
-            <p>Please find the attached monthly performance report for EventsBridge covering the period from <strong>${moment(start).format("MMM DD")}</strong> to <strong>${moment(now).format("MMM DD, YYYY")}</strong>.</p>
-            
-            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <h3 style="color: #34495e; margin-top: 0;">Quick Summary:</h3>
-              <ul style="list-style: none; padding: 0;">
-                <li style="padding: 5px 0;"><strong>New Users:</strong> ${newUsers}</li>
-                <li style="padding: 5px 0;"><strong>New Vendors:</strong> ${newVendors}</li>
-                <li style="padding: 5px 0;"><strong>Average Rating:</strong> ${averageRating}/5.0</li>
-                <li style="padding: 5px 0;"><strong>Total Reviews:</strong> ${reviews.length}</li>
-              </ul>
+      try {
+        await sendEmail({
+          to: email,
+          subject: "Monthly Performance Report - EventsBridge",
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+              <h2 style="color: #2c3e50;">Monthly Performance Report</h2>
+              <p>Hello Admin,</p>
+              <p>Please find the attached monthly performance report for EventsBridge covering the period from <strong>${moment(start).format("MMM DD")}</strong> to <strong>${moment(now).format("MMM DD, YYYY")}</strong>.</p>
+              
+              <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <h3 style="color: #34495e; margin-top: 0;">Quick Summary:</h3>
+                <ul style="list-style: none; padding: 0;">
+                  <li style="padding: 5px 0;"><strong>New Users:</strong> ${newUsers}</li>
+                  <li style="padding: 5px 0;"><strong>New Vendors:</strong> ${newVendors}</li>
+                  <li style="padding: 5px 0;"><strong>Average Rating:</strong> ${averageRating}/5.0</li>
+                  <li style="padding: 5px 0;"><strong>Total Reviews:</strong> ${reviews.length}</li>
+                </ul>
+              </div>
+              
+              <p>For detailed analytics and insights, please refer to the attached PDF report.</p>
+              <p>Best regards,<br>EventsBridge System</p>
             </div>
-            
-            <p>For detailed analytics and insights, please refer to the attached PDF report.</p>
-            <p>Best regards,<br>EventsBridge System</p>
-          </div>
-        `,
-        attachments: [{ filename: "MonthlyReport.pdf", path: filePath }],
-      });
+          `,
+          attachments: [{ filename: "MonthlyReport.pdf", path: filePath }],
+        });
+
+        emailsSent++;
+        console.log(`Monthly Report successfully sent to: ${email}`);
+      } catch (emailError) {
+        console.error(`Failed to send email to ${email}:`, emailError);
+        emailErrors.push({ email, error: emailError.message });
+      }
     }
 
-    console.log("Monthly Report generated and sent to all admins.");
+    // Auto-delete file only if at least one email was sent successfully
+    if (emailsSent > 0) {
+      try {
+        // Additional safety check before deletion
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+          console.log(`Monthly Report PDF file automatically deleted: ${filePath}`);
+        }
+      } catch (deleteError) {
+        console.error("Failed to delete report file:", deleteError);
+        // Don't throw error here as the main functionality (sending emails) was successful
+      }
+    } else {
+      console.warn("No emails were sent successfully. Report file will NOT be deleted for retry purposes.");
+      console.warn("Report file location:", filePath);
+    }
+
+    // Log final results
+    if (emailsSent === adminEmails.length) {
+      console.log(`Monthly Report generated and sent to all ${emailsSent} admins successfully.`);
+    } else if (emailsSent > 0) {
+      console.log(`Monthly Report sent to ${emailsSent}/${adminEmails.length} admins successfully.`);
+      console.log("Email errors:", emailErrors);
+    } else {
+      throw new Error("Failed to send report to any admin. Check email configuration and admin email list.");
+    }
+
   } catch (error) {
     console.error("Failed to generate or send report:", error);
+    
+    // Clean up file only if it exists and no emails were sent
+    if (filePath && fs.existsSync(filePath)) {
+      try {
+        // Check if we at least attempted to send emails
+        // If generation failed before email sending, we can safely delete
+        if (error.message.includes("PDF file was not created") || 
+            error.message.includes("Failed to generate") ||
+            !error.message.includes("send")) {
+          fs.unlinkSync(filePath);
+          console.log("Cleaned up incomplete report file due to generation failure.");
+        } else {
+          console.log("Report file preserved for retry purposes:", filePath);
+        }
+      } catch (deleteError) {
+        console.error("Failed to clean up report file:", deleteError);
+      }
+    }
+    
+    // Re-throw the error for upstream handling
+    throw error;
   }
 };
 

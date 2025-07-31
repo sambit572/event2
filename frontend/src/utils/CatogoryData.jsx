@@ -116,7 +116,7 @@ import image15 from "../assets/home/categoriesImages/marriage-card.png";
 export const CategoryData = [
   {
     id: "dj",
-    title: "DJ Services",
+    title: "DJ Services and Brass Band",
     image: image1,
     tagline: "Beats That Breathe Fun",
     icon: "🎧",
@@ -212,7 +212,7 @@ export const CategoryData = [
   },
   {
     id: "band",
-    title: "Live Musical Band",
+    title: "Orchesta And Music Concert",
     image: image2,
     tagline: "Brass Beats the Best",
     icon: "🎺",
@@ -404,7 +404,7 @@ export const CategoryData = [
   },
   {
     id: "photographer",
-    title: "Photo & Video Shoot",
+    title: "Photographer and Videographer",
     image: image4,
     tagline: "Freeze Time with Frames",
     icon: "📸",
@@ -500,7 +500,7 @@ export const CategoryData = [
   },
   {
     id: "pandit",
-    title: "Hindu Priest",
+    title: "Hindu Pandit",
     image: image5,
     tagline: "Mantras Meet Moments",
     icon: "🕉",
@@ -637,7 +637,7 @@ export const CategoryData = [
   },
   {
     id: "cultural-troupe",
-    title: "Cultural Troupe",
+    title: "Classical Music and Dance",
     image: image7,
     tagline: "Echoes of Celebration",
     icon: "🕺",
@@ -705,7 +705,7 @@ export const CategoryData = [
   },
   {
     id: "islamic",
-    title: "Islamic Priest",
+    title: "Islamic Maulbi",
     image: image8,
     tagline: "Prayers that Guide Hearts",
     icon: "🕌",
@@ -1041,7 +1041,7 @@ export const CategoryData = [
   },
   {
     id: "transport",
-    title: "Wedding Carraige",
+    title: "Ceremonial Ride",
     image: image13,
     tagline: "Royal Rides Await You",
     icon: "🚗",

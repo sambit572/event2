@@ -1,6 +1,4 @@
 import { Schema, model } from "mongoose";
-
-
 const consetSchema = new Schema(
   {
     vendorId: {
@@ -19,9 +17,9 @@ const consetSchema = new Schema(
       type: Boolean,
       required: true,
     },
-    version:{
+    version: {
       type: String,
-      default:"1.0",
+      default: "1.0",
     },
     signature: {
       type: String,

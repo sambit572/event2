@@ -20,7 +20,7 @@ import {
 import { FcAbout } from "react-icons/fc";
 import axios from "axios";
 import { useNavigate, Navigate, useLocation } from "react-router-dom";
-
+import { FaCartShopping } from "react-icons/fa6";
 import {
   attemptVendorSilentLogin,
   checkVendorEmailStatus,
@@ -72,6 +72,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
   const inputRef = useRef(null);
   const mobileSearchRef = useRef(null);
   const suggestionRef = useRef(null);
+  const searchBarRef = useRef(null);
 
   const RELATED_TERMS = {};
 
@@ -226,7 +227,13 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
   };
 
   const handleToggleProfileDropdown = () => {
-    setShowProfileDropdown((prev) => !prev);
+    setShowProfileDropdown((prev) => {
+      if (!prev) {
+        setShowVendorDropdown(false);
+        setShowEllipsisDropdown(false);
+      }
+      return !prev;
+    });
   };
 
   const handleLogout = async () => {
@@ -342,30 +349,38 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
       navigate("/vendor/register");
     }
   };
-
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (profileRef.current && !profileRef.current.contains(event.target)) {
+    const handleClickOutsideAll = (event) => {
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(event.target) &&
+        vendorRef.current &&
+        !vendorRef.current.contains(event.target) &&
+        ellipsisRef.current &&
+        !ellipsisRef.current.contains(event.target)
+      ) {
         setShowProfileDropdown(false);
-      }
-      if (ellipsisRef.current && !ellipsisRef.current.contains(event.target)) {
-        setShowEllipsisDropdown(false);
-      }
-      if (vendorRef.current && !vendorRef.current.contains(event.target)) {
         setShowVendorDropdown(false);
+        setShowEllipsisDropdown(false);
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutsideAll);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutsideAll);
+    };
   }, []);
-
   useEffect(() => {
     const handleClickOutsideSearch = (e) => {
+      const clickedOutsideDesktop =
+        searchBarRef.current && !searchBarRef.current.contains(e.target);
+
+      const clickedOutsideMobile =
+        mobileSearchRef.current && !mobileSearchRef.current.contains(e.target);
+
       if (
-        mobileSearchRef.current &&
-        !mobileSearchRef.current.contains(e.target) &&
-        window.innerWidth <= 768
+        showMobileSearchBar &&
+        (clickedOutsideDesktop || clickedOutsideMobile)
       ) {
         setShowMobileSearchBar(false);
       }
@@ -375,7 +390,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutsideSearch);
     };
-  }, []);
+  }, [showMobileSearchBar]);
 
   // click anywhere to close search bar
 
@@ -436,6 +451,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
         <div className="search-and-nav-icons-container ">
           {/* Search Bar */}
           <div
+            ref={searchBarRef}
             className={`search-bar ${showMobileSearchBar ? "active" : ""}`}
             onClick={(e) => {
               handleSearchicon(e);
@@ -478,13 +494,15 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                   setSuggestions(combinedSuggestions);
                   setShowSuggestions(true);
                 }}
-                onFocus={handleInputFocus}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    setShowSuggestions(false); // ✅ closes dropdown
-                  }
-                  handleSearch(e); // ✅ keep your existing search logic
-                }}
+                autoFocus
+
+                // onFocus={handleInputFocus}
+                // onKeyDown={(e) => {
+                //   if (e.key === "Enter") {
+                //     setShowSuggestions(false); // ✅ closes dropdown
+                //   }
+                //   handleSearch(e); // ✅ keep your existing search logic
+                // }}
               />
             )}
             <div className="searchbarIcon">
@@ -539,12 +557,12 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                   {!userFirstName ? (
                     <>
                       <CgProfile className="text-2xl" />
-                      <span className="font-medium">Login</span>
+                      <span className="font-medium vendorNameText">Login</span>
                     </>
                   ) : (
                     <>
                       <UserProfileIcon currentUser={currentUser} />
-                      <span className="font-medium">{`Hi, ${userFirstName}`}</span>
+                      <span className="font-medium vendorNameText">{`Hi, ${userFirstName}`}</span>
                     </>
                   )}
                 </span>
@@ -626,7 +644,13 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                   <span
                     className="text-[#001F3F]  font-semibold  max-[820px]:text-[11px] max-[820px]:w-max"
                     onClick={() => {
-                      setShowVendorDropdown(false);
+                      setShowVendorDropdown((prev) => {
+                        if (!prev) {
+                          setShowProfileDropdown(false);
+                          setShowEllipsisDropdown(false);
+                        }
+                        return !prev;
+                      });
                       if (!userFirstName) {
                         const toastId = toast.custom((t) => (
                           <div
@@ -656,17 +680,30 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                     }}
                   >
                     {!VendorFirstName ? (
-                      <span className="font-medium hover:bg-[#001f3f]  hover rounded px-2 py-1 transition-colors">
+                      <span className="font-medium vendorNameText hover:bg-[#001f3f]  hover rounded px-2 py-1 transition-colors">
                         Be a Vendor
                       </span>
                     ) : (
                       <>
-                        <span className="font-medium">{VendorFirstName}</span>
+                        <span className="font-medium vendorNameText">
+                          {VendorFirstName}
+                        </span>
                       </>
                     )}
                   </span>
 
-                  <span onClick={() => setShowVendorDropdown((prev) => !prev)}>
+                  <span
+                    onClick={() => {
+                      setShowVendorDropdown((prev) => {
+                        if (!prev) {
+                          setShowProfileDropdown(false);
+                          setShowEllipsisDropdown(false);
+                        }
+                        return !prev;
+                      });
+                    }}
+                  >
+                    {" "}
                     {showVendorDropdown ? (
                       <FaChevronUp className="text-sm" />
                     ) : (
@@ -677,7 +714,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
               </div>
 
               {showVendorDropdown && (
-                <div className="absolute top-[75px] right-[50px] bg-[#e5e5de] rounded-lg border border-white shadow-[0_4px_12px_rgba(0,0,0,0.1)] p-4 z-[2000] w-[350px]">
+                <div className="vendor_dropdown-menu absolute top-[75px]  right-[50px] bg-[#e5e5de] rounded-lg border border-white shadow-[0_4px_12px_rgba(0,0,0,0.1)] p-4 z-[2000] w-[278px] ">
                   <h4 className="text-lg font-semibold text-[#001F3F] text-center mb-1">
                     Welcome Vendor
                   </h4>
@@ -801,12 +838,25 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                 </div>
               )}
             </div>
-
+            <div className="navbarCart" onClick={() => navigate("/your-cart")}>
+              <div className="navbarCartIcon">
+                <FaCartShopping />
+              </div>
+              <div className="navbarCartText">Cart</div>
+            </div>
             {/* Three Dots Dropdown */}
             <div className="nav-item ellipsis-container" ref={ellipsisRef}>
               <FaEllipsisV
                 className="three-dot"
-                onClick={() => setShowEllipsisDropdown((prev) => !prev)}
+                onClick={() => {
+                  setShowEllipsisDropdown((prev) => {
+                    if (!prev) {
+                      setShowVendorDropdown(false);
+                      setShowProfileDropdown(false);
+                    }
+                    return !prev;
+                  });
+                }}
                 style={{ cursor: "pointer" }}
               />
               {showEllipsisDropdown && (
@@ -815,7 +865,10 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                     className={`dropdown-item ${
                       location.pathname === "/about_us" ? "active" : ""
                     }`}
-                    onClick={() => navigate("/about_us")}
+                    onClick={() => {
+                      navigate("/about_us");
+                      setShowEllipsisDropdown(!showEllipsisDropdown);
+                    }}
                   >
                     <FcAbout className="navbar_icon" /> About Us
                   </div>
@@ -824,7 +877,10 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                     className={`dropdown-item ${
                       location.pathname === "/help_us" ? "active" : ""
                     }`}
-                    onClick={() => navigate("/help_us")}
+                    onClick={() => {
+                      navigate("/help_us");
+                      setShowEllipsisDropdown(!showEllipsisDropdown);
+                    }}
                   >
                     <FaHandsHelping className="nav-icon" /> Help Us
                   </div>
