@@ -103,6 +103,7 @@ export default function VendorRegister() {
       console.log("Vendor data set in Redux:", response.data.data);
 
       const vendor = response.data.data;
+      localStorage.setItem("vendorId", vendor._id); //added so that the vendor’s ID can be accessed in later steps (like saving service or payment details) without needing to refetch it.
 
       const fullName = vendor.fullName || "";
       const firstName = fullName.split(" ")[0];

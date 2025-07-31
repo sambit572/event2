@@ -7,7 +7,7 @@
   transition: width 0.3s ease;
   position: fixed;
   left: 500px;
-  margin-top: 70px;
+  margin-top: -70px;
   z-index: 10001;
 }
 
@@ -540,6 +540,8 @@
     min-height: 42px;
     padding: 10px 18px;
     font-size: 12px;
+    margin-bottom: 5px;
+    margin-top: -10px;
   }
 
   .remove-confirm-dialog {
@@ -629,6 +631,9 @@
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
     height: 100vh;
   }
+  .profile-heading {
+    margin-top: 20px;
+  }
 
   .user-sidebar.open {
     transform: translateX(0);
@@ -648,7 +653,7 @@
 
   .user-profile-pic,
   .profile-initials {
-    margin-left: 26px;
+    margin-left: 6px;
     position: relative;
     top: -18px;
     width: 140px;

@@ -236,12 +236,13 @@
 /* Sidebar closed */
 .user-sidebar.closed {
   transform: translateX(-100%);
+  margin-top: -1px;
 }
 
 /* Sidebar open */
 .user-sidebar.open {
   background-color: #004989;
-  margin-top: 20px;
+  margin-top: 10px;
   transform: translateX(0);
 }
 .sortby-dropdown {
@@ -306,6 +307,7 @@
     position: relative;
   }
 
+
   .info-section {
     justify-content: space-between;
   }
@@ -316,11 +318,15 @@
   .profile-hamburger {
     display: block !important;
 
-    top: 30px;
+    top: 20px;
   }
+  .user-sidebar.closed {
+  transform: translateX(-100%);
+  margin-top: -10px;
+}
 
   .open {
-    top: 45px;
+    top: 25px;
   }
 }
 @media (max-width: 680px) {

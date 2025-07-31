@@ -440,6 +440,16 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
     }, 2000);
     return () => clearInterval(interval);
   }, []);
+
+  //cart logic
+  const handleAddToCart = () => {
+    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
+    if (isLoggedIn) {
+      navigate("/your-cart");
+    } else {
+      onOpenLogin(true);
+    }
+  };
   return (
     <div>
       <div className="navbar">
@@ -838,7 +848,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                 </div>
               )}
             </div>
-            <div className="navbarCart" onClick={() => navigate("/your-cart")}>
+            <div className="navbarCart" onClick={handleAddToCart}>
               <div className="navbarCartIcon">
                 <FaCartShopping />
               </div>

@@ -1,19 +1,24 @@
 import { BankDetails } from "../../model/vendor/bankDetails.model.js";
-import {
-  uploadOnCloudinary,
-  deleteFromCloudinary,
-} from "../../utilities/cloudinary.js";
-
-import { ApiResponse } from "../../utilities/ApiResponse.js";
+import Vendor from "../../model/vendor/vendor.model.js";
+import axios from "axios";
 import { ApiError } from "../../utilities/ApiError.js";
+import { ApiResponse } from "../../utilities/ApiResponse.js";
 
-// chnage "pan card pic upload" from regular to private in production as otherwise may violate indian law :
-
-// IT Act, 2000 (India)
-
-// Aadhaar & PAN privacy regulations
-
-// DPDP Bill (Digital Personal Data Protection), 2023
+// Cashfree PAN validation function
+async function verifyPanWithCashfree(panNumber) {
+  const resp = await axios.post(
+    "https://payout-api.cashfree.com/payout/v1/validatePan",
+    { pan: panNumber },
+    {
+      headers: {
+        "Content-Type": "application/json",
+        "x-client-id": process.env.CASHFREE_CLIENT_ID,
+        "x-client-secret": process.env.CASHFREE_CLIENT_SECRET,
+      },
+    }
+  );
+  return resp.data;
+}
 
 export const createBankDetails = async (req, res) => {
   try {
@@ -24,135 +29,194 @@ export const createBankDetails = async (req, res) => {
       ifscCode,
       gst,
       upiId,
+      panNumber,
     } = req.body;
 
-    if (!req.file) {
-      return res.status(400).json({
-        success: false,
-        message: "Pan Card image is required, please upload it.",
-      });
+    // Validate presence
+    if (
+      !accountHolderName ||
+      !accountNumber ||
+      !branchName ||
+      !ifscCode ||
+      !panNumber
+    ) {
+      return res.status(400).json(new ApiError(400, "Missing required fields"));
     }
 
-    // Upload to Cloudinary
-    const cloudinaryResponse = await uploadOnCloudinary(req.file.path);
-
-    if (!cloudinaryResponse?.secure_url) {
-      return res.status(500).json({
-        success: false,
-        message: "Failed to upload PAN card to Cloudinary.",
-      });
+    // Verify PAN via Cashfree with proper error handling
+    let verifyResp;
+    try {
+      verifyResp = await verifyPanWithCashfree(panNumber);
+    } catch (cashfreeError) {
+      console.error("Cashfree PAN verification error:", cashfreeError.response?.data || cashfreeError.message);
+      return res.status(400).json(new ApiError(400, "PAN verification failed. Please check your PAN number and try again."));
     }
 
+    if (verifyResp.status !== "SUCCESS") {
+      return res.status(400).json(new ApiError(400, "Invalid PAN number"));
+    }
+
+    // Optional: Use name from Cashfree
+    const verifiedName = verifyResp.data?.full_name;
+
+    // Save to DB
     const newDetails = await BankDetails.create({
+      vendorId: req.vendor._id, // from auth middleware
+      accountHolderName: verifiedName || accountHolderName,
+      accountNumber,
+      branchName,
+      ifscCode,
+      gst,
+      upiId,
+      panNumber,
+    });
+
+    // Update vendor registration progress
+    await Vendor.findByIdAndUpdate(req.vendor._id, {
+      registrationProgress: 3,
+    });
+
+    res
+      .status(201)
+      .json(
+        new ApiResponse(201, newDetails, "Bank details saved successfully")
+      );
+  } catch (err) {
+    console.error("Error saving bank details:", err);
+    res.status(500).json(new ApiError(500, err.message));
+  }
+};
+
+export const deleteBankDetails = async (req, res) => {
+  try {
+    const bankDetail = await BankDetails.findOneAndDelete({
       vendorId: req.vendor._id,
+    });
+
+    if (!bankDetail) {
+      return res.status(404).json(new ApiError(404, "Bank details not found"));
+    }
+
+    res
+      .status(200)
+      .json(new ApiResponse(200, null, "Bank details deleted successfully"));
+  } catch (error) {
+    console.error("Error deleting bank details:", error);
+    res.status(500).json(new ApiError(500, error.message));
+  }
+};
+
+export const getBankDetailsByVendor = async (req, res) => {
+  try {
+    const bankDetails = await BankDetails.findOne({ vendorId: req.vendor._id });
+
+    if (!bankDetails) {
+      return res
+        .status(404)
+        .json(new ApiError(404, "Bank details not found"));
+    }
+
+    res
+      .status(200)
+      .json(new ApiResponse(200, bankDetails, "Bank details retrieved successfully"));
+  } catch (error) {
+    console.error("Error fetching bank details:", error);
+    res.status(500).json(new ApiError(500, error.message));
+  }
+};
+
+export const updateBankDetails = async (req, res) => {
+  try {
+    const {
       accountHolderName,
       accountNumber,
       branchName,
       ifscCode,
       gst,
       upiId,
-      panCardPic: cloudinaryResponse.secure_url, // Save Cloudinary URL
-    });
+      panNumber,
+    } = req.body;
 
-    await Vendor.findByIdAndUpdate(req.vendor._id, {
-      $set: { registrationProgress: 3 },
-    });
-
-    res.status(201).json({
-      success: true,
-      message: "Bank details created successfully",
-      data: newDetails,
-    });
-  } catch (error) {
-    console.error("Error creating bank details:", error);
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
-
-// Getting bank details by vendor ID
-export const getBankDetailsByVendor = async (req, res) => {
-  try {
-    console.log("inside getBankDetailsByVendor");
-    // console.log(req.vendor)
-    const vendorId = req.vendor._id;
-
-    const details = await BankDetails.findOne({ vendorId: vendorId });
-
-    console.log(details);
-    if (!details) {
-      return res
-        .status(404)
-        .json(new ApiError(404, "Bank details can't be found"));
+    // Optional: re-verify PAN if changed
+    if (!panNumber) {
+      return res.status(400).json(new ApiError(400, "PAN number is required"));
     }
 
-    res
-      .status(200)
-      .json(new ApiResponse(200, details, "Bank details fetched successfully"));
-  } catch (error) {
-    res.status(500).json(new ApiError(500, error.message));
-    console.error(
-      "error message as can not obtain bankdetails: ",
-      error.message
-    );
-  }
-};
+    // Verify PAN via Cashfree with proper error handling
+    let verifyResp;
+    try {
+      verifyResp = await verifyPanWithCashfree(panNumber);
+    } catch (cashfreeError) {
+      console.error("Cashfree PAN verification error:", cashfreeError.response?.data || cashfreeError.message);
+      return res.status(400).json(new ApiError(400, "PAN verification failed. Please check your PAN number and try again."));
+    }
 
-// controllers/bankDetailsController.js
-// Backend route (Express)
+    if (verifyResp.status !== "SUCCESS") {
+      return res.status(400).json(new ApiError(400, "Invalid PAN number"));
+    }
 
-export const updateBankDetails = async (req, res) => {
-  const { vendorId } = req.params;
-  const { tempAccountNumber, ifscCode, upiId } = req.body;
+    const verifiedName = verifyResp.data?.full_name;
 
-  try {
-    const updatedBankDetails = await BankDetails.findOneAndUpdate(
-      { vendorId },
+    const updatedDetails = await BankDetails.findOneAndUpdate(
+      { vendorId: req.vendor._id },
       {
-        $set: {
-          upiId,
-          accountNumber: tempAccountNumber,
-          ifscCode,
-        },
+        accountHolderName: verifiedName || accountHolderName,
+        accountNumber,
+        branchName,
+        ifscCode,
+        gst,
+        upiId,
+        panNumber,
       },
       { new: true }
     );
 
-    if (!updatedBankDetails) {
-      return res.status(404).json({ message: "Bank details not found" });
+    if (!updatedDetails) {
+      return res.status(404).json(new ApiError(404, "Bank details not found"));
     }
 
-    res.json({ success: true, data: updatedBankDetails });
-  } catch (error) {
-    console.error("Error updating bank details:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(200).json(
+      new ApiResponse(200, updatedDetails, "Bank details updated successfully")
+    );
+  } catch (err) {
+    console.error("Error updating bank details:", err);
+    res.status(500).json(new ApiError(500, err.message));
   }
 };
-// Deleting bank details by vendor ID
-export const deleteBankDetails = async (req, res) => {
+
+// Verify PAN 
+
+export const verifyPan = async (req, res) => {
   try {
-    const { vendorId } = req.params;
+    const { panNumber } = req.body;
 
-    const bankDetails = await BankDetails.findOne({ vendorid: vendorId });
-
-    if (!bankDetails) {
-      return res.status(404).json({
-        success: false,
-        message: "Bank details not found to delete",
-      });
+    // Validate PAN format
+    if (!panNumber || !/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(panNumber)) {
+      return res.status(400).json(new ApiError(400, "Invalid PAN format"));
     }
 
-    // Delete image from Cloudinary (extraction handled inside utility)
-    await deleteFromCloudinary(bankDetails.panCardPic);
+    // Verify PAN via Cashfree with proper error handling
+    let verifyResp;
+    try {
+      verifyResp = await verifyPanWithCashfree(panNumber);
+    } catch (cashfreeError) {
+      console.error("Cashfree PAN verification error:", cashfreeError.response?.data || cashfreeError.message);
+      return res.status(400).json(new ApiError(400, "PAN verification failed. Please check your PAN number and try again."));
+    }
 
-    // Delete bank detail from DB
-    await BankDetails.deleteOne({ vendorid: vendorId });
+    if (verifyResp.status !== "SUCCESS") {
+      return res.status(400).json(new ApiError(400, "Invalid PAN number"));
+    }
 
-    res.status(200).json({
-      success: true,
-      message: "Bank details and PAN card image deleted successfully",
-    });
-  } catch (error) {
-    console.error("Error deleting bank details:", error);
-    res.status(500).json({ success: false, message: error.message });
+    // Return success with verified data
+    res.status(200).json(
+      new ApiResponse(200, {
+        full_name: verifyResp.data?.full_name,
+        pan_status: verifyResp.status
+      }, "PAN verified successfully")
+    );
+  } catch (err) {
+    console.error("Error verifying PAN:", err);
+    res.status(500).json(new ApiError(500, "PAN verification service temporarily unavailable"));
   }
 };
