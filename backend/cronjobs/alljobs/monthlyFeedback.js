@@ -6,7 +6,7 @@ import { sendEmail } from "../../utilities/sendEmail.js";
 export default function monthlyFeedback() {
   //  For testing purpose
   // cron.schedule("* * * * *", async () => { 
-   // Run on 1st of every month at 10:00 AM
+  // Run on 1st of every month at 10:00 AM
     cron.schedule("0 10 1 * *", async () => {
     try {
       console.log("📬 Running Monthly Feedback Cron Job...");

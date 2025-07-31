@@ -9,6 +9,23 @@ const Feedback = () => {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [wordCount, setWordCount] = useState(0);
+
+  // Word counting function
+  const countWords = (text) => {
+    return text.trim().split(/\s+/).filter(word => word.length > 0).length;
+  };
+
+  // Handle feedback text change with word limit
+  const handleFeedbackChange = (e) => {
+    const text = e.target.value;
+    const words = countWords(text);
+    
+    if (words <= 30) {
+      setFeedbackText(text);
+      setWordCount(words);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,6 +37,12 @@ const Feedback = () => {
 
     if (!userEmail.trim()) {
       setError("Please enter your email address");
+      return;
+    }
+
+    // Word limit validation
+    if (countWords(feedbackText.trim()) > 30) {
+      setError("Feedback must be 30 words or less");
       return;
     }
 
@@ -59,6 +82,7 @@ const Feedback = () => {
       setUserEmail("");
       setUserName("");
       setRating(5);
+      setWordCount(0);
     } catch (err) {
       console.error("Error submitting feedback:", err);
 
@@ -86,6 +110,7 @@ const Feedback = () => {
     setUserEmail("");
     setUserName("");
     setRating(5);
+    setWordCount(0);
   };
 
   return (
@@ -159,12 +184,15 @@ const Feedback = () => {
               </label>
               <textarea
                 value={feedbackText}
-                onChange={(e) => setFeedbackText(e.target.value)}
-                placeholder="Write your experience or suggestions here..."
+                onChange={handleFeedbackChange}
+                placeholder="Write your experience or suggestions here... (Max 30 words)"
                 className="w-full h-32 p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
                 disabled={loading}
               ></textarea>
+              <div className="text-right text-sm text-gray-500 mt-1">
+                {wordCount}/30 words
+              </div>
             </div>
 
             {/* Rating */}
