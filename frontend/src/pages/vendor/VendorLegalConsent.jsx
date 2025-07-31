@@ -10,10 +10,15 @@ import "./StepProgress.css";
 import "./LegalButton.css";
 import axios from "axios";
 import Spinner from "./../../components/common/Spinner";
+import {useSelector} from "react-redux";
 
 export default function VendorLegalConsent() {
   const [signatureFile, setSignatureFile] = React.useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const vendor = useSelector((state) => state.vendor.vendor);
+
+  console.log("Vendor Legal Consent Page Rendered");
+
 
   const fileInputRef = React.useRef();
   const navigate = useNavigate();
@@ -44,6 +49,7 @@ export default function VendorLegalConsent() {
       formData.append("iAgreeKYCVerifyUsingPanAndAdhar", true);
 
       formData.append("signature", signatureFile); // required by multer
+      formData.append("vendorId", vendor?._id || ""); // Use vendor ID from Redux state
 
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/vendors/legal-consent`,
@@ -52,6 +58,7 @@ export default function VendorLegalConsent() {
           headers: {
             "Content-Type": "multipart/form-data",
           },
+          withCredentials: true,
         }
       );
 
