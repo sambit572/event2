@@ -1,9 +1,5 @@
 import React from "react";
-import PriceSection from "./PriceSection.jsx";
-import RatingSection from "./RatingSection.jsx";
-import ServiceDescription from "./ServiceDescription.jsx";
-import ServiceDetailsSection from "./ServiceDetailsSection.jsx";
-import "./ServiceCard.css";
+import "./ServiceDetailCard.css";
 
 const ServiceCard = ({ service }) => {
   if (!service) return null;
