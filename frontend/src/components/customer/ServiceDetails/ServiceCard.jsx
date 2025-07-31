@@ -1,8 +1,3 @@
-import React from "react";
-import PriceSection from "./PriceSection.jsx";
-import RatingSection from "./RatingSection.jsx";
-import ServiceDescription from "./ServiceDescription.jsx";
-import ServiceDetailsSection from "./ServiceDetailsSection.jsx";
 import "./ServiceCard.css";
 
 const ServiceCard = ({ service }) => {
@@ -12,7 +7,8 @@ const ServiceCard = ({ service }) => {
     serviceName,
     serviceDes,
     locationOffered,
-    priceRange,
+    minPrice,
+    maxPrice,
     duration,
     serviceCategory,
     rating,
@@ -29,21 +25,26 @@ const ServiceCard = ({ service }) => {
       </h2>
 
       <p className="serviceDetails-location text-sm text-black mb-2">
-        {locationOffered}
+        {Array.isArray(locationOffered)
+          ? locationOffered.join(", ")
+          : locationOffered || "Location not provided"}
       </p>
 
       <p className="serviceDetails-price text-lg font-bold text-black mb-3">
-        ₹{priceRange}
+        ₹
+        {service.minPrice && service.maxPrice
+          ? service.minPrice === service.maxPrice
+            ? service.minPrice
+            : `${service.minPrice} - ${service.maxPrice}`
+          : "N/A"}
       </p>
 
       {/* ⭐ Rating and Reviews Section */}
       <div className="flex items-center gap-2 mb-3">
         <span className="bg-green-600 text-white px-2 py-1 rounded-full text-sm font-semibold">
-         {averageRating.toFixed(1)} ★
-          </span>
-        <span className="text-gray-500 text-sm">
-          ({totalReviews} reviews)
+          {averageRating.toFixed(1)} ★
         </span>
+        <span className="text-gray-500 text-sm">({totalReviews} reviews)</span>
       </div>
 
       <div className="service-description">
