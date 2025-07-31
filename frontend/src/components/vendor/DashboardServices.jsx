@@ -233,192 +233,219 @@ const DashboardServices = () => {
 
 
   return (
-    <div>
-      {services.length > 0 ? (
-        services.map((service, index) => {
-          const isEditing = editingIndex === index;
-          const selectedImage =
-            selectedImages[index] || service.serviceImage?.[0];
+    <div className="service-container">
+      <div>
+        {services.length > 0 ? (
+          services.map((service, index) => {
+            const isEditing = editingIndex === index;
+            const selectedImage =
+              selectedImages[index] || service.serviceImage?.[0];
 
-          return (
-            <section key={index} className="service-box xl:ml-20 mb-10">
-              <div className="availability-toggle-wrapper">
-                {/* Toggle Switch */}
-                <label
-                  className={`toggle-switch ${service.available ? "bg-blue-500" : "bg-gray-300"}`}
-                >
-                  <input
-                    type="checkbox"
-                    checked={service.available}
-                    onChange={() => handleToggleAvailability(index)}
-                    className="sr-only"
-                  />
-                  <span
-                    className={`toggle-dot ${service.available ? "active" : ""}`}
-                  />
-                </label>
+            return (
 
-                {/* Availability Label */}
-                <span className="availability-label">
-                  {service.available ? "Available" : "Unavailable"}
-                </span>
-              </div>
-
-              <div className="both_images_section">
-                <div className="thumbnail-column-dashboard">
-                  {service.serviceImage?.map((img, i) => (
-                    <img
-                      key={i}
-                      src={img}
-                      alt={`thumb-${i}`}
-                      className={`thumbnail ${selectedImage === img ? "selected" : ""
-                        }`}
-                      onClick={() => handleImageSelect(index, img)}
+              <section key={index} className="service-box xl:ml-20 mb-10">
+                <div className="availability-toggle-wrapper">
+                  {/* Toggle Switch */}
+                  <label
+                    className={`toggle-switch ${service.available ? "bg-blue-500" : "bg-gray-300"}`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={service.available}
+                      onChange={() => handleToggleAvailability(index)}
+                      className="sr-only"
                     />
-                  ))}
+                    <span
+                      className={`toggle-dot ${service.available ? "active" : ""}`}
+                    />
+                  </label>
+
+                  {/* Availability Label */}
+                  <span className="availability-label">
+                    {service.available ? "Available" : "Unavailable"}
+                  </span>
                 </div>
 
-                <div className="main-image-and-buttons">
-                  <img
-                    src={selectedImage}
-                    alt="Service"
-                    className="main-image-dashboard"
-                  />
-                  <div className="image-buttons-dashboard">
-                    <button
-                      className="vendor-edit-btn flex gap-1"
-                      onClick={() => handleEdit(index)}
-                    >
-                      <FaEdit className="mt-[2.9px]" /> Edit
-                    </button>
-                    <button
-                      className="vendor-delete-btn flex gap-1"
-                      onClick={() => handleDelete(index)}
-                    >
-                      <FaTrash className="mt-[2.9px]" /> Delete
-                    </button>
+                <div className="both_images_section">
+                  <div className="thumbnail-column-dashboard">
+                    {service.serviceImage?.map((img, i) => (
+                      <img
+                        key={i}
+                        src={img}
+                        alt={`thumb-${i}`}
+                        className={`thumbnail ${selectedImage === img ? "selected" : ""
+                          }`}
+                        onClick={() => handleImageSelect(index, img)}
+                      />
+                    ))}
                   </div>
-                </div>
-              </div>
 
-              <div className="right-section xl:w-[500px] xl:ml-3">
-                {isEditing ? (
-                  <form className="edit-form-dashboard">
-                    <input
-                      type="text"
-                      name="serviceName"
-                      value={editedData.serviceName}
-                      onChange={handleChange}
-                      placeholder="Service Name"
+                  <div className="main-image-and-buttons">
+                    <img
+                      src={selectedImage}
+                      alt="Service"
+                      className="main-image-dashboard"
                     />
-                    <input
-                      type="text"
-                      name="locationOffered"
-                      value={editedData.locationOffered}
-                      onChange={handleChange}
-                      placeholder="Location Offered"
-                    />
-                    <input
-                      type="text"
-                      name="priceRange"
-                      value={editedData.priceRange}
-                      onChange={handleChange}
-                      placeholder="Price Range"
-                    />
-                    <input
-                      type="text"
-                      name="serviceCategory"
-                      value={editedData.serviceCategory}
-                      onChange={handleChange}
-                      placeholder="Service Category"
-                    />
-                    <input
-                      type="text"
-                      name="duration"
-                      value={editedData.duration}
-                      onChange={handleChange}
-                      placeholder="Duration"
-                    />
-                    <textarea
-                      name="serviceDes"
-                      value={editedData.serviceDes}
-                      onChange={handleChange}
-                      placeholder="Description"
-                      maxLength={500}
-                    />
-
-
-                    <div className="flex flex-nowrap overflow-x-auto items-center gap-3">
-                      {/* Existing Images */}
-                      {editedData.serviceImage?.map((img, i) => (
-                        <div key={`existing-${i}`} className="relative w-14 h-14 shrink-0">
-                          <img
-                            src={img}
-                            alt={`thumb-${i}`}
-                            className="w-full h-full object-cover rounded"
-                          />
-                          <button
-                            type="button"
-                            className="absolute top-0 right-0 !text-red-600 !p-[3px] !text-[10px] !bg-white !rounded-full leading-none"
-                            onClick={() => {
-                              const updatedImgs = [...editedData.serviceImage];
-                              updatedImgs.splice(i, 1);
-                              setEditedData((prev) => ({
-                                ...prev,
-                                serviceImage: updatedImgs,
-                              }));
-                            }}
-                          >
-                            ✕
-                          </button>
-                        </div>
-                      ))}
-
-                      {/* New Image Previews */}
-                      {newImagePreviews.map((url, i) => (
-                        <div key={`new-${i}`} className="relative w-14 h-14 shrink-0">
-                          <img
-                            src={url}
-                            alt={`new-preview-${i}`}
-                            className="w-full h-full object-cover rounded"
-                          />
-                          <button
-                            type="button"
-                            className="absolute top-0 right-0 !text-red-600 !p-[3px] !text-[10px] !bg-white !rounded-full leading-none"
-                            onClick={() => {
-                              const updatedPreviews = [...newImagePreviews];
-                              const updatedFiles = [...newImages];
-                              updatedPreviews.splice(i, 1);
-                              updatedFiles.splice(i, 1);
-                              setNewImages(updatedFiles);
-                              setNewImagePreviews(updatedPreviews);
-                            }}
-                          >
-                            ✕
-                          </button>
-                        </div>
-                      ))}
-
-                      {/* Upload Button (show only if total images < 5) */}
-                      {(editedData.serviceImage.length + newImagePreviews.length < 5) && (
-                        <label className="w-14 h-14 border-2 border-dashed border-gray-400 rounded flex items-center justify-center cursor-pointer shrink-0">
-                          <FaPlus className="text-gray-500 text-xs" />
-                          <input
-                            type="file"
-                            accept="image/*"
-                            className="hidden"
-                            onChange={handleImageUpload}
-                          />
-                        </label>
-                      )}
+                    <div className="buttons-dashboard flex justify-center gap-3 w-full mt-2">
+                      <button
+                        className="vendor-edit-btn flex items-center gap-1 px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded hover:bg-blue-700 transition duration-300 md:px-3 md:py-1.5 md:text-sm"
+                        onClick={() => handleEdit(index)}
+                      >
+                        <FaEdit className="text-sm" /> Edit
+                      </button>
+                      <button
+                        className="vendor-delete-btn flex items-center gap-1 px-4 py-2 text-sm font-semibold text-white bg-red-600 rounded hover:bg-red-700 transition duration-300 md:px-3 md:py-1.5 md:text-sm"
+                        onClick={() => handleDelete(index)}
+                      >
+                        <FaTrash className="text-sm" /> Delete
+                      </button>
                     </div>
 
+                  </div>
+                </div>
 
-                    <button type="button" onClick={() => handleSave(index)}>
-                      Save
-                    </button>
-                  </form>
-                ) : (
+                {isEditing && (
+                  <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center 
+                items-start md:items-center px-2 py-2 overflow-y-auto">
+                    <form
+                      className="dashboard-custom-form"
+                    >
+
+
+
+                      <div className="space-y-3">
+                        <input
+                          type="text"
+                          name="serviceName"
+                          value={editedData.serviceName}
+                          onChange={handleChange}
+                          placeholder="Service Name"
+                          className="w-full p-1.5 border border-[#001f3f] rounded-md focus:ring-2 focus:ring-[#001f3f]"
+                        />
+                        <input
+                          type="text"
+                          name="locationOffered"
+                          value={editedData.locationOffered}
+                          onChange={handleChange}
+                          placeholder="Location Offered"
+                          className="w-full p-1 border border-[#001f3f] rounded-md focus:ring-2 focus:ring-blue-400"
+                        />
+                        <input
+                          type="text"
+                          name="priceRange"
+                          value={editedData.priceRange}
+                          onChange={handleChange}
+                          placeholder="Price Range"
+                          className="w-full p-1 border border-[#001f3f] rounded-md focus:ring-2 focus:ring-blue-400"
+                        />
+                        <input
+                          type="text"
+                          name="serviceCategory"
+                          value={editedData.serviceCategory}
+                          onChange={handleChange}
+                          placeholder="Service Category"
+                          className="w-full p-1 border border-[#001f3f] rounded-md focus:ring-2 focus:ring-blue-400"
+                        />
+                        <input
+                          type="text"
+                          name="duration"
+                          value={editedData.duration}
+                          onChange={handleChange}
+                          placeholder="Duration"
+                          className="w-full p-1 border border-[#001f3f] rounded-md focus:ring-2 focus:ring-blue-400"
+                        />
+                        <textarea
+                          name="serviceDes"
+                          value={editedData.serviceDes}
+                          onChange={handleChange}
+                          placeholder="Description"
+                          maxLength={500}
+                          className="w-full p-1 border border-[#001f3f] rounded-md focus:ring-2 focus:ring-blue-400 min-h-[90px]"
+                        />
+
+                      </div>
+
+                      {/* Image Preview Section */}
+                      <div className="flex flex-nowrap overflow-x-auto items-center gap-3">
+                        {editedData.serviceImage?.map((img, i) => (
+                          <div key={`existing-${i}`} className="relative w-10 h-10 shrink-0">
+                            <img
+                              src={img}
+                              alt={`thumb-${i}`}
+                              className="w-full h-full object-cover rounded"
+                            />
+                            <button
+                              type="button"
+                              className="absolute top-0 right-0 text-red-600 p-[3px] text-[10px] bg-white rounded-full"
+                              onClick={() => {
+                                const updatedImgs = [...editedData.serviceImage];
+                                updatedImgs.splice(i, 1);
+                                setEditedData((prev) => ({
+                                  ...prev,
+                                  serviceImage: updatedImgs,
+                                }));
+                              }}
+                            >
+                              ✕
+                            </button>
+                          </div>
+
+                        ))}
+
+                        {newImagePreviews.map((url, i) => (
+                          <div key={`new-${i}`} className="relative w-10 h-10 shrink-0">
+                            <img
+                              src={url}
+                              alt={`new-preview-${i}`}
+                              className="w-full h-full object-cover rounded"
+                            />
+                            <button
+                              type="button"
+                              className="absolute top-0 right-0 text-red-600 p-[3px] text-[10px] bg-white rounded-full"
+                              onClick={() => {
+                                const updatedPreviews = [...newImagePreviews];
+                                const updatedFiles = [...newImages];
+                                updatedPreviews.splice(i, 1);
+                                updatedFiles.splice(i, 1);
+                                setNewImages(updatedFiles);
+                                setNewImagePreviews(updatedPreviews);
+                              }}
+                            >
+                              ✕
+                            </button>
+                          </div>
+
+                        ))}
+
+                        {(editedData.serviceImage.length + newImagePreviews.length < 5) && (
+                          <label className="w-14 h-14 border-2 border-dashed border-gray-400 rounded flex items-center justify-center cursor-pointer shrink-0">
+                            <FaPlus className="text-gray-500 text-xs" />
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={handleImageUpload}
+                            />
+                          </label>
+                        )}
+                      </div>
+
+                      {/* Buttons */}
+                      <div className="flex justify-center gap-4 pt-2">
+                        <button
+                          type="button"
+                          onClick={() => handleSave(index)}
+                          className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 shadow"
+                        >
+                          Save
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+
+                )}
+
+                <div className="right-section xl:w-[500px] xl:ml-3">
                   <div className="details">
                     <h2 className="details-h2">{service.serviceName}</h2>
                     <div className="l">{service.locationOffered}</div>
@@ -442,15 +469,16 @@ const DashboardServices = () => {
                       {service.userReviews}
                     </div>
                   </div>
-                )}
-              </div>
+                </div>
 
-            </section>
-          );
-        })
-      ) : (
-        <p className="text-center text-gray-600 mt-20">No services found.</p>
-      )}
+              </section>
+
+            );
+          })
+        ) : (
+          <p className="text-center text-gray-600 mt-20">No services found.</p>
+        )}
+      </div>
     </div>
   );
 

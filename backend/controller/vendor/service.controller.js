@@ -93,9 +93,11 @@ export const createService = async (req, res) => {
     });
     console.log("✅ Service created successfully:", newService);
 
-    await Vendor.findByIdAndUpdate(req.vendor._id, {
-      $set: { registrationProgress: 2 },
-    });
+    if (req.vendor.isRegistrationComplete === false){
+      await Vendor.findByIdAndUpdate(req.vendor._id, {
+        $set: { registrationProgress: 2 },
+      });
+    }
 
     return res
       .status(200)
