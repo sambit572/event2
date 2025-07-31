@@ -1,4 +1,4 @@
-import "./ServiceCard.css";
+import "./ServiceDetailCard.css";
 
 const ServiceCard = ({ service }) => {
   if (!service) return null;
