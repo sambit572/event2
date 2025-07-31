@@ -125,18 +125,20 @@ function DashBoardMain() {
       <div className="main-contain">
         <ToggleTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
-        <div className="relative w-full mt-4">
-  <button
-    className="absolute top-[-40px] right-4 md:top-[-60px] md:right-[10px] 
-      flex items-center justify-center gap-2 
-      rounded-[10px] bg-[#001f3f] font-semibold text-[#fff] px-4 py-2"
-    onClick={handleOpenAddService}
-  >
-    <span className="text-xl font-bold">+</span>
-    <span className="text-base tracking-wide">Services</span>
-  </button>
-</div>
-
+        <div className="relative w-full">
+          <button
+            className="
+      flex items-center ml-12 justify-center gap-2 text-center
+      rounded-xl bg-[#434a51] font-semibold px-6 py-3 text-white
+      shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 ease-in-out
+      xl:fixed xl:top-[90px] xl:right-4 z-50
+    "
+            onClick={handleOpenAddService}
+          >
+            <span className="text-xl font-bold">+</span>
+            <span className="text-base tracking-wide">Add Services</span>
+          </button>
+        </div>
 
         <div className="relative max-h-[70vh] overflow-y-auto">
           {activeTab === "services" ? (

@@ -62,7 +62,8 @@ const DashboardServices = () => {
       const totalImages = existingImages.length + newImages.length;
       if (totalImages > 5) {
         alert(
-          `You can upload a maximum of 5 images.\nYou already have ${existingImages.length
+          `You can upload a maximum of 5 images.\nYou already have ${
+            existingImages.length
           } images.\nPlease remove ${totalImages - 5} image(s) before saving.`
         );
         return;
@@ -102,11 +103,13 @@ const DashboardServices = () => {
         serviceName: editedData.serviceName,
         serviceDes: editedData.serviceDes,
         serviceCategory: editedData.serviceCategory,
-        priceRange: editedData.priceRange,
-        locationOffered: editedData.locationOffered,
+        minPrice: editedData.minPrice,
+        maxPrice: editedData.maxPrice,
+        locationOffered: editedData.locationOffered, 
         duration: editedData.duration,
         serviceImage: allImages,
       };
+
 
       const updateRes = await axios.put(
         `${BACKEND_URL}/vendors/update-service/${serviceId}`,
@@ -128,7 +131,6 @@ const DashboardServices = () => {
       alert(error.response?.data?.message || "Update failed");
     }
   };
-
 
   const handleDelete = async (index) => {
     const confirmDelete = window.confirm(
@@ -183,7 +185,8 @@ const DashboardServices = () => {
       editedData.serviceImage.length + newImages.length + files.length;
     if (totalSelected > 5) {
       alert(
-        `You can only upload up to 5 images in total. Remove ${totalSelected - 5
+        `You can only upload up to 5 images in total. Remove ${
+          totalSelected - 5
         } image(s).`
       );
       return;
@@ -194,7 +197,6 @@ const DashboardServices = () => {
     setNewImages((prev) => [...prev, ...files]);
     setNewImagePreviews((prev) => [...prev, ...newPreviews]);
   };
-
 
   const handleToggleAvailability = async (index) => {
     const updatedList = [...services];
@@ -231,7 +233,6 @@ const DashboardServices = () => {
     };
   }, [newImagePreviews]);
 
-
   return (
     <div>
       {services.length > 0 ? (
@@ -245,7 +246,9 @@ const DashboardServices = () => {
               <div className="availability-toggle-wrapper">
                 {/* Toggle Switch */}
                 <label
-                  className={`toggle-switch ${service.available ? "bg-blue-500" : "bg-gray-300"}`}
+                  className={`toggle-switch ${
+                    service.available ? "bg-blue-500" : "bg-gray-300"
+                  }`}
                 >
                   <input
                     type="checkbox"
@@ -254,7 +257,9 @@ const DashboardServices = () => {
                     className="sr-only"
                   />
                   <span
-                    className={`toggle-dot ${service.available ? "active" : ""}`}
+                    className={`toggle-dot ${
+                      service.available ? "active" : ""
+                    }`}
                   />
                 </label>
 
@@ -271,8 +276,9 @@ const DashboardServices = () => {
                       key={i}
                       src={img}
                       alt={`thumb-${i}`}
-                      className={`thumbnail ${selectedImage === img ? "selected" : ""
-                        }`}
+                      className={`thumbnail ${
+                        selectedImage === img ? "selected" : ""
+                      }`}
                       onClick={() => handleImageSelect(index, img)}
                     />
                   ))}
@@ -311,20 +317,54 @@ const DashboardServices = () => {
                       onChange={handleChange}
                       placeholder="Service Name"
                     />
+                    {/* Location Offered (comma-separated) */}
                     <input
                       type="text"
                       name="locationOffered"
-                      value={editedData.locationOffered}
-                      onChange={handleChange}
-                      placeholder="Location Offered"
+                      value={
+                        Array.isArray(editedData.locationOffered)
+                          ? editedData.locationOffered.join(", ")
+                          : ""
+                      }
+                      onChange={(e) =>
+                        setEditedData((prev) => ({
+                          ...prev,
+                          locationOffered: e.target.value
+                            .split(",")
+                            .map((loc) => loc.trim()), // Convert to array
+                        }))
+                      }
+                      placeholder="Locations (comma separated)"
                     />
+
+                    {/* Min Price */}
                     <input
-                      type="text"
-                      name="priceRange"
-                      value={editedData.priceRange}
-                      onChange={handleChange}
-                      placeholder="Price Range"
+                      type="number"
+                      name="minPrice"
+                      value={editedData.minPrice || ""}
+                      onChange={(e) =>
+                        setEditedData((prev) => ({
+                          ...prev,
+                          minPrice: e.target.value,
+                        }))
+                      }
+                      placeholder="Min Price"
                     />
+
+                    {/* Max Price */}
+                    <input
+                      type="number"
+                      name="maxPrice"
+                      value={editedData.maxPrice || ""}
+                      onChange={(e) =>
+                        setEditedData((prev) => ({
+                          ...prev,
+                          maxPrice: e.target.value,
+                        }))
+                      }
+                      placeholder="Max Price"
+                    />
+
                     <input
                       type="text"
                       name="serviceCategory"
@@ -347,11 +387,13 @@ const DashboardServices = () => {
                       maxLength={500}
                     />
 
-
                     <div className="flex flex-nowrap overflow-x-auto items-center gap-3">
                       {/* Existing Images */}
                       {editedData.serviceImage?.map((img, i) => (
-                        <div key={`existing-${i}`} className="relative w-14 h-14 shrink-0">
+                        <div
+                          key={`existing-${i}`}
+                          className="relative w-14 h-14 shrink-0"
+                        >
                           <img
                             src={img}
                             alt={`thumb-${i}`}
@@ -376,7 +418,10 @@ const DashboardServices = () => {
 
                       {/* New Image Previews */}
                       {newImagePreviews.map((url, i) => (
-                        <div key={`new-${i}`} className="relative w-14 h-14 shrink-0">
+                        <div
+                          key={`new-${i}`}
+                          className="relative w-14 h-14 shrink-0"
+                        >
                           <img
                             src={url}
                             alt={`new-preview-${i}`}
@@ -400,7 +445,9 @@ const DashboardServices = () => {
                       ))}
 
                       {/* Upload Button (show only if total images < 5) */}
-                      {(editedData.serviceImage.length + newImagePreviews.length < 5) && (
+                      {editedData.serviceImage.length +
+                        newImagePreviews.length <
+                        5 && (
                         <label className="w-14 h-14 border-2 border-dashed border-gray-400 rounded flex items-center justify-center cursor-pointer shrink-0">
                           <FaPlus className="text-gray-500 text-xs" />
                           <input
@@ -413,7 +460,6 @@ const DashboardServices = () => {
                       )}
                     </div>
 
-
                     <button type="button" onClick={() => handleSave(index)}>
                       Save
                     </button>
@@ -421,10 +467,18 @@ const DashboardServices = () => {
                 ) : (
                   <div className="details">
                     <h2 className="details-h2">{service.serviceName}</h2>
-                    <div className="l">{service.locationOffered}</div>
-                    <div className="pr">
-                      <strong>Price Range: </strong>₹ {service.priceRange}
+                    <div className="l">
+                      <strong>Locations: </strong>
+                      {Array.isArray(service.locationOffered)
+                        ? service.locationOffered.join(", ")
+                        : service.locationOffered}
                     </div>
+
+                    <div className="pr">
+                      <strong>Price: </strong>₹ {service.minPrice} - ₹{" "}
+                      {service.maxPrice}
+                    </div>
+
                     <div className="c">
                       <strong>Category: </strong>
                       {service.serviceCategory}
@@ -444,7 +498,6 @@ const DashboardServices = () => {
                   </div>
                 )}
               </div>
-
             </section>
           );
         })
@@ -453,7 +506,6 @@ const DashboardServices = () => {
       )}
     </div>
   );
-
 };
 
 export default DashboardServices;

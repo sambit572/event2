@@ -15,13 +15,13 @@ const serviceSchema = new Schema(
       type: [String],
       required: true,
     },
-    priceRange: {
-      type: String,
-      required: false,
+    maxPrice: {
+      type: Number,
+      required: true,
     },
     minPrice: {
       type: Number,
-      required: false,
+      required: true,
     },
     serviceName: {
       type: String,
@@ -32,15 +32,13 @@ const serviceSchema = new Schema(
       required: true,
     },
     locationOffered: {
-      type: String,
+      type: [String], 
       required: true,
     },
     serviceDes: {
       type: String,
       required: true,
     },
-
-    // ✅ Add this new field
     available: {
       type: Boolean,
       default: true,

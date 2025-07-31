@@ -7,9 +7,8 @@ import {
   updateAvailability,
   updateService,
   updateServiceImageFirst,
-   getServicesByCategory,
-  getServiceById,
 } from "../../controller/vendor/service.controller.js";
+import { verifyPan } from "../../controller/vendor/bankdetails.controller.js";
 import { verifyVendorJwt } from "../../middleware/VendorAuth.middleware.js";
   
 
@@ -90,7 +89,6 @@ vendor_router.route("/update-service/:id").put(verifyVendorJwt, updateService);
 vendor_router
   .route("/delete-service/:id")
   .delete(verifyVendorJwt, deleteService);
-vendor_router.get("/category/:category", getServicesByCategory);
 
 vendor_router
   .route("/update-availability/:id")
@@ -103,7 +101,6 @@ vendor_router.post(
   updateServiceImageFirst
 );
 
-vendor_router.get("/service/:id", getServiceById);
 // --- BANK DETAILS ROUTES --- //
 vendor_router.post(
   "/bank-details",
@@ -118,6 +115,9 @@ vendor_router.get(
 );
 vendor_router.put("/bank-details/:vendorId", updateBankDetails);
 vendor_router.delete("/bank-details/:vendorId", deleteBankDetails);
+
+// --- PAN VERIFICATION ROUTE --- //
+vendor_router.post("/verify-pan", verifyVendorJwt, verifyPan);
 
 // --- LEGAL CONSENT ROUTES --- //
 vendor_router.post(

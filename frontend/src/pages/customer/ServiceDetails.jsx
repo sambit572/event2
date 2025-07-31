@@ -9,7 +9,7 @@ import { similarServiceData } from "../../components/customer/ServiceDetails/Sim
 
 import RatingDetails from "../../components/customer/ServiceDetails/RatingDetails.jsx";
 import SimilarProductCard from "../../components/customer/ServiceDetails/PeopleAlsoBooked.jsx";
-import DJServiceCard from "../../components/customer/ServiceDetails/ServiceCard.jsx";
+import DJServiceCard from "../../components/customer/ServiceDetails/ServiceDetailCard.jsx";
 import ReviewList from "../../components/customer/ServiceDetails/ReviewList";
 import ReviewForm from "../../components/customer/ServiceDetails/ReviewForm.jsx";
 import axios from "axios";
