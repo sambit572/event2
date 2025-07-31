@@ -34,10 +34,10 @@ const ReviewSlider = () => {
     const fetchReviews = async () => {
       try {
         setLoading(true);
-        console.log("Fetching reviews from:", `${BACKEND_URL}/api/reviews/all`);
+        console.log("Fetching reviews from:", `${BACKEND_URL}/reviews/all`);
         
         // Fetch ALL reviews first to debug
-        const res = await axios.get(`${BACKEND_URL}/api/reviews/all?page=1&limit=50`);
+        const res = await axios.get(`${BACKEND_URL}/reviews/all?page=1&limit=50`);
         console.log("Raw API response:", res.data);
         
         const fetched = res.data.reviews || [];
@@ -61,7 +61,7 @@ const ReviewSlider = () => {
             
             // Use the enriched data from backend
             const name = r.userName || r.userEmail?.split("@")[0] || "Anonymous User";
-            const initials = name
+            const initials = r.initials || name
               .split(" ")
               .map((n) => n[0])
               .join("")
@@ -69,10 +69,10 @@ const ReviewSlider = () => {
               .slice(0, 2);
 
             const formatted = {
-              name,
+              userName: name,
               rating: r.rating,
-              text: r.reviewMessage,
-              image: r.profileImage || null,
+              reviewMessage: r.reviewMessage,
+              profileImage: r.profileImage || null,
               initials,
               reviewType: r.reviewType
             };
@@ -128,17 +128,17 @@ const ReviewSlider = () => {
             style={{ transform: `translateX(-${offset}px)` }}
           >
             {duplicatedReviews.map((review, index) => (
-              <div key={`${review.name}-${review.text.slice(0,10)}-${index}`} className="review_card">
-                {review.image ? (
+              <div key={`${review.userName}-${review.reviewMessage.slice(0,10)}-${index}`} className="review_card">
+                {review.profileImage ? (
                   <img
-                    src={review.image}
-                    alt={review.name}
+                    src={review.profileImage}
+                    alt={review.userName}
                     className="review_avatar"
                   />
                 ) : (
                   <div className="initials_avatar">{review.initials}</div>
                 )}
-                <h3>{review.name}</h3>
+                <h3>{review.userName}</h3>
                 <div className="review_rating">
                   {Array.from({ length: review.rating }, (_, i) => (
                     <span key={`filled-${i}-${index}`} className="star filled">
@@ -151,7 +151,7 @@ const ReviewSlider = () => {
                     </span>
                   ))}
                 </div>
-                <p>{review.text}</p>
+                <p>{review.reviewMessage}</p>
                 <small className="text-gray-500">Type: {review.reviewType}</small>
               </div>
             ))}
