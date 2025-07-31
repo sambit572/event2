@@ -116,7 +116,7 @@ import image15 from "../assets/home/categoriesImages/marriage-card.png";
 export const CategoryData = [
   {
     id: "dj",
-    title: "DJ Services and Brash Band",
+    title: "DJ Services and Brass Band",
     image: image1,
     tagline: "Beats That Breathe Fun",
     icon: "🎧",
@@ -1041,7 +1041,7 @@ export const CategoryData = [
   },
   {
     id: "transport",
-    title: "Ceremonial Ride",
+    title: "Ceremonial Ride",
     image: image13,
     tagline: "Royal Rides Await You",
     icon: "🚗",

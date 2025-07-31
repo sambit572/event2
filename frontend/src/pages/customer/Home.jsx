@@ -13,7 +13,7 @@ import cateringTablet from "../../assets/home/sliderImages/catering-tablet.png";
 import cateringDesktop from "../../assets/home/sliderImages/catering-desktop.png";
 
 import CategoryCard from "../../components/customer/home/CategoryCard.jsx";
-import ReviewSlider from "../../components/customer/home/ReviewSlider.jsx";
+import ReviewSlider from "../../components/customer/Home/ReviewSlider.jsx";
 import FaqSection from "../../components/customer/home/FaqSection.jsx";
 import ImageSlider from "../../components/customer/home/ImageSlider.jsx";
 
@@ -47,29 +47,44 @@ const Home = () => {
     const checkUser = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/user/`,
-          {
-            withCredentials: true,
-          }
+          `${import.meta.env.VITE_BACKEND_URL}/user/no-need-to-login`,
+          { withCredentials: true }
         );
-        console.log(response.data.message);
 
+        console.log(response.data.message);
         console.log(response.data.data);
-        const { user, accessToken } = response.data.data;
-        if (user && accessToken) {
+
+        const data = response.data.data;
+
+        if (data?.user) {
           localStorage.setItem("currentlyLoggedIn", "true");
-          localStorage.setItem("userFirstName", user.fullName.split(" ")[0]);
+          localStorage.setItem(
+            "userFirstName",
+            data.user.fullName.split(" ")[0]
+          );
+        }
+
+        // ✅ Optional: Store access token if backend sends it
+        if (data?.accessToken) {
+          localStorage.setItem("accessToken", data.accessToken);
         }
       } catch (error) {
         console.log(
           "error in noLogin :",
-          error.data?.data?.message || error.message
+          error.response?.data?.message || error.message
         );
+
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          localStorage.removeItem("currentlyLoggedIn");
+          localStorage.removeItem("userFirstName");
+          localStorage.removeItem("accessToken");
+        }
       }
     };
 
     checkUser();
   }, []);
+
 
   return (
     <div className="home">
