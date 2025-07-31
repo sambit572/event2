@@ -12,16 +12,22 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
   const vendorName = service.vendorName || "Unknown Vendor";
 
   const description = service.serviceDes || service.description || "";
-  const location =
-    service.locationOffered ||
+const location = Array.isArray(service.locationOffered)
+  ? service.locationOffered.join(", ")
+  : service.locationOffered ||
     (service.address
       ? `${service.address.area}, ${service.address.city}, ${service.address.state} - ${service.address.pincode}`
       : "Location not provided");
 
+
   const rating = service.rating || "★";
   const reviews = service.reviews || 0;
 
-  const price = service.price || service.priceRange || "N/A";
+ const price =
+   service.minPrice && service.maxPrice
+     ? `${service.minPrice} - ${service.maxPrice}`
+     : "N/A";
+
   const originalPrice = service.originalPrice;
   const discountPercent = service.discountPercent;
 

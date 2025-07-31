@@ -8,26 +8,66 @@ import Review from "../../model/common/review.model.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
+
+// Track last report generation to prevent duplicates
+let lastReportGenerated = null;
+
+// Helper function to check if we should generate report (1st of month only)
+const shouldGenerateReport = () => {
+  const now = moment();
+  const today = now.date();
+  const currentMonth = now.format('YYYY-MM');
+  
+  // Only generate on 1st of month
+  if (today !== 1) {
+    return false;
+  }
+  
+  // Check if already generated this month
+  if (lastReportGenerated === currentMonth) {
+    console.log(`Monthly report already generated for ${currentMonth}`);
+    return false;
+  }
+  
+  return true;
+};
+
+// Function to mark report as generated for current month
+const markReportGenerated = () => {
+  lastReportGenerated = moment().format('YYYY-MM');
+  console.log(`Monthly report marked as generated for ${lastReportGenerated}`);
+};
+
 const generateMonthlyReport = async () => {
+  // Check if today is 1st of month and not already generated
+  if (!shouldGenerateReport()) {
+    console.log("Monthly report: Not the 1st of the month or already generated this month. Skipping...");
+    return;
+  }
+
   let filePath = null; // Track file path for cleanup
   
   try {
+    console.log("🗓️ First day of the month detected! Starting monthly report generation...");
+    
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
     const reportsDir = path.join(__dirname, "..", "reports");
 
     // Ensure directory exists
-    if (!fs.existsSync(reportsDir)) fs.mkdirSync(reportsDir);
+    if (!fs.existsSync(reportsDir)) fs.mkdirSync(reportsDir, { recursive: true });
 
-    // Create unique filename with timestamp to avoid conflicts
-    const timestamp = moment().format("YYYY-MM-DD_HH-mm-ss");
-    filePath = path.join(reportsDir, `MonthlyReport_${timestamp}.pdf`);
+    // Create filename with month-year for easy identification
+    const monthYear = moment().format("YYYY-MM");
+    filePath = path.join(reportsDir, `MonthlyReport_${monthYear}.pdf`);
     const doc = new PDFDocument({ margin: 50 });
 
     doc.pipe(fs.createWriteStream(filePath));
 
     const start = moment().subtract(30, "days").toDate();
     const now = new Date();
+
+    console.log("📊 Fetching monthly data...");
 
     // Fetch data
     const newUsers = await User.countDocuments({ createdAt: { $gte: start } });
@@ -47,6 +87,8 @@ const generateMonthlyReport = async () => {
       reviews.length > 0
         ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(2)
         : "0.0";
+
+    console.log(`📈 Data Summary: ${newUsers} users, ${newVendors} vendors, ${reviews.length} reviews`);
 
     // Helper functions for drawing
     const drawBox = (x, y, width, height, fillColor = null, strokeColor = "#e0e0e0") => {
@@ -321,6 +363,8 @@ const generateMonthlyReport = async () => {
                align: "center" 
              });
 
+    console.log("📄 Generating PDF...");
+
     // Wait for PDF generation to complete
     await new Promise((resolve, reject) => {
       doc.on('end', resolve);
@@ -336,13 +380,22 @@ const generateMonthlyReport = async () => {
       throw new Error("PDF file was not created successfully");
     }
 
-    console.log(`Monthly Report PDF generated at: ${filePath}`);
+    console.log(`✅ Monthly Report PDF generated: ${filePath}`);
 
     // Send to all admins
     const adminEmails = [
       // "jyotinayak961@gmail.com",
       // "shreya31.rout1999@gmail.com" /* Replace with actual admin email */
     ];
+
+    if (adminEmails.length === 0) {
+      console.warn("⚠️ No admin emails configured. Add admin emails to receive reports.");
+      // Still mark as generated to prevent re-generation
+      markReportGenerated();
+      return;
+    }
+
+    console.log(`📧 Sending report to ${adminEmails.length} admin(s)...`);
 
     // Track successful email sends
     let emailsSent = 0;
@@ -352,7 +405,7 @@ const generateMonthlyReport = async () => {
       try {
         await sendEmail({
           to: email,
-          subject: "Monthly Performance Report - EventsBridge",
+          subject: `Monthly Performance Report - EventsBridge (${moment().format("MMM YYYY")})`,
           html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
               <h2 style="color: #2c3e50;">Monthly Performance Report</h2>
@@ -373,13 +426,13 @@ const generateMonthlyReport = async () => {
               <p>Best regards,<br>EventsBridge System</p>
             </div>
           `,
-          attachments: [{ filename: "MonthlyReport.pdf", path: filePath }],
+          attachments: [{ filename: `MonthlyReport_${moment().format("MMM_YYYY")}.pdf`, path: filePath }],
         });
 
         emailsSent++;
-        console.log(`Monthly Report successfully sent to: ${email}`);
+        console.log(`✅ Monthly Report successfully sent to: ${email}`);
       } catch (emailError) {
-        console.error(`Failed to send email to ${email}:`, emailError);
+        console.error(`❌ Failed to send email to ${email}:`, emailError);
         emailErrors.push({ email, error: emailError.message });
       }
     }
@@ -390,29 +443,34 @@ const generateMonthlyReport = async () => {
         // Additional safety check before deletion
         if (fs.existsSync(filePath)) {
           fs.unlinkSync(filePath);
-          console.log(`Monthly Report PDF file automatically deleted: ${filePath}`);
+          console.log(`🗑️ Monthly Report PDF file automatically deleted: ${filePath}`);
         }
+        
+        // Mark report as generated for this month only after successful sending
+        markReportGenerated();
+        
       } catch (deleteError) {
-        console.error("Failed to delete report file:", deleteError);
-        // Don't throw error here as the main functionality (sending emails) was successful
+        console.error("❌ Failed to delete report file:", deleteError);
+        // Still mark as generated since emails were sent
+        markReportGenerated();
       }
     } else {
-      console.warn("No emails were sent successfully. Report file will NOT be deleted for retry purposes.");
-      console.warn("Report file location:", filePath);
+      console.warn("⚠️ No emails were sent successfully. Report file will NOT be deleted for retry purposes.");
+      console.warn("📁 Report file location:", filePath);
     }
 
     // Log final results
     if (emailsSent === adminEmails.length) {
-      console.log(`Monthly Report generated and sent to all ${emailsSent} admins successfully.`);
+      console.log(`🎉 Monthly Report generated and sent to all ${emailsSent} admins successfully!`);
     } else if (emailsSent > 0) {
-      console.log(`Monthly Report sent to ${emailsSent}/${adminEmails.length} admins successfully.`);
-      console.log("Email errors:", emailErrors);
+      console.log(`⚠️ Monthly Report sent to ${emailsSent}/${adminEmails.length} admins successfully.`);
+      console.log("❌ Email errors:", emailErrors);
     } else {
       throw new Error("Failed to send report to any admin. Check email configuration and admin email list.");
     }
 
   } catch (error) {
-    console.error("Failed to generate or send report:", error);
+    console.error("❌ Failed to generate or send monthly report:", error);
     
     // Clean up file only if it exists and no emails were sent
     if (filePath && fs.existsSync(filePath)) {
@@ -423,12 +481,12 @@ const generateMonthlyReport = async () => {
             error.message.includes("Failed to generate") ||
             !error.message.includes("send")) {
           fs.unlinkSync(filePath);
-          console.log("Cleaned up incomplete report file due to generation failure.");
+          console.log("🗑️ Cleaned up incomplete report file due to generation failure.");
         } else {
-          console.log("Report file preserved for retry purposes:", filePath);
+          console.log("📁 Report file preserved for retry purposes:", filePath);
         }
       } catch (deleteError) {
-        console.error("Failed to clean up report file:", deleteError);
+        console.error("❌ Failed to clean up report file:", deleteError);
       }
     }
     
@@ -436,5 +494,27 @@ const generateMonthlyReport = async () => {
     throw error;
   }
 };
+
+// Auto-scheduler: Check every hour if it's the 1st of the month
+const startAutoScheduler = () => {
+  console.log("🕐 Monthly Report Auto-Scheduler started - checking every hour for 1st of month");
+  
+  // Check immediately on startup
+  generateMonthlyReport().catch(err => {
+    console.error("Error in initial monthly report check:", err.message);
+  });
+  
+  // Then check every hour
+  setInterval(async () => {
+    try {
+      await generateMonthlyReport();
+    } catch (error) {
+      console.error("Error in scheduled monthly report check:", error.message);
+    }
+  }, 60 * 60 * 1000); // Every hour
+};
+
+// Start the auto-scheduler when this module is imported
+startAutoScheduler();
 
 export default generateMonthlyReport;
