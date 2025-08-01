@@ -631,37 +631,93 @@ const changePassword = async (req, res) => {
 
 const noNeedToLogin = async (req, res) => {
   try {
-    const token = req.cookies.refreshToken;
-    if (!token)
-      return res.status(401).json(new ApiResponse(401, "Token missing"));
+    const accessTokenFromCookie = req.cookies.accessToken;
+    const refreshTokenFromCookie = req.cookies.refreshToken;
 
-    let decoded;
-    try {
-      decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
-    } catch (err) {
+    let decodedAccess = null;
+    let decodedRefresh = null;
+
+    // 1️⃣ Check if access token exists & is valid
+    if (accessTokenFromCookie) {
+      try {
+        decodedAccess = jwt.verify(
+          accessTokenFromCookie,
+          process.env.ACCESS_TOKEN_SECRET
+        );
+      } catch (err) {
+        console.log("Access token expired or invalid.", err);
+      }
+    }
+
+    // 2️⃣ If access token is valid
+    if (decodedAccess) {
+      const user = await User.findById(decodedAccess._id);
+      if (!user)
+        return res.status(404).json(new ApiError(404, "User not found"));
+
+      // If refresh token is missing or invalid → generate a new one
+      let newRefreshToken = refreshTokenFromCookie;
+      if (refreshTokenFromCookie) {
+        try {
+          decodedRefresh = jwt.verify(
+            refreshTokenFromCookie,
+            process.env.REFRESH_TOKEN_SECRET
+          );
+        } catch (err) {
+          console.log("Refresh token invalid, regenerating...");
+          newRefreshToken = user.generateRefreshToken();
+          user.refreshToken = newRefreshToken;
+          await user.save();
+        }
+      } else {
+        // No refresh token in cookie at all → generate a new one
+        newRefreshToken = user.generateRefreshToken();
+        user.refreshToken = newRefreshToken;
+        await user.save();
+      }
+
       return res
-        .status(401)
-        .json(new ApiResponse(401, null, "Token expired or invalid"));
+        .status(200)
+        .cookie("refreshToken", newRefreshToken, option)
+        .json(new ApiResponse(200, user, "Session valid (access token ok)"));
     }
 
-    const user = await User.findById(decoded._id);
-    if (!user) return res.status(404).json(new ApiError(404, "User not found"));
+    // 3️⃣ If access token missing/expired → check refresh token
+    if (refreshTokenFromCookie) {
+      try {
+        decodedRefresh = jwt.verify(
+          refreshTokenFromCookie,
+          process.env.REFRESH_TOKEN_SECRET
+        );
+      } catch (err) {
+        console.log("Refresh token expired or invalid.", err);
+      }
 
-    // Generate profile picture if user doesn't have one
-    if (!user.profilePhoto) {
-      user.profilePhoto = generateProfilePicture(user.fullName);
-      await user.save({ validateBeforeSave: false });
+      if (decodedRefresh) {
+        const user = await User.findById(decodedRefresh._id);
+        if (!user)
+          return res.status(404).json(new ApiError(404, "User not found"));
+
+        // Issue a new access token
+        const newAccessToken = await user.generateAccessToken();
+
+        return res
+          .status(200)
+          .cookie("accessToken", newAccessToken, option)
+          .json(
+            new ApiResponse(
+              200,
+              { user, accessToken: newAccessToken },
+              "Access token refreshed"
+            )
+          );
+      }
     }
 
-    const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
-      user._id
-    );
-
+    // 4️⃣ Both tokens invalid → force login
     return res
-      .status(200)
-      .cookie("accessToken", accessToken, option)
-      .cookie("refreshToken", refreshToken, option)
-      .json(new ApiResponse(200, { user, accessToken }, "Session refreshed"));
+      .status(401)
+      .json(new ApiResponse(401, null, "Session expired, please login"));
   } catch (error) {
     console.error("noNeedToLogin error:", error);
     return res.status(500).json(new ApiError(500, "Internal Server Error"));

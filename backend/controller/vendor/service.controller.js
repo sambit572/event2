@@ -6,13 +6,11 @@ import { ApiError } from "../../utilities/ApiError.js";
 export const createService = async (req, res) => {
   try {
     console.log("🔵 createService called");
-    // console.log("Request body:", req.body);
-    // console.log("Uploaded files count:", req.files ? req.files.length : 0);
 
     const {
       serviceCategory,
-      priceRange,
       minPrice,
+      maxPrice,
       serviceName,
       locationOffered,
       serviceDes,
@@ -21,7 +19,7 @@ export const createService = async (req, res) => {
       mins = 0,
     } = req.body;
 
-    // Validate required fields
+    // ✅ Validate required fields
     if (!serviceCategory || !serviceName || !locationOffered || !serviceDes) {
       console.error("❌ Validation failed: required fields missing", {
         serviceCategory,
@@ -34,73 +32,82 @@ export const createService = async (req, res) => {
         .json({ message: "All required fields must be filled" });
     }
 
-    // Calculate duration in minutes
+    // ✅ Ensure locationOffered is always an array (multi-location support)
+    const locationsArray = Array.isArray(locationOffered)
+      ? locationOffered
+      : [locationOffered];
+
+    if (locationsArray.length === 0) {
+      return res
+        .status(400)
+        .json({ message: "Please select at least one location" });
+    }
+
+    // ✅ Validate prices
+    if (
+      !minPrice ||
+      !maxPrice ||
+      parseInt(minPrice) <= 0 ||
+      parseInt(maxPrice) <= 0
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Min and max prices must be valid positive numbers" });
+    }
+    if (parseInt(minPrice) >= parseInt(maxPrice)) {
+      return res
+        .status(400)
+        .json({ message: "Min price must be less than max price" });
+    }
+
+    // ✅ Calculate duration in minutes
     const duration =
       parseInt(days) * 24 * 60 + parseInt(hrs) * 60 + parseInt(mins);
-    console.log("Calculated duration (minutes):", duration);
-
     if (isNaN(duration) || duration <= 0) {
       console.error("❌ Invalid estimated duration:", { days, hrs, mins });
       return res.status(400).json({ message: "Invalid estimated duration" });
     }
 
-    // Upload images to Cloudinary
+    // ✅ Upload images to Cloudinary
     const imageUrls = [];
     if (req.files && req.files.length > 0) {
-      console.log("Uploading images to Cloudinary...");
       for (const file of req.files) {
-        console.log(
-          "Processing file:",
-          file.originalname,
-          "at path:",
-          file.path
-        );
         const cloudRes = await uploadOnCloudinary(file.path);
-        console.log(
-          "Cloudinary response for",
-          file.originalname,
-          ":",
-          cloudRes
-        );
         if (cloudRes?.secure_url) {
-          console.log("✅ Image uploaded successfully:", cloudRes.secure_url);
           imageUrls.push(cloudRes.secure_url);
         } else {
           console.error("❌ Failed to upload image:", file.originalname);
         }
       }
-      console.log("Final image URLs:", imageUrls);
     } else {
-      console.error("❌ No images uploaded");
       return res
         .status(400)
         .json({ message: "Please upload at least one image" });
     }
 
-    // Save service document to database
-    console.log("Creating new service document in DB...");
+    // ✅ Save service document to DB
     const newService = await Service.create({
       vendorId: req.vendor._id,
       serviceCategory,
       serviceImage: imageUrls,
-      priceRange,
       minPrice,
+      maxPrice,
       serviceName,
-      locationOffered,
+      locationOffered: locationsArray, // ✅ store array
       serviceDes,
       duration,
     });
-    console.log("✅ Service created successfully:", newService);
+
+    // ✅ Update vendor registration progress if needed
+    if (req.vendor.isRegistrationComplete === false) {
+      await Vendor.findByIdAndUpdate(req.vendor._id, {
+        $set: { registrationProgress: 2 },
+      });
+    }
 
     return res
       .status(200)
-      .json(
-        new ApiResponse(
-          200,
-          newService,
-          "Service created and saved succesfully"
-        )
-      );
+      .json(new ApiResponse(200, newService, "Service created successfully"));
   } catch (error) {
     console.error("❌ Service creation error:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -147,14 +154,10 @@ export const getMyServices = async (req, res) => {
 
 export const updateService = async (req, res) => {
   try {
-
-    console.log("inside update service..")
+    console.log("inside update service..");
 
     const vendorId = req.vendor._id;
     const serviceId = req.params.id;
-
-    // console.log("vendorId: ",vendorId);
-    // console.log("serviceId: ",serviceId);
 
     const existingService = await Service.findOne({
       _id: serviceId,
@@ -162,33 +165,55 @@ export const updateService = async (req, res) => {
     });
 
     if (!existingService) {
-      console.error("Service not found or not authorized: ", existingService);
+      console.error("❌ Service not found or not authorized");
       return res
         .status(404)
         .json(new ApiError(404, "Service not found or not authorized"));
     }
 
-    // Merge existing data with new updates
+    // Extract updated fields (default to existing values if not provided)
     const {
       serviceName = existingService.serviceName,
       serviceDes = existingService.serviceDes,
       serviceCategory = existingService.serviceCategory,
-      priceRange = existingService.priceRange,
+      minPrice = existingService.minPrice,
+      maxPrice = existingService.maxPrice,
       locationOffered = existingService.locationOffered,
       duration = existingService.duration,
-      serviceImage = existingService.serviceImage, // critical!
+      serviceImage = existingService.serviceImage, // ✅ Cloudinary URLs from frontend
     } = req.body;
 
+    // ✅ Ensure locationOffered is always an array
+    const locationsArray = Array.isArray(locationOffered)
+      ? locationOffered
+      : [locationOffered];
+
+    // ✅ Validate prices if updated
+    if (minPrice && maxPrice) {
+      if (parseInt(minPrice) <= 0 || parseInt(maxPrice) <= 0) {
+        return res
+          .status(400)
+          .json(new ApiError(400, "Price values must be positive"));
+      }
+      if (parseInt(minPrice) >= parseInt(maxPrice)) {
+        return res
+          .status(400)
+          .json(new ApiError(400, "Min price must be less than max price"));
+      }
+    }
+
+    // ✅ Update service
     const updatedService = await Service.findByIdAndUpdate(
       serviceId,
       {
         serviceName,
         serviceDes,
         serviceCategory,
-        priceRange,
-        locationOffered,
+        minPrice,
+        maxPrice,
+        locationOffered: locationsArray,
         duration,
-        serviceImage,
+        serviceImage, // ✅ Uses URLs from frontend
       },
       { new: true }
     );
