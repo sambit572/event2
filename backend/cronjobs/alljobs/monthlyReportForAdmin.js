@@ -384,7 +384,7 @@ const generateMonthlyReport = async () => {
 
     // Send to all admins
     const adminEmails = [
-      "swainamrit8@gmail.com",
+      // "swainamrit8@gmail.com",
     ];
 
     if (adminEmails.length === 0) {

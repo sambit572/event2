@@ -89,7 +89,7 @@ const registerUser = async (req, res) => {
       return res.status(400).json(new ApiError(400, "Invalid email format"));
     }
 
-    if (password.length < 6) {
+    if (password.length < 8) {
       return res
         .status(400)
         .json(new ApiError(400, "Password must be 6 characters long"));
@@ -99,8 +99,8 @@ const registerUser = async (req, res) => {
 
     if (userExist) {
       return res
-        .status(200)
-        .json(new ApiResponse(200, userExist, "User already exists"));
+        .status(400)
+        .json(new ApiResponse(400, userExist, "User already exists"));
     }
 
     const user = await User.create({
