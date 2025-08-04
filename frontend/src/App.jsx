@@ -54,6 +54,7 @@ import { setVendor } from "./redux/VendorSlice.js";
 import ScrollToTop from "./components/common/ScrollToTop.jsx";
 import AddToCart from "./components/customer/YourCart/AddToCart.jsx";
 import ErrorPage from "./pages/common/ErrorPage.jsx";
+import VendorChangePassword from "./components/vendor/VendorChangePassword.jsx";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -257,7 +258,10 @@ const App = () => {
             path="/vendor/reset-password/:resetToken"
             element={<VendorResetPassword />}
           />
-
+          <Route
+            path="/vendor/change-password"
+            element={<VendorChangePassword />}
+          />
           {/* Misc */}
           <Route path="/your-cart" element={<AddToCart />} />
           <Route path="/about_us" element={<AboutUs />} />
