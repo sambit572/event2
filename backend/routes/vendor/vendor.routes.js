@@ -104,7 +104,6 @@ vendor_router.post(
 // --- BANK DETAILS ROUTES --- //
 vendor_router.post(
   "/bank-details",
-  upload.single("panCardPic"),
   verifyVendorJwt,
   createBankDetails
 );
@@ -125,7 +124,7 @@ vendor_router.post(
   upload.single("signature"),
   createLegalConsent
 );
-vendor_router.get("/legal-consent/:vendorId", getLegalConsentByVendor);
+vendor_router.get("/legal-consent/:vendorId", verifyVendorJwt, getLegalConsentByVendor);
 vendor_router.put(
   "/legal-consent/:vendorId",
   upload.single("signature"),

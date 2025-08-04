@@ -58,7 +58,7 @@ app.use("/api/test", test_router);
 app.use("/api/feedback", feedbackRoutes);
 
 // ✅ Health Check Route
-app.get("/api/health", (req, res) => {
+app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
     message: "Server is running and healthy!",

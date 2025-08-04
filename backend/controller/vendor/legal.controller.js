@@ -14,6 +14,7 @@ export const createLegalConsent = async (req, res) => {
     const { vendorId, iAgreeTC, iAgreeCP, iAgreeKYCVerifyUsingPanAndAdhar } =
       req.body;
 
+    // ✅ Ensure signature is uploaded
     if (!req.file) {
       return res.status(400).json({
         success: false,
@@ -21,9 +22,8 @@ export const createLegalConsent = async (req, res) => {
       });
     }
 
-    // Upload signature to Cloudinary
+    // ✅ Upload signature to Cloudinary
     const cloudinaryResponse = await uploadOnCloudinary(req.file.path);
-
     if (!cloudinaryResponse?.secure_url) {
       return res.status(500).json({
         success: false,
@@ -31,34 +31,81 @@ export const createLegalConsent = async (req, res) => {
       });
     }
 
+    // ✅ Determine vendor ID (middleware or body fallback)
+    const resolvedVendorId = req.vendor?._id || vendorId;
+    if (!resolvedVendorId) {
+      return res.status(400).json({
+        success: false,
+        message: "Vendor ID missing. Authentication or vendorId is required.",
+      });
+    }
+
+    // ✅ Check if vendor is already marked complete
+    const existingVendor = await Vendor.findById(resolvedVendorId);
+    if (!existingVendor) {
+      return res.status(404).json({
+        success: false,
+        message: "Vendor not found",
+      });
+    }
+
+    if (existingVendor.isRegistrationComplete) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Registration already completed. Duplicate consent not allowed.",
+      });
+    }
+
+    // ✅ Save consent in DB
     const newConsent = await Consent.create({
-      vendorId,
+      vendorId: resolvedVendorId,
       iAgreeTC,
       iAgreeCP,
       iAgreeKYCVerifyUsingPanAndAdhar,
-      signature: cloudinaryResponse.secure_url, // Save Cloudinary URL
+      signature: cloudinaryResponse.secure_url,
     });
 
-    console.log("consent backend working fine...");
+    console.log("✅ Consent saved successfully...");
 
-
-    await Vendor.findByIdAndUpdate(vendorId, {
-      $set: {
-        registrationProgress: 4, // or 5 based on your final step logic
-        isRegistrationComplete: true, // 🔐 useful for middleware and admin filtering
+    // ✅ Update vendor registration progress
+    const updatedVendor = await Vendor.findByIdAndUpdate(
+      resolvedVendorId,
+      {
+        $set: {
+          registrationProgress: 4, // dynamically set based on flow
+          isRegistrationComplete: true,
+        },
       },
-    });
+      { new: true, runValidators: true }
+    );
 
-    res.status(201).json({
+    if (!updatedVendor) {
+      console.error("❌ Vendor not found during update:", resolvedVendorId);
+      return res.status(404).json({
+        success: false,
+        message: "Consent saved but failed to update vendor registration.",
+      });
+    }
+
+    console.log("✅ Vendor registration marked complete:", updatedVendor);
+
+    return res.status(201).json({
       success: true,
-      message: "Legal consent created successfully",
-      data: newConsent,
+      message:
+        "Legal consent created and vendor registration completed successfully.",
+      data: { consent: newConsent, vendor: updatedVendor },
     });
   } catch (error) {
-    console.error("Error creating legal consent:", error);
-    res.status(500).json({ success: false, message: error.message });
+    console.error("❌ Error creating legal consent:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Internal server error",
+    });
   }
 };
+
+
 
 // Getting legal consent by vendor ID
 export const getLegalConsentByVendor = async (req, res) => {
