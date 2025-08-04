@@ -13,11 +13,10 @@ import {
   FaChevronUp,
   FaStore,
   FaEllipsisV,
-  FaHandsHelping,
   FaHeart,
   FaSignOutAlt,
 } from "react-icons/fa";
-import { FcAbout } from "react-icons/fc";
+import { FcAbout, FcAssistant } from "react-icons/fc";
 import axios from "axios";
 import { useNavigate, Navigate, useLocation } from "react-router-dom";
 import { FaCartShopping } from "react-icons/fa6";
@@ -892,7 +891,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                       setShowEllipsisDropdown(!showEllipsisDropdown);
                     }}
                   >
-                    <FaHandsHelping className="nav-icon" /> Help Us
+                    <FcAssistant className="nav-icon" /> Help Us
                   </div>
                 </div>
               )}

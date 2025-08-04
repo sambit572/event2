@@ -186,7 +186,7 @@ const VendorLogin = ({ onClose, onSwitchToLogin }) => {
             </span>
           </div>
 
-          <div className="Login-forget-password-link">
+          <div className="Login-forget-password-link text-blue-500 mb-5">
             <a href="/vendor/forgot-password">Forgot your password?</a>
           </div>
 
