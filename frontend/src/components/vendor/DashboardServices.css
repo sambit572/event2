@@ -1,0 +1,429 @@
+/* RD */
+
+/* ========== Main Content Area ========== */
+.content-area {
+  flex: 1;
+  padding: 20px;
+}
+.both_images_section {
+  display: flex;
+  flex-direction: row;
+}
+.details {
+  font-family: "Montserrat";
+}
+
+.details-h2 {
+  font-weight: 600;
+  font-size: x-large;
+}
+
+/* ========== Service Card Section ========== */
+.service-box {
+  display: flex;
+  /* background-color: #00897b !important; */
+  overflow-y: auto;
+  width: 90%;
+  gap: 20px;
+  border-radius: 8px;
+  padding: 16px;
+  background-color: #ffffff; /* very soft yellow */
+  border-left: 5px solid #ffc107;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Thumbnail column on left, vertically stacked */
+.thumbnail-column-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Main image and btn to the right of thumbnails */
+.main-image-and-buttons {
+  margin-left: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+/* Main Image */
+.main-image-dashboard {
+  width: 405px;
+  height: 240px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Thumbnails */
+.thumbnail {
+  width: 60px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 5px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border 0.3s ease;
+}
+
+.thumbnail:hover,
+.thumbnail.selected {
+  border: 2px solid #3cb0ff;
+}
+
+/* Buttons below main image */
+.image-buttons-dashboard {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.edit,
+.delete {
+  padding: 10px 18px;
+  font-weight: bold;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.vendor-edit-btn {
+  background-color: transparent;
+  border: 2px solid #00897b;
+  color: #00897b;
+  font-weight: 600;
+}
+
+.vendor-edit-btn:hover {
+  background-color: #00897b;
+  color: #ffffff;
+}
+
+.vendor-delete-btn {
+  background-color: transparent;
+  border: 2px solid #b71c1c;
+  color: #b71c1c;
+  font-weight: 600;
+}
+
+.vendor-delete-btn:hover {
+  background-color: #b71c1c;
+  color: #fff;
+}
+
+/* ========== Right Text Section ========== */
+.right-section {
+  display: flex;
+  color: rgb(2, 2, 43);
+  flex-direction: column;
+  gap: 6px;
+  justify-content: flex-start;
+}
+
+/* ========== Bookings Section ========== */
+.booking-card {
+  background-color: #f0f4ff; /* subtle light blue */
+  border: 1px solid #0d47a1;
+  color: #1a237e;
+  padding: 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.booking-card h2 {
+  margin-bottom: 10px;
+  font-size: 24px;
+}
+
+/* ========== Edit Form with Animation ========== */
+.edit-form-dashboard {
+  display: flex;
+  width: 350px;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 5px;
+  padding: 18px;
+  background: #ffffff;
+  border: 2px solid #3cb0ff;
+  border-radius: 12px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+  animation: toggleFadeIn 0.4s ease-out forwards;
+}
+
+@keyframes toggleFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.edit-form-dashboard input,
+.edit-form-dashboard textarea {
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: linear-gradient(to right, #f9f9f9, #eef6ff);
+  font-family: inherit;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.edit-form-dashboard input:focus,
+.edit-form-dashboard textarea:focus {
+  border-color: #3cb0ff;
+  background-color: #fff;
+  box-shadow: 0 0 6px rgba(60, 176, 255, 0.4);
+  outline: none;
+}
+
+.edit-form-dashboard textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+/* Save Button with Glow Effect */
+.edit-form-dashboard button {
+  align-self: flex-start;
+  padding: 10px 22px;
+  font-size: 15px;
+  background-color: #0d47a1;
+  box-shadow: 0 4px 12px rgba(13, 71, 161, 0.3);
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.edit-form-dashboard button:hover {
+  background-color: #1565c0;
+  box-shadow: 0 6px 15px rgba(21, 101, 192, 0.5);
+  transform: translateY(-2px);
+}
+
+/* ========== Responsive Design ========== */
+
+/* Tablets (width <= 1024px) */
+@media (max-width: 1024px) {
+  .thumbnail {
+    height: 35px;
+  }
+
+  .service-box {
+    height: 490px;
+  }
+
+  .edit-form-dashboard {
+    position: relative;
+    bottom: 490px;
+    width: 600px;
+    height: 540px;
+  }
+  .edit-form-dashboard button {
+    margin-top: 20px;
+  }
+  .image-buttons-dashboard {
+    flex-direction: row;
+    flex-wrap: wrap;
+    position: relative;
+    top: 70px;
+    margin-left: 24px;
+  }
+
+  .edit,
+  .delete {
+    padding: 8px 14px;
+    font-size: 14px;
+  }
+
+  .details {
+    /* position: relative; */
+    top: -200px;
+
+    font-size: 15px;
+  }
+
+  .details-h2 {
+    font-weight: 500;
+  }
+}
+
+/* Mobile Devices (width <= 768px) */
+@media (max-width: 768px) {
+  .service-box {
+    width: 100%;
+    height: 438px;
+  }
+}
+
+/* Extra Small Devices (width <= 480px) */
+@media (max-width: 570px) {
+  .dashboard-container {
+    width: 100vw;
+
+    height: 100vh;
+  }
+  .image-buttons-dashboard {
+    width: 150%;
+
+    top: 100px;
+  }
+  .service-box {
+    height: 355px;
+
+    position: relative;
+  }
+
+  .edit-form-dashboard {
+    width: 300px;
+    padding: 15px;
+  }
+
+  .main-image-dashboard {
+    width: 250px;
+    height: 150px;
+    /* margin-top: px; */
+  }
+
+  .thumbnail {
+    width: 40px;
+    height: 28px;
+  }
+
+  .booking-card {
+    font-size: 14px;
+    padding: 15px;
+  }
+
+  .booking-card h2 {
+    font-size: 20px;
+  }
+
+  .details {
+    font-size: 15px;
+  }
+
+  .details h2 {
+    font-size: 17px;
+  }
+
+  .thumbnail-column-dashboard {
+    left: -134px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-container {
+    /* overflow-y: auto; */
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .service-box {
+    flex-direction: column;
+    width: 100%;
+    height: 500px;
+  }
+  .image-buttons-dashboard {
+    width: 100%;
+    /* background-color: #00897b; */
+    top: 250px;
+  }
+  .edit-form-dashboard {
+    width: 280px;
+    padding: 15px;
+    height: 550px;
+  }
+
+  .main-image-dashboard {
+    width: 350px;
+    height: 142px;
+    /* margin-top: 40px; */
+  }
+
+  .thumbnail {
+    width: 40px;
+    height: 28px;
+  }
+
+  .booking-card {
+    font-size: 14px;
+    padding: 15px;
+  }
+
+  .booking-card h2 {
+    font-size: 20px;
+  }
+
+  .details {
+    font-size: 14px;
+  }
+
+  .details h2 {
+    font-size: 16px;
+  }
+
+  .details strong {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 380px) {
+  .service-box {
+    height: 550px;
+  }
+
+  .edit-form-dashboard {
+    width: 280px;
+    padding: 15px;
+  }
+  .edit-form-dashboard button {
+    margin-top: 0px;
+  }
+  .main-image-dashboard {
+    max-width: 90%;
+    margin-top: 40px;
+  }
+
+  .thumbnail {
+    width: 40px;
+    height: 28px;
+    margin-left: 20px;
+  }
+
+  .booking-card {
+    font-size: 14px;
+    padding: 15px;
+  }
+
+  .booking-card h2 {
+    font-size: 20px;
+  }
+
+  .details {
+    font-size: 14px;
+  }
+
+  .details h2 {
+    font-size: 16px;
+  }
+
+  .details strong {
+    font-size: 14px;
+  }
+}

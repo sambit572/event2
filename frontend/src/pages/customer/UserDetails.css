@@ -1,0 +1,195 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+
+.user-details-container {
+  max-width: 620px;
+   font-family: 'Inter', sans-serif;
+  margin: 60px auto;
+  padding: 45px 35px;
+  border-radius: 20px;
+  
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: #001F3F 3px solid;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+  background: #c0bcbc;
+  color: #1f2937;
+}
+
+
+
+
+.user-details-container h3 {
+  font-size: 30px;
+  font-weight: 700;
+  background: linear-gradient(45deg	,#004989,#001F3F);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.5px;
+  text-align: center;
+  margin-top: -10px;
+  margin-bottom: 12px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+/* === Form Layout === */
+.user-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* === Floating Label Field === */
+.form-group {
+  position: relative;
+  margin-top: 10px;
+}
+
+.form-group label {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  background: white;
+  padding: 0 4px;
+  color: #888;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  pointer-events: none;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  text-transform: capitalize;
+
+}
+
+.form-input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  font-size: 15px;
+  /* background-color: #f9fafb;  */
+  transition: all 0.3s ease;
+  color: #1f2937;
+  font-weight: 500;
+}
+
+/* On focus or when filled */
+.form-input:focus,
+.form-input:not(:placeholder-shown) {
+  background-color: #ffffff; /* White on focus/fill */
+  border-color: #6366f1; /* Purple border on focus */
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15); /* Subtle ring */
+}
+
+/* Label movement when input is focused or filled */
+.form-input:focus + label,
+.form-input:not(:placeholder-shown) + label {
+  top: -10px;
+  left: 10px;
+  font-size: 12px;
+  color: #6366f1;
+}
+/* === Group Layouts === */
+.location-group,
+.date-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.form-group.small {
+  flex: 1 1 calc(50% - 10px);
+}
+
+/* === Buttons === */
+.form-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.btn {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s ease;
+   text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.btn:hover {
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+}
+
+.save-btn {
+  background: #21a427;
+  color: #fff;
+  width: 150px;
+}
+
+.cancel-btn {
+  background: linear-gradient(to right, #f43f5e, #e11d48);
+  color: #fff;
+  width: 150px;
+}
+.btn-icon {
+  margin-right: 8px;
+  font-size: 16px;
+  vertical-align: middle;
+}
+
+/* === Success Popup === */
+.popup-inside {
+  margin-top: 20px;
+  background: linear-gradient(to right, #d1fae5, #a7f3d0);
+  border-left: 6px solid #22c55e;
+  padding: 15px 20px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 16px;
+  color: #14532d;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.popup-inside strong {
+  font-size: 18px;
+  display: block;
+}
+
+.popup-inside p {
+  margin-top: 4px;
+  font-size: 14px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* === Responsive === */
+@media (max-width: 640px) {
+  .user-details-container {
+    padding: 30px 20px;
+  }
+
+  .form-group.small {
+    flex: 1 1 100%;
+  }
+
+  .form-buttons {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}

@@ -1,0 +1,72 @@
+import React from "react";
+import "./ImageSlider.css";
+
+export default function ImageSlider({ images }) {
+  const [selectedImage, setSelectedImage] = React.useState(images[0]?.mobile);
+  React.useEffect(() => {
+    const container = document.querySelector(".scroll-container");
+
+    let scrollInterval = setInterval(() => {
+      if (container) {
+        container.scrollLeft += 1;
+
+        // Reset scroll to left for infinite scroll effect
+        if (
+          container.scrollLeft + container.offsetWidth >=
+          container.scrollWidth - 1
+        ) {
+          container.scrollLeft = 0;
+        }
+      }
+    }, 30); // Adjust speed if needed
+
+    return () => clearInterval(scrollInterval);
+  }, []);
+  return (
+    <div
+      className="relative h-[450px] sm:h-[500px] md:h-[600px] lg:h-[600px] max-h-screen bg-cover bg-center bg-no-repeat text-white"
+      style={{
+        backgroundImage: `url(${selectedImage})`,
+      }}
+    >
+      <div className="backdrop-blur-sm bg-black/30 h-full  flex items-center justify-center">
+        <div className="px-10 py-10 max-w-7xl w-full">
+          <main className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-center">
+            <div>
+              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-6xl font-extrabold mb-6 text-white drop-shadow-lg tracking-wide">
+                EventsBridge
+              </h1>
+              <p className="text-sm max-w-xl font-bold text-white-900 drop-shadow-md leading-relaxed">
+                Connecting Event Seekers with the Best Vendors. Plan, Book, and
+                Celebrate — All in One Place.
+              </p>
+
+              <a
+                href="#categories"
+                className="inline-block mt-6 px-6 py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-200 transition-all"
+              >
+                Explore Now
+              </a>
+            </div>
+
+            <div className="scroll-container flex items-center space-x-5 overflow-x-auto no-scrollbar">
+              {images.map((img, index) => (
+                <div
+                  key={index}
+                  className="rounded-2xl min-w-[300px] h-[200px] overflow-hidden shadow-xl hover:scale-105 transition-transform bg-white"
+                >
+                  <img
+                    src={img.mobile}
+                    alt={img.alt}
+                    className="w-full h-full object-cover cursor-pointer"
+                    onClick={() => setSelectedImage(img.mobile)}
+                  />
+                </div>
+              ))}
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  );
+}
