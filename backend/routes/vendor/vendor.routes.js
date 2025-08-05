@@ -4,8 +4,6 @@ import {
   createService,
   deleteService,
   getMyServices,
-  getServiceById,
-  getServicesByCategory,
   updateAvailability,
   updateService,
   updateServiceImageFirst,
@@ -49,6 +47,10 @@ import {
   updateLegalConsent,
   deleteLegalConsent,
 } from "../../controller/vendor/legal.controller.js";
+import {
+  getServiceById,
+  getServicesByCategory,
+} from "../../controller/common/serviceList.controller.js";
 
 const vendor_router = express.Router();
 

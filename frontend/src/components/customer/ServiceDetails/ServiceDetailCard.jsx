@@ -1,51 +1,124 @@
-import "./ServiceDetailCard.css";
-
-const ServiceCard = ({ service }) => {
+import React, { useState } from "react";
+import { FaRegCalendarCheck } from "react-icons/fa6";
+import { FaRegHeart, FaHeart } from "react-icons/fa6";
+const ServiceDetailCard = ({ service }) => {
+  const [isWishlisted, setIsWishlisted] = useState(false);
   if (!service) return null;
 
   const {
+    _id,
     serviceName,
     serviceDes,
     locationOffered,
     minPrice,
     maxPrice,
     duration,
-    serviceCategory,
+    vendorName,
     rating,
     reviews,
+    originalPrice,
+    discountPercent,
+    address,
   } = service;
 
-  const totalReviews = reviews?.length || 0;
+  const totalReviews = reviews?.length || reviews || 0;
   const averageRating = rating || 0;
+  const id = _id || service.id;
 
+  const formatDuration = (durationInMinutes) => {
+    const totalMinutes = parseInt(durationInMinutes, 10) || 0;
+    const days = Math.floor(totalMinutes / (24 * 60));
+    const hours = Math.floor((totalMinutes % (24 * 60)) / 60);
+    const minutes = totalMinutes % 60;
+
+    let result = "";
+    if (days > 0) result += `${days}d`;
+    if (hours > 0) result += (result ? " : " : "") + `${hours}h`;
+    if (minutes > 0) result += (result ? " : " : "") + `${minutes}m`;
+
+    return result || "0m";
+  };
+
+  const formattedDuration = formatDuration(duration);
+
+  const location = Array.isArray(locationOffered)
+    ? locationOffered.join(", ")
+    : locationOffered ||
+      (address
+        ? `${address.area}, ${address.city}, ${address.state} - ${address.pincode}`
+        : "Location not provided");
+
+  const price = minPrice
+    ? maxPrice
+      ? minPrice === maxPrice
+        ? `${minPrice}`
+        : `${minPrice} - ${maxPrice}`
+      : `${minPrice}`
+    : "N/A";
+  console.log("SERVICE PROPS:", service);
+  const handleWishlistToggle = () => {
+    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
+    if (isLoggedIn) {
+      setIsWishlisted(!isWishlisted);
+    } else {
+      onSwitchToLogin(true);
+    }
+  };
   return (
-    <div className="dj-service-card p-4 bg-white rounded-lg border border-gray-200">
-      <h2 className="dj-title text-xl font-semibold text-gray-800 mb-2">
-        {serviceName || "DJ Test Title"}
+    <div className="p-4 bg-white mt-5 rounded-lg border border-gray-200 w-full">
+      <div className="flex justify-end h-0">
+        <div
+          className={`h-10 w-10 flex items-center justify-center rounded-full bg-gray-200 shadow-md cursor-pointer transition-all duration-300
+                  ${
+                    isWishlisted
+                      ? "text-red-600 ring-2 ring-red-300 shadow-red-200"
+                      : "text-gray-600 hover:text-red-500"
+                  }`}
+          onClick={handleWishlistToggle}
+        >
+          {isWishlisted ? <FaHeart /> : <FaRegHeart />}
+        </div>
+      </div>
+      <h2 className="text-xl font-semibold text-gray-800 mb-2">
+        {serviceName || "Untitled Service"}
       </h2>
 
-      <p className="serviceDetails-location text-sm text-black mb-2">
-        {Array.isArray(locationOffered)
-          ? locationOffered.join(", ")
-          : locationOffered || "Location not provided"}
-      </p>
+      <div className="flex items-center gap-2 text-sm font-medium text-black mb-2">
+        <span className="font-semibold">{vendorName || "Unknown Vendor"}</span>
+        <span className="text-gray-400 text-xs">|</span>
+        <span className="flex items-center gap-1 bg-yellow-200 text-yellow-900 px-2 py-0.5 rounded-md text-xs">
+          <FaRegCalendarCheck className="text-sm" />
+          Event Hosted: 0
+        </span>
+      </div>
 
-      <p className="serviceDetails-price text-lg font-bold text-black mb-3">
-        ₹
-        {service.minPrice && service.maxPrice
-          ? service.minPrice === service.maxPrice
-            ? service.minPrice
-            : `${service.minPrice} - ${service.maxPrice}`
-          : "N/A"}
-      </p>
+      <p className="text-sm text-black mb-2">{location}</p>
 
-      {/* ⭐ Rating and Reviews Section */}
       <div className="flex items-center gap-2 mb-3">
         <span className="bg-green-600 text-white px-2 py-1 rounded-full text-sm font-semibold">
           {averageRating.toFixed(1)} ★
         </span>
         <span className="text-gray-500 text-sm">({totalReviews} reviews)</span>
       </div>
+
+      <div className="flex flex-wrap gap-3 items-center mb-2 text-sm">
+        <span className="text-xl font-bold text-black">₹{price}</span>
+        {originalPrice && (
+          <>
+            <span className="line-through text-gray-500 font-medium">
+              ₹{originalPrice}
+            </span>
+            <span className="text-green-600 font-bold text-base">
+              {discountPercent}% off
+            </span>
+          </>
+        )}
+      </div>
+
+      <p className="text-sm text-black mb-4">
+        <span className="font-bold">Prep Time: </span>
+        {formattedDuration}
+      </p>
 
       <div className="service-description">
         <p className="text-black text-sm">{serviceDes}</p>
@@ -54,4 +127,4 @@ const ServiceCard = ({ service }) => {
   );
 };
 
-export default ServiceCard;
+export default ServiceDetailCard;

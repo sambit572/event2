@@ -18,7 +18,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `${BACKEND_URL}/vendors/category/${categoryId}`
+          `${BACKEND_URL}/common/category/${categoryId}`
         );
         console.log("Fetched services:", response);
         setServices(response.data.data);
@@ -43,7 +43,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
           services.map((service, idx) => (
             <div className="singleServiceCard" key={idx}>
               <Link
-                to={`/service/${service._id}`}
+               to={`/service/${service._id}`}
                 style={{ textDecoration: "none", color: "inherit" }}
               ></Link>
               <ServiceCard

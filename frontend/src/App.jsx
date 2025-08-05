@@ -89,6 +89,8 @@ const App = () => {
     "/dashboard",
     "/profile",
     "/reset-password",
+    // "/service/:serviceId",
+    // "/category/:categoryId",
   ];
   const handleOpenLogin = () => {
     setShowLoginModal(true);

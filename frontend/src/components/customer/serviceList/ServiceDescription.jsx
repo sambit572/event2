@@ -1,8 +1,8 @@
-import React from "react";
 import "./ServiceDescription.css";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { FaHeart } from "react-icons/fa6";
+import { FaRegHeart, FaHeart } from "react-icons/fa6";
+import { FaRegCalendarCheck } from "react-icons/fa6";
 
 const ServiceDescription = ({ service, onSwitchToLogin }) => {
   const navigate = useNavigate();
@@ -11,28 +11,53 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
   const id = service._id || service.id;
   const title = service.serviceName || service.title || "Untitled Service";
   const vendorName = service.vendorName || "Unknown Vendor";
-
   const description = service.serviceDes || service.description || "";
-const location = Array.isArray(service.locationOffered)
-  ? service.locationOffered.join(", ")
-  : service.locationOffered ||
-    (service.address
-      ? `${service.address.area}, ${service.address.city}, ${service.address.state} - ${service.address.pincode}`
-      : "Location not provided");
+  const rawDuration = service.duration || 0;
 
+  const formatDuration = (durationInMinutes) => {
+    const totalMinutes = parseInt(durationInMinutes, 10) || 0;
+    const days = Math.floor(totalMinutes / (24 * 60));
+    const hours = Math.floor((totalMinutes % (24 * 60)) / 60);
+    const minutes = totalMinutes % 60;
+
+    let result = "";
+
+    if (days > 0) result += `${days}d`;
+    if (hours > 0) result += (result ? " : " : "") + `${hours}h`;
+    if (minutes > 0) result += (result ? " : " : "") + `${minutes}m`;
+
+    return result || "0m"; // fallback if all are 0
+  };
+
+  const duration = formatDuration(rawDuration);
+
+  const location = Array.isArray(service.locationOffered)
+    ? service.locationOffered.join(", ")
+    : service.locationOffered ||
+      (service.address
+        ? `${service.address.area}, ${service.address.city}, ${service.address.state} - ${service.address.pincode}`
+        : "Location not provided");
 
   const rating = service.rating || "★";
   const reviews = service.reviews || 0;
 
- const price =
-   service.minPrice && service.maxPrice
-     ? `${service.minPrice} - ${service.maxPrice}`
-     : "N/A";
+  const price = service.minPrice
+    ? service.maxPrice
+      ? `${service.minPrice} - ${service.maxPrice}`
+      : `${service.minPrice}`
+    : "N/A";
 
   const originalPrice = service.originalPrice;
   const discountPercent = service.discountPercent;
 
-  const handleClick = () => setIsWishlisted(!isWishlisted);
+  const handleWishlistToggle = () => {
+    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
+    if (isLoggedIn) {
+      setIsWishlisted(!isWishlisted);
+    } else {
+      onSwitchToLogin(true);
+    }
+  };
 
   const handleBookNow = () => {
     const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
@@ -44,16 +69,37 @@ const location = Array.isArray(service.locationOffered)
   };
 
   return (
-    <section className="w-full text-black-900 p-4 ">
+    <section className="w-full text-black-900 p-4">
+      {/* Wishlist Button */}
+      <div className="flex justify-end h-0">
+        <div
+          className={`h-10 w-10 flex items-center justify-center rounded-full bg-white shadow-md cursor-pointer transition-all duration-300
+            ${
+              isWishlisted
+                ? "text-red-600 ring-2 ring-red-300 shadow-red-200"
+                : "text-gray-600 hover:text-red-500"
+            }`}
+          onClick={handleWishlistToggle}
+        >
+          {isWishlisted ? <FaHeart /> : <FaRegHeart />}
+        </div>
+      </div>
+
+      {/* Service Info */}
       <Link to={`/service/${id}`} className="block">
         <h3 className="text-xl font-bold mb-1">{title}</h3>
-
-        <p className="inline-block  text-blue-700 text-sm font-medium  mb-2">
-          {vendorName}
-        </p>
+        <div className="flex items-center gap-2 text-sm font-medium text-blue-700 mb-2">
+          <span className="text-blue-800">{vendorName}</span>
+          <span className="text-gray-400 text-xs">|</span>
+          <span className="flex items-center gap-1 bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full text-xs shadow-sm">
+            <FaRegCalendarCheck className="text-xs" />
+            Event Hosted: 0
+          </span>
+        </div>
 
         <p className="text-sm text-black mb-2">{location}</p>
 
+        {/* Rating and Reviews */}
         <div className="flex flex-wrap items-center gap-3 mb-2">
           <span className="bg-green-600 text-white px-2 py-1 rounded-full text-sm font-semibold">
             {rating}
@@ -61,6 +107,7 @@ const location = Array.isArray(service.locationOffered)
           <span className="text-sm">{reviews} reviews</span>
         </div>
 
+        {/* Pricing */}
         <div className="flex flex-wrap gap-3 items-center mb-2 text-sm">
           <span className="text-xl font-bold text-black-900">₹{price}</span>
           {originalPrice && (
@@ -74,31 +121,23 @@ const location = Array.isArray(service.locationOffered)
             </>
           )}
         </div>
+        <p className="text-sm text-black mb-4">
+          <span className="font-bold">Prep Time: </span>
+          {duration}
+        </p>
 
+        {/* Description */}
         <p className="text-sm text-black mb-4">{description}</p>
       </Link>
 
+      {/* Buttons */}
       <div className="flex flex-col sm:flex-row-reverse gap-4">
-        <button
-          className={`flex items-center justify-center gap-2 px-4 py-2 rounded-full font-bold text-sm border transition-all duration-300 w-full sm:w-44 ${
-            isWishlisted
-              ? "border-red-500 bg-white text-black"
-              : "border-gray-800 bg-white text-gray-800 hover:bg-red-600 hover:text-white hover:border-red-600"
-          }`}
-          onClick={handleClick}
-        >
-          {isWishlisted && <FaHeart className="text-red-500 text-lg" />}
-          {isWishlisted ? (
-            "Wishlisted"
-          ) : (
-            <span className="flex items-center gap-1">
-              <span className="text-lg leading-none">+</span> Wishlist
-            </span>
-          )}
+        <button className="w-full sm:w-44 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-md transition-all duration-300">
+          Add to Cart
         </button>
 
         <button
-          className="px-4 py-2 rounded-full font-bold text-sm bg-green-700 text-white hover:bg-green-600 w-full sm:w-44"
+          className="w-full sm:w-44 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-green-700 shadow-md hover:from-green-500 hover:to-green-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-400"
           onClick={handleBookNow}
         >
           Book Now

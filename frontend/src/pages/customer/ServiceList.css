@@ -21,6 +21,7 @@
   box-sizing: border-box;
   height: 100vh;
   overflow-y: auto;
+  scrollbar-width: none;
   /* position: absolute; */
 
   z-index: 1;
