@@ -5,19 +5,19 @@ import { FaHeart, FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import ServiceDescription from "./ServiceDescription";
 
 const ServiceCard = ({ service, onSwitchToLogin }) => {
-  // In old mock data the image array was `img`; in new data it's `serviceImage`.
-  const images = service.serviceImage || service.img || [];
+ const img = service.serviceImage || [];
 
-  // Unique id for the detail page route.
-  const id = service._id || service.id;
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [hovered, setHovered] = useState(false);
 
-  const prevImage = () =>
-    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  const prevImage = () => {
+    setCurrentIndex((prev) => (prev === 0 ? img.length - 1 : prev - 1));
+  };
 
-  const nextImage = () => setCurrentIndex((prev) => (prev + 1) % images.length);
+  const nextImage = () => {
+    setCurrentIndex((prev) => (prev + 1) % img.length);
+  };
 
   return (
     <div className="totalService">
@@ -27,14 +27,15 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
         >
-          <Link to={`/service/${id}`} className="link">
-            <img
-              src={images[currentIndex]}
-              alt={service.serviceName || service.title || "Service preview"}
-            />
+          <Link to={`/service/${service.id}`} className="link">
+            {Array.isArray(img) && img.length > 0 ? (
+              <img src={img[currentIndex]} alt="Main preview" />
+            ) : (
+              <div className="no-image">No image available</div>
+            )}
           </Link>
 
-          {hovered && images.length > 1 && (
+          {hovered && (
             <>
               <button className="navArrow left" onClick={prevImage}>
                 <FaChevronLeft />
@@ -48,19 +49,16 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
         {/* </Link> */}
 
         <div className="thumbnailColumn">
-          {images.length > 1 && (
-            <div className="thumbnailColumn">
-              {images.map((thumb, idx) => (
-                <img
-                  key={idx}
-                  src={thumb}
-                  alt={`thumb-${idx}`}
-                  className={idx === currentIndex ? "activeThumb" : ""}
-                  onClick={() => setCurrentIndex(idx)}
-                />
-              ))}
-            </div>
-          )}
+          {Array.isArray(img) &&
+            img.map((thumb, idx) => (
+              <img
+                key={idx}
+                src={thumb}
+                alt={`thumb-${idx}`}
+                className={idx === currentIndex ? "activeThumb" : ""}
+                onClick={() => setCurrentIndex(idx)}
+              />
+            ))}
         </div>
       </div>
       <ServiceDescription service={service} onSwitchToLogin={onSwitchToLogin} />

@@ -18,7 +18,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `${BACKEND_URL}/vendors/category/${categoryId}`
+          `${BACKEND_URL}/common/category/${categoryId}`
         );
         console.log("Fetched services:", response);
         setServices(response.data.data);

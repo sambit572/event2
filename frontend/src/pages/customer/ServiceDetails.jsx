@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FaHeart } from "react-icons/fa6";
 
 import "./ServiceDetails.css";
@@ -16,9 +16,19 @@ import axios from "axios";
 import { useEffect } from "react";
 import { BACKEND_URL } from "../../utils/constant.js";
 
-const Service = () => {
+const Service = ({ onSwitchToLogin }) => {
+  const navigate = useNavigate();
   const { serviceId } = useParams();
 
+  const handleBookNow = () => {
+    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
+
+    if (isLoggedIn) {
+      navigate("/userdetails");
+    } else {
+      onSwitchToLogin(true); // ✅ this opens your login popup
+    }
+  };
   const [service, setService] = useState(null);
   const [mediaList, setMediaList] = useState([]);
   const [selectMedia, setSelectMedia] = useState(null);
@@ -26,7 +36,7 @@ const Service = () => {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-const [latestReview, setLatestReview] = useState(null);
+  const [latestReview, setLatestReview] = useState(null);
   const handleClick = () => {
     setIsWishlisted(!isWishlisted);
   };
@@ -35,7 +45,7 @@ const [latestReview, setLatestReview] = useState(null);
       try {
         setLoading(true);
         const res = await axios.get(
-          `${BACKEND_URL}/vendors/service/${serviceId}`
+          `${BACKEND_URL}/common/service/${serviceId}`
         );
         const data = res.data.data;
         setService(data);
@@ -57,6 +67,7 @@ const [latestReview, setLatestReview] = useState(null);
 
     fetchService();
   }, [serviceId]);
+
 
   if (loading) return <p>Loading service details...</p>;
   if (error || !service) return <p>{error || "Service not found."}</p>;
@@ -82,27 +93,18 @@ const [latestReview, setLatestReview] = useState(null);
             </div>
           </div>
 
-          <div className="buttons">
-            <button
-              className={`viewBtns ${isWishlisted ? "wishlisted" : ""}`}
-              onClick={handleClick}
-            >
-              <div>
-                {isWishlisted && <FaHeart className="wishIcon" color="red" />}
-              </div>
-              <div>
-                {isWishlisted ? (
-                  "Wishlisted"
-                ) : (
-                  <span className="wishlist-text">
-                    <span className="plusSign">+</span> Wishlist
-                  </span>
-                )}
-              </div>
-            </button>
+            <div className="flex flex-col justify-center sm:flex-row-reverse gap-4">
+        <button className="w-full sm:w-44 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-md transition-all duration-300">
+          Add to Cart
+        </button>
 
-            <button className="buynow">Book Now</button>
-          </div>
+        <button
+          className="w-full sm:w-44 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-green-700 shadow-md hover:from-green-500 hover:to-green-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-400"
+          onClick={handleBookNow}
+        >
+          Book Now
+        </button>
+      </div>
         </div>
 
         {/* Right Section */}
