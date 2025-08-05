@@ -58,10 +58,9 @@ import DashboardEnforcement from "./utils/DashboardEnforcement.jsx";
 //Feedback
 import Feedback from "./pages/common/Feedback.jsx";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-import ReviewSlider from "./components/customer/home/ReviewSlider.jsx";
 import FaqSection from "./components/customer/home/FaqSection.jsx";
 import ErrorPage from "./pages/common/ErrorPage.jsx";
-
+import ReviewSlider from "./components/customer/Home/ReviewSlider.jsx";
 const App = () => {
   const location = useLocation();
   // Modal states for user

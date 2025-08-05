@@ -4,6 +4,8 @@ import {
   createService,
   deleteService,
   getMyServices,
+  getServiceById,
+  getServicesByCategory,
   updateAvailability,
   updateService,
   updateServiceImageFirst,
@@ -38,6 +40,7 @@ import {
   getBankDetailsByVendor,
   updateBankDetails,
 } from "../../controller/vendor/bankdetails.controller.js";
+// import { getServiceById } from './../../controller/vendor/service.controller';
 
 // Legal Consent
 import {
@@ -63,8 +66,9 @@ vendor_router.post("/change-password", verifyVendorJwt, changeVendorPassword);
 vendor_router.get("/silent-login", verifyVendorJwt, vendorSilentLogin);
 vendor_router.post("/check-email", checkVendorEmailStatus);
 vendor_router.get("/me", verifyVendorJwt, getVendorProfile);
+vendor_router.get("/category/:category", getServicesByCategory);
 
-// --- PROFILE ROUTES --- //
+vendor_router.get("/service/:id", getServiceById); // --- PROFILE ROUTES --- //
 vendor_router.put("/:id", upload.single("profilePicture"), updateVendor);
 
 // --- SERVICE ROUTES --- //
