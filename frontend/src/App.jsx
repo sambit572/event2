@@ -60,7 +60,7 @@ import Feedback from "./pages/common/Feedback.jsx";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 import FaqSection from "./components/customer/home/FaqSection.jsx";
 import ErrorPage from "./pages/common/ErrorPage.jsx";
-import ReviewSlider from "./components/customer/Home/ReviewSlider.jsx";
+import ReviewSlider from "./components/customer/home/ReviewSlider.jsx";
 const App = () => {
   const location = useLocation();
   // Modal states for user
