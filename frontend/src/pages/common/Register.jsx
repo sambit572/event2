@@ -1,17 +1,14 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import PasswordInput from "../../utils/PasswordInput.jsx";
-import "./LoginRegister.css";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/UserSlice.js";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import "./LoginRegister.css";
 
 const Register = ({ onClose, onSwitchToLogin }) => {
-  const navigate = useNavigate();
-
   const dispatch = useDispatch();
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -21,6 +18,7 @@ const Register = ({ onClose, onSwitchToLogin }) => {
 
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -36,44 +34,58 @@ const Register = ({ onClose, onSwitchToLogin }) => {
     e.preventDefault();
     setErrorMsg("");
 
-    if (formData.password !== confirmPassword) {
+    // Client-side validation
+    if (!formData.fullName.trim()) return setErrorMsg("Full name is required.");
+    if (!formData.email.trim()) return setErrorMsg("Email is required.");
+    if (!formData.phoneNo.trim() || formData.phoneNo.length !== 10)
+      return setErrorMsg("Enter a valid 10-digit phone number.");
+    if (formData.password.length < 8)
+      return setErrorMsg("Password must be at least 8 characters long.");
+    if (formData.password !== confirmPassword)
       return setErrorMsg("Passwords do not match.");
-    }
 
     try {
+      setLoading(true);
+
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/user/signup`,
         formData,
         { withCredentials: true }
       );
 
-      const user = response.data.data;
-      console.log(user);
+      if (response?.data?.message === "user do exist") {
+        setErrorMsg("User already exists. Please log in.");
+        setLoading(false);
+        return;
+      }
 
+      console.log("Registration successful:", response.data);
+      const { user } = response?.data?.data; 
+     
+      if (!user || !user.fullName) {
+        throw new Error("Invalid response from server. Missing user data.");
+      }
+
+      // Dispatch user to Redux
       dispatch(setUser(user));
 
-      if (response.data.message === "user do exist") {
-        setErrorMsg("User already exists. Please log in.");
-      } else {
-        let userFirstName;
+      // Extract first name safely
+      const userFirstName = user?.fullName?.split(" ")[0] || "";
+      localStorage.setItem("userFirstName", userFirstName);
+      localStorage.setItem("currentlyLoggedIn", "true");
 
-        if (user.fullName.length == 1) {
-          userFirstName = user.fullName;
-        } else {
-          userFirstName = user.fullName.split(" ")[0];
-        }
-
-        localStorage.setItem("userFirstName", userFirstName);
-        localStorage.setItem("currentlyLoggedIn", "true");
-        window.dispatchEvent(new Event("userLoggedIn"));
-        onClose();
-      }
+      // Notify other components & close modal
+      window.dispatchEvent(new Event("userLoggedIn"));
+      onClose();
     } catch (error) {
+      console.error("Registration error:", error);
       const msg =
         error.response?.data?.message ||
         error.message ||
-        "Something went wrong.";
+        "Something went wrong during registration.";
       setErrorMsg(msg);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -119,14 +131,6 @@ const Register = ({ onClose, onSwitchToLogin }) => {
             required
           />
 
-          {/* <PasswordInput
-            name="password"
-            placeholder="Create password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            minLength={8}
-          /> */}
           <div className="relative w-full mb-4">
             <input
               type={showPassword ? "text" : "password"}
@@ -146,14 +150,6 @@ const Register = ({ onClose, onSwitchToLogin }) => {
             </span>
           </div>
 
-          {/* <PasswordInput
-            name="confirmPassword"
-            placeholder="Confirm password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-            minLength={8}
-          /> */}
           <div className="relative w-full mb-4">
             <input
               type={showConfirmPassword ? "text" : "password"}
@@ -175,8 +171,8 @@ const Register = ({ onClose, onSwitchToLogin }) => {
 
           {errorMsg && <p className="error">{errorMsg}</p>}
 
-          <button type="submit" className="otp-button">
-            Register
+          <button type="submit" className="otp-button" disabled={loading}>
+            {loading ? "Registering..." : "Register"}
           </button>
 
           <p className="signup-text">
@@ -192,7 +188,6 @@ const Register = ({ onClose, onSwitchToLogin }) => {
 };
 
 Register.propTypes = {
-
   onClose: PropTypes.func,
   onSwitchToLogin: PropTypes.func,
 };

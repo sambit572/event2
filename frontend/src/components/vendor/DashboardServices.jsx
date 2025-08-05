@@ -17,12 +17,30 @@ const DashboardServices = () => {
     const hours = Math.floor((totalMinutes % (24 * 60)) / 60);
     const minutes = totalMinutes % 60;
 
-    const dStr = days > 0 ? `${days} ${days === 1 ? "day" : "days"} ` : "";
-    const hStr = `${hours} ${hours === 1 ? "hour" : "hours"} `;
-    const mStr = `${minutes} ${minutes === 1 ? "minute" : "minutes"}`;
+    const dStr = days > 0 ? `${days}d ` : "";
+    const hStr = hours > 0 ? `${hours}h ` : "";
+    const mStr = minutes > 0 ? `${minutes}m` : "";
 
-    return `${dStr} : ${hStr} : ${mStr}`;
+    return [dStr, hStr, mStr].filter(Boolean).join(" : ")|| "0m";
   }
+
+  const updateDuration = (value, unit) => {
+    const days =
+      unit === "days" ? +value : Math.floor(editedData.duration / (24 * 60));
+    const hours =
+      unit === "hours"
+        ? +value
+        : Math.floor((editedData.duration % (24 * 60)) / 60);
+    const minutes = unit === "minutes" ? +value : editedData.duration % 60;
+
+    const totalMinutes = days * 24 * 60 + hours * 60 + minutes;
+
+    setEditedData((prev) => ({
+      ...prev,
+      duration: totalMinutes,
+    }));
+  };
+
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -223,14 +241,22 @@ const DashboardServices = () => {
           return (
             <section key={index} className="service-box xl:ml-20 mb-10">
               <div className="availability-toggle-wrapper">
-                <label className={`toggle-switch ${service.available ? "bg-blue-500" : "bg-gray-300"}`}>
+                <label
+                  className={`toggle-switch ${
+                    service.available ? "bg-blue-500" : "bg-gray-300"
+                  }`}
+                >
                   <input
                     type="checkbox"
                     checked={service.available}
                     onChange={() => handleToggleAvailability(index)}
                     className="sr-only"
                   />
-                  <span className={`toggle-dot ${service.available ? "active" : ""}`} />
+                  <span
+                    className={`toggle-dot ${
+                      service.available ? "active" : ""
+                    }`}
+                  />
                 </label>
                 <span className="availability-label">
                   {service.available ? "Available" : "Unavailable"}
@@ -244,19 +270,31 @@ const DashboardServices = () => {
                       key={i}
                       src={img}
                       alt={`thumb-${i}`}
-                      className={`thumbnail ${selectedImage === img ? "selected" : ""}`}
+                      className={`thumbnail ${
+                        selectedImage === img ? "selected" : ""
+                      }`}
                       onClick={() => handleImageSelect(index, img)}
                     />
                   ))}
                 </div>
 
                 <div className="main-image-and-buttons">
-                  <img src={selectedImage} alt="Service" className="main-image-dashboard" />
+                  <img
+                    src={selectedImage}
+                    alt="Service"
+                    className="main-image-dashboard"
+                  />
                   <div className="buttons-dashboard">
-                    <button className="vendor-edit-btn flex gap-1" onClick={() => handleEdit(index)}>
+                    <button
+                      className="vendor-edit-btn flex gap-1"
+                      onClick={() => handleEdit(index)}
+                    >
                       <FaEdit className="mt-[2.9px]" /> Edit
                     </button>
-                    <button className="vendor-delete-btn flex gap-1" onClick={() => handleDelete(index)}>
+                    <button
+                      className="vendor-delete-btn flex gap-1"
+                      onClick={() => handleDelete(index)}
+                    >
                       <FaTrash className="mt-[2.9px]" /> Delete
                     </button>
                   </div>
@@ -265,9 +303,7 @@ const DashboardServices = () => {
 
               {isEditing ? (
                 <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-start sm:items-center px-4 py-6 overflow-y-auto">
-                  <form
-                    className="dashboard-custom-form"
-                  >
+                  <form className="dashboard-custom-form">
                     <div className="flex flex-col space-y-2">
                       <input
                         type="text"
@@ -289,7 +325,9 @@ const DashboardServices = () => {
                         onChange={(e) =>
                           setEditedData((prev) => ({
                             ...prev,
-                            locationOffered: e.target.value.split(",").map((loc) => loc.trim()),
+                            locationOffered: e.target.value
+                              .split(",")
+                              .map((loc) => loc.trim()),
                           }))
                         }
                         placeholder="Locations (comma separated)"
@@ -302,7 +340,10 @@ const DashboardServices = () => {
                           name="minPrice"
                           value={editedData.minPrice || ""}
                           onChange={(e) =>
-                            setEditedData((prev) => ({ ...prev, minPrice: e.target.value }))
+                            setEditedData((prev) => ({
+                              ...prev,
+                              minPrice: e.target.value,
+                            }))
                           }
                           placeholder="Min Price"
                           className="w-1/2 p-1  bg-[#f1f1f1] border border-[#001f3f] rounded-md"
@@ -312,7 +353,10 @@ const DashboardServices = () => {
                           name="maxPrice"
                           value={editedData.maxPrice || ""}
                           onChange={(e) =>
-                            setEditedData((prev) => ({ ...prev, maxPrice: e.target.value }))
+                            setEditedData((prev) => ({
+                              ...prev,
+                              maxPrice: e.target.value,
+                            }))
                           }
                           placeholder="Max Price"
                           className="w-1/2 p-1 bg-[#f1f1f1] text-black border border-[#001f3f] rounded-md"
@@ -328,14 +372,52 @@ const DashboardServices = () => {
                         className="w-full p-1 bg-[#f1f1f1] border border-[#001f3f] rounded-md"
                       />
 
-                      <input
-                        type="text"
-                        name="duration"
-                        value={editedData.duration}
-                        onChange={handleChange}
-                        placeholder="Duration"
-                        className="w-full p-1 bg-[#f1f1f1] border border-[#001f3f] rounded-md"
-                      />
+                      <div className="flex items-center justify-center gap-3">
+                        <div className="flex items-center gap-1">
+                          <input
+                            type="number"
+                            className="w-16 text-center p-1 bg-[#f1f1f1] border border-[#001f3f] rounded-md"
+                            value={Math.floor(editedData.duration / (24 * 60))}
+                            onChange={(e) =>
+                              updateDuration(e.target.value, "days")
+                            }
+                            placeholder="Days"
+                          />
+                          <span>D</span>
+                        </div>
+
+                        <span>:</span>
+
+                        <div className="flex items-center gap-1">
+                          <input
+                            type="number"
+                            className="w-16 text-center p-1 bg-[#f1f1f1] border border-[#001f3f] rounded-md"
+                            value={Math.floor(
+                              (editedData.duration % (24 * 60)) / 60
+                            )}
+                            onChange={(e) =>
+                              updateDuration(e.target.value, "hours")
+                            }
+                            placeholder="Hours"
+                          />
+                          <span>H</span>
+                        </div>
+
+                        <span>:</span>
+
+                        <div className="flex items-center gap-1">
+                          <input
+                            type="number"
+                            className="w-16 text-center p-1 bg-[#f1f1f1] border border-[#001f3f] rounded-md"
+                            value={editedData.duration % 60}
+                            onChange={(e) =>
+                              updateDuration(e.target.value, "minutes")
+                            }
+                            placeholder="Minutes"
+                          />
+                          <span>M</span>
+                        </div>
+                      </div>
 
                       <textarea
                         name="serviceDes"
@@ -347,19 +429,28 @@ const DashboardServices = () => {
                       />
                     </div>
 
-
                     {/* Image Preview Area */}
                     <div className="flex flex-nowrap overflow-x-auto items-center gap-3 pt-2">
                       {editedData.serviceImage?.map((img, i) => (
-                        <div key={`existing-${i}`} className="relative w-10 h-10 shrink-0">
-                          <img src={img} alt={`thumb-${i}`} className="w-full h-full object-cover rounded" />
+                        <div
+                          key={`existing-${i}`}
+                          className="relative w-10 h-10 shrink-0"
+                        >
+                          <img
+                            src={img}
+                            alt={`thumb-${i}`}
+                            className="w-full h-full object-cover rounded"
+                          />
                           <button
                             type="button"
                             className="absolute top-0 right-0 text-red-600 p-[3px] text-[10px] bg-white rounded-full"
                             onClick={() => {
                               const updatedImgs = [...editedData.serviceImage];
                               updatedImgs.splice(i, 1);
-                              setEditedData((prev) => ({ ...prev, serviceImage: updatedImgs }));
+                              setEditedData((prev) => ({
+                                ...prev,
+                                serviceImage: updatedImgs,
+                              }));
                             }}
                           >
                             ✕
@@ -367,8 +458,15 @@ const DashboardServices = () => {
                         </div>
                       ))}
                       {newImagePreviews.map((url, i) => (
-                        <div key={`new-${i}`} className="relative w-10 h-10 shrink-0">
-                          <img src={url} alt={`new-preview-${i}`} className="w-full h-full object-cover rounded" />
+                        <div
+                          key={`new-${i}`}
+                          className="relative w-10 h-10 shrink-0"
+                        >
+                          <img
+                            src={url}
+                            alt={`new-preview-${i}`}
+                            className="w-full h-full object-cover rounded"
+                          />
                           <button
                             type="button"
                             className="absolute top-0 right-0 text-red-600 p-[3px] text-[10px] bg-white rounded-full"
@@ -385,10 +483,17 @@ const DashboardServices = () => {
                           </button>
                         </div>
                       ))}
-                      {(editedData.serviceImage.length + newImagePreviews.length < 5) && (
+                      {editedData.serviceImage.length +
+                        newImagePreviews.length <
+                        5 && (
                         <label className="w-14 h-14 border-2 border-dashed border-[#001f3f] rounded flex items-center justify-center cursor-pointer shrink-0">
                           <FaPlus className="text-gray-500 text-xs" />
-                          <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={handleImageUpload}
+                          />
                         </label>
                       )}
                     </div>
@@ -405,18 +510,36 @@ const DashboardServices = () => {
                     </div>
                   </form>
                 </div>
-
               ) : (
                 <div className="right-section xl:w-[500px] xl:ml-3">
                   <div className="details">
                     <h2 className="details-h2">{service.serviceName}</h2>
-                    <div className="l"><strong>Locations: </strong>{Array.isArray(service.locationOffered) ? service.locationOffered.join(", ") : service.locationOffered}</div>
-                    <div className="pr"><strong>Price: </strong>₹ {service.minPrice} - ₹ {service.maxPrice}</div>
-                    <div className="c"><strong>Category: </strong>{service.serviceCategory}</div>
-                    <div className="d"><strong>Duration: </strong>{formatDuration(service.duration)}</div>
-                    <div className="des"><strong>Description: </strong></div>
+                    <div className="l">
+                      <strong>Locations: </strong>
+                      {Array.isArray(service.locationOffered)
+                        ? service.locationOffered.join(", ")
+                        : service.locationOffered}
+                    </div>
+                    <div className="pr">
+                      <strong>Price: </strong>₹ {service.minPrice} - ₹{" "}
+                      {service.maxPrice}
+                    </div>
+                    <div className="c">
+                      <strong>Category: </strong>
+                      {service.serviceCategory}
+                    </div>
+                    <div className="d">
+                      <strong>Duration: </strong>
+                      {formatDuration(service.duration)}
+                    </div>
+                    <div className="des">
+                      <strong>Description: </strong>
+                    </div>
                     <div>{service.serviceDes}</div>
-                    <div className="u"><strong>User Reviews: </strong>{service.userReviews}</div>
+                    <div className="u">
+                      <strong>User Reviews: </strong>
+                      {service.userReviews}
+                    </div>
                   </div>
                 </div>
               )}

@@ -8,7 +8,7 @@ import {
   updateService,
   updateServiceImageFirst,
 } from "../../controller/vendor/service.controller.js";
-import { verifyPan } from "../../controller/vendor/bankdetails.controller.js";
+
 import { verifyVendorJwt } from "../../middleware/VendorAuth.middleware.js";
   
 
@@ -34,6 +34,7 @@ import {
 
 // Bank Details
 import {
+  beforeHandPanVerification,
   createBankDetails,
   deleteBankDetails,
   getBankDetailsByVendor,
@@ -116,7 +117,7 @@ vendor_router.put("/bank-details/:vendorId", updateBankDetails);
 vendor_router.delete("/bank-details/:vendorId", deleteBankDetails);
 
 // --- PAN VERIFICATION ROUTE --- //
-vendor_router.post("/verify-pan", verifyVendorJwt, verifyPan);
+vendor_router.post("/verify-pan", verifyVendorJwt, beforeHandPanVerification);
 
 // --- LEGAL CONSENT ROUTES --- //
 vendor_router.post(

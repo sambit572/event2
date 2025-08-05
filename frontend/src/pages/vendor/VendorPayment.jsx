@@ -58,10 +58,12 @@ export default function VendorPayment() {
       verificationMessage: "Verifying PAN..."
     }));
 
+    console.log(`🔍 [VendorPayment] Verifying PAN: ${panNumber}`);
+
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/vendors/verify-pan`,
-        { panNumber },
+        { panNumber, name: formData.accountHolderName },
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
