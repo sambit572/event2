@@ -21,10 +21,9 @@ function VendorService({ currentStep }) {
   const [showLocationDropdown, setShowLocationDropdown] = useState(false);
   const [serviceName, setServiceName] = useState("");
   const [serviceDescription, setServiceDescription] = useState("");
-  const [days, setDays] = useState("");
-  const [hours, setHours] = useState("");
-  const [minutes, setMinutes] = useState("");
-  const [selectedDropdownValue, setSelectedDropdownValue] = useState("");
+  const [days, setDays] = useState("0");
+  const [hours, setHours] = useState("0");
+  const [minutes, setMinutes] = useState("0");
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [selectedLocations, setSelectedLocations] = useState([]);
 

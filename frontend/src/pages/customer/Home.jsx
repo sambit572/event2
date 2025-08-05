@@ -13,7 +13,7 @@ import cateringTablet from "../../assets/home/sliderImages/catering-tablet.png";
 import cateringDesktop from "../../assets/home/sliderImages/catering-desktop.png";
 
 import CategoryCard from "../../components/customer/home/CategoryCard.jsx";
-import ReviewSlider from "../../components/customer/home/ReviewSlider.jsx";
+import ReviewSlider from "../../components/customer/Home/ReviewSlider.jsx";
 import FaqSection from "../../components/customer/home/FaqSection.jsx";
 import ImageSlider from "../../components/customer/home/ImageSlider.jsx";
 
@@ -36,41 +36,6 @@ const images = [
     mobile: cateringMobile,
     tablet: cateringTablet,
     desktop: cateringDesktop,
-  },
-  {
-    mobile: shaadiMobile,
-    tablet: shaadiTablet,
-    desktop: shaadiDesktop,
-  },
-  {
-    mobile: christianMobile,
-    tablet: christianTablet,
-    desktop: christianDesktop,
-  },
-  {
-    mobile: cateringMobile,
-    tablet: cateringTablet,
-    desktop: cateringDesktop,
-  },
-  {
-    mobile: shaadiMobile,
-    tablet: shaadiTablet,
-    desktop: shaadiDesktop,
-  },
-  {
-    mobile: christianMobile,
-    tablet: christianTablet,
-    desktop: christianDesktop,
-  },
-  {
-    mobile: cateringMobile,
-    tablet: cateringTablet,
-    desktop: cateringDesktop,
-  },
-  {
-    mobile: christianMobile,
-    tablet: christianTablet,
-    desktop: christianDesktop,
   },
 ];
 const Home = () => {
@@ -125,10 +90,10 @@ const Home = () => {
       <ImageSlider images={images} />
       <AddsBanner />
       {/* <img className="addbanner" src={banner} alt="" /> */}
-      <div id="categories" className="categories-head1 mb-[-15px]">
+      <div className="categories-head1 mb-[-15px]">
         <h1 className="align_center categories-head">Categories</h1>
       </div>
-      <p className="category-subheads text-base mr-4 text-center">
+      <p className="category-subheads text-center">
         Explore trusted professionals across categories and simplify your event
         planning.
       </p>

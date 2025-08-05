@@ -353,6 +353,40 @@
   background-color: #1e40af;
   transform: scale(1.03);
 }
+.vendor-changePassword,
+.vendor-signout {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  margin: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  width: 160px;
+  color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Solid Purple */
+.vendor-changePassword {
+  background-color: #7e22ce;
+}
+
+.vendor-changePassword:hover {
+  background-color: #6b21a8;
+  transform: scale(1.03);
+}
+
+/* Solid Deep Blue */
+.vendor-signout {
+  background-color: #1e3a8a;
+}
+
+.vendor-signout:hover {
+  background-color: #1e40af;
+  transform: scale(1.03);
+}
 
 .search-and-nav-icons-container {
   display: flex;

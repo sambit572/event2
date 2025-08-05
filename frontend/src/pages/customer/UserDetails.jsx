@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./UserDetails.css";
-import { useNavigate } from "react-router-dom";
 
 const stateDistricts = {
   Odisha: [
@@ -194,10 +193,9 @@ const districtCities = {
 };
 
 const UserDetails = () => {
-  const navigate = useNavigate();
-
   const [userName, setUserName] = useState("");
   const [showPopup, setShowPopup] = useState(false);
+
   const [formData, setFormData] = useState({
     phone: "",
     altPhone: "",
@@ -209,7 +207,7 @@ const UserDetails = () => {
     district: "",
     city: "",
     pincode: "",
-    // country: "",
+    country: "",
   });
 
   useEffect(() => {
@@ -259,34 +257,18 @@ const UserDetails = () => {
     const { pincode } = formData;
     const pincodeRegex = /^\d{6}$/;
 
-    if (!pincodeRegex.test(String(pincode))) {
+    if (!pincodeRegex.test(pincode)) {
       alert("Pincode must be exactly 6 digits.");
       return;
     }
 
     const allFieldsFilled =
       userName.trim() !== "" &&
-      Object.values(formData).every((value) => String(value).trim() !== "");
-    // console.log(allFieldsFilled);
-
-    // const allFieldsFilled =
-    //   userName.trim() !== "" &&
-    //   Object.entries(formData).every(([key, value]) => {
-    //     const trimmedValue = String(value).trim();
-    //     if (trimmedValue === "") {
-    //       console.log(`${key} is empty`);
-    //       return false;
-    //     }
-    //     return true;
-    // //   });
-
-    // console.log("userName:", userName.trim());
-    // console.log("formData:", formData);
+      Object.values(formData).every((value) => value.trim() !== "");
 
     if (allFieldsFilled) {
       setShowPopup(true);
       setTimeout(() => setShowPopup(false), 3000);
-      navigate("/pop-up");
     } else {
       alert("Please fill in all fields before saving.");
     }

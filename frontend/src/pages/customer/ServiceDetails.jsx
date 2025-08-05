@@ -1,56 +1,65 @@
 import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { FaHeart } from "react-icons/fa6";
 
 import "./ServiceDetails.css";
 
-import { CategoryData } from "../../utils/CatogoryData.jsx";
+// import { CategoryData } from "../../utils/CatogoryData.jsx";
 import { similarServiceData } from "../../components/customer/ServiceDetails/SimilarServiceData.jsx";
 
 import RatingDetails from "../../components/customer/ServiceDetails/RatingDetails.jsx";
 import SimilarProductCard from "../../components/customer/ServiceDetails/PeopleAlsoBooked.jsx";
-import DJServiceCard from "../../components/customer/ServiceDetails/ServiceCard.jsx";
+import DJServiceCard from "../../components/customer/ServiceDetails/ServiceDetailCard.jsx";
 import ReviewList from "../../components/customer/ServiceDetails/ReviewList";
 import ReviewForm from "../../components/customer/ServiceDetails/ReviewForm.jsx";
+import axios from "axios";
+import { useEffect } from "react";
+import { BACKEND_URL } from "../../utils/constant.js";
 
-const Service = ({ onSwitchToLogin }) => {
-  const navigate = useNavigate();
+const Service = () => {
   const { serviceId } = useParams();
 
-  const handleBookNow = () => {
-    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
-
-    if (isLoggedIn) {
-      navigate("/userdetails");
-    } else {
-      onSwitchToLogin(true); // ✅ this opens your login popup
-    }
-  };
-  // Get the service object from CategoryData
-  const service = CategoryData.flatMap((cat) => cat.services).find(
-    (srv) => srv.id === serviceId
-  );
-
-  // If service not found
-  if (!service) return <p>Service not found</p>;
-
-  const mediaList = service.img.map((src) => ({ type: "image", src }));
-  const [selectMedia, setSelectMedia] = useState(mediaList[0]);
+  const [service, setService] = useState(null);
+  const [mediaList, setMediaList] = useState([]);
+  const [selectMedia, setSelectMedia] = useState(null);
   const [isWishlisted, setIsWishlisted] = useState(false);
 
-  // ✅ For syncing new review from ReviewForm to ReviewList
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [latestReview, setLatestReview] = useState(null);
-
-  const handleWishlist = () => {
-    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
-
-    if (isLoggedIn) {
-      setIsWishlisted(!isWishlisted);
-    } else {
-      onSwitchToLogin(true); // ✅ this opens your login popup
-    }
+  const handleClick = () => {
+    setIsWishlisted(!isWishlisted);
   };
+  useEffect(() => {
+    const fetchService = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get(
+          `${BACKEND_URL}/vendors/service/${serviceId}`
+        );
+        const data = res.data.data;
+        setService(data);
 
+        const formattedMedia = (data.serviceImage || []).map((src) => ({
+          type: "image",
+          src,
+        }));
+        setMediaList(formattedMedia);
+        setSelectMedia(formattedMedia[0]);
+
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching service:", err);
+        setError("Service not found.");
+        setLoading(false);
+      }
+    };
+
+    fetchService();
+  }, [serviceId]);
+
+  if (loading) return <p>Loading service details...</p>;
+  if (error || !service) return <p>{error || "Service not found."}</p>;
   return (
     <div className="dj">
       <div className="section_one">
@@ -69,14 +78,14 @@ const Service = ({ onSwitchToLogin }) => {
               ))}
             </div>
             <div className="big-image">
-              <img src={selectMedia.src} alt="Selected media" />
+              <img src={selectMedia?.src} alt="Selected media" />
             </div>
           </div>
 
           <div className="buttons">
             <button
               className={`viewBtns ${isWishlisted ? "wishlisted" : ""}`}
-              onClick={handleWishlist}
+              onClick={handleClick}
             >
               <div>
                 {isWishlisted && <FaHeart className="wishIcon" color="red" />}
@@ -92,9 +101,7 @@ const Service = ({ onSwitchToLogin }) => {
               </div>
             </button>
 
-            <button className="buynow" onClick={handleBookNow}>
-              Book Now
-            </button>
+            <button className="buynow">Book Now</button>
           </div>
         </div>
 

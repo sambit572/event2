@@ -4,8 +4,11 @@ import {
   createService,
   deleteService,
   getMyServices,
+  updateAvailability,
   updateService,
+  updateServiceImageFirst,
 } from "../../controller/vendor/service.controller.js";
+
 import { verifyVendorJwt } from "../../middleware/VendorAuth.middleware.js";
 
 // Vendor Core Controllers
@@ -22,12 +25,14 @@ import {
   getVendorProfile,
   updateVendorProfilePicture,
   verifyConfirmPassword,
-  getSearchSuggestions, 
+  getSearchSuggestions,
+  getVendorDashboard,
   // updateTheBankDetails,
 } from "../../controller/vendor/vendor.controller.js";
 
 // Bank Details
 import {
+  beforeHandPanVerification,
   createBankDetails,
   deleteBankDetails,
   getBankDetailsByVendor,
@@ -76,21 +81,24 @@ vendor_router.post(
   },
   createService
 );
-
 vendor_router.route("/my-services").get(verifyVendorJwt, getMyServices);
-
 vendor_router.route("/update-service/:id").put(verifyVendorJwt, updateService);
-
 vendor_router
   .route("/delete-service/:id")
   .delete(verifyVendorJwt, deleteService);
 
-// --- BANK DETAILS ROUTES --- //
+vendor_router
+  .route("/update-availability/:id")
+  .patch(verifyVendorJwt, updateAvailability);
+
 vendor_router.post(
-  "/bank-details",
-  verifyVendorJwt,
-  createBankDetails
+  "/upload-new-service-image/:id",
+  upload.array("images", 5),
+  updateServiceImageFirst
 );
+
+// --- BANK DETAILS ROUTES --- //
+vendor_router.post("/bank-details", verifyVendorJwt, createBankDetails);
 vendor_router.get(
   "/bank-details/bankDetails",
   verifyVendorJwt,
@@ -98,9 +106,9 @@ vendor_router.get(
 );
 vendor_router.put("/bank-details/:vendorId", updateBankDetails);
 vendor_router.delete("/bank-details/:vendorId", deleteBankDetails);
-// vendor_router.get("/bank-details/:vendorId", getBankDetailsByVendor);
 
-vendor_router.delete("/bank-details/:vendorId", deleteBankDetails);
+// --- PAN VERIFICATION ROUTE --- //
+vendor_router.post("/verify-pan", verifyVendorJwt, beforeHandPanVerification);
 
 // --- LEGAL CONSENT ROUTES --- //
 vendor_router.post(
@@ -108,7 +116,11 @@ vendor_router.post(
   upload.single("signature"),
   createLegalConsent
 );
-vendor_router.get("/legal-consent/:vendorId", getLegalConsentByVendor);
+vendor_router.get(
+  "/legal-consent/:vendorId",
+  verifyVendorJwt,
+  getLegalConsentByVendor
+);
 vendor_router.put(
   "/legal-consent/:vendorId",
   upload.single("signature"),
@@ -124,10 +136,15 @@ vendor_router.post(
   updateVendorProfilePicture
 );
 vendor_router.post("/verify-password", verifyVendorJwt, verifyConfirmPassword);
-// router.post("/update-bank-details", verifyVendorJwt, updateTheBankDetails);
-// services ROUTES
 
-vendor_router.get("/search-suggestions", getSearchSuggestions);// ---  DYNAMIC SEARCH SUGGESTIONS ROUTE --- //
-vendor_router.get("/my-services", verifyVendorJwt, getMyServices);
+// --- DYNAMIC SEARCH SUGGESTIONS ROUTE --- //
+vendor_router.get("/search-suggestions", getSearchSuggestions);
+
+// --- DASHBOARD ROUTE --- //
+vendor_router.get(
+  "/currentStep-status",
+  verifyVendorJwt, // existing auth check
+  getVendorDashboard
+);
 
 export { vendor_router };

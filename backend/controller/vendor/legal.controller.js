@@ -6,6 +6,7 @@ import {
 
 import { ApiResponse } from "../../utilities/ApiResponse.js";
 import { ApiError } from "../../utilities/ApiError.js";
+import Vendor from "../../model/vendor/vendor.model.js";
 
 // Create legal consent
 export const createLegalConsent = async (req, res) => {

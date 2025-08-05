@@ -1,5 +1,4 @@
 import Vendor from "../../model/vendor/vendor.model.js";
-
 import { ApiError } from "../../utilities/ApiError.js";
 import { ApiResponse } from "../../utilities/ApiResponse.js";
 import fs from "fs/promises";
@@ -18,7 +17,11 @@ const cookieOptions = {
   secure: false,
   sameSite: "Lax",
 };
-
+const updateProgress = async (vendorId, step) => {
+  await Vendor.findByIdAndUpdate(vendorId, {
+    registrationProgress: step,
+  });
+};
 const registerVendor = async (req, res) => {
   try {
     const { fullName, email, phoneNumber, password } = req.body;
@@ -76,6 +79,7 @@ const registerVendor = async (req, res) => {
       phoneNumber,
       password,
       profilePicture: profilePictureUrl, // May be empty string
+      registrationProgress: 1,
     });
 
     const { accessToken, refreshToken } = await generateVendorTokens(
@@ -454,32 +458,6 @@ const verifyConfirmPassword = async (req, res, next) => {
   }
 };
 
-// const updateTheBankDetails = async (req, res, next) => {
-//   try {
-//     const { password, bankDetails } = req.body;
-
-//     const vendor = await Vendor.findById(req.vendor._id);
-//     if (!vendor) {
-//       return res
-//         .status(404)
-//         .json({ success: false, message: "Vendor not found" });
-//     }
-//   if (!isMatch) {
-//       return res.status(401).json({ success: false, message: 'Incorrect password' });
-//     }
-
-//     vendor.bankDetails = bankDetails;
-//     await vendor.save();
-
-//     return res.json({
-//       success: true,
-//       message: "Bank details updated successfully",
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
 const updateVendorProfilePicture = async (req, res, next) => {
   try {
     const id = req.vendor._id; // 👈 Comes from JWT middleware
@@ -603,22 +581,64 @@ export const getSearchSuggestions = async (req, res) => {
     );
 
     if (suggestions.length === 0) {
-      return res.status(200).json(
-        new ApiResponse(200, [], "No suggestions found for this search.")
-      );
+      return res
+        .status(200)
+        .json(
+          new ApiResponse(200, [], "No suggestions found for this search.")
+        );
     }
 
-    return res.status(200).json(
-      new ApiResponse(200, suggestions, "Search suggestions fetched")
-    );
+    return res
+      .status(200)
+      .json(new ApiResponse(200, suggestions, "Search suggestions fetched"));
   } catch (error) {
     console.error("Suggestion error:", error.message);
-    return res
-      .status(500)
-      .json(new ApiError(500, "Internal Server Error"));
+    return res.status(500).json(new ApiError(500, "Internal Server Error"));
   }
 };
 
+// dashboard
+export const getVendorDashboard = async (req, res) => {
+  console.log("📍 getVendorDashboard called");
+  try {
+    const currentStep = req.vendor.registrationProgress;
+    const currentPath = req.query.currentPath;
+
+    console.log("📍 Current frontend path:", currentPath);
+    console.log("🧠 Vendor DB progress:", currentStep);
+
+    // Optional logic based on currentPath
+    // You can use a map or regex to validate allowed paths for each step
+
+    if (!currentStep || currentStep < 4) {
+      let redirectTo = "";
+
+      if (currentStep === 1) {
+        redirectTo = "/category/VendorService";
+      }
+      if (currentStep === 2) {
+        redirectTo = "/vendor/payment-info";
+      }
+      if (currentStep === 3) {
+        redirectTo = "/vendor/legal-consent";
+      }
+
+      return res.status(200).json({
+        incomplete: true,
+        redirectTo,
+      });
+    }
+
+    return res.status(200).json({
+      incomplete: false,
+      message: `Welcome to your dashboard, ${req.vendor.fullName}`,
+      vendor: req.vendor,
+    });
+  } catch (err) {
+    console.error("Dashboard error:", err);
+    return res.status(500).json({ message: "Dashboard loading failed" });
+  }
+};
 
 export {
   registerVendor,

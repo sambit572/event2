@@ -440,6 +440,16 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
     }, 2000);
     return () => clearInterval(interval);
   }, []);
+
+  //cart logic
+  const handleAddToCart = () => {
+    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
+    if (isLoggedIn) {
+      navigate("/your-cart");
+    } else {
+      onOpenLogin(true);
+    }
+  };
   return (
     <div>
       <div className="navbar">
@@ -637,7 +647,10 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
             >
               <div className="nav-items max-[1024px]:flex-col max-[1024px]:text-[12px] max-[820px]:text-[11px] cursor-pointer">
                 <div className="flex items-center gap-1">
-                  <FaStore className="icons max-[1024px]:h-[18px] max-[1024px]:w-[18px] max-[820px]:h-[15px]" />
+                  <FaStore
+                    className="icons max-[1024px]:h-[18px] max-[1024px]:w-[18px] max-[820px]:h-[15px]"
+                    onClick={handleVendorClick}
+                  />
                   <span
                     className="text-[#001F3F]  font-semibold  max-[820px]:text-[11px] max-[820px]:w-max"
                     onClick={() => {
@@ -677,7 +690,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                     }}
                   >
                     {!VendorFirstName ? (
-                      <span className="font-medium vendorNameText ">
+                      <span className="font-medium vendorNameText hover:bg-[#001f3f]  hover rounded px-2 py-1 transition-colors">
                         Be a Vendor
                       </span>
                     ) : (
@@ -835,7 +848,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                 </div>
               )}
             </div>
-            <div className="navbarCart" onClick={() => navigate("/your-cart")}>
+            <div className="navbarCart" onClick={handleAddToCart}>
               <div className="navbarCartIcon">
                 <FaCartShopping />
               </div>

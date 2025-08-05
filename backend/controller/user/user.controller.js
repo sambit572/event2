@@ -15,8 +15,10 @@ import { sendEmail } from "../../utilities/sendEmail.js";
 
 const option = {
   httpOnly: true,
-  secure: false,
+  secure: false, // for localhost
+  // secure : true, // for production
   sameSite: "Lax",
+  maxAge: 10 * 24 * 60 * 60 * 1000, // 10 days
 };
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -89,7 +91,7 @@ const registerUser = async (req, res) => {
       return res.status(400).json(new ApiError(400, "Invalid email format"));
     }
 
-    if (password.length < 8) {
+    if (password.length < 6) {
       return res
         .status(400)
         .json(new ApiError(400, "Password must be 6 characters long"));
@@ -99,8 +101,8 @@ const registerUser = async (req, res) => {
 
     if (userExist) {
       return res
-        .status(400)
-        .json(new ApiResponse(400, userExist, "User already exists"));
+        .status(200)
+        .json(new ApiResponse(200, userExist, "User already exists"));
     }
 
     const user = await User.create({

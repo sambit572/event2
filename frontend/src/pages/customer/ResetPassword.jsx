@@ -22,6 +22,7 @@ const ResetPassword = () => {
 
         console.log("✅ Password reset successful:", response.data.message);
         alert("Password reset successful! You can now log in.");
+
         navigate("/"); // Redirect to homepage
         setTimeout(() => {
           // Trigger login modal

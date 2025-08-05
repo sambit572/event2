@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setVendor } from "../../redux/VendorSlice";
 import VendorAutoFillConfirmModal from "../../components/vendor/VendorAutoFillConfirmModal";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
 export default function VendorRegister() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -100,6 +101,7 @@ export default function VendorRegister() {
       console.log("Vendor data set in Redux:", response.data.data);
 
       const vendor = response.data.data;
+      //added so that the vendor’s ID can be accessed in later steps (like saving service or payment details) without needing to refetch it.
 
       const fullName = vendor.fullName || "";
       const firstName = fullName.split(" ")[0];

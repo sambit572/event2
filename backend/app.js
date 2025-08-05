@@ -8,10 +8,11 @@ import { fileURLToPath } from "url";
 import userRouter from "./routes/user/user.routes.js";
 import { vendor_router } from "./routes/vendor/vendor.routes.js";
 import { errorHandler } from "./middleware/error.middleware.js";
-
+import reviewRoutes from "./routes/review.routes.js";
 import test_router from "./routes/agenda/agenda.routes.js";
 import startAgenda from "./agenda/startAgenda.js";
 import "./cronjobs/startCronjobs.js";
+import feedbackRoutes from "./routes/common/feedback.routes.js";
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -50,11 +51,11 @@ app.use(cookieParser());
 })();
 
 // ✅ API Routes
-
+app.use("/api/reviews", reviewRoutes);
 app.use("/api/user", userRouter);
 app.use("/api/vendors", vendor_router);
 app.use("/api/test", test_router);
-
+app.use("/api/feedback", feedbackRoutes);
 
 // ✅ Health Check Route
 app.get("/", (req, res) => {

@@ -46,11 +46,174 @@
   font-style: normal;
   font-weight: 700;
   line-height: normal;
-  margin-left: 23px;
-  margin-bottom: 10px;
-  margin-top: 20px;
+  margin-left: 18px;
+  margin-bottom: 20px;
+  margin-top: 10px;
   /* z-index: 10000; */
 }
+
+/* Profile Photo Container with Camera Icon */
+.profile-photo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.profile-photo-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.user-profile-pic {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.user-profile-pic:hover {
+  transform: scale(1.02);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.profile-initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: bold;
+  font-size: 3.5em;
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  font-family: Montserrat, sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.profile-initials:hover {
+  transform: scale(1.02);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Camera Icon Overlay */
+.camera-icon-overlay {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 40px;
+  height: 40px;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.camera-icon-overlay:hover {
+  background: rgba(0, 0, 0, 0.9);
+  transform: scale(1.1);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.camera-icon-overlay:active {
+  transform: scale(1);
+}
+
+.camera-icon {
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* If using Font Awesome or similar icon font */
+.camera-icon::before {
+  content: "📷";
+  font-size: 16px;
+}
+
+/* Alternative: Using SVG or Unicode camera symbol */
+.camera-icon-svg {
+  width: 18px;
+  height: 18px;
+  fill: white;
+}
+
+.photo-upload-section {
+  margin-top: 10px;
+}
+
+.upload-photo-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 10px 15px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+  min-width: 150px;
+  font-family: Montserrat, sans-serif;
+}
+
+.upload-photo-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+}
+
+.upload-photo-btn:active {
+  transform: translateY(0);
+}
+
+.upload-icon {
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.upload-text {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 
 .custom-list-decor-dashboard {
   list-style: none;
@@ -153,7 +316,7 @@ color: #ffc107;
   color: #ffc107;
   gap: 8px;
   font-weight: 700;
-  margin-left: 80px;
+  margin-left: 70px;
   margin-top: 10px;
 }
 
