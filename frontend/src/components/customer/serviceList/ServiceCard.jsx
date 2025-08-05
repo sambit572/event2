@@ -27,7 +27,7 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
         >
-          <Link to={`/service/${service.id}`} className="link">
+          <Link to={`/service/${service._id}`} className="link">
             {Array.isArray(img) && img.length > 0 ? (
               <img src={img[currentIndex]} alt="Main preview" />
             ) : (

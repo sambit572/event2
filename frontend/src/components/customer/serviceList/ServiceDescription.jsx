@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaRegHeart, FaHeart } from "react-icons/fa6";
+import { FaRegCalendarCheck } from "react-icons/fa6";
 
 const ServiceDescription = ({ service, onSwitchToLogin }) => {
   const navigate = useNavigate();
@@ -10,7 +11,25 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
   const title = service.serviceName || service.title || "Untitled Service";
   const vendorName = service.vendorName || "Unknown Vendor";
   const description = service.serviceDes || service.description || "";
-  const duration = service.duration || "0d : 0h : 0m";
+  const rawDuration = service.duration || 0;
+
+  const formatDuration = (durationInMinutes) => {
+    const totalMinutes = parseInt(durationInMinutes, 10) || 0;
+    const days = Math.floor(totalMinutes / (24 * 60));
+    const hours = Math.floor((totalMinutes % (24 * 60)) / 60);
+    const minutes = totalMinutes % 60;
+
+    let result = "";
+
+    if (days > 0) result += `${days}d`;
+    if (hours > 0) result += (result ? " : " : "") + `${hours}h`;
+    if (minutes > 0) result += (result ? " : " : "") + `${minutes}m`;
+
+    return result || "0m"; // fallback if all are 0
+  };
+
+  const duration = formatDuration(rawDuration);
+
   const location = Array.isArray(service.locationOffered)
     ? service.locationOffered.join(", ")
     : service.locationOffered ||
@@ -68,7 +87,15 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
       {/* Service Info */}
       <Link to={`/service/${id}`} className="block">
         <h3 className="text-xl font-bold mb-1">{title}</h3>
-        <p className="text-blue-700 text-sm font-medium mb-2">{vendorName}</p>
+        <div className="flex items-center gap-2 text-sm font-medium text-blue-700 mb-2">
+          <span className="text-blue-800">{vendorName}</span>
+          <span className="text-gray-400 text-xs">|</span>
+          <span className="flex items-center gap-1 bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full text-xs shadow-sm">
+            <FaRegCalendarCheck className="text-xs" />
+            Event Hosted: 0
+          </span>
+        </div>
+
         <p className="text-sm text-black mb-2">{location}</p>
 
         {/* Rating and Reviews */}
@@ -93,7 +120,11 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
             </>
           )}
         </div>
-        <p className="text-sm text-black mb-4"><span>Prep Time: </span>{duration}</p>
+        <p className="text-sm text-black mb-4">
+          <span className="font-bold">Prep Time: </span>
+          {duration}
+        </p>
+
         {/* Description */}
         <p className="text-sm text-black mb-4">{description}</p>
       </Link>

@@ -43,7 +43,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
           services.map((service, idx) => (
             <div className="singleServiceCard" key={idx}>
               <Link
-                to={`/service/${service._id}`}
+               to={`/service/${service._id}`}
                 style={{ textDecoration: "none", color: "inherit" }}
               ></Link>
               <ServiceCard

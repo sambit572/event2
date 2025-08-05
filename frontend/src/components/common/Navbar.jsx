@@ -806,7 +806,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
 
                               setTimeout(() => toast.dismiss(toastId), 2000);
                             } else {
-                              handleVendorClick();
+                              onOpenVendorLogin();
                             }
 
                             // ✅ Always go to login (or open modal)

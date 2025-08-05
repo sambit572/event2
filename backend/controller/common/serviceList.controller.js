@@ -56,20 +56,31 @@ export const getServicesByCategory = async (req, res) => {
   }
 };
 
+
 export const getServiceById = async (req, res) => {
   try {
     const { id } = req.params;
-    const service = await Service.findById(id);
+
+    const service = await Service.findById(id).populate({
+      path: "vendorId",
+      select: "fullName email", // fetch only needed fields
+    });
 
     if (!service) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Service not found" });
+      return res.status(404).json({ success: false, message: "Service not found" });
     }
 
-    return res.status(200).json({ success: true, data: service });
-  } catch (err) {
-    console.error("Error fetching service by ID:", err);
-    return res.status(500).json({ success: false, message: "Server error" });
+    // Transform the response to include vendorName
+    const transformed = {
+      ...service._doc,
+      vendorName: service.vendorId?.fullName,
+      vendorEmail: service.vendorId?.email,
+    };
+
+    return res.status(200).json({ success: true, data: transformed });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
+
