@@ -1,5 +1,6 @@
-console.log("🚀 Initializing server...");
+console.log("🚀 Initializing server... branch-3.o");
 
+// ✅ Import required modules
 import { config } from "dotenv";
 import "dotenv/config";
 import { app } from "./app.js";
