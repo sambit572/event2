@@ -41,7 +41,6 @@ import VendorResetPassword from "./pages/vendor/VendorResetPass.jsx";
 import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
 import AddServiceInDashboard from "./components/vendor/AddServiceInDashboard.jsx";
 
-// Common
 import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 
