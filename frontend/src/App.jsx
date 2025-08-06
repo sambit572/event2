@@ -64,6 +64,7 @@ const App = () => {
   // Modal states for user
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
 
   // Modal states for vendor
   const [showVendorRegisterModal, setShowVendorRegisterModal] = useState(false);
@@ -172,7 +173,12 @@ const App = () => {
           onOpenRegister={handleOpenRegister}
           onOpenVendorRegister={handleOpenVendorRegister}
           onOpenVendorLogin={handleOpenVendorLogin}
+          setShowPasswordModal={setShowPasswordModal} 
         />
+      )}
+
+       {showPasswordModal && (
+        <VendorChangePassword onClose={() => setShowPasswordModal(false)} />
       )}
 
       <main className="custom-mt mt-[50px]  sm:mt-[70px] md:mt-[60px]">

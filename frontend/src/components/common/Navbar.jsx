@@ -17,7 +17,7 @@ import {
   FaHeart,
   FaSignOutAlt,
 } from "react-icons/fa";
-import { FcAbout } from "react-icons/fc";
+import { FcAbout, FcAssistant } from "react-icons/fc";
 import axios from "axios";
 import { useNavigate, Navigate, useLocation } from "react-router-dom";
 import { FaCartShopping } from "react-icons/fa6";
@@ -49,7 +49,7 @@ const CATEGORIES = [
   "card-design",
 ];
 
-const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
+const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin, isOpen, setShowPasswordModal }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -66,6 +66,12 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
 
   const [searchInput, setSearchInput] = useState("");
   const [showMobileSearchBar, setShowMobileSearchBar] = useState(false);
+
+  // pop up show after logout
+  const [showLogoutPopup, setShowLogoutPopup] = useState(false);
+  const [showVendorLogoutPopup, setShowVendorLogoutPopup] = useState(false);
+
+
   const profileRef = useRef(null);
   const ellipsisRef = useRef(null);
   const vendorRef = useRef(null);
@@ -248,13 +254,22 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
       setUserFirstName(null);
 
       dispatch(clearUser());
-      navigate("/", { replace: true });
+
+      // ✅ Show popup message
+      setShowLogoutPopup(true);
+      setTimeout(() => {
+        setShowLogoutPopup(false);
+        navigate("/", { replace: true });
+      }, 3000);
     } catch (error) {
       console.error("Logout failed", error);
+      alert("Logout failed. Please try again.");
     }
   };
 
-  const vendorLogout = async (req, res) => {
+
+
+  const vendorLogout = async () => {
     try {
       console.log("Logging out vendor...");
       await axios.post(
@@ -262,17 +277,28 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
         {},
         { withCredentials: true }
       );
+
+      // Clear vendor info
       localStorage.removeItem("VendorFullName");
       localStorage.removeItem("VendorFirstName");
       localStorage.removeItem("VendorInitial");
       localStorage.removeItem("VendorCurrentlyLoggedIn");
       setVendorFirstName(null);
       dispatch(clearVendor());
-      navigate("/", { replace: true });
+
+      // ✅ Show popup
+      setShowVendorLogoutPopup(true);
+      setTimeout(() => {
+        setShowVendorLogoutPopup(false);
+        navigate("/", { replace: true });
+      }, 3000);
+
     } catch (error) {
       console.error("Logout failed", error);
+      alert("Failed to logout");
     }
   };
+
 
   const handleSearch = (e) => {
     if (e.key === "Enter" && searchInput.trim()) {
@@ -440,9 +466,64 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
     }, 2000);
     return () => clearInterval(interval);
   }, []);
+
   return (
     <div>
+
       <div className="navbar">
+        {/* ✅ User Logout Popup */}
+        {showLogoutPopup && (
+          <div
+            style={{
+              position: "fixed",
+              top: "115px",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              padding: "20px 32px",
+              borderRadius: "8px",
+              background: "rgba(255, 255, 255, 0.1)",
+              boxShadow: "0 8px 32px rgba(31, 38, 135, 0.37)",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
+              border: "2px solid white",
+              fontWeight: "bold",
+              color: "white",
+              zIndex: 9999,
+              textAlign: "center",
+              animation: "popIn 0.3s ease-out forwards",
+            }}
+          >
+            You are logged out successfully!
+          </div>
+
+        )}
+
+        {/* ✅ Vendor Logout Popup */}
+        {showVendorLogoutPopup && (
+          <div
+            style={{
+              position: "fixed",
+              top: "115px",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              padding: "20px 32px",
+              borderRadius: "8px",
+              background: "rgba(255, 255, 255, 0.1)",
+              boxShadow: "0 8px 32px rgba(31, 38, 135, 0.37)",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
+              border: "2px solid white",
+              fontWeight: "bold",
+              color: "white",
+              zIndex: 9999,
+              textAlign: "center",
+              animation: "popIn 0.3s ease-out forwards",
+            }}
+          >
+            You are logged out successfully!
+          </div>
+        )}
+
         {/* Logo */}
         <div className="logo">
           <span onClick={handleHomeClick}>EVENTSBRIDGE</span>
@@ -496,13 +577,13 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                 }}
                 autoFocus
 
-                // onFocus={handleInputFocus}
-                // onKeyDown={(e) => {
-                //   if (e.key === "Enter") {
-                //     setShowSuggestions(false); // ✅ closes dropdown
-                //   }
-                //   handleSearch(e); // ✅ keep your existing search logic
-                // }}
+              // onFocus={handleInputFocus}
+              // onKeyDown={(e) => {
+              //   if (e.key === "Enter") {
+              //     setShowSuggestions(false); // ✅ closes dropdown
+              //   }
+              //   handleSearch(e); // ✅ keep your existing search logic
+              // }}
               />
             )}
             <div className="searchbarIcon">
@@ -654,11 +735,10 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                       if (!userFirstName) {
                         const toastId = toast.custom((t) => (
                           <div
-                            className={`${
-                              t.visible
-                                ? "animate-toast-wiggle"
-                                : "animate-leave"
-                            } fixed top-4 right-10 z-50 mt-12`}
+                            className={`${t.visible
+                              ? "animate-toast-wiggle"
+                              : "animate-leave"
+                              } fixed top-4 right-10 z-50 mt-12`}
                           >
                             {/* Toast Box */}
                             <div className="relative bg-white border-10 border-[#001f3f] text-black px-6 py-3 rounded-xl w-fit max-w-sm">
@@ -739,11 +819,10 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                             if (!userFirstName) {
                               const toastId = toast.custom((t) => (
                                 <div
-                                  className={`${
-                                    t.visible
-                                      ? "animate-toast-wiggle"
-                                      : "animate-leave"
-                                  } fixed top-4 right-10 z-50 mt-12`}
+                                  className={`${t.visible
+                                    ? "animate-toast-wiggle"
+                                    : "animate-leave"
+                                    } fixed top-4 right-10 z-50 mt-12`}
                                 >
                                   {/* Toast Box */}
                                   <div className="relative bg-white border-[#001f3f] text-black px-6 py-3 rounded-xl w-fit max-w-sm">
@@ -776,11 +855,10 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                             if (!userFirstName) {
                               const toastId = toast.custom((t) => (
                                 <div
-                                  className={`${
-                                    t.visible
-                                      ? "animate-toast-wiggle"
-                                      : "animate-leave"
-                                  } fixed top-4 right-10 z-50 mt-12`}
+                                  className={`${t.visible
+                                    ? "animate-toast-wiggle"
+                                    : "animate-leave"
+                                    } fixed top-4 right-10 z-50 mt-12`}
                                 >
                                   {/* Toast Box */}
                                   <div className="relative bg-white border-[#001f3f] text-black px-6 py-3 rounded-xl w-fit max-w-sm">
@@ -815,14 +893,12 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                       <hr className="my-2" />
                       <div className="flex flex-col gap-2">
                         <button
-                          className="bg-blue-500 hover:bg-blue-600 text-white py-3 px-3 rounded"
-                          onClick={() => {
-                            setShowVendorDropdown(false);
-                            navigate("/vendor/change-password");
-                          }}
+                          className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-3 rounded"
+                          onClick={() => navigate("/dashboard")}
                         >
-                          Change Password
+                          My Dashboard
                         </button>
+
                         <button
                           className="bg-red-500 hover:bg-red-600 text-white py-3 px-3 rounded"
                           onClick={() => {
@@ -862,9 +938,8 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
               {showEllipsisDropdown && (
                 <div className="dropdown-menu ellipsis-menu">
                   <div
-                    className={`dropdown-item ${
-                      location.pathname === "/about_us" ? "active" : ""
-                    }`}
+                    className={`dropdown-item ${location.pathname === "/about_us" ? "active" : ""
+                      }`}
                     onClick={() => {
                       navigate("/about_us");
                       setShowEllipsisDropdown(!showEllipsisDropdown);
@@ -874,15 +949,14 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                   </div>
 
                   <div
-                    className={`dropdown-item ${
-                      location.pathname === "/help_us" ? "active" : ""
-                    }`}
+                    className={`dropdown-item ${location.pathname === "/help_us" ? "active" : ""
+                      }`}
                     onClick={() => {
                       navigate("/help_us");
                       setShowEllipsisDropdown(!showEllipsisDropdown);
                     }}
                   >
-                    <FaHandsHelping className="nav-icon" /> Help Us
+                    <FcAssistant className="nav-icon" /> Help Us
                   </div>
                 </div>
               )}

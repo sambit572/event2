@@ -37,6 +37,9 @@
 }
 .login:hover {
   color: #fff;
+  background-color: #001f3f;
+  border-radius: 10px;
+  padding: 8px 12px;
 }
 .search-bar {
   display: flex;
@@ -227,7 +230,7 @@
 .signup-link {
   cursor: pointer;
   font-weight: 500;
-  color: #007bff;
+  color: #74b3f5;
   transition: color 0.2s ease;
 }
 
@@ -297,16 +300,16 @@
 .ellipsis-menu .dropdown-item {
   padding: 8px 12px;
   cursor: pointer;
-  font-weight: 300;
+  font-weight: 400;
   font-size: 15px;
   text-align: center;
   background: #fff;
-  color: #3b0340e1;
+  color: #001f3f;
 }
 
 .ellipsis-menu .dropdown-item:hover {
   font-weight: bold;
-  color: black;
+  color: #001f3f;
 }
 
 .login-h4 {
