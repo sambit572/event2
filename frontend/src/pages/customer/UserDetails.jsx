@@ -421,6 +421,143 @@ const UserDetails = () => {
     alert("Cancelled");
   };
 
+  // Helper to parse address components from Google Maps API
+  // Helper to extract a component by type
+  const getComponent = (components, type, useShort = false) => {
+    const comp = components.find((c) => c.types.includes(type));
+    if (!comp) return "";
+    return useShort ? comp.short_name : comp.long_name;
+  };
+
+  // Helper to extract sublocality (handles multiple possible types)
+  const getSublocality = (components) => {
+    const comp = components.find(
+      (c) =>
+        c.types.includes("sublocality") ||
+        c.types.includes("sublocality_level_1")
+    );
+    return comp ? comp.long_name : "";
+  };
+
+  const parseAddressComponents = (addressComponents) => {
+    return {
+      premise: getComponent(addressComponents, "premise"),
+      streetNumber: getComponent(addressComponents, "street_number"),
+      route: getComponent(addressComponents, "route"),
+      neighborhood: getComponent(addressComponents, "neighborhood"),
+      sublocality: getSublocality(addressComponents),
+      locality: getComponent(addressComponents, "locality"),
+      district_level_2: getComponent(
+        addressComponents,
+        "administrative_area_level_2"
+      ),
+      district_level_3: getComponent(
+        addressComponents,
+        "administrative_area_level_3"
+      ),
+      state: getComponent(
+        addressComponents,
+        "administrative_area_level_1",
+        true
+      ),
+      pincode: getComponent(addressComponents, "postal_code"),
+      country: getComponent(addressComponents, "country"),
+    };
+  };
+
+  // Helper to build address string
+  const buildCompleteAddress = ({
+    premise,
+    streetNumber,
+    route,
+    neighborhood,
+    sublocality,
+    locality,
+  }) => {
+    const addressParts = new Set();
+    if (premise || streetNumber) addressParts.add(premise || streetNumber);
+    if (route) addressParts.add(route);
+    if (neighborhood) addressParts.add(neighborhood);
+    if (sublocality) addressParts.add(sublocality);
+    if (locality) addressParts.add(locality);
+    return [...addressParts].join(", ");
+  };
+
+  // Helper to match state, district, city
+  const matchLocationFields = ({
+    state,
+    district_level_2,
+    district_level_3,
+    locality,
+  }) => {
+    const matchedState = findStateMatch(state);
+    let matchedDistrict =
+      findDistrictMatch(district_level_2, matchedState) ||
+      findDistrictMatch(district_level_3, matchedState) ||
+      findDistrictMatch(locality, matchedState);
+    const matchedCity = findCityMatch(locality, matchedDistrict);
+    return { matchedState, matchedDistrict, matchedCity };
+  };
+
+  // Helper to handle geocode API response
+  const handleGeocodeResponse = (data, setFormData, setLocationMessage) => {
+    if (data.status === "OK" && data.results.length > 0) {
+      const result = data.results[0];
+      const addressComponents = result.address_components;
+      const parsed = parseAddressComponents(addressComponents);
+      const completeAddress = buildCompleteAddress(parsed);
+      const { matchedState, matchedDistrict, matchedCity } =
+        matchLocationFields(parsed);
+      setFormData((prevData) => ({
+        ...prevData,
+        address: completeAddress.trim(),
+        state: matchedState || "",
+        district: matchedDistrict || "",
+        city: matchedCity || "",
+        pincode: parsed.pincode,
+        country: parsed.country || "India",
+      }));
+      setLocationMessage("Location auto-filled. Please verify the address.");
+      const matchInfo = [];
+      if (!matchedState) matchInfo.push("state");
+      if (!matchedDistrict) matchInfo.push("district");
+      if (!matchedCity) matchInfo.push("city");
+      if (matchInfo.length > 0) {
+        alert(
+          `Location fetched! Note: Could not auto-select ${matchInfo.join(
+            ", "
+          )}. Please select manually.`
+        );
+      } else {
+        alert("Location fetched successfully!");
+      }
+    } else {
+      console.error("Geocoding failed:", data.status);
+      alert("Could not get address. Please try again.");
+    }
+  };
+
+  // Helper to handle geolocation errors
+  const handleGeolocationError = (error) => {
+    console.error("Geolocation error:", error);
+    let errorMessage = "Failed to get location. ";
+    switch (error.code) {
+      case error.PERMISSION_DENIED:
+        errorMessage += "Please allow location access.";
+        break;
+      case error.POSITION_UNAVAILABLE:
+        errorMessage += "Location information unavailable.";
+        break;
+      case error.TIMEOUT:
+        errorMessage += "Location request timed out.";
+        break;
+      default:
+        errorMessage += "Unknown error occurred.";
+        break;
+    }
+    alert(errorMessage);
+  };
+
   const handleUseCurrentAddress = () => {
     if (!navigator.geolocation) {
       alert("Geolocation is not supported by your browser.");
@@ -444,86 +581,7 @@ const UserDetails = () => {
               },
             }
           );
-          if (data.status === "OK" && data.results.length > 0) {
-            const result = data.results[0];
-            const addressComponents = result.address_components;
-            let premise = "",
-              streetNumber = "",
-              route = "",
-              neighborhood = "",
-              sublocality = "";
-            let locality = "",
-              district_level_2 = "",
-              district_level_3 = "",
-              state = "";
-            let pincode = "",
-              country = "";
-            for (let comp of addressComponents) {
-              const types = comp.types;
-              const longName = comp.long_name;
-              const shortName = comp.short_name;
-              if (types.includes("premise")) premise = longName;
-              if (types.includes("street_number")) streetNumber = longName;
-              if (types.includes("route")) route = longName;
-              if (types.includes("neighborhood")) neighborhood = longName;
-              if (
-                types.includes("sublocality") ||
-                types.includes("sublocality_level_1")
-              )
-                sublocality = longName;
-              if (types.includes("locality")) locality = longName;
-              if (types.includes("administrative_area_level_2"))
-                district_level_2 = longName;
-              if (types.includes("administrative_area_level_3"))
-                district_level_3 = longName;
-              if (types.includes("administrative_area_level_1"))
-                state = shortName;
-              if (types.includes("postal_code")) pincode = longName;
-              if (types.includes("country")) country = longName;
-            }
-            const addressParts = new Set();
-            if (premise || streetNumber)
-              addressParts.add(premise || streetNumber);
-            if (route) addressParts.add(route);
-            if (neighborhood) addressParts.add(neighborhood);
-            if (sublocality) addressParts.add(sublocality);
-            if (locality) addressParts.add(locality);
-            const completeAddress = [...addressParts].join(", ");
-            const matchedState = findStateMatch(state);
-            let matchedDistrict =
-              findDistrictMatch(district_level_2, matchedState) ||
-              findDistrictMatch(district_level_3, matchedState) ||
-              findDistrictMatch(locality, matchedState);
-            const matchedCity = findCityMatch(locality, matchedDistrict);
-            setFormData((prevData) => ({
-              ...prevData,
-              address: completeAddress.trim(),
-              state: matchedState || "",
-              district: matchedDistrict || "",
-              city: matchedCity || "",
-              pincode: pincode,
-              country: country || "India",
-            }));
-            setLocationMessage(
-              "Location auto-filled. Please verify the address."
-            );
-            const matchInfo = [];
-            if (!matchedState) matchInfo.push("state");
-            if (!matchedDistrict) matchInfo.push("district");
-            if (!matchedCity) matchInfo.push("city");
-            if (matchInfo.length > 0) {
-              alert(
-                `Location fetched! Note: Could not auto-select ${matchInfo.join(
-                  ", "
-                )}. Please select manually.`
-              );
-            } else {
-              alert("Location fetched successfully!");
-            }
-          } else {
-            console.error("Geocoding failed:", data.status);
-            alert("Could not get address. Please try again.");
-          }
+          handleGeocodeResponse(data, setFormData, setLocationMessage);
         } catch (err) {
           console.error("Geocode error:", err);
           alert(
@@ -531,26 +589,7 @@ const UserDetails = () => {
           );
         }
       },
-      (error) => {
-        console.error("Geolocation error:", error);
-        let errorMessage = "Failed to get location. ";
-        switch (error.code) {
-          case error.PERMISSION_DENIED:
-            errorMessage += "Please allow location access.";
-            break;
-          case error.POSITION_UNAVAILABLE:
-            errorMessage += "Location information unavailable.";
-            break;
-
-          case error.TIMEOUT:
-            errorMessage += "Location request timed out.";
-            break;
-          default:
-            errorMessage += "Unknown error occurred.";
-            break;
-        }
-        alert(errorMessage);
-      },
+      handleGeolocationError,
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 }
     );
   };
