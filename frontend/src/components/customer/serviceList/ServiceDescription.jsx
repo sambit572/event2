@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "./ServiceDescription.css";
 import { Link, useNavigate } from "react-router-dom";
 import { FaRegHeart, FaHeart, FaRegCalendarCheck } from "react-icons/fa6";
 import { BACKEND_URL } from "../../../utils/constant";

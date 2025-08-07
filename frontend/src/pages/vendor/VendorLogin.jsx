@@ -90,7 +90,7 @@ const VendorLogin = ({ onClose, onSwitchToLogin }) => {
         window.recaptchaVerifier
       );
       window.confirmationResult = confirmationResult;
-      console.log("OTP sent successfully : ",confirmationResult)
+      console.log("OTP sent successfully : ", confirmationResult);
       setStep("otp");
     } catch (err) {
       setErrorMsg("OTP send failed. Try again.");

@@ -79,7 +79,6 @@ function VendorService({ currentStep }) {
     "Sonepur",
     "Sundargarh",
   ];
-  
 
   const filteredCategories = categories.filter((cat) =>
     cat.toLowerCase().includes(categorySearchTerm.toLowerCase())

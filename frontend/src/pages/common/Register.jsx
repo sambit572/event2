@@ -60,8 +60,7 @@ const Register = ({ onClose, onSwitchToLogin }) => {
       }
 
       console.log("Registration successful:", response.data);
-      const { user } = response?.data?.data; 
-     
+      const {user} = response?.data?.data;
       if (!user || !user.fullName) {
         throw new Error("Invalid response from server. Missing user data.");
       }

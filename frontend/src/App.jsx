@@ -55,14 +55,12 @@ import ScrollToTop from "./components/common/ScrollToTop.jsx";
 import AddToCart from "./components/customer/YourCart/AddToCart.jsx";
 import DashboardEnforcement from "./utils/DashboardEnforcement.jsx";
 
-
 //Feedback
 import Feedback from "./pages/common/Feedback.jsx";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-import ReviewSlider from "./components/customer/home/ReviewSlider.jsx";
 import FaqSection from "./components/customer/home/FaqSection.jsx";
 import ErrorPage from "./pages/common/ErrorPage.jsx";
-
+import ReviewSlider from "./components/customer/home/ReviewSlider.jsx";
 const App = () => {
   const location = useLocation();
   // Modal states for user
@@ -91,6 +89,8 @@ const App = () => {
     "/dashboard",
     "/profile",
     "/reset-password",
+    // "/service/:serviceId",
+    // "/category/:categoryId",
   ];
   const handleOpenLogin = () => {
     setShowLoginModal(true);
@@ -189,7 +189,7 @@ const App = () => {
           />
           {/* <Route path="/categories" element={<CategoryCard />}></Route> */}
           <Route path="/reviews" element={<ReviewSlider />} />
-           <Route path="/service/:serviceId" element={<ServiceDetails />} />
+          <Route path="/service/:serviceId" element={<ServiceDetails />} />
           <Route
             path="/wishlist"
             element={

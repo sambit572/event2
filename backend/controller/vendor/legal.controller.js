@@ -105,8 +105,6 @@ export const createLegalConsent = async (req, res) => {
   }
 };
 
-
-
 // Getting legal consent by vendor ID
 export const getLegalConsentByVendor = async (req, res) => {
   try {

@@ -20,7 +20,7 @@ export const addReview = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: errors.join(", ") + ".",
-        errors: errors
+        errors: errors,
       });
     }
 
@@ -55,7 +55,8 @@ export const addReview = async (req, res) => {
       console.log("Duplicate review attempt from:", userEmail);
       return res.status(409).json({
         success: false,
-        message: "A review already exists from this email. Only one review per email is allowed.",
+        message:
+          "A review already exists from this email. Only one review per email is allowed.",
       });
     }
 
@@ -81,23 +82,24 @@ export const addReview = async (req, res) => {
         userEmail: newReview.userEmail,
         rating: newReview.rating,
         reviewType: newReview.reviewType,
-        createdAt: newReview.createdAt
+        createdAt: newReview.createdAt,
       },
     });
   } catch (err) {
     console.error("Error in addReview:", err);
-    
+
     // Handle specific MongoDB errors
-    if (err.name === 'ValidationError') {
-      const validationErrors = Object.values(err.errors).map(e => e.message);
+    if (err.name === "ValidationError") {
+      const validationErrors = Object.values(err.errors).map((e) => e.message);
       return res.status(400).json({
         success: false,
         message: "Validation failed: " + validationErrors.join(", "),
-        errors: validationErrors
+        errors: validationErrors,
       });
     }
 
-    if (err.code === 11000) { // Duplicate key error
+    if (err.code === 11000) {
+      // Duplicate key error
       return res.status(409).json({
         success: false,
         message: "A review from this email already exists.",
@@ -107,7 +109,7 @@ export const addReview = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Internal server error. Please try again later.",
-      error: process.env.NODE_ENV === 'development' ? err.message : undefined
+      error: process.env.NODE_ENV === "development" ? err.message : undefined,
     });
   }
 };
@@ -126,26 +128,26 @@ export const getAllReviews = async (req, res) => {
     if (page < 1) {
       return res.status(400).json({
         success: false,
-        message: "Page number must be greater than 0"
+        message: "Page number must be greater than 0",
       });
     }
 
     if (limit < 1 || limit > 100) {
       return res.status(400).json({
         success: false,
-        message: "Limit must be between 1 and 100"
+        message: "Limit must be between 1 and 100",
       });
     }
 
     // Optional filter by reviewType
     const reviewType = req.query.reviewType;
     const filter = {};
-    
+
     if (reviewType) {
       if (!["product", "vendorService"].includes(reviewType)) {
         return res.status(400).json({
           success: false,
-          message: "Invalid reviewType. Must be 'product' or 'vendorService'"
+          message: "Invalid reviewType. Must be 'product' or 'vendorService'",
         });
       }
       filter.reviewType = reviewType;
@@ -168,8 +170,8 @@ export const getAllReviews = async (req, res) => {
       reviews.map(async (review) => {
         try {
           // Find user by email (case-insensitive)
-          const user = await User.findOne({ 
-            email: { $regex: new RegExp(`^${review.userEmail}$`, 'i') }
+          const user = await User.findOne({
+            email: { $regex: new RegExp(`^${review.userEmail}$`, "i") },
           });
 
           let userName = "";
@@ -181,7 +183,9 @@ export const getAllReviews = async (req, res) => {
             if (user.fullName) {
               userName = user.fullName;
             } else if (user.firstName || user.lastName) {
-              userName = `${user.firstName || ""} ${user.lastName || ""}`.trim();
+              userName = `${user.firstName || ""} ${
+                user.lastName || ""
+              }`.trim();
             } else {
               userName = review.userEmail.split("@")[0];
             }
@@ -239,7 +243,7 @@ export const getAllReviews = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to fetch reviews",
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+      error: process.env.NODE_ENV === "development" ? error.message : undefined,
     });
   }
 };

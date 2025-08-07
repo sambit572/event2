@@ -13,7 +13,7 @@ import cateringTablet from "../../assets/home/sliderImages/catering-tablet.png";
 import cateringDesktop from "../../assets/home/sliderImages/catering-desktop.png";
 
 import CategoryCard from "../../components/customer/home/CategoryCard.jsx";
-import ReviewSlider from "../../components/customer/Home/ReviewSlider.jsx";
+import ReviewSlider from "../../components/customer/home/ReviewSlider.jsx";
 import FaqSection from "../../components/customer/home/FaqSection.jsx";
 import ImageSlider from "../../components/customer/home/ImageSlider.jsx";
 
@@ -84,7 +84,6 @@ const Home = () => {
 
     checkUser();
   }, []);
-
 
   return (
     <div className="home">

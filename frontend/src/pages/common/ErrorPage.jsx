@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from "react";
 
-
-import { Link } from 'react-router-dom';
-
+// This is a placeholder for the Link component from react-router-dom.
+// In your actual project, you would import it directly:
+// import { Link } from 'react-router-dom';
+const Link = ({ to, children, ...props }) => (
+  <a href={to} {...props}>
+    {children}
+  </a>
+);
 
 // Bubble component for the background effect
 // These are purely decorative elements to add a sense of depth and motion.

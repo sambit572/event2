@@ -726,7 +726,6 @@ const noNeedToLogin = async (req, res) => {
   }
 };
 
-
 const getUserEmail = async (req, res) => {
   const user = await User.findById(req.user._id);
   return res

@@ -1,15 +1,16 @@
 /* ================= StepProgress Styles ================= */
 .progress-container {
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   align-items: center;
-  flex-wrap: nowrap;
-  gap: 10px;
-  padding: 1rem;
-  margin: 5rem auto;
+  /* flex-wrap: nowrap; */
+  /* gap: 10px; */
+  padding: 2rem;
+  /* margin: 2rem auto; */
   max-width: 100%;
   box-sizing: border-box;
   position: relative;
+  /* background-color: aqua; */
 }
 
 .step-wrapper {
@@ -19,6 +20,7 @@
   align-items: center;
   position: relative;
   text-align: center;
+  /* background-color: #d73f3f; */
 }
 
 .step-label {
@@ -63,15 +65,18 @@
 .step-wrapper:not(:last-child)::after {
   content: "";
   position: absolute;
-  top: 50%;
+  top: 40%;
   left: calc(50% + 30px);
   height: 3px;
-  width: calc(100% - 60px);
+  width: calc(100% - 50px);
   background-color: #000000;
   z-index: 0;
   transform: translateY(-50%);
 }
-
+.step-wrapper:last-child {
+  /* Just to be safe, enforce same height */
+  min-height: 167px;
+}
 /* ================= Responsive Design ================= */
 
 /* Large Desktop */
@@ -90,10 +95,10 @@
     height: 35px;
   }
 
-  .step-wrapper:not(:last-child)::after {
+  /* .step-wrapper:not(:last-child)::after {
     left: calc(50% + 35px);
     width: calc(100% - 60px);
-  }
+  } */
 }
 
 /* Desktop */
@@ -111,26 +116,38 @@
     width: 32px;
     height: 32px;
   }
-
-  .step-wrapper:not(:last-child)::after {
+  .step-wrapper:last-child {
+    /* Just to be safe, enforce same height */
+    min-height: 155px;
+  }
+  /* .step-wrapper:not(:last-child)::after {
     left: calc(50% + 32.5px);
     width: calc(100% - 55px);
+  } */
+}
+@media (max-width: 1018px) {
+  .step-wrapper:last-child {
+    /* Just to be safe, enforce same height */
+    min-height: 158px;
   }
 }
-
 /* Tablet */
 
 @media (max-width: 768px) {
   .progress-container {
     gap: 6px;
     padding: 0.8rem;
+    margin-top: 80px;
   }
 
   .step-label {
     font-size: 0.875rem;
     margin-bottom: 0.3rem;
   }
-
+  .step-wrapper:last-child {
+    /* Just to be safe, enforce same height */
+    min-height: 138px;
+  }
   .step-sub-label {
     font-size: 0.7rem;
     padding: 0.25rem 0.5rem;
@@ -149,11 +166,17 @@
 
   .step-wrapper:not(:last-child)::after {
     height: 2px;
+    top: 35%;
     left: calc(50% + 25px);
-    width: calc(100% - 44px);
+    width: calc(100% - 40px);
   }
 }
-
+@media (max-width: 680px) {
+  .step-wrapper:last-child {
+    /* Just to be safe, enforce same height */
+    min-height: 128px;
+  }
+}
 /* Mobile */
 @media (max-width: 480px) {
   .progress-container {
@@ -163,6 +186,11 @@
 
   .step-wrapper {
     flex: 1;
+  }
+
+  .step-wrapper:last-child {
+    /* Just to be safe, enforce same height */
+    min-height: 108px;
   }
 
   .step-label {
@@ -190,6 +218,7 @@
 
   .step-wrapper:not(:last-child)::after {
     height: 2px;
+    top: 30%;
     left: calc(50% + 20px);
     width: calc(100% - 35px);
   }
@@ -237,7 +266,12 @@
     width: 32px;
     height: 32px;
   }
-
+  @media (max-width: 1018px) {
+    .step-wrapper:last-child {
+      /* Just to be safe, enforce same height */
+      min-height: 93px;
+    }
+  }
   .step-circle img {
     width: 16px;
     height: 16px;
@@ -264,7 +298,12 @@
     padding: 0.4rem;
     gap: 1px;
   }
-
+  @media (max-width: 1018px) {
+    .step-wrapper:last-child {
+      /* Just to be safe, enforce same height */
+      min-height: 86px;
+    }
+  }
   .step-label {
     font-size: 0.6rem;
     margin-bottom: 0.15rem;

@@ -13,6 +13,7 @@ import {
   FaChevronUp,
   FaStore,
   FaEllipsisV,
+  FaHandsHelping,
   FaHeart,
   FaSignOutAlt,
 } from "react-icons/fa";
@@ -689,7 +690,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                     }}
                   >
                     {!VendorFirstName ? (
-                      <span className="font-medium vendorNameText hover:bg-[#001f3f]  hover rounded px-2 py-1 transition-colors">
+                      <span className="font-medium vendorNameText transition-colors">
                         Be a Vendor
                       </span>
                     ) : (
@@ -714,9 +715,9 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                   >
                     {" "}
                     {showVendorDropdown ? (
-                      <FaChevronUp className="text-sm" />
+                      <FaChevronUp className="text-sm icons" />
                     ) : (
-                      <FaChevronDown className="text-sm" />
+                      <FaChevronDown className="text-sm icons" />
                     )}
                   </span>
                 </div>

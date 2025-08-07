@@ -11,13 +11,13 @@ import axios from "axios";
 export default function VendorPayment() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  
+
   // Add PAN verification states
   const [panVerification, setPanVerification] = useState({
     isVerifying: false,
     isVerified: false,
     verificationMessage: "",
-    verifiedName: ""
+    verifiedName: "",
   });
 
   const [formData, setFormData] = useState({
@@ -47,15 +47,15 @@ export default function VendorPayment() {
         isVerifying: false,
         isVerified: false,
         verificationMessage: "",
-        verifiedName: ""
+        verifiedName: "",
       });
       return;
     }
 
-    setPanVerification(prev => ({
+    setPanVerification((prev) => ({
       ...prev,
       isVerifying: true,
-      verificationMessage: "Verifying PAN..."
+      verificationMessage: "Verifying PAN...",
     }));
 
     console.log(`🔍 [VendorPayment] Verifying PAN: ${panNumber}`);
@@ -76,14 +76,14 @@ export default function VendorPayment() {
           isVerifying: false,
           isVerified: true,
           verificationMessage: "PAN verified successfully!",
-          verifiedName
+          verifiedName,
         });
 
         // Auto-fill account holder name if verified name is available
         if (verifiedName && !formData.accountHolderName) {
-          setFormData(prev => ({
+          setFormData((prev) => ({
             ...prev,
-            accountHolderName: verifiedName
+            accountHolderName: verifiedName,
           }));
         }
       }
@@ -91,8 +91,9 @@ export default function VendorPayment() {
       setPanVerification({
         isVerifying: false,
         isVerified: false,
-        verificationMessage: error.response?.data?.message || "PAN verification failed",
-        verifiedName: ""
+        verificationMessage:
+          error.response?.data?.message || "PAN verification failed",
+        verifiedName: "",
       });
     }
   };
@@ -100,9 +101,9 @@ export default function VendorPayment() {
   // Handle PAN input with auto-verification
   const handlePANChange = (e) => {
     const panValue = e.target.value.toUpperCase();
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      panNumber: panValue
+      panNumber: panValue,
     }));
 
     // Reset verification state when PAN changes
@@ -111,7 +112,7 @@ export default function VendorPayment() {
         isVerifying: false,
         isVerified: false,
         verificationMessage: "",
-        verifiedName: ""
+        verifiedName: "",
       });
     }
 
@@ -136,7 +137,7 @@ export default function VendorPayment() {
       upiId,
       panNumber,
     } = formData;
-  
+
     // Check required fields
     if (
       !accountHolderName ||
@@ -157,10 +158,10 @@ export default function VendorPayment() {
       alert("Please verify your PAN number before proceeding.");
       return;
     }
-  
+
     try {
       const vendorId = localStorage.getItem("vendorId");
-  
+
       await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/vendors/bank-details`,
         {
@@ -178,14 +179,17 @@ export default function VendorPayment() {
           withCredentials: true,
         }
       );
-  
+
       navigate("/vendor/legal-consent", { state: { currentStep: 3 } });
     } catch (err) {
-      console.error("Error submitting bank details:", err.response?.data || err.message);
+      console.error(
+        "Error submitting bank details:",
+        err.response?.data || err.message
+      );
       setShowPopup(true);
       setTimeout(() => setShowPopup(false), 3000);
     }
-  
+
     setIsLoading(false);
   };
 
@@ -197,7 +201,7 @@ export default function VendorPayment() {
 
       <StepProgress currentStep={2} />
       {isLoading && <Spinner />}
-      
+
       <div className="payment-box">
         <h2 className="payment-box-title">Bank Details</h2>
 
@@ -211,7 +215,7 @@ export default function VendorPayment() {
             placeholder="Enter account name"
           />
           {panVerification.verifiedName && (
-            <small style={{color: '#28a745', fontSize: '12px'}}>
+            <small style={{ color: "#28a745", fontSize: "12px" }}>
               Verified name: {panVerification.verifiedName}
             </small>
           )}
@@ -292,14 +296,17 @@ export default function VendorPayment() {
 
         <label>
           PAN Card Number <span className="required-icon">*</span>
-          <div style={{ position: 'relative' }}>
+          <div style={{ position: "relative" }}>
             <input
               type="text"
               name="panNumber"
               value={formData.panNumber}
               onChange={handlePANChange}
               onBlur={() => {
-                if (formData.panNumber.length === 10 && !panVerification.isVerified) {
+                if (
+                  formData.panNumber.length === 10 &&
+                  !panVerification.isVerified
+                ) {
                   verifyPAN(formData.panNumber);
                 }
               }}
@@ -308,55 +315,65 @@ export default function VendorPayment() {
               maxLength="10"
               required
               style={{
-                borderColor: panVerification.isVerified ? '#28a745' : 
-                           panVerification.verificationMessage && !panVerification.isVerified ? '#dc3545' : 
-                           '#ccc'
+                borderColor: panVerification.isVerified
+                  ? "#28a745"
+                  : panVerification.verificationMessage &&
+                    !panVerification.isVerified
+                  ? "#dc3545"
+                  : "#ccc",
               }}
             />
-            
+
             {/* PAN Verification Status */}
             {panVerification.isVerifying && (
-              <div style={{
-                position: 'absolute',
-                right: '10px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                display: 'flex',
-                alignItems: 'center'
-              }}>
-                <div style={{
-                  width: '16px',
-                  height: '16px',
-                  border: '2px solid #f3f3f3',
-                  borderTop: '2px solid #007bff',
-                  borderRadius: '50%',
-                  animation: 'spin 1s linear infinite'
-                }}></div>
+              <div
+                style={{
+                  position: "absolute",
+                  right: "10px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <div
+                  style={{
+                    width: "16px",
+                    height: "16px",
+                    border: "2px solid #f3f3f3",
+                    borderTop: "2px solid #007bff",
+                    borderRadius: "50%",
+                    animation: "spin 1s linear infinite",
+                  }}
+                ></div>
               </div>
             )}
-            
+
             {panVerification.isVerified && (
-              <div style={{
-                position: 'absolute',
-                right: '10px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                color: '#28a745',
-                fontSize: '18px'
-              }}>
+              <div
+                style={{
+                  position: "absolute",
+                  right: "10px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  color: "#28a745",
+                  fontSize: "18px",
+                }}
+              >
                 ✓
               </div>
             )}
           </div>
-          
           {/* Verification Message */}
           {panVerification.verificationMessage && (
-            <small style={{
-              color: panVerification.isVerified ? '#28a745' : '#dc3545',
-              fontSize: '12px',
-              marginTop: '4px',
-              display: 'block'
-            }}>
+            <small
+              style={{
+                color: panVerification.isVerified ? "#28a745" : "#dc3545",
+                fontSize: "12px",
+                marginTop: "4px",
+                display: "block",
+              }}
+            >
               {panVerification.verificationMessage}
             </small>
           )}
@@ -364,11 +381,15 @@ export default function VendorPayment() {
 
         <Button onBack={handleBack} onNext={handleNext} />
       </div>
-      
+
       <style jsx>{`
         @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
         }
       `}</style>
     </div>

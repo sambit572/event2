@@ -10,7 +10,7 @@ import "./StepProgress.css";
 import "./LegalButton.css";
 import axios from "axios";
 import Spinner from "./../../components/common/Spinner";
-import {useSelector} from "react-redux";
+import { useSelector } from "react-redux";
 
 export default function VendorLegalConsent() {
   const [signatureFile, setSignatureFile] = React.useState(null);
@@ -18,7 +18,6 @@ export default function VendorLegalConsent() {
   const vendor = useSelector((state) => state.vendor.vendor);
 
   console.log("Vendor Legal Consent Page Rendered");
-
 
   const fileInputRef = React.useRef();
   const navigate = useNavigate();

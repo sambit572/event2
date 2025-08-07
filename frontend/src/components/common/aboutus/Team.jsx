@@ -70,7 +70,7 @@ const reviews = [
   },
 ];
 
-const ReviewSlider = () => {
+const Team = () => {
   const [offset, setOffset] = useState(0);
   const containerRef = useRef(null);
   const cardWidth = 310;
@@ -118,4 +118,4 @@ const ReviewSlider = () => {
   );
 };
 
-export default ReviewSlider;
+export default Team;

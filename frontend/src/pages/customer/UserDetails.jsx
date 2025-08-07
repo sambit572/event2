@@ -3,7 +3,37 @@ import axios from "axios";
 import "./UserDetails.css";
 
 const stateDistricts = {
-  Odisha: ["Angul","Balangir","Balasore","Bargarh","Bhadrak","Boudh","Cuttack","Debagarh","Dhenkanal","Gajapati","Ganjam","Jagatsinghpur","Jajpur","Jharsuguda","Kalahandi","Kandhamal","Kendrapara","Kendujhar","Khordha","Koraput","Malkangiri","Mayurbhanj","Nabarangpur","Nayagarh","Nuapada","Puri","Rayagada","Sambalpur","Subarnapur","Sundargarh",
+  Odisha: [
+    "Angul",
+    "Balangir",
+    "Balasore",
+    "Bargarh",
+    "Bhadrak",
+    "Boudh",
+    "Cuttack",
+    "Debagarh",
+    "Dhenkanal",
+    "Gajapati",
+    "Ganjam",
+    "Jagatsinghpur",
+    "Jajpur",
+    "Jharsuguda",
+    "Kalahandi",
+    "Kandhamal",
+    "Kendrapara",
+    "Kendujhar",
+    "Khordha",
+    "Koraput",
+    "Malkangiri",
+    "Mayurbhanj",
+    "Nabarangpur",
+    "Nayagarh",
+    "Nuapada",
+    "Puri",
+    "Rayagada",
+    "Sambalpur",
+    "Subarnapur",
+    "Sundargarh",
   ],
   Gujarat: ["Ahmedabad", "Surat", "Vadodara"],
   Maharashtra: ["Mumbai Suburban", "Pune", "Nagpur"],
@@ -18,7 +48,17 @@ const districtCities = {
   Bargarh: ["Bargarh", "Kantabanji", "Sohela", "Barpali"],
   Bhadrak: ["Bhadrak", "Dhamnagar", "Basudebpur", "Erei"],
   Boudh: ["Boudh"],
-  Cuttack: ["Cuttack","Choudwar","Athagad","Banki","Charibatia","Dadhapatna","Kanheipur","Nuapatna","Ramgarh",],
+  Cuttack: [
+    "Cuttack",
+    "Choudwar",
+    "Athagad",
+    "Banki",
+    "Charibatia",
+    "Dadhapatna",
+    "Kanheipur",
+    "Nuapatna",
+    "Ramgarh",
+  ],
   Debagarh: ["Debagarh"],
   Dhenkanal: ["Dhenkanal", "Indipur", "Bhuban", "Kamakshyanagar"],
   Gajapati: ["Paralakhemundi", "Kashinagar"],
@@ -243,8 +283,8 @@ const UserDetails = () => {
       alert("Geolocation is not supported by your browser.");
       return;
     }
-  // Check if API key is available
-  if (!import.meta.env.VITE_GOOGLE_API_KEY) {
+    // Check if API key is available
+    if (!import.meta.env.VITE_GOOGLE_API_KEY) {
       alert("Google API key is not configured.");
       console.error("VITE_GOOGLE_API_KEY is not set in environment variables");
       return;
@@ -265,8 +305,7 @@ const UserDetails = () => {
             }
           );
           console.log("Data fetched from API : ", data);
-          
-          
+
           if (data.status === "OK") {
             const addressComponents = data.results[0].address_components;
 

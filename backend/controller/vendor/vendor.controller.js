@@ -104,8 +104,6 @@ const registerVendor = async (req, res) => {
   `,
     });
 
-    
-
     // 5. Return success response
     return res
       .status(200)
@@ -617,13 +615,13 @@ export const getVendorDashboard = async (req, res) => {
 
       if (currentStep === 1) {
         redirectTo = "/category/VendorService";
-      } 
-       if (currentStep === 2) {
+      }
+      if (currentStep === 2) {
         redirectTo = "/vendor/payment-info";
       }
-       if (currentStep === 3) {
+      if (currentStep === 3) {
         redirectTo = "/vendor/legal-consent";
-      } 
+      }
 
       return res.status(200).json({
         incomplete: true,

@@ -32,7 +32,7 @@ const serviceSchema = new Schema(
       required: true,
     },
     locationOffered: {
-      type: [String], 
+      type: [String],
       required: true,
     },
     serviceDes: {

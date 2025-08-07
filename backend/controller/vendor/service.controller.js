@@ -118,7 +118,6 @@ export const createService = async (req, res) => {
   }
 };
 
-
 export const checkServiceExists = async (req, res) => {
   try {
     const existingService = await Service.findOne().sort({ createdAt: -1 });
@@ -233,7 +232,6 @@ export const updateService = async (req, res) => {
     return res.status(500).json(new ApiError(500, "Internal Server Error"));
   }
 };
-
 
 export const deleteService = async (req, res) => {
   try {

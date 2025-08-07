@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { FiChevronDown } from "react-icons/fi";
-import AboutUs_1 from "../../assets/aboutUs/about-image.png";
-import Aboutus_2 from "../../assets/aboutUs/Aboutus_2.png";
+import AboutUs_1 from "../../assets/aboutus/aboutus_1.jpeg";
+import Aboutus_2 from "../../assets/aboutus/aboutus_2.png";
 import Design from "../../components/common/aboutus/Design";
 import ServiceFeature from "./ServiceFeature";
 import frame from "../../assets/home/categoriesImages/pandit.png";
@@ -24,14 +24,16 @@ const Card = ({ title, description, image }) => {
         <div className="flex justify-between items-center w-full">
           <h3 className="text-lg font-semibold text-[#001f3f]">{title}</h3>
           <FiChevronDown
-            className={`text-xl transition-transform duration-300 ${open ? "rotate-180" : ""
-              }`}
+            className={`text-xl transition-transform duration-300 ${
+              open ? "rotate-180" : ""
+            }`}
           />
         </div>
       </div>
       <div
-        className={`transition-all duration-300 overflow-hidden mt-3 ${open ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-          }`}
+        className={`transition-all duration-300 overflow-hidden mt-3 ${
+          open ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+        }`}
       >
         {open && (
           <p className="text-gray-700 text-sm leading-relaxed mt-3">
@@ -47,51 +49,61 @@ const AboutUs = () => {
   return (
     <div className="bg-transparent text-gray-800 px-4 sm:px-6 md:px-10 py-10 space-y-20">
       {/* First Section */}
-      <div className="flex flex-col items-center gap-7">
-        {/* Top - Image Section */}
-        <div className="w-full ">
+      <div className="flex flex-col lg:flex-row items-center gap-10">
+        {/* Left - Image Section */}
+        <div className="w-full lg:w-1/2">
           <img
             src={AboutUs_1}
             alt="About Eventsbridge Platform"
-            className="w-full h-[510px] object-cover ml-2 -mt-7 rounded-xl border border-gray-200 shadow-lg"
+            className="w-full h-[520px] object-cover mt-15 rounded-xl border border-gray-200 shadow-lg"
           />
         </div>
 
-        {/* Bottom - Textual Content */}
-        <div className="w-full space-y-5">
+        {/* Right - Textual Content */}
+        <div className="w-full lg:w-1/2 space-y-5">
           <h2 className="text-3xl font-bold text-[#001f3f]">
-            About Eventsbridge
+            Information About Eventsbridge
           </h2>
           <p className="text-gray-700 text-base md:text-lg">
-            Eventsbridge is a cutting-edge digital platform created to revolutionize the way events are planned and experienced. Whether you're hosting a wedding, birthday, corporate function, or cultural ceremony — our platform connects customers with the most reliable and talented vendors in the industry.
+            Eventsbridge is a cutting-edge digital platform created to
+            revolutionize the way events are planned and experienced. Whether
+            you're hosting a wedding, birthday, corporate function, or cultural
+            ceremony — our platform connects customers with the most reliable
+            and talented vendors in the industry.
           </p>
           <p className="text-gray-700 text-sm md:text-base">
-            The platform is designed to remove the stress and guesswork from event management. With our intuitive interface, you can search, compare, and book vendors across multiple categories — all from one place.
+            The platform is designed to remove the stress and guesswork from
+            event management. With our intuitive interface, you can search,
+            compare, and book vendors across multiple categories — all from one
+            place.
           </p>
 
           <ul className="space-y-3 mt-4">
             <li className="flex items-start gap-2">
               <FaCheckCircle className="text-green-500 mt-1" />
               <span>
-                <strong>For Vendors:</strong> Expand visibility, receive real-time leads, and manage bookings efficiently.
+                <strong>For Vendors:</strong> Expand visibility, receive
+                real-time leads, and manage bookings efficiently.
               </span>
             </li>
             <li className="flex items-start gap-2">
               <FaCheckCircle className="text-green-500 mt-1" />
               <span>
-                <strong>For Customers:</strong> Discover, evaluate, and book trusted services confidently with reviews and transparent pricing.
+                <strong>For Customers:</strong> Discover, evaluate, and book
+                trusted services confidently with reviews and transparent
+                pricing.
               </span>
             </li>
             <li className="flex items-start gap-2">
               <FaCheckCircle className="text-green-500 mt-1" />
               <span>
-                <strong>Admin Recommendations:</strong> Get curated vendor suggestions based on your event type, location, and preferences.
+                <strong>Admin Recommendations:</strong> Get curated vendor
+                suggestions based on your event type, location, and preferences.
               </span>
             </li>
           </ul>
         </div>
       </div>
-
 
       <Design />
 

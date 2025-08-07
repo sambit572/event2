@@ -10,8 +10,6 @@ import {
 } from "../../controller/vendor/service.controller.js";
 
 import { verifyVendorJwt } from "../../middleware/VendorAuth.middleware.js";
-  
-
 
 // Vendor Core Controllers
 import {
@@ -40,6 +38,7 @@ import {
   getBankDetailsByVendor,
   updateBankDetails,
 } from "../../controller/vendor/bankdetails.controller.js";
+// import { getServiceById } from './../../controller/vendor/service.controller';
 
 // Legal Consent
 import {
@@ -48,8 +47,10 @@ import {
   updateLegalConsent,
   deleteLegalConsent,
 } from "../../controller/vendor/legal.controller.js";
-
-
+import {
+  getServiceById,
+  getServicesByCategory,
+} from "../../controller/common/serviceList.controller.js";
 
 const vendor_router = express.Router();
 
@@ -67,8 +68,9 @@ vendor_router.post("/change-password", verifyVendorJwt, changeVendorPassword);
 vendor_router.get("/silent-login", verifyVendorJwt, vendorSilentLogin);
 vendor_router.post("/check-email", checkVendorEmailStatus);
 vendor_router.get("/me", verifyVendorJwt, getVendorProfile);
+vendor_router.get("/category/:category", getServicesByCategory);
 
-// --- PROFILE ROUTES --- //
+vendor_router.get("/service/:id", getServiceById); // --- PROFILE ROUTES --- //
 vendor_router.put("/:id", upload.single("profilePicture"), updateVendor);
 
 // --- SERVICE ROUTES --- //
@@ -95,7 +97,6 @@ vendor_router
   .route("/update-availability/:id")
   .patch(verifyVendorJwt, updateAvailability);
 
-
 vendor_router.post(
   "/upload-new-service-image/:id",
   upload.array("images", 5),
@@ -103,11 +104,7 @@ vendor_router.post(
 );
 
 // --- BANK DETAILS ROUTES --- //
-vendor_router.post(
-  "/bank-details",
-  verifyVendorJwt,
-  createBankDetails
-);
+vendor_router.post("/bank-details", verifyVendorJwt, createBankDetails);
 vendor_router.get(
   "/bank-details/bankDetails",
   verifyVendorJwt,
@@ -125,7 +122,11 @@ vendor_router.post(
   upload.single("signature"),
   createLegalConsent
 );
-vendor_router.get("/legal-consent/:vendorId", verifyVendorJwt, getLegalConsentByVendor);
+vendor_router.get(
+  "/legal-consent/:vendorId",
+  verifyVendorJwt,
+  getLegalConsentByVendor
+);
 vendor_router.put(
   "/legal-consent/:vendorId",
   upload.single("signature"),

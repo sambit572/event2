@@ -5,7 +5,7 @@ const bankDetailsSchema = new Schema(
     vendorId: {
       type: Schema.Types.ObjectId,
       ref: "Vendor",
-      required:true,
+      required: true,
     },
     accountHolderName: {
       type: String,
@@ -31,12 +31,12 @@ const bankDetailsSchema = new Schema(
     upiId: {
       type: String,
     },
-   
+
     panNumber: {
       type: String,
       required: true,
       match: [/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN card format"],
-    },   
+    },
   },
   { timestamps: true }
 );
