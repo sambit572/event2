@@ -1,14 +1,16 @@
+import React, { useState, useEffect } from "react";
 import "./ServiceDescription.css";
-import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaRegHeart, FaHeart } from "react-icons/fa6";
-import { FaRegCalendarCheck } from "react-icons/fa6";
+import { FaRegHeart, FaHeart, FaRegCalendarCheck } from "react-icons/fa6";
+import { BACKEND_URL } from "../../../utils/constant";
+import axios from "axios";
 
 const ServiceDescription = ({ service, onSwitchToLogin }) => {
   const navigate = useNavigate();
   const [isWishlisted, setIsWishlisted] = useState(false);
 
-  const id = service._id || service.id;
+  const serviceId = service._id || service.id;
+
   const title = service.serviceName || service.title || "Untitled Service";
   const vendorName = service.vendorName || "Unknown Vendor";
   const description = service.serviceDes || service.description || "";
@@ -21,12 +23,11 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
     const minutes = totalMinutes % 60;
 
     let result = "";
-
     if (days > 0) result += `${days}d`;
     if (hours > 0) result += (result ? " : " : "") + `${hours}h`;
     if (minutes > 0) result += (result ? " : " : "") + `${minutes}m`;
 
-    return result || "0m"; // fallback if all are 0
+    return result || "0m";
   };
 
   const duration = formatDuration(rawDuration);
@@ -50,12 +51,56 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
   const originalPrice = service.originalPrice;
   const discountPercent = service.discountPercent;
 
-  const handleWishlistToggle = () => {
-    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
-    if (isLoggedIn) {
-      setIsWishlisted(!isWishlisted);
-    } else {
-      onSwitchToLogin(true);
+  // Fetch wishlist status
+  useEffect(() => {
+    const fetchWishlistStatus = async () => {
+      try {
+        const res = await axios.get(`${BACKEND_URL}/wishlist/getwishlist`, {
+          withCredentials: true,
+        });
+        const found = res.data.some((item) => item.service._id === serviceId);
+        setIsWishlisted(found);
+      } catch (err) {
+        console.error("Error fetching wishlist:", err);
+      }
+    };
+
+    fetchWishlistStatus();
+
+    // Event listener to update state when wishlist is changed elsewhere
+    const handleWishlistUpdate = (e) => {
+      if (e.detail?.serviceId === serviceId) {
+        fetchWishlistStatus();
+      }
+    };
+
+    window.addEventListener("wishlistUpdated", handleWishlistUpdate);
+    return () => {
+      window.removeEventListener("wishlistUpdated", handleWishlistUpdate);
+    };
+  }, [serviceId]);
+
+  // Toggle wishlist state
+  const handleToggle = async () => {
+    try {
+      await axios.post(
+        `${BACKEND_URL}/wishlist/toggle/${serviceId}`,
+        {},
+        { withCredentials: true }
+      );
+      const newStatus = !isWishlisted;
+      setIsWishlisted(newStatus);
+
+      // Notify other components (like Wishlist.jsx)
+      window.dispatchEvent(
+        new CustomEvent("wishlistUpdated", {
+          detail: { serviceId },
+        })
+      );
+
+      console.log("Wishlist toggled:", newStatus);
+    } catch (err) {
+      console.error("Toggle error:", err);
     }
   };
 
@@ -70,7 +115,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
 
   return (
     <section className="w-full text-black-900 p-4">
-      {/* Wishlist Button */}
+      {/* Wishlist Heart */}
       <div className="flex justify-end h-0">
         <div
           className={`h-10 w-10 flex items-center justify-center rounded-full bg-white shadow-md cursor-pointer transition-all duration-300
@@ -79,15 +124,16 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
                 ? "text-red-600 ring-2 ring-red-300 shadow-red-200"
                 : "text-gray-600 hover:text-red-500"
             }`}
-          onClick={handleWishlistToggle}
+          onClick={handleToggle}
         >
           {isWishlisted ? <FaHeart /> : <FaRegHeart />}
         </div>
       </div>
 
-      {/* Service Info */}
-      <Link to={`/service/${id}`} className="block">
+      {/* Main Content */}
+      <Link to={`/service/${serviceId}`} className="block">
         <h3 className="text-xl font-bold mb-1">{title}</h3>
+
         <div className="flex items-center gap-2 text-sm font-medium text-blue-700 mb-2">
           <span className="text-blue-800">{vendorName}</span>
           <span className="text-gray-400 text-xs">|</span>
@@ -121,12 +167,12 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
             </>
           )}
         </div>
+
         <p className="text-sm text-black mb-4">
           <span className="font-bold">Prep Time: </span>
           {duration}
         </p>
 
-        {/* Description */}
         <p className="text-sm text-black mb-4">{description}</p>
       </Link>
 
