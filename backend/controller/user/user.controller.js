@@ -15,8 +15,10 @@ import { sendEmail } from "../../utilities/sendEmail.js";
 
 const option = {
   httpOnly: true,
-  secure: false,
+  secure: false, // for localhost
+  // secure : true, // for production
   sameSite: "Lax",
+  maxAge: 10 * 24 * 60 * 60 * 1000, // 10 days
 };
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 

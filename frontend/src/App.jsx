@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 // Core Components
@@ -14,7 +14,7 @@ import Register from "./pages/common/Register.jsx";
 // Customer Pages
 import Home from "./pages/customer/Home";
 import ServiceList from "./pages/customer/ServiceList";
-import ReviewSlider from "./components/customer/home/ReviewSlider.jsx";
+
 import ServiceDetails from "./pages/customer/ServiceDetails";
 
 import VendorLegalConsent from "./pages/vendor/VendorLegalConsent";
@@ -33,7 +33,7 @@ import ResetPassword from "./pages/customer/ResetPassword.jsx";
 import Wishlist from "./pages/customer/Wishlist.jsx";
 import Profile from "./components/customer/profile/Profile.jsx";
 import UserDetails from "./pages/customer/UserDetails.jsx";
-import DashboardServices from "./components/vendor/DashboardServices.jsx";
+
 import PopUp from "./components/customer/CustomerNegotiationModal";
 import VendorResetPassword from "./pages/vendor/VendorResetPass.jsx";
 
@@ -41,25 +41,26 @@ import VendorResetPassword from "./pages/vendor/VendorResetPass.jsx";
 import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
 import AddServiceInDashboard from "./components/vendor/AddServiceInDashboard.jsx";
 
-// Common
 import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 
 import BackToTop from "./pages/common/BackToTop";
-import FaqSection from "./components/customer/home/FaqSection.jsx";
+
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { setUser } from "./redux/UserSlice.js";
 import { setVendor } from "./redux/VendorSlice.js";
 import ScrollToTop from "./components/common/ScrollToTop.jsx";
 import AddToCart from "./components/customer/YourCart/AddToCart.jsx";
-import ErrorPage from "./pages/common/ErrorPage.jsx";
-import VendorChangePassword from "./components/vendor/VendorChangePassword.jsx";
+import DashboardEnforcement from "./utils/DashboardEnforcement.jsx";
 
+//Feedback
+import Feedback from "./pages/common/Feedback.jsx";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-
+import FaqSection from "./components/customer/home/FaqSection.jsx";
+import ErrorPage from "./pages/common/ErrorPage.jsx";
+import ReviewSlider from "./components/customer/home/ReviewSlider.jsx";
 const App = () => {
-  const navigate = useNavigate();
   const location = useLocation();
   // Modal states for user
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -88,6 +89,8 @@ const App = () => {
     "/dashboard",
     "/profile",
     "/reset-password",
+    // "/service/:serviceId",
+    // "/category/:categoryId",
   ];
   const handleOpenLogin = () => {
     setShowLoginModal(true);
@@ -219,18 +222,7 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-
-          <Route
-            path="/dashboardservices"
-            element={
-              <ProtectedRoute>
-                <DashboardServices />
-              </ProtectedRoute>
-            }
-          />
-
           {/* Vendor Routes */}
-
           <Route
             path="/vendor/register"
             element={
@@ -239,7 +231,6 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-
           <Route path="/category/VendorService" element={<VendorService />} />
           <Route path="/vendor/payment-info" element={<VendorPayment />} />
           <Route
@@ -247,14 +238,19 @@ const App = () => {
             element={<VendorLegalConsent />}
           />
           <Route path="/vendor/thank-you" element={<VendorThankYou />} />
-
-          <Route path="/dashboard" element={<DashBoardMain />} />
+          <Route
+            path="/dashboard"
+            element={
+              <DashboardEnforcement>
+                <DashBoardMain />
+              </DashboardEnforcement>
+            }
+          />
           {/* <Route path="/vendor-login" element={<VendorLogin />} /> */}
           <Route
             path="/vendor/services/addServices"
             element={<AddServiceInDashboard />}
           />
-
           <Route path="/forgot-password" element={<ForgotPass />} />
           <Route
             path="/reset-password/:resetToken"
@@ -264,16 +260,13 @@ const App = () => {
             path="/vendor/reset-password/:resetToken"
             element={<VendorResetPassword />}
           />
-          <Route
-            path="/vendor/change-password"
-            element={<VendorChangePassword />}
-          />
           {/* Misc */}
           <Route path="/your-cart" element={<AddToCart />} />
           <Route path="/about_us" element={<AboutUs />} />
           <Route path="/help_us" element={<HelpUs />} />
           <Route path="/help-Center" element={<HelpCenter />} />
           <Route path="/faqs" element={<FaqSection />} />
+          <Route path="/feedback" element={<Feedback />} /> {/* Feedback */}
           <Route path="/Wishlist" element={<Wishlist />}></Route>
           <Route path="/profile" element={<Profile />}></Route>
           <Route path="/userdetails" element={<UserDetails />}></Route>

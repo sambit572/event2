@@ -5,7 +5,9 @@ import { FaHeart, FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import ServiceDescription from "./ServiceDescription";
 
 const ServiceCard = ({ service, onSwitchToLogin }) => {
-  const { img } = service;
+ const img = service.serviceImage || [];
+
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [hovered, setHovered] = useState(false);
 
@@ -25,8 +27,12 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
         >
-          <Link to={`/service/${service.id}`} className="link">
-            <img src={img[currentIndex]} alt="Main preview" />
+          <Link to={`/service/${service._id}`} className="link">
+            {Array.isArray(img) && img.length > 0 ? (
+              <img src={img[currentIndex]} alt="Main preview" />
+            ) : (
+              <div className="no-image">No image available</div>
+            )}
           </Link>
 
           {hovered && (
@@ -43,15 +49,16 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
         {/* </Link> */}
 
         <div className="thumbnailColumn">
-          {img.map((thumb, idx) => (
-            <img
-              key={idx}
-              src={thumb}
-              alt={`thumb-${idx}`}
-              className={idx === currentIndex ? "activeThumb" : ""}
-              onClick={() => setCurrentIndex(idx)}
-            />
-          ))}
+          {Array.isArray(img) &&
+            img.map((thumb, idx) => (
+              <img
+                key={idx}
+                src={thumb}
+                alt={`thumb-${idx}`}
+                className={idx === currentIndex ? "activeThumb" : ""}
+                onClick={() => setCurrentIndex(idx)}
+              />
+            ))}
         </div>
       </div>
       <ServiceDescription service={service} onSwitchToLogin={onSwitchToLogin} />

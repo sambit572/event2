@@ -90,6 +90,7 @@ const VendorLogin = ({ onClose, onSwitchToLogin }) => {
         window.recaptchaVerifier
       );
       window.confirmationResult = confirmationResult;
+      console.log("OTP sent successfully : ", confirmationResult);
       setStep("otp");
     } catch (err) {
       setErrorMsg("OTP send failed. Try again.");
@@ -106,7 +107,7 @@ const VendorLogin = ({ onClose, onSwitchToLogin }) => {
       const res = await axios.post(
         `${BACKEND_URL}/vendors/login`,
         {
-          email: formData.email,
+          email: formData.email.toLowerCase(),
           phoneNo: formData.phoneNo,
           password: formData.password,
         },
@@ -185,7 +186,7 @@ const VendorLogin = ({ onClose, onSwitchToLogin }) => {
             </span>
           </div>
 
-          <div className="Login-forget-password-link">
+          <div className="Login-forget-password-link text-blue-500 mb-5">
             <a href="/vendor/forgot-password">Forgot your password?</a>
           </div>
 

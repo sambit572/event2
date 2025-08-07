@@ -64,6 +64,14 @@ const vendorSchema = new mongoose.Schema(
       type: Boolean,
       default: true, // or false, up to you
     },
+    registrationProgress: {
+      type: Number,
+      default: 0, // 0: just registered, 1: service added, 2: bank details added, 3: legal complete
+    },
+    isRegistrationComplete: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

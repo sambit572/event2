@@ -4,14 +4,17 @@ import { FaHeart } from "react-icons/fa6";
 
 import "./ServiceDetails.css";
 
-import { CategoryData } from "../../utils/CatogoryData.jsx";
+// import { CategoryData } from "../../utils/CatogoryData.jsx";
 import { similarServiceData } from "../../components/customer/ServiceDetails/SimilarServiceData.jsx";
 
 import RatingDetails from "../../components/customer/ServiceDetails/RatingDetails.jsx";
 import SimilarProductCard from "../../components/customer/ServiceDetails/PeopleAlsoBooked.jsx";
-import DJServiceCard from "../../components/customer/ServiceDetails/ServiceCard.jsx";
+import DJServiceCard from "../../components/customer/ServiceDetails/ServiceDetailCard.jsx";
 import ReviewList from "../../components/customer/ServiceDetails/ReviewList";
 import ReviewForm from "../../components/customer/ServiceDetails/ReviewForm.jsx";
+import axios from "axios";
+import { useEffect } from "react";
+import { BACKEND_URL } from "../../utils/constant.js";
 
 const Service = ({ onSwitchToLogin }) => {
   const navigate = useNavigate();
@@ -26,31 +29,48 @@ const Service = ({ onSwitchToLogin }) => {
       onSwitchToLogin(true); // ✅ this opens your login popup
     }
   };
-  // Get the service object from CategoryData
-  const service = CategoryData.flatMap((cat) => cat.services).find(
-    (srv) => srv.id === serviceId
-  );
-
-  // If service not found
-  if (!service) return <p>Service not found</p>;
-
-  const mediaList = service.img.map((src) => ({ type: "image", src }));
-  const [selectMedia, setSelectMedia] = useState(mediaList[0]);
+  const [service, setService] = useState(null);
+  const [mediaList, setMediaList] = useState([]);
+  const [selectMedia, setSelectMedia] = useState(null);
   const [isWishlisted, setIsWishlisted] = useState(false);
 
-  // ✅ For syncing new review from ReviewForm to ReviewList
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [latestReview, setLatestReview] = useState(null);
-
-  const handleWishlist = () => {
-    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
-
-    if (isLoggedIn) {
-      setIsWishlisted(!isWishlisted);
-    } else {
-      onSwitchToLogin(true); // ✅ this opens your login popup
-    }
+  const handleClick = () => {
+    setIsWishlisted(!isWishlisted);
   };
+  useEffect(() => {
+    const fetchService = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get(
+          `${BACKEND_URL}/common/service/${serviceId}`
+        );
+        const data = res.data.data;
+        setService(data);
 
+        const formattedMedia = (data.serviceImage || []).map((src) => ({
+          type: "image",
+          src,
+        }));
+        setMediaList(formattedMedia);
+        setSelectMedia(formattedMedia[0]);
+
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching service:", err);
+        setError("Service not found.");
+        setLoading(false);
+      }
+    };
+
+    fetchService();
+  }, [serviceId]);
+
+
+  if (loading) return <p>Loading service details...</p>;
+  if (error || !service) return <p>{error || "Service not found."}</p>;
   return (
     <div className="dj">
       <div className="section_one">
@@ -69,33 +89,22 @@ const Service = ({ onSwitchToLogin }) => {
               ))}
             </div>
             <div className="big-image">
-              <img src={selectMedia.src} alt="Selected media" />
+              <img src={selectMedia?.src} alt="Selected media" />
             </div>
           </div>
 
-          <div className="buttons">
-            <button
-              className={`viewBtns ${isWishlisted ? "wishlisted" : ""}`}
-              onClick={handleWishlist}
-            >
-              <div>
-                {isWishlisted && <FaHeart className="wishIcon" color="red" />}
-              </div>
-              <div>
-                {isWishlisted ? (
-                  "Wishlisted"
-                ) : (
-                  <span className="wishlist-text">
-                    <span className="plusSign">+</span> Wishlist
-                  </span>
-                )}
-              </div>
-            </button>
+            <div className="flex flex-col justify-center sm:flex-row-reverse gap-4">
+        <button className="w-full sm:w-44 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-md transition-all duration-300">
+          Add to Cart
+        </button>
 
-            <button className="buynow" onClick={handleBookNow}>
-              Book Now
-            </button>
-          </div>
+        <button
+          className="w-full sm:w-44 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-green-700 shadow-md hover:from-green-500 hover:to-green-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-400"
+          onClick={handleBookNow}
+        >
+          Book Now
+        </button>
+      </div>
         </div>
 
         {/* Right Section */}

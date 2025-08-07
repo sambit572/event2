@@ -23,11 +23,11 @@ const router = Router();
 //
 // 🔓 PUBLIC ROUTES
 //
-router.get("/", noNeedToLogin);
+router.get("/no-need-to-login", noNeedToLogin);
 router.post("/signup", registerUser);
 router.post("/login", loginUser);
 router.post("/logout", logoutUser);
-router.post("/auth/google", googleAuth); 
+router.post("/auth/google", googleAuth);
 router.post("/forgot-password", sendPasswordResetLink);
 router.post("/reset-password/:resetToken", resetPassword);
 

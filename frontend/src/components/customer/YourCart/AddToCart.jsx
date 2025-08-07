@@ -1,5 +1,6 @@
 import React from "react";
 import CartData from "./CartData";
+import { useNavigate } from "react-router-dom";
 
 const AddToCart = () => {
   const listedTotal = CartData.reduce(
@@ -11,7 +12,7 @@ const AddToCart = () => {
   const cgst = Math.round(finalTotal * 0.02);
   const sgst = Math.round(finalTotal * 0.01);
   const grandTotal = finalTotal + cgst + sgst;
-
+  const navigate = useNavigate();
   return (
     <div className="px-4 md:px-10 py-12 min-h-screen">
       {/* Heading */}
@@ -31,7 +32,7 @@ const AddToCart = () => {
               className="flex flex-col sm:flex-row items-start gap-4 border border-gray-300 rounded-2xl shadow-xl p-5 mb-6 bg-gray-100"
             >
               {/* Image */}
-              <div className="w-full sm:w-36 h-36 sm:h-36 md:w-40 md:h-40 rounded-xl overflow-hidden shadow-lg border border-gray-200 bg-white flex-shrink-0 mx-auto sm:mx-0">
+              <div className="w-full sm:w-36 h-[15rem] sm:h-36 md:w-40 md:h-40 rounded-xl overflow-hidden shadow-lg border border-gray-200 bg-white flex-shrink-0 mx-auto sm:mx-0">
                 <img
                   src={item.image}
                   alt={item.name}
@@ -133,7 +134,7 @@ const AddToCart = () => {
               🎉 You saved ₹{discount} on this order!
             </p>
 
-            <button className="mt-6 w-full bg-yellow-400 text-black font-bold py-3 rounded-xl shadow-sm hover:bg-yellow-300 active:scale-95 transition">
+            <button className="mt-6 w-full bg-yellow-400 text-black font-bold py-3 rounded-xl shadow-sm hover:bg-yellow-300 active:scale-95 transition" onClick={()=>navigate("/userdetails")}>
               PLACE ORDER
             </button>
           </div>

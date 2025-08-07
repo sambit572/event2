@@ -61,3 +61,9 @@
   color: #1a237e;
   font-weight: 700;
 }
+@media (max-width: 500px) {
+  .milestones-wrapper {
+    margin-top: 0px;
+    padding: 0;
+  }
+}

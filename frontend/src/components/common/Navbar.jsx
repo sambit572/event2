@@ -467,6 +467,15 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin, isOpen, setSho
     return () => clearInterval(interval);
   }, []);
 
+  //cart logic
+  const handleAddToCart = () => {
+    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
+    if (isLoggedIn) {
+      navigate("/your-cart");
+    } else {
+      onOpenLogin(true);
+    }
+  };
   return (
     <div>
 
@@ -760,7 +769,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin, isOpen, setSho
                     }}
                   >
                     {!VendorFirstName ? (
-                      <span className="font-medium vendorNameText hover:bg-[#001f3f]  hover rounded px-2 py-1 transition-colors">
+                      <span className="font-medium vendorNameText transition-colors">
                         Be a Vendor
                       </span>
                     ) : (
@@ -785,9 +794,9 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin, isOpen, setSho
                   >
                     {" "}
                     {showVendorDropdown ? (
-                      <FaChevronUp className="text-sm" />
+                      <FaChevronUp className="text-sm icons" />
                     ) : (
-                      <FaChevronDown className="text-sm" />
+                      <FaChevronDown className="text-sm icons" />
                     )}
                   </span>
                 </div>
@@ -875,7 +884,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin, isOpen, setSho
 
                               setTimeout(() => toast.dismiss(toastId), 2000);
                             } else {
-                              handleVendorClick();
+                              onOpenVendorLogin();
                             }
 
                             // ✅ Always go to login (or open modal)
@@ -914,7 +923,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin, isOpen, setSho
                 </div>
               )}
             </div>
-            <div className="navbarCart" onClick={() => navigate("/your-cart")}>
+            <div className="navbarCart" onClick={handleAddToCart}>
               <div className="navbarCartIcon">
                 <FaCartShopping />
               </div>

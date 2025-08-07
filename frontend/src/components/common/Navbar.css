@@ -356,6 +356,40 @@
   background-color: #1e40af;
   transform: scale(1.03);
 }
+.vendor-changePassword,
+.vendor-signout {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  margin: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  width: 160px;
+  color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Solid Purple */
+.vendor-changePassword {
+  background-color: #7e22ce;
+}
+
+.vendor-changePassword:hover {
+  background-color: #6b21a8;
+  transform: scale(1.03);
+}
+
+/* Solid Deep Blue */
+.vendor-signout {
+  background-color: #1e3a8a;
+}
+
+.vendor-signout:hover {
+  background-color: #1e40af;
+  transform: scale(1.03);
+}
 
 .search-and-nav-icons-container {
   display: flex;
@@ -447,9 +481,8 @@
   font-weight: 600;
 }
 .navbarCart:hover {
-  background-color: #001f3f;
   color: #fff;
-  padding: 6px 10px;
+
   border-radius: 5px;
   cursor: pointer;
 }
@@ -522,8 +555,6 @@
     width: 200px;
     transition: width 0.4s ease;
     margin-left: 0px;
-    border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
   }
   .search-bar input {
     width: 100px;
@@ -543,8 +574,6 @@
     width: 200px;
     transition: width 0.4s ease;
     margin-left: 0px;
-    border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
   }
   .search-bar input {
     width: 100px;

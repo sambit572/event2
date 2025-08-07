@@ -4,89 +4,33 @@ import { config } from "dotenv";
 import "dotenv/config";
 import { app } from "./app.js";
 import { connectToDb } from "./db/db.js";
+import mongoose from "mongoose"; // ✅ Import mongoose for DB close
 import { createServer } from "http";
-import { Server } from "socket.io";
-import NegotiationModel from "./model/common/NegotiationModel.js";
+import initSocket from "./socket/index.js";
 
 config({ path: "./env" });
 
-// Create HTTP server
-const server = createServer(app);
+let server;
+try {
+  server = createServer(app);
+  console.log("✅ HTTP server created successfully");
+} catch (err) {
+  console.error("❌ Failed to create HTTP server:", err);
+  process.exit(1);
+}
 
-// Setup Socket.IO with CORS
-const io = new Server(server, {
-  cors: {
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  },
-});
+let io;
+try {
+  io = initSocket(server); // ✅ Store io for cleanup
+  console.log("✅ Socket.IO initialized successfully");
+} catch (err) {
+  console.error("❌ Socket initialization failed:", err);
+  process.exit(1);
+}
 
-io.on("connection", (socket) => {
-  console.log("🟢 User connected:", socket.id);
-
-  // 🎯 Handle new negotiation request from customer
-  socket.on("new-negotiation-request", async (data) => {
-    console.log("📩 Negotiation request received:", data);
-
-    // ✅ Save to DB
-    try {
-      await NegotiationModel.create({ ...data, status: "pending" });
-      console.log("✅ Negotiation request saved to DB");
-    } catch (err) {
-      console.error("❌ Error saving to DB:", err);
-    }
-
-    // 🚀 Emit to all online vendors (real-time)
-    io.emit("negotiation_to_vendor", data);
-  });
-
-  // 🎯 Handle vendor online - send pending requests from DB
-  socket.on("vendor-online", async (vendorName) => {
-    try {
-      const pendingRequests = await NegotiationModel.find({
-        vendorName,
-        status: "pending"
-      });
-
-      console.log(`📦 Sending ${pendingRequests.length} pending requests to vendor: ${vendorName}`);
-      socket.emit("pending-negotiations", pendingRequests);
-    } catch (err) {
-      console.error("❌ Error fetching pending requests:", err);
-    }
-  });
-
-    // 🎯 Handle vendor response (accept/decline)
-  socket.on("vendor_response", async ({ bookingId, action, vendorName }) => {
-  try {
-    // ✅ Step 1: Update the status
-    await NegotiationModel.findByIdAndUpdate(bookingId, {
-      status: action === "accept" ? "accepted" : "declined"
-    });
-
-    // ✅ Step 2: Fetch next pending request for same vendor
-    const nextPending = await NegotiationModel.findOne({
-      vendorName,
-      status: "pending"
-    }).sort({ createdAt: 1 }); // FIFO queue
-
-    if (nextPending) {
-      console.log("📦 Sending next pending request to vendor:", vendorName);
-      socket.emit("pending-negotiations", [nextPending]); // sending next one
-    }
-  } catch (err) {
-    console.error("❌ Error handling vendor response:", err);
-  }
-});
-
-
-  socket.on("disconnect", () => {
-    console.log("🔴 User disconnected:", socket.id);
-  });
-});
-
-// Start server after DB connection
 const port = process.env.PORT || 8000;
 
+// Connect to DB and start server
 connectToDb()
   .then(() => {
     server.listen(port, () => {
@@ -95,4 +39,52 @@ connectToDb()
   })
   .catch((err) => {
     console.error(`❌ DB connection failed: ${err}`);
+    process.exit(1);
   });
+
+// ✅ Handle unexpected async errors
+process.on("unhandledRejection", (reason) => {
+  console.error("❌ Unhandled Promise Rejection:", reason);
+  closeServer();
+});
+
+// ✅ Handle runtime crashes
+process.on("uncaughtException", (err) => {
+  console.error("❌ Uncaught Exception:", err);
+  closeServer();
+});
+
+// ✅ Graceful shutdown on signals (e.g., Ctrl+C, Kubernetes stop)
+process.on("SIGINT", closeServer);
+process.on("SIGTERM", closeServer);
+
+// ✅ Graceful shutdown helper
+async function closeServer() {
+  console.log("🛑 Shutting down server gracefully...");
+
+  try {
+    // 1️⃣ Close HTTP server
+    if (server) {
+      await new Promise((resolve) => server.close(resolve));
+      console.log("✅ HTTP server closed.");
+    }
+
+    // 2️⃣ Close Socket.IO
+    if (io) {
+      await new Promise((resolve) => io.close(resolve));
+      console.log("✅ Socket.IO closed.");
+    }
+
+    // 3️⃣ Close DB connection
+    if (mongoose.connection.readyState === 1) {
+      // connected
+      await mongoose.connection.close(false);
+      console.log("✅ MongoDB connection closed.");
+    }
+
+    process.exit(0); // Normal exit
+  } catch (err) {
+    console.error("❌ Error during graceful shutdown:", err);
+    process.exit(1);
+  }
+}

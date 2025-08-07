@@ -1,5 +1,6 @@
 .home {
   width: 100%;
+  margin-top: 70px;
 }
 
 .categories-head1 {
@@ -32,9 +33,8 @@
 .category-subheads {
   margin-top: 17px;
   padding-top: 10px;
-  font-size: 21px;
   font-weight: 600;
-  color: #001f3f;
+  color: #3b0340e1;
 }
 .category_section {
   display: grid;

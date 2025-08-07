@@ -1,7 +1,11 @@
 import { Service } from "../../model/vendor/service.model.js";
-import { deleteFromCloudinary, uploadOnCloudinary } from "../../utilities/cloudinary.js";
+import {
+  deleteFromCloudinary,
+  uploadOnCloudinary,
+} from "../../utilities/cloudinary.js";
 import { ApiResponse } from "../../utilities/ApiResponse.js";
 import { ApiError } from "../../utilities/ApiError.js";
+import Vendor from "../../model/vendor/vendor.model.js";
 
 export const createService = async (req, res) => {
   try {
@@ -270,5 +274,73 @@ export const deleteService = async (req, res) => {
     return res
       .status(500)
       .json(new ApiError(500, "Internal server error", [], error.stack));
+  }
+};
+
+export const updateAvailability = async (req, res) => {
+  try {
+    const vendorId = req.vendor._id; // assumes vendor is attached via auth middleware
+    const serviceId = req.params.id;
+    const { available } = req.body;
+
+    if (typeof available !== "boolean") {
+      return res
+        .status(400)
+        .json(
+          new ApiError(400, "`available` must be a boolean (true or false)")
+        );
+    }
+
+    const service = await Service.findOne({
+      _id: serviceId,
+      vendorId: vendorId, // ensure vendor owns the service
+    });
+
+    if (!service) {
+      console.error("Service not found or not authorized");
+      return res
+        .status(404)
+        .json(new ApiError(404, "Service not found or not authorized"));
+    }
+
+    service.available = available;
+    await service.save();
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, service, "Availability updated successfully"));
+  } catch (error) {
+    console.error("❌ Error updating availability:", error);
+    return res.status(500).json(new ApiError(500, "Internal Server Error"));
+  }
+};
+
+export const updateServiceImageFirst = async (req, res) => {
+  const imageUrls = [];
+  if (req.files && req.files.length > 0) {
+    console.log("Uploading images to Cloudinary...");
+    for (const file of req.files) {
+      console.log("Processing file:", file.originalname, "at path:", file.path);
+      const cloudRes = await uploadOnCloudinary(file.path);
+      console.log("Cloudinary response for", file.originalname, ":", cloudRes);
+      if (cloudRes?.secure_url) {
+        console.log("✅ Image uploaded successfully:", cloudRes.secure_url);
+        imageUrls.push(cloudRes.secure_url);
+      } else {
+        console.error("❌ Failed to upload image:", file.originalname);
+      }
+    }
+    console.log("Final image URLs:", imageUrls);
+
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(200, imageUrls, "Images are upload to cloudinary only ")
+      );
+  } else {
+    console.error("❌ No images uploaded");
+    return res
+      .status(400)
+      .json({ message: "Please upload at least one image" });
   }
 };
