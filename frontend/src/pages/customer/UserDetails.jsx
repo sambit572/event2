@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-// The import for "./UserDetails.css" is no longer needed.
 
+// Data objects (stateDistricts, districtCities, aliases) remain the same...
 const stateDistricts = {
   Odisha: [
     "Angul",
@@ -214,24 +214,77 @@ const cityAliases = {
   Chennai: ["Madras"],
 };
 
-// A reusable component for the floating label input fields
-const FormField = ({ id, label, children }) => (
-  <div className="relative mt-2.5">
-    {React.cloneElement(children, {
-      id: id,
-      className: `peer w-full px-4 py-3.5 rounded-xl border border-slate-300 text-base text-gray-800 font-medium transition-all duration-300 ease-in-out placeholder-transparent focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 focus:outline-none`,
-      placeholder: label,
-    })}
-    <label
-      htmlFor={id}
-      className="absolute left-2.5 -top-2.5 px-1 bg-white text-xs text-indigo-500 font-medium tracking-wider capitalize transition-all duration-300 ease-in-out pointer-events-none
-                 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-3 peer-placeholder-shown:left-4
-                 peer-focus:-top-2.5 peer-focus:left-2.5 peer-focus:text-xs peer-focus:text-indigo-500"
-    >
-      {label}
-    </label>
-  </div>
-);
+const FormField = ({
+  id,
+  label,
+  children,
+  useStaticLabel = false,
+  placeholder = "",
+}) => {
+  const isSelect = children.type === "select";
+
+  const commonInputClasses =
+    "w-full px-4 py-3.5 rounded-xl border border-slate-300 text-base text-gray-800 font-medium focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 focus:outline-none";
+
+  if (useStaticLabel) {
+    return (
+      <div>
+        <label
+          htmlFor={id}
+          className="block mb-1 text-sm font-medium text-gray-700"
+        >
+          {label}
+        </label>
+        {React.cloneElement(children, {
+          id: id,
+          className: commonInputClasses,
+          placeholder: placeholder,
+        })}
+      </div>
+    );
+  }
+
+  // These classes position the label inside the input/select when it's empty OR disabled
+  const unfocusedClasses = isSelect
+    ? "peer-invalid:text-gray-500 peer-invalid:top-3 peer-invalid:text-sm peer-invalid:left-4 peer-disabled:text-gray-500 peer-disabled:top-3 peer-disabled:text-sm peer-disabled:left-4 peer-disabled:bg-[#e9ecef]"
+    : "peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-3 peer-placeholder-shown:text-sm peer-placeholder-shown:left-4";
+
+  return (
+    <div className="relative">
+      {React.cloneElement(children, {
+        id: id,
+        className: `peer transition-all duration-300 ease-in-out placeholder-transparent disabled:bg-[#e9ecef] disabled:cursor-not-allowed ${commonInputClasses} ${
+          isSelect ? "appearance-none pr-10" : ""
+        }`,
+        placeholder: label,
+      })}
+      <label
+        htmlFor={id}
+        className={`absolute left-2.5 -top-2.5 px-1 bg-white text-xs text-indigo-500 font-medium tracking-wider capitalize transition-all duration-300 ease-in-out pointer-events-none peer-focus:-top-2.5 peer-focus:left-2.5 peer-focus:text-xs peer-focus:text-indigo-500 ${unfocusedClasses}`}
+      >
+        {label}
+      </label>
+      {isSelect && (
+        <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
+          <svg
+            className="w-5 h-5 text-gray-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M19 9l-7 7-7-7"
+            ></path>
+          </svg>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const UserDetails = () => {
   const [userName, setUserName] = useState("");
@@ -251,7 +304,6 @@ const UserDetails = () => {
     country: "",
   });
 
-  // Matching functions remain the same
   const findStateMatch = (stateName) => {
     const stateKeys = Object.keys(stateDistricts);
     if (stateKeys.includes(stateName)) return stateName;
@@ -316,64 +368,6 @@ const UserDetails = () => {
     );
   };
 
-  const LocationDebugger = () => {
-    const [debugInfo, setDebugInfo] = useState(null);
-    const testLocationAPI = async () => {
-      if (!navigator.geolocation) {
-        setDebugInfo("Geolocation not supported");
-        return;
-      }
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const { latitude, longitude } = position.coords;
-          try {
-            const { data } = await axios.get(
-              "https://maps.googleapis.com/maps/api/geocode/json",
-              {
-                params: {
-                  latlng: `${latitude},${longitude}`,
-                  key: import.meta.env.VITE_GOOGLE_API_KEY,
-                },
-              }
-            );
-            setDebugInfo({
-              coordinates: { latitude, longitude },
-              apiResponse: data,
-              formattedAddress: data.results?.[0]?.formatted_address,
-              components: data.results?.[0]?.address_components,
-            });
-          } catch (error) {
-            setDebugInfo({ error: error.message });
-          }
-        },
-        (error) => setDebugInfo({ geolocationError: error.message })
-      );
-    };
-
-    return (
-      <div className="p-4 mx-0 my-5 bg-red-100 border-2 border-red-400 rounded-lg">
-        <h4 className="mb-2.5 text-red-600 font-bold">
-          🔍 DEBUG TOOL (Remove after testing)
-        </h4>
-        <button
-          onClick={testLocationAPI}
-          className="px-5 py-2.5 text-sm text-white bg-blue-600 border-0 rounded cursor-pointer"
-        >
-          Test Location API
-        </button>
-        {debugInfo && (
-          <div className="mt-4">
-            <h5 className="font-semibold text-gray-800">Debug Results:</h5>
-            <pre className="p-3 mt-2 overflow-auto text-xs bg-white border border-gray-300 rounded-sm max-h-96 whitespace-pre-wrap">
-              {JSON.stringify(debugInfo, null, 2)}
-            </pre>
-          </div>
-        )}
-      </div>
-    );
-  };
-
-  // Handlers remain the same
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "pincode") {
@@ -421,143 +415,6 @@ const UserDetails = () => {
     alert("Cancelled");
   };
 
-  // Helper to parse address components from Google Maps API
-  // Helper to extract a component by type
-  const getComponent = (components, type, useShort = false) => {
-    const comp = components.find((c) => c.types.includes(type));
-    if (!comp) return "";
-    return useShort ? comp.short_name : comp.long_name;
-  };
-
-  // Helper to extract sublocality (handles multiple possible types)
-  const getSublocality = (components) => {
-    const comp = components.find(
-      (c) =>
-        c.types.includes("sublocality") ||
-        c.types.includes("sublocality_level_1")
-    );
-    return comp ? comp.long_name : "";
-  };
-
-  const parseAddressComponents = (addressComponents) => {
-    return {
-      premise: getComponent(addressComponents, "premise"),
-      streetNumber: getComponent(addressComponents, "street_number"),
-      route: getComponent(addressComponents, "route"),
-      neighborhood: getComponent(addressComponents, "neighborhood"),
-      sublocality: getSublocality(addressComponents),
-      locality: getComponent(addressComponents, "locality"),
-      district_level_2: getComponent(
-        addressComponents,
-        "administrative_area_level_2"
-      ),
-      district_level_3: getComponent(
-        addressComponents,
-        "administrative_area_level_3"
-      ),
-      state: getComponent(
-        addressComponents,
-        "administrative_area_level_1",
-        true
-      ),
-      pincode: getComponent(addressComponents, "postal_code"),
-      country: getComponent(addressComponents, "country"),
-    };
-  };
-
-  // Helper to build address string
-  const buildCompleteAddress = ({
-    premise,
-    streetNumber,
-    route,
-    neighborhood,
-    sublocality,
-    locality,
-  }) => {
-    const addressParts = new Set();
-    if (premise || streetNumber) addressParts.add(premise || streetNumber);
-    if (route) addressParts.add(route);
-    if (neighborhood) addressParts.add(neighborhood);
-    if (sublocality) addressParts.add(sublocality);
-    if (locality) addressParts.add(locality);
-    return [...addressParts].join(", ");
-  };
-
-  // Helper to match state, district, city
-  const matchLocationFields = ({
-    state,
-    district_level_2,
-    district_level_3,
-    locality,
-  }) => {
-    const matchedState = findStateMatch(state);
-    let matchedDistrict =
-      findDistrictMatch(district_level_2, matchedState) ||
-      findDistrictMatch(district_level_3, matchedState) ||
-      findDistrictMatch(locality, matchedState);
-    const matchedCity = findCityMatch(locality, matchedDistrict);
-    return { matchedState, matchedDistrict, matchedCity };
-  };
-
-  // Helper to handle geocode API response
-  const handleGeocodeResponse = (data, setFormData, setLocationMessage) => {
-    if (data.status === "OK" && data.results.length > 0) {
-      const result = data.results[0];
-      const addressComponents = result.address_components;
-      const parsed = parseAddressComponents(addressComponents);
-      const completeAddress = buildCompleteAddress(parsed);
-      const { matchedState, matchedDistrict, matchedCity } =
-        matchLocationFields(parsed);
-      setFormData((prevData) => ({
-        ...prevData,
-        address: completeAddress.trim(),
-        state: matchedState || "",
-        district: matchedDistrict || "",
-        city: matchedCity || "",
-        pincode: parsed.pincode,
-        country: parsed.country || "India",
-      }));
-      setLocationMessage("Location auto-filled. Please verify the address.");
-      const matchInfo = [];
-      if (!matchedState) matchInfo.push("state");
-      if (!matchedDistrict) matchInfo.push("district");
-      if (!matchedCity) matchInfo.push("city");
-      if (matchInfo.length > 0) {
-        alert(
-          `Location fetched! Note: Could not auto-select ${matchInfo.join(
-            ", "
-          )}. Please select manually.`
-        );
-      } else {
-        alert("Location fetched successfully!");
-      }
-    } else {
-      console.error("Geocoding failed:", data.status);
-      alert("Could not get address. Please try again.");
-    }
-  };
-
-  // Helper to handle geolocation errors
-  const handleGeolocationError = (error) => {
-    console.error("Geolocation error:", error);
-    let errorMessage = "Failed to get location. ";
-    switch (error.code) {
-      case error.PERMISSION_DENIED:
-        errorMessage += "Please allow location access.";
-        break;
-      case error.POSITION_UNAVAILABLE:
-        errorMessage += "Location information unavailable.";
-        break;
-      case error.TIMEOUT:
-        errorMessage += "Location request timed out.";
-        break;
-      default:
-        errorMessage += "Unknown error occurred.";
-        break;
-    }
-    alert(errorMessage);
-  };
-
   const handleUseCurrentAddress = () => {
     if (!navigator.geolocation) {
       alert("Geolocation is not supported by your browser.");
@@ -581,7 +438,86 @@ const UserDetails = () => {
               },
             }
           );
-          handleGeocodeResponse(data, setFormData, setLocationMessage);
+          if (data.status === "OK" && data.results.length > 0) {
+            const result = data.results[0];
+            const addressComponents = result.address_components;
+            let premise = "",
+              streetNumber = "",
+              route = "",
+              neighborhood = "",
+              sublocality = "";
+            let locality = "",
+              district_level_2 = "",
+              district_level_3 = "",
+              state = "";
+            let pincode = "",
+              country = "";
+            for (let comp of addressComponents) {
+              const types = comp.types;
+              const longName = comp.long_name;
+              const shortName = comp.short_name;
+              if (types.includes("premise")) premise = longName;
+              if (types.includes("street_number")) streetNumber = longName;
+              if (types.includes("route")) route = longName;
+              if (types.includes("neighborhood")) neighborhood = longName;
+              if (
+                types.includes("sublocality") ||
+                types.includes("sublocality_level_1")
+              )
+                sublocality = longName;
+              if (types.includes("locality")) locality = longName;
+              if (types.includes("administrative_area_level_2"))
+                district_level_2 = longName;
+              if (types.includes("administrative_area_level_3"))
+                district_level_3 = longName;
+              if (types.includes("administrative_area_level_1"))
+                state = shortName;
+              if (types.includes("postal_code")) pincode = longName;
+              if (types.includes("country")) country = longName;
+            }
+            const addressParts = new Set();
+            if (premise || streetNumber)
+              addressParts.add(premise || streetNumber);
+            if (route) addressParts.add(route);
+            if (neighborhood) addressParts.add(neighborhood);
+            if (sublocality) addressParts.add(sublocality);
+            if (locality) addressParts.add(locality);
+            const completeAddress = [...addressParts].join(", ");
+            const matchedState = findStateMatch(state);
+            let matchedDistrict =
+              findDistrictMatch(district_level_2, matchedState) ||
+              findDistrictMatch(district_level_3, matchedState) ||
+              findDistrictMatch(locality, matchedState);
+            const matchedCity = findCityMatch(locality, matchedDistrict);
+            setFormData((prevData) => ({
+              ...prevData,
+              address: completeAddress.trim(),
+              state: matchedState || "",
+              district: matchedDistrict || "",
+              city: matchedCity || "",
+              pincode: pincode,
+              country: country || "India",
+            }));
+            setLocationMessage(
+              "Location auto-filled. Please verify the address."
+            );
+            const matchInfo = [];
+            if (!matchedState) matchInfo.push("state");
+            if (!matchedDistrict) matchInfo.push("district");
+            if (!matchedCity) matchInfo.push("city");
+            if (matchInfo.length > 0) {
+              alert(
+                `Location fetched! Note: Could not auto-select ${matchInfo.join(
+                  ", "
+                )}. Please select manually.`
+              );
+            } else {
+              alert("Location fetched successfully!");
+            }
+          } else {
+            console.error("Geocoding failed:", data.status);
+            alert("Could not get address. Please try again.");
+          }
         } catch (err) {
           console.error("Geocode error:", err);
           alert(
@@ -589,7 +525,25 @@ const UserDetails = () => {
           );
         }
       },
-      handleGeolocationError,
+      (error) => {
+        console.error("Geolocation error:", error);
+        let errorMessage = "Failed to get location. ";
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage += "Please allow location access.";
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage += "Location information unavailable.";
+            break;
+          case error.TIMEOUT:
+            errorMessage += "Location request timed out.";
+            break;
+          default:
+            errorMessage += "Unknown error occurred.";
+            break;
+        }
+        alert(errorMessage);
+      },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 }
     );
   };
@@ -597,12 +551,11 @@ const UserDetails = () => {
   return (
     <div className="font-sans">
       <div className="max-w-2xl p-8 mx-auto my-16 text-gray-800 bg-[#c0bcbc] rounded-2xl border-[3px] border-[#001F3F] shadow-[0_8px_32px_rgba(31,38,135,0.2)] backdrop-blur-lg">
-        <LocationDebugger />
-        <h3 className="-mt-2.5 mb-3 text-center text-3xl font-bold tracking-wide bg-gradient-to-r from-[#004989] to-[#001F3F] bg-clip-text text-transparent">
+        <h3 className="mb-3 text-center text-3xl font-bold tracking-wide bg-gradient-to-r from-[#004989] to-[#001F3F] bg-clip-text text-transparent">
           Fill Out Your Event Details
         </h3>
 
-        <form className="flex flex-col gap-5" onSubmit={handleSave}>
+        <form className="flex flex-col gap-5 mt-8" onSubmit={handleSave}>
           <FormField id="userName" label="User Name">
             <input
               type="text"
@@ -613,78 +566,74 @@ const UserDetails = () => {
             />
           </FormField>
 
-          <div className="flex flex-wrap gap-4">
-            <div className="flex-1 basis-full sm:basis-[calc(50%-8px)]">
-              <FormField id="phone" label="Phone Number">
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  required
-                />
-              </FormField>
-            </div>
-            <div className="flex-1 basis-full sm:basis-[calc(50%-8px)]">
-              <FormField id="altPhone" label="Alternate Number">
-                <input
-                  type="tel"
-                  name="altPhone"
-                  value={formData.altPhone}
-                  onChange={handleChange}
-                  required
-                />
-              </FormField>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap gap-4">
-            <div className="flex-1 basis-full sm:basis-[calc(50%-8px)]">
-              <FormField id="startDate" label="Start Date">
-                <input
-                  type="date"
-                  name="startDate"
-                  value={formData.startDate}
-                  onChange={handleChange}
-                  required
-                />
-              </FormField>
-            </div>
-            <div className="flex-1 basis-full sm:basis-[calc(50%-8px)]">
-              <FormField id="endDate" label="End Date">
-                <input
-                  type="date"
-                  name="endDate"
-                  value={formData.endDate}
-                  onChange={handleChange}
-                  required
-                />
-              </FormField>
-            </div>
-          </div>
-
-          <div className="relative mt-2.5">
-            <div className="relative">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <FormField id="phone" label="Phone Number">
               <input
-                id="address"
-                type="text"
-                name="address"
-                value={formData.address}
+                type="tel"
+                name="phone"
+                value={formData.phone}
                 onChange={handleChange}
                 required
-                className="peer w-full px-4 py-3.5 rounded-xl border border-slate-300 text-base text-gray-800 font-medium transition-all duration-300 ease-in-out placeholder-transparent focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 focus:outline-none"
-                placeholder="Event Address"
               />
-              <label
-                htmlFor="address"
-                className="absolute left-2.5 -top-2.5 px-1 bg-white text-xs text-indigo-500 font-medium tracking-wider capitalize transition-all duration-300 ease-in-out pointer-events-none peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-3 peer-placeholder-shown:left-4 peer-focus:-top-2.5 peer-focus:left-2.5 peer-focus:text-xs peer-focus:text-indigo-500"
-              >
-                Event Address
-              </label>
+            </FormField>
+            <FormField id="altPhone" label="Alternate Number">
+              <input
+                type="tel"
+                name="altPhone"
+                value={formData.altPhone}
+                onChange={handleChange}
+                required
+              />
+            </FormField>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <FormField
+              id="startDate"
+              label="Start Date"
+              useStaticLabel={true}
+              placeholder="dd/mm/yyyy"
+            >
+              <input
+                type="date"
+                name="startDate"
+                value={formData.startDate}
+                onChange={handleChange}
+                required
+              />
+            </FormField>
+            <FormField
+              id="endDate"
+              label="End Date"
+              useStaticLabel={true}
+              placeholder="dd/mm/yyyy"
+            >
+              <input
+                type="date"
+                name="endDate"
+                value={formData.endDate}
+                onChange={handleChange}
+                required
+              />
+            </FormField>
+          </div>
+
+          {/* VVV CORRECTED ADDRESS FIELD STRUCTURE VVV */}
+          <div>
+            <div className="relative">
+              <FormField id="address" label="Event Address">
+                <input
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  required
+                />
+              </FormField>
               <button
                 type="button"
                 onClick={handleUseCurrentAddress}
-                className="absolute right-[2%] top-2 bg-amber-300 hover:bg-indigo-600 text-white text-xs px-2 py-1 rounded-md shadow-sm"
+                className="absolute right-3 top-1/2 -translate-y-1/2 bg-amber-300 hover:bg-indigo-600 text-white text-xs px-2 py-1 rounded-md shadow-sm"
                 title="Use Current Location"
               >
                 📍
@@ -707,72 +656,64 @@ const UserDetails = () => {
             />
           </FormField>
 
-          <div className="flex flex-wrap gap-4">
-            <div className="flex-1 basis-full sm:basis-[calc(50%-8px)]">
-              <FormField id="state" label="State">
-                <select
-                  name="state"
-                  value={formData.state}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value=""></option>
-                  <option value="Odisha">Odisha</option>
-                  <option value="Gujarat">Gujarat</option>
-                  <option value="Maharashtra">Maharashtra</option>
-                  <option value="Karnataka">Karnataka</option>
-                  <option value="TamilNadu">Tamil Nadu</option>
-                  <option value="UttarPradesh">Uttar Pradesh</option>
-                </select>
-              </FormField>
-            </div>
-            <div className="flex-1 basis-full sm:basis-[calc(50%-8px)]">
-              <FormField id="district" label="District">
-                <select
-                  name="district"
-                  value={formData.district}
-                  onChange={handleChange}
-                  required
-                  disabled={!formData.state}
-                >
-                  <option value=""></option>
-                  {stateDistricts[formData.state]?.map((district) => (
-                    <option key={district} value={district}>
-                      {district}
-                    </option>
-                  ))}
-                </select>
-              </FormField>
-            </div>
-            <div className="flex-1 basis-full sm:basis-[calc(50%-8px)]">
-              <FormField id="city" label="City">
-                <select
-                  name="city"
-                  value={formData.city}
-                  onChange={handleChange}
-                  required
-                  disabled={!formData.district}
-                >
-                  <option value=""></option>
-                  {districtCities[formData.district]?.map((city) => (
-                    <option key={city} value={city}>
-                      {city}
-                    </option>
-                  ))}
-                </select>
-              </FormField>
-            </div>
-            <div className="flex-1 basis-full sm:basis-[calc(50%-8px)]">
-              <FormField id="pincode" label="Pincode">
-                <input
-                  type="text"
-                  name="pincode"
-                  value={formData.pincode}
-                  onChange={handleChange}
-                  required
-                />
-              </FormField>
-            </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <FormField id="state" label="State">
+              <select
+                name="state"
+                value={formData.state}
+                onChange={handleChange}
+                required
+              >
+                <option value=""></option>
+                <option value="Odisha">Odisha</option>
+                <option value="Gujarat">Gujarat</option>
+                <option value="Maharashtra">Maharashtra</option>
+                <option value="Karnataka">Karnataka</option>
+                <option value="TamilNadu">Tamil Nadu</option>
+                <option value="UttarPradesh">Uttar Pradesh</option>
+              </select>
+            </FormField>
+            <FormField id="district" label="District">
+              <select
+                name="district"
+                value={formData.district}
+                onChange={handleChange}
+                required
+                disabled={!formData.state}
+              >
+                <option value=""></option>
+                {stateDistricts[formData.state]?.map((district) => (
+                  <option key={district} value={district}>
+                    {district}
+                  </option>
+                ))}
+              </select>
+            </FormField>
+            <FormField id="city" label="City">
+              <select
+                name="city"
+                value={formData.city}
+                onChange={handleChange}
+                required
+                disabled={!formData.district}
+              >
+                <option value=""></option>
+                {districtCities[formData.district]?.map((city) => (
+                  <option key={city} value={city}>
+                    {city}
+                  </option>
+                ))}
+              </select>
+            </FormField>
+            <FormField id="pincode" label="Pincode">
+              <input
+                type="text"
+                name="pincode"
+                value={formData.pincode}
+                onChange={handleChange}
+                required
+              />
+            </FormField>
           </div>
 
           <div className="flex flex-col justify-center gap-3.5 mt-2.5 sm:flex-row">
