@@ -1,12 +1,12 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../pages/vendor/VendorService.css";
+import axios from "axios";
 import Spinner from "./../../components/common/Spinner";
 
-import axios from "axios";
-
-function AddServiceInDashboard() {
+function VendorService({ currentStep }) {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   // All state variables
   const [categorySearchTerm, setCategorySearchTerm] = useState("");
@@ -15,33 +15,67 @@ function AddServiceInDashboard() {
   const [selectedImageIndex, setSelectedImageIndex] = useState(-1);
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
-  const [activeField, setActiveField] = useState("min");
   const [locationSearchTerm, setLocationSearchTerm] = useState("");
   const [showLocationDropdown, setShowLocationDropdown] = useState(false);
   const [serviceName, setServiceName] = useState("");
   const [serviceDescription, setServiceDescription] = useState("");
-  const [days, setDays] = useState("");
-  const [hours, setHours] = useState("");
-  const [minutes, setMinutes] = useState("");
-  const [selectedDropdownValue, setSelectedDropdownValue] = useState("");
+  const [days, setDays] = useState("0");
+  const [hours, setHours] = useState("0");
+  const [minutes, setMinutes] = useState("0");
   const [selectedFiles, setSelectedFiles] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [selectedLocations, setSelectedLocations] = useState([]);
 
   const fileInputRef = useRef(null);
 
   const categories = [
-    "DJ",
-    "Orchestra",
-    "Food Catering",
-    "Florist",
-    "Tent House",
+    "DJ Services and Brass Band",
+    "Orchesta And Music Concert",
+    "Food & Catering",
+    "Floral Decor",
+    "Venue Styling & Decor",
+    "Photographer and Videographer",
+    "Hindu Pandit",
+    "Magic Shows",
+    "Classical Music and Dance",
+    "Islamic Maulbi",
+    "Christian Priest",
+    "Beauty Makeover",
+    "Ceremonial Rides",
+    "Fireworks",
+    "Card Design & Printing",
   ];
+
   const allLocations = [
-    "Bhubaneswar",
+    "Angul",
+    "Balangir",
     "Balasore",
-    "Kendrapara",
-    "Dhenkanal",
+    "Bargarh",
+    "Bhadrak",
+    "Boudh",
     "Cuttack",
+    "Deogarh",
+    "Dhenkanal",
+    "Gajapati",
+    "Ganjam",
+    "Jagatsinghpur",
+    "Jajpur",
+    "Jharsuguda",
+    "Kalahandi",
+    "Kandhamal",
+    "Kendrapara",
+    "Kendujhar",
+    "Khordha",
+    "Koraput",
+    "Malkangiri",
+    "Mayurbhanj",
+    "Nabarangpur",
+    "Nayagarh",
+    "Nuapada",
+    "Puri",
+    "Rayagada",
+    "Sambalpur",
+    "Sonepur",
+    "Sundargarh",
   ];
 
   const filteredCategories = categories.filter((cat) =>
@@ -68,7 +102,7 @@ function AddServiceInDashboard() {
         "video/flv",
         "video/webm",
       ];
-      const max = 5 * 1024 * 1024;
+      const max = 50 * 1024 * 1024;
 
       for (let f of newFiles) {
         if (!valid.includes(f.type)) return alert("JPEG/PNG/GIF only");
@@ -110,12 +144,12 @@ function AddServiceInDashboard() {
   };
 
   const handleAdd = async () => {
-    console.log("Add button clicked");
     setIsLoading(true);
+    console.log("ADD button clicked");
+
     if (!validateForm()) {
       setIsLoading(false);
       console.log("form is not validated wrong");
-
       return;
     }
 
@@ -124,15 +158,13 @@ function AddServiceInDashboard() {
       formData.append("serviceName", serviceName);
       formData.append("serviceDes", serviceDescription);
 
-      if (selectedDropdownValue) {
-        formData.append("priceRange", selectedDropdownValue);
-      } else {
-        formData.append("minPrice", minPrice);
-        formData.append("maxPrice", maxPrice);
-      }
+      formData.append("minPrice", minPrice);
+      formData.append("maxPrice", maxPrice);
 
       formData.append("serviceCategory", categorySearchTerm);
-      formData.append("locationOffered", locationSearchTerm);
+      selectedLocations.forEach((loc) => {
+        formData.append("locationOffered[]", loc);
+      });
 
       selectedFiles.forEach((file) => {
         formData.append("images", file);
@@ -155,7 +187,6 @@ function AddServiceInDashboard() {
 
       console.log(response);
 
-      alert("service added successfully");
       navigate("/dashboard");
     } catch (error) {
       console.error("Error submitting service:", error);
@@ -179,10 +210,8 @@ function AddServiceInDashboard() {
     }
 
     // 3. Check price range - either dropdown OR min/max prices
-    if (!selectedDropdownValue && (!minPrice || !maxPrice)) {
-      alert(
-        "Please set price range either from dropdown or enter min/max prices"
-      );
+    if (!minPrice || !maxPrice) {
+      alert("Please enter both minimum and maximum prices");
       return false;
     }
 
@@ -232,8 +261,8 @@ function AddServiceInDashboard() {
     }
 
     // 8. Check location
-    if (!locationSearchTerm.trim()) {
-      alert("Please select a location");
+    if (selectedLocations.length === 0) {
+      alert("Please select at least one location");
       return false;
     }
 
@@ -252,10 +281,27 @@ function AddServiceInDashboard() {
     return true;
   };
 
+  const locationDropdownRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        locationDropdownRef.current &&
+        !locationDropdownRef.current.contains(event.target)
+      ) {
+        setShowLocationDropdown(false); // ✅ Close dropdown if clicked outside
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <>
+      {isLoading && <Spinner />}
       <div className="form-container">
-        {isLoading && <Spinner />}
         <div className="form-wrapper">
           {/* Left Side: Form Column */}
           <div className="form-column">
@@ -378,79 +424,27 @@ function AddServiceInDashboard() {
             {/* Price Range */}
             <div className="price-range-container">
               <label className="section-label">Price Range *</label>
-              <select
-                className="value-dropdown"
-                value={selectedDropdownValue}
-                onChange={(e) => {
-                  setSelectedDropdownValue(e.target.value);
-                  // Clear manual price inputs when dropdown is selected
-                  if (e.target.value) {
-                    setMinPrice("");
-                    setMaxPrice("");
-                  }
-                }}
-              >
-                <option value="">Select Range</option>
-                <option value="500-1000">₹500 - ₹1000</option>
-                <option value="1000-2000">₹1000 - ₹2000</option>
-                <option value="2000-5000">₹2000 - ₹5000</option>
-                <option value="5000+">₹5000+</option>
-              </select>
 
-              <div
-                style={{ margin: "10px 0", textAlign: "center", color: "#666" }}
-              >
-                OR
-              </div>
-
-              <div className="price-input-toggle">
-                <button
-                  type="button"
-                  className={activeField === "min" ? "active" : ""}
-                  onClick={() => {
-                    setActiveField("min");
-                    // Clear dropdown when manual input is used
-                    setSelectedDropdownValue("");
-                  }}
-                >
-                  Min
-                </button>
-                <button
-                  type="button"
-                  className={activeField === "max" ? "active" : ""}
-                  onClick={() => {
-                    setActiveField("max");
-                    // Clear dropdown when manual input is used
-                    setSelectedDropdownValue("");
-                  }}
-                >
-                  Max
-                </button>
-              </div>
-              <div className="price-input-fields">
-                {activeField === "min" ? (
-                  <input
-                    type="number"
-                    placeholder="Enter Min Price"
-                    value={minPrice}
-                    min="1"
-                    onChange={(e) => {
-                      setMinPrice(e.target.value);
-                      setSelectedDropdownValue("");
-                    }}
-                  />
-                ) : (
-                  <input
-                    type="number"
-                    placeholder="Enter Max Price"
-                    value={maxPrice}
-                    min="1"
-                    onChange={(e) => {
-                      setMaxPrice(e.target.value);
-                      setSelectedDropdownValue("");
-                    }}
-                  />
-                )}
+              <div className="flex items-center gap-2 mt-2">
+                {/* Min Price */}
+                <input
+                  type="number"
+                  placeholder="Min Price"
+                  value={minPrice}
+                  min="1"
+                  onChange={(e) => setMinPrice(e.target.value)}
+                  className="w-1/2 rounded-md px-3 py-2 bg-[#f7f3ff] text-[#4b2bb3] border-2 border-[#c5b9f5] focus:outline-none focus:border-[2px] focus:border-[#4b2bb3] cursor-text caret-black"
+                />
+                <span className="text-gray-600 font-semibold">-</span>
+                {/* Max Price */}
+                <input
+                  type="number"
+                  placeholder="Max Price"
+                  value={maxPrice}
+                  min="1"
+                  onChange={(e) => setMaxPrice(e.target.value)}
+                  className="w-1/2 rounded-md px-3 py-2 bg-[#f7f3ff] text-[#4b2bb3] border-2 border-[#c5b9f5] focus:outline-none focus:border-[2px] focus:border-[#4b2bb3] cursor-text caret-black"
+                />
               </div>
             </div>
 
@@ -513,16 +507,77 @@ function AddServiceInDashboard() {
             <label htmlFor="locations" className="location-label">
               Locations Offered *
             </label>
-            <div className="location-dropdown-wrapper">
-              <div className="dropdown-input">
+            <div
+              className="location-dropdown-wrapper"
+              ref={locationDropdownRef}
+            >
+              <div
+                className="dropdown-input"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                  gap: "6px",
+                  cursor: "text",
+                }}
+                onClick={() =>
+                  document.getElementById("location-input").focus()
+                }
+              >
                 <span className="icon-left">🔍</span>
+
+                {/* Selected Locations (inside input area) */}
+                {selectedLocations.map((loc, index) => (
+                  <span
+                    key={index}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      background: "#f7f3ff",
+                      color: "#4b2bb3",
+                      border: "1px solid #4b2bb3",
+                      borderRadius: "6px",
+                      padding: "2px 6px",
+                      fontSize: "14px",
+                    }}
+                  >
+                    {loc}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setSelectedLocations(
+                          selectedLocations.filter((l) => l !== loc)
+                        )
+                      }
+                      style={{
+                        marginLeft: "4px",
+                        color: "#4b2bb3",
+                        cursor: "pointer",
+                        border: "none",
+                        background: "transparent",
+                        fontSize: "14px",
+                      }}
+                    >
+                      ✕
+                    </button>
+                  </span>
+                ))}
+
+                {/* Input field */}
                 <input
+                  id="location-input"
                   type="text"
                   placeholder="Search location"
                   value={locationSearchTerm}
                   onChange={(e) => setLocationSearchTerm(e.target.value)}
                   onFocus={() => setShowLocationDropdown(true)}
-                  required
+                  style={{
+                    flex: "1",
+                    minWidth: "120px",
+                    border: "none",
+                    outline: "none",
+                    background: "transparent",
+                  }}
                 />
                 {locationSearchTerm && (
                   <img
@@ -540,8 +595,11 @@ function AddServiceInDashboard() {
                     <li
                       key={index}
                       onClick={() => {
-                        setLocationSearchTerm(loc);
-                        setShowLocationDropdown(false);
+                        if (!selectedLocations.includes(loc)) {
+                          setSelectedLocations([...selectedLocations, loc]);
+                        }
+                        setLocationSearchTerm("");
+                        setShowLocationDropdown(false); // ✅ Close dropdown on selection
                       }}
                     >
                       {loc}
@@ -594,4 +652,4 @@ function AddServiceInDashboard() {
   );
 }
 
-export default AddServiceInDashboard;
+export default VendorService;
