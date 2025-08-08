@@ -412,7 +412,7 @@ color: #ffc107;
 @media (max-width: 768px) {
   .dash-sidebar {
     position: absolute;
-    top: 0;
+    top: 60px;
     left: 0;
     bottom: 0;
     width: 250px;
@@ -437,7 +437,7 @@ color: #ffc107;
   }
 
   .dashboard-sidebar-content {
-    margin-top: -16px;
+    margin-top: -20px;
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -446,8 +446,9 @@ color: #ffc107;
   }
 
   .dasgboardHeading {
-    text-align: end;
-    margin-right: 10px;
+    text-align: center;
+    margin-right: 20px;
+    margin-top: 45px;
   }
 
   .dash-sidebar.open {

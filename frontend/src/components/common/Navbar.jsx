@@ -483,6 +483,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin, isOpen, setSho
         {/* ✅ User Logout Popup */}
         {showLogoutPopup && (
           <div
+            className="mt-[40px] sm:mt-[-50px] w-full md:mt-[80px] lg:mt-[100px] xl:mt-[120px]"
             style={{
               position: "fixed",
               top: "115px",
@@ -510,6 +511,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin, isOpen, setSho
         {/* ✅ Vendor Logout Popup */}
         {showVendorLogoutPopup && (
           <div
+            className="mt-[40px] sm:mt-[60px] w-full md:mt-[80px] lg:mt-[100px] xl:mt-[120px]"
             style={{
               position: "fixed",
               top: "115px",

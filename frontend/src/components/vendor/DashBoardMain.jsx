@@ -146,27 +146,27 @@ function DashBoardMain() {
       {/* ✅ Success Popup */}
       {showSuccessPopup && (
         <div
-            style={{
-              position: "fixed",
-              top: "115px",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              padding: "20px 32px",
-              borderRadius: "8px",
-              background: "rgba(255, 255, 255, 0.1)",
-              boxShadow: "0 8px 32px rgba(31, 38, 135, 0.37)",
-              backdropFilter: "blur(10px)",
-              WebkitBackdropFilter: "blur(10px)",
-              border: "2px solid black",
-              fontWeight: "bold",
-              color: "black",
-              zIndex: 9999,
-              textAlign: "center",
-              animation: "popIn 0.3s ease-out forwards",
-            }}
-          >
-            You password updated successfully!
-          </div>
+          style={{
+            position: "fixed",
+            top: "115px",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            padding: "20px 32px",
+            borderRadius: "8px",
+            background: "rgba(255, 255, 255, 0.1)",
+            boxShadow: "0 8px 32px rgba(31, 38, 135, 0.37)",
+            backdropFilter: "blur(10px)",
+            WebkitBackdropFilter: "blur(10px)",
+            border: "2px solid black",
+            fontWeight: "bold",
+            color: "black",
+            zIndex: 9999,
+            textAlign: "center",
+            animation: "popIn 0.3s ease-out forwards",
+          }}
+        >
+          You password updated successfully!
+        </div>
       )}
 
       <button
@@ -189,11 +189,14 @@ function DashBoardMain() {
 
         <div className="relative w-full">
           <button
-            className="flex items-center ml-12 justify-center gap-2 text-center rounded-xl bg-[#434a51] font-semibold px-6 py-3 text-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 ease-in-out xl:fixed xl:top-[90px] xl:right-4 z-50"
+            className="absolute top-[-40px] right-4 md:top-[-70px] md:right-[10px] 
+  flex items-center justify-center gap-2 
+  rounded-[10px] bg-[#2251c9] font-semibold text-[#fff] px-4 py-2
+  mb-4 sm:mb-0"
             onClick={handleOpenAddService}
           >
             <span className="text-xl font-bold">+</span>
-            <span className="text-base tracking-wide">Add Services</span>
+            <span className="text-base tracking-wide">Services</span>
           </button>
         </div>
 
