@@ -49,7 +49,13 @@ const CATEGORIES = [
   "card-design",
 ];
 
-const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin, isOpen, setShowPasswordModal }) => {
+const Navbar = ({
+  onOpenLogin,
+  onOpenRegister,
+  onOpenVendorLogin,
+  isOpen,
+  setShowPasswordModal,
+}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -70,7 +76,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin, isOpen, setSho
   // pop up show after logout
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
   const [showVendorLogoutPopup, setShowVendorLogoutPopup] = useState(false);
-
 
   const profileRef = useRef(null);
   const ellipsisRef = useRef(null);
@@ -267,8 +272,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin, isOpen, setSho
     }
   };
 
-
-
   const vendorLogout = async () => {
     try {
       console.log("Logging out vendor...");
@@ -292,13 +295,11 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin, isOpen, setSho
         setShowVendorLogoutPopup(false);
         navigate("/", { replace: true });
       }, 3000);
-
     } catch (error) {
       console.error("Logout failed", error);
       alert("Failed to logout");
     }
   };
-
 
   const handleSearch = (e) => {
     if (e.key === "Enter" && searchInput.trim()) {
@@ -478,12 +479,11 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin, isOpen, setSho
   };
   return (
     <div>
-
       <div className="navbar">
         {/* ✅ User Logout Popup */}
         {showLogoutPopup && (
           <div
-            className="mt-[40px] sm:mt-[-50px] w-full md:mt-[80px] lg:mt-[100px] xl:mt-[120px]"
+            className="mt-[20px] sm:mt-[-50px]  md:mt-[80px] lg:mt-[100px] xl:mt-[120px]"
             style={{
               position: "fixed",
               top: "115px",
@@ -497,7 +497,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin, isOpen, setSho
               WebkitBackdropFilter: "blur(10px)",
               border: "2px solid white",
               fontWeight: "bold",
-              color: "white",
+              color: "yellow",
               zIndex: 9999,
               textAlign: "center",
               animation: "popIn 0.3s ease-out forwards",
@@ -505,7 +505,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin, isOpen, setSho
           >
             You are logged out successfully!
           </div>
-
         )}
 
         {/* ✅ Vendor Logout Popup */}
@@ -523,9 +522,9 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin, isOpen, setSho
               boxShadow: "0 8px 32px rgba(31, 38, 135, 0.37)",
               backdropFilter: "blur(10px)",
               WebkitBackdropFilter: "blur(10px)",
-              border: "2px solid white",
+              border: "2px solid black",
               fontWeight: "bold",
-              color: "white",
+              color: "black",
               zIndex: 9999,
               textAlign: "center",
               animation: "popIn 0.3s ease-out forwards",
@@ -588,13 +587,13 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin, isOpen, setSho
                 }}
                 autoFocus
 
-              // onFocus={handleInputFocus}
-              // onKeyDown={(e) => {
-              //   if (e.key === "Enter") {
-              //     setShowSuggestions(false); // ✅ closes dropdown
-              //   }
-              //   handleSearch(e); // ✅ keep your existing search logic
-              // }}
+                // onFocus={handleInputFocus}
+                // onKeyDown={(e) => {
+                //   if (e.key === "Enter") {
+                //     setShowSuggestions(false); // ✅ closes dropdown
+                //   }
+                //   handleSearch(e); // ✅ keep your existing search logic
+                // }}
               />
             )}
             <div className="searchbarIcon">
@@ -746,10 +745,11 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin, isOpen, setSho
                       if (!userFirstName) {
                         const toastId = toast.custom((t) => (
                           <div
-                            className={`${t.visible
-                              ? "animate-toast-wiggle"
-                              : "animate-leave"
-                              } fixed top-4 right-10 z-50 mt-12`}
+                            className={`${
+                              t.visible
+                                ? "animate-toast-wiggle"
+                                : "animate-leave"
+                            } fixed top-4 right-10 z-50 mt-12`}
                           >
                             {/* Toast Box */}
                             <div className="relative bg-white border-10 border-[#001f3f] text-black px-6 py-3 rounded-xl w-fit max-w-sm">
@@ -830,10 +830,11 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin, isOpen, setSho
                             if (!userFirstName) {
                               const toastId = toast.custom((t) => (
                                 <div
-                                  className={`${t.visible
-                                    ? "animate-toast-wiggle"
-                                    : "animate-leave"
-                                    } fixed top-4 right-10 z-50 mt-12`}
+                                  className={`${
+                                    t.visible
+                                      ? "animate-toast-wiggle"
+                                      : "animate-leave"
+                                  } fixed top-4 right-10 z-50 mt-12`}
                                 >
                                   {/* Toast Box */}
                                   <div className="relative bg-white border-[#001f3f] text-black px-6 py-3 rounded-xl w-fit max-w-sm">
@@ -866,10 +867,11 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin, isOpen, setSho
                             if (!userFirstName) {
                               const toastId = toast.custom((t) => (
                                 <div
-                                  className={`${t.visible
-                                    ? "animate-toast-wiggle"
-                                    : "animate-leave"
-                                    } fixed top-4 right-10 z-50 mt-12`}
+                                  className={`${
+                                    t.visible
+                                      ? "animate-toast-wiggle"
+                                      : "animate-leave"
+                                  } fixed top-4 right-10 z-50 mt-12`}
                                 >
                                   {/* Toast Box */}
                                   <div className="relative bg-white border-[#001f3f] text-black px-6 py-3 rounded-xl w-fit max-w-sm">
@@ -949,8 +951,9 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin, isOpen, setSho
               {showEllipsisDropdown && (
                 <div className="dropdown-menu ellipsis-menu">
                   <div
-                    className={`dropdown-item ${location.pathname === "/about_us" ? "active" : ""
-                      }`}
+                    className={`dropdown-item ${
+                      location.pathname === "/about_us" ? "active" : ""
+                    }`}
                     onClick={() => {
                       navigate("/about_us");
                       setShowEllipsisDropdown(!showEllipsisDropdown);
@@ -960,8 +963,9 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin, isOpen, setSho
                   </div>
 
                   <div
-                    className={`dropdown-item ${location.pathname === "/help_us" ? "active" : ""
-                      }`}
+                    className={`dropdown-item ${
+                      location.pathname === "/help_us" ? "active" : ""
+                    }`}
                     onClick={() => {
                       navigate("/help_us");
                       setShowEllipsisDropdown(!showEllipsisDropdown);

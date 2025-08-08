@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { FiChevronDown } from "react-icons/fi";
-import AboutUs_1 from "../../assets/aboutus/aboutus_1.jpeg";
+import AboutUs_1 from "../../assets/aboutus/about-image.png";
 import Aboutus_2 from "../../assets/aboutus/aboutus_2.png";
 import Design from "../../components/common/aboutus/Design";
 import ServiceFeature from "./ServiceFeature";
@@ -49,7 +49,7 @@ const AboutUs = () => {
   return (
     <div className="bg-transparent text-gray-800 px-4 sm:px-6 md:px-10 py-10 space-y-20">
       {/* First Section */}
-      <div className="flex flex-col lg:flex-row items-center gap-10">
+      <div className="flex flex-row lg:flex-row items-center gap-10">
         {/* Left - Image Section */}
         <div className="w-full lg:w-1/2">
           <img
