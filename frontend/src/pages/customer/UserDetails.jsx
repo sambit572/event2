@@ -549,8 +549,8 @@ const UserDetails = () => {
   };
 
   return (
-    <div className="font-sans">
-      <div className="max-w-2xl p-8 mx-auto my-16 text-gray-800 bg-[#c0bcbc] rounded-2xl border-[3px] border-[#001F3F] shadow-[0_8px_32px_rgba(31,38,135,0.2)] backdrop-blur-lg">
+    <div className="font-sans px-4">
+      <div className="max-w-2xl p-8 mx-auto my-24 text-gray-800 bg-[#c0bcbc] rounded-2xl border-[3px] border-[#001F3F] shadow-[0_8px_32px_rgba(31,38,135,0.2)] backdrop-blur-lg">
         <h3 className="mb-3 text-center text-3xl font-bold tracking-wide bg-gradient-to-r from-[#004989] to-[#001F3F] bg-clip-text text-transparent">
           Fill Out Your Event Details
         </h3>
@@ -715,17 +715,18 @@ const UserDetails = () => {
               />
             </FormField>
           </div>
-
-          <div className="flex flex-col justify-center gap-3.5 mt-2.5 sm:flex-row">
+          
+          {/* --- CHANGES APPLIED HERE --- */}
+          <div className="flex flex-col justify-center gap-3.5 mt-2.5 md:flex-row">
             <button
               type="submit"
-              className="w-full px-5 py-3 text-base font-semibold tracking-wider text-white uppercase transition-transform duration-200 ease-in-out bg-green-600 rounded-lg cursor-pointer hover:shadow-lg sm:w-36"
+              className="w-full px-5 py-3 text-base font-semibold tracking-wider text-white uppercase transition-transform duration-200 ease-in-out bg-green-600 rounded-lg cursor-pointer hover:shadow-lg md:w-36"
             >
               Save
             </button>
             <button
               type="button"
-              className="w-full px-5 py-3 text-base font-semibold tracking-wider text-white uppercase transition-transform duration-200 ease-in-out bg-gradient-to-r from-rose-500 to-rose-600 rounded-lg cursor-pointer hover:shadow-lg sm:w-36"
+              className="w-full px-5 py-3 text-base font-semibold tracking-wider text-white uppercase transition-transform duration-200 ease-in-out bg-gradient-to-r from-rose-500 to-rose-600 rounded-lg cursor-pointer hover:shadow-lg md:w-36"
               onClick={handleCancel}
             >
               Cancel
@@ -745,5 +746,4 @@ const UserDetails = () => {
     </div>
   );
 };
-
 export default UserDetails;
