@@ -8,7 +8,7 @@
 }
 
 .thankyou-card {
-background:  #001F3F;
+  background: #001f3f;
   padding: 40px 50px;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
@@ -59,19 +59,6 @@ background:  #001F3F;
   }
 }
 
-h1 {
-  color: rgb(235, 235, 101);
-  font-weight: bold;
-  font-size: 28px;
-  margin-bottom: 10px;
-}
-
-p {
-  font-size: 15px;
-  color: white;
-  margin-bottom: 30px;
-}
-
 @keyframes fadeInScale {
   from {
     opacity: 0;
@@ -82,7 +69,6 @@ p {
     transform: scale(1);
   }
 }
-
 
 @media (min-width: 768px) {
   .thankyou-actions {
@@ -111,19 +97,18 @@ p {
   }
 }
 
-.thankyou-social h3
- {
+.thankyou-social h3 {
   font-size: 16px;
   margin-bottom: 15px;
   color: #0b6b25;
   font-weight: bold;
 }
 
-.thankyou-visit h3{
-  color:#001F3F;
+.thankyou-visit h3 {
+  color: #001f3f;
   font-size: 16px;
   font-weight: bold;
-   margin-bottom: 15px;
+  margin-bottom: 15px;
 }
 
 /* Social Media Icons */

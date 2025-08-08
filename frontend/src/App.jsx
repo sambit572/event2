@@ -60,6 +60,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 import FaqSection from "./components/customer/home/FaqSection.jsx";
 import ErrorPage from "./pages/common/ErrorPage.jsx";
 import ReviewSlider from "./components/customer/home/ReviewSlider.jsx";
+import MyReports from "./pages/common/myreports/MyReports.jsx";
 const App = () => {
   const location = useLocation();
   // Modal states for user
@@ -88,6 +89,7 @@ const App = () => {
     "/dashboard",
     "/profile",
     "/reset-password",
+    "/report",
     // "/service/:serviceId",
     // "/category/:categoryId",
   ];
@@ -264,6 +266,7 @@ const App = () => {
           <Route path="/pop-up" element={<PopUp />}></Route>
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="*" element={<ErrorPage />} />
+          <Route path="/report" element={<MyReports />} />
         </Routes>
       </main>
       <BackToTop />

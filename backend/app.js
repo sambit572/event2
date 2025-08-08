@@ -14,6 +14,7 @@ import startAgenda from "./agenda/startAgenda.js";
 import "./cronjobs/startCronjobs.js";
 import feedbackRoutes from "./routes/common/feedback.routes.js";
 import serviceRoutes from "./routes/common/serviceList.routes.js";
+import reportRoutes from "./routes/common/report.routes.js";
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -52,6 +53,8 @@ app.use(cookieParser());
 })();
 
 // ✅ API Routes
+app.use("/api/reports", reportRoutes);
+
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/user", userRouter);
 app.use("/api/vendors", vendor_router);
