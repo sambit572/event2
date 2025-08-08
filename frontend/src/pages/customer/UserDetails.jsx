@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 
 // Data objects (stateDistricts, districtCities, aliases) remain the same...
@@ -301,7 +301,7 @@ const UserDetails = () => {
     district: "",
     city: "",
     pincode: "",
-    country: "",
+    country: "India",
   });
 
   const findStateMatch = (stateName) => {
@@ -400,9 +400,11 @@ const UserDetails = () => {
       alert("Pincode must be exactly 6 digits.");
       return;
     }
+    console.log("Form Data:",formData);
     const allFieldsFilled =
       userName.trim() !== "" &&
       Object.values(formData).every((value) => String(value).trim() !== "");
+    console.log("All fields filled:", allFieldsFilled);
     if (allFieldsFilled) {
       setShowPopup(true);
       setTimeout(() => setShowPopup(false), 3000);
@@ -721,6 +723,7 @@ const UserDetails = () => {
             <button
               type="submit"
               className="w-full px-5 py-3 text-base font-semibold tracking-wider text-white uppercase transition-transform duration-200 ease-in-out bg-green-600 rounded-lg cursor-pointer hover:shadow-lg md:w-36"
+              onClick={handleSave}
             >
               Save
             </button>
