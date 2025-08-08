@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaRegHeart, FaHeart, FaRegCalendarCheck } from "react-icons/fa6";
 import { BACKEND_URL } from "../../../utils/constant";
 import axios from "axios";
+import { FaBell } from "react-icons/fa6";
 
 const ServiceDescription = ({ service, onSwitchToLogin }) => {
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
 
   const rating = service.rating || "★";
   const reviews = service.reviews || 0;
-
+  const available = service.available || null;
   const price = service.minPrice
     ? service.maxPrice
       ? `${service.minPrice} - ${service.maxPrice}`
@@ -50,7 +51,19 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
 
   const originalPrice = service.originalPrice;
   const discountPercent = service.discountPercent;
+  const [notified, setNotified] = useState(false);
 
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const handleNotifyClick = () => {
+    setNotified(true);
+    setIsAnimating(true);
+
+    setTimeout(() => {
+      setIsAnimating(false); // stop vibrating after 10 seconds
+      console.log("animation stopped");
+    }, 2000);
+  };
   // Fetch wishlist status
   useEffect(() => {
     const fetchWishlistStatus = async () => {
@@ -116,9 +129,9 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
   return (
     <section className="w-full text-black-900 p-4">
       {/* Wishlist Heart */}
-      <div className="flex justify-end h-0">
+      <div className="flex justify-end h-0  relative">
         <div
-          className={`h-10 w-10 flex items-center justify-center rounded-full bg-white shadow-md cursor-pointer transition-all duration-300
+          className={`h-10 w-10 absolute  z-10 mt-3 flex items-center justify-center rounded-full bg-white shadow-md cursor-pointer transition-all duration-300
             ${
               isWishlisted
                 ? "text-red-600 ring-2 ring-red-300 shadow-red-200"
@@ -154,7 +167,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
         </div>
 
         {/* Pricing */}
-        <div className="flex flex-wrap gap-3 items-center mb-2 text-sm">
+        <div className="flex flex-wrap gap-3 items-center mb-1 text-sm">
           <span className="text-xl font-bold text-black-900">₹{price}</span>
           {originalPrice && (
             <>
@@ -167,27 +180,54 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
             </>
           )}
         </div>
-
-        <p className="text-sm text-black mb-4">
+        {/* <p
+          className={`text-sm mb-1 ${
+            available ? "text-green-600" : "text-red-600"
+          }`}
+        >
+           {available ? null : "Out Of Service"}
+        </p> */}
+        <p className="text-sm text-black mb-2">
           <span className="font-bold">Prep Time: </span>
           {duration}
         </p>
 
         <p className="text-sm text-black mb-4">{description}</p>
       </Link>
-
       {/* Buttons */}
       <div className="flex flex-col sm:flex-row-reverse gap-4">
-        <button className="w-full sm:w-44 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-md transition-all duration-300">
-          Add to Cart
-        </button>
+        {available ? (
+          <>
+            <button className="w-full sm:w-44 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-md transition-all duration-300">
+              Add to Cart
+            </button>
 
-        <button
-          className="w-full sm:w-44 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-green-700 shadow-md hover:from-green-500 hover:to-green-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-400"
-          onClick={handleBookNow}
-        >
-          Book Now
-        </button>
+            <button
+              className="w-full sm:w-44 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-green-700 shadow-md hover:from-green-500 hover:to-green-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-400"
+              onClick={handleBookNow}
+            >
+              Book Now
+            </button>
+          </>
+        ) : (
+          <button
+            onClick={handleNotifyClick}
+            className={`w-full sm:w-44 flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-blue-900 bg-transparent border border-blue-900
+        hover:bg-blue-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-md transition-all duration-300`}
+          >
+            {!notified ? (
+              "Notify"
+            ) : (
+              <span
+                className={`flex items-center gap-1 ${
+                  isAnimating ? "animate-bell" : ""
+                }`}
+              >
+                <FaBell className="text-base" />
+              </span>
+            )}
+          </button>
+        )}
       </div>
     </section>
   );

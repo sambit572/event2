@@ -1,4 +1,4 @@
-import "./ServiceDescription.css";
+import "./ServiceDetailDescription.css";
 
 const ServiceDescription = ({ description }) => {
   return (

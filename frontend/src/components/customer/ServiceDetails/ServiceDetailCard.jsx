@@ -21,6 +21,7 @@ const ServiceDetailCard = ({ service }) => {
     originalPrice,
     discountPercent,
     address,
+    available,
   } = service;
 
   const totalReviews = reviews?.length || reviews || 0;
@@ -58,7 +59,7 @@ const ServiceDetailCard = ({ service }) => {
       : `${minPrice}`
     : "N/A";
   console.log("SERVICE PROPS:", service);
-  
+
   const serviceId = service._id || service.id;
   // Fetch wishlist status
   useEffect(() => {
@@ -163,7 +164,13 @@ const ServiceDetailCard = ({ service }) => {
           </>
         )}
       </div>
-
+      <p
+        className={`text-sm mb-1 ${
+          available ? "text-green-600" : "text-red-700"
+        }`}
+      >
+         {available ? null : "Out Of Service"}
+      </p>
       <p className="text-sm text-black mb-4">
         <span className="font-bold">Prep Time: </span>
         {formattedDuration}
