@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import React, { useState } from "react";
 import axios from "axios";
 
-// Data objects (stateDistricts, districtCities, aliases) remain the same...
 // Data objects (stateDistricts, districtCities, aliases) remain the same...
 const stateDistricts = {
   Odisha: [
@@ -43,7 +41,6 @@ const stateDistricts = {
   TamilNadu: ["Chennai", "Coimbatore"],
   UttarPradesh: ["Lucknow", "Kanpur"],
 };
-
 
 const districtCities = {
   Angul: ["Angul", "Talcher", "Athmallik", "Dera Colony"],
@@ -289,104 +286,9 @@ const FormField = ({
   );
 };
 
-const stateAliases = {
-  Odisha: ["OR", "OD", "Orissa"],
-  Gujarat: ["GJ"],
-  Maharashtra: ["MH"],
-  Karnataka: ["KA"],
-  TamilNadu: ["TN", "Tamil Nadu"],
-  UttarPradesh: ["UP", "Uttar Pradesh"],
-};
-const districtAliases = {
-  Khordha: ["Khurda"],
-  Cuttack: ["Kattak"],
-  "Mumbai Suburban": ["Mumbai", "Greater Mumbai"],
-  "Bangalore Urban": ["Bengaluru Urban", "Bengaluru", "Bangalore"],
-};
-const cityAliases = {
-  Bhubaneswar: ["BBSR"],
-  Mumbai: ["Bombay"],
-  Bangalore: ["Bengaluru"],
-  Mysuru: ["Mysore"],
-  Chennai: ["Madras"],
-};
-
-const FormField = ({
-  id,
-  label,
-  children,
-  useStaticLabel = false,
-  placeholder = "",
-}) => {
-  const isSelect = children.type === "select";
-
-  const commonInputClasses =
-    "w-full px-4 py-3.5 rounded-xl border border-slate-300 text-base text-gray-800 font-medium focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 focus:outline-none";
-
-  if (useStaticLabel) {
-    return (
-      <div>
-        <label
-          htmlFor={id}
-          className="block mb-1 text-sm font-medium text-gray-700"
-        >
-          {label}
-        </label>
-        {React.cloneElement(children, {
-          id: id,
-          className: commonInputClasses,
-          placeholder: placeholder,
-        })}
-      </div>
-    );
-  }
-
-  // These classes position the label inside the input/select when it's empty OR disabled
-  const unfocusedClasses = isSelect
-    ? "peer-invalid:text-gray-500 peer-invalid:top-3 peer-invalid:text-sm peer-invalid:left-4 peer-disabled:text-gray-500 peer-disabled:top-3 peer-disabled:text-sm peer-disabled:left-4 peer-disabled:bg-[#e9ecef]"
-    : "peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-3 peer-placeholder-shown:text-sm peer-placeholder-shown:left-4";
-
-  return (
-    <div className="relative">
-      {React.cloneElement(children, {
-        id: id,
-        className: `peer transition-all duration-300 ease-in-out placeholder-transparent disabled:bg-[#e9ecef] disabled:cursor-not-allowed ${commonInputClasses} ${
-          isSelect ? "appearance-none pr-10" : ""
-        }`,
-        placeholder: label,
-      })}
-      <label
-        htmlFor={id}
-        className={`absolute left-2.5 -top-2.5 px-1 bg-white text-xs text-indigo-500 font-medium tracking-wider capitalize transition-all duration-300 ease-in-out pointer-events-none peer-focus:-top-2.5 peer-focus:left-2.5 peer-focus:text-xs peer-focus:text-indigo-500 ${unfocusedClasses}`}
-      >
-        {label}
-      </label>
-      {isSelect && (
-        <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
-          <svg
-            className="w-5 h-5 text-gray-500"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M19 9l-7 7-7-7"
-            ></path>
-          </svg>
-        </div>
-      )}
-    </div>
-  );
-};
-
 const UserDetails = () => {
   const [userName, setUserName] = useState("");
   const [showPopup, setShowPopup] = useState(false);
-  const [locationMessage, setLocationMessage] = useState("");
   const [locationMessage, setLocationMessage] = useState("");
   const [formData, setFormData] = useState({
     phone: "",
@@ -400,72 +302,8 @@ const UserDetails = () => {
     city: "",
     pincode: "",
     country: "India",
-    country: "India",
   });
 
-  const findStateMatch = (stateName) => {
-    const stateKeys = Object.keys(stateDistricts);
-    if (stateKeys.includes(stateName)) return stateName;
-    for (const [state, aliases] of Object.entries(stateAliases)) {
-      if (
-        aliases.some(
-          (alias) =>
-            alias.toLowerCase() === stateName.toLowerCase() ||
-            stateName.toLowerCase().includes(alias.toLowerCase())
-        )
-      )
-        return state;
-    }
-    return (
-      stateKeys.find(
-        (key) =>
-          key.toLowerCase().includes(stateName.toLowerCase()) ||
-          stateName.toLowerCase().includes(key.toLowerCase())
-      ) || ""
-    );
-  };
-
-  const findDistrictMatch = (districtName, selectedState) => {
-    if (!selectedState || !stateDistricts[selectedState]) return "";
-    const districts = stateDistricts[selectedState];
-    if (districts.includes(districtName)) return districtName;
-    for (const [district, aliases] of Object.entries(districtAliases)) {
-      if (
-        districts.includes(district) &&
-        aliases.some(
-          (alias) => alias.toLowerCase() === districtName.toLowerCase()
-        )
-      )
-        return district;
-    }
-    return (
-      districts.find(
-        (d) =>
-          d.toLowerCase().includes(districtName.toLowerCase()) ||
-          districtName.toLowerCase().includes(d.toLowerCase())
-      ) || ""
-    );
-  };
-
-  const findCityMatch = (cityName, selectedDistrict) => {
-    if (!selectedDistrict || !districtCities[selectedDistrict]) return "";
-    const cities = districtCities[selectedDistrict];
-    if (cities.includes(cityName)) return cityName;
-    for (const [city, aliases] of Object.entries(cityAliases)) {
-      if (
-        cities.includes(city) &&
-        aliases.some((alias) => alias.toLowerCase() === cityName.toLowerCase())
-      )
-        return city;
-    }
-    return (
-      cities.find(
-        (c) =>
-          c.toLowerCase().includes(cityName.toLowerCase()) ||
-          cityName.toLowerCase().includes(c.toLowerCase())
-      ) || ""
-    );
-  };
   const findStateMatch = (stateName) => {
     const stateKeys = Object.keys(stateDistricts);
     if (stateKeys.includes(stateName)) return stateName;
@@ -549,7 +387,6 @@ const UserDetails = () => {
       }));
     } else if (name === "district") {
       setFormData((prevData) => ({ ...prevData, district: value, city: "" }));
-      setFormData((prevData) => ({ ...prevData, district: value, city: "" }));
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -566,8 +403,6 @@ const UserDetails = () => {
     console.log("Form Data:", formData);
     const allFieldsFilled =
       userName.trim() !== "" &&
-      Object.values(formData).every((value) => String(value).trim() !== "");
-    console.log("All fields filled:", allFieldsFilled);
       Object.values(formData).every((value) => String(value).trim() !== "");
     console.log("All fields filled:", allFieldsFilled);
     if (allFieldsFilled) {
@@ -619,57 +454,8 @@ const UserDetails = () => {
               state = "";
             let pincode = "",
               country = "";
-          if (data.status === "OK" && data.results.length > 0) {
-            const result = data.results[0];
-            const addressComponents = result.address_components;
-            let premise = "",
-              streetNumber = "",
-              route = "",
-              neighborhood = "",
-              sublocality = "";
-            let locality = "",
-              district_level_2 = "",
-              district_level_3 = "",
-              state = "";
-            let pincode = "",
-              country = "";
             for (let comp of addressComponents) {
               const types = comp.types;
-              const longName = comp.long_name;
-              const shortName = comp.short_name;
-              if (types.includes("premise")) premise = longName;
-              if (types.includes("street_number")) streetNumber = longName;
-              if (types.includes("route")) route = longName;
-              if (types.includes("neighborhood")) neighborhood = longName;
-              if (
-                types.includes("sublocality") ||
-                types.includes("sublocality_level_1")
-              )
-                sublocality = longName;
-              if (types.includes("locality")) locality = longName;
-              if (types.includes("administrative_area_level_2"))
-                district_level_2 = longName;
-              if (types.includes("administrative_area_level_3"))
-                district_level_3 = longName;
-              if (types.includes("administrative_area_level_1"))
-                state = shortName;
-              if (types.includes("postal_code")) pincode = longName;
-              if (types.includes("country")) country = longName;
-            }
-            const addressParts = new Set();
-            if (premise || streetNumber)
-              addressParts.add(premise || streetNumber);
-            if (route) addressParts.add(route);
-            if (neighborhood) addressParts.add(neighborhood);
-            if (sublocality) addressParts.add(sublocality);
-            if (locality) addressParts.add(locality);
-            const completeAddress = [...addressParts].join(", ");
-            const matchedState = findStateMatch(state);
-            let matchedDistrict =
-              findDistrictMatch(district_level_2, matchedState) ||
-              findDistrictMatch(district_level_3, matchedState) ||
-              findDistrictMatch(locality, matchedState);
-            const matchedCity = findCityMatch(locality, matchedDistrict);
               const longName = comp.long_name;
               const shortName = comp.short_name;
               if (types.includes("premise")) premise = longName;
@@ -730,32 +516,7 @@ const UserDetails = () => {
             } else {
               alert("Location fetched successfully!");
             }
-              address: completeAddress.trim(),
-              state: matchedState || "",
-              district: matchedDistrict || "",
-              city: matchedCity || "",
-              pincode: pincode,
-              country: country || "India",
-            }));
-            setLocationMessage(
-              "Location auto-filled. Please verify the address."
-            );
-            const matchInfo = [];
-            if (!matchedState) matchInfo.push("state");
-            if (!matchedDistrict) matchInfo.push("district");
-            if (!matchedCity) matchInfo.push("city");
-            if (matchInfo.length > 0) {
-              alert(
-                `Location fetched! Note: Could not auto-select ${matchInfo.join(
-                  ", "
-                )}. Please select manually.`
-              );
-            } else {
-              alert("Location fetched successfully!");
-            }
           } else {
-            console.error("Geocoding failed:", data.status);
-            alert("Could not get address. Please try again.");
             console.error("Geocoding failed:", data.status);
             alert("Could not get address. Please try again.");
           }
@@ -764,32 +525,9 @@ const UserDetails = () => {
           alert(
             "Error fetching location. Please check your internet connection."
           );
-          console.error("Geocode error:", err);
-          alert(
-            "Error fetching location. Please check your internet connection."
-          );
         }
       },
       (error) => {
-        console.error("Geolocation error:", error);
-        let errorMessage = "Failed to get location. ";
-        switch (error.code) {
-          case error.PERMISSION_DENIED:
-            errorMessage += "Please allow location access.";
-            break;
-          case error.POSITION_UNAVAILABLE:
-            errorMessage += "Location information unavailable.";
-            break;
-          case error.TIMEOUT:
-            errorMessage += "Location request timed out.";
-            break;
-          default:
-            errorMessage += "Unknown error occurred.";
-            break;
-        }
-        alert(errorMessage);
-      },
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 }
         console.error("Geolocation error:", error);
         let errorMessage = "Failed to get location. ";
         switch (error.code) {
@@ -821,14 +559,6 @@ const UserDetails = () => {
 
         <form className="flex flex-col gap-5 mt-8" onSubmit={handleSave}>
           <FormField id="userName" label="User Name">
-    <div className="font-sans px-4">
-      <div className="max-w-2xl p-8 mx-auto my-24 text-gray-800 bg-[#c0bcbc] rounded-2xl border-[3px] border-[#001F3F] shadow-[0_8px_32px_rgba(31,38,135,0.2)] backdrop-blur-lg">
-        <h3 className="mb-3 text-center text-3xl font-bold tracking-wide bg-gradient-to-r from-[#004989] to-[#001F3F] bg-clip-text text-transparent">
-          Fill Out Your Event Details
-        </h3>
-
-        <form className="flex flex-col gap-5 mt-8" onSubmit={handleSave}>
-          <FormField id="userName" label="User Name">
             <input
               type="text"
               name="userName"
@@ -837,10 +567,7 @@ const UserDetails = () => {
               required
             />
           </FormField>
-          </FormField>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <FormField id="phone" label="Phone Number">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <FormField id="phone" label="Phone Number">
               <input
@@ -852,8 +579,6 @@ const UserDetails = () => {
               />
             </FormField>
             <FormField id="altPhone" label="Alternate Number">
-            </FormField>
-            <FormField id="altPhone" label="Alternate Number">
               <input
                 type="tel"
                 name="altPhone"
@@ -862,16 +587,8 @@ const UserDetails = () => {
                 required
               />
             </FormField>
-            </FormField>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <FormField
-              id="startDate"
-              label="Start Date"
-              useStaticLabel={true}
-              placeholder="dd/mm/yyyy"
-            >
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <FormField
               id="startDate"
@@ -893,13 +610,6 @@ const UserDetails = () => {
               useStaticLabel={true}
               placeholder="dd/mm/yyyy"
             >
-            </FormField>
-            <FormField
-              id="endDate"
-              label="End Date"
-              useStaticLabel={true}
-              placeholder="dd/mm/yyyy"
-            >
               <input
                 type="date"
                 name="endDate"
@@ -908,21 +618,8 @@ const UserDetails = () => {
                 required
               />
             </FormField>
-            </FormField>
           </div>
 
-          {/* VVV CORRECTED ADDRESS FIELD STRUCTURE VVV */}
-          <div>
-            <div className="relative">
-              <FormField id="address" label="Event Address">
-                <input
-                  type="text"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleChange}
-                  required
-                />
-              </FormField>
           {/* VVV CORRECTED ADDRESS FIELD STRUCTURE VVV */}
           <div>
             <div className="relative">
@@ -939,7 +636,6 @@ const UserDetails = () => {
                 type="button"
                 onClick={handleUseCurrentAddress}
                 className="absolute right-3 top-1/2 -translate-y-1/2 bg-amber-300 hover:bg-indigo-600 text-white text-xs px-2 py-1 rounded-md shadow-sm"
-                className="absolute right-3 top-1/2 -translate-y-1/2 bg-amber-300 hover:bg-indigo-600 text-white text-xs px-2 py-1 rounded-md shadow-sm"
                 title="Use Current Location"
               >
                 📍
@@ -950,14 +646,8 @@ const UserDetails = () => {
                 {locationMessage}
               </small>
             )}
-            {locationMessage && (
-              <small className="block mt-1 text-blue-600">
-                {locationMessage}
-              </small>
-            )}
           </div>
 
-          <FormField id="landmark" label="Landmark">
           <FormField id="landmark" label="Landmark">
             <input
               type="text"
@@ -967,10 +657,7 @@ const UserDetails = () => {
               required
             />
           </FormField>
-          </FormField>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <FormField id="state" label="State">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <FormField id="state" label="State">
               <select
@@ -979,7 +666,6 @@ const UserDetails = () => {
                 onChange={handleChange}
                 required
               >
-                <option value=""></option>
                 <option value=""></option>
                 <option value="Odisha">Odisha</option>
                 <option value="Gujarat">Gujarat</option>
@@ -990,17 +676,13 @@ const UserDetails = () => {
               </select>
             </FormField>
             <FormField id="district" label="District">
-            </FormField>
-            <FormField id="district" label="District">
               <select
                 name="district"
                 value={formData.district}
                 onChange={handleChange}
                 required
                 disabled={!formData.state}
-                disabled={!formData.state}
               >
-                <option value=""></option>
                 <option value=""></option>
                 {stateDistricts[formData.state]?.map((district) => (
                   <option key={district} value={district}>
@@ -1010,17 +692,13 @@ const UserDetails = () => {
               </select>
             </FormField>
             <FormField id="city" label="City">
-            </FormField>
-            <FormField id="city" label="City">
               <select
                 name="city"
                 value={formData.city}
                 onChange={handleChange}
                 required
                 disabled={!formData.district}
-                disabled={!formData.district}
               >
-                <option value=""></option>
                 <option value=""></option>
                 {districtCities[formData.district]?.map((city) => (
                   <option key={city} value={city}>
@@ -1030,8 +708,6 @@ const UserDetails = () => {
               </select>
             </FormField>
             <FormField id="pincode" label="Pincode">
-            </FormField>
-            <FormField id="pincode" label="Pincode">
               <input
                 type="text"
                 name="pincode"
@@ -1039,7 +715,6 @@ const UserDetails = () => {
                 onChange={handleChange}
                 required
               />
-            </FormField>
             </FormField>
           </div>
 
@@ -1055,7 +730,6 @@ const UserDetails = () => {
             <button
               type="button"
               className="w-full px-5 py-3 text-base font-semibold tracking-wider text-white uppercase transition-transform duration-200 ease-in-out bg-gradient-to-r from-rose-500 to-rose-600 rounded-lg cursor-pointer hover:shadow-lg md:w-36"
-              className="w-full px-5 py-3 text-base font-semibold tracking-wider text-white uppercase transition-transform duration-200 ease-in-out bg-gradient-to-r from-rose-500 to-rose-600 rounded-lg cursor-pointer hover:shadow-lg md:w-36"
               onClick={handleCancel}
             >
               Cancel
@@ -1063,11 +737,6 @@ const UserDetails = () => {
           </div>
 
           {showPopup && (
-            <div className="px-5 py-4 mt-5 text-base text-center text-green-800 bg-gradient-to-r from-green-100 to-green-200 border-l-[6px] border-l-green-500 rounded-xl animate-fadeIn">
-              <strong className="block text-lg font-bold">{userName},</strong>
-              <p className="mt-1 text-sm">
-                Your User Details Saved Successfully!
-              </p>
             <div className="px-5 py-4 mt-5 text-base text-center text-green-800 bg-gradient-to-r from-green-100 to-green-200 border-l-[6px] border-l-green-500 rounded-xl animate-fadeIn">
               <strong className="block text-lg font-bold">{userName},</strong>
               <p className="mt-1 text-sm">

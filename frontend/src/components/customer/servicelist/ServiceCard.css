@@ -3,6 +3,32 @@
   
   /* background-color: aqua; */
 }
+/* ServiceCard.css */
+
+.totalService.out-of-service {
+  position: relative;
+opacity: 0.9;
+
+  transition: opacity 0.3s ease;
+}
+.totalService.out-of-service .serviceCardImg ,
+.totalService.out-of-service .thumbnailColumn img {
+  filter: grayscale(100%);
+}
+.out-of-service-label {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  background-color: blue;
+  color: white;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  border-bottom-left-radius: 20px;
+  /* border-bottom-right-radius: 10px; */
+  z-index: 1000;
+}
+
 .serviceCards {
   display: flex;
   width: 100%;
