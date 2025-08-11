@@ -85,7 +85,8 @@ function DashBoardMain() {
     } catch (error) {
       console.error("Password change error:", error);
       const backendMsg =
-        error.response?.data?.message || "Failed to change password. Try again.";
+        error.response?.data?.message ||
+        "Failed to change password. Try again.";
       setErrorMsg(backendMsg);
     }
   };
@@ -197,11 +198,16 @@ function DashBoardMain() {
           >
             <span className="text-xl font-bold">+</span>
             <span className="text-base tracking-wide">Services</span>
+            <span className="text-base tracking-wide">Services</span>
           </button>
         </div>
 
         <div className="relative max-h-[70vh] overflow-y-auto">
-          {activeTab === "services" ? <DashboardServices /> : <DashBoardBooking />}
+          {activeTab === "services" ? (
+            <DashboardServices />
+          ) : (
+            <DashBoardBooking />
+          )}
         </div>
 
         {/* ✅ Password Change Modal */}
@@ -236,7 +242,9 @@ function DashBoardMain() {
                   setConfirmPassword(e.target.value);
                 }}
               />
-              {errorMsg && <p className="text-red-500 mt-2 text-sm">{errorMsg}</p>}
+              {errorMsg && (
+                <p className="text-red-500 mt-2 text-sm">{errorMsg}</p>
+              )}
               <div className="mt-4 flex justify-center gap-4">
                 <button
                   onClick={handlePasswordChangeSubmit}
@@ -299,11 +307,21 @@ function DashBoardMain() {
             <div className="popup-container">
               <h3 className="popup-title">New Booking Request</h3>
               <div className="popup-content">
-                <p><strong>Service:</strong> {popupData.vendorName}</p>
-                <p><strong>Venue:</strong> {popupData.venueLocation}</p>
-                <p><strong>Type:</strong> {popupData.type}</p>
-                <p><strong>Original Price:</strong> ₹{popupData.originalPrice}</p>
-                <p><strong>Proposed Price:</strong> ₹{popupData.proposedPrice}</p>
+                <p>
+                  <strong>Service:</strong> {popupData.vendorName}
+                </p>
+                <p>
+                  <strong>Venue:</strong> {popupData.venueLocation}
+                </p>
+                <p>
+                  <strong>Type:</strong> {popupData.type}
+                </p>
+                <p>
+                  <strong>Original Price:</strong> ₹{popupData.originalPrice}
+                </p>
+                <p>
+                  <strong>Proposed Price:</strong> ₹{popupData.proposedPrice}
+                </p>
                 {popupData.proposedPrice < popupData.originalPrice && (
                   <p>
                     <strong>Enter Final Price:</strong>
@@ -314,13 +332,22 @@ function DashBoardMain() {
                     />
                   </p>
                 )}
-                <p><strong>Date:</strong> {new Date(popupData.date).toLocaleDateString()}</p>
+                <p>
+                  <strong>Date:</strong>{" "}
+                  {new Date(popupData.date).toLocaleDateString()}
+                </p>
               </div>
               <div className="popup-actions">
-                <button className="btn-accept" onClick={() => handleResponse("accept")}>
+                <button
+                  className="btn-accept"
+                  onClick={() => handleResponse("accept")}
+                >
                   Accept
                 </button>
-                <button className="btn-decline" onClick={() => handleResponse("decline")}>
+                <button
+                  className="btn-decline"
+                  onClick={() => handleResponse("decline")}
+                >
                   Cancel
                 </button>
               </div>

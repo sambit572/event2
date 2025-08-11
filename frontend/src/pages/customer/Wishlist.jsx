@@ -1,123 +1,132 @@
-import React, { useState } from 'react';
-import './Wishlist.css';
-import { FaTrash } from 'react-icons/fa';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { BACKEND_URL } from "../../utils/constant";
+import { FaStar } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
-
-const wishlistData = [
-  {
-    id: 1,
-    title: 'Dream Frame Studio',
-    price: '₹ 6,200',
-    oldPrice: '10,000',
-    discount: '20% Off',
-    description:
-      'Lorem ipsum dolour sit a met, connecter adipescnt elite, sed do temper incident ut labore et dolore magna aliquant. Ut denim ad minim venial, quiz nostrum exercitation.',
-    image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
-  },
-  {
-    id: 2,
-    title: 'Sunlight Portraits',
-    price: '₹ 4,800',
-    oldPrice: '8,000',
-    discount: '40% Off',
-    description:
-      'Lorem ipsum dolour sit a met, connecter adipescnt elite, sed do temper incident ut labore et dolore magna aliquant. Ut denim ad minim venial, quiz nostrum exercitation.',
-    image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
-  },
-  {
-    id: 3,
-    title: 'Nature Clicks',
-    price: '₹ 5,500',
-    oldPrice: '9,000',
-    discount: '38% Off',
-    description:
-      'Lorem ipsum dolour sit a met, connecter adipescnt elite, sed do temper incident ut labore et dolore magna aliquant. Ut denim ad minim venial, quiz nostrum exercitation.',
-    image: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca',
-  },
-  {
-    id: 4,
-    title: 'Studio Flash Pro',
-    price: '₹ 7,000',
-    oldPrice: '12,000',
-    discount: '42% Off',
-    description:
-      'Lorem ipsum dolour sit a met, connecter adipescnt elite, sed do temper incident ut labore et dolore magna aliquant. Ut denim ad minim venial, quiz nostrum exercitation.',
-    image: 'https://images.unsplash.com/photo-1533750349088-cd871a92f312',
-  },
-];
 const Wishlist = () => {
-  const [wishlistItems, setWishlistItems] = useState(wishlistData);
-  const [popupVisible, setPopupVisible] = useState(false);
-  const [itemToDelete, setItemToDelete] = useState(null);
-  const [flippingOut, setFlippingOut] = useState(false);
+  const [wishlist, setWishlist] = useState([]);
 
-  const handleDeleteClick = (id) => {
-    setItemToDelete(id);
-    setPopupVisible(true);
-    setFlippingOut(false); // Reset flip state
-  };
+  useEffect(() => {
+    const fetchWishlist = async () => {
+      try {
+        const res = await axios.get(`${BACKEND_URL}/wishlist/getwishlist`, {
+          withCredentials: true,
+        });
+        setWishlist(res.data);
+        console.log("Wishlist fetched successfully:", res.data);
+      } catch (error) {
+        console.error("Error fetching wishlist:", error);
+      }
+    };
+    fetchWishlist();
+  }, []);
 
-  const confirmDelete = () => {
-    setFlippingOut(true);
-    setTimeout(() => {
-      setWishlistItems((items) => items.filter((item) => item.id !== itemToDelete));
-      setPopupVisible(false);
-      setItemToDelete(null);
-    }, 600); // matches animation duration
-  };
+  const handleDelete = async (id, serviceId) => {
+    try {
+      await axios.delete(`${BACKEND_URL}/wishlist/deleteWishlist/${id}`, {
+        withCredentials: true,
+      });
 
-  const cancelDelete = () => {
-    setFlippingOut(true);
-    setTimeout(() => {
-      setPopupVisible(false);
-      setItemToDelete(null);
-    }, 600);
+      setWishlist((prev) => prev.filter((item) => item._id !== id));
+
+      window.dispatchEvent(
+        new CustomEvent("wishlistUpdated", { detail: { serviceId } })
+      );
+
+      console.log("Item removed and event dispatched:", serviceId);
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
   };
 
   return (
-    <div className="wishlist-container">
-      <h1 className=" mt-10 sm:text-3xl md:text-4xl font-bold text-[#001f3f] mb-4 text-center">
-        My Wishlist
+    <div className="p-6 min-h-screen bg-white">
+      <h1 className="text-3xl font-bold text-center text-[#002147] mb-8">
+        Your Wishlist
       </h1>
 
-      {wishlistItems.map((item) => (
-        <div className="wishlist-card" key={item.id}>
-          <div className="wishlist-left">
-            <img src={item.image} alt={item.title} className="wishlist-image" />
-          </div>
-          <div className="wishlist-right">
-            <div className="wishlist-header">
-              <h3 className="wishlist-title">{item.title}</h3>
-            </div>
-            <div className="wishlist-pricing">
-              <span className="wishlist-price">{item.price}</span>
-              <span className="wishlist-old-price">{item.oldPrice}</span>
-              <span className="wishlist-discount">{item.discount}</span>
-            </div>
-            <p className="wishlist-description">{item.description}</p>
-            <div className='btn-columns'>
-              <button className="wishlist-book-btn"><a href="userdetails">Book Now</a></button>
-              <button className="wishlist-remove-btn" onClick={() => handleDeleteClick(item.id)} >Remove</button>
-            </div>
-          </div>
-        </div>
-      ))}
+      {wishlist.length === 0 ? (
+        <p className="text-center text-gray-500 text-lg">
+          No services in wishlist
+        </p>
+      ) : (
+        <div className="flex flex-col gap-6">
+          {wishlist.map((item) => {
+            const service = item.service;
 
-      {popupVisible && (
-        <div className="wishlist-popup-overlay">
-          <div className={`wishlist-popup-box ${flippingOut ? 'flip-out' : 'flip-in'}`}>
-            <p>
-              Are you sure you want to delete this?
-            </p>
-            <div className="wishlist-popup-buttons">
-              <button className="wishlist-popup-yes" onClick={confirmDelete}>
-                Remove
-              </button>
-              <button className="wishlist-popup-no" onClick={cancelDelete}>
-                Cancel
-              </button>
-            </div>
-          </div>
+            return (
+              <div
+                key={item._id}
+                className="flex flex-col bg-gray-200 md:flex-row items-center gap-6 p-4 rounded-lg shadow border hover:shadow-md transition"
+              >
+                {/* Entire left section is clickable */}
+                <Link
+                  to={`/service/${service._id}`}
+                  className="flex flex-col md:flex-row gap-6 w-full hover:opacity-80"
+                >
+                  {/* Image */}
+                  <div className="w-full md:w-1/4 flex justify-center">
+                    <img
+                      src={
+                        Array.isArray(item.service.serviceImage) &&
+                        item.service.serviceImage.length > 0
+                          ? service.serviceImage[0]
+                          : "/default.jpg"
+                      }
+                      alt={service.serviceName}
+                      className="w-60 h-40 object-cover rounded-md"
+                    />
+                  </div>
+
+                  {/* Details */}
+                  <div className="w-full md:w-1/2">
+                    <h2 className="text-xl font-semibold mb-2 text-[#002147]">
+                      {item.service.serviceName}
+                    </h2>
+                    <div className="flex items-center gap-2 mb-1">
+                      <div className="bg-green-700 text-white px-2 py-1 rounded-lg flex items-center gap-1">
+                        <span className="text-sm font-semibold">
+                          {item.service.rating !== undefined
+                            ? item.service.rating
+                            : 0}
+                        </span>
+                        <FaStar className="text-white-500" />
+                      </div>
+                    </div>
+                    <p
+                      className={`text-sm ${
+                        item.service.available
+                          ? "text-green-600"
+                          : "text-red-600"
+                      }`}
+                    >
+                     
+                      {item.service.available ? null : "Out Of Service"}
+                    </p>
+                    <p className="text-gray-600 text-sm">
+                      {service.serviceDes}
+                    </p>
+                  </div>
+                </Link>
+
+                {/* Right: Price + Remove */}
+                <div className="w-full md:w-1/4 flex md:flex-col items-end justify-between gap-3">
+                  <div className="text-right">
+                    <p className="text-lg font-bold text-black">
+                      ₹{item.service.minPrice} - ₹{item.service.maxPrice}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => handleDelete(item._id, service._id)}
+                    className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-md"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

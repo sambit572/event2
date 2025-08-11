@@ -701,7 +701,7 @@ const Navbar = ({
                           className="navbar_icon "
                           style={{ marginRight: "4px" }}
                         />
-                        <a href="./wishlist">Wishlist</a>
+                        <a href="/wishlist">Wishlist</a>
                       </div>
                       <div className="dropdown-item">
                         <FaSignOutAlt

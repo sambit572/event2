@@ -6,7 +6,7 @@ import ServiceDescription from "./ServiceDescription";
 
 const ServiceCard = ({ service, onSwitchToLogin }) => {
  const img = service.serviceImage || [];
-
+const isAvailable = service.available;
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [hovered, setHovered] = useState(false);
@@ -20,7 +20,11 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
   };
 
   return (
-    <div className="totalService">
+    <div className={`totalService ${!isAvailable ? "out-of-service" : ""}`}>
+      {!isAvailable && (
+        <div className="out-of-service-label">Out of Service</div>
+      )}
+
       <div className="serviceCards">
         <div
           className="serviceCardImg"
