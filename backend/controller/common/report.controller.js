@@ -29,3 +29,32 @@ export const createReport = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+
+export const fetchReports = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    console.log("Fetching reports for user ID:", userId);
+    if (!userId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User ID not found" });
+    }
+
+    const reports = await Report.find({ reporterId: userId }).sort({
+      createdAt: -1,
+    });
+
+    if (!reports || reports.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No reports found for this user" });
+    }
+
+    res.status(200).json({ success: true, data: reports });
+  } catch (error) {
+    console.error("Error fetching reports:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Server error while fetching reports" });
+  }
+};

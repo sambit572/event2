@@ -2,9 +2,11 @@ import express from "express";
 
 const router = express.Router();
 import { createReport } from "../../controller/common/report.controller.js";
+import { fetchReports } from "../../controller/common/report.controller.js";
 
 // POST: Create a new report
 router.post("/", createReport);
+router.get("/:userId", fetchReports);
 
 // Get reports by reporterId
 // router.get("/my-reports/:id", async (req, res) => {
