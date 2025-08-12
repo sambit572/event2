@@ -15,32 +15,29 @@ const MyReport = () => {
   const [showForm, setShowForm] = useState(false);
   const [reports, setReports] = useState([]);
   const [isLoading, setLoading] = useState(true);
+  const fetchReports = async () => {
+    setLoading(true);
+
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/reports/${userId}`
+      );
+
+      console.log("Backend raw response:", res.data);
+      setReports(res.data.data);
+      // console.log("Fetched reports:", reports);
+    } catch (error) {
+      console.error("Error fetching reports:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (!userId) return;
-
-    const fetchReports = async () => {
-      setLoading(true);
-
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/reports/${userId}`
-        );
-
-        console.log("Backend raw response:", res.data);
-        setReports(res.data.data);
-        // console.log("Fetched reports:", reports);
-      } catch (error) {
-        console.error("Error fetching reports:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchReports();
   }, [userId]); //Runs only when userId changes
-  useEffect(() => {
-    console.log("Updated reports state:", reports);
-  }, [reports]);
+
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
@@ -55,7 +52,10 @@ const MyReport = () => {
 
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-          <ReportForm onClose={() => setShowForm(false)} />
+          <ReportForm
+            onClose={() => setShowForm(false)}
+            onSuccess={fetchReports}
+          />
         </div>
       )}
 

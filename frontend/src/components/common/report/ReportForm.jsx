@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 
-const ReportForm = ({ onClose }) => {
+const ReportForm = ({ onClose, onSuccess }) => {
   const user = useSelector((state) => state.user.user);
   const location = useLocation();
   const { targetType } = location.state || {};
@@ -30,7 +30,13 @@ const ReportForm = ({ onClose }) => {
       status: "pending",
     };
     console.log(payload);
-    await axios.post(`${import.meta.env.VITE_BACKEND_URL}/reports`, payload);
+    try {
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/reports`, payload);
+      onSuccess();
+      onClose();
+    } catch (error) {
+      console.error("Error submitting report:", error);
+    }
   };
 
   // const handleSubmit = (e) => {
