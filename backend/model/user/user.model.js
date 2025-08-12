@@ -20,8 +20,8 @@ const loginSchema = new Schema(
       required: true,
       trim: true,
       unique: true,
-      maxlength:10,
-      minlength:10,
+      maxlength: 15,
+      minlength: 10,
     },
     password: {
       type: String,
