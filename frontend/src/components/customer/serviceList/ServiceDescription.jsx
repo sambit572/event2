@@ -10,7 +10,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
   const navigate = useNavigate();
   const [isWishlisted, setIsWishlisted] = useState(false);
 
-  const serviceId = service._id || service.id;
+  const serviceId = service._id || service._id;
 
   const title = service.serviceName || service.title || "Untitled Service";
   const vendorName = service.vendorName || "Unknown Vendor";
@@ -32,7 +32,12 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
   };
 
   const duration = formatDuration(rawDuration);
-
+  const stateLocation = Array.isArray(service.stateLocationOffered)
+    ? service.stateLocationOffered.join(", ")
+    : service.stateLocationOffered ||
+      (service.address
+        ? `${service.address.area}, ${service.address.city}, ${service.address.state} - ${service.address.pincode}`
+        : "Location not provided");
   const location = Array.isArray(service.locationOffered)
     ? service.locationOffered.join(", ")
     : service.locationOffered ||
@@ -71,7 +76,8 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
         const res = await axios.get(`${BACKEND_URL}/wishlist/getwishlist`, {
           withCredentials: true,
         });
-        const found = res.data.some((item) => item.service._id === serviceId);
+        const found = res.data.some((item) => item?.service?._id === serviceId);
+
         setIsWishlisted(found);
       } catch (err) {
         console.error("Error fetching wishlist:", err);
@@ -155,9 +161,9 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
             Event Hosted: 0
           </span>
         </div>
-
+        {/* Location */}
         <p className="text-sm text-black mb-2">{location}</p>
-
+        <p className="text-sm text-black mb-2 mt-0">{stateLocation.toUpperCase()}</p>
         {/* Rating and Reviews */}
         <div className="flex flex-wrap items-center gap-3 mb-2">
           <span className="bg-green-600 text-white px-2 py-1 rounded-full text-sm font-semibold">

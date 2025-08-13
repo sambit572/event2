@@ -43,7 +43,12 @@ const ServiceDetailCard = ({ service }) => {
   };
 
   const formattedDuration = formatDuration(duration);
-
+  const stateLocation = Array.isArray(service.stateLocationOffered)
+    ? service.stateLocationOffered.join(", ")
+    : service.stateLocationOffered ||
+      (service.address
+        ? `${service.address.area}, ${service.address.city}, ${service.address.state} - ${service.address.pincode}`
+        : "Location not provided");
   const location = Array.isArray(locationOffered)
     ? locationOffered.join(", ")
     : locationOffered ||
@@ -143,7 +148,9 @@ const ServiceDetailCard = ({ service }) => {
       </div>
 
       <p className="text-sm text-black mb-2">{location}</p>
-
+      <p className="text-sm text-black mb-2 mt-0">
+        {stateLocation.toUpperCase()}
+      </p>
       <div className="flex items-center gap-2 mb-3">
         <span className="bg-green-600 text-white px-2 py-1 rounded-full text-sm font-semibold">
           {averageRating.toFixed(1)} ★
@@ -169,7 +176,7 @@ const ServiceDetailCard = ({ service }) => {
           available ? "text-green-600" : "text-red-700"
         }`}
       >
-         {available ? null : "Out Of Service"}
+        {available ? null : "Out Of Service"}
       </p>
       <p className="text-sm text-black mb-4">
         <span className="font-bold">Prep Time: </span>

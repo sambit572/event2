@@ -37,6 +37,7 @@ export const getServicesByCategory = async (req, res) => {
           maxPrice: 1,
           serviceImage: 1,
           duration: 1,
+          stateLocationOffered: 1,
           locationOffered: 1,
           address: 1,
           vendorId: 1,
