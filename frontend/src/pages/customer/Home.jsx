@@ -90,7 +90,7 @@ const Home = () => {
       <ImageSlider images={images} />
       <AddsBanner />
       {/* <img className="addbanner" src={banner} alt="" /> */}
-      <div className="categories-head1 mb-[-15px]">
+      <div id="categories" className="categories-head1 mb-[-15px]">
         <h1 className="align_center categories-head">Categories</h1>
       </div>
       <p className="category-subheads text-center">

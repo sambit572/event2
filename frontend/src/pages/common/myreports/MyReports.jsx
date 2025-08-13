@@ -48,13 +48,13 @@ const MyReport = () => {
 
   return (
     <div className="p-6">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl black-900 font-semibold">
+      <div className="flex justify-between items-center ">
+        <h1 className="max-[400px]:text-xl text -2xl sm:text-3xl black-900 font-semibold">
           {capitalizedType} Reports
         </h1>
         <button
           onClick={() => setShowForm(true)}
-          className="px-4 py-2 rounded bg-red-600 text-white hover:bg-blue-700 font-medium"
+          className="px-4  max-[400px]:px-2 py-2 rounded bg-red-600 text-white hover:bg-red-700 font-semibold transition-colors duration-300 "
         >
           + File New Report
         </button>
