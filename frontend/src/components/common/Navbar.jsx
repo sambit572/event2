@@ -49,7 +49,13 @@ const CATEGORIES = [
   "card-design",
 ];
 
-const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
+const Navbar = ({
+  onOpenLogin,
+  onOpenRegister,
+  onOpenVendorLogin,
+  isOpen,
+  setShowPasswordModal,
+}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -66,6 +72,11 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
 
   const [searchInput, setSearchInput] = useState("");
   const [showMobileSearchBar, setShowMobileSearchBar] = useState(false);
+
+  // pop up show after logout
+  const [showLogoutPopup, setShowLogoutPopup] = useState(false);
+  const [showVendorLogoutPopup, setShowVendorLogoutPopup] = useState(false);
+
   const profileRef = useRef(null);
   const ellipsisRef = useRef(null);
   const vendorRef = useRef(null);
@@ -248,13 +259,20 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
       setUserFirstName(null);
 
       dispatch(clearUser());
-      navigate("/", { replace: true });
+
+      // ✅ Show popup message
+      setShowLogoutPopup(true);
+      setTimeout(() => {
+        setShowLogoutPopup(false);
+        navigate("/", { replace: true });
+      }, 3000);
     } catch (error) {
       console.error("Logout failed", error);
+      alert("Logout failed. Please try again.");
     }
   };
 
-  const vendorLogout = async (req, res) => {
+  const vendorLogout = async () => {
     try {
       console.log("Logging out vendor...");
       await axios.post(
@@ -262,15 +280,24 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
         {},
         { withCredentials: true }
       );
+
+      // Clear vendor info
       localStorage.removeItem("VendorFullName");
       localStorage.removeItem("VendorFirstName");
       localStorage.removeItem("VendorInitial");
       localStorage.removeItem("VendorCurrentlyLoggedIn");
       setVendorFirstName(null);
       dispatch(clearVendor());
-      navigate("/", { replace: true });
+
+      // ✅ Show popup
+      setShowVendorLogoutPopup(true);
+      setTimeout(() => {
+        setShowVendorLogoutPopup(false);
+        navigate("/", { replace: true });
+      }, 3000);
     } catch (error) {
       console.error("Logout failed", error);
+      alert("Failed to logout");
     }
   };
 
@@ -453,6 +480,60 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
   return (
     <div>
       <div className="navbar">
+        {/* ✅ User Logout Popup */}
+        {showLogoutPopup && (
+          <div
+            className="mt-[20px] sm:mt-[-50px]  md:mt-[80px] lg:mt-[100px] xl:mt-[120px]"
+            style={{
+              position: "fixed",
+              top: "115px",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              padding: "20px 32px",
+              borderRadius: "8px",
+              background: "rgba(255, 255, 255, 0.1)",
+              boxShadow: "0 8px 32px rgba(31, 38, 135, 0.37)",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
+              border: "2px solid white",
+              fontWeight: "bold",
+              color: "yellow",
+              zIndex: 9999,
+              textAlign: "center",
+              animation: "popIn 0.3s ease-out forwards",
+            }}
+          >
+            You are logged out successfully!
+          </div>
+        )}
+
+        {/* ✅ Vendor Logout Popup */}
+        {showVendorLogoutPopup && (
+          <div
+            className="mt-[40px] sm:mt-[60px] w-full md:mt-[80px] lg:mt-[100px] xl:mt-[120px]"
+            style={{
+              position: "fixed",
+              top: "115px",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              padding: "20px 32px",
+              borderRadius: "8px",
+              background: "rgba(255, 255, 255, 0.1)",
+              boxShadow: "0 8px 32px rgba(31, 38, 135, 0.37)",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
+              border: "2px solid black",
+              fontWeight: "bold",
+              color: "black",
+              zIndex: 9999,
+              textAlign: "center",
+              animation: "popIn 0.3s ease-out forwards",
+            }}
+          >
+            You are logged out successfully!
+          </div>
+        )}
+
         {/* Logo */}
         <div className="logo">
           <span onClick={handleHomeClick}>EVENTSBRIDGE</span>
@@ -620,7 +701,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                           className="navbar_icon "
                           style={{ marginRight: "4px" }}
                         />
-                        <a href="./wishlist">Wishlist</a>
+                        <a href="/wishlist">Wishlist</a>
                       </div>
                       <div className="dropdown-item">
                         <FaSignOutAlt
@@ -825,14 +906,12 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                       <hr className="my-2" />
                       <div className="flex flex-col gap-2">
                         <button
-                          className="bg-blue-500 hover:bg-blue-600 text-white py-3 px-3 rounded"
-                          onClick={() => {
-                            setShowVendorDropdown(false);
-                            navigate("/vendor/change-password");
-                          }}
+                          className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-3 rounded"
+                          onClick={() => navigate("/dashboard")}
                         >
-                          Change Password
+                          My Dashboard
                         </button>
+
                         <button
                           className="bg-red-500 hover:bg-red-600 text-white py-3 px-3 rounded"
                           onClick={() => {

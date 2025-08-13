@@ -15,6 +15,7 @@ import "./cronjobs/startCronjobs.js";
 import feedbackRoutes from "./routes/common/feedback.routes.js";
 import serviceRoutes from "./routes/common/serviceList.routes.js";
 import reportRoutes from "./routes/common/report.routes.js";
+import wishlistRoutes from "./routes/user/wishlist.routes.js"; // Import wishlist routes
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -61,6 +62,7 @@ app.use("/api/vendors", vendor_router);
 app.use("/api/test", test_router);
 app.use("/api/feedback", feedbackRoutes);
 app.use("/api/common", serviceRoutes);
+app.use("/api/wishlist", wishlistRoutes); // Use wishlist routes
 // ✅ Health Check Route
 app.get("/", (req, res) => {
   res.status(200).json({

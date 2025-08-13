@@ -50,7 +50,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
   };
 
   function setupRecaptcha() {
-    if (window.recaptchaVerifier) window.recaptchaVerifier.clear();
+    if (window.recaptchaVerifier) window.recaptchaVerifier.clear();    
     window.recaptchaVerifier = new RecaptchaVerifier(
       auth,
       "recaptcha-container",

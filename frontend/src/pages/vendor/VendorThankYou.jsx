@@ -34,7 +34,12 @@ export default function VendorThankYou() {
         {/*  Go to Profile */}
         <div className="thankyou-visit">
           <h3>View Your Profile</h3>
-          <button onClick={() => navigate("/dashboard")}>Go to Profile</button>
+          <button
+            className="vendor-thankyou-btn"
+            onClick={() => navigate("/dashboard")}
+          >
+            Go to Profile
+          </button>
         </div>
       </div>
     </div>

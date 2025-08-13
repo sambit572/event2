@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { FaRegCalendarCheck } from "react-icons/fa6";
 import { FaRegHeart, FaHeart } from "react-icons/fa6";
+import { BACKEND_URL } from "../../../utils/constant";
 const ServiceDetailCard = ({ service }) => {
   const [isWishlisted, setIsWishlisted] = useState(false);
   if (!service) return null;
@@ -19,6 +21,7 @@ const ServiceDetailCard = ({ service }) => {
     originalPrice,
     discountPercent,
     address,
+    available,
   } = service;
 
   const totalReviews = reviews?.length || reviews || 0;
@@ -56,14 +59,61 @@ const ServiceDetailCard = ({ service }) => {
       : `${minPrice}`
     : "N/A";
   console.log("SERVICE PROPS:", service);
-  const handleWishlistToggle = () => {
-    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
-    if (isLoggedIn) {
-      setIsWishlisted(!isWishlisted);
-    } else {
-      onSwitchToLogin(true);
+
+  const serviceId = service._id || service.id;
+  // Fetch wishlist status
+  useEffect(() => {
+    const fetchWishlistStatus = async () => {
+      try {
+        const res = await axios.get(`${BACKEND_URL}/wishlist/getwishlist`, {
+          withCredentials: true,
+        });
+        const found = res.data.some((item) => item.service._id === serviceId);
+        setIsWishlisted(found);
+      } catch (err) {
+        console.error("Error fetching wishlist:", err);
+      }
+    };
+
+    fetchWishlistStatus();
+
+    // Event listener to update state when wishlist is changed elsewhere
+    const handleWishlistUpdate = (e) => {
+      if (e.detail?.serviceId === serviceId) {
+        fetchWishlistStatus();
+      }
+    };
+
+    window.addEventListener("wishlistUpdated", handleWishlistUpdate);
+    return () => {
+      window.removeEventListener("wishlistUpdated", handleWishlistUpdate);
+    };
+  }, [serviceId]);
+
+  // Toggle wishlist state
+  const handleToggle = async () => {
+    try {
+      await axios.post(
+        `${BACKEND_URL}/wishlist/toggle/${serviceId}`,
+        {},
+        { withCredentials: true }
+      );
+      const newStatus = !isWishlisted;
+      setIsWishlisted(newStatus);
+
+      // Notify other components (like Wishlist.jsx)
+      window.dispatchEvent(
+        new CustomEvent("wishlistUpdated", {
+          detail: { serviceId },
+        })
+      );
+
+      console.log("Wishlist toggled:", newStatus);
+    } catch (err) {
+      console.error("Toggle error:", err);
     }
   };
+
   return (
     <div className="p-4 bg-white mt-5 rounded-lg border border-gray-200 w-full">
       <div className="flex justify-end h-0">
@@ -74,7 +124,7 @@ const ServiceDetailCard = ({ service }) => {
                       ? "text-red-600 ring-2 ring-red-300 shadow-red-200"
                       : "text-gray-600 hover:text-red-500"
                   }`}
-          onClick={handleWishlistToggle}
+          onClick={handleToggle}
         >
           {isWishlisted ? <FaHeart /> : <FaRegHeart />}
         </div>
@@ -114,7 +164,13 @@ const ServiceDetailCard = ({ service }) => {
           </>
         )}
       </div>
-
+      <p
+        className={`text-sm mb-1 ${
+          available ? "text-green-600" : "text-red-700"
+        }`}
+      >
+         {available ? null : "Out Of Service"}
+      </p>
       <p className="text-sm text-black mb-4">
         <span className="font-bold">Prep Time: </span>
         {formattedDuration}

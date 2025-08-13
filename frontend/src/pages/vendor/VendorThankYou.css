@@ -155,7 +155,7 @@
 }
 
 /* Button Styling */
-button {
+.vendor-thankyou-btn {
   background-color: #0b6b25;
   color: white;
   border: none;

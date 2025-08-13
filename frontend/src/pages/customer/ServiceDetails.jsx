@@ -15,6 +15,7 @@ import ReviewForm from "../../components/customer/ServiceDetails/ReviewForm.jsx"
 import axios from "axios";
 import { useEffect } from "react";
 import { BACKEND_URL } from "../../utils/constant.js";
+import { FaBell } from "react-icons/fa6";
 
 const Service = ({ onSwitchToLogin }) => {
   const navigate = useNavigate();
@@ -37,6 +38,19 @@ const Service = ({ onSwitchToLogin }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [latestReview, setLatestReview] = useState(null);
+  const [notified, setNotified] = useState(false);
+
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const handleNotifyClick = () => {
+    setNotified(true);
+    setIsAnimating(true);
+
+    setTimeout(() => {
+      setIsAnimating(false); // stop vibrating after 10 seconds
+      console.log("animation stopped");
+    }, 2000);
+  };
   const handleClick = () => {
     setIsWishlisted(!isWishlisted);
   };
@@ -67,8 +81,7 @@ const Service = ({ onSwitchToLogin }) => {
 
     fetchService();
   }, [serviceId]);
-
-
+  const available = service?.available || false;
   if (loading) return <p>Loading service details...</p>;
   if (error || !service) return <p>{error || "Service not found."}</p>;
   return (
@@ -92,19 +105,40 @@ const Service = ({ onSwitchToLogin }) => {
               <img src={selectMedia?.src} alt="Selected media" />
             </div>
           </div>
+          <div className="flex justify-center flex-col sm:flex-row-reverse gap-4">
+            {available ? (
+              <>
+                <button className="w-full sm:w-44 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-md transition-all duration-300">
+                  Add to Cart
+                </button>
 
-            <div className="flex flex-col justify-center sm:flex-row-reverse gap-4">
-        <button className="w-full sm:w-44 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-md transition-all duration-300">
-          Add to Cart
-        </button>
-
-        <button
-          className="w-full sm:w-44 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-green-700 shadow-md hover:from-green-500 hover:to-green-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-400"
-          onClick={handleBookNow}
-        >
-          Book Now
-        </button>
-      </div>
+                <button
+                  className="w-full sm:w-44 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-green-700 shadow-md hover:from-green-500 hover:to-green-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-400"
+                  onClick={handleBookNow}
+                >
+                  Book Now
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={handleNotifyClick}
+                className={`w-full sm:w-44 flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-blue-900 bg-transparent border border-blue-900
+        hover:bg-blue-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-md transition-all duration-300`}
+              >
+                {!notified ? (
+                  "Notify"
+                ) : (
+                  <span
+                    className={`flex items-center gap-1 ${
+                      isAnimating ? "animate-bell" : ""
+                    }`}
+                  >
+                    <FaBell className="text-base" />
+                  </span>
+                )}
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Right Section */}
