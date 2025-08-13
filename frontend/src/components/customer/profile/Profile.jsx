@@ -243,7 +243,7 @@ function Profile({ onProfileChange }) {
                   </p>
                   <button
                     onClick={() =>
-                      navigate("/report", { state: { targetType: "vendor" } })
+                      navigate("/report", { state: { selectedType: "user" } })
                     }
                     className="align_center w-24 justify-evenly bg-[#001F3F] text-white p-2 font-semibold rounded-lg shadow mt-2"
                   >

@@ -7,10 +7,10 @@ import axios from "axios";
 const ReportForm = ({ onClose, onSuccess }) => {
   const user = useSelector((state) => state.user.user);
   const location = useLocation();
-  const { targetType } = location.state || {};
-  console.log("Target Model:", targetType);
-  const currentUser = user._id;
-  console.log("From ReportForm", currentUser);
+  const { selectedType } = location.state || {};
+  // console.log("Target Model:", selectedType);
+  const currentUser = user?._id;
+  // console.log("From ReportForm", currentUser);
   const [formData, setFormData] = useState({
     reason: "",
     description: "",
@@ -24,14 +24,15 @@ const ReportForm = ({ onClose, onSuccess }) => {
 
     const payload = {
       reporterId: currentUser,
-      targetType,
-      description: formData.description,
-      reason: formData.reason,
+      selectedType,
+      description: formData.description.trim(),
+      reason: formData.reason.trim(),
       status: "pending",
     };
-    console.log(payload);
+    // console.log(payload);
     try {
       await axios.post(`${import.meta.env.VITE_BACKEND_URL}/reports`, payload);
+      // console.log("Report submitted successfully");
       onSuccess();
       onClose();
     } catch (error) {

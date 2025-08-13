@@ -1,6 +1,6 @@
 import React from "react";
 
-const ReportCard = ({ reason, description, status }) => {
+const ReportCard = ({ reason, description, status, createdAt }) => {
   // Status color logic
   const statusColor =
     status === "pending"
@@ -12,7 +12,12 @@ const ReportCard = ({ reason, description, status }) => {
   return (
     <div className="bg-white shadow-md rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-all duration-200">
       {/* Reason */}
-      <h3 className="text-lg font-semibold text-gray-800 mb-2">{reason}</h3>
+      <div className="reason_date flex justify-between">
+        <h3 className="text-lg font-semibold text-gray-800 mb-2">{reason}</h3>
+        <p>
+          <b>Created</b>: {new Date(createdAt).toLocaleString()}
+        </p>
+      </div>
 
       {/* Description */}
       <p className="text-gray-600 text-sm mb-4">{description}</p>

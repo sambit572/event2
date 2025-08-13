@@ -6,24 +6,26 @@ import { ApiError } from "../../utilities/ApiError.js";
 // Create a new report
 export const createReport = async (req, res) => {
   try {
-    const { reporterId, targetType, reason, description } = req.body;
-    if (!reporterId || !targetType || !reason || !description) {
+    const { reporterId, selectedType, reason, description } = req.body;
+    console.log("Creating report with data:", req.body);
+    if (!reporterId || !selectedType || !reason || !description) {
       return res.status(400).json(new ApiError(400, "All fields are required"));
     }
 
     const report = await Report.create({
       reporterId,
-      targetType,
+      selectedType,
       reason,
       description,
     });
-
-    const createdReport = await User.findById(user._id);
+    // console.log("ReportsId form backend", reporterId);
+    const createdReport = await Report.findById(report._id);
+    // console.log("Created Report:", createdReport);
     if (!createdReport) {
       return res.status(500).json(new ApiError(500, "Unable to create Report"));
     }
 
-    console.log("Report created:", report);
+    // console.log("Report created:", report);
     res.status(201).json(report);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -33,16 +35,30 @@ export const createReport = async (req, res) => {
 export const fetchReports = async (req, res) => {
   try {
     const { userId } = req.params;
-    console.log("Fetching reports for user ID:", userId);
+    const { targetType } = req.query; // Assuming targetType is passed as a query parameter
+    // console.log("Fetching req.query:", req.query);
+    // console.log(
+    //   "Fetching reports for user ID:",
+    //   userId,
+    //   "and target type:",
+    //   targetType
+    // );
+    // console.log("Fetching reports for user ID:", userId);
     if (!userId) {
       return res
         .status(400)
         .json({ success: false, message: "User ID not found" });
     }
+    if (!targetType) {
+      return res
+        .status(400)
+        .json({ success: false, message: "selectedType not found" });
+    }
 
-    const reports = await Report.find({ reporterId: userId }).sort({
-      createdAt: -1,
-    });
+    const reports = await Report.find({
+      reporterId: userId,
+      selectedType: targetType,
+    }).sort({ createdAt: -1 });
 
     if (!reports || reports.length === 0) {
       return res

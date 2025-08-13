@@ -6,24 +6,32 @@ import Spinner from "./../../../components/common/Spinner";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 const MyReport = () => {
   const user = useSelector((state) => state.user.user);
   const userId = user?._id;
-  console.log("User ID from MyReport:", userId);
+  const location = useLocation();
+  const { selectedType } = location.state || {};
+  // console.log("User ID from MyReport:", userId);
+  const capitalizedType =
+    selectedType.charAt(0).toUpperCase() + selectedType.slice(1);
 
   const [showForm, setShowForm] = useState(false);
   const [reports, setReports] = useState([]);
   const [isLoading, setLoading] = useState(true);
+
   const fetchReports = async () => {
     setLoading(true);
 
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/reports/${userId}`
+        `${
+          import.meta.env.VITE_BACKEND_URL
+        }/reports/${userId}?targetType=${selectedType}`
       );
 
-      console.log("Backend raw response:", res.data);
+      // console.log("Backend raw response:", res.data);
       setReports(res.data.data);
       // console.log("Fetched reports:", reports);
     } catch (error) {
@@ -41,7 +49,9 @@ const MyReport = () => {
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl black-900 font-semibold">My Reports</h1>
+        <h1 className="text-2xl black-900 font-semibold">
+          {capitalizedType} Reports
+        </h1>
         <button
           onClick={() => setShowForm(true)}
           className="px-4 py-2 rounded bg-red-600 text-white hover:bg-blue-700 font-medium"
@@ -75,6 +85,7 @@ const MyReport = () => {
                 reason={report.reason}
                 description={report.description}
                 status={report.status}
+                createdAt={report.createdAt}
               />
             ))}
           </ul>
