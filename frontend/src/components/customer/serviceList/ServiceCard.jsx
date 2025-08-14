@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import "./ServiceCard.css";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { FaHeart, FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import ServiceDescription from "./ServiceDescription";
 
 const ServiceCard = ({ service, onSwitchToLogin }) => {
- const img = service.serviceImage || [];
-const isAvailable = service.available;
-
+  const img = service.serviceImage || [];
+  const isAvailable = service.available;
+  const { categoryId } = useParams();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [hovered, setHovered] = useState(false);
 
@@ -31,7 +31,7 @@ const isAvailable = service.available;
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
         >
-          <Link to={`/service/${service._id}`} className="link">
+          <Link to={`/service/${categoryId}/${service._id}`} className="link">
             {Array.isArray(img) && img.length > 0 ? (
               <img src={img[currentIndex]} alt="Main preview" />
             ) : (
