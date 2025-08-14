@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./ServiceDescription.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { FaRegHeart, FaHeart, FaRegCalendarCheck } from "react-icons/fa6";
 import { BACKEND_URL } from "../../../utils/constant";
 import axios from "axios";
@@ -9,7 +9,7 @@ import { FaBell } from "react-icons/fa6";
 const ServiceDescription = ({ service, onSwitchToLogin }) => {
   const navigate = useNavigate();
   const [isWishlisted, setIsWishlisted] = useState(false);
-
+  const { categoryId } = useParams();
   const serviceId = service._id || service.id;
 
   const title = service.serviceName || service.title || "Untitled Service";
@@ -144,7 +144,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
       </div>
 
       {/* Main Content */}
-      <Link to={`/service/${serviceId}`} className="block">
+      <Link to={`/service/${categoryId}/${serviceId}`} className="block">
         <h3 className="text-xl font-bold mb-1">{title}</h3>
 
         <div className="flex items-center gap-2 text-sm font-medium text-blue-700 mb-2">

@@ -14,27 +14,27 @@ const SimilarProductCard = ({ product }) => {
   return (
     <div className="similar-card">
       <div className="similar-image">
-        <img src={product.image} alt="DJ Service" />
+        <img src={product.serviceImage[0]} alt="DJ Service" />
       </div>
 
       <div className="similar-container">
-        <h3 className="similar-title">Wedding DJ Service</h3>
+        <h3 className="similar-title">{product.serviceName}</h3>
 
         <div className="price-block">
           <div className="prices">
             <BsCurrencyRupee />
-            <span>{product.price}</span>
+            <span>{product.minPrice}</span>
           </div>
-          <div className="original-prices">
+          {/* <div className="original-prices">
             <BsCurrencyRupee />
-            <span>{product.originalPrice}</span>
-          </div>
+            <span>{product.minPrice}</span>
+          </div> */}
           <div className="discounts">40% off</div>
         </div>
 
         <div className="review-block">
           <div className="rating-badge">
-            <span>{product.rating}</span>
+            <span>4.5</span>
             <IoIosStar />
           </div>
           <span className="review-text">{product.reviews} reviews</span>

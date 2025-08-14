@@ -5,22 +5,62 @@ import { FaHeart } from "react-icons/fa6";
 import "./ServiceDetails.css";
 
 // import { CategoryData } from "../../utils/CatogoryData.jsx";
-import { similarServiceData } from "../../components/customer/ServiceDetails/SimilarServiceData.jsx";
+// import { similarServiceData } from "../../components/customer/ServiceDetails/SimilarServiceData.jsx";
 
-import RatingDetails from "../../components/customer/ServiceDetails/RatingDetails.jsx";
-import SimilarProductCard from "../../components/customer/ServiceDetails/PeopleAlsoBooked.jsx";
-import DJServiceCard from "../../components/customer/ServiceDetails/ServiceDetailCard.jsx";
-import ReviewList from "../../components/customer/ServiceDetails/ReviewList";
-import ReviewForm from "../../components/customer/ServiceDetails/ReviewForm.jsx";
+import RatingDetails from "../../components/customer/servicedetails/RatingDetails.jsx";
+import SimilarProductCard from "../../components/customer/servicedetails/PeopleAlsoBooked.jsx";
+import DJServiceCard from "../../components/customer/servicedetails/ServiceDetailCard.jsx";
+import ReviewList from "../../components/customer/servicedetails/ReviewList.jsx";
+import ReviewForm from "../../components/customer/servicedetails/ReviewForm.jsx";
 import axios from "axios";
 import { useEffect } from "react";
 import { BACKEND_URL } from "../../utils/constant.js";
 import { FaBell } from "react-icons/fa6";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { setCategoryServices } from "../../redux/categorySlice";
 
 const Service = ({ onSwitchToLogin }) => {
   const navigate = useNavigate();
   const { serviceId } = useParams();
+  const categoryServices = useSelector(
+    (state) => state.category.categoryServices
+  );
+  const dispatch = useDispatch();
+  const { categoryId } = useParams(); // This is the category name passed in URL
+  // console.log("Category ID:", categoryId);
+  console.log("Fetched services2:", categoryServices);
+  useEffect(() => {
+    if (!categoryServices || categoryServices.length === 0) {
+      axios
 
+        .get(`${BACKEND_URL}/common/category/${categoryId}`)
+        .then((res) => {
+          dispatch(setCategoryServices(res.data.data));
+        })
+        .catch((err) => console.error(err));
+    }
+  }, [categoryId]);
+  // console.log("similarServiceData", similarServiceData.length);
+  // useEffect(() => {
+  //   console.log("Category ID:", categoryId);
+  //   const fetchServices = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const response = await axios.get(
+  //         `${BACKEND_URL}/common/category/${categoryId}`
+  //       );
+  //       console.log("Fetched services:", response);
+  //       setServices(response.data.data);
+  //       setLoading(false);
+  //     } catch (error) {
+  //       console.error("Error fetching services:", error);
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchServices();
+  // }, [categoryId]);
   const handleBookNow = () => {
     const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
 
@@ -177,7 +217,7 @@ const Service = ({ onSwitchToLogin }) => {
       <div className="view-dj-section">
         <h2 className="people-also-book">People Also Booked</h2>
         <div className="view-dj">
-          {similarServiceData.map((product) => (
+          {categoryServices.map((product) => (
             <SimilarProductCard key={product.id} product={product} />
           ))}
         </div>

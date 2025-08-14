@@ -178,11 +178,11 @@ const App = () => {
           onOpenRegister={handleOpenRegister}
           onOpenVendorRegister={handleOpenVendorRegister}
           onOpenVendorLogin={handleOpenVendorLogin}
-          setShowPasswordModal={setShowPasswordModal} 
+          setShowPasswordModal={setShowPasswordModal}
         />
       )}
 
-       {showPasswordModal && (
+      {showPasswordModal && (
         <VendorChangePassword onClose={() => setShowPasswordModal(false)} />
       )}
 
@@ -197,7 +197,7 @@ const App = () => {
           {/* <Route path="/categories" element={<CategoryCard />}></Route> */}
           <Route path="/reviews" element={<ReviewSlider />} />
           <Route
-            path="/service/:serviceId"
+            path="/service/:categoryId/:serviceId"
             element={<ServiceDetails onSwitchToLogin={handleOpenLogin} />}
           />
           <Route
