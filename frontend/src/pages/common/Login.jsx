@@ -348,13 +348,8 @@ useEffect(() => {
           Login
         </button>
 
-        <div className="flex items-center my-4">
-          <div className="flex-grow h-px bg-gray-300" />
-          <span className="px-3 text-xs text-gray-500">or</span>
-          <div className="flex-grow h-px bg-gray-300" />
-        </div>
 
-        <p className="signup-text">
+        <p className="signup-text pt-3">
           Don't have an account?{" "}
           <span
             className="login-link cursor-pointer font-semibold text-blue-600 hover:underline"

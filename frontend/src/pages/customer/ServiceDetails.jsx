@@ -24,7 +24,7 @@ const Service = ({ onSwitchToLogin }) => {
     const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
 
     if (isLoggedIn) {
-      navigate("/userdetails");
+      navigate(`/userdetails/${serviceId}`);
     } else {
       onSwitchToLogin(true); // ✅ this opens your login popup
     }

@@ -140,7 +140,7 @@ export const getMyServices = async (req, res) => {
     const services = await Service.find({ vendorId: vendorId }).sort({
       createdAt: -1,
     });
-    console.log("services of current vendor fetched from database :", services);
+    // console.log("services of current vendor fetched from database :", services);
     res
       .status(200)
       .json(

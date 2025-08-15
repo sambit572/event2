@@ -107,7 +107,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
   const handleBookNow = () => {
     const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
     if (isLoggedIn) {
-      navigate("/userdetails");
+      navigate(`/userdetails/${serviceId}`);
     } else {
       onSwitchToLogin(true);
     }

@@ -254,9 +254,16 @@ const googleAuth = async (req, res) => {
       idToken: token,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
-    console.log("✅ GOOGLE PAYLOAD RECEIVED:", ticket.getPayload());
+
+    // console.log("✅ GOOGLE PAYLOAD RECEIVED:", ticket.getPayload());
+
+
     const { email, name, picture } = ticket.getPayload();
-    console.log("Google profile picture URL:", picture);
+
+    
+    // console.log("Google profile picture URL:", picture);
+
+
     // 2. find or create user
     let user = await User.findOne({ email });
     let isNewUser = false;

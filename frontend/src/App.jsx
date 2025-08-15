@@ -34,7 +34,7 @@ import Wishlist from "./pages/customer/Wishlist.jsx";
 import Profile from "./components/customer/profile/Profile.jsx";
 import UserDetails from "./pages/customer/UserDetails.jsx";
 
-import PopUp from "./components/customer/CustomerNegotiationModal";
+import PopUp from "./socket/user/CustomerNegotiationModal.jsx";
 import VendorResetPassword from "./pages/vendor/VendorResetPass.jsx";
 
 // Vendor Pages
@@ -47,7 +47,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 
 import BackToTop from "./pages/common/BackToTop";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setUser } from "./redux/UserSlice.js";
 import { setVendor } from "./redux/VendorSlice.js";
@@ -61,6 +61,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 import FaqSection from "./components/customer/home/FaqSection.jsx";
 import ErrorPage from "./pages/common/ErrorPage.jsx";
 import ReviewSlider from "./components/customer/home/ReviewSlider.jsx";
+import VendorSocketManager from "./socket/vendor/VendorSocketManager.jsx";
 const App = () => {
   const location = useLocation();
   // Modal states for user
@@ -70,6 +71,7 @@ const App = () => {
   // Modal states for vendor
   const [showVendorRegisterModal, setShowVendorRegisterModal] = useState(false);
   const [showVendorLoginModal, setShowVendorLoginModal] = useState(false);
+   const vendor = useSelector((state) => state.vendor.vendor);
 
   const handleOpenVendorRegister = () => {
     setShowVendorRegisterModal(true);
@@ -157,7 +159,7 @@ const App = () => {
     };
 
     checkVendorAuth();
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const openLoginListener = () => handleOpenLogin();
@@ -180,6 +182,7 @@ const App = () => {
       )}
 
       <main className="custom-mt mt-[50px]  sm:mt-[70px] md:mt-[60px]">
+        {vendor?._id && <VendorSocketManager />}
         <Routes>
           {/* Customer Routes */}
           <Route path="/" element={<Home />} />
@@ -261,8 +264,11 @@ const App = () => {
           <Route path="/feedback" element={<Feedback />} /> {/* Feedback */}
           <Route path="/Wishlist" element={<Wishlist />}></Route>
           <Route path="/profile" element={<Profile />}></Route>
-          <Route path="/userdetails" element={<UserDetails />}></Route>
-          <Route path="/pop-up" element={<PopUp />}></Route>
+          <Route
+            path="/userdetails/:serviceId"
+            element={<UserDetails />}
+          ></Route>
+          <Route path="/pop-up/:userDetailsId" element={<PopUp />}></Route>
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>

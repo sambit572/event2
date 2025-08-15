@@ -4,7 +4,7 @@ import { User } from "../../model/user/user.model.js";
 // Add Review (POST)
 export const addReview = async (req, res) => {
   try {
-    console.log("Received review request body:", req.body); // Debug log
+    // console.log("Received review request body:", req.body); // Debug log
 
     const { userEmail, reviewMessage, rating, reviewType } = req.body;
 
