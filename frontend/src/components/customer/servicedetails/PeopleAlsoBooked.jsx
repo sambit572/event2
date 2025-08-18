@@ -3,16 +3,20 @@ import { IoIosStar } from "react-icons/io";
 import { FaHeart } from "react-icons/fa6"; // FontAwesome shopping cart
 import "./PeopleAlsoBooked.css"; // Extracted CSSs for maintainability
 import { useState } from "react";
-
+import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 const SimilarProductCard = ({ product }) => {
-  const [isWishlisted, setIsWishlisted] = useState(false);
+  const navigate = useNavigate();
 
+  const { categoryId } = useParams();
+  // console.log("Category ID & Service ID:", categoryId, product._id);
   const handleClick = () => {
-    setIsWishlisted(!isWishlisted);
+    navigate(`/service/${categoryId}/${product._id}`);
   };
 
   return (
-    <div className="similar-card">
+    <div className="similar-card" onClick={handleClick}>
       <div className="similar-image">
         <img src={product.serviceImage[0]} alt="DJ Service" />
       </div>
@@ -39,19 +43,16 @@ const SimilarProductCard = ({ product }) => {
           </div>
           <span className="review-text">{product.reviews} reviews</span>
         </div>
-
-        <button
-          className={`viewBtn ${isWishlisted ? "wishlisted" : ""}`}
-          onClick={handleClick}
+        <Link
+          to={`/service/${categoryId}/${product._id}`}
+          className="viewBtn"
+          style={{ textDecoration: "none", color: "inherit" }}
         >
-          <div>
-            <FaHeart
-              className="wishIcon"
-              color={isWishlisted ? "red" : undefined}
-            />
-          </div>
-          <div>{isWishlisted ? "Wishlisted" : "Add To Wishlist"}</div>
-        </button>
+          View
+        </Link>
+        {/* <button  
+          
+        </button> */}
       </div>
     </div>
   );

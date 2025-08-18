@@ -30,8 +30,8 @@ const ServiceList = ({ onSwitchToLogin }) => {
         );
         // console.log("Fetched services1:", response.data.data);
         dispatch(setCategoryServices(response.data.data)); // save to redux
-
-        setServices(response.data.data);
+        // console.log("My data", response.data.data);
+        // setServices(response.data.data);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching services:", error);

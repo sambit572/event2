@@ -19,6 +19,7 @@ import { FaBell } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { setCategoryServices } from "../../redux/categorySlice";
+// import SimilarProductCard from "./../../components/customer/ServiceDetails/PeopleAlsoBooked";
 
 const Service = ({ onSwitchToLogin }) => {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ const Service = ({ onSwitchToLogin }) => {
   const dispatch = useDispatch();
   const { categoryId } = useParams(); // This is the category name passed in URL
   // console.log("Category ID:", categoryId);
-  console.log("Fetched services2:", categoryServices);
+  // console.log("Fetched services2:", categoryServices);
   useEffect(() => {
     if (!categoryServices || categoryServices.length === 0) {
       axios
@@ -124,6 +125,7 @@ const Service = ({ onSwitchToLogin }) => {
   const available = service?.available || false;
   if (loading) return <p>Loading service details...</p>;
   if (error || !service) return <p>{error || "Service not found."}</p>;
+
   return (
     <div className="dj">
       <div className="section_one">
