@@ -2,15 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./Home.css";
 
-import shaadiMobile from "../../assets/home/sliderImages/shaadi-mobile.png";
-import shaadiTablet from "../../assets/home/sliderImages/shaadi-tablet.png";
-import shaadiDesktop from "../../assets/home/sliderImages/shaadi-desktop.png";
-import christianMobile from "../../assets/home/sliderImages/christian-mobile.png";
-import christianTablet from "../../assets/home/sliderImages/christian-tablet.png";
-import christianDesktop from "../../assets/home/sliderImages/christian-desktop.png";
-import cateringMobile from "../../assets/home/sliderImages/catering-mobile.png";
-import cateringTablet from "../../assets/home/sliderImages/catering-tablet.png";
-import cateringDesktop from "../../assets/home/sliderImages/catering-desktop.png";
+import slider_1 from "../../assets/home/sliderImages/slider_1.png";
+import slider_2 from "../../assets/home/sliderImages/slider_2.png";
+import slider_3 from "../../assets/home/sliderImages/slider_3.png";
+import slider_4 from "../../assets/home/sliderImages/slider_4.png";
+import slider_5 from "../../assets/home/sliderImages/slider_5.png";
+import slider_6 from "../../assets/home/sliderImages/slider_6.png";
+import slider_7 from "../../assets/home/sliderImages/slider_7.png";
+import slider_8 from "../../assets/home/sliderImages/slider_8.png";
 
 import CategoryCard from "../../components/customer/home/CategoryCard.jsx";
 import ReviewSlider from "../../components/customer/home/ReviewSlider.jsx";
@@ -23,19 +22,32 @@ import categories from "../../utils/CatogoryData.jsx";
 
 const images = [
   {
-    mobile: shaadiMobile,
-    tablet: shaadiTablet,
-    desktop: shaadiDesktop,
+    // mobile: shaadiMobile,
+    // tablet: shaadiTablet,
+    desktop: slider_1,
   },
   {
-    mobile: christianMobile,
-    tablet: christianTablet,
-    desktop: christianDesktop,
+    // mobile: christianMobile,
+    // tablet: christianTablet,
+    desktop: slider_2,
   },
   {
-    mobile: cateringMobile,
-    tablet: cateringTablet,
-    desktop: cateringDesktop,
+    desktop: slider_3,
+  },
+  {
+    desktop: slider_4,
+  },
+  {
+    desktop: slider_5,
+  },
+  {
+    desktop: slider_6,
+  },
+  {
+    desktop: slider_7,
+  },
+  {
+    desktop: slider_8,
   },
 ];
 const Home = () => {

@@ -2,7 +2,7 @@ import React from "react";
 import "./ImageSlider.css";
 
 export default function ImageSlider({ images }) {
-  const [selectedImage, setSelectedImage] = React.useState(images[0]?.mobile);
+  const [selectedImage, setSelectedImage] = React.useState(images[0]?.desktop);
   React.useEffect(() => {
     const container = document.querySelector(".scroll-container");
 
@@ -29,24 +29,24 @@ export default function ImageSlider({ images }) {
         backgroundImage: `url(${selectedImage})`,
       }}
     >
-      <div className="backdrop-blur-sm bg-black/30 h-full  flex items-center justify-center">
+      <div className=" h-full  flex items-center justify-center">
         <div className="px-10 py-10 max-w-7xl w-full">
           <main className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-center">
             <div>
-              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-6xl font-extrabold mb-6 text-white drop-shadow-lg tracking-wide">
+              {/* <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-6xl font-extrabold mb-6 text-white drop-shadow-lg tracking-wide">
                 EventsBridge
-              </h1>
-              <p className="text-sm max-w-xl font-bold text-white-900 drop-shadow-md leading-relaxed">
+              </h1> */}
+              {/* <p className="text-sm max-w-xl font-bold text-white-900 drop-shadow-md leading-relaxed">
                 Connecting Event Seekers with the Best Vendors. Plan, Book, and
                 Celebrate — All in One Place.
-              </p>
+              </p> */}
 
-              <a
+              {/* <a
                 href="#categories"
                 className="inline-block mt-6 px-6 py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-200 transition-all"
               >
                 Explore Now
-              </a>
+              </a> */}
             </div>
 
             <div className="scroll-container flex items-center space-x-5 overflow-x-auto no-scrollbar">
@@ -56,10 +56,10 @@ export default function ImageSlider({ images }) {
                   className="rounded-2xl min-w-[300px] h-[200px] overflow-hidden shadow-xl hover:scale-105 transition-transform bg-white"
                 >
                   <img
-                    src={img.mobile}
+                    src={img.desktop}
                     alt={img.alt}
                     className="w-full h-full object-cover cursor-pointer"
-                    onClick={() => setSelectedImage(img.mobile)}
+                    onClick={() => setSelectedImage(img.desktop)}
                   />
                 </div>
               ))}

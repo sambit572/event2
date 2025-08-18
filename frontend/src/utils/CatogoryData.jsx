@@ -99,11 +99,11 @@ import mehendi4 from "../assets/service/makeup/mehendi4.jpg";
 
 import image1 from "../assets/home/categoriesImages/dj.png";
 import image2 from "../assets/home/categoriesImages/bass-brand.png";
-import image3 from "../assets/home/categoriesImages/tenthouse.png";
+import image3 from "../assets/home/categoriesImages/tent_house.jpg";
 import image4 from "../assets/home/categoriesImages/photographer.png";
 import image5 from "../assets/home/categoriesImages/pandit.png";
 import image6 from "../assets/home/categoriesImages/magician.png";
-import image7 from "../assets/home/categoriesImages/orchestra.png";
+import image7 from "../assets/home/categoriesImages/classical_music_and_dance.jpg";
 import image8 from "../assets/home/categoriesImages/moulbi.png";
 import image9 from "../assets/home/categoriesImages/father.png";
 import image10 from "../assets/aboutus/catering_img.png";
