@@ -15,6 +15,7 @@ import "./cronjobs/startCronjobs.js";
 import feedbackRoutes from "./routes/common/feedback.routes.js";
 import serviceRoutes from "./routes/common/serviceList.routes.js";
 import  wishlistRoutes  from "./routes/user/wishlist.routes.js"; // Import wishlist routes
+import { searchRouter } from "./routes/common/search.routes.js";
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -53,6 +54,7 @@ app.use(cookieParser());
 })();
 
 // ✅ API Routes
+app.use("/api/search",searchRouter);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/user", userRouter);
 app.use("/api/vendors", vendor_router);
