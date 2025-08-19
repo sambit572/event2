@@ -679,7 +679,7 @@ const Navbar = ({
                       <div className="dropdown-header">
                         <span className="text-[#001f3f]">New Customer?</span>
                         <button
-                          className="bg-[#001f3f] hover:bg-gray-900"
+                          className="bg-[#e5e5de] hover:bg-gray-900"
                           onClick={handleSignupClick}
                         >
                           Sign Up

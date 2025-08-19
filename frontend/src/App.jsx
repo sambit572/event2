@@ -186,7 +186,7 @@ const App = () => {
         <VendorChangePassword onClose={() => setShowPasswordModal(false)} />
       )}
 
-      <main className="custom-mt mt-[50px]  sm:mt-[70px] md:mt-[60px]">
+      <main className="custom-mt mt-[52px]  sm:mt-[52px] md:mt-[62px]">
         <Routes>
           {/* Customer Routes */}
           <Route path="/" element={<Home />} />

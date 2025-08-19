@@ -3,8 +3,8 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  height: 70px;
-  padding: 10px 20px;
+  height: 60px;
+  padding: 0px 20px;
   background: rgba(243, 193, 45, 1); /* 👈 yellow with 70% opacity */
   position: fixed;
   top: 0;
@@ -649,8 +649,7 @@
     width: 300px;
   }
   .navbar {
-    height: 80px;
-    width: 100%;
+    height: 50px;
   }
   .nav-item a {
     font-size: 15px;
@@ -739,7 +738,7 @@
   .navbar {
     display: flex;
     /* flex-wrap: wrap; */
-    height: 59px;
+
     margin-top: 0px;
   }
   .search-and-nav-icons-container {

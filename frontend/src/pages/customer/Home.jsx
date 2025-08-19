@@ -2,14 +2,18 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./Home.css";
 
-import slider_1 from "../../assets/home/sliderImages/slider_1.png";
+import slider_1 from "../../assets/home/sliderImages/slider_1.jpg";
 import slider_2 from "../../assets/home/sliderImages/slider_2.png";
 import slider_3 from "../../assets/home/sliderImages/slider_3.png";
 import slider_4 from "../../assets/home/sliderImages/slider_4.png";
 import slider_5 from "../../assets/home/sliderImages/slider_5.png";
 import slider_6 from "../../assets/home/sliderImages/slider_6.png";
 import slider_7 from "../../assets/home/sliderImages/slider_7.png";
-import slider_8 from "../../assets/home/sliderImages/slider_8.png";
+import slider_8 from "../../assets/home/sliderImages/slider_8.jpg";
+import slider_9 from "../../assets/home/sliderImages/slider_9.jpg";
+import slider_10 from "../../assets/home/sliderImages/slider_10.png";
+import slider_11 from "../../assets/home/sliderImages/slider_11.jpg";
+import slider_12 from "../../assets/home/sliderImages/slider_12.jpg";
 
 import CategoryCard from "../../components/customer/home/CategoryCard.jsx";
 import ReviewSlider from "../../components/customer/home/ReviewSlider.jsx";
@@ -48,6 +52,18 @@ const images = [
   },
   {
     desktop: slider_8,
+  },
+  {
+    desktop: slider_9,
+  },
+  {
+    desktop: slider_10,
+  },
+  {
+    desktop: slider_11,
+  },
+  {
+    desktop: slider_12,
   },
 ];
 const Home = () => {
