@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import socket from "../socketClient.js";
 
+
+
 const CustomerNegotiationModal = () => {
   const { userDetailsId } = useParams();
   const navigate = useNavigate();
