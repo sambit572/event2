@@ -2,10 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import UserProfileIcon from "../../pages/common/UserProfileIcon.jsx";
 import toast from "react-hot-toast";
-// import "../../pages/vendor/VendorLogin.jsx";
 import "./Navbar.css";
 import { CgProfile } from "react-icons/cg";
-
 import {
   FaSearch,
   FaUser,
@@ -25,9 +23,9 @@ import {
   attemptVendorSilentLogin,
   checkVendorEmailStatus,
 } from "../../utils/VendorAuth.jsx";
-
 import { useDispatch, useSelector } from "react-redux";
-import { clearUser } from "../../redux/UserSlice.js";
+import { clearUser, fetchCart, setCartCount } from "../../redux/UserSlice.js";
+import socket from "../../socket/socketClient.js";
 import { clearVendor } from "../../redux/VendorSlice.js";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -54,8 +52,9 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [currentUser, setCurrentUser] = useState(null);
+  const { cartCount } = useSelector((state) => state.user);
 
+  const [currentUser, setCurrentUser] = useState(null);
   const [userFirstName, setUserFirstName] = useState(null);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showEllipsisDropdown, setShowEllipsisDropdown] = useState(false);
@@ -63,7 +62,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
   const [VendorFirstName, setVendorFirstName] = useState(null);
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-
   const [searchInput, setSearchInput] = useState("");
   const [showMobileSearchBar, setShowMobileSearchBar] = useState(false);
   const profileRef = useRef(null);
@@ -82,7 +80,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
     });
   };
 
-  // 🔁 Define keyword groups
   mapAliases(["photo", "photos", "photography", "picture"], "photographer");
   mapAliases(["dj", "deejay"], "dj");
   mapAliases(["band", "music", "musician"], "band");
@@ -111,6 +108,25 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
     "cultural-troupe"
   );
 
+  useEffect(() => {
+    const storedName = localStorage.getItem("userFirstName");
+    if (storedName) {
+      setUserFirstName(storedName);
+      dispatch(fetchCart());
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    const handleCartUpdate = (data) => {
+      console.log("Socket event 'cart-updated' received with data:", data);
+      dispatch(setCartCount(data.count));
+    };
+    socket.on("cart-updated", handleCartUpdate);
+    return () => {
+      socket.off("cart-updated", handleCartUpdate);
+    };
+  }, [dispatch]);
+
   const handleInputFocus = () => {
     const localHistory =
       JSON.parse(localStorage.getItem("searchHistory")) || [];
@@ -119,6 +135,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
       setShowSuggestions(true);
     }
   };
+
   const fetchDynamicSuggestions = async (query) => {
     try {
       if (query.trim().length <= 1) {
@@ -128,24 +145,18 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
         setShowSuggestions(true);
         return;
       }
-
       const res = await axios.get(
         `${BACKEND_URL}/vendors/search-suggestions?query=${query}`
       );
-
       const backendSuggestions = res.data.data || [];
-
       const localHistory =
         JSON.parse(localStorage.getItem("searchHistory")) || [];
-
       const matchingCategories = CATEGORIES.filter((cat) =>
         cat.toLowerCase().includes(query.toLowerCase())
       );
-
       const matchingHistory = localHistory.filter((term) =>
         term.toLowerCase().includes(query.toLowerCase())
       );
-
       const combined = [
         ...new Set([
           ...backendSuggestions,
@@ -153,7 +164,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
           ...matchingHistory,
         ]),
       ].slice(0, 5);
-
       setSuggestions(combined);
       setShowSuggestions(true);
     } catch (err) {
@@ -166,32 +176,24 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
     if (window.innerWidth <= 768) {
       setShowMobileSearchBar((prev) => !prev);
     } else {
-      setShowMobileSearchBar(true); // set true on desktop
+      setShowMobileSearchBar(true);
       if (inputRef.current) inputRef.current.focus();
     }
   };
 
-  // new function added
   const handleSearchNavigate = (text) => {
     if (!text.trim()) return;
-
     const searchText = text.toLowerCase().trim();
-
-    // Check for direct alias mapping
     const matchedCategory = RELATED_TERMS[searchText];
-
     if (matchedCategory) {
       navigate(`/category/${matchedCategory}`);
     } else {
-      // Try partial match within the search text
       const foundCategory = Object.keys(RELATED_TERMS).find((key) =>
         searchText.includes(key)
       );
-
       if (foundCategory) {
         navigate(`/category/${RELATED_TERMS[foundCategory]}`);
       } else {
-        // Fallback: full search results
         navigate(`/search-results?q=${encodeURIComponent(searchText)}`);
       }
     }
@@ -202,7 +204,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
       const res = await axios.get(`${BACKEND_URL}/user/profile`, {
         withCredentials: true,
       });
-
       if (res.data.success) {
         setCurrentUser(res.data.data);
       } else {
@@ -246,7 +247,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
       localStorage.removeItem("userFirstName");
       localStorage.removeItem("currentlyLoggedIn");
       setUserFirstName(null);
-
       dispatch(clearUser());
       navigate("/", { replace: true });
     } catch (error) {
@@ -277,19 +277,13 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
   const handleSearch = (e) => {
     if (e.key === "Enter" && searchInput.trim()) {
       const term = searchInput.trim().toLowerCase();
-
-      // 🔁 Save search history in localStorage
       let history = JSON.parse(localStorage.getItem("searchHistory")) || [];
-      history.unshift(term); // add to top
-      history = [...new Set(history)].slice(0, 5); // remove duplicates, limit to 5
+      history.unshift(term);
+      history = [...new Set(history)].slice(0, 5);
       localStorage.setItem("searchHistory", JSON.stringify(history));
-
-      // ✅ If user searched for a known category, go to /category/categoryName
       let matchedCategory = CATEGORIES.find((cat) =>
         term.includes(cat.toLowerCase())
       );
-
-      // Try matching related words if no direct category match
       if (!matchedCategory) {
         const words = term.split(/\s+/);
         for (let word of words) {
@@ -300,14 +294,12 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
           }
         }
       }
-
       if (matchedCategory) {
         navigate(`/category/${matchedCategory.toLowerCase()}`);
       } else {
         navigate(`/search-results?query=${encodeURIComponent(term)}`);
       }
-
-      setSearchInput(""); // clear input box
+      setSearchInput("");
     }
   };
 
@@ -324,31 +316,26 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
   const handleVendorClick = async () => {
     console.log("clicked vendor button ...");
     if (!userFirstName) {
-      onOpenVendorLogin(); // force user to login first
+      onOpenVendorLogin();
       return;
     }
-
-    // 1. Try silent login with vendor token
     const silentRes = await attemptVendorSilentLogin();
     if (silentRes.success) {
       navigate("/dashboard");
       return;
     }
-
-    // 2. Check email status for current user
     const response = await axios.get(`${BACKEND_URL}/user/get-email`, {
       withCredentials: true,
     });
     const emailStatus = await checkVendorEmailStatus(response.data.data.email);
-
     console.log("Email status from backend:", emailStatus);
-
     if (emailStatus.existsInVendor) {
-      onOpenVendorLogin(); // already a vendor
+      onOpenVendorLogin();
     } else {
       navigate("/vendor/register");
     }
   };
+
   useEffect(() => {
     const handleClickOutsideAll = (event) => {
       if (
@@ -364,20 +351,18 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
         setShowEllipsisDropdown(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutsideAll);
     return () => {
       document.removeEventListener("mousedown", handleClickOutsideAll);
     };
   }, []);
+
   useEffect(() => {
     const handleClickOutsideSearch = (e) => {
       const clickedOutsideDesktop =
         searchBarRef.current && !searchBarRef.current.contains(e.target);
-
       const clickedOutsideMobile =
         mobileSearchRef.current && !mobileSearchRef.current.contains(e.target);
-
       if (
         showMobileSearchBar &&
         (clickedOutsideDesktop || clickedOutsideMobile)
@@ -385,14 +370,11 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
         setShowMobileSearchBar(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutsideSearch);
     return () => {
       document.removeEventListener("mousedown", handleClickOutsideSearch);
     };
   }, [showMobileSearchBar]);
-
-  // click anywhere to close search bar
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -403,9 +385,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
         setShowSuggestions(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -418,7 +398,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
       setUserFirstName(storedName);
       setVendorFirstName(storedVendor);
     };
-
     updateName();
     window.addEventListener("userLoggedIn", updateName);
     return () => window.removeEventListener("userLoggedIn", updateName);
@@ -441,7 +420,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
     return () => clearInterval(interval);
   }, []);
 
-  //cart logic
   const handleAddToCart = () => {
     const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
     if (isLoggedIn) {
@@ -450,22 +428,20 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
       onOpenLogin(true);
     }
   };
+
   return (
     <div>
       <div className="navbar">
-        {/* Logo */}
         <div className="logo">
           <span onClick={handleHomeClick}>EVENTSBRIDGE</span>
         </div>
-
         <div className="search-and-nav-icons-container ">
-          {/* Search Bar */}
           <div
             ref={searchBarRef}
             className={`search-bar ${showMobileSearchBar ? "active" : ""}`}
             onClick={(e) => {
               handleSearchicon(e);
-              e.stopPropagation(); // Prevent event bubbling
+              e.stopPropagation();
             }}
           >
             {(showMobileSearchBar || window.innerWidth > 768) && (
@@ -477,27 +453,21 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                 onChange={(e) => {
                   const value = e.target.value;
                   setSearchInput(value);
-
-                  // If input is empty or only spaces, hide suggestions
                   if (value.trim() === "") {
                     setShowSuggestions(false);
                     return;
                   }
-
                   if (value.trim().length > 1) {
                     fetchDynamicSuggestions(value);
                   }
-
                   const localHistory =
                     JSON.parse(localStorage.getItem("searchHistory")) || [];
                   const matchingCategories = CATEGORIES.filter((cat) =>
                     cat.toLowerCase().includes(value.toLowerCase())
                   );
-
                   const matchingHistory = localHistory.filter((term) =>
                     term.toLowerCase().includes(value.toLowerCase())
                   );
-
                   const combinedSuggestions = [
                     ...new Set([...matchingCategories, ...matchingHistory]),
                   ].slice(0, 5);
@@ -505,14 +475,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                   setShowSuggestions(true);
                 }}
                 autoFocus
-
-                // onFocus={handleInputFocus}
-                // onKeyDown={(e) => {
-                //   if (e.key === "Enter") {
-                //     setShowSuggestions(false); // ✅ closes dropdown
-                //   }
-                //   handleSearch(e); // ✅ keep your existing search logic
-                // }}
               />
             )}
             <div className="searchbarIcon">
@@ -527,7 +489,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
               />
             </div>
           </div>
-
           {showSuggestions && (
             <div className="suggestions-dropdown" ref={suggestionRef}>
               {suggestions.length > 0 ? (
@@ -551,10 +512,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
               )}
             </div>
           )}
-
-          {/* Nav Icons */}
           <div className="nav-icons">
-            {/* Profile Dropdown */}
             <div
               className="nav-item profile-dropdown-container"
               ref={profileRef}
@@ -576,8 +534,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                     </>
                   )}
                 </span>
-
-                {/* ⬇ Always show dropdown toggle arrow */}
                 <span onClick={handleToggleProfileDropdown}>
                   {showProfileDropdown ? (
                     <FaChevronUp className="text-sm" />
@@ -586,7 +542,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                   )}
                 </span>
               </div>
-
               {showProfileDropdown && (
                 <div className="dropdown-menu profile-menu">
                   {!userFirstName ? (
@@ -639,8 +594,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                 </div>
               )}
             </div>
-
-            {/* Become Vendor */}
             <div
               className="nav-item profile-dropdown-container"
               ref={vendorRef}
@@ -670,19 +623,14 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                                 : "animate-leave"
                             } fixed top-4 right-10 z-50 mt-12`}
                           >
-                            {/* Toast Box */}
                             <div className="relative bg-white border-10 border-[#001f3f] text-black px-6 py-3 rounded-xl w-fit max-w-sm">
-                              {/* Triangle */}
                               <div className="absolute -top-2 right-4 w-0 h-0 border-l-8 border-r-8 border-b-[10px] border-l-transparent border-r-transparent"></div>
-
-                              {/* Toast Message */}
                               <span className="font-semibold block">
                                 Please register as a user first.
                               </span>
                             </div>
                           </div>
                         ));
-
                         setTimeout(() => toast.dismiss(toastId), 2000);
                       } else {
                         handleVendorClick();
@@ -701,7 +649,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                       </>
                     )}
                   </span>
-
                   <span
                     onClick={() => {
                       setShowVendorDropdown((prev) => {
@@ -722,7 +669,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                   </span>
                 </div>
               </div>
-
               {showVendorDropdown && (
                 <div className="vendor_dropdown-menu absolute top-[75px]  right-[50px] bg-[#e5e5de] rounded-lg border border-white shadow-[0_4px_12px_rgba(0,0,0,0.1)] p-4 z-[2000] w-[278px] ">
                   <h4 className="text-lg font-semibold text-[#001F3F] text-center mb-1">
@@ -731,8 +677,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                   <p className="text-gray-600 text-center mb-3">
                     Access your vendor tools and profile
                   </p>
-
-                  {/* If NOT logged in → Show Register */}
                   {!VendorFirstName && (
                     <>
                       <div className="dropdown-header">
@@ -741,7 +685,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                         </span>
                       </div>
                       <div className="flex flex-row gap-2 mt-2">
-                        {/* Register Button */}
                         <button
                           className="w-1/2 bg-black hover:bg-gray-800 text-white rounded px-3 py-2 transition-colors"
                           onClick={() => {
@@ -755,19 +698,14 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                                       : "animate-leave"
                                   } fixed top-4 right-10 z-50 mt-12`}
                                 >
-                                  {/* Toast Box */}
                                   <div className="relative bg-white border-[#001f3f] text-black px-6 py-3 rounded-xl w-fit max-w-sm">
-                                    {/* Triangle */}
                                     <div className="absolute -top-2 right-4 w-0 h-0 border-l-8 border-r-8 border-b-[10px] border-l-transparent border-r-transparent"></div>
-
-                                    {/* Toast Message */}
                                     <span className="font-semibold block">
                                       Please register as a user first.
                                     </span>
                                   </div>
                                 </div>
                               ));
-
                               setTimeout(() => toast.dismiss(toastId), 2000);
                             } else {
                               navigate("/vendor/register");
@@ -776,13 +714,10 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                         >
                           Register
                         </button>
-
-                        {/* Login Button */}
                         <button
                           className="w-1/2 bg-blue-500 font-bold text-white hover:bg-blue-800 rounded px-3 py-2 transition-colors"
                           onClick={() => {
-                            setShowVendorDropdown(false); // ✅ Close the dropdown
-
+                            setShowVendorDropdown(false);
                             if (!userFirstName) {
                               const toastId = toast.custom((t) => (
                                 <div
@@ -792,25 +727,18 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                                       : "animate-leave"
                                   } fixed top-4 right-10 z-50 mt-12`}
                                 >
-                                  {/* Toast Box */}
                                   <div className="relative bg-white border-[#001f3f] text-black px-6 py-3 rounded-xl w-fit max-w-sm">
-                                    {/* Triangle */}
                                     <div className="absolute -top-2 right-4 w-0 h-0 border-l-8 border-r-8 border-b-[10px] border-l-transparent border-r-transparent"></div>
-
-                                    {/* Toast Message */}
                                     <span className="font-semibold block">
                                       Please register as a user first.
                                     </span>
                                   </div>
                                 </div>
                               ));
-
                               setTimeout(() => toast.dismiss(toastId), 2000);
                             } else {
                               onOpenVendorLogin();
                             }
-
-                            // ✅ Always go to login (or open modal)
                           }}
                         >
                           Login
@@ -818,8 +746,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                       </div>
                     </>
                   )}
-
-                  {/* If logged in → Show Change Password + Sign Out */}
                   {VendorFirstName && (
                     <>
                       <hr className="my-2" />
@@ -851,10 +777,12 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
             <div className="navbarCart" onClick={handleAddToCart}>
               <div className="navbarCartIcon">
                 <FaCartShopping />
+                {cartCount > 0 && (
+                  <span className="cart-badge">{cartCount}</span>
+                )}
               </div>
               <div className="navbarCartText">Cart</div>
             </div>
-            {/* Three Dots Dropdown */}
             <div className="nav-item ellipsis-container" ref={ellipsisRef}>
               <FaEllipsisV
                 className="three-dot"
@@ -882,7 +810,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                   >
                     <FcAbout className="navbar_icon" /> About Us
                   </div>
-
                   <div
                     className={`dropdown-item ${
                       location.pathname === "/help_us" ? "active" : ""
@@ -900,7 +827,6 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
           </div>
         </div>
       </div>
-
       {showMobileSearchBar && window.innerWidth <= 768 && (
         <div
           ref={mobileSearchRef}
@@ -925,4 +851,5 @@ Navbar.propTypes = {
   onOpenRegister: PropTypes.func.isRequired,
   onOpenVendorLogin: PropTypes.func.isRequired,
 };
+
 export default Navbar;

@@ -1,55 +1,63 @@
 import { Server } from "socket.io";
+import jwt from "jsonwebtoken";
 import registerNegotiationHandler from "./handlers/negotiation.handlers.js";
 
-export default function initSocket(server) {
-  let io;
-  try {
-    io = new Server(server, {
-      cors: {
-        origin: process.env.FRONTEND_URL || "http://localhost:5173",
-        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-      },
-    });
-    console.log("✅ Socket.IO initialized successfully");
-  } catch (err) {
-    console.error("❌ Failed to initialize Socket.IO:", err);
-    throw err; // Critical failure, bubble up to stop server startup
+let ioInstance = null;
+
+export const getIO = () => {
+  if (!ioInstance) {
+    throw new Error("❌ Socket.IO not initialized");
   }
+  return ioInstance;
+};
+
+export default function initSocket(server) {
+  const io = new Server(server, {
+    cors: {
+      origin: process.env.FRONTEND_URL || "http://localhost:5173",
+      methods: ["GET", "POST"],
+      credentials: true,
+    },
+  });
+
+  // ✅ ADD THIS MIDDLEWARE: The "Check-in" Process
+  io.use((socket, next) => {
+    // Your frontend sends the token in socket.handshake.auth
+    const token = socket.handshake.auth.token;
+
+    if (!token) {
+      return next(new Error("Authentication error: Token not provided"));
+    }
+
+    // Verify the token to get the user's ID
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+      if (err) {
+        return next(new Error("Authentication error: Invalid token"));
+      }
+      // Attach the user ID to the socket object for later use
+      socket.userId = decoded._id;
+      next();
+    });
+  });
 
   io.on("connection", (socket) => {
-    try {
-      console.log("🟢 User connected:", socket.id);
+    console.log(`🟢 User connected: ${socket.id} with UserID: ${socket.userId}`);
 
-      // ✅ Wrap handler registration in try-catch
-      try {
-        registerNegotiationHandler(io, socket);
-      } catch (handlerErr) {
-        console.error(
-          `❌ Failed to register socket handlers for ${socket.id}:`,
-          handlerErr
-        );
-        socket.emit("server_error", {
-          message: "Internal server error in socket handler",
-        });
-      }
+    // ✅ JOIN THE ROOM: Put the user in their private room
+    socket.join(socket.userId);
 
-      socket.on("disconnect", (reason) => {
-        console.log(`🔴 User disconnected: ${socket.id} (Reason: ${reason})`);
-      });
+    // Your other handlers
+    registerNegotiationHandler(io, socket);
 
-      // Catch unexpected socket errors
-      socket.on("error", (err) => {
-        console.error(`⚠️ Socket error on ${socket.id}:`, err);
-      });
-    } catch (err) {
-      console.error("❌ Error during socket connection setup:", err);
-    }
+    socket.on("disconnect", (reason) => {
+      console.log(`🔴 User disconnected: ${socket.id} (Reason: ${reason})`);
+    });
+
+    socket.on("error", (err) => {
+      console.error(`⚠️ Socket error on ${socket.id}:`, err);
+    });
   });
 
-  // Optional: Handle IO-level errors (e.g., adapter failures)
-  io.engine.on("connection_error", (err) => {
-    console.error("⚠️ Socket.IO engine connection error:", err);
-  });
-
+  ioInstance = io;
   return io;
 }
