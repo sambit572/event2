@@ -30,7 +30,7 @@ export default function ImageSlider({ images }) {
       }}
     >
       <div className="backdrop-blur-sm  bg-black/30  h-full  flex items-center justify-center">
-        <div className="pl-10 py-10  max-w-7xl w-full">
+        <div className="pl-10 pr-0 py-10  max-w-7xl w-full">
           <main className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-center">
             <div>
               <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-6xl font-extrabold mb-6 text-white drop-shadow-lg tracking-wide">

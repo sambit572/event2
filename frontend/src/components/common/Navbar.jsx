@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import UserProfileIcon from "../../pages/common/UserProfileIcon.jsx";
 import toast from "react-hot-toast";
+import logo from "../../assets/serverLogo.png";
 // import "../../pages/vendor/VendorLogin.jsx";
 import "./Navbar.css";
 import { CgProfile } from "react-icons/cg";
@@ -536,7 +537,8 @@ const Navbar = ({
 
         {/* Logo */}
         <div className="logo">
-          <span onClick={handleHomeClick}>EVENTSBRIDGE</span>
+          {/* <img src={logo} alt="logo" /> */}
+          <span onClick={handleHomeClick}>𝐄𝐕𝐄𝐍𝐓𝐒𝐁𝐑𝐈𝐃𝐆𝐄</span>
         </div>
 
         <div className="search-and-nav-icons-container ">
