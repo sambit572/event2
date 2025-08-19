@@ -16,6 +16,7 @@ const Service = ({ onSwitchToLogin }) => {
   const navigate = useNavigate();
   const { serviceId } = useParams();
 
+
   const [service, setService] = useState(null);
   const [mediaList, setMediaList] = useState([]);
   const [selectMedia, setSelectMedia] = useState(null);
@@ -54,7 +55,7 @@ const Service = ({ onSwitchToLogin }) => {
   const handleBookNow = () => {
     const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
     if (isLoggedIn) {
-      navigate("/userdetails");
+      navigate(`/userdetails/${serviceId}`);
     } else {
       if (onSwitchToLogin) {
         onSwitchToLogin(true);

@@ -200,7 +200,7 @@ const handleBookNow = (e) => {
 e.stopPropagation();
 const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
 if (isLoggedIn) {
-navigate("/userdetails");
+navigate(`/userdetails/${serviceId}`);
 } else {
 if (onSwitchToLogin) onSwitchToLogin(true);
 }

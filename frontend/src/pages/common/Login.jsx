@@ -1,30 +1,29 @@
+// Login.jsx
 import { GoogleLogin } from "@react-oauth/google";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../utils/firebase.js";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import OTPVerification from "./OTPVerification.jsx";
-import PasswordInput from "../../utils/PasswordInput.jsx";
-import { FiEyeOff, FiEye } from "react-icons/fi";
 import SuccessBlock from "./SuccessBlock.jsx";
 import axios from "axios";
 import "./LoginRegister.css";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/UserSlice.js";
+import ForgotPass from "./../customer/ForgotPass";
+import { FiEyeOff, FiEye } from "react-icons/fi";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-import ForgotPass from "./../customer/ForgotPass";
 
 const Login = ({ onClose, onSwitchToRegister }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [step, setStep] = useState("form"); // 'form', 'otp', 'success', 'google-phone'
+
+  const [step, setStep] = useState("form");
   const [showSuccessIcon, setShowSuccessIcon] = useState(false);
   const [showForgotModal, setShowForgotModal] = useState(false);
-
   const [showPassword, setShowPassword] = useState(false);
-
   const [googleCredential, setGoogleCredential] = useState(null);
   const [formData, setFormData] = useState({
     phoneNo: "",
@@ -32,6 +31,43 @@ const Login = ({ onClose, onSwitchToRegister }) => {
     password: "",
   });
   const [errorMsg, setErrorMsg] = useState("");
+
+  const recaptchaVerifierRef = useRef(null);
+
+  // ✅ Initialize reCAPTCHA only once
+useEffect(() => {
+  if (!recaptchaVerifierRef.current) {
+    try {
+      const verifier = new RecaptchaVerifier(
+        auth,
+        "recaptcha-container",
+        {
+          size: "invisible",
+          callback: (response) => {
+            console.log("Enterprise reCAPTCHA passed", response);
+          },
+          "expired-callback": () => {
+            console.warn("Recaptcha expired. Resetting...");
+            verifier.clear();
+            recaptchaVerifierRef.current = null;
+          },
+        },
+        { type: "recaptcha-enterprise" } // 👈 This tells Firebase to use Enterprise mode
+      );
+
+      verifier.render().then((widgetId) => {
+        console.log("Enterprise Recaptcha rendered with ID:", widgetId);
+        recaptchaVerifierRef.current = verifier;
+      });
+    } catch (err) {
+      console.error("Failed to render Enterprise reCAPTCHA:", err);
+      setErrorMsg(
+        "Enterprise reCAPTCHA failed to load. Please refresh the page."
+      );
+    }
+  }
+}, []);
+
 
   useEffect(() => {
     if (step === "success") {
@@ -49,40 +85,41 @@ const Login = ({ onClose, onSwitchToRegister }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  function setupRecaptcha() {
-    if (window.recaptchaVerifier) window.recaptchaVerifier.clear();    
-    window.recaptchaVerifier = new RecaptchaVerifier(
-      auth,
-      "recaptcha-container",
-      {
-        size: "invisible",
-        callback: () => console.log("Recaptcha passed"),
-      }
-    );
-  }
-
+  // ✅ OTP handler
   async function handleGetOTP(e) {
     e.preventDefault();
+    setErrorMsg("");
     const phone = formData.phoneNo.replace(/\D/g, "");
     const phoneNumber = "+91" + phone;
 
+    if (!recaptchaVerifierRef.current) {
+      return setErrorMsg("ReCAPTCHA is not ready. Please wait...");
+    }
+
     if (!/^\+91\d{10}$/.test(phoneNumber)) {
-      setErrorMsg("Invalid Indian phone number.");
-      return;
+      return setErrorMsg("Invalid Indian phone number.");
     }
 
     try {
-      setupRecaptcha();
       const confirmationResult = await signInWithPhoneNumber(
         auth,
         phoneNumber,
-        window.recaptchaVerifier
+        recaptchaVerifierRef.current
       );
       window.confirmationResult = confirmationResult;
       setStep("otp");
     } catch (err) {
       console.error("OTP error:", err);
-      setErrorMsg("OTP send failed. Try again.");
+      recaptchaVerifierRef.current?.clear();
+      recaptchaVerifierRef.current = null;
+
+      if (err.code === "auth/invalid-phone-number") {
+        setErrorMsg("Invalid phone number format.");
+      } else if (err.code === "auth/too-many-requests") {
+        setErrorMsg("Too many attempts. Try again later.");
+      } else {
+        setErrorMsg("OTP send failed. Check number or reCAPTCHA.");
+      }
     }
   }
 
@@ -125,7 +162,6 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
-      // First attempt without phone number (for existing users)
       const { data } = await axios.post(
         `${BACKEND_URL}/user/auth/google`,
         { token: credentialResponse.credential },
@@ -141,7 +177,6 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
       setStep("success");
     } catch (err) {
-      // If error is about phone number being required for new users
       if (
         err.response?.data?.message === "Phone number is required for new users"
       ) {
@@ -197,7 +232,6 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
   const renderStep = () => {
     if (step === "success") return <SuccessBlock onClose={onClose} />;
-
     if (step === "otp") return <OTPVerification setStep={setStep} />;
 
     if (step === "google-phone") {
@@ -209,7 +243,6 @@ const Login = ({ onClose, onSwitchToRegister }) => {
           <p className="text-sm text-gray-600 mb-6">
             Please enter your phone number to complete your Google registration.
           </p>
-
           <form onSubmit={handleGooglePhoneSubmit} className="space-y-4">
             <div className="text-left">
               <label
@@ -229,20 +262,17 @@ const Login = ({ onClose, onSwitchToRegister }) => {
                 required
               />
             </div>
-
             {errorMsg && <p className="text-sm text-red-600">{errorMsg}</p>}
-
             <button
               type="submit"
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md transition duration-200"
             >
               Complete Registration
             </button>
-
             <button
               type="button"
               onClick={() => setStep("form")}
-              className="text-sm text-white-500  mt-2"
+              className="text-sm text-gray-500 mt-2"
             >
               Back to Login
             </button>
@@ -287,15 +317,6 @@ const Login = ({ onClose, onSwitchToRegister }) => {
           value={formData.email}
           onChange={handleChange}
         />
-
-        {/* <PasswordInput
-          name="password"
-          placeholder="Enter password"
-          value={formData.password}
-          onChange={handleChange}
-          minLength={8}
-        /> */}
-
         <div className="relative w-full mb-4">
           <input
             type={showPassword ? "text" : "password"}
@@ -327,13 +348,8 @@ const Login = ({ onClose, onSwitchToRegister }) => {
           Login
         </button>
 
-        <div className="flex items-center my-4">
-          <div className="flex-grow h-px bg-gray-300" />
-          <span className="px-3 text-xs text-gray-500">or</span>
-          <div className="flex-grow h-px bg-gray-300" />
-        </div>
 
-        <p className="signup-text">
+        <p className="signup-text pt-3">
           Don't have an account?{" "}
           <span
             className="login-link cursor-pointer font-semibold text-blue-600 hover:underline"
@@ -367,6 +383,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
 Login.propTypes = {
   onClose: PropTypes.func,
+  onSwitchToRegister: PropTypes.func,
 };
 
 export default Login;

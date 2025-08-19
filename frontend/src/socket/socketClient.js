@@ -1,51 +1,36 @@
 import { io } from "socket.io-client";
-import { BACKEND_URL } from "../utils/constant";
 
-// ✅ Create socket instance but don't connect immediately
-const socket = io(BACKEND_URL, {
+const BACKEND = import.meta.env.VITE_BACKEND_URL;
+
+console.log("Connecting to Socket.IO at:", BACKEND);
+
+const socket = io(BACKEND, {
   withCredentials: true,
-  autoConnect: false, // ✅ Don't connect automatically
-  transports: ["websocket", "polling"], // ✅ Allow polling fallback
+  transports: ["websocket"],
+  forceNew: true,
+  reconnectionAttempts: 5,
+  reconnectionDelay: 1000,
 });
-
-// ✅ Function to connect socket when user logs in
-const connectSocket = () => {
-  const token = localStorage.getItem("userToken");
-  if (token && !socket.connected) {
-    socket.auth = { token }; // ✅ Set auth token
-    socket.connect();
-  }
-};
-
-// ✅ Function to disconnect socket when user logs out
-const disconnectSocket = () => {
-  if (socket.connected) {
-    socket.disconnect();
-  }
-};
-
-// ✅ Auto-connect if token exists when module loads
-const initializeSocket = () => {
-  const token = localStorage.getItem("userToken");
-  if (token) {
-    connectSocket();
-  }
-};
 
 socket.on("connect", () => {
-  console.log("✅ Socket connected:", socket.id);
-});
-
-socket.on("disconnect", (reason) => {
-  console.warn("⚠️ Socket disconnected:", reason);
+  console.log("Socket connected:", socket.id);
 });
 
 socket.on("connect_error", (err) => {
-  console.error("❌ Socket connection error:", err.message);
+  console.error("Socket connect_error:", err);
+  if (err.message === "Session ID unknown") {
+    console.log("Stale session ID detected. Forcing a new connection.");
+    socket.disconnect();
+    socket.connect();
+  }
 });
 
-// ✅ Initialize socket on module load
-initializeSocket();
+socket.on("reconnect_attempt", (attempt) => {
+  console.log("Socket reconnect attempt:", attempt);
+});
 
-export { connectSocket, disconnectSocket };
+socket.on("disconnect", (reason) => {
+  console.log("Socket disconnected:", reason);
+});
+
 export default socket;

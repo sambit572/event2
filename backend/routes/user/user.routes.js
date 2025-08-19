@@ -17,6 +17,7 @@ import {
 
 import { verifyJwt } from "../../middleware/auth.middleware.js";
 import { upload } from "../../middleware/multer.middleware.js";
+import { getDetails, saveDetails } from "../../controller/user/userDetails.controller.js";
 
 const router = Router();
 
@@ -48,5 +49,9 @@ router.put(
   updateUserAvatar
 );
 router.delete("/remove-profile-photo", verifyJwt, removeProfilePhoto);
+
+// User Details Routes
+router.post("/save-details", verifyJwt, saveDetails);
+router.get("/bookings/:userDetailsId", verifyJwt, getDetails);
 
 export default router;

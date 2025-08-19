@@ -18,7 +18,6 @@ const option = {
   secure: false, // for localhost
   // secure : true, // for production
   sameSite: "Lax",
-  maxAge: 10 * 24 * 60 * 60 * 1000, // 10 days
 };
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -255,9 +254,16 @@ const googleAuth = async (req, res) => {
       idToken: token,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
-    console.log("✅ GOOGLE PAYLOAD RECEIVED:", ticket.getPayload());
+
+    // console.log("✅ GOOGLE PAYLOAD RECEIVED:", ticket.getPayload());
+
+
     const { email, name, picture } = ticket.getPayload();
-    console.log("Google profile picture URL:", picture);
+
+    
+    // console.log("Google profile picture URL:", picture);
+
+
     // 2. find or create user
     let user = await User.findOne({ email });
     let isNewUser = false;

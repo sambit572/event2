@@ -34,7 +34,7 @@ import Wishlist from "./pages/customer/Wishlist.jsx";
 import Profile from "./components/customer/profile/Profile.jsx";
 import UserDetails from "./pages/customer/UserDetails.jsx";
 
-import PopUp from "./components/customer/CustomerNegotiationModal";
+import PopUp from "./socket/user/CustomerNegotiationModal.jsx";
 import VendorResetPassword from "./pages/vendor/VendorResetPass.jsx";
 
 // Vendor Pages
@@ -47,7 +47,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 
 import BackToTop from "./pages/common/BackToTop";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import api from "./utils/api.js"; // ✅ 1. Import 'api' instead of 'axios'
 import { setUser } from "./redux/UserSlice.js";
 import { setVendor } from "./redux/VendorSlice.js";
@@ -60,6 +60,7 @@ import Feedback from "./pages/common/Feedback.jsx";
 import FaqSection from "./components/customer/home/FaqSection.jsx";
 import ErrorPage from "./pages/common/ErrorPage.jsx";
 import ReviewSlider from "./components/customer/home/ReviewSlider.jsx";
+import VendorSocketManager from "./socket/vendor/VendorSocketManager.jsx";
 import OrderSummary from "./components/customer/YourCart/orderSummary.jsx";
 
 const App = () => {
@@ -68,40 +69,9 @@ const App = () => {
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showVendorRegisterModal, setShowVendorRegisterModal] = useState(false);
   const [showVendorLoginModal, setShowVendorLoginModal] = useState(false);
+   const vendor = useSelector((state) => state.vendor.vendor);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        // ✅ 2. Use 'api' to automatically send the token
-        const res = await api.get('/user/get-email');
-        console.log("in app.jsx user dispatched:", res.data.data);
-        dispatch(setUser(res.data.data));
-      } catch (err) {
-        // This is expected if the user is not logged in, so we don't need to log an error
-      }
-    };
-    // Only check auth if a token exists
-    if (localStorage.getItem("userToken")) {
-        checkAuth();
-    }
-  }, [dispatch]);
-
-  useEffect(() => {
-    const checkVendorAuth = async () => {
-      try {
-        // ✅ 3. Use 'api' to automatically send the token
-        const res = await api.get('/vendors/me');
-        console.log("Vendor data received:", res.data.data);
-        dispatch(setVendor(res.data.data));
-      } catch (err) {
-        // This is expected if the vendor is not logged in
-      }
-    };
-    if (localStorage.getItem("vendorToken")) { // Assuming you store a vendor token
-        checkVendorAuth();
-    }
-  }, [dispatch]);
 
 
   // All your other functions for handling modals, etc. remain here
@@ -145,8 +115,60 @@ const App = () => {
     "/dashboard",
     "/profile",
     "/reset-password",
+    // "/service/:serviceId",
+    // "/category/:categoryId",
   ];
 
+
+
+  useEffect(() => {
+    const storedVendor = localStorage.getItem("vendor");
+    if (storedVendor) {
+      dispatch(setVendor(JSON.parse(storedVendor)));
+    }
+  }, []);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await axios.get(`${BACKEND_URL}/user/get-email`, {
+          withCredentials: true,
+        });
+
+        // this specific route provide whole user object so nothing to worry
+
+        console.log("in app.jsx user dispatched:", res.data.data);
+        dispatch(setUser(res.data.data));
+      } catch (err) {
+        console.error("Auth check failed:", err.message);
+      }
+    };
+    checkAuth();
+  }, []);
+
+  useEffect(() => {
+    const checkVendorAuth = async () => {
+      try {
+        const res = await axios.get(`${BACKEND_URL}/vendors/me`, {
+          withCredentials: true,
+        });
+
+        console.log("Vendor data received:", res.data.data);
+        dispatch(setVendor(res.data.data));
+      } catch (err) {
+        console.error("Vendor auth check failed:", err.message);
+      }
+    };
+
+    checkVendorAuth();
+  }, [dispatch]);
+
+  useEffect(() => {
+    const openLoginListener = () => handleOpenLogin();
+    window.addEventListener("openLoginModal", openLoginListener);
+    return () =>
+      window.removeEventListener("openLoginModal", openLoginListener);
+  }, []);
 
   return (
     <>
@@ -159,7 +181,9 @@ const App = () => {
           onOpenVendorLogin={handleOpenVendorLogin}
         />
       )}
-      <main className="custom-mt mt-[50px] sm:mt-[70px] md:mt-[60px]">
+
+      <main className="custom-mt mt-[50px]  sm:mt-[70px] md:mt-[60px]">
+        {vendor?._id && <VendorSocketManager />}
         <Routes>
           {/* ... All your <Route> components ... */}
           <Route path="/" element={<Home />} />
@@ -184,8 +208,16 @@ const App = () => {
           <Route path="/help_us" element={<HelpUs />} />
           <Route path="/help-Center" element={<HelpCenter />} />
           <Route path="/faqs" element={<FaqSection />} />
+          <Route path="/feedback" element={<Feedback />} /> {/* Feedback */}
+          <Route path="/Wishlist" element={<Wishlist />}></Route>
+          <Route path="/profile" element={<Profile />}></Route>
+          <Route
+            path="/userdetails/:serviceId"
+            element={<UserDetails />}
+          ></Route>
+          <Route path="/pop-up/:userDetailsId" element={<PopUp />}></Route>
           <Route path="/feedback" element={<Feedback />} />
-          <Route path="/pop-up" element={<PopUp />} />
+          
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="*" element={<ErrorPage />} />
           <Route path="/order-summary" element={<OrderSummary />} />
