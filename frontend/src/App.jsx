@@ -61,6 +61,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 import FaqSection from "./components/customer/home/FaqSection.jsx";
 import ErrorPage from "./pages/common/ErrorPage.jsx";
 import ReviewSlider from "./components/customer/home/ReviewSlider.jsx";
+import SearchPage from "./pages/search/SearchPage.jsx";
 const App = () => {
   const location = useLocation();
   // Modal states for user
@@ -187,6 +188,7 @@ const App = () => {
             path="/category/:categoryId"
             element={<ServiceList onSwitchToLogin={handleOpenLogin} />}
           />
+          <Route path="/search" element={<SearchPage/>}/>
           {/* <Route path="/categories" element={<CategoryCard />}></Route> */}
           <Route path="/reviews" element={<ReviewSlider />} />
           <Route path="/service/:serviceId" element={<ServiceDetails />} />
