@@ -1,30 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import api from "../../utils/api.js";
 import "./ServiceList.css";
 import Filter from "../../components/customer/serviceList/Filter.jsx";
 import ServiceCard from "./../../components/customer/serviceList/ServiceCard";
-import { Link } from "react-router-dom";
-import { BACKEND_URL } from "../../utils/constant.js";
-const ServiceList = ({ onSwitchToLogin }) => {
-  const { categoryId } = useParams(); // This is the category name passed in URL
 
+const ServiceList = ({ onSwitchToLogin }) => {
+  const { categoryId } = useParams();
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log("Category ID:", categoryId);
     const fetchServices = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(
-          `${BACKEND_URL}/common/category/${categoryId}`
-        );
-        console.log("Fetched services:", response);
+        const response = await api.get(`/common/category/${categoryId}`);
         setServices(response.data.data);
-        setLoading(false);
       } catch (error) {
         console.error("Error fetching services:", error);
+      } finally {
         setLoading(false);
       }
     };
@@ -35,17 +29,12 @@ const ServiceList = ({ onSwitchToLogin }) => {
   return (
     <div className="serviceList">
       <Filter />
-
       <div className="serviceCardDetails">
         {loading ? (
           <p>Loading services...</p>
         ) : services.length > 0 ? (
-          services.map((service, idx) => (
-            <div className="singleServiceCard" key={idx}>
-              <Link
-               to={`/service/${service._id}`}
-                style={{ textDecoration: "none", color: "inherit" }}
-              ></Link>
+          services.map((service) => (
+            <div className="singleServiceCard" key={service._id}>
               <ServiceCard
                 service={service}
                 onSwitchToLogin={onSwitchToLogin}
@@ -58,6 +47,5 @@ const ServiceList = ({ onSwitchToLogin }) => {
       </div>
     </div>
   );
-};
-
+};  
 export default ServiceList;

@@ -1,4 +1,5 @@
 import { Server } from "socket.io";
+import jwt from "jsonwebtoken";
 import registerNegotiationHandler from "./handlers/negotiation.handlers.js";
 
 let io; 
