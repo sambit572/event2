@@ -7,6 +7,8 @@ export const verifyJwt = async (req, res, next) => {
     // Get token from cookies or authorization header
     let token = req.cookies?.accessToken;
 
+  // console.log("Token from cookies:", token);
+
     if (!token) {
       const authHeader = req.header("Authorization");
 

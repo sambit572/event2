@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-
+import axios from "axios";
 // Core Components
 import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
@@ -48,7 +48,6 @@ import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 import BackToTop from "./pages/common/BackToTop";
 
 import { useDispatch, useSelector } from "react-redux";
-import api from "./utils/api.js"; // ✅ 1. Import 'api' instead of 'axios'
 import { setUser } from "./redux/UserSlice.js";
 import { setVendor } from "./redux/VendorSlice.js";
 import ScrollToTop from "./components/common/ScrollToTop.jsx";
@@ -62,6 +61,7 @@ import ErrorPage from "./pages/common/ErrorPage.jsx";
 import ReviewSlider from "./components/customer/home/ReviewSlider.jsx";
 import VendorSocketManager from "./socket/vendor/VendorSocketManager.jsx";
 import OrderSummary from "./components/customer/YourCart/orderSummary.jsx";
+import { BACKEND_URL } from "./utils/constant.js";
 
 const App = () => {
   const location = useLocation();
@@ -69,10 +69,8 @@ const App = () => {
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showVendorRegisterModal, setShowVendorRegisterModal] = useState(false);
   const [showVendorLoginModal, setShowVendorLoginModal] = useState(false);
-   const vendor = useSelector((state) => state.vendor.vendor);
+  const vendor = useSelector((state) => state.vendor.vendor);
   const dispatch = useDispatch();
-
-
 
   // All your other functions for handling modals, etc. remain here
   // For brevity, I'm omitting them, but you should keep them in your file.
@@ -97,8 +95,8 @@ const App = () => {
     setShowVendorLoginModal(false);
     document.body.classList.remove("modal-open");
   };
-  
-    const handleOpenVendorRegister = () => {
+
+  const handleOpenVendorRegister = () => {
     setShowVendorRegisterModal(true);
     document.body.classList.add("modal-open");
   };
@@ -115,11 +113,7 @@ const App = () => {
     "/dashboard",
     "/profile",
     "/reset-password",
-    // "/service/:serviceId",
-    // "/category/:categoryId",
   ];
-
-
 
   useEffect(() => {
     const storedVendor = localStorage.getItem("vendor");
@@ -187,22 +181,75 @@ const App = () => {
         <Routes>
           {/* ... All your <Route> components ... */}
           <Route path="/" element={<Home />} />
-          <Route path="/category/:categoryId" element={<ServiceList onSwitchToLogin={handleOpenLogin} />}/>
+          <Route
+            path="/category/:categoryId"
+            element={<ServiceList onSwitchToLogin={handleOpenLogin} />}
+          />
           <Route path="/reviews" element={<ReviewSlider />} />
-          <Route path="/service/:serviceId" element={<ServiceDetails onSwitchToLogin={handleOpenLogin}/>} />
-          <Route path="/wishlist" element={<ProtectedRoute><Wishlist /></ProtectedRoute>} />
-          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>}/>
-          <Route path="/userdetails" element={<ProtectedRoute><UserDetails /></ProtectedRoute>}/>
-          <Route path="/vendor/register" element={<ProtectedRoute><VendorRegistration /></ProtectedRoute>}/>
+          <Route
+            path="/service/:serviceId"
+            element={<ServiceDetails onSwitchToLogin={handleOpenLogin} />}
+          />
+          <Route
+            path="/wishlist"
+            element={
+              <ProtectedRoute>
+                <Wishlist />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/userdetails"
+            element={
+              <ProtectedRoute>
+                <UserDetails />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/vendor/register"
+            element={
+              <ProtectedRoute>
+                <VendorRegistration />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/category/VendorService" element={<VendorService />} />
           <Route path="/vendor/payment-info" element={<VendorPayment />} />
-          <Route path="/vendor/legal-consent" element={<VendorLegalConsent />} />
+          <Route
+            path="/vendor/legal-consent"
+            element={<VendorLegalConsent />}
+          />
           <Route path="/vendor/thank-you" element={<VendorThankYou />} />
-          <Route path="/dashboard" element={<DashboardEnforcement><DashBoardMain /></DashboardEnforcement>}/>
-          <Route path="/vendor/services/addServices" element={<AddServiceInDashboard />} />
+          <Route
+            path="/dashboard"
+            element={
+              <DashboardEnforcement>
+                <DashBoardMain />
+              </DashboardEnforcement>
+            }
+          />
+          <Route
+            path="/vendor/services/addServices"
+            element={<AddServiceInDashboard />}
+          />
           <Route path="/forgot-password" element={<ForgotPass />} />
-          <Route path="/reset-password/:resetToken" element={<ResetPassword />} />
-          <Route path="/vendor/reset-password/:resetToken" element={<VendorResetPassword />} />
+          <Route
+            path="/reset-password/:resetToken"
+            element={<ResetPassword />}
+          />
+          <Route
+            path="/vendor/reset-password/:resetToken"
+            element={<VendorResetPassword />}
+          />
           <Route path="/your-cart" element={<AddToCart />} />
           <Route path="/about_us" element={<AboutUs />} />
           <Route path="/help_us" element={<HelpUs />} />
@@ -217,7 +264,6 @@ const App = () => {
           ></Route>
           <Route path="/pop-up/:userDetailsId" element={<PopUp />}></Route>
           <Route path="/feedback" element={<Feedback />} />
-          
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="*" element={<ErrorPage />} />
           <Route path="/order-summary" element={<OrderSummary />} />
@@ -225,10 +271,27 @@ const App = () => {
       </main>
       <BackToTop />
       <Chatbot />
-      {showLoginModal && <Login onClose={handleCloseModals} onSwitchToRegister={handleOpenRegister} />}
-      {showRegisterModal && <Register onClose={handleCloseModals} onSwitchToLogin={handleOpenLogin} />}
-      {showVendorRegisterModal && <VendorRegistration onClose={handleCloseVendorModals} />}
-      {showVendorLoginModal && <VendorLogin onClose={handleCloseModals} onSwitchToLogin={handleOpenVendorLogin} />}
+      {showLoginModal && (
+        <Login
+          onClose={handleCloseModals}
+          onSwitchToRegister={handleOpenRegister}
+        />
+      )}
+      {showRegisterModal && (
+        <Register
+          onClose={handleCloseModals}
+          onSwitchToLogin={handleOpenLogin}
+        />
+      )}
+      {showVendorRegisterModal && (
+        <VendorRegistration onClose={handleCloseVendorModals} />
+      )}
+      {showVendorLoginModal && (
+        <VendorLogin
+          onClose={handleCloseModals}
+          onSwitchToLogin={handleOpenVendorLogin}
+        />
+      )}
       {!pagesWithoutFooter.includes(location.pathname) && <Footer />}
       <Toaster
         toastOptions={{

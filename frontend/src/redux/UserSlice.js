@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import api from "../utils/api.js"; // ✅ 1. Import 'api' instead of 'axios'
+import axios from "axios";
 import { BACKEND_URL } from "../utils/constant";
 
 const initialState = {
@@ -11,7 +11,9 @@ export const fetchCart = createAsyncThunk("user/fetchCart", async () => {
   // No need to get token manually, the api handler does it automatically
   try {
     // ✅ 2. Use 'api' and the correct '/api/cart' endpoint
-    const res = await api.get('/cart'); 
+    const res = await axios.get(`${BACKEND_URL}/cart`, {
+      withCredentials: true,
+    });
     return { count: res.data.count };
   } catch (error) {
     // Don't log expected 401/403 errors when user is not logged in

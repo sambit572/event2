@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import api from "../../utils/api.js";
+import axios from "axios";
 import "./ServiceList.css";
 import Filter from "../../components/customer/serviceList/Filter.jsx";
 import ServiceCard from "./../../components/customer/serviceList/ServiceCard";
+import { BACKEND_URL } from "../../utils/constant.js";
 
 const ServiceList = ({ onSwitchToLogin }) => {
   const { categoryId } = useParams();
@@ -14,7 +15,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
     const fetchServices = async () => {
       try {
         setLoading(true);
-        const response = await api.get(`/common/category/${categoryId}`);
+        const response = await axios.get(`${BACKEND_URL}/common/category/${categoryId}`);
         setServices(response.data.data);
       } catch (error) {
         console.error("Error fetching services:", error);

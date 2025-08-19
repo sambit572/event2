@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../../../utils/api.js";
+import axios from "axios";
 import toast from "react-hot-toast";
+import { BACKEND_URL } from "../../../utils/constant";
 
 const OrderSummary = () => {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ const OrderSummary = () => {
     const fetchCartItems = async () => {
       try {
         setLoading(true);
-        const response = await api.get('/cart');
+        const response = await axios.get(`${BACKEND_URL}/cart`);
         if (response.data.success) {
           setItems(response.data.data);
         }
@@ -39,7 +40,7 @@ const OrderSummary = () => {
   }, [items]);
 
   const handlePlaceOrder = () => {
-    navigate("/userdetails");
+    navigate("/userdetails"); // need to change here
   };
 
   const handleBackToCart = () => {

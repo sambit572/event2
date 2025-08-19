@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
-import api from "../../utils/api.js";
+import axios from "axios";
 
 import "./ServiceDetails.css";
 import { similarServiceData } from "../../components/customer/ServiceDetails/SimilarServiceData.jsx";
@@ -11,11 +11,11 @@ import DJServiceCard from "../../components/customer/ServiceDetails/ServiceDetai
 import ReviewList from "../../components/customer/ServiceDetails/ReviewList";
 import ReviewForm from "../../components/customer/ServiceDetails/ReviewForm.jsx";
 import { FaBell } from "react-icons/fa6";
+import { BACKEND_URL } from "../../utils/constant.js";
 
 const Service = ({ onSwitchToLogin }) => {
   const navigate = useNavigate();
   const { serviceId } = useParams();
-
 
   const [service, setService] = useState(null);
   const [mediaList, setMediaList] = useState([]);
@@ -28,7 +28,9 @@ const Service = ({ onSwitchToLogin }) => {
     const fetchService = async () => {
       try {
         setLoading(true);
-        const res = await api.get(`/common/service/${serviceId}`);
+        const res = await axios.get(
+          `${BACKEND_URL}/common/service/${serviceId}`
+        );
         const data = res.data.data;
         setService(data);
 
@@ -78,7 +80,7 @@ const Service = ({ onSwitchToLogin }) => {
       return;
     }
     try {
-      await api.post('/cart/add', { serviceId: serviceId });
+      await axios.post(`${BACKEND_URL}/cart/add`, { serviceId: serviceId });
       toast.success("Service added to your cart!");
     } catch (err) {
       if (err.response && err.response.status === 409) {
@@ -88,7 +90,7 @@ const Service = ({ onSwitchToLogin }) => {
       }
     }
   };
-  
+
   const handleNotifyMe = async (e) => {
     e.stopPropagation();
     const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
@@ -98,7 +100,9 @@ const Service = ({ onSwitchToLogin }) => {
       return;
     }
     try {
-      await api.post(`/notifications/notify-when-available`, { serviceId });
+      await axios.post(`${BACKEND_URL}/notifications/notify-when-available`, {
+        serviceId,
+      });
       toast.success("You'll be notified when this service becomes available!");
     } catch (err) {
       toast.error("Failed to set up notification.");
@@ -106,10 +110,9 @@ const Service = ({ onSwitchToLogin }) => {
     }
   };
 
-
   if (loading) return <p>Loading service details...</p>;
   if (error || !service) return <p>{error || "Service not found."}</p>;
-  
+
   return (
     <div className="dj">
       <div className="section_one">
@@ -122,20 +125,36 @@ const Service = ({ onSwitchToLogin }) => {
                   onClick={() => setSelectMedia(media)}
                   className="li1"
                 >
-                  <img src={media.src} alt={`media-${index}`} className={!isVendorAvailable ? 'grayscale brightness-75' : ''}/>
+                  <img
+                    src={media.src}
+                    alt={`media-${index}`}
+                    className={
+                      !isVendorAvailable ? "grayscale brightness-75" : ""
+                    }
+                  />
                 </div>
               ))}
             </div>
             <div className="big-image relative">
-              <img src={selectMedia?.src} alt="Selected media" className={`transition-all duration-300 ${!isVendorAvailable ? 'grayscale brightness-50' : ''}`} />
-              
+              <img
+                src={selectMedia?.src}
+                alt="Selected media"
+                className={`transition-all duration-300 ${
+                  !isVendorAvailable ? "grayscale brightness-50" : ""
+                }`}
+              />
+
               {!isVendorAvailable && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40">
-                      <div className="rounded-lg bg-red-600 px-6 py-5 text-center shadow-lg">
-                          <p className="text-sm font-bold text-white">OUT OF SERVICE</p>
-                          <p className="text-xs text-red-100">Oops! We’re on a quick break, back soon.</p>
-                      </div>
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40">
+                  <div className="rounded-lg bg-red-600 px-6 py-5 text-center shadow-lg">
+                    <p className="text-sm font-bold text-white">
+                      OUT OF SERVICE
+                    </p>
+                    <p className="text-xs text-red-100">
+                      Oops! We’re on a quick break, back soon.
+                    </p>
                   </div>
+                </div>
               )}
             </div>
           </div>

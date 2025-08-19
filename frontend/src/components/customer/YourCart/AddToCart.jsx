@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../../../utils/api.js";
+import axios from "axios";
 import toast from "react-hot-toast";
+import { BACKEND_URL } from "../../../utils/constant";
 
 const AddToCart = () => {
   const navigate = useNavigate();
@@ -12,7 +13,9 @@ const AddToCart = () => {
     const fetchCartItems = async () => {
       try {
         setLoading(true);
-        const response = await api.get('/cart');
+        const response = await axios.get(`${BACKEND_URL}/cart`,{
+          withCredentials: true
+        });
         if (response.data.success) {
           setItems(response.data.data);
         }
@@ -28,7 +31,9 @@ const AddToCart = () => {
 
   const handleRemoveItem = async (serviceId) => {
     try {
-      await api.delete(`/cart/${serviceId}`);
+      await axios.delete(`${BACKEND_URL}/cart/${serviceId}`,{
+        withCredentials: true
+      });
       setItems(prevItems => prevItems.filter(item => item.serviceId._id !== serviceId));
       toast.success("Item removed from cart!");
     } catch (error) {
