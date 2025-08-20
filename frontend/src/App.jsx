@@ -53,7 +53,10 @@ import { setVendor } from "./redux/VendorSlice.js";
 import ScrollToTop from "./components/common/ScrollToTop.jsx";
 import AddToCart from "./components/customer/YourCart/AddToCart.jsx";
 import DashboardEnforcement from "./utils/DashboardEnforcement.jsx";
-
+import BookingSuccess from "./pages/common/BookingSuccess.jsx";
+import PrivacyPolicy from "./components/common/PrivacyPolicy.jsx";
+import RefundPolicy from "./components/common/RefundPolicy.jsx";
+import TermsAndConditions from "./components/common/TermsAndConditions.jsx";
 //Feedback
 import Feedback from "./pages/common/Feedback.jsx";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -276,6 +279,13 @@ const App = () => {
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="*" element={<ErrorPage />} />
           <Route path="/report" element={<MyReports />} />
+          <Route path="/booking-success" element={<BookingSuccess />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/refund-policy" element={<RefundPolicy />} />
+          <Route
+            path="/terms-and-conditions"
+            element={<TermsAndConditions />}
+          />
         </Routes>
       </main>
       <BackToTop />
