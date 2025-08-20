@@ -189,7 +189,7 @@ const App = () => {
           />
           {/* <Route path="/categories" element={<CategoryCard />}></Route> */}
           <Route path="/reviews" element={<ReviewSlider />} />
-          <Route path="/service/:serviceId" element={<ServiceDetails />} />
+          <Route path="/service/:serviceId" element={<ServiceDetails onSwitchToLogin={handleOpenLogin} />} />
           <Route
             path="/wishlist"
             element={

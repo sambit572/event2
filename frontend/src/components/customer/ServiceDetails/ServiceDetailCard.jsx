@@ -5,6 +5,8 @@ import { FaRegHeart, FaHeart } from "react-icons/fa6";
 import { BACKEND_URL } from "../../../utils/constant";
 const ServiceDetailCard = ({ service }) => {
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [ratingData, setRatingData] = useState(null);
+
   if (!service) return null;
 
   const {
@@ -95,6 +97,21 @@ const ServiceDetailCard = ({ service }) => {
     };
   }, [serviceId]);
 
+    useEffect(() => {
+    const fetchRatingSummary = async () => {
+      try {
+        const res = await axios.get(`${BACKEND_URL}/reviews/rating/${serviceId}`);
+        if (res.data.success) {
+          setRatingData(res.data.data);
+        }
+      } catch (err) {
+        console.error("Error fetching rating summary:", err);
+      }
+    };
+
+    if (serviceId) fetchRatingSummary();
+  }, [serviceId]);
+
   // Toggle wishlist state
   const handleToggle = async () => {
     try {
@@ -151,12 +168,18 @@ const ServiceDetailCard = ({ service }) => {
       <p className="text-sm text-black mb-2 mt-0">
         {stateLocation.toUpperCase()}
       </p>
-      <div className="flex items-center gap-2 mb-3">
-        <span className="bg-green-600 text-white px-2 py-1 rounded-full text-sm font-semibold">
-          {averageRating.toFixed(1)} ★
-        </span>
-        <span className="text-gray-500 text-sm">({totalReviews} reviews)</span>
-      </div>
+          {ratingData ? (
+        <div className="flex items-center gap-2 mb-3">
+          <span className="bg-green-600 text-white px-2 py-1 rounded-full text-sm font-semibold">
+            {ratingData.averageRating.toFixed(1)} ★
+          </span>
+          <span className="text-gray-500 text-sm">
+            ({ratingData.totalReviews} reviews)
+          </span>
+        </div>
+      ) : (
+        <p className="text-gray-500 text-sm mb-3">Loading rating...</p>
+      )}
 
       <div className="flex flex-wrap gap-3 items-center mb-2 text-sm">
         <span className="text-xl font-bold text-black">₹{price}</span>
