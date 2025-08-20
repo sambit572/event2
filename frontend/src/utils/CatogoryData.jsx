@@ -97,7 +97,7 @@ import mehendi2 from "../assets/service/makeup/mehendi2.jpg";
 import mehendi3 from "../assets/service/makeup/mehendi3.jpg";
 import mehendi4 from "../assets/service/makeup/mehendi4.jpg";
 
-import image1 from "../assets/home/categoriesImages/dj.png";
+import image1 from "../assets/home/categoriesImages/dj_image.png";
 import image2 from "../assets/home/categoriesImages/bass-brand.png";
 import image3 from "../assets/home/categoriesImages/tent_house.jpg";
 import image4 from "../assets/home/categoriesImages/photographer.png";
@@ -109,9 +109,12 @@ import image9 from "../assets/home/categoriesImages/father.png";
 import image10 from "../assets/aboutus/catering_img.png";
 import image11 from "../assets/home/categoriesImages/bride-mehendi-&-makeup.png";
 import image12 from "../assets/home/categoriesImages/flower-decor.png";
-import image13 from "../assets/home/categoriesImages/horse-cart.png";
+import image13 from "../assets/home/categoriesImages/ceremonial_ride.png";
 import image14 from "../assets/home/categoriesImages/fireworks.png";
 import image15 from "../assets/home/categoriesImages/marriage-card.png";
+import image16 from "../assets/home/categoriesImages/banquithall.jpeg";
+import image17 from "../assets/home/categoriesImages/stage_decor.png";
+import image18 from "../assets/home/categoriesImages/event_company.png";
 
 export const CategoryData = [
   {
@@ -212,7 +215,7 @@ export const CategoryData = [
   },
   {
     id: "band",
-    title: "Orchesta And Music Concert",
+    title: "Music Concert And Orchesta",
     image: image2,
     tagline: "Brass Beats the Best",
     icon: "🎺",
@@ -568,7 +571,7 @@ export const CategoryData = [
   {
     id: "banquet-hall",
     title: "Banquet Hall & Mandap",
-    image: image11,
+    image: image16,
     tagline: "Where Celebrations Begin",
     icon: "🎉",
     services: [
@@ -1313,7 +1316,7 @@ export const CategoryData = [
   {
     id: "stage-decor",
     title: "Stage Decor",
-    image: image10, // Replace with your actual image import
+    image: image17, // Replace with your actual image import
     tagline: "Designs That Dazzle, Moments That Matter",
     icon: "🌸",
     services: [
@@ -1380,7 +1383,7 @@ export const CategoryData = [
   {
     id: "event-management",
     title: "Event Company",
-    image: image14, // Replace with actual image
+    image: image18, // Replace with actual image
     tagline: "Crafting Moments, Managing Memories",
     icon: "🎉",
     services: [
