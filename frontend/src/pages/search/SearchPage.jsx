@@ -24,6 +24,9 @@ const SearchPage = () => {
         minPrice: "",
         maxPrice: "",
     })
+    const [appliedRatingFilters, setAppliedRatingFilters] = useState({
+        rating: "",
+    })
 
     useEffect(() => {
         setIsLoading(false)
@@ -37,7 +40,7 @@ const SearchPage = () => {
         }
     }, [query])
 
-    const fetchSearchResults = async (searchQuery, priceFilters = {}) => {
+    const fetchSearchResults = async (searchQuery, priceFilters = {}, ratingFilters = {}) => {
         try {
         setIsLoading(true)
         setIsNotFound(false)
@@ -46,6 +49,7 @@ const SearchPage = () => {
         if (searchQuery) params.append("q", searchQuery)
         if (priceFilters.minPrice) params.append("minPrice", priceFilters.minPrice)
         if (priceFilters.maxPrice) params.append("maxPrice", priceFilters.maxPrice)
+        if (ratingFilters.rating) params.append("rating", ratingFilters.rating)
 
         const response = await axios.get(`${BACKEND_URL}/search?${params.toString()}`)
         const result = response.data.results
@@ -72,14 +76,27 @@ const SearchPage = () => {
     const handlePriceFilterApply = (priceFilters) => {
         setAppliedPriceFilters(priceFilters)
 
-        // Update URL only for price filters
         const params = new URLSearchParams()
         if (query) params.append("query", query)
         if (priceFilters.minPrice) params.append("minPrice", priceFilters.minPrice)
         if (priceFilters.maxPrice) params.append("maxPrice", priceFilters.maxPrice)
+        if (appliedRatingFilters.rating) params.append("rating", appliedRatingFilters.rating)
 
         navigate(`/search?${params.toString()}`, { replace: true })
-        fetchSearchResults(query, priceFilters)
+        fetchSearchResults(query, priceFilters, appliedRatingFilters)
+    }
+
+    const handleRatingFilterApply = (ratingFilters) => {
+        setAppliedRatingFilters(ratingFilters)
+
+        const params = new URLSearchParams()
+        if (query) params.append("query", query)
+        if (appliedPriceFilters.minPrice) params.append("minPrice", appliedPriceFilters.minPrice)
+        if (appliedPriceFilters.maxPrice) params.append("maxPrice", appliedPriceFilters.maxPrice)
+        if (ratingFilters.rating) params.append("rating", ratingFilters.rating)
+
+        navigate(`/search?${params.toString()}`, { replace: true })
+        fetchSearchResults(query, appliedPriceFilters, ratingFilters)
     }
 
     const getFilteredData = () => {
@@ -88,7 +105,6 @@ const SearchPage = () => {
         let filteredServices = [...data.services]
         const filteredCategories = [...data.categories]
 
-        // Apply location filter
         if (filters.location) {
         filteredServices = filteredServices.filter((service) => {
             const locations = Array.isArray(service.locationOffered) ? service.locationOffered : [service.locationOffered]
@@ -96,13 +112,14 @@ const SearchPage = () => {
         })
         }
 
-        // Apply sorting
         if (filters.sortBy === "price") {
         filteredServices.sort((a, b) => (a.minPrice || 0) - (b.minPrice || 0))
         } else if (filters.sortBy === "name") {
         filteredServices.sort((a, b) => a.serviceName.localeCompare(b.serviceName))
         } else if (filters.sortBy === "duration") {
         filteredServices.sort((a, b) => (a.duration || 0) - (b.duration || 0))
+        } else if (filters.sortBy === "rating") {
+        filteredServices.sort((a, b) => (b.averageRating || 0) - (a.averageRating || 0))
         }
 
         return {
@@ -154,6 +171,7 @@ const SearchPage = () => {
                     categories={data.categories}
                     onFiltersChange={handleFiltersChange}
                     onPriceFilterApply={handlePriceFilterApply}
+                    onRatingFilterApply={handleRatingFilterApply}
                 />
                 </div>
 

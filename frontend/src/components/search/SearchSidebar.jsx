@@ -1,6 +1,12 @@
 import { useState } from "react"
 
-export const SearchSidebar = ({ services = [], categories = [], onFiltersChange, onPriceFilterApply }) => {
+export const SearchSidebar = ({
+    services = [],
+    categories = [],
+    onFiltersChange,
+    onPriceFilterApply,
+    onRatingFilterApply,
+}) => {
     const [filters, setFilters] = useState({
         location: "",
         sortBy: "price",
@@ -9,6 +15,10 @@ export const SearchSidebar = ({ services = [], categories = [], onFiltersChange,
     const [priceInputs, setPriceInputs] = useState({
         minPrice: "",
         maxPrice: "",
+    })
+
+    const [ratingInputs, setRatingInputs] = useState({
+        rating: "",
     })
 
     const uniqueLocations = [
@@ -31,8 +41,16 @@ export const SearchSidebar = ({ services = [], categories = [], onFiltersChange,
         setPriceInputs((prev) => ({ ...prev, [key]: value }))
     }
 
+    const handleRatingInputChange = (value) => {
+        setRatingInputs({ rating: value })
+    }
+
     const applyPriceFilter = () => {
         onPriceFilterApply(priceInputs)
+    }
+
+    const applyRatingFilter = () => {
+        onRatingFilterApply(ratingInputs)
     }
 
     const clearFilters = () => {
@@ -45,8 +63,12 @@ export const SearchSidebar = ({ services = [], categories = [], onFiltersChange,
         minPrice: "",
         maxPrice: "",
         })
+        setRatingInputs({
+        rating: "",
+        })
         onFiltersChange(clearedFilters)
         onPriceFilterApply({ minPrice: "", maxPrice: "" })
+        onRatingFilterApply({ rating: "" })
     }
 
     return (
@@ -122,6 +144,39 @@ export const SearchSidebar = ({ services = [], categories = [], onFiltersChange,
         </div>
 
         <div className="mb-6">
+            <h3 className="font-medium text-gray-800 mb-3">Minimum Rating</h3>
+            <div className="space-y-3">
+            <div>
+                <label className="block text-xs text-gray-600 mb-1">Rating (0-5)</label>
+                <select
+                value={ratingInputs.rating}
+                onChange={(e) => handleRatingInputChange(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                >
+                <option value="">Any Rating</option>
+                <option value="0">0+ Stars</option>
+                <option value="0.5">0.5+ Stars</option>
+                <option value="1">1+ Stars</option>
+                <option value="1.5">1.5+ Stars</option>
+                <option value="2">2+ Stars</option>
+                <option value="2.5">2.5+ Stars</option>
+                <option value="3">3+ Stars</option>
+                <option value="3.5">3.5+ Stars</option>
+                <option value="4">4+ Stars</option>
+                <option value="4.5">4.5+ Stars</option>
+                <option value="5">5 Stars</option>
+                </select>
+            </div>
+            <button
+                onClick={applyRatingFilter}
+                className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
+            >
+                Apply Rating Filter
+            </button>
+            </div>
+        </div>
+
+        <div className="mb-6">
             <h3 className="font-medium text-gray-800 mb-3">Sort By</h3>
             <select
             value={filters.sortBy}
@@ -131,10 +186,10 @@ export const SearchSidebar = ({ services = [], categories = [], onFiltersChange,
             <option value="price">Price</option>
             <option value="name">Name</option>
             <option value="duration">Duration</option>
+            <option value="rating">Rating</option>
             </select>
         </div>
 
-        {/* Categories Filter */}
         {categories.length > 0 && (
             <div className="mb-6">
             <h3 className="font-medium text-gray-800 mb-3">Categories</h3>
