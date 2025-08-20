@@ -8,45 +8,46 @@ import similarimg5 from "../../../assets/service/similar-dj-img5.jpg";
 
 const dummyImages = [similarimg2, similarimg3, similarimg4, similarimg5];
 
-const ReviewList = ({ newReview }) => {
+const ReviewList = ({ serviceId, newReview }) => {
   const [allReviews, setAllReviews] = useState([]);
-  const [showAll, setShowAll] = useState(false); // 🔁 for toggle
+  const [showAll, setShowAll] = useState(false);
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const res = await axios.get(`${BACKEND_URL}/api/reviews/all`);
-        const backendData = res.data.data;
+        const res = await axios.get(
+          `${BACKEND_URL}/reviews/getReview/${serviceId}`
+        );
+        const backendData = res.data.reviews;
+        // ✅ map with pipeline response (userDetails contains fullName & _id)
+        const formatted = backendData.map((rev, idx) => ({
+          ...rev,
+          userName: rev.userDetails?.fullName || "Anonymous",
+          date: new Date(rev.createdAt).toISOString().split("T")[0],
+          reviewMessage: rev.reviewMessage || "No review message provided",
+          // images: [dummyImages[idx % dummyImages.length]],
+          helpful: Math.floor(Math.random() * 10),
+        }));
 
-        const filtered = backendData
-          .filter((rev) => rev.rating >= 4)
-          .map((rev, idx) => ({
-            ...rev,
-            label: rev.text,
-            date: new Date().toISOString().split("T")[0],
-            images: [dummyImages[idx % dummyImages.length]],
-            helpful: Math.floor(Math.random() * 10),
-          }));
-
-        setAllReviews(filtered);
+        setAllReviews(formatted);
       } catch (err) {
         console.error("Error fetching reviews:", err.message);
       }
     };
 
     fetchReviews();
-  }, []);
+  }, [serviceId]);
 
+  // ✅ handle new review append
   useEffect(() => {
-    if (newReview && newReview.rating >= 4) {
+    if (newReview) {
+      console.log("New review received:", newReview);
       const updated = {
         ...newReview,
-        label: newReview.text,
+
         date: new Date().toISOString().split("T")[0],
-        images: [
-          dummyImages[Math.floor(Math.random() * dummyImages.length)],
-        ],
+        // images: [dummyImages[Math.floor(Math.random() * dummyImages.length)]],
         helpful: 0,
       };
       setAllReviews((prev) => [...prev, updated]);

@@ -50,7 +50,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
   };
 
   function setupRecaptcha() {
-    if (window.recaptchaVerifier) window.recaptchaVerifier.clear();    
+    if (window.recaptchaVerifier) window.recaptchaVerifier.clear();
     window.recaptchaVerifier = new RecaptchaVerifier(
       auth,
       "recaptcha-container",
@@ -110,6 +110,8 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
       localStorage.setItem("currentlyLoggedIn", "true");
       localStorage.setItem("userFirstName", user.fullName.split(" ")[0]);
+      localStorage.setItem("userLastName", user.fullName.split(" ")[1]);
+
       window.dispatchEvent(new Event("userLoggedIn"));
 
       setStep("success");

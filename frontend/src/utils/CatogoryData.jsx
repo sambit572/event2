@@ -1379,7 +1379,7 @@ export const CategoryData = [
   },
   {
     id: "event-management",
-    title: "Event Management",
+    title: "Event Company",
     image: image14, // Replace with actual image
     tagline: "Crafting Moments, Managing Memories",
     icon: "🎉",
