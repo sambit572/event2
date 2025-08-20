@@ -10,7 +10,7 @@ const initialState = {
 export const fetchCart = createAsyncThunk("user/fetchCart", async () => {
   // No need to get token manually, the api handler does it automatically
   try {
-    // ✅ 2. Use 'api' and the correct '/api/cart' endpoint
+   
     const res = await axios.get(`${BACKEND_URL}/cart`, {
       withCredentials: true,
     });

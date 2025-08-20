@@ -194,14 +194,14 @@ function DashBoardMain() {
                     ? "To be negotiated upon discussion."
                     : `₹${popupData.proposedPrice}`}
                 </p>
-                {/* Updated to compare proposed price with the minimum of the range */}
-                {popupData.proposedPrice < popupData.originalPriceRange.min && (
+                {popupData && (
                   <p>
                     <strong>Enter Final Price:</strong>
                     <input
                       type="text"
                       placeholder="Enter Your Final Price"
                       className="VenueInput"
+                      required
                     />
                   </p>
                 )}
@@ -229,7 +229,7 @@ function DashBoardMain() {
                   className="btn-decline"
                   onClick={() => handleResponse("decline")}
                 >
-                  Cancel
+                  Reject
                 </button>
               </div>
             </div>

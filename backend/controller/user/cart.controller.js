@@ -2,6 +2,10 @@ import { Cart } from "../../model/user/cart.model.js";
 import { Service } from "../../model/vendor/service.model.js";
 import { ApiError } from "../../utilities/ApiError.js";
 import { getIO } from "../../socket/index.js"; 
+import { Negotiation } from "../../model/common/Negotiation.model.js";
+import { UserDetails } from "../../model/user/userDetails.model.js";
+import { ApiResponse } from "../../utilities/ApiResponse.js";
+import mongoose from "mongoose";
 
 // ➕ Add to Cart
 export const addToCart = async (req, res) => {
@@ -40,10 +44,7 @@ export const addToCart = async (req, res) => {
   } catch (error) {
       console.error("Add to cart error:", error);
       // Use the ApiError utility for consistent error responses
-      if (error instanceof ApiError) {
-          return res.status(error.statusCode).json(new ApiError(error.statusCode, error.message));
-      }
-      return res.status(500).json(new ApiError(500, "Internal Server Error"));
+      return res.status(500).json(new ApiError(500, "Internal Server Error in case of add to cart"));
   }
 };
 
@@ -97,5 +98,59 @@ export const removeFromCart = async (req, res) => {
   } catch (error) {
       console.error("Remove from cart error:", error);
       return res.status(500).json(new ApiError(500, "Internal Server Error"));
+  }
+};
+
+
+export const getSingleCart = async (req, res) => {
+  try {
+    console.log("Getting single cart item...");
+    const { userDetailsId } = req.params;
+
+    // Step 1: Get bookedById, bookedBy, and serviceId from UserDetails
+    const userDetails = await UserDetails.aggregate([
+      {
+        $match: {
+          _id: mongoose.Types.ObjectId.createFromHexString(userDetailsId),
+        },
+      },
+      {
+        $project: {
+          serviceId: 1,
+          bookedById: 1,
+        },
+      },
+    ]);
+
+    if (!userDetails || userDetails.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "User details not found.",
+      });
+    }
+
+    const { serviceId, bookedById } = userDetails[0];
+
+    // Step 2: Find Negotiation using those fields
+    const item = await Negotiation.findOne({
+      serviceId,
+      bookedById,
+    }).populate({
+      path: "serviceId",
+      model: "Service",
+    });
+
+    console.log("Negotiation item found:", item);
+
+    if (!item) {
+      return res.status(404).json(new ApiError(404, "Negotiation not found for given user details."));
+    }
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, "Negotiation found.", item));
+  } catch (error) {
+    console.error("Get single cart item error:", error);
+    return res.status(500).json(new ApiError(500, "Internal Server Error"));
   }
 };

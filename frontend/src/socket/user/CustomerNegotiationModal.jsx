@@ -118,15 +118,18 @@ const CustomerNegotiationModal = () => {
       type: "Negotiation Requested",
     };
 
+
+
     setIsLoading(true);
     setTimeout(() => {
       emitNegotiation(negotiationData);
       // Replaces alert
       alert(`✅ Your price ₹${proposedPrice} has been sent to the vendor!`);
       setErrorMsg("");
-      startTimer();
       setIsLoading(false);
+      navigate(`/order-summary/${userDetailsId}`);
     }, 500);
+
   };
 
   const handleProceedWithoutNegotiation = () => {
@@ -157,8 +160,8 @@ const CustomerNegotiationModal = () => {
       alert("🚀 Proceeding with the listed price...");
       setProceededWithoutNegotiation(true);
       setErrorMsg("");
-      startTimer();
       setIsLoading(false);
+      navigate(`/order-summary/${userDetailsId}`);
     }, 500);
   };
 

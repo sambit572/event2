@@ -117,9 +117,9 @@ export default function VendorPayment() {
     }
 
     // Auto-verify when PAN is 10 characters
-    if (panValue.length === 10 && /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(panValue)) {
-      verifyPAN(panValue);
-    }
+    // if (panValue.length === 10 && /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(panValue)) {
+    //   verifyPAN(panValue);
+    // }
   };
 
   const handleBack = () => {
@@ -153,11 +153,11 @@ export default function VendorPayment() {
     }
 
     // Check PAN verification
-    if (!panVerification.isVerified) {
-      setIsLoading(false);
-      alert("Please verify your PAN number before proceeding.");
-      return;
-    }
+    // if (!panVerification.isVerified) {
+    //   setIsLoading(false);
+    //   alert("Please verify your PAN number before proceeding.");
+    //   return;
+    // }
 
     try {
       const vendorId = localStorage.getItem("vendorId");

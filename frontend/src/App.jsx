@@ -62,6 +62,7 @@ import ReviewSlider from "./components/customer/home/ReviewSlider.jsx";
 import VendorSocketManager from "./socket/vendor/VendorSocketManager.jsx";
 import OrderSummary from "./components/customer/YourCart/orderSummary.jsx";
 import { BACKEND_URL } from "./utils/constant.js";
+import ComingSoon from "./utils/ComingSoon.jsx";
 
 const App = () => {
   const location = useLocation();
@@ -266,7 +267,9 @@ const App = () => {
           <Route path="/feedback" element={<Feedback />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="*" element={<ErrorPage />} />
-          <Route path="/order-summary" element={<OrderSummary />} />
+          <Route path="/order-summary/:userDetailsId" element={<OrderSummary />} />
+
+          <Route path="/coming-soon" element={<ComingSoon />} />
         </Routes>
       </main>
       <BackToTop />

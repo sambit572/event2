@@ -7,9 +7,9 @@ const userDetailsSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    bookedBy:{
+    bookedBy: {
       type: String,
-      required: true
+      required: true,
     },
     serviceId: {
       type: mongoose.Schema.Types.ObjectId, // assuming it's from your services collection
