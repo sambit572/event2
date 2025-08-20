@@ -1,12 +1,27 @@
 import { BiLike } from "react-icons/bi";
 import { AiFillStar } from "react-icons/ai";
+import { useState } from "react";
 
 const ReviewCard = ({ review }) => {
   if (!review) return null; // Safeguard for undefined prop
 
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  // Limit message to ~150 chars (≈ 2 lines), adjust as needed
+  const charLimit = 150;
+  const isLong = review.reviewMessage?.length > charLimit;
+  const displayMessage = isExpanded
+    ? review.reviewMessage
+    : review.reviewMessage?.slice(0, charLimit) + (isLong ? "..." : "");
+
   return (
     <div style={{ borderBottom: "1px solid #eee", padding: "16px 0" }}>
-      <h4 style={{ marginBottom: "8px" }}>{review.name}</h4>
+      {/* User Full Name */}
+      <h4 style={{ marginBottom: "8px" }}>
+        {review.userDetails?.fullName || review.userName || "Anonymous"}
+      </h4>
+
+      {/* Rating + Date */}
       <div
         style={{
           display: "flex",
@@ -18,6 +33,7 @@ const ReviewCard = ({ review }) => {
           marginBottom: "6px",
         }}
       >
+        {/* Rating badge */}
         <div
           style={{
             backgroundColor: "#008000",
@@ -33,52 +49,66 @@ const ReviewCard = ({ review }) => {
           <AiFillStar size={14} style={{ marginRight: "4px" }} />{" "}
           {review.rating}
         </div>
-        <span>{review.label}</span>
-        <span style={{ color: "#666" }}>• Posted on {review.date}</span>
+        {/* Review Date */}
+        <span style={{ color: "#666" }}>
+          • Posted on {new Date(review.createdAt).toLocaleDateString()}
+        </span>
       </div>
-      <p style={{ fontSize: "14px", marginBottom: "8px" }}>{review.text}</p>
-      <div
-        style={{
-          display: "flex",
-          gap: "6px",
-          color: "#001f3f",
-          marginBottom: "8px",
-          flexWrap: "wrap",
-        }}
-      >
-        {(review.images || []).map((img, idx) => (
-          <div
-            key={idx}
-            style={{
-              width: "60px",
-              height: "80px",
-              color: "#001f3f",
-              backgroundColor: "#ccc",
-              borderRadius: "6px",
-              overflow: "hidden",
-            }}
-          >
-            <img
-              src={img}
-              alt={`review-${idx}`}
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            />
-          </div>
-        ))}
-      </div>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "6px",
-          color: "#001f3f",
-          fontSize: "14px",
-        }}
-      >
-        <BiLike /> Helpful{review.helpful ? ` (${review.helpful})` : ""}
-      </div>
+
+      {/* Review Message with Read More / Read Less */}
+      <p style={{ fontSize: "14px", marginBottom: "4px" }} className="text-black">
+        {displayMessage}
+      </p>
+      {isLong && (
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          style={{
+            background: "none",
+            border: "none",
+            color: "#007bff",
+            fontSize: "14px",
+            cursor: "pointer",
+            padding: 0,
+          }}
+        >
+          {isExpanded ? "Read less" : "Read more"}
+        </button>
+      )}
+
+      {/* Optional Images (if you plan to store images in reviews later) */}
+      {review.images?.length > 0 && (
+        <div
+          style={{
+            display: "flex",
+            gap: "6px",
+            color: "#001f3f",
+            marginBottom: "8px",
+            flexWrap: "wrap",
+          }}
+        >
+          {review.images.map((img, idx) => (
+            <div
+              key={idx}
+              style={{
+                width: "60px",
+                height: "80px",
+                backgroundColor: "#ccc",
+                borderRadius: "6px",
+                overflow: "hidden",
+              }}
+            >
+              <img
+                src={img}
+                alt={`review-${idx}`}
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
 
 export default ReviewCard;
+// This component displays a single review card with user details, rating, review message, optional images, and helpful count.

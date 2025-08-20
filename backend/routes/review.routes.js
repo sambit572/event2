@@ -1,15 +1,14 @@
-import express from "express";
-import {
-  addReview,
-  getAllReviews,
-} from "../controller/common/review.controller.js";
+// backend/routes/review.routes.js
+import { Router } from "express";
 
-const router = express.Router();
+import { verifyJwt } from "../middleware/auth.middleware.js";
+import { addReview, getReviewsByService, getServiceRatingSummary } from "../controller/common/review.controller.js";
 
-// POST /reviews/add
-router.post("/add", addReview);
 
-// GET /reviews/all
-router.get("/all", getAllReviews);
+const router = Router();
 
+router.post("/add", verifyJwt, addReview);
+
+router.get("/getReview/:serviceId", getReviewsByService);
+router.get("/rating/:serviceId", getServiceRatingSummary);
 export default router;

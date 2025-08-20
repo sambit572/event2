@@ -9,6 +9,7 @@ import { FaBell } from "react-icons/fa6";
 const ServiceDescription = ({ service, onSwitchToLogin }) => {
   const navigate = useNavigate();
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [ratingData, setRatingData] = useState(null);
 
   const serviceId = service._id || service._id;
 
@@ -98,7 +99,22 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
       window.removeEventListener("wishlistUpdated", handleWishlistUpdate);
     };
   }, [serviceId]);
+  useEffect(() => {
+    const fetchRatingSummary = async () => {
+      try {
+        const res = await axios.get(
+          `${BACKEND_URL}/reviews/rating/${serviceId}`
+        );
+        if (res.data.success) {
+          setRatingData(res.data.data);
+        }
+      } catch (err) {
+        console.error("Error fetching rating summary:", err);
+      }
+    };
 
+    if (serviceId) fetchRatingSummary();
+  }, [serviceId]);
   // Toggle wishlist state
   const handleToggle = async () => {
     try {
@@ -163,14 +179,22 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
         </div>
         {/* Location */}
         <p className="text-sm text-black mb-2">{location}</p>
-        <p className="text-sm text-black mb-2 mt-0">{stateLocation.toUpperCase()}</p>
+        <p className="text-sm text-black mb-2 mt-0">
+          {stateLocation.toUpperCase()}
+        </p>
         {/* Rating and Reviews */}
-        <div className="flex flex-wrap items-center gap-3 mb-2">
-          <span className="bg-green-600 text-white px-2 py-1 rounded-full text-sm font-semibold">
-            {rating}
-          </span>
-          <span className="text-sm">{reviews} reviews</span>
-        </div>
+        {ratingData ? (
+          <div className="flex items-center gap-2 mb-3">
+            <span className="bg-green-600 text-white px-2 py-1 rounded-full text-sm font-semibold">
+              {ratingData.averageRating.toFixed(1)} ★
+            </span>
+            <span className="text-gray-500 text-sm">
+              ({ratingData.totalReviews} reviews)
+            </span>
+          </div>
+        ) : (
+          <p className="text-gray-500 text-sm mb-3">Loading rating...</p>
+        )}
 
         {/* Pricing */}
         <div className="flex flex-wrap gap-3 items-center mb-1 text-sm">

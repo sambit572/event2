@@ -1,24 +1,48 @@
-import React from "react";
-import RatingBar from "./RatingBar"; // assuming RatingBar is in the same folder
+import React, { useEffect, useState } from "react";
+import RatingBar from "./RatingBar";
+import axios from "axios";
+import { BACKEND_URL } from "../../../utils/constant"; // your base URL
 
-const RatingDetails = () => {
-  const ratingsData = {
-    averageRating: 4.3,
-    totalRatings: 150,
-    totalReviews: 87,
-    breakdown: [
-      { label: "5★", count: 80, color: "#4caf50" },
-      { label: "4★", count: 40, color: "#8bc34a" },
-      { label: "3★", count: 15, color: "#cddc39" },
-      { label: "2★", count: 10, color: "#ffc107" },
-      { label: "1★", count: 5, color: "#f44336" },
-    ],
-  };
+const RatingDetails = ({ serviceId }) => {
+  const [ratingsData, setRatingsData] = useState(null);
+
+  useEffect(() => {
+    const fetchRatingSummary = async () => {
+      try {
+        const res = await axios.get(`${BACKEND_URL}/reviews/rating/${serviceId}`);
+        if (res.data.success) {
+          const data = res.data.data;
+
+          // convert breakdown to array format for RatingBar
+          const breakdownArray = [
+            { label: "5★", count: data.breakdown[5], color: "#4caf50" },
+            { label: "4★", count: data.breakdown[4], color: "#8bc34a" },
+            { label: "3★", count: data.breakdown[3], color: "#cddc39" },
+            { label: "2★", count: data.breakdown[2], color: "#ffc107" },
+            { label: "1★", count: data.breakdown[1], color: "#f44336" },
+          ];
+
+          setRatingsData({
+            averageRating: data.averageRating,
+            totalRatings: data.totalRatings,
+            totalReviews: data.totalReviews,
+            breakdown: breakdownArray,
+          });
+        }
+      } catch (err) {
+        console.error("Error fetching rating summary:", err);
+      }
+    };
+
+    fetchRatingSummary();
+  }, [serviceId]);
+
+  if (!ratingsData) return <p>Loading ratings...</p>;
 
   const maxCount = Math.max(...ratingsData.breakdown.map((r) => r.count));
 
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", gap: "2rem" }}>
+    <div style={{ display: "flex", flexWrap: "wrap",gap:"1rem" }}>
       {/* Average Rating Section */}
       <div style={{ minWidth: "120px" }}>
         <div
