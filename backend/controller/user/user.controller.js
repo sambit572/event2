@@ -13,12 +13,25 @@ import {
 } from "../../utilities/cloudinary.js";
 import { sendEmail } from "../../utilities/sendEmail.js";
 
-const option = {
+const isProd = process.env.NODE_ENV === "production";
+
+const baseOption = {
   httpOnly: true,
-  secure: false, // for localhost
-  // secure : true, // for production
-  sameSite: "Lax",
+  secure: isProd ? "true" : "false", // true in prod, false in dev
+  sameSite: isProd ? "None" : "Lax",
+  path: "/",
 };
+
+const accessTokenOption = {
+  ...baseOption,
+  expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 day
+};
+
+const refreshTokenOption = {
+  ...baseOption,
+  expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000), // 10 days
+};
+
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Helper function to generate profile picture URL with first name initial
@@ -145,8 +158,8 @@ const registerUser = async (req, res) => {
 
     return res
       .status(200)
-      .cookie("accessToken", accessToken, option)
-      .cookie("refreshToken", refreshToken, option)
+      .cookie("accessToken", accessToken, accessTokenOption)
+      .cookie("refreshToken", refreshToken, refreshTokenOption)
       .json(
         new ApiResponse(
           200,
@@ -210,8 +223,8 @@ const loginUser = async (req, res) => {
 
     return res
       .status(200)
-      .cookie("accessToken", accessToken, option)
-      .cookie("refreshToken", refreshToken, option)
+      .cookie("accessToken", accessToken, accessTokenOption)
+      .cookie("refreshToken", refreshToken, refreshTokenOption)
       .json(
         new ApiResponse(
           200,
@@ -235,8 +248,8 @@ const logoutUser = async (req, res) => {
 
     return res
       .status(200)
-      .clearCookie("accessToken", option)
-      .clearCookie("refreshToken", option)
+      .clearCookie("accessToken", accessTokenOption)
+      .clearCookie("refreshToken", refreshTokenOption)
       .json(new ApiResponse(200, {}, "User logged out successfully"));
   } catch (error) {
     console.error("Logout error:", error);
@@ -377,8 +390,8 @@ const googleAuth = async (req, res) => {
     // 4. respond
     return res
       .status(200)
-      .cookie("accessToken", accessToken, option)
-      .cookie("refreshToken", refreshToken, option)
+      .cookie("accessToken", accessToken, accessTokenOption)
+      .cookie("refreshToken", refreshToken, refreshTokenOption)
       .json(
         new ApiResponse(
           200,
@@ -691,7 +704,7 @@ const noNeedToLogin = async (req, res) => {
 
       return res
         .status(200)
-        .cookie("refreshToken", newRefreshToken, option)
+        .cookie("refreshToken", newRefreshToken, refreshTokenOption)
         .json(new ApiResponse(200, user, "Session valid (access token ok)"));
     }
 
@@ -716,7 +729,7 @@ const noNeedToLogin = async (req, res) => {
 
         return res
           .status(200)
-          .cookie("accessToken", newAccessToken, option)
+          .cookie("accessToken", newAccessToken, accessTokenOption)
           .json(
             new ApiResponse(
               200,
