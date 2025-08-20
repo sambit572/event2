@@ -1,9 +1,94 @@
+/**
+ * Search Controller
+ *
+ * Endpoint: GET /api/search
+ *
+ * Description:
+ *   Performs a search for services, categories, and vendors based on a query string and optional filters.
+ *   Uses an aggregation pipeline for efficient filtering, joining, and faceting of results.
+ *
+ * ---
+ * Request Query Parameters:
+ *   - q (string, required): The main search term (minimum 2 characters).
+ *   - location (string, optional): Filter by location (case-insensitive, partial match).
+ *   - minPrice (number, optional): Minimum price filter (services with maxPrice >= minPrice).
+ *   - maxPrice (number, optional): Maximum price filter (services with minPrice <= maxPrice).
+ *   - rating (number, optional): Minimum average rating filter (services with averageRating >= rating).
+ *
+ * Example Request:
+ *   GET /api/search?q=photography&location=Delhi&minPrice=1000&maxPrice=5000&rating=4
+ *
+ * ---
+ * Response Format:
+ *   Status: 200 OK
+ *   {
+ *     success: true,
+ *     message: "Search results for \"photography\"",
+ *     results: {
+ *       services: [
+ *         {
+ *           vendorId: ObjectId,
+ *           serviceCategory: string,
+ *           serviceImage: [...],
+ *           maxPrice: number,
+ *           minPrice: number,
+ *           serviceName: string,
+ *           duration: ...,
+ *           stateLocationOffered: string,
+ *           locationOffered: [...],
+ *           serviceDes: string,
+ *           available: boolean,
+ *           createdAt: date,
+ *           updatedAt: date,
+ *           averageRating: number,
+ *           vendor: {
+ *             _id: ObjectId,
+ *             fullName: string,
+ *             email: string,
+ *             phoneNumber: string,
+ *             profilePicture: string
+ *           }
+ *         },
+ *         ...
+ *       ],
+ *       categories: [
+ *         {
+ *           name: string, // category name
+ *           count: number // number of services in this category
+ *         },
+ *         ...
+ *       ]
+ *     }
+ *   }
+ *
+ * ---
+ * Error Responses:
+ *   - 400 Bad Request: If the 'q' parameter is missing or too short.
+ *     {
+ *       success: false,
+ *       message: "A search query (q) of more than 2 characters is required."
+ *     }
+ *   - 500 Internal Server Error: For unexpected errors during aggregation or database access.
+ *     {
+ *       message: "Something went wrong during the search."
+ *     }
+ *
+ * ---
+ * Implementation Notes:
+ *   - The controller uses an aggregation pipeline with $match, $lookup, $unwind, and $facet for efficient querying.
+ *   - The main search is performed on serviceName, serviceCategory, and vendor.fullName fields (case-insensitive, partial match).
+ *   - The $facet stage returns both a list of matching services (with vendor and average rating info) and a breakdown of categories.
+ *   - Optional filters (location, price, rating) are applied only if provided.
+ *   - Limits are applied to the number of results (20 services, 10 categories).
+ *
+ * This controller is designed for flexibility, performance, and clarity in search results for the frontend.
+ */
 import { Service } from "../../model/vendor/service.model.js";
 
 export const searchController = async (req, res) => {
     try {
         // --- 1. Get and Validate All Query Parameters ---
-        const { q, location, minPrice, maxPrice } = req.query;
+        const { q, location, minPrice, maxPrice, rating } = req.query;
 
         // Validation updated: Only 'q' is mandatory.
         if (!q || q.trim().length < 2) {
@@ -34,8 +119,8 @@ export const searchController = async (req, res) => {
         }
 
         // --- 3. The Main Aggregation Pipeline ---
-        const searchResults = await Service.aggregate([
-            // Stage 1: Initial Filter (Location & Price) - FAST
+        const pipeline = [
+            // Stage 1: Initial Filter (Location & Price)
             { $match: initialMatchStage },
 
             // Stage 2: Join with Vendors
@@ -49,7 +134,7 @@ export const searchController = async (req, res) => {
             },
             { $unwind: "$vendor" },
 
-            // Stage 3: Text Search Filter - SLOW (but now on a smaller dataset)
+            // Stage 3: Text Search Filter
             {
                 $match: {
                     $or: [
@@ -63,14 +148,34 @@ export const searchController = async (req, res) => {
             // Stage 4: Use $facet to create the two separate result buckets
             {
                 $facet: {
-                    // --- Bucket 1: Matched Services ---
                     services: [
-                        // Project the final shape, excluding sensitive vendor fields
+                        // Stage 4a: Join with the CORRECT reviews collection
+                        {
+                            $lookup: {
+                                from: "userreviews", // <-- THE FIX IS HERE
+                                localField: "_id",
+                                foreignField: "serviceId",
+                                as: "reviews"
+                            }
+                        },
+                        // Stage 4b: Calculate the average rating
+                        {
+                            $addFields: {
+                                averageRating: {
+                                    $ifNull: [{ $avg: "$reviews.rating" }, 0]
+                                }
+                            }
+                        },
+                        // Stage 4c: Conditionally apply the rating filter
+                        ...(rating && !isNaN(rating) ? [{
+                            $match: { averageRating: { $gte: parseFloat(rating) } }
+                        }] : []),
+
+                        // Stage 4d: Project the final shape
                         {
                             $project: {
-                                // Include all fields from the service document
                                 vendorId: 1,
-                                serviceCategory: 1, // This was already here, ensuring it's included
+                                serviceCategory: 1,
                                 serviceImage: 1,
                                 maxPrice: 1,
                                 minPrice: 1,
@@ -82,7 +187,7 @@ export const searchController = async (req, res) => {
                                 available: 1,
                                 createdAt: 1,
                                 updatedAt: 1,
-                                // Explicitly include only the safe vendor fields
+                                averageRating: 1, // Include the new field
                                 vendor: {
                                     _id: "$vendor._id",
                                     fullName: "$vendor.fullName",
@@ -92,11 +197,9 @@ export const searchController = async (req, res) => {
                                 }
                             }
                         },
-                        { $limit: 20 } // Add a limit to the services returned
+                        { $limit: 20 }
                     ],
-                    // --- Bucket 2: Matched Categories ---
                     categories: [
-                        // Group to get unique category names from the filtered results
                         {
                             $group: {
                                 _id: "$serviceCategory",
@@ -111,11 +214,12 @@ export const searchController = async (req, res) => {
                             },
                         },
                         { $sort: { count: -1 } },
-                        { $limit: 10 }, // Add a limit to the categories returned
+                        { $limit: 10 },
                     ],
                 }
             }
-        ]);
+        ];
+        const searchResults = await Service.aggregate(pipeline);
 
         // The result is an array with one object containing the facets.
         const results = searchResults[0];
