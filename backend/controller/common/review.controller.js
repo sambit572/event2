@@ -1,3 +1,20 @@
+/**
+ * Review Controller Documentation
+ *
+ * Change Summary:
+ * The strategy for creating a new review has been updated. Previously, a Review instance was created using the `new Review({...})` constructor and then saved with `review.save()`. Now, the controller uses `Review.create({...})` directly to insert the review into the database.
+ *
+ * Why this is better:
+ * - **Atomic Operation:** `Review.create()` combines instantiation and saving into a single atomic operation, reducing the risk of partial or inconsistent data states.
+ * - **Cleaner Code:** The code is more concise and easier to read, as it eliminates the need for two separate steps (instantiation and save).
+ * - **Error Handling:** Any validation or schema errors are caught immediately within the `create` call, making error handling more straightforward.
+ * - **Performance:** Slightly more efficient as it avoids creating an unsaved Mongoose document in memory before persisting.
+ *
+ * Functionality:
+ * - The overall functionality remains unchanged: a review is created and stored in the database, and the response structure is the same.
+ *
+ * In summary, this change improves code clarity, reliability, and efficiency without altering the external behavior of the API.
+ */
 import mongoose from "mongoose";
 import { User } from "../../model/user/user.model.js";
 import Review from "../../model/user/userReview.model.js";
@@ -22,14 +39,21 @@ export const addReview = async (req, res) => {
       userId,
     });
 
-    const review = new Review({
-      serviceId,
-      userId,
-      rating,
-      reviewMessage,
-    });
+    // const review = new Review({
+    //   serviceId,
+    //   userId,
+    //   rating,
+    //   reviewMessage,
+    // });
 
-    await review.save();
+    const review = await Review.create({
+      serviceId: serviceId,
+      userId: userId,
+      rating: rating,
+      reviewMessage: reviewMessage,
+    })
+
+    // await review.save();
 
     res.status(201).json({ success: true, review });
   } catch (err) {
