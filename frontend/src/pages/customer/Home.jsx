@@ -22,7 +22,7 @@ import ImageSlider from "../../components/customer/home/ImageSlider.jsx";
 import Milestones from "../../components/common/aboutus/Milestones";
 import AddsBanner from "../../components/customer/home/AddsBanner.jsx";
 import categories from "../../utils/CatogoryData.jsx";
-
+import StepsSection from "../../components/customer/home/StepsSection.jsx";
 const images = [
   {
     // mobile: shaadiMobile,
@@ -144,7 +144,7 @@ const Home = () => {
           </div>
         ))}
       </div>
-
+      <StepsSection />
       <Milestones />
       <ReviewSlider />
       <FaqSection />

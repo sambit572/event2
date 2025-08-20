@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./ServiceDescription.css";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaRegHeart, FaHeart, FaRegCalendarCheck } from "react-icons/fa6";
 import { BACKEND_URL } from "../../../utils/constant";
 import axios from "axios";
@@ -9,8 +9,9 @@ import { FaBell } from "react-icons/fa6";
 const ServiceDescription = ({ service, onSwitchToLogin }) => {
   const navigate = useNavigate();
   const [isWishlisted, setIsWishlisted] = useState(false);
-  const { categoryId } = useParams();
-  const serviceId = service._id || service.id;
+  const [ratingData, setRatingData] = useState(null);
+
+  const serviceId = service._id || service._id;
 
   const title = service.serviceName || service.title || "Untitled Service";
   const vendorName = service.vendorName || "Unknown Vendor";
@@ -32,7 +33,12 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
   };
 
   const duration = formatDuration(rawDuration);
-
+  const stateLocation = Array.isArray(service.stateLocationOffered)
+    ? service.stateLocationOffered.join(", ")
+    : service.stateLocationOffered ||
+      (service.address
+        ? `${service.address.area}, ${service.address.city}, ${service.address.state} - ${service.address.pincode}`
+        : "Location not provided");
   const location = Array.isArray(service.locationOffered)
     ? service.locationOffered.join(", ")
     : service.locationOffered ||
@@ -71,7 +77,8 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
         const res = await axios.get(`${BACKEND_URL}/wishlist/getwishlist`, {
           withCredentials: true,
         });
-        const found = res.data.some((item) => item.service._id === serviceId);
+        const found = res.data.some((item) => item?.service?._id === serviceId);
+
         setIsWishlisted(found);
       } catch (err) {
         console.error("Error fetching wishlist:", err);
@@ -92,7 +99,22 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
       window.removeEventListener("wishlistUpdated", handleWishlistUpdate);
     };
   }, [serviceId]);
+  useEffect(() => {
+    const fetchRatingSummary = async () => {
+      try {
+        const res = await axios.get(
+          `${BACKEND_URL}/reviews/rating/${serviceId}`
+        );
+        if (res.data.success) {
+          setRatingData(res.data.data);
+        }
+      } catch (err) {
+        console.error("Error fetching rating summary:", err);
+      }
+    };
 
+    if (serviceId) fetchRatingSummary();
+  }, [serviceId]);
   // Toggle wishlist state
   const handleToggle = async () => {
     try {
@@ -144,7 +166,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
       </div>
 
       {/* Main Content */}
-      <Link to={`/service/${categoryId}/${serviceId}`} className="block">
+      <Link to={`/service/${serviceId}`} className="block">
         <h3 className="text-xl font-bold mb-1">{title}</h3>
 
         <div className="flex items-center gap-2 text-sm font-medium text-blue-700 mb-2">
@@ -155,16 +177,24 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
             Event Hosted: 0
           </span>
         </div>
-
+        {/* Location */}
         <p className="text-sm text-black mb-2">{location}</p>
-
+        <p className="text-sm text-black mb-2 mt-0">
+          {stateLocation.toUpperCase()}
+        </p>
         {/* Rating and Reviews */}
-        <div className="flex flex-wrap items-center gap-3 mb-2">
-          <span className="bg-green-600 text-white px-2 py-1 rounded-full text-sm font-semibold">
-            {rating}
-          </span>
-          <span className="text-sm">{reviews} reviews</span>
-        </div>
+        {ratingData ? (
+          <div className="flex items-center gap-2 mb-3">
+            <span className="bg-green-600 text-white px-2 py-1 rounded-full text-sm font-semibold">
+              {ratingData.averageRating.toFixed(1)} ★
+            </span>
+            <span className="text-gray-500 text-sm">
+              ({ratingData.totalReviews} reviews)
+            </span>
+          </div>
+        ) : (
+          <p className="text-gray-500 text-sm mb-3">Loading rating...</p>
+        )}
 
         {/* Pricing */}
         <div className="flex flex-wrap gap-3 items-center mb-1 text-sm">

@@ -6,32 +6,27 @@ import Filter from "../../components/customer/serviceList/Filter.jsx";
 import ServiceCard from "./../../components/customer/serviceList/ServiceCard";
 import { Link } from "react-router-dom";
 import { BACKEND_URL } from "../../utils/constant.js";
-import { setCategoryServices } from "../../redux/categorySlice";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
 
 const ServiceList = ({ onSwitchToLogin }) => {
-  const dispatch = useDispatch();
-  // const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const categoryServices = useSelector(
-    (state) => state.category.categoryServices
-  );
   const { categoryId } = useParams(); // This is the category name passed in URL
 
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filteredServices, setFilteredServices] = useState([]);
+  const [selectedState, setSelectedState] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
+
   useEffect(() => {
-    // console.log("Category ID:", categoryId);
+    console.log("Category ID:", categoryId);
     const fetchServices = async () => {
       try {
         setLoading(true);
         const response = await axios.get(
           `${BACKEND_URL}/common/category/${categoryId}`
         );
-        // console.log("Fetched services1:", response.data.data);
-        dispatch(setCategoryServices(response.data.data)); // save to redux
-        // console.log("My data", response.data.data);
-        // setServices(response.data.data);
+        console.log("Fetched services:", response);
+        setServices(response.data.data);
+        setFilteredServices(response.data.data); // Initialize filtered services
         setLoading(false);
       } catch (error) {
         console.error("Error fetching services:", error);
@@ -41,20 +36,80 @@ const ServiceList = ({ onSwitchToLogin }) => {
 
     fetchServices();
   }, [categoryId]);
-  // console.log("Fetched services:", categoryServices);
+
+  const handleApplyFilters = (filters) => {
+    const results = services.filter((service) => {
+      const serviceMin = Number(service.minPrice) || 0;
+      const serviceMax = Number(service.maxPrice) || 0;
+
+      const priceMatch =
+        serviceMin >= filters.minPrice && serviceMax <= filters.maxPrice;
+
+      const ratingMatch =
+        filters.ratings.length === 0 ||
+        filters.ratings.some((r) => Number(service.rating) >= r);
+
+      const prepTimeDays = Math.ceil((service.duration || 0) / (24 * 60));
+      const durationMatch =
+        !filters.duration || prepTimeDays <= filters.duration;
+
+      // ✅ State match
+      let stateMatch = true;
+      if (filters.state) {
+        if (Array.isArray(service.stateLocationOffered)) {
+          stateMatch = service.stateLocationOffered.some(
+            (state) =>
+              state?.toLowerCase().trim() === filters.state.toLowerCase().trim()
+          );
+        } else {
+          stateMatch =
+            service.stateLocationOffered?.toLowerCase().trim() ===
+            filters.state.toLowerCase().trim();
+        }
+      }
+
+      // ✅ City/District match
+      let cityMatch = true;
+      if (filters.subdistrict && stateMatch) {
+        if (Array.isArray(service.locationOffered)) {
+          cityMatch = service.locationOffered.some(
+            (city) =>
+              city?.toLowerCase().trim() ===
+              filters.subdistrict.toLowerCase().trim()
+          );
+        } else {
+          cityMatch =
+            service.locationOffered?.toLowerCase().trim() ===
+            filters.subdistrict.toLowerCase().trim();
+        }
+      }
+
+      return (
+        priceMatch && ratingMatch && durationMatch && stateMatch && cityMatch
+      );
+    });
+
+    setFilteredServices(results);
+    console.log("Filtered count:", results.length);
+  };
+
+  // Runs when Cancel is clicked in Filter
+  const handleCancelFilters = () => {
+    setFilteredServices(services);
+  };
 
   return (
     <div className="serviceList">
-      <Filter />
+      <Filter onApply={handleApplyFilters} onCancel={handleCancelFilters} />
 
       <div className="serviceCardDetails">
         {loading ? (
           <p>Loading services...</p>
-        ) : categoryServices.length > 0 ? (
-          categoryServices.map((service, idx) => (
+        ) : filteredServices.length > 0 ? (
+          filteredServices.map((service, idx) => (
             <div className="singleServiceCard" key={idx}>
               <Link
-                to={`/service/${categoryId}/${service._id}`}
+                to={`/service/${service._id}`}
                 style={{ textDecoration: "none", color: "inherit" }}
               ></Link>
               <ServiceCard
@@ -64,7 +119,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
             </div>
           ))
         ) : (
-          <p>No services found in this category.</p>
+          <p>No services found matching filters.</p>
         )}
       </div>
     </div>

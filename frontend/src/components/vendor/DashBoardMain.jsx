@@ -198,7 +198,6 @@ function DashBoardMain() {
           >
             <span className="text-xl font-bold">+</span>
             <span className="text-base tracking-wide">Services</span>
-            <span className="text-base tracking-wide">Services</span>
           </button>
         </div>
 

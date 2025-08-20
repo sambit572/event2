@@ -16,6 +16,7 @@ export const createService = async (req, res) => {
       minPrice,
       maxPrice,
       serviceName,
+      stateLocationOffered,
       locationOffered,
       serviceDes,
       days = 0,
@@ -28,12 +29,24 @@ export const createService = async (req, res) => {
       console.error("❌ Validation failed: required fields missing", {
         serviceCategory,
         serviceName,
+        stateLocationOffered,
         locationOffered,
         serviceDes,
       });
       return res
         .status(400)
         .json({ message: "All required fields must be filled" });
+    }
+
+    // ✅ Ensure stateLocationOffered is always an array (multi-location support)
+    const stateLocationsArray = Array.isArray(stateLocationOffered)
+      ? stateLocationOffered
+      : [stateLocationOffered];
+
+    if (stateLocationsArray.length === 0) {
+      return res
+        .status(400)
+        .json({ message: "Please select at least one location" });
     }
 
     // ✅ Ensure locationOffered is always an array (multi-location support)
@@ -97,6 +110,7 @@ export const createService = async (req, res) => {
       minPrice,
       maxPrice,
       serviceName,
+      stateLocationOffered: stateLocationsArray,
       locationOffered: locationsArray, // ✅ store array
       serviceDes,
       duration,
@@ -182,10 +196,16 @@ export const updateService = async (req, res) => {
       serviceCategory = existingService.serviceCategory,
       minPrice = existingService.minPrice,
       maxPrice = existingService.maxPrice,
+      stateLocationOffered = existingService.stateLocationOffered,
       locationOffered = existingService.locationOffered,
       duration = existingService.duration,
       serviceImage = existingService.serviceImage, // ✅ Cloudinary URLs from frontend
     } = req.body;
+
+    // ✅ Ensure locationOffered is always an array
+    const stateLocationsArray = Array.isArray(stateLocationOffered)
+      ? stateLocationOffered
+      : [stateLocationOffered];
 
     // ✅ Ensure locationOffered is always an array
     const locationsArray = Array.isArray(locationOffered)
@@ -215,6 +235,7 @@ export const updateService = async (req, res) => {
         serviceCategory,
         minPrice,
         maxPrice,
+        stateLocationOffered: stateLocationsArray,
         locationOffered: locationsArray,
         duration,
         serviceImage, // ✅ Uses URLs from frontend
@@ -286,9 +307,7 @@ export const updateAvailability = async (req, res) => {
     if (typeof available !== "boolean") {
       return res
         .status(400)
-        .json(
-          new ApiError(400, "`available` must be a boolean (true or false)")
-        );
+        .json(new ApiError(400, "available must be a boolean (true or false)"));
     }
 
     const service = await Service.findOne({

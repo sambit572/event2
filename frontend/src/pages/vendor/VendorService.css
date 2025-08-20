@@ -29,7 +29,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 18px;
 }
 
 .form-divider {
@@ -46,7 +46,7 @@
     width: 95%;
     padding: 35px;
   }
-  
+
   .form-wrapper {
     gap: 30px;
   }
@@ -58,7 +58,7 @@
     padding: 30px;
     margin: 40px auto;
   }
-  
+
   .form-wrapper {
     gap: 25px;
   }
@@ -70,12 +70,12 @@
     padding: 25px;
     margin: 30px auto;
   }
-  
+
   .form-wrapper {
     flex-direction: column;
     gap: 30px;
   }
-  
+
   .form-divider {
     width: 100%;
     height: 2px;
@@ -91,7 +91,7 @@
     margin: 20px auto;
     gap: 25px;
   }
-  
+
   .form-column,
   .form-right {
     gap: 20px;
@@ -152,7 +152,7 @@
 }
 
 .category-input:hover {
-  border-color: #6A4BB1;
+  border-color: #6a4bb1;
 }
 
 .category-input input {
@@ -228,11 +228,11 @@
   .category-input {
     padding: 8px 10px;
   }
-  
+
   .category-input input {
     font-size: 13px;
   }
-  
+
   .clear-icon-img {
     width: 14px;
     height: 14px;
@@ -244,7 +244,7 @@
   .category-input {
     padding: 6px 8px;
   }
-  
+
   .clear-icon-img {
     width: 12px;
     height: 12px;
@@ -363,7 +363,6 @@
   color: white;
 }
 
-
 /* Image Upload Responsive Design */
 @media (max-width: 1024px) {
   .main-preview img {
@@ -378,19 +377,19 @@
     gap: 20px;
     align-items: center;
   }
-  
+
   .main-preview {
     width: 100%;
     display: flex;
     justify-content: center;
   }
-  
+
   .main-preview img {
     max-width: 100%;
     height: 200px;
     width: 100%;
   }
-  
+
   .thumbnail-preview {
     flex-direction: row;
     max-height: none;
@@ -401,7 +400,7 @@
     gap: 12px;
     justify-content: flex-start;
   }
-  
+
   .thumbnail-preview img {
     flex-shrink: 0;
     width: 80px;
@@ -414,17 +413,17 @@
   .preview-container {
     gap: 16px;
   }
-  
+
   .main-preview img {
     height: 180px;
     border-radius: 10px;
   }
-  
+
   .thumbnail-preview {
     gap: 10px;
     padding: 8px 0;
   }
-  
+
   .thumbnail-preview img {
     width: 70px;
     height: 50px;
@@ -435,12 +434,12 @@
   .preview-container {
     gap: 15px;
   }
-  
+
   .main-preview img {
     height: 160px;
     border-radius: 8px;
   }
-  
+
   .thumbnail-preview {
     gap: 8px;
     padding: 6px 0;
@@ -448,25 +447,25 @@
     scrollbar-width: thin;
     scrollbar-color: #9d7bf9 #f7f3ff;
   }
-  
+
   .thumbnail-preview::-webkit-scrollbar {
     height: 6px;
   }
-  
+
   .thumbnail-preview::-webkit-scrollbar-track {
     background: #f7f3ff;
     border-radius: 3px;
   }
-  
+
   .thumbnail-preview::-webkit-scrollbar-thumb {
     background: #9d7bf9;
     border-radius: 3px;
   }
-  
+
   .thumbnail-preview::-webkit-scrollbar-thumb:hover {
     background: #4b2bb3;
   }
-  
+
   .thumbnail-preview img {
     width: 65px;
     height: 45px;
@@ -474,28 +473,27 @@
     /* Add subtle shadow for better depth */
     box-shadow: 0 2px 4px rgba(75, 43, 179, 0.1);
   }
-  
+
   .thumbnail-preview img:hover,
   .thumbnail-preview img.active {
     transform: scale(1.08);
     box-shadow: 0 4px 8px rgba(75, 43, 179, 0.2);
   }
-  
 }
 
 @media (max-width: 400px) {
   .preview-container {
     gap: 12px;
   }
-  
+
   .main-preview img {
     height: 140px;
   }
-  
+
   .thumbnail-preview {
     gap: 6px;
   }
-  
+
   .thumbnail-preview img {
     width: 60px;
     height: 40px;
@@ -508,15 +506,15 @@
   .preview-container {
     gap: 10px;
   }
-  
+
   .main-preview img {
     height: 130px;
   }
-  
+
   .thumbnail-preview {
     padding: 5px 0;
   }
-  
+
   .thumbnail-preview img {
     width: 58px;
     height: 38px;
@@ -531,7 +529,7 @@
   .main-preview img {
     height: 120px;
   }
-  
+
   .thumbnail-preview img {
     width: 55px;
     height: 36px;
@@ -546,17 +544,17 @@
     gap: 20px;
     align-items: flex-start;
   }
-  
+
   .main-preview {
     flex: 2;
   }
-  
+
   .main-preview img {
     max-width: none;
     width: 100%;
     height: 150px;
   }
-  
+
   .thumbnail-preview {
     flex: 1;
     flex-direction: column;
@@ -564,7 +562,7 @@
     overflow-y: auto;
     overflow-x: hidden;
   }
-  
+
   .thumbnail-preview img {
     width: 100%;
     height: 35px;
@@ -646,7 +644,7 @@
     padding: 8px 16px;
     font-size: 13px;
   }
-  
+
   .price-input-fields input {
     font-size: 13px;
     padding: 8px 10px;
@@ -744,7 +742,7 @@
   .duration-inputs {
     justify-content: center;
   }
-  
+
   .duration-field {
     width: 70px;
   }
@@ -756,7 +754,7 @@
     font-size: 13px;
     padding: 8px 10px;
   }
-  
+
   .section-title {
     font-size: 15px;
   }
@@ -768,19 +766,65 @@
     justify-content: center;
     gap: 5px;
   }
-  
+
   .duration-field {
     width: 55px;
     font-size: 12px;
     padding: 6px 8px;
   }
-  
+
   .duration-separator {
     font-size: 14px;
   }
 }
 
 /* ================= Location Section ================= */
+.state-location-dropdown-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.state-dropdown-input {
+  border: 2px solid #7a4fff;
+  border-radius: 8px;
+  background-color: #f7f3ff;
+  padding: 10px 12px;
+  color: #4b2bb3;
+  transition: border-color 0.3s ease;
+}
+
+.state-location-dropdown-list {
+  position: absolute;
+  width: 100%;
+  background: #f9f5ff;
+  border: 1px solid #4b2bb3;
+  border-radius: 6px;
+  margin-top: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.state-location-dropdown-list li {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.state-location-dropdown-list li:hover {
+  background: #ece6ff;
+}
+.state-location-label {
+  font-weight: 600;
+  color: #4b2bb3;
+  font-size: 14px;
+}
+.selected-chip {
+  display: flex;
+  align-items: center;
+  color: rgb(75, 43, 179);
+  padding: 2px 6px;
+  font-size: 14px;
+}
 .location-section {
   display: flex;
   flex-direction: column;
@@ -852,7 +896,7 @@
   border: 2px solid #7a4fff;
   border-top: none;
   border-radius: 0 0 8px 8px;
-  max-height: 180px;
+  height: 180px;
   overflow-y: auto;
   z-index: 1000;
   padding: 0;
@@ -877,11 +921,11 @@
   .dropdown-input {
     padding: 8px 10px;
   }
-  
+
   .dropdown-input input {
     font-size: 13px;
   }
-  
+
   .cross-icon {
     width: 14px;
     height: 14px;
@@ -893,7 +937,7 @@
   .dropdown-input {
     padding: 6px 8px;
   }
-  
+
   .cross-icon {
     width: 12px;
     height: 12px;
@@ -1005,7 +1049,7 @@
     flex-direction: column;
     gap: 15px;
   }
-  
+
   .nav-button {
     width: 100%;
     padding: 12px;

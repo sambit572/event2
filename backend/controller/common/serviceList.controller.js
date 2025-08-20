@@ -37,6 +37,7 @@ export const getServicesByCategory = async (req, res) => {
           maxPrice: 1,
           serviceImage: 1,
           duration: 1,
+          stateLocationOffered: 1,
           locationOffered: 1,
           address: 1,
           vendorId: 1,
@@ -56,7 +57,6 @@ export const getServicesByCategory = async (req, res) => {
   }
 };
 
-
 export const getServiceById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -67,7 +67,9 @@ export const getServiceById = async (req, res) => {
     });
 
     if (!service) {
-      return res.status(404).json({ success: false, message: "Service not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Service not found" });
     }
 
     // Transform the response to include vendorName
@@ -80,7 +82,8 @@ export const getServiceById = async (req, res) => {
     return res.status(200).json({ success: true, data: transformed });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ success: false, message: "Internal Server Error" });
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
   }
 };
-
