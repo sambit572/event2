@@ -77,7 +77,7 @@ const StepsSection = () => {
             isVisible ? "after:w-3/4" : "after:w-0"
           }`} /* This line is the key change */
         >
-          How EventsBridge Works
+          𝐇𝐨𝐰 𝐄𝐯𝐞𝐧𝐭𝐬𝐁𝐫𝐢𝐝𝐠𝐞 𝐖𝐨𝐫𝐤𝐬
         </h2>
         <p className="mt-1 sm:text-base md:text-md font-normal text-[#001f3f] max-w-4xl lg:max-w-6xl mx-auto px-2">
           From Search to Celebration – We’ve Got You Covered. Discover trusted

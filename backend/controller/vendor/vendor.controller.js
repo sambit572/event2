@@ -12,10 +12,23 @@ import crypto from "crypto";
 import nodemailer from "nodemailer";
 import { User } from "../../model/user/user.model.js";
 
-const cookieOptions = {
+const isProd = process.env.NODE_ENV === "production";
+
+const baseOption = {
   httpOnly: true,
-  secure: false,
-  sameSite: "Lax",
+  secure: isProd ? "true" : "false", // true in prod, false in dev
+  sameSite: isProd ? "None" : "Lax",
+  path: "/",
+};
+
+const accessTokenOption = {
+  ...baseOption,
+  expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 day
+};
+
+const refreshTokenOption = {
+  ...baseOption,
+  expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000), // 10 days
 };
 const updateProgress = async (vendorId, step) => {
   await Vendor.findByIdAndUpdate(vendorId, {
@@ -107,8 +120,8 @@ const registerVendor = async (req, res) => {
     // 5. Return success response
     return res
       .status(200)
-      .cookie("vendorAccessToken", accessToken, cookieOptions)
-      .cookie("vendorRefreshToken", refreshToken, cookieOptions)
+      .cookie("vendorAccessToken", accessTokenOption)
+      .cookie("vendorRefreshToken", refreshTokenOption)
       .json(new ApiResponse(200, newVendor, "Vendor registered successfully."));
   } catch (error) {
     console.error("Vendor registration error:", error);
@@ -260,8 +273,8 @@ const loginVendor = async (req, res) => {
   );
   return res
     .status(200)
-    .cookie("vendorAccessToken", accessToken, cookieOptions)
-    .cookie("vendorRefreshToken", refreshToken, cookieOptions)
+    .cookie("vendorAccessToken", accessTokenOption)
+    .cookie("vendorRefreshToken", refreshTokenOption)
     .json(
       new ApiResponse(
         200,
@@ -280,8 +293,8 @@ const vendorLogout = async (req, res) => {
   }
   return res
     .status(200)
-    .clearCookie("vendorAccessToken", cookieOptions)
-    .clearCookie("vendorRefreshToken", cookieOptions)
+    .clearCookie("vendorAccessToken", accessTokenOption)
+    .clearCookie("vendorRefreshToken", refreshTokenOption)
     .json(new ApiResponse(200, {}, "Vendor logged out"));
 };
 
@@ -383,8 +396,8 @@ const vendorSilentLogin = async (req, res) => {
 
   return res
     .status(200)
-    .cookie("vendorAccessToken", accessToken, cookieOptions)
-    .cookie("vendorRefreshToken", refreshToken, cookieOptions)
+    .cookie("vendorAccessToken", accessTokenOption)
+    .cookie("vendorRefreshToken", refreshTokenOption)
     .json(
       new ApiResponse(
         200,

@@ -98,7 +98,7 @@ import mehendi3 from "../assets/service/makeup/mehendi3.jpg";
 import mehendi4 from "../assets/service/makeup/mehendi4.jpg";
 
 import image1 from "../assets/home/categoriesImages/dj_image.png";
-import image2 from "../assets/home/categoriesImages/bass-brand.png";
+import image2 from "../assets/home/categoriesImages/bass-brand.webp";
 import image3 from "../assets/home/categoriesImages/tent_house.jpg";
 import image4 from "../assets/home/categoriesImages/photographer.png";
 import image5 from "../assets/home/categoriesImages/pandit.png";

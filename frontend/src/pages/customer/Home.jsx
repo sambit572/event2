@@ -115,7 +115,7 @@ const Home = () => {
       <AddsBanner />
       {/* <img className="addbanner" src={banner} alt="" /> */}
       <div id="categories" className="categories-head1 mb-[-15px]">
-        <h1 className="align_center categories-head">Categories</h1>
+        <h1 className="align_center categories-head">𝐂𝐀𝐓𝐄𝐆𝐎𝐑𝐈𝐄𝐒</h1>
       </div>
       <p className="category-subheads text-center">
         Explore trusted professionals across categories and simplify your event
