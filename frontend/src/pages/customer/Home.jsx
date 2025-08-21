@@ -2,15 +2,17 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./Home.css";
 
-import shaadiMobile from "../../assets/home/sliderImages/shaadi-mobile.png";
-import shaadiTablet from "../../assets/home/sliderImages/shaadi-tablet.png";
-import shaadiDesktop from "../../assets/home/sliderImages/shaadi-desktop.png";
-import christianMobile from "../../assets/home/sliderImages/christian-mobile.png";
-import christianTablet from "../../assets/home/sliderImages/christian-tablet.png";
-import christianDesktop from "../../assets/home/sliderImages/christian-desktop.png";
-import cateringMobile from "../../assets/home/sliderImages/catering-mobile.png";
-import cateringTablet from "../../assets/home/sliderImages/catering-tablet.png";
-import cateringDesktop from "../../assets/home/sliderImages/catering-desktop.png";
+import slider_1 from "../../assets/home/sliderImages/slider_1.jpg";
+import slider_2 from "../../assets/home/sliderImages/slider_2.jpeg";
+import slider_3 from "../../assets/home/sliderImages/slider_3.jpeg";
+import slider_4 from "../../assets/home/sliderImages/slider_4.jpeg";
+import slider_5 from "../../assets/home/sliderImages/slider_5.jpeg";
+import slider_6 from "../../assets/home/sliderImages/slider_6.jpeg";
+import slider_7 from "../../assets/home/sliderImages/slider_7.jpeg";
+import slider_8 from "../../assets/home/sliderImages/slider_8.jpeg";
+import slider_9 from "../../assets/home/sliderImages/slider_9.jpeg";
+import slider_10 from "../../assets/home/sliderImages/slider_10.jpeg";
+import slider_11 from "../../assets/home/sliderImages/slider_11.jpeg";
 
 import CategoryCard from "../../components/customer/home/CategoryCard.jsx";
 import ReviewSlider from "../../components/customer/home/ReviewSlider.jsx";
@@ -20,22 +22,44 @@ import ImageSlider from "../../components/customer/home/ImageSlider.jsx";
 import Milestones from "../../components/common/aboutus/Milestones";
 import AddsBanner from "../../components/customer/home/AddsBanner.jsx";
 import categories from "../../utils/CatogoryData.jsx";
-
+import StepsSection from "../../components/customer/home/StepsSection.jsx";
 const images = [
   {
-    mobile: shaadiMobile,
-    tablet: shaadiTablet,
-    desktop: shaadiDesktop,
+    // mobile: shaadiMobile,
+    // tablet: shaadiTablet,
+    desktop: slider_1,
   },
   {
-    mobile: christianMobile,
-    tablet: christianTablet,
-    desktop: christianDesktop,
+    // mobile: christianMobile,
+    // tablet: christianTablet,
+    desktop: slider_2,
   },
   {
-    mobile: cateringMobile,
-    tablet: cateringTablet,
-    desktop: cateringDesktop,
+    desktop: slider_3,
+  },
+  {
+    desktop: slider_4,
+  },
+  {
+    desktop: slider_5,
+  },
+  {
+    desktop: slider_6,
+  },
+  {
+    desktop: slider_7,
+  },
+  {
+    desktop: slider_8,
+  },
+  {
+    desktop: slider_9,
+  },
+  {
+    desktop: slider_10,
+  },
+  {
+    desktop: slider_11,
   },
 ];
 const Home = () => {
@@ -90,8 +114,8 @@ const Home = () => {
       <ImageSlider images={images} />
       <AddsBanner />
       {/* <img className="addbanner" src={banner} alt="" /> */}
-      <div className="categories-head1 mb-[-15px]">
-        <h1 className="align_center categories-head">Categories</h1>
+      <div id="categories" className="categories-head1 mb-[-15px]">
+        <h1 className="align_center categories-head">𝐂𝐀𝐓𝐄𝐆𝐎𝐑𝐈𝐄𝐒</h1>
       </div>
       <p className="category-subheads text-center">
         Explore trusted professionals across categories and simplify your event
@@ -120,7 +144,7 @@ const Home = () => {
           </div>
         ))}
       </div>
-
+      <StepsSection />
       <Milestones />
       <ReviewSlider />
       <FaqSection />

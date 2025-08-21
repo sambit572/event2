@@ -41,7 +41,6 @@ import VendorResetPassword from "./pages/vendor/VendorResetPass.jsx";
 import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
 import AddServiceInDashboard from "./components/vendor/AddServiceInDashboard.jsx";
 
-// Common
 import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 
@@ -53,7 +52,10 @@ import { setVendor } from "./redux/VendorSlice.js";
 import ScrollToTop from "./components/common/ScrollToTop.jsx";
 import AddToCart from "./components/customer/YourCart/AddToCart.jsx";
 import DashboardEnforcement from "./utils/DashboardEnforcement.jsx";
-
+import BookingSuccess from "./pages/common/BookingSuccess.jsx";
+import PrivacyPolicy from "./components/common/PrivacyPolicy.jsx";
+import RefundPolicy from "./components/common/RefundPolicy.jsx";
+import TermsAndConditions from "./components/common/TermsAndConditions.jsx";
 //Feedback
 import Feedback from "./pages/common/Feedback.jsx";
 import FaqSection from "./components/customer/home/FaqSection.jsx";
@@ -64,10 +66,12 @@ import OrderSummary from "./components/customer/YourCart/orderSummary.jsx";
 import { BACKEND_URL } from "./utils/constant.js";
 import ComingSoon from "./utils/ComingSoon.jsx";
 
+import MyReports from "./pages/common/myreports/MyReports.jsx";
 const App = () => {
   const location = useLocation();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showVendorRegisterModal, setShowVendorRegisterModal] = useState(false);
   const [showVendorLoginModal, setShowVendorLoginModal] = useState(false);
   const vendor = useSelector((state) => state.vendor.vendor);
@@ -174,10 +178,15 @@ const App = () => {
           onOpenRegister={handleOpenRegister}
           onOpenVendorRegister={handleOpenVendorRegister}
           onOpenVendorLogin={handleOpenVendorLogin}
+          setShowPasswordModal={setShowPasswordModal}
         />
       )}
 
-      <main className="custom-mt mt-[50px]  sm:mt-[70px] md:mt-[60px]">
+      {showPasswordModal && (
+        <VendorChangePassword onClose={() => setShowPasswordModal(false)} />
+      )}
+
+      <main className="custom-mt mt-[52px]  sm:mt-[52px] md:mt-[62px]">
         {vendor?._id && <VendorSocketManager />}
         <Routes>
           {/* ... All your <Route> components ... */}
@@ -188,7 +197,7 @@ const App = () => {
           />
           <Route path="/reviews" element={<ReviewSlider />} />
           <Route
-            path="/service/:serviceId"
+            path="/service/:categoryId/:serviceId"
             element={<ServiceDetails onSwitchToLogin={handleOpenLogin} />}
           />
           <Route
@@ -267,8 +276,18 @@ const App = () => {
           <Route path="/feedback" element={<Feedback />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="*" element={<ErrorPage />} />
-          <Route path="/order-summary/:userDetailsId" element={<OrderSummary />} />
-
+          <Route path="/report" element={<MyReports />} />
+          <Route path="/booking-success" element={<BookingSuccess />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/refund-policy" element={<RefundPolicy />} />
+          <Route
+            path="/terms-and-conditions"
+            element={<TermsAndConditions />}
+          />
+          <Route
+            path="/order-summary/:userDetailsId"
+            element={<OrderSummary />}
+          />
           <Route path="/coming-soon" element={<ComingSoon />} />
         </Routes>
       </main>

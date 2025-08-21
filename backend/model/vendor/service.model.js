@@ -31,6 +31,10 @@ const serviceSchema = new Schema(
       type: Number,
       required: true,
     },
+    stateLocationOffered: {
+      type: [String],
+      required: true,
+    },
     locationOffered: {
       type: [String],
       required: true,

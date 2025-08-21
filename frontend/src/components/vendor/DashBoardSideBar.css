@@ -348,6 +348,33 @@ color: #ffc107;
 .custom-font-active {
   font-size: 15px;
 }
+
+.change-password {
+  width: 100%;
+  border-radius: 10px;
+  border: none;
+  position: relative;
+  padding: 5px;
+  top: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 16px;
+  font-family: Montserrat, sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.ch-password:hover {
+  background: rgba(255, 255, 255, 0.2);
+  font-weight: 600;
+}
+
+.ch-password:active {
+  color: rgb(75, 75, 184);
+  transform: translateY(1px);
+}
+
 @media (max-width: 1024px) {
   .custom-li {
     padding: 3px;
@@ -385,7 +412,7 @@ color: #ffc107;
 @media (max-width: 768px) {
   .dash-sidebar {
     position: absolute;
-    top: 0;
+    top: 60px;
     left: 0;
     bottom: 0;
     width: 250px;
@@ -410,7 +437,7 @@ color: #ffc107;
   }
 
   .dashboard-sidebar-content {
-    margin-top: -16px;
+    margin-top: -20px;
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -419,8 +446,9 @@ color: #ffc107;
   }
 
   .dasgboardHeading {
-    text-align: end;
-    margin-right: 10px;
+    text-align: center;
+    margin-right: 20px;
+    margin-top: 45px;
   }
 
   .dash-sidebar.open {

@@ -205,6 +205,21 @@
   gap: 20px;
   justify-content: start;
 }
+@keyframes bellShake {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(-30deg); }
+  50% { transform: rotate(30deg); }
+  75% { transform: rotate(-30deg); }
+  100% { transform: rotate(0deg); }
+}
+
+
+.animate-bell {
+  animation: bellShake 0.6s ease-in-out infinite;
+  display: inline-block;
+}
+
+
 @media (max-width: 768px) {
   .section_one {
     flex-direction: column;

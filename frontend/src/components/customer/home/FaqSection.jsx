@@ -63,7 +63,7 @@ const FaqSection = () => {
   );
   return (
     <div className="faq-container">
-      <h2 className="faq-title">Explore Our FAQs </h2>
+      <h2 className="faq-title">𝐄𝐱𝐩𝐥𝐨𝐫𝐞 𝐎𝐮𝐫 𝐅𝐀𝐐𝐬</h2>
       <h3 className="faq-subtitle">
         Bridging the Gap Between You and Clarity{" "}
       </h3>

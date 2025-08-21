@@ -87,13 +87,22 @@ const Wishlist = () => {
                     <div className="flex items-center gap-2 mb-1">
                       <div className="bg-green-700 text-white px-2 py-1 rounded-lg flex items-center gap-1">
                         <span className="text-sm font-semibold">
-                          {item.service.rating !== undefined ? item.service.rating : 0}
+                          {item.service.rating !== undefined
+                            ? item.service.rating
+                            : 0}
                         </span>
                         <FaStar className="text-white-500" />
                       </div>
                     </div>
-                    <p className="text-red-600 text-sm">
-                      Service {item.service.available ? "Available" : "Not Available"}
+                    <p
+                      className={`text-sm ${
+                        item.service.available
+                          ? "text-green-600"
+                          : "text-red-600"
+                      }`}
+                    >
+                     
+                      {item.service.available ? null : "Out Of Service"}
                     </p>
                     <p className="text-gray-600 text-sm">
                       {service.serviceDes}

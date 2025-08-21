@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import UserSideBar from "./UserSideBar.jsx";
 import PasswordInput from "../../../utils/PasswordInput.jsx";
 import axios from "axios";
 import { BACKEND_URL } from "../../../utils/constant.js";
 import "./Profile.css";
+import Button from "./../../vendor/register/VendorButton";
+import { MdReportGmailerrorred } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 function Profile({ onProfileChange }) {
+  const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
@@ -20,6 +24,8 @@ function Profile({ onProfileChange }) {
     phoneNo: "",
     profilePhoto: "",
   });
+
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
   //  Sync profile image and other updates to navbar if needed
   const handleProfileUpdate = (updatedProfile) => {
@@ -51,7 +57,10 @@ function Profile({ onProfileChange }) {
       );
 
       if (response.status === 200) {
-        alert("Password changed successfully");
+        setShowSuccessPopup(true);
+        setTimeout(() => {
+          setShowSuccessPopup(false);
+        }, 3000);
         setShowPasswordModal(false);
         setOldPassword("");
         setNewPassword("");
@@ -99,6 +108,30 @@ function Profile({ onProfileChange }) {
 
   return (
     <div className="profile_section  relative w-full  flex bg-white ">
+      {showSuccessPopup && (
+        <div
+            style={{
+              position: "fixed",
+              top: "115px",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              padding: "20px 32px",
+              borderRadius: "8px",
+              background: "rgba(255, 255, 255, 0.1)",
+              boxShadow: "0 8px 32px rgba(31, 38, 135, 0.37)",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
+              border: "2px solid black",
+              fontWeight: "bold",
+              color: "black",
+              zIndex: 9999,
+              textAlign: "center",
+              animation: "popIn 0.3s ease-out forwards",
+            }}
+          >
+            You password updated successfully!
+          </div>
+      )}
       <div className="profile-sidebar-fixed">
         <button
           className={`profile-hamburger ${isSidebarOpen ? "open" : ""}`}
@@ -155,6 +188,7 @@ function Profile({ onProfileChange }) {
                 >
                   Submit
                 </button>
+
                 <button
                   onClick={() => {
                     setShowPasswordModal(false);
@@ -217,13 +251,13 @@ function Profile({ onProfileChange }) {
                   <p className="text-black">
                     Patia, Bhubaneswar, Odisha, India
                   </p>
-                  <p className="text-sm text-black mt-[-20px] mb-[8px]">
+                  <p className="text-sm text-black  ">
                     Booking Date: 10/06/2025
                   </p>
                   <p className="text-sm text-black">Event Date: 10/06/2025</p>
                   <a
                     href="#payment-details"
-                    className="text-[#001F3F] underline font-medium "
+                    className="text-[#001F3F] underline font-medium hover:text-blue-600"
                   >
                     Payment Details
                   </a>
@@ -237,6 +271,15 @@ function Profile({ onProfileChange }) {
                   <p className="text-yellow-600 font-semibold mt-2">
                     Payment Pending
                   </p>
+                  <button
+                    onClick={() =>
+                      navigate("/report", { state: { selectedType: "user" } })
+                    }
+                    className="align_center w-24 justify-evenly bg-[#001F3F] text-white p-2 font-semibold rounded-lg shadow mt-2"
+                  >
+                    <MdReportGmailerrorred />
+                    Report
+                  </button>
                 </div>
               </div>
             </div>

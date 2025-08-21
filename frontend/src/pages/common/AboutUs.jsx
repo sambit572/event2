@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { FiChevronDown } from "react-icons/fi";
-import AboutUs_1 from "../../assets/aboutus/aboutus_1.jpeg";
+import AboutUs_1 from "../../assets/aboutus/about-image.png";
 import Aboutus_2 from "../../assets/aboutus/aboutus_2.png";
 import Design from "../../components/common/aboutus/Design";
 import ServiceFeature from "./ServiceFeature";
@@ -49,29 +49,29 @@ const AboutUs = () => {
   return (
     <div className="bg-transparent text-gray-800 px-4 sm:px-6 md:px-10 py-10 space-y-20">
       {/* First Section */}
-      <div className="flex flex-col lg:flex-row items-center gap-10">
+      <div className="flex flex-col lg:flex-col items-center gap-10">
         {/* Left - Image Section */}
-        <div className="w-full lg:w-1/2">
+        <div className="w-full -mt-11">
           <img
             src={AboutUs_1}
             alt="About Eventsbridge Platform"
-            className="w-full h-[520px] object-cover mt-15 rounded-xl border border-gray-200 shadow-lg"
+            className="w-full h-auto  max-h-[550px] object-fill mt-5 rounded-xl border border-gray-200 shadow-lg"
           />
         </div>
 
         {/* Right - Textual Content */}
-        <div className="w-full lg:w-1/2 space-y-5">
-          <h2 className="text-3xl font-bold text-[#001f3f]">
-            Information About Eventsbridge
+        <div className="w-full space-y-5">
+          <h2 className="text-2xl text-center sm:text-3xl font-bold text-[#001f3f]">
+            About Eventsbridge
           </h2>
-          <p className="text-gray-700 text-base md:text-lg">
+          <p className="text-gray-700 text-base sm:text-lg">
             Eventsbridge is a cutting-edge digital platform created to
             revolutionize the way events are planned and experienced. Whether
             you're hosting a wedding, birthday, corporate function, or cultural
             ceremony — our platform connects customers with the most reliable
             and talented vendors in the industry.
           </p>
-          <p className="text-gray-700 text-sm md:text-base">
+          <p className="text-gray-700 text-sm sm:text-base">
             The platform is designed to remove the stress and guesswork from
             event management. With our intuitive interface, you can search,
             compare, and book vendors across multiple categories — all from one

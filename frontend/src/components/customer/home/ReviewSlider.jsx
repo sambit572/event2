@@ -35,11 +35,13 @@ const ReviewSlider = () => {
       try {
         setLoading(true);
         console.log("Fetching reviews from:", `${BACKEND_URL}/reviews/all`);
-        
+
         // Fetch ALL reviews first to debug
-        const res = await axios.get(`${BACKEND_URL}/reviews/all?page=1&limit=50`);
+        const res = await axios.get(
+          `${BACKEND_URL}/reviews/all?page=1&limit=50`
+        );
         console.log("Raw API response:", res.data);
-        
+
         const fetched = res.data.reviews || [];
         console.log("Fetched reviews:", fetched);
 
@@ -58,15 +60,18 @@ const ReviewSlider = () => {
           })
           .map((r) => {
             console.log("Processing review:", r);
-            
+
             // Use the enriched data from backend
-            const name = r.userName || r.userEmail?.split("@")[0] || "Anonymous User";
-            const initials = r.initials || name
-              .split(" ")
-              .map((n) => n[0])
-              .join("")
-              .toUpperCase()
-              .slice(0, 2);
+            const name =
+              r.userName || r.userEmail?.split("@")[0] || "Anonymous User";
+            const initials =
+              r.initials ||
+              name
+                .split(" ")
+                .map((n) => n[0])
+                .join("")
+                .toUpperCase()
+                .slice(0, 2);
 
             const formatted = {
               userName: name,
@@ -74,9 +79,9 @@ const ReviewSlider = () => {
               reviewMessage: r.reviewMessage,
               profileImage: r.profileImage || null,
               initials,
-              reviewType: r.reviewType
+              reviewType: r.reviewType,
             };
-            
+
             console.log("Formatted review:", formatted);
             return formatted;
           });
@@ -101,11 +106,11 @@ const ReviewSlider = () => {
 
   return (
     <div className="review_section">
-      <h1 className="heading_review">OUR REVIEWS</h1>
+      <h1 className="heading_review">𝐎𝐔𝐑 𝐑𝐄𝐕𝐈𝐄𝐖𝐒</h1>
       <h3 className="subheadings">Celebrated by Many, Loved by All.</h3>
 
       {/* Debug info */}
-     {/*  <div className="text-center mb-4 p-4 bg-gray-100 rounded">
+      {/*  <div className="text-center mb-4 p-4 bg-gray-100 rounded">
         <strong>Debug Info:</strong><br/>
         Total Reviews: {reviews.length}<br/>
         Loading: {loading ? "Yes" : "No"}<br/>
@@ -116,7 +121,7 @@ const ReviewSlider = () => {
       <div className="review_wrapper" ref={containerRef}>
         {loading ? (
           <div className="text-center py-8">
-            <p className ="decoration-sky-950">Loading reviews...</p>
+            <p className="decoration-sky-950">Loading reviews...</p>
           </div>
         ) : error ? (
           <div className="text-center py-8">
@@ -128,7 +133,13 @@ const ReviewSlider = () => {
             style={{ transform: `translateX(-${offset}px)` }}
           >
             {duplicatedReviews.map((review, index) => (
-              <div key={`${review.userName}-${review.reviewMessage.slice(0,10)}-${index}`} className="review_card">
+              <div
+                key={`${review.userName}-${review.reviewMessage.slice(
+                  0,
+                  10
+                )}-${index}`}
+                className="review_card"
+              >
                 {review.profileImage ? (
                   <img
                     src={review.profileImage}
@@ -152,7 +163,9 @@ const ReviewSlider = () => {
                   ))}
                 </div>
                 <p>{review.reviewMessage}</p>
-                <small className="text-gray-500">Type: {review.reviewType}</small>
+                <small className="text-gray-500">
+                  Type: {review.reviewType}
+                </small>
               </div>
             ))}
           </div>

@@ -26,6 +26,7 @@
 }
 
 .similar-card:hover {
+  cursor: pointer;
   transform: scale(1.04);
   box-shadow: 0 12px 26px rgba(0, 0, 0, 0.15);
 }
@@ -43,6 +44,7 @@
 .similar-title {
   font-size: 16px;
   font-weight: 500;
+  /* text-align: center; */
   /* margin-top: 12px; */
   color: #001f3f;
 }
@@ -127,27 +129,11 @@
 }
 
 /* Hover only when not wishlisted */
-.viewBtn:not(.wishlisted):hover {
-  background-color: red;
-  color: white;
-  border: red;
+.viewBtn:hover {
+  background-color: rgb(217, 181, 50) !important;
+  color: black !important;
+  border: 1px solid !important;
 }
-
-.viewBtn:not(.wishlisted):hover .wishIcon {
-  color: white;
-}
-
-/* Wishlisted style */
-.viewBtn.wishlisted {
-  border: 1px solid red;
-  background-color: white;
-  color: #001f3f;
-}
-
-.viewBtn.wishlisted .wishIcon {
-  color: red;
-}
-
 /* ---------- Responsive Layout ---------- */
 
 /* Medium screens (tablets) — 3 cards per row */

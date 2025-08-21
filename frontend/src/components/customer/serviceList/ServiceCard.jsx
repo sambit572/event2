@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import ServiceDescription from './ServiceDescription';
 
 const ServiceCard = ({ service, onSwitchToLogin }) => {
-const navigate = useNavigate();
+ const navigate = useNavigate();
 if (!service) return null;
-
+const isAvailable = service.available;
+const { categoryId } = useParams();
 const images = service.serviceImage || [];
 const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -86,6 +87,55 @@ setCurrentIndex(idx);
 </div>
 </div>
 );
+  return (
+    <div className={`totalService ${!isAvailable ? "out-of-service" : ""}`}>
+      {!isAvailable && (
+        <div className="out-of-service-label">Out of Service</div>
+      )}
+
+      <div className="serviceCards">
+        <div
+          className="serviceCardImg"
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+        >
+          <Link to={`/service/${categoryId}/${service._id}`} className="link">
+            {Array.isArray(img) && img.length > 0 ? (
+              <img src={img[currentIndex]} alt="Main preview" />
+            ) : (
+              <div className="no-image">No image available</div>
+            )}
+          </Link>
+
+          {hovered && (
+            <>
+              <button className="navArrow left" onClick={prevImage}>
+                <FaChevronLeft />
+              </button>
+              <button className="navArrow right" onClick={nextImage}>
+                <FaChevronRight />
+              </button>
+            </>
+          )}
+        </div>
+        {/* </Link> */}
+
+        <div className="thumbnailColumn">
+          {Array.isArray(img) &&
+            img.map((thumb, idx) => (
+              <img
+                key={idx}
+                src={thumb}
+                alt={`thumb-${idx}`}
+                className={idx === currentIndex ? "activeThumb" : ""}
+                onClick={() => setCurrentIndex(idx)}
+              />
+            ))}
+        </div>
+      </div>
+      <ServiceDescription service={service} onSwitchToLogin={onSwitchToLogin} />
+    </div>
+  );
 };
 
 export default ServiceCard;

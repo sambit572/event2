@@ -140,7 +140,7 @@ export const getSingleCart = async (req, res) => {
       model: "Service",
     });
 
-    console.log("Negotiation item found:", item);
+    
 
     if (!item) {
       return res.status(404).json(new ApiError(404, "Negotiation not found for given user details."));

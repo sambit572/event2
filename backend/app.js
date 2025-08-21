@@ -8,13 +8,14 @@ import { fileURLToPath } from "url";
 import userRouter from "./routes/user/user.routes.js";
 import { vendor_router } from "./routes/vendor/vendor.routes.js";
 import { errorHandler } from "./middleware/error.middleware.js";
-import reviewRoutes from "./routes/review.routes.js";
+import reviewRoutes from "./routes/common/review.routes.js"; 
 import test_router from "./routes/agenda/agenda.routes.js";
 import startAgenda from "./agenda/startAgenda.js";
 import "./cronjobs/startCronjobs.js";
 import feedbackRoutes from "./routes/common/feedback.routes.js";
 import serviceRoutes from "./routes/common/serviceList.routes.js";
-import  wishlistRoutes  from "./routes/user/wishlist.routes.js"; // Import wishlist routes
+import reportRoutes from "./routes/common/report.routes.js";
+import wishlistRoutes from "./routes/user/wishlist.routes.js"; // Import wishlist routes
 import cartRouter from "./routes/user/cart.routes.js";
 
 const app = express();
@@ -54,13 +55,15 @@ app.use(cookieParser());
 })();
 
 // ✅ API Routes
+app.use("/api/reports", reportRoutes);
+
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/user", userRouter);
 app.use("/api/vendors", vendor_router);
 app.use("/api/test", test_router);
 app.use("/api/feedback", feedbackRoutes);
 app.use("/api/common", serviceRoutes);
-app.use("/api/wishlist", wishlistRoutes);// Use wishlist routes
+app.use("/api/wishlist", wishlistRoutes); // Use wishlist routes
 app.use("/api/cart", cartRouter);
 // ✅ Health Check Route
 app.get("/", (req, res) => {

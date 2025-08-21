@@ -18,16 +18,22 @@ function DashBoardMain() {
   const [activeTab, setActiveTab] = useState("services");
   const [popupData, setPopupData] = useState(null);
 
+  const [vendorShowPasswordModal, setVendorShowPasswordModal] = useState(false); // ✅ Added
+  const [oldPassword, setOldPassword] = useState(""); // ✅ Added
+  const [newPassword, setNewPassword] = useState(""); // ✅ Added
+  const [confirmPassword, setConfirmPassword] = useState(""); // ✅ Added
+  const [errorMsg, setErrorMsg] = useState(""); // ✅ Added
+
   const [confirmPasswordModal, setConfirmPasswordModal] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
   const [password, setPassword] = useState("");
 
-  // 🔁 Called when "Add Service" is clicked
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false); // ✅ Success popup state
+
   const handleOpenAddService = () => {
     navigate("/vendor/services/addServices");
   };
 
-  // 🔐 Handle password confirmation
   const handleConfirmPassword = async () => {
     try {
       const res = await axios.post(
@@ -37,7 +43,7 @@ function DashBoardMain() {
       );
 
       if (res.data.success) {
-        setIsVerified(true); // 👉 Triggers update in DashBoardSideBar
+        setIsVerified(true);
         setConfirmPasswordModal(false);
         console.log("✅ Password correct.");
       } else {
@@ -49,7 +55,38 @@ function DashBoardMain() {
     }
   };
 
-  // 📶 Socket setup
+  // ✅ Handle Password Change
+  const handlePasswordChangeSubmit = async () => {
+    setErrorMsg("");
+
+    if (newPassword !== confirmPassword) {
+      return setErrorMsg("Passwords do not match");
+    }
+
+    try {
+      const response = await axios.post(
+        `${BACKEND_URL}/vendors/change-password`,
+        { oldPassword, newPassword },
+        { withCredentials: true }
+      );
+
+      if (response.status === 200) {
+        setShowSuccessPopup(true); // ✅ Show popup
+        setTimeout(() => setShowSuccessPopup(false), 3000); // ✅ Hide after 3 sec
+        setVendorShowPasswordModal(false);
+        setOldPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+      }
+    } catch (error) {
+      console.error("Password change error:", error);
+      const backendMsg =
+        error.response?.data?.message ||
+        "Failed to change password. Try again.";
+      setErrorMsg(backendMsg);
+    }
+  };
+
   useEffect(() => {
     socket.emit("vendor-online", vendor?._id);
 
@@ -73,7 +110,6 @@ function DashBoardMain() {
     };
   }, []);
 
-  // 💻 Sidebar responsive toggle
   useEffect(() => {
     const handleResize = () => {
       setIsSidebarOpen(window.innerWidth > 768);
@@ -97,6 +133,32 @@ function DashBoardMain() {
 
   return (
     <div className="dashboard-container-box">
+      {/* ✅ Success Popup */}
+      {showSuccessPopup && (
+        <div
+          style={{
+            position: "fixed",
+            top: "115px",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            padding: "20px 32px",
+            borderRadius: "8px",
+            background: "rgba(255, 255, 255, 0.1)",
+            boxShadow: "0 8px 32px rgba(31, 38, 135, 0.37)",
+            backdropFilter: "blur(10px)",
+            WebkitBackdropFilter: "blur(10px)",
+            border: "2px solid black",
+            fontWeight: "bold",
+            color: "black",
+            zIndex: 9999,
+            textAlign: "center",
+            animation: "popIn 0.3s ease-out forwards",
+          }}
+        >
+          You password updated successfully!
+        </div>
+      )}
+
       <button
         className={`dashboard-hamburger ${isSidebarOpen ? "open" : ""}`}
         onClick={() => setIsSidebarOpen((prev) => !prev)}
@@ -108,7 +170,8 @@ function DashBoardMain() {
         isOpen={isSidebarOpen}
         isVerified={isVerified}
         setConfirmPasswordModal={setConfirmPasswordModal}
-        onSaveComplete={() => setIsVerified(false)} // ✅ Reset flag after update
+        setVendorShowPasswordModal={setVendorShowPasswordModal} // ✅ Added to trigger password modal
+        onSaveComplete={() => setIsVerified(false)}
       />
 
       <div className="main-contain">
@@ -117,9 +180,9 @@ function DashBoardMain() {
         <div className="relative w-full">
           <button
             className="absolute top-[-40px] right-4 md:top-[-70px] md:right-[10px] 
-            flex items-center justify-center gap-2 
-            rounded-[10px] bg-[#2251c9] font-semibold text-[#fff] px-4 py-2
-            mb-4 sm:mb-0"
+  flex items-center justify-center gap-2 
+  rounded-[10px] bg-[#2251c9] font-semibold text-[#fff] px-4 py-2
+  mb-4 sm:mb-0"
             onClick={handleOpenAddService}
           >
             <span className="text-xl font-bold">+</span>
@@ -135,7 +198,66 @@ function DashBoardMain() {
           )}
         </div>
 
-        {/* Password Confirmation Modal */}
+        {/* ✅ Password Change Modal */}
+        {vendorShowPasswordModal && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <h3 className="text-lg font-semibold mb-4">Change Password</h3>
+              <PasswordInput
+                name="oldPassword"
+                type="password"
+                placeholder="Current Password"
+                value={oldPassword}
+                onChange={(e) => setOldPassword(e.target.value)}
+              />
+              <PasswordInput
+                name="newPassword"
+                type="password"
+                placeholder="New Password"
+                value={newPassword}
+                onChange={(e) => {
+                  setErrorMsg("");
+                  setNewPassword(e.target.value);
+                }}
+              />
+              <PasswordInput
+                name="confirmPassword"
+                type="password"
+                placeholder="Confirm Password"
+                value={confirmPassword}
+                onChange={(e) => {
+                  setErrorMsg("");
+                  setConfirmPassword(e.target.value);
+                }}
+              />
+              {errorMsg && (
+                <p className="text-red-500 mt-2 text-sm">{errorMsg}</p>
+              )}
+              <div className="mt-4 flex justify-center gap-4">
+                <button
+                  onClick={handlePasswordChangeSubmit}
+                  className="bg-purple-700 text-white px-4 py-2 rounded"
+                >
+                  Submit
+                </button>
+                <button
+                  onClick={() => {
+                    setVendorShowPasswordModal(false);
+                    setOldPassword("");
+                    setNewPassword("");
+                    setConfirmPassword("");
+                    setErrorMsg("");
+                  }}
+                  className="bg-gray-300 px-4 py-2 rounded"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Confirm Password Modal */}
         {confirmPasswordModal && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
@@ -167,7 +289,7 @@ function DashBoardMain() {
           </div>
         )}
 
-        {/* Negotiation Popup */}
+        {/* Booking Negotiation Popup */}
         {popupData && (
           <div className="popup-overlayfinal">
             <div className="popup-container">
@@ -217,7 +339,6 @@ function DashBoardMain() {
                       ).toLocaleDateString()}`}
                 </p>
               </div>
-
               <div className="popup-actions">
                 <button
                   className="btn-accept"

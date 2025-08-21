@@ -1,0 +1,199 @@
+.rp-container {
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Center vertically if needed */
+  padding: 60px 20px; /* More breathing room */
+  background-color: #fafafa;
+}
+
+.rp-card {
+  width: 75%;
+  background: #fff;
+  font-family: "Segoe UI", "Roboto", "Helvetica Neue", Arial, "Liberation Sans",
+    sans-serif;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  padding: 40px;
+  margin: 20px; /* Space from other elements */
+  font-size: 17px;
+  line-height: 1.7;
+  color: #222;
+}
+
+.rp-header {
+  text-align: center; /* Center title & meta */
+  margin-bottom: 20px;
+}
+
+.rp-header h1 {
+  margin-bottom: 25px;
+  font-size: 2.25rem;
+  color: var(--accent);
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: underline;
+}
+.rp-section h2 {
+  margin: 12px 0;
+  font-size: 1.15rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.rp-meta {
+  font-size: 14px;
+  color: #777;
+  display: flex;
+  justify-content: center; /* Align in center */
+  align-items: center;
+}
+
+.rp-dot {
+  margin: 0 8px;
+}
+
+.rp-section {
+  margin-top: 20px;
+}
+
+.rp-section p {
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+.rp-list {
+  list-style: disc;
+  padding-left: 25px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.rp-list li {
+  margin-bottom: 20px;
+  line-height: 1.6;
+  margin-top: 20px;
+}
+
+.rp-footer {
+  border-top: 1px solid #eee;
+  margin-top: 30px;
+  padding-top: 15px;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+}
+
+/* Base styles remain the same */
+
+/* 1024 x 1366 */
+@media (width: 1024px) and (height: 1366px) {
+  .rp-container {
+    height: calc(120vh - 50px);
+    padding: 50px 20px;
+    margin-top: -200px;
+  }
+}
+
+/* 1024 x 600 */
+@media (width: 1024px) and (height: 600px) {
+  .rp-container {
+    height: calc(200vh - 30px);
+    padding: 30px 15px;
+  }
+}
+
+/* 912px width */
+@media (width: 912px) {
+  .rp-container {
+    height: calc(130vh - 100px);
+    padding: 40px 15px;
+    margin-top: -150px;
+  }
+}
+
+/* 855px width */
+@media (width: 855px) {
+  .rp-container {
+    height: calc(150vh - 45px);
+    padding: 35px 15px;
+    margin-top: -20px;
+  }
+}
+
+/* 768px width */
+@media (width: 768px) {
+  .rp-container {
+    height: calc(150vh - 100px);
+    padding: 30px 12px;
+  }
+}
+
+/* 640px width */
+@media (width: 640px) {
+  .rp-container {
+    height: calc(100vh - 35px);
+    padding: 25px 10px;
+  }
+}
+
+/* 540px width */
+@media (width: 540px) {
+  .rp-container {
+    height: calc(260vh - 100px);
+    padding: 25px 8px;
+  }
+}
+
+/* 430px width */
+@media (width: 430px) {
+  .rp-container {
+    height: calc(290vh - 100px);
+    padding: 20px 6px;
+    margin-top: -100px;
+  }
+}
+
+/* 414px width */
+@media (width: 414px) {
+  .rp-container {
+    height: calc(310vh - 100px);
+    padding: 18px 6px;
+    margin-top: -100px;
+  }
+}
+
+/* 390px width */
+@media (width: 390px) {
+  .rp-container {
+    height: calc(340vh - 100px);
+    padding: 18px 5px;
+    margin-top: -100px;
+  }
+}
+
+/* 380px width */
+@media (width: 380px) {
+  .rp-container {
+    height: calc(100vh - 20px);
+    padding: 15px 5px;
+  }
+}
+
+/* 360px width */
+@media (width: 360px) {
+  .rp-container {
+    width: 50vh;
+    height: calc(420vh - 100px);
+    padding: 15px 5px;
+  }
+}
+
+/* 344px width */
+@media (width: 344px) {
+  .rp-container {
+    width: 50vh;
+    height: calc(270vh - 100px);
+    padding: 16px 6px;
+  }
+}
