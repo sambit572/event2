@@ -271,12 +271,9 @@ const googleAuth = async (req, res) => {
 
     // console.log("✅ GOOGLE PAYLOAD RECEIVED:", ticket.getPayload());
 
-
     const { email, name, picture } = ticket.getPayload();
 
-    
     // console.log("Google profile picture URL:", picture);
-
 
     // 2. find or create user
     let user = await User.findOne({ email });
@@ -654,6 +651,37 @@ const changePassword = async (req, res) => {
   }
 };
 
+const verifyLogin = async (req, res) => {
+  const { phoneNo } = req.body;
+
+  if (!phoneNo || !isValidPhoneNumber(phoneNo, "IN")) {
+    return res.status(400).json(new ApiError(400, "Invalid phone number"));
+  }
+
+  const user = await User.findOne({ phoneNo });
+  if (!user) return res.status(404).json(new ApiError(404, "User not found"));
+
+  const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
+    user._id
+  );
+
+  const loggedInUser = await User.findById(user._id).select(
+    "-password -refreshToken"
+  );
+
+  return res
+    .status(200)
+    .cookie("accessToken", accessToken, accessTokenOption)
+    .cookie("refreshToken", refreshToken, refreshTokenOption)
+    .json(
+      new ApiResponse(
+        200,
+        { loggedInUser, accessToken, refreshToken },
+        "Login successful"
+      )
+    );
+};
+
 // ------------------ TOKEN AUTH CONTROLLER ------------------
 
 const noNeedToLogin = async (req, res) => {
@@ -797,4 +825,5 @@ export {
   getUserEmail,
   getUserProfile,
   googleAuth,
+  verifyLogin,
 };

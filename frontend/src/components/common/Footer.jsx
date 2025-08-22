@@ -156,11 +156,11 @@ function Footer() {
                 >
                   <p>
                     <img src="/gmail.png" className="icon" alt="" />{" "}
-                    Support@eventsbridge.com
+                    techsupport@eventsbridge.com
                   </p>
                   <p>
-                    <img src="/phone-call.png" className="icon" alt="" />{" "}
-                    123-456-7890
+                    <img src="/phone-call.png" className="icon" alt="" /> +91
+                    1169320147
                   </p>
                   <p>
                     <img src="/placeholder.png" className="icon" alt="" />{" "}
