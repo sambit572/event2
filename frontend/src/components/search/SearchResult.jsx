@@ -67,21 +67,18 @@ export const SearchResult = ({
                     </span>
                   </div>
                 </div>
-
                 <div className="p-4">
                   <div className="flex items-start justify-between mb-2">
                     <h3 className="font-semibold text-lg text-gray-900 line-clamp-1">
                       {service.serviceName}
                     </h3>
-                    <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full ml-2 whitespace-nowrap">
-                      {service.serviceCategory}
-                    </span>
                   </div>
-
+                   <div className="flex justify-center text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full ml-10 whitespace-nowrap">
+                      {service.serviceCategory}
+                    </div>
                   <p className="text-gray-600 text-sm mb-3 line-clamp-2">
                     {service.serviceDes}
                   </p>
-
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium text-black-700">
@@ -91,7 +88,6 @@ export const SearchResult = ({
                         {formatPrice(service.minPrice, service.maxPrice)}
                       </span>
                     </div>
-
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium text-black-700">
                         Duration:
@@ -100,7 +96,6 @@ export const SearchResult = ({
                         {formatDuration(service.duration)}
                       </span>
                     </div>
-
                     {typeof service.averageRating === "number" && (
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-medium text-black-700">
@@ -132,7 +127,6 @@ export const SearchResult = ({
                       </div>
                     )}
                   </div>
-
                   <div className="mt-3 pt-3 border-t border-black-100">
                     <div className="flex items-center space-x-2">
                       <img
@@ -147,7 +141,6 @@ export const SearchResult = ({
                         by {service.vendor?.fullName}
                       </span>
                     </div>
-
                     {service.locationOffered && (
                       <div className="mt-2">
                         <span className="text-xs text-black-500">
@@ -155,7 +148,9 @@ export const SearchResult = ({
                         </span>
                         <span className="text-xs text-black-600">
                           {Array.isArray(service.locationOffered)
-                            ? service.locationOffered.slice(0, 2).join(", ") +
+                            ? service.locationOffered
+                                .slice(0, 2)
+                                .join(", ") +
                               (service.locationOffered.length > 2
                                 ? ` +${service.locationOffered.length - 2} more`
                                 : "")

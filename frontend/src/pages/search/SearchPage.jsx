@@ -164,7 +164,7 @@ const SearchPage = () => {
             </div>
 
             {filteredData && (
-            <div className="flex flex-col lg:flex-row gap-8">
+            <div className="flex flex-col lg:flex-row gap-6">
                 <div className="lg:order-1 order-2">
                 <SearchSidebar
                     services={data.services}

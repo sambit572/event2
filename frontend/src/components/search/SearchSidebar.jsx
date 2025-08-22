@@ -228,7 +228,7 @@ export const SearchSidebar = ({
         <div className="space-y-3">
           <button
             onClick={applyPriceFilter}
-            className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2  rounded-lg transition-colors duration-200"
+            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 rounded-lg transition-colors duration-200"
           >
             Apply
           </button>
@@ -254,12 +254,13 @@ export const SearchSidebar = ({
         </div>
       )}
 
-      <button
-        onClick={clearFilters}
-        className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 rounded-lg transition-colors duration-200"
-      >
-        Clear All Filters
-      </button>
+    <button
+  onClick={clearFilters}
+  className="w-full bg-red-100 hover:bg-red-200 text-red-700 font-medium py-2 rounded-lg transition-colors duration-200"
+>
+  Clear All Filters
+</button>
+
     </div>
   );
 };
