@@ -24,7 +24,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
         const response = await axios.get(
           `${BACKEND_URL}/common/category/${categoryId}`
         );
-        console.log("Fetched services:", response);
+        console.log("Fetched services data:", response.data.data); // Debugging log
         setServices(response.data.data);
         setFilteredServices(response.data.data); // Initialize filtered services
         setLoading(false);
@@ -39,25 +39,26 @@ const ServiceList = ({ onSwitchToLogin }) => {
   
 const handleApplyFilters = (filters) => {
   console.log("Applying filters:", filters);
+  // Initialize results by filtering services
   const results = services.filter((service) => {
+    console.log("Inspecting service:", service); // Debugging log
+
     const serviceMin = Number(service.minPrice) || 0;
     const serviceMax = Number(service.maxPrice) || 0;
 
-  // ✅ Price overlap check
+    // ✅ Price overlap check
     const priceMatch =
       (!filters.minPrice && !filters.maxPrice) ||
       (serviceMax >= filters.minPrice && serviceMin <= filters.maxPrice);
 
     // ✅ Rating check
     const ratingValue =
-      Number(service.rating) || Number(service?.ratingData?.averageRating) || 0;
+      Number(service.avgRating) ||
+      Number(service?.ratingData?.averageRating) ||
+      0; // Default to 0 if no rating is available
     const ratingMatch = filters.rating
-      ? ratingValue >= Number(filters.rating)
+      ? ratingValue >= Number(filters.rating) // Ensure rating is equal to or above the selected rating
       : true;
-
-    console.log("Service price:", serviceMin, serviceMax);
-  console.log("Service ratings:", services.map(s => ({ id: s._id, rating: s.rating })));
-  console.log("Filtered services:", results.map(s => ({ id: s._id, rating: s.rating })));
 
     const prepTimeDays = Math.ceil((service.duration || 0) / (24 * 60));
     const durationMatch =
@@ -97,8 +98,30 @@ const handleApplyFilters = (filters) => {
     return priceMatch && ratingMatch && durationMatch && stateMatch && cityMatch;
   });
 
+  console.log("Filtered services:", results);
+
+  // ✅ Sorting logic
+  if (filters.sortBy) {
+    results.sort((a, b) => {
+      switch (filters.sortBy) {
+        case "price":
+          return (a.minPrice || 0) - (b.minPrice || 0);
+        case "name":
+          return a.serviceName.localeCompare(b.serviceName);
+        case "duration":
+          return (a.duration || 0) - (b.duration || 0);
+        case "rating":
+          const ratingA = Number(a.rating) || Number(a?.ratingData?.averageRating) || 0;
+          const ratingB = Number(b.rating) || Number(b?.ratingData?.averageRating) || 0;
+          return ratingB - ratingA; // Higher rating first
+        default:
+          return 0;
+      }
+    });
+  }
+
   setFilteredServices(results);
-  console.log("Filtered count:", results.length);
+  console.log("Filtered and sorted count:", results.length);
 };
 
 
