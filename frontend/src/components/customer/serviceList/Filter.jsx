@@ -10,12 +10,11 @@ const Filter = ({ onApply, onCancel }) => {
   const STEP_MAX = 1000;
   const priceCap = 200000;
   const minGap = 1000;
-  
 
   const defaultFilters = {
     minPrice: 0,
     maxPrice: priceCap,
-    ratings: [],
+    rating: "",
     state: "",
     subdistrict: "",
     duration: "",
@@ -26,6 +25,13 @@ const Filter = ({ onApply, onCancel }) => {
 
   const [states] = useState(Object.keys(locationData));
   const [subdistricts, setSubdistricts] = useState([]);
+  // Already correct:
+  const handleRatingChange = (e) => {
+    setFilters({
+      ...filters,
+      rating: e.target.value ? Number(e.target.value) : "",
+    });
+  };
 
   // Price change handlers (snap to step)
   const handleMinChange = (e) => {
@@ -48,18 +54,18 @@ const Filter = ({ onApply, onCancel }) => {
     }
   };
 
-  // Rating selection
-  const handleRatingChange = (rating) => {
-    setFilters((prev) => {
-      const alreadySelected = prev.ratings.includes(rating);
-      return {
-        ...prev,
-        ratings: alreadySelected
-          ? prev.ratings.filter((r) => r !== rating)
-          : [...prev.ratings, rating],
-      };
-    });
-  };
+  // // Rating selection
+  // const handleRatingChange = (rating) => {
+  //   setFilters((prev) => {
+  //     const alreadySelected = prev.ratings.includes(rating);
+  //     return {
+  //       ...prev,
+  //       ratings: alreadySelected
+  //         ? prev.ratings.filter((r) => r !== rating)
+  //         : [...prev.ratings, rating],
+  //     };
+  //   });
+  // };
 
   // State change → update subdistricts
   const handleStateChange = (e) => {
@@ -111,10 +117,22 @@ const Filter = ({ onApply, onCancel }) => {
           )}
 
           <h3 className="filter-heading">Filters</h3>
-
+          <div className="mb-6">
+            <h3 className="font-medium text-gray-800 mb-3">Sort By</h3>
+            <select
+              // value={filters.sortBy}
+              // onChange={(e) => handleFilterChange("sortBy", e.target.value)}
+              className="w-full px-3 py-[0.3rem] border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            >
+              <option value="price">Price</option>
+              <option value="name">Name</option>
+              <option value="duration">Duration</option>
+              <option value="rating">Rating</option>
+            </select>
+          </div>
           {/* Price Filter */}
           <div className="price-range-wrapper">
-            <h4 className="heading4">Price</h4>
+            <h4 className="heading4">Price Range</h4>
             <div
               className="slider"
               style={{
@@ -147,28 +165,51 @@ const Filter = ({ onApply, onCancel }) => {
               />
             </div>
           </div>
+          <div className="flex items-center justify-center">OR </div>
+          <div className="space-y-3">
+            <div>
+              <label className="block text-xs text-gray-900 mb-1">
+                Min Price (₹)
+              </label>
+              <input
+                type="number"
+                placeholder="0"
+                // value={priceInputs.minPrice}
+                // onChange={(e) =>
+                //   handlePriceInputChange("minPrice", e.target.value)
+                // }
+                className="w-full px-3 py-[0.3rem] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-900 mb-1">
+                Max Price (₹)
+              </label>
+              <input
+                type="number"
+                placeholder="200000"
+                // value={priceInputs.maxPrice}
+                // onChange={(e) =>
+                //   handlePriceInputChange("maxPrice", e.target.value)
+                // }
+                className="w-full px-3 py-[0.3rem] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              />
+            </div>
+          </div>
           <hr className="line" />
 
-          {/* Customer Rating */}
-          <div>
-            <h4 className="head4">Customer Rating</h4>
-            {ratingOptions.map((rating) => (
-              <div key={rating} className="align_center rating-option">
-                <input
-                  type="checkbox"
-                  id={`rating-${rating}`}
-                  checked={filters.ratings.includes(rating)}
-                  onChange={() => handleRatingChange(rating)}
-                />
-                <label className="align_center ml-2" htmlFor={`rating-${rating}`}>
-                  {rating}{" "}
-                  <span className="star">
-                    <TiStarFullOutline />
-                  </span>{" "}
-                  & above
-                </label>
-              </div>
-            ))}
+          <div className="filter-section">
+            <h4>Customer Rating</h4>
+            <div className="dropdown">
+              <select value={filters.rating} onChange={handleRatingChange}>
+                <option value="">Any Rating</option>
+                <option value="3">3+ Stars</option>
+                <option value="3.5">3.5+ Stars</option>
+                <option value="4">4+ Stars</option>
+                <option value="4.5">4.5+ Stars</option>
+                <option value="5">5 Stars</option>
+              </select>
+            </div>
           </div>
           <hr className="line" />
 

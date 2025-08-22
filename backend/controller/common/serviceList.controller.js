@@ -1,4 +1,5 @@
 import { Service } from "../../model/vendor/service.model.js";
+
 export const getServicesByCategory = async (req, res) => {
   try {
     const { category } = req.params;
@@ -26,6 +27,21 @@ export const getServicesByCategory = async (req, res) => {
           preserveNullAndEmptyArrays: true,
         },
       },
+      // 🔹 Lookup reviews to calculate average rating
+      {
+        $lookup: {
+          from: "reviews", // collection name of Review model
+          localField: "_id",
+          foreignField: "serviceId",
+          as: "reviews",
+        },
+      },
+      {
+        $addFields: {
+          avgRating: { $avg: "$reviews.rating" }, // calculate avg
+          totalReviews: { $size: "$reviews" },
+        },
+      },
       {
         $project: {
           _id: 1,
@@ -43,8 +59,8 @@ export const getServicesByCategory = async (req, res) => {
           vendorId: 1,
           vendorName: "$vendorDetails.fullName",
           vendorEmail: "$vendorDetails.email",
-          rating: 1,
-          reviews: 1,
+          avgRating: { $ifNull: ["$avgRating", 0] }, // return 0 if no reviews
+          totalReviews: 1,
           available: 1,
         },
       },

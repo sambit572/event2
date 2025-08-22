@@ -38,16 +38,26 @@ const ServiceList = ({ onSwitchToLogin }) => {
   }, [categoryId]);
   
 const handleApplyFilters = (filters) => {
+  console.log("Applying filters:", filters);
   const results = services.filter((service) => {
     const serviceMin = Number(service.minPrice) || 0;
     const serviceMax = Number(service.maxPrice) || 0;
 
+  // ✅ Price overlap check
     const priceMatch =
-      serviceMin >= filters.minPrice && serviceMax <= filters.maxPrice;
+      (!filters.minPrice && !filters.maxPrice) ||
+      (serviceMax >= filters.minPrice && serviceMin <= filters.maxPrice);
 
-    const ratingMatch =
-      filters.ratings.length === 0 ||
-      filters.ratings.some((r) => Number(service.rating) >= r);
+    // ✅ Rating check
+    const ratingValue =
+      Number(service.rating) || Number(service?.ratingData?.averageRating) || 0;
+    const ratingMatch = filters.rating
+      ? ratingValue >= Number(filters.rating)
+      : true;
+
+    console.log("Service price:", serviceMin, serviceMax);
+  console.log("Service ratings:", services.map(s => ({ id: s._id, rating: s.rating })));
+  console.log("Filtered services:", results.map(s => ({ id: s._id, rating: s.rating })));
 
     const prepTimeDays = Math.ceil((service.duration || 0) / (24 * 60));
     const durationMatch =
