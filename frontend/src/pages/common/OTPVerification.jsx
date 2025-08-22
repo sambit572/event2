@@ -2,6 +2,10 @@ import PropTypes from "prop-types";
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./LoginRegister.css";
+import axios from "axios";
+import { BACKEND_URL } from "../../utils/constant.js";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../redux/UserSlice.js";
 
 const OTPVerification = ({
   error,
@@ -10,8 +14,10 @@ const OTPVerification = ({
   handleResend,
   setStep,
   onClose,
+  phoneNum,
 }) => {
   const [otp, setOtp] = useState(new Array(6).fill(""));
+  const dispatch = useDispatch();
 
   // If parent didn't pass inputRefs, create a fallback ref
   const localRefs = useRef([]);
@@ -44,6 +50,23 @@ const OTPVerification = ({
       }
       const result = await window.confirmationResult.confirm(otpCode);
       console.log("Phone auth success:", result.user);
+
+      const response = await axios.post(`${BACKEND_URL}/user/verify-otp`, {
+        phoneNo: phoneNum,
+      });
+
+      console.log("OTP verification response:", response.data.data);
+
+      const { loggedInUser } = response.data.data;
+      console.log("Verified user data:", loggedInUser);
+      dispatch(setUser(loggedInUser));
+
+      localStorage.setItem("currentlyLoggedIn", "true");
+      localStorage.setItem("userFirstName", loggedInUser.fullName.split(" ")[0]);
+      localStorage.setItem("userLastName", loggedInUser.fullName.split(" ")[1]);
+
+      window.dispatchEvent(new Event("userLoggedIn"));
+
       setStep("success");
     } catch (err) {
       console.error("OTP verification failed", err);
@@ -78,8 +101,7 @@ const OTPVerification = ({
         <p className="otp-info">
           We’ve sent a 6-digit verification code to your registered mobile
           number
-          <strong> +91-9692486267</strong> and email{" "}
-          <strong>dummy@gmail.com</strong>. Enter it below to continue.
+          <strong>+91-{phoneNum}</strong>. Enter it below to continue.
         </p>
 
         <div className="otp-inputs">
@@ -140,6 +162,7 @@ OTPVerification.propTypes = {
   handleResend: PropTypes.func.isRequired,
   setStep: PropTypes.func.isRequired,
   onClose: PropTypes.func, // Optional
+  phoneNum: PropTypes.string.isRequired,
 };
 
 export default OTPVerification;

@@ -232,7 +232,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
   const renderStep = () => {
     if (step === "success") return <SuccessBlock onClose={onClose} />;
-    if (step === "otp") return <OTPVerification setStep={setStep} />;
+    if (step === "otp") return <OTPVerification phoneNum={formData.phoneNo} setStep={setStep} />;
 
     if (step === "google-phone") {
       return (
