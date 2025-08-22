@@ -27,10 +27,10 @@ export const getServicesByCategory = async (req, res) => {
           preserveNullAndEmptyArrays: true,
         },
       },
-      // 🔹 Lookup reviews to calculate average rating
+      // 🔹 Lookup reviews from UserReview model to calculate average rating
       {
         $lookup: {
-          from: "reviews", // collection name of Review model
+          from: "userreviews", // collection name of UserReview model
           localField: "_id",
           foreignField: "serviceId",
           as: "reviews",
@@ -38,7 +38,13 @@ export const getServicesByCategory = async (req, res) => {
       },
       {
         $addFields: {
-          avgRating: { $avg: "$reviews.rating" }, // calculate avg
+          avgRating: {
+            $cond: {
+              if: { $gt: [{ $size: "$reviews" }, 0] },
+              then: { $avg: "$reviews.rating" },
+              else: 0,
+            },
+          },
           totalReviews: { $size: "$reviews" },
         },
       },
@@ -59,7 +65,7 @@ export const getServicesByCategory = async (req, res) => {
           vendorId: 1,
           vendorName: "$vendorDetails.fullName",
           vendorEmail: "$vendorDetails.email",
-          avgRating: { $ifNull: ["$avgRating", 0] }, // return 0 if no reviews
+          avgRating: 1, // Ensure avgRating is included
           totalReviews: 1,
           available: 1,
         },
@@ -72,7 +78,6 @@ export const getServicesByCategory = async (req, res) => {
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
-
 
 export const getServiceById = async (req, res) => {
   try {
