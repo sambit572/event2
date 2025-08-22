@@ -1,0 +1,299 @@
+/* Container */
+.tc-container {
+  background-color: #f8fafc; /* Soft background */
+  min-height: 100vh;
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* Card */
+.tc-card {
+  background: #ffffff;
+  max-width: 1200px;
+  width: 100%;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+}
+
+/* Title */
+.tc-title {
+  font-size: 2.2rem;
+  color: #0f3d56;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 20px;
+  border-bottom: 3px solid #a8dadc;
+  padding-bottom: 10px;
+}
+
+/* Intro paragraph */
+.tc-intro {
+  font-size: 1rem;
+  color: #334155;
+  margin-bottom: 25px;
+  line-height: 1.6;
+}
+
+/* Main headings */
+.tc-heading {
+  font-size: 1.5rem;
+  color: #1e3a8a;
+  font-weight: 600;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  border-left: 5px solid #a8dadc;
+  padding-left: 10px;
+}
+
+/* Subheadings */
+.tc-subheading {
+  font-size: 1.2rem;
+  color: #2563eb;
+  font-weight: 600;
+  margin-top: 15px;
+  margin-bottom: 8px;
+}
+
+/* Paragraph text */
+.tc-text {
+  font-size: 1rem;
+  color: #374151;
+  text-align: justify;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+/* Highlighted law names */
+.tc-text strong {
+  color: black;
+  font-weight: 600;
+}
+
+.tc-list {
+  list-style-type: disc; /* Keep bullets */
+  padding-left: 25px; /* Indent bullets */
+  margin-top: 20px;
+}
+
+.tc-list li {
+  margin-bottom: 12px; /* Space between items */
+  line-height: 1.6; /* Better readability */
+  color: black; /* Red text */
+  font-size: 16px;
+}
+
+.tc-list strong {
+  font-weight: bold;
+  color: black; /* Darker red for emphasis */
+}
+
+/* Responsive Design */
+
+@media (max-width: 1200px) {
+  .tc-card {
+    padding: 20px;
+  }
+
+  .tc-title {
+    font-size: 1.8rem;
+  }
+
+  .tc-heading {
+    font-size: 1.4rem;
+  }
+
+  .tc-subheading {
+    font-size: 1.1rem;
+  }
+
+  .tc-text {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .tc-container {
+    height: calc(10vh - 50px); /* Adjust for header */
+    overflow-y: auto; /* Enable scrolling */
+  }
+
+  .tc-card {
+    padding: 15px;
+  }
+
+  .tc-title {
+    font-size: 1.7rem;
+  }
+
+  .tc-heading {
+    font-size: 1.3rem;
+  }
+
+  .tc-subheading {
+    font-size: 1rem;
+  }
+
+  .tc-text {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 912px) {
+  .tc-container {
+    max-height: calc(50vh - 100px); /* Adjust for header */
+    overflow-y: auto;
+  }
+
+  .tc-card {
+    padding: 15px;
+  }
+
+  .tc-title {
+    font-size: 1.6rem;
+  }
+
+  .tc-heading {
+    font-size: 1.3rem;
+  }
+
+  .tc-subheading {
+    font-size: 1rem;
+  }
+
+  .tc-text {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 820px) {
+  .tc-container {
+    max-height: calc(50vh - 100px); /* Adjust for header */
+  }
+
+  .tc-card {
+    padding: 15px;
+  }
+
+  .tc-title {
+    font-size: 1.5rem;
+  }
+
+  .tc-heading {
+    font-size: 1.2rem;
+  }
+
+  .tc-subheading {
+    font-size: 1rem;
+  }
+
+  .tc-text {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .tc-container {
+    max-height: calc(120vh - 100px); /* Adjust for header */
+    margin-bottom: 20px;
+    overflow-y: auto; /* Enable scrolling */
+  }
+  .tc-card {
+    padding: 20px;
+  }
+
+  .tc-title {
+    font-size: 1.8rem;
+  }
+
+  .tc-heading {
+    font-size: 1.3rem;
+  }
+
+  .tc-subheading {
+    font-size: 1.1rem;
+  }
+
+  .tc-text {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 540px) {
+  .tc-card {
+    padding: 15px;
+  }
+
+  .tc-title {
+    font-size: 1.6rem;
+  }
+
+  .tc-heading {
+    font-size: 1.2rem;
+  }
+
+  .tc-subheading {
+    font-size: 1rem;
+  }
+
+  .tc-text {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tc-title {
+    font-size: 1.5rem;
+  }
+
+  .tc-heading {
+    font-size: 1.2rem;
+  }
+
+  .tc-subheading {
+    font-size: 1rem;
+  }
+
+  .tc-text {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .tc-title {
+    font-size: 1.3rem;
+  }
+
+  .tc-heading {
+    font-size: 1.1rem;
+  }
+
+  .tc-subheading {
+    font-size: 0.95rem;
+  }
+
+  .tc-text {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .tc-title {
+    font-size: 1.2rem;
+  }
+
+  .tc-heading {
+    font-size: 1rem;
+  }
+
+  .tc-subheading {
+    font-size: 0.9rem;
+  }
+
+  .tc-text {
+    font-size: 0.8rem;
+  }
+}

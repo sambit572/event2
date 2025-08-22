@@ -1,57 +1,89 @@
 import React, { useState } from "react";
 import "../../customer/serviceList/Filter.css";
 import { TiStarFullOutline } from "react-icons/ti";
-import locationData from "./LocationData";
+import locationData from "./LocationData"; // { "Maharashtra": ["Mumbai", "Pune"], ... }
 import { IoFilterOutline } from "react-icons/io5";
-import { RxCross2 } from "react-icons/rx";
 
-const Filter = () => {
-  const rating = [4.9, 4, 3];
-  const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(100000);
+const Filter = ({ onApply, onCancel }) => {
+  const ratingOptions = [4.9, 4, 3];
+  const STEP_MIN = 1000;
+  const STEP_MAX = 1000;
+  const priceCap = 200000;
+  const minGap = 1000;
+
+  const defaultFilters = {
+    minPrice: 0,
+    maxPrice: priceCap,
+    ratings: [],
+    state: "",
+    subdistrict: "",
+    duration: "",
+  };
+
+  const [filters, setFilters] = useState(defaultFilters);
   const [showFilter, setShowFilter] = useState(false);
 
-  const minGap = 1000;
-  const priceCap = 100000;
+  const [states] = useState(Object.keys(locationData));
+  const [subdistricts, setSubdistricts] = useState([]);
 
+  // Price change handlers (snap to step)
   const handleMinChange = (e) => {
-    if (parseInt(e.target.value) + minGap <= maxPrice) {
-      setMinPrice(parseInt(e.target.value));
+    let value = Number(e.target.value);
+    // snap to step
+    value = Math.round(value / STEP_MIN) * STEP_MIN;
+    // keep within gap
+    if (value + minGap <= filters.maxPrice) {
+      setFilters((prev) => ({ ...prev, minPrice: value }));
     }
   };
 
   const handleMaxChange = (e) => {
-    if (parseInt(e.target.value) - minGap >= minPrice) {
-      setMaxPrice(parseInt(e.target.value));
+    let value = Number(e.target.value);
+    // snap to step
+    value = Math.round(value / STEP_MAX) * STEP_MAX;
+    // keep within gap
+    if (value - minGap >= filters.minPrice) {
+      setFilters((prev) => ({ ...prev, maxPrice: value }));
     }
   };
 
-  //location filter
-  const [selectedState, setSelectedState] = useState("");
-  const [selectedCity, setSelectedCity] = useState("");
-  const [selectedPincode, setSelectedPincode] = useState("");
+  // Rating selection
+  const handleRatingChange = (rating) => {
+    setFilters((prev) => {
+      const alreadySelected = prev.ratings.includes(rating);
+      return {
+        ...prev,
+        ratings: alreadySelected
+          ? prev.ratings.filter((r) => r !== rating)
+          : [...prev.ratings, rating],
+      };
+    });
+  };
 
-  const [cities, setCities] = useState([]);
-  const [pincodes, setPincodes] = useState([]);
-
+  // State change → update subdistricts
   const handleStateChange = (e) => {
     const state = e.target.value;
-    setSelectedState(state);
-    setCities(Object.keys(locationData[state] || {}));
-    setSelectedCity("");
-    setPincodes([]);
-    setSelectedPincode("");
+    setFilters({ ...filters, state, subdistrict: "" });
+    setSubdistricts(locationData[state] || []);
   };
 
-  const handleCityChange = (e) => {
-    const city = e.target.value;
-    setSelectedCity(city);
-    setPincodes(locationData[selectedState]?.[city] || []);
-    setSelectedPincode("");
+  // Subdistrict change
+  const handleSubdistrictChange = (e) => {
+    setFilters({ ...filters, subdistrict: e.target.value });
   };
 
-  const handlePincodeChange = (e) => {
-    setSelectedPincode(e.target.value);
+  // Apply filters
+  const handleApply = () => {
+    onApply(filters);
+    setShowFilter(false);
+  };
+
+  // Cancel filters
+  const handleCancel = () => {
+    setFilters(defaultFilters);
+    setSubdistricts([]);
+    onCancel();
+    setShowFilter(false);
   };
 
   return (
@@ -65,6 +97,7 @@ const Filter = () => {
           <span className="filter-text">Filters</span>
         </button>
       )}
+
       <div className={`filterBox ${showFilter ? "show" : ""}`}>
         <div className="filter m-2">
           {showFilter && (
@@ -75,27 +108,30 @@ const Filter = () => {
               <span className="filter-text">Close</span>
             </button>
           )}
+
           <h3 className="filter-heading">Filters</h3>
 
+          {/* Price Filter */}
           <div className="price-range-wrapper">
             <h4 className="heading4">Price</h4>
             <div
               className="slider"
               style={{
-                "--min": minPrice,
-                "--max": maxPrice,
+                "--min": filters.minPrice,
+                "--max": filters.maxPrice,
               }}
             >
               <div className="price-display">
-                <span className="price-box">₹{minPrice}</span>
-                <span className="price-box">₹{maxPrice}</span>
+                <span className="price-box">₹{filters.minPrice}</span>
+                <span className="price-box">₹{filters.maxPrice}</span>
               </div>
               <div className="range-track" />
               <input
                 type="range"
                 min="0"
                 max={priceCap}
-                value={minPrice}
+                step={STEP_MIN}
+                value={filters.minPrice}
                 onChange={handleMinChange}
                 className="thumb thumb-left"
               />
@@ -103,19 +139,30 @@ const Filter = () => {
                 type="range"
                 min="0"
                 max={priceCap}
-                value={maxPrice}
+                step={STEP_MAX}
+                value={filters.maxPrice}
                 onChange={handleMaxChange}
                 className="thumb thumb-right"
               />
             </div>
           </div>
           <hr className="line" />
+
+          {/* Customer Rating */}
           <div>
             <h4 className="head4">Customer Rating</h4>
-            {rating.map((rating) => (
+            {ratingOptions.map((rating) => (
               <div key={rating} className="align_center rating-option">
-                <input type="checkbox" id={`rating-${rating}`} />
-                <label className="align_center" htmlFor={`rating-${rating}`}>
+                <input
+                  type="checkbox"
+                  id={`rating-${rating}`}
+                  checked={filters.ratings.includes(rating)}
+                  onChange={() => handleRatingChange(rating)}
+                />
+                <label
+                  className="align_center ml-2"
+                  htmlFor={`rating-${rating}`}
+                >
                   {rating}{" "}
                   <span className="star">
                     <TiStarFullOutline />
@@ -127,16 +174,15 @@ const Filter = () => {
           </div>
           <hr className="line" />
 
+          {/* Location Filter */}
           <div className="filter-section">
-            <h4 className="l">Location</h4>
+            <h4>Location</h4>
 
             <div className="dropdown">
-              <label htmlFor="state" className="state">
-                State
-              </label>
-              <select value={selectedState} onChange={handleStateChange}>
+              <label>State</label>
+              <select value={filters.state} onChange={handleStateChange}>
                 <option value="">Select State</option>
-                {Object.keys(locationData).map((state) => (
+                {states.map((state) => (
                   <option key={state} value={state}>
                     {state}
                   </option>
@@ -144,42 +190,54 @@ const Filter = () => {
               </select>
             </div>
 
-            {cities.length > 0 && (
-              <div className="dropdown">
-                <label htmlFor="city">City</label>
-                <select value={selectedCity} onChange={handleCityChange}>
-                  <option value="">Select City</option>
-                  {cities.map((city) => (
-                    <option key={city} value={city}>
-                      {city}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-
-            {pincodes.length > 0 && (
-              <div className="dropdown">
-                <label htmlFor="pincode">Pincode</label>
-                <select value={selectedPincode} onChange={handlePincodeChange}>
-                  <option value="">Select Pincode</option>
-                  {pincodes.map((pin) => (
-                    <option key={pin} value={pin}>
-                      {pin}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
+            <div className="dropdown">
+              <label>City/District</label>
+              <select
+                value={filters.subdistrict}
+                onChange={handleSubdistrictChange}
+                disabled={!filters.state}
+              >
+                <option value="">Select City/District</option>
+                {subdistricts.map((sub) => (
+                  <option key={sub} value={sub}>
+                    {sub}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
           <hr className="line" />
-          <div>
-            <h4 className="head4">Date</h4>
-            <input type="date" className="dateFilter" />
+
+          {/* Service Ready Within */}
+          <div className="dropdown">
+            <h4 className="head4">Service Ready Within</h4>
+            <select
+              value={filters.duration}
+              onChange={(e) =>
+                setFilters({
+                  ...filters,
+                  duration: e.target.value ? parseInt(e.target.value) : "",
+                })
+              }
+            >
+              <option value="">Any</option>
+              <option value={1}>12 Hours</option>
+              <option value={2}>1 Day</option>
+              <option value={3}>2 Days</option>
+              <option value={4}>3 Days</option>
+              <option value={5}>4 Days</option>
+              <option value={7}>1 Week</option>
+            </select>
           </div>
+
+          {/* Buttons */}
           <div className="filter-btn">
-            <button className="applybtn">Apply</button>
-            <button className="cancelbtn">Cancel</button>
+            <button className="applybtn" onClick={handleApply}>
+              Apply
+            </button>
+            <button className="cancelbtn" onClick={handleCancel}>
+              Cancel
+            </button>
           </div>
         </div>
       </div>

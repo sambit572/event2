@@ -35,39 +35,38 @@ const Login = ({ onClose, onSwitchToRegister }) => {
   const recaptchaVerifierRef = useRef(null);
 
   // ✅ Initialize reCAPTCHA only once
-useEffect(() => {
-  if (!recaptchaVerifierRef.current) {
-    try {
-      const verifier = new RecaptchaVerifier(
-        auth,
-        "recaptcha-container",
-        {
-          size: "invisible",
-          callback: (response) => {
-            console.log("Enterprise reCAPTCHA passed", response);
+  useEffect(() => {
+    if (!recaptchaVerifierRef.current) {
+      try {
+        const verifier = new RecaptchaVerifier(
+          auth,
+          "recaptcha-container",
+          {
+            size: "invisible",
+            callback: (response) => {
+              console.log("Enterprise reCAPTCHA passed", response);
+            },
+            "expired-callback": () => {
+              console.warn("Recaptcha expired. Resetting...");
+              verifier.clear();
+              recaptchaVerifierRef.current = null;
+            },
           },
-          "expired-callback": () => {
-            console.warn("Recaptcha expired. Resetting...");
-            verifier.clear();
-            recaptchaVerifierRef.current = null;
-          },
-        },
-        { type: "recaptcha-enterprise" } // 👈 This tells Firebase to use Enterprise mode
-      );
+          { type: "recaptcha-enterprise" } // 👈 This tells Firebase to use Enterprise mode
+        );
 
-      verifier.render().then((widgetId) => {
-        console.log("Enterprise Recaptcha rendered with ID:", widgetId);
-        recaptchaVerifierRef.current = verifier;
-      });
-    } catch (err) {
-      console.error("Failed to render Enterprise reCAPTCHA:", err);
-      setErrorMsg(
-        "Enterprise reCAPTCHA failed to load. Please refresh the page."
-      );
+        verifier.render().then((widgetId) => {
+          console.log("Enterprise Recaptcha rendered with ID:", widgetId);
+          recaptchaVerifierRef.current = verifier;
+        });
+      } catch (err) {
+        console.error("Failed to render Enterprise reCAPTCHA:", err);
+        setErrorMsg(
+          "Enterprise reCAPTCHA failed to load. Please refresh the page."
+        );
+      }
     }
-  }
-}, []);
-
+  }, []);
 
   useEffect(() => {
     if (step === "success") {
@@ -85,7 +84,6 @@ useEffect(() => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // ✅ OTP handler
   async function handleGetOTP(e) {
     e.preventDefault();
     setErrorMsg("");
@@ -147,6 +145,8 @@ useEffect(() => {
 
       localStorage.setItem("currentlyLoggedIn", "true");
       localStorage.setItem("userFirstName", user.fullName.split(" ")[0]);
+      localStorage.setItem("userLastName", user.fullName.split(" ")[1]);
+
       window.dispatchEvent(new Event("userLoggedIn"));
 
       setStep("success");
@@ -347,7 +347,6 @@ useEffect(() => {
         <button className="otp-button" onClick={handleLogin}>
           Login
         </button>
-
 
         <p className="signup-text pt-3">
           Don't have an account?{" "}

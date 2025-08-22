@@ -296,9 +296,9 @@ export default function VendorRegister() {
             </form>
 
             {/* Right: Animation */}
-            <div className="vendor-animation-container">
+            {/* <div className="vendor-animation-container">
               <video src="/New Video.mp4" autoPlay muted loop playsInline />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

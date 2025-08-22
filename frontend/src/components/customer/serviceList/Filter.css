@@ -1,5 +1,5 @@
 .filter {
-  width: 280px;
+  width: 250px;
   height: max-content;
   margin-left: 5px;
   margin-top: 17px;
@@ -34,14 +34,36 @@
   height: 600px;
   z-index: 0;
 }
-.rating-option {
-  margin: 8px 0;
+/* Star container */
+.rating-option .star {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px; /* adjust as needed */
+  height: 20px;
+  border-radius: 50%;
+  background-color: transparent;
+  margin-left: 4px;
+  transition: background-color 0.2s ease;
 }
-.rating-option input {
-  margin-right: 8px;
+
+/* Default star icon color */
+.rating-option .star svg {
+  color: black;
+  transition: color 0.2s ease;
 }
+
+/* When checkbox is checked → green background & white star */
+.rating-option input[type="checkbox"]:checked + label .star {
+  background-color: green;
+}
+
+.rating-option input[type="checkbox"]:checked + label .star svg {
+  color: white;
+}
+
 .head4 {
-  margin-bottom: 20px;
+  margin-bottom: 5px;
   color: #001f3f;
 }
 .star {
@@ -128,8 +150,8 @@ input[type="range"].thumb-right {
   background: #007bff;
   border-radius: 4px;
   z-index: 1;
-  left: calc((100% * var(--min)) / 100000);
-  width: calc((100% * (var(--max) - var(--min))) / 100000);
+  left: calc((100% * var(--min)) / 200000);
+  width: calc((100% * (var(--max) - var(--min))) / 200000);
 }
 .price-display {
   display: flex;
@@ -145,6 +167,24 @@ input[type="range"].thumb-right {
 .dropdown {
   margin: 10px 0;
 }
+
+.dropdown select {
+  width: 100%;
+  color: #001f3f;
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  background-color: white;
+  cursor: pointer;
+}
+
+.dropdown select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.4);
+}
+
 .state {
   color: #001f3f;
 }
@@ -165,42 +205,70 @@ input[type="range"].thumb-right {
 }
 .filter-btn {
   display: flex;
-  justify-content: space-around;
-  margin-top: 30px;
-  padding: 4px 8px;
-  margin-bottom: 10px;
+  gap: 12px;
+  margin-top: 15px;
 }
-.applybtn {
-  padding: 8px 12px;
-  border-radius: 8px;
-  background-color: green;
-  border: none;
-  color: white;
-  font-weight: 500;
-  width: 100px;
-  cursor: pointer;
-}
+
+.applybtn,
 .cancelbtn {
-  padding: 8px 12px;
-  border-radius: 8px;
-  background-color: rgb(219, 38, 38);
+  flex: 1;
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 600;
   border: none;
-  color: white;
-  font-weight: 500;
-  width: 100px;
+  border-radius: 10px;
   cursor: pointer;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
+/* Solid purple for Apply */
+.applybtn {
+  background-color: #7f00ff;
+}
+
 .applybtn:hover {
-  background-color: white;
-  color: green;
-  border: 1px solid green;
-  font-weight: 500;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(127, 0, 255, 0.4);
 }
+
+/* Solid teal for Cancel */
+.cancelbtn {
+  background-color: #008080;
+}
+
 .cancelbtn:hover {
-  background-color: white;
-  color: rgb(219, 38, 38);
-  border: 1px solid rgb(219, 38, 38);
-  font-weight: 500;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 128, 128, 0.4);
+}
+
+/* Shine effect */
+.applybtn::after,
+.cancelbtn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75px;
+  width: 50px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.4);
+  transform: skewX(-20deg);
+}
+
+.applybtn:hover::after,
+.cancelbtn:hover::after {
+  animation: shine 0.7s ease forwards;
+}
+
+@keyframes shine {
+  0% {
+    left: -75px;
+  }
+  100% {
+    left: 125%;
+  }
 }
 
 .filter-toggle-btn {

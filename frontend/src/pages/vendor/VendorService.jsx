@@ -26,7 +26,10 @@ function VendorService({ currentStep }) {
   const [minutes, setMinutes] = useState("0");
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [selectedLocations, setSelectedLocations] = useState([]);
-
+  const [selectedState, setSelectedState] = useState("");
+  const [showStateLocationDropdown, setShowStateLocationDropdown] =
+    useState(false);
+  const [stateLocationSearchTerm, setStateLocationSearchTerm] = useState("");
   const fileInputRef = useRef(null);
 
   const categories = [
@@ -47,45 +50,70 @@ function VendorService({ currentStep }) {
     "Card Design & Printing",
   ];
 
-  const allLocations = [
-    "Angul",
-    "Balangir",
-    "Balasore",
-    "Bargarh",
-    "Bhadrak",
-    "Boudh",
-    "Cuttack",
-    "Deogarh",
-    "Dhenkanal",
-    "Gajapati",
-    "Ganjam",
-    "Jagatsinghpur",
-    "Jajpur",
-    "Jharsuguda",
-    "Kalahandi",
-    "Kandhamal",
-    "Kendrapara",
-    "Kendujhar",
-    "Khordha",
-    "Koraput",
-    "Malkangiri",
-    "Mayurbhanj",
-    "Nabarangpur",
-    "Nayagarh",
-    "Nuapada",
-    "Puri",
-    "Rayagada",
-    "Sambalpur",
-    "Sonepur",
-    "Sundargarh",
-  ];
+  const allLocations = {
+    Odisha: [
+      "Angul",
+      "Balangir",
+      "Balasore",
+      "Bargarh",
+      "Bhadrak",
+      "Boudh",
+      "Cuttack",
+      "Deogarh",
+      "Dhenkanal",
+      "Gajapati",
+      "Ganjam",
+      "Jagatsinghpur",
+      "Jajpur",
+      "Jharsuguda",
+      "Kalahandi",
+      "Kandhamal",
+      "Kendrapara",
+      "Kendujhar",
+      "Khordha",
+      "Koraput",
+      "Malkangiri",
+      "Mayurbhanj",
+      "Nabarangpur",
+      "Nayagarh",
+      "Nuapada",
+      "Puri",
+      "Rayagada",
+      "Sambalpur",
+      "Sonepur",
+      "Sundargarh",
+    ],
+    Karnataka: [
+      "Bengaluru Urban",
+      "Bengaluru Rural",
+      "Mysuru",
+      "Mangaluru",
+      "Hubballi",
+      "Belagavi",
+    ],
+    Maharashtra: [
+      "Mumbai",
+      "Pune",
+      "Nagpur",
+      "Nashik",
+      "Aurangabad",
+      "Kolhapur",
+    ],
+  };
 
   const filteredCategories = categories.filter((cat) =>
     cat.toLowerCase().includes(categorySearchTerm.toLowerCase())
   );
 
-  const filteredLocations = allLocations.filter((loc) =>
-    loc.toLowerCase().includes(locationSearchTerm.toLowerCase())
+  // Locations based on selected state
+  const filteredLocations = selectedState
+    ? allLocations[selectedState].filter((loc) =>
+        loc.toLowerCase().includes(locationSearchTerm.toLowerCase())
+      )
+    : [];
+
+  const filteredStates = Object.keys(allLocations).filter((state) =>
+    state.toLowerCase().includes((stateLocationSearchTerm || "").toLowerCase())
   );
 
   // Enhanced image upload with validation
@@ -162,11 +190,15 @@ function VendorService({ currentStep }) {
 
       formData.append("minPrice", minPrice);
       formData.append("maxPrice", maxPrice);
-
       formData.append("serviceCategory", categorySearchTerm);
+      formData.append("stateLocationOffered", selectedState);
       selectedLocations.forEach((loc) => {
         formData.append("locationOffered[]", loc);
       });
+
+      // selectedLocations.forEach((loc) => {
+      //   formData.append("locationOffered[]", loc);
+      // });
 
       selectedFiles.forEach((file) => {
         formData.append("images", file);
@@ -262,6 +294,11 @@ function VendorService({ currentStep }) {
       return false;
     }
 
+    if (selectedState.length === 0) {
+      alert("Please select at least one state location");
+      return false;
+    }
+
     // 8. Check location
     if (selectedLocations.length === 0) {
       alert("Please select at least one location");
@@ -284,14 +321,22 @@ function VendorService({ currentStep }) {
   };
 
   const locationDropdownRef = useRef(null);
+  const stateLocationDropdownRef = useRef(null);
 
+  // Click outside handler
   useEffect(() => {
     function handleClickOutside(event) {
+      if (
+        stateLocationDropdownRef.current &&
+        !stateLocationDropdownRef.current.contains(event.target)
+      ) {
+        setShowStateLocationDropdown(false);
+      }
       if (
         locationDropdownRef.current &&
         !locationDropdownRef.current.contains(event.target)
       ) {
-        setShowLocationDropdown(false); // ✅ Close dropdown if clicked outside
+        setShowLocationDropdown(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -507,6 +552,89 @@ function VendorService({ currentStep }) {
               />
             </div>
 
+            {/* Selected State */}
+            <label htmlFor="state-location" className="state-location-label">
+              State Locations Offered *
+            </label>
+
+            <div
+              className="state-location-dropdown-wrapper"
+              ref={stateLocationDropdownRef}
+            >
+              <div
+                className="state-dropdown-input"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                  gap: "6px",
+                  cursor: "text",
+                }}
+                onClick={() =>
+                  document.getElementById("state-location-input").focus()
+                }
+              >
+                <span className="icon-left">🔍</span>
+
+                {/* Search input */}
+                <input
+                  id="state-location-input"
+                  type="text"
+                  placeholder="Search state location"
+                  value={stateLocationSearchTerm}
+                  onChange={(e) => setStateLocationSearchTerm(e.target.value)}
+                  onFocus={() => setShowStateLocationDropdown(true)}
+                  style={{
+                    flex: "1",
+                    minWidth: "120px",
+                    border: "none",
+                    outline: "none",
+                    background: "transparent",
+                  }}
+                />
+
+                {stateLocationSearchTerm && (
+                  <img
+                    src="/public/close.png"
+                    alt="Clear"
+                    className="cross-icon"
+                    onClick={() => setStateLocationSearchTerm("")}
+                  />
+                )}
+              </div>
+              {/* Selected State */}
+              {selectedState && (
+                <span className="selected-chip">
+                  {selectedState}
+                  <button
+                    type="button"
+                    className="ml-2 mr-2"
+                    onClick={() => setSelectedState("")}
+                  >
+                    ✕
+                  </button>
+                </span>
+              )}
+              {/* Dropdown */}
+              {showStateLocationDropdown && (
+                <ul className="state-location-dropdown-list">
+                  {filteredStates.map((state, index) => (
+                    <li
+                      key={index}
+                      onClick={() => {
+                        setSelectedState(state);
+                        setStateLocationSearchTerm(""); // reset search field
+                        setShowStateLocationDropdown(false);
+                        setSelectedLocations([]);
+                      }}
+                    >
+                      {state}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
             <label htmlFor="locations" className="location-label">
               Locations Offered *
             </label>
@@ -570,7 +698,7 @@ function VendorService({ currentStep }) {
                 <input
                   id="location-input"
                   type="text"
-                  placeholder="Search location"
+                  placeholder="Search district/cities location"
                   value={locationSearchTerm}
                   onChange={(e) => setLocationSearchTerm(e.target.value)}
                   onFocus={() => setShowLocationDropdown(true)}

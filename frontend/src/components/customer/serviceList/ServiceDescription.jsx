@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { FaRegHeart, FaHeart, FaRegCalendarCheck, FaBell } from "react-icons/fa6";
 import { BACKEND_URL } from "../../../utils/constant";
 import axios from "axios";
@@ -57,7 +57,19 @@ const price = service.minPrice
 
 const originalPrice = service.originalPrice;
 const discountPercent = service.discountPercent;
+  const [notified, setNotified] = useState(false);
 
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const handleNotifyClick = () => {
+    setNotified(true);
+    setIsAnimating(true);
+
+    setTimeout(() => {
+      setIsAnimating(false); // stop vibrating after 10 seconds
+      console.log("animation stopped");
+    }, 2000);
+  };
 const MAX_LENGTH = 200;
 const shouldTruncate = description.length > MAX_LENGTH;
 const displayDescription = isReadMore || !shouldTruncate

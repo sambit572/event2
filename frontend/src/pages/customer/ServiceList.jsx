@@ -5,18 +5,33 @@ import "./ServiceList.css";
 import Filter from "../../components/customer/serviceList/Filter.jsx";
 import ServiceCard from "./../../components/customer/serviceList/ServiceCard";
 import { BACKEND_URL } from "../../utils/constant.js";
+import { setCategoryServices } from "../../redux/categorySlice";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const ServiceList = ({ onSwitchToLogin }) => {
-  const { categoryId } = useParams();
-  const [services, setServices] = useState([]);
+  const dispatch = useDispatch();
+  // const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const categoryServices = useSelector(
+    (state) => state.category.categoryServices
+  );
+  const { categoryId } = useParams(); // This is the category name passed in URL
+
   useEffect(() => {
+    // console.log("Category ID:", categoryId);
     const fetchServices = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${BACKEND_URL}/common/category/${categoryId}`);
-        setServices(response.data.data);
+        const response = await axios.get(
+          `${BACKEND_URL}/common/category/${categoryId}`
+        );
+        // console.log("Fetched services1:", response.data.data);
+        dispatch(setCategoryServices(response.data.data)); // save to redux
+        // console.log("My data", response.data.data);
+        // setServices(response.data.data);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching services:", error);
       } finally {
@@ -26,6 +41,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
 
     fetchServices();
   }, [categoryId]);
+  // console.log("Fetched services:", categoryServices);
 
   return (
     <div className="serviceList">
@@ -33,9 +49,13 @@ const ServiceList = ({ onSwitchToLogin }) => {
       <div className="serviceCardDetails">
         {loading ? (
           <p>Loading services...</p>
-        ) : services.length > 0 ? (
-          services.map((service) => (
-            <div className="singleServiceCard" key={service._id}>
+        ) : categoryServices.length > 0 ? (
+          categoryServices.map((service, idx) => (
+            <div className="singleServiceCard" key={idx}>
+              <Link
+                to={`/service/${categoryId}/${service._id}`}
+                style={{ textDecoration: "none", color: "inherit" }}
+              ></Link>
               <ServiceCard
                 service={service}
                 onSwitchToLogin={onSwitchToLogin}

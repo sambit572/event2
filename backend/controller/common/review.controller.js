@@ -1,10 +1,11 @@
-import Review from "../../model/common/review.model.js";
+import mongoose from "mongoose";
 import { User } from "../../model/user/user.model.js";
+import { Review } from "../../model/common/review.model.js";
 
-// Add Review (POST)
+// Add a new review
 export const addReview = async (req, res) => {
   try {
-    // console.log("Received review request body:", req.body); // Debug log
+    console.log("Received review request body:", req.body); // Debug log
 
     const { userEmail, reviewMessage, rating, reviewType } = req.body;
 
@@ -49,72 +50,135 @@ export const addReview = async (req, res) => {
       });
     }
 
-    // Check for duplicate review from the same email
-    const existingReview = await Review.findOne({ userEmail });
-    if (existingReview) {
-      console.log("Duplicate review attempt from:", userEmail);
-      return res.status(409).json({
-        success: false,
-        message:
-          "A review already exists from this email. Only one review per email is allowed.",
-      });
-    }
+    const userId = req.user._id;
 
-    // Create new review
-    const newReview = new Review({
-      userEmail: userEmail.toLowerCase().trim(), // Normalize email
-      reviewMessage: reviewMessage.trim(),
-      rating: Number(rating),
-      reviewType,
+    console.log("Incoming review data:", {
+      serviceId,
+      rating,
+      reviewMessage,
+      userId,
     });
 
-    console.log("Creating new review:", newReview);
-
-    await newReview.save();
-
-    console.log("Review saved successfully for:", userEmail);
-
-    res.status(201).json({
-      success: true,
-      message: "Review saved successfully!",
-      data: {
-        id: newReview._id,
-        userEmail: newReview.userEmail,
-        rating: newReview.rating,
-        reviewType: newReview.reviewType,
-        createdAt: newReview.createdAt,
-      },
+    const review = new Review({
+      serviceId,
+      userId,
+      rating,
+      reviewMessage,
     });
+
+    await review.save();
+
+    res.status(201).json({ success: true, review });
   } catch (err) {
-    console.error("Error in addReview:", err);
-
-    // Handle specific MongoDB errors
-    if (err.name === "ValidationError") {
-      const validationErrors = Object.values(err.errors).map((e) => e.message);
-      return res.status(400).json({
-        success: false,
-        message: "Validation failed: " + validationErrors.join(", "),
-        errors: validationErrors,
-      });
-    }
-
-    if (err.code === 11000) {
-      // Duplicate key error
-      return res.status(409).json({
-        success: false,
-        message: "A review from this email already exists.",
-      });
-    }
-
-    res.status(500).json({
-      success: false,
-      message: "Internal server error. Please try again later.",
-      error: process.env.NODE_ENV === "development" ? err.message : undefined,
-    });
+    console.error("Add Review Error:", err);
+    res.status(500).json({ success: false, message: "Failed to add review" });
   }
 };
 
-// Get All Reviews with Pagination (GET)
+// Get reviews by service
+export const getReviewsByService = async (req, res) => {
+  try {
+    const { serviceId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(serviceId)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid serviceId" });
+    }
+
+    const reviews = await Review.aggregate([
+      {
+        $match: {
+          serviceId: mongoose.Types.ObjectId.createFromHexString(serviceId),
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "userDetails",
+        },
+      },
+      { $unwind: "$userDetails" },
+      {
+        $sort: { createdAt: -1 },
+      },
+      {
+        $project: {
+          _id: 1,
+          rating: 1,
+          reviewMessage: 1,
+          createdAt: 1,
+          "userDetails._id": 1,
+          "userDetails.fullName": 1,
+        },
+      },
+    ]);
+
+    res.status(200).json({ success: true, reviews });
+  } catch (err) {
+    console.error("Get Reviews Error:", err);
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to fetch reviews" });
+  }
+};
+
+export const getServiceRatingSummary = async (req, res) => {
+  try {
+    const { serviceId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(serviceId)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid serviceId" });
+    }
+
+    // --- Ratings Breakdown (all ratings, with or without reviewMessage) ---
+    const agg = await Review.aggregate([
+      { $match: { serviceId: new mongoose.Types.ObjectId(serviceId) } },
+      {
+        $group: {
+          _id: "$rating",
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const breakdown = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+    let totalRatings = 0;
+    let totalScore = 0;
+
+    agg.forEach((r) => {
+      breakdown[r._id] = r.count;
+      totalRatings += r.count;
+      totalScore += r._id * r.count;
+    });
+
+    const avgRating = totalRatings ? totalScore / totalRatings : 0;
+
+    // --- Count only those with reviewMessage ---
+    const totalReviews = await Review.countDocuments({
+      serviceId: new mongoose.Types.ObjectId(serviceId),
+      reviewMessage: { $ne: null, $ne: "" }, // only if review text exists
+    });
+
+    res.json({
+      success: true,
+      data: {
+        averageRating: avgRating,
+        totalRatings, // all ratings
+        totalReviews, // only with reviewMessage
+        breakdown,
+      },
+    });
+  } catch (err) {
+    console.error("getServiceRatingSummary error:", err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
 export const getAllReviews = async (req, res) => {
   try {
     console.log("Fetching reviews with query:", req.query); // Debug log
@@ -165,6 +229,8 @@ export const getAllReviews = async (req, res) => {
 
     console.log(`Found ${reviews.length} reviews out of ${totalReviews} total`);
 
+    // console.log("Reviews fetched:", reviews);
+
     // Enrich each review with profile image and name
     const enrichedReviews = await Promise.all(
       reviews.map(async (review) => {
@@ -173,6 +239,8 @@ export const getAllReviews = async (req, res) => {
           const user = await User.findOne({
             email: { $regex: new RegExp(`^${review.userEmail}$`, "i") },
           });
+
+          // console.log(user ? `Found user: ${user.email}` : "User not found");
 
           let userName = "";
           let profileImage = "";

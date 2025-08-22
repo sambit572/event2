@@ -3,8 +3,11 @@ import "./DashboardServices.css";
 import { FaTrash, FaEdit, FaPlus } from "react-icons/fa";
 import axios from "axios";
 import { BACKEND_URL } from "../../utils/constant.js";
+import { MdReportGmailerrorred } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 const DashboardServices = () => {
+  const navigate = useNavigate();
   const [services, setServices] = useState([]);
   const [editingIndex, setEditingIndex] = useState(null);
   const [selectedImages, setSelectedImages] = useState({});
@@ -21,7 +24,7 @@ const DashboardServices = () => {
     const hStr = hours > 0 ? `${hours}h ` : "";
     const mStr = minutes > 0 ? `${minutes}m` : "";
 
-    return [dStr, hStr, mStr].filter(Boolean).join(" : ")|| "0m";
+    return [dStr, hStr, mStr].filter(Boolean).join(" : ") || "0m";
   }
 
   const updateDuration = (value, unit) => {
@@ -40,7 +43,6 @@ const DashboardServices = () => {
       duration: totalMinutes,
     }));
   };
-
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -79,7 +81,8 @@ const DashboardServices = () => {
       const totalImages = existingImages.length + newImages.length;
       if (totalImages > 5) {
         alert(
-          `You can upload a maximum of 5 images.\nYou already have ${existingImages.length
+          `You can upload a maximum of 5 images.\nYou already have ${
+            existingImages.length
           } images.\nPlease remove ${totalImages - 5} image(s) before saving.`
         );
         return;
@@ -134,13 +137,18 @@ const DashboardServices = () => {
       setServices(updatedList);
       setEditingIndex(null);
     } catch (error) {
-      console.error("❌ Failed to update service:", error.response?.data || error.message);
+      console.error(
+        "❌ Failed to update service:",
+        error.response?.data || error.message
+      );
       alert(error.response?.data?.message || "Update failed");
     }
   };
 
   const handleDelete = async (index) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this service?");
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this service?"
+    );
     if (!confirmDelete) return;
 
     try {
@@ -153,7 +161,10 @@ const DashboardServices = () => {
       updatedList.splice(index, 1);
       setServices(updatedList);
     } catch (error) {
-      console.error("❌ Failed to delete service:", error.response?.data || error.message);
+      console.error(
+        "❌ Failed to delete service:",
+        error.response?.data || error.message
+      );
       alert(error.response?.data?.message || "Delete failed");
     }
   };
@@ -187,7 +198,9 @@ const DashboardServices = () => {
       editedData.serviceImage.length + newImages.length + files.length;
     if (totalSelected > 5) {
       alert(
-        `You can only upload up to 5 images in total. Remove ${totalSelected - 5} image(s).`
+        `You can only upload up to 5 images in total. Remove ${
+          totalSelected - 5
+        } image(s).`
       );
       return;
     }
@@ -204,7 +217,9 @@ const DashboardServices = () => {
     const newAvailability = !currentService.available;
 
     if (!newAvailability) {
-      const confirm = window.confirm("Are you sure you want to mark this service as unavailable?");
+      const confirm = window.confirm(
+        "Are you sure you want to mark this service as unavailable?"
+      );
       if (!confirm) return;
     }
 
@@ -232,11 +247,12 @@ const DashboardServices = () => {
   }, [newImagePreviews]);
 
   return (
-    <div className="service-container"> 
+    <div className="service-container">
       {services.length > 0 ? (
         services.map((service, index) => {
           const isEditing = editingIndex === index;
-          const selectedImage = selectedImages[index] || service.serviceImage?.[0];
+          const selectedImage =
+            selectedImages[index] || service.serviceImage?.[0];
 
           return (
             <section key={index} className="service-box xl:ml-20 mb-10">
@@ -536,9 +552,20 @@ const DashboardServices = () => {
                       <strong>Description: </strong>
                     </div>
                     <div>{service.serviceDes}</div>
-                    <div className="u">
+                    <div className="u flex justify-between">
                       <strong>User Reviews: </strong>
                       {service.userReviews}
+                      <button
+                        onClick={() =>
+                          navigate("/report", {
+                            state: { selectedType: "vendor" },
+                          })
+                        }
+                        className="align_center w-24 justify-evenly bg-[#001F3F] text-white p-2 font-semibold rounded-lg shadow mt-2"
+                      >
+                        <MdReportGmailerrorred />
+                        Report
+                      </button>
                     </div>
                   </div>
                 </div>
