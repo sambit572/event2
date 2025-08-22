@@ -156,7 +156,7 @@ function Footer() {
                 >
                   <p>
                     <img src="/gmail.png" className="icon" alt="" />{" "}
-                    techsupport@eventsbridge.com
+                    techsupport@eventsbridge.com{" "}
                   </p>
                   <p>
                     <img src="/phone-call.png" className="icon" alt="" /> +91
@@ -227,9 +227,24 @@ function Footer() {
                     openSections.privacy ? "show" : ""
                   }`}
                 >
-                  <p>Terms and Conditions</p>
-                  <p>Refund Policy</p>
-                  <p>Legal Information</p>
+                  <p
+                    className="hover:text-[#ffc107]"
+                    onClick={() => navigate("/terms-and-conditions")}
+                  >
+                    Terms and Conditions
+                  </p>
+                  <p
+                    className="hover:text-[#ffc107]"
+                    onClick={() => navigate("/refund-policy")}
+                  >
+                    Refund Policy
+                  </p>
+                  <p
+                    className="hover:text-[#ffc107]"
+                    onClick={() => navigate("/privacy-policy")}
+                  >
+                    Legal Information
+                  </p>
                 </div>
               </div>
             </div>
