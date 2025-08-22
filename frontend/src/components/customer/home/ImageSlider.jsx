@@ -33,7 +33,7 @@ export default function ImageSlider({ images }) {
         <div className="pl-10 pr-0 py-10  max-w-7xl w-full">
           <main className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-center">
             <div>
-              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-6xl font-extrabold mb-6 text-white drop-shadow-lg tracking-wide">
+              <h1 className="text-3xl sm:text-6xl md:text-7xl lg:text-6xl font-extrabold mb-6 text-white drop-shadow-lg tracking-wide">
                 EventsBridge
               </h1>
               <p className="text-sm max-w-xl font-bold text-white-900 drop-shadow-md leading-relaxed">
