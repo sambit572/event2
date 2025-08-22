@@ -103,7 +103,11 @@ export const createService = async (req, res) => {
     }
 
     // ✅ Save service document to DB
-    const newService = await Service.create({
+    // ✅ Create or Update service document in DB
+    let newService;
+    let responseMessage;
+
+    const serviceData = {
       vendorId: req.vendor._id,
       serviceCategory,
       serviceImage: imageUrls,
@@ -111,21 +115,36 @@ export const createService = async (req, res) => {
       maxPrice,
       serviceName,
       stateLocationOffered: stateLocationsArray,
-      locationOffered: locationsArray, // ✅ store array
+      locationOffered: locationsArray,
       serviceDes,
       duration,
-    });
+    };
 
-    // ✅ Update vendor registration progress if needed
+    // If vendor is still registering, they can only have ONE service.
+    // We use "upsert" to create it if it's their first time, or update it if they're editing.
     if (req.vendor.isRegistrationComplete === false) {
+      console.log("🔵 Vendor registration not complete. Upserting service...");
+      newService = await Service.findOneAndUpdate(
+        { vendorId: req.vendor._id }, // Condition to find the service
+        serviceData,                  // The data to update or insert
+        { new: true, upsert: true }   // Options: return the new doc, and create if it doesn't exist
+      );
+
+      // Also update their registration progress
       await Vendor.findByIdAndUpdate(req.vendor._id, {
         $set: { registrationProgress: 2 },
       });
+      responseMessage = "Service saved successfully during registration";
+    } else {
+      // If registration is complete, they can add multiple services, so we always create a new one.
+      console.log("🟢 Vendor registration complete. Creating new service...");
+      newService = await Service.create(serviceData);
+      responseMessage = "New service created successfully";
     }
 
     return res
       .status(200)
-      .json(new ApiResponse(200, newService, "Service created successfully"));
+      .json(new ApiResponse(200, newService, responseMessage));
   } catch (error) {
     console.error("❌ Service creation error:", error);
     res.status(500).json({ message: "Internal server error" });
