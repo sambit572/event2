@@ -237,3 +237,98 @@ export const searchController = async (req, res) => {
         });
     }
 };
+
+/**
+ * getSearchSuggestions
+ *
+ * Endpoint: GET /api/search/suggestion
+ *
+ * Description:
+ *   Fetches autocomplete suggestions for search queries. The suggestions are derived from both the 'services' and 'vendors' collections.
+ *   Uses MongoDB's aggregation pipeline and autocomplete search indexes for efficient querying.
+ *
+ * Request Query Parameters:
+ *   - q (string, required): The search term for which suggestions are needed (minimum 2 characters).
+ *
+ * Response Format:
+ *   Status: 200 OK
+ *   {
+ *     success: true,
+ *     suggestions: ["suggestion1", "suggestion2", ...]
+ *   }
+ *
+ * Error Responses:
+ *   - 500 Internal Server Error: For unexpected errors during aggregation or database access.
+ *     {
+ *       success: false,
+ *       message: "Server error fetching suggestions."
+ *     }
+ *
+ * Implementation Notes:
+ *   - The method uses MongoDB's $search stage for autocomplete functionality.
+ *   - Combines results from 'services' and 'vendors' collections using $unionWith.
+ *   - Limits the total number of suggestions to 8 for performance and usability.
+ */
+export const getSearchSuggestions = async (req, res) => {
+    try {
+        const { q } = req.query;
+
+        // Validate the query parameter 'q'. If it's missing or too short, return an empty suggestions list.
+        if (!q || q.trim().length < 2) {
+            return res.status(200).json({ success: true, suggestions: [] });
+        }
+        const searchTerm = q.trim();
+
+        const suggestions = await Service.aggregate([
+            // Stage 1: Search the 'services' collection using its autocomplete index.
+            {
+                $search: {
+                    index: "searchSuggestion", // The index on the 'services' collection.
+                    autocomplete: {
+                        query: searchTerm, // The search term provided by the user.
+                        path: "serviceName", // The field to search within the 'services' collection.
+                    }
+                }
+            },
+            // Stage 2: Combine results with a search on the 'vendors' collection.
+            {
+                $unionWith: {
+                    coll: "vendors", // The name of the 'vendors' collection.
+                    pipeline: [
+                        {
+                            $search: {
+                                index: "vendorSuggestions", // The index on the 'vendors' collection.
+                                autocomplete: {
+                                    query: searchTerm, // The search term provided by the user.
+                                    path: "fullName" // The field to search within the 'vendors' collection.
+                                }
+                            }
+                        }
+                    ]
+                }
+            },
+            // Stage 3: Project all results into a consistent format.
+            {
+                $project: {
+                    _id: 0, // Exclude the '_id' field from the results.
+                    suggestion: {
+                        $ifNull: ["$serviceName", "$fullName"] // Use 'serviceName' if available, otherwise use 'fullName'.
+                    }
+                }
+            },
+            // Stage 4: Limit the total number of suggestions to 8.
+            {
+                $limit: 8
+            }
+        ]);
+
+        // Extract just the string values for a clean response.
+        const suggestionList = suggestions.map(item => item.suggestion);
+
+        res.status(200).json({ success: true, suggestions: suggestionList });
+
+    } catch (error) {
+        console.error("Error fetching search suggestions:", error);
+        res.status(500).json({ success: false, message: "Server error fetching suggestions." });
+    }
+};
