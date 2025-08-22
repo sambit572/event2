@@ -22,6 +22,7 @@ const Filter = ({ onApply, onCancel }) => {
 
   const [filters, setFilters] = useState(defaultFilters);
   const [showFilter, setShowFilter] = useState(false);
+  const [sortBy, setSortBy] = useState("price"); // Add state for sortBy
 
   const [states] = useState(Object.keys(locationData));
   const [subdistricts, setSubdistricts] = useState([]);
@@ -81,7 +82,8 @@ const Filter = ({ onApply, onCancel }) => {
 
   // Apply filters
   const handleApply = () => {
-    onApply(filters);
+    const appliedFilters = { ...filters, sortBy }; // Update handleApply to include sortBy
+    onApply(appliedFilters);
     setShowFilter(false);
   };
 
@@ -120,8 +122,8 @@ const Filter = ({ onApply, onCancel }) => {
           <div className="mb-6">
             <h3 className="font-medium text-gray-800 mb-3">Sort By</h3>
             <select
-              // value={filters.sortBy}
-              // onChange={(e) => handleFilterChange("sortBy", e.target.value)}
+              value={sortBy} // Update the Sort By dropdown to use state
+              onChange={(e) => setSortBy(e.target.value)}
               className="w-full px-3 py-[0.3rem] border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
             >
               <option value="price">Price</option>
@@ -174,10 +176,8 @@ const Filter = ({ onApply, onCancel }) => {
               <input
                 type="number"
                 placeholder="0"
-                // value={priceInputs.minPrice}
-                // onChange={(e) =>
-                //   handlePriceInputChange("minPrice", e.target.value)
-                // }
+                value={filters.minPrice} // Ensure price inputs update filters
+                onChange={(e) => handleMinChange(e)}
                 className="w-full px-3 py-[0.3rem] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
               />
             </div>
@@ -188,10 +188,8 @@ const Filter = ({ onApply, onCancel }) => {
               <input
                 type="number"
                 placeholder="200000"
-                // value={priceInputs.maxPrice}
-                // onChange={(e) =>
-                //   handlePriceInputChange("maxPrice", e.target.value)
-                // }
+                value={filters.maxPrice} // Ensure price inputs update filters
+                onChange={(e) => handleMaxChange(e)}
                 className="w-full px-3 py-[0.3rem] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
               />
             </div>
