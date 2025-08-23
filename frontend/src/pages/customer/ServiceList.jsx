@@ -68,5 +68,5 @@ const ServiceList = ({ onSwitchToLogin }) => {
       </div>
     </div>
   );
-};  
+};
 export default ServiceList;

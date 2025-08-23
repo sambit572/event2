@@ -39,7 +39,6 @@ const Service = ({ onSwitchToLogin }) => {
     }
   }, [categoryId]);
 
- 
   const [service, setService] = useState(null);
   const [mediaList, setMediaList] = useState([]);
   const [selectMedia, setSelectMedia] = useState(null);
@@ -104,26 +103,28 @@ const Service = ({ onSwitchToLogin }) => {
     }
   };
 
-  const handleAddToCart = async () => {
+  const handleAddToCart = async (e) => {
+    e.stopPropagation();
     const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
     if (!isLoggedIn) {
       toast.error("Please log in to add items to your cart.");
-      if (onSwitchToLogin) {
-        onSwitchToLogin(true);
-      } else {
-        navigate("/login");
-      }
+      if (onSwitchToLogin) onSwitchToLogin(true);
       return;
     }
     try {
-      await axios.post(`${BACKEND_URL}/cart/add`, { serviceId: serviceId });
+      await axios.post(
+        `${BACKEND_URL}/cart/add`,
+        { serviceId },
+        { withCredentials: true }
+      );
       toast.success("Service added to your cart!");
     } catch (err) {
       if (err.response && err.response.status === 409) {
         toast.error("This service is already in your cart.");
       } else {
-        toast.error("Failed to add service. Please try again.");
+        toast.error("Failed to add service.");
       }
+      console.error("Add to cart error:", err);
     }
   };
 
