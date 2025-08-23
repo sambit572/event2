@@ -13,7 +13,7 @@ const firebaseConfig = {
   storageBucket: "eventsbridge-verification.firebasestorage.app",
   messagingSenderId: "1003710775298",
   appId: "1:1003710775298:web:841711699eea104f1da71b",
-  measurementId: "G-VLTY6BZ6G8"
+  measurementId: "G-VLTY6BZ6G8",
 };
 
 // Initialize Firebase

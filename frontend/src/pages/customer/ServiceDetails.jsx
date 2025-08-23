@@ -1,21 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { FaHeart } from "react-icons/fa6";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 import "./ServiceDetails.css";
-
-// import { CategoryData } from "../../utils/CatogoryData.jsx";
 // import { similarServiceData } from "../../components/customer/ServiceDetails/SimilarServiceData.jsx";
-
 import RatingDetails from "../../components/customer/servicedetails/RatingDetails.jsx";
 import SimilarProductCard from "../../components/customer/servicedetails/PeopleAlsoBooked.jsx";
 import DJServiceCard from "../../components/customer/servicedetails/ServiceDetailCard.jsx";
 import ReviewList from "../../components/customer/servicedetails/ReviewList.jsx";
 import ReviewForm from "../../components/customer/servicedetails/ReviewForm.jsx";
-import axios from "axios";
-import { useEffect } from "react";
-import { BACKEND_URL } from "../../utils/constant.js";
 import { FaBell } from "react-icons/fa6";
+import { BACKEND_URL } from "../../utils/constant.js";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { setCategoryServices } from "../../redux/categorySlice";
@@ -42,40 +38,11 @@ const Service = ({ onSwitchToLogin }) => {
         .catch((err) => console.error(err));
     }
   }, [categoryId]);
-  // console.log("similarServiceData", similarServiceData.length);
-  // useEffect(() => {
-  //   console.log("Category ID:", categoryId);
-  //   const fetchServices = async () => {
-  //     try {
-  //       setLoading(true);
-  //       const response = await axios.get(
-  //         `${BACKEND_URL}/common/category/${categoryId}`
-  //       );
-  //       console.log("Fetched services:", response);
-  //       setServices(response.data.data);
-  //       setLoading(false);
-  //     } catch (error) {
-  //       console.error("Error fetching services:", error);
-  //       setLoading(false);
-  //     }
-  //   };
 
-  //   fetchServices();
-  // }, [categoryId]);
-  const handleBookNow = () => {
-    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
-
-    if (isLoggedIn) {
-      navigate("/userdetails");
-    } else {
-      onSwitchToLogin(true); // ✅ this opens your login popup
-    }
-  };
+ 
   const [service, setService] = useState(null);
   const [mediaList, setMediaList] = useState([]);
   const [selectMedia, setSelectMedia] = useState(null);
-  const [isWishlisted, setIsWishlisted] = useState(false);
-
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [latestReview, setLatestReview] = useState(null);
@@ -92,9 +59,7 @@ const Service = ({ onSwitchToLogin }) => {
       console.log("animation stopped");
     }, 2000);
   };
-  const handleClick = () => {
-    setIsWishlisted(!isWishlisted);
-  };
+
   useEffect(() => {
     const fetchService = async () => {
       try {
@@ -122,14 +87,71 @@ const Service = ({ onSwitchToLogin }) => {
 
     fetchService();
   }, [serviceId]);
-  const available = service?.available || false;
+
+  const isVendorAvailable = service?.available !== false;
+
+  const handleBookNow = () => {
+    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
+    if (isLoggedIn) {
+      navigate(`/userdetails/${serviceId}`);
+    } else {
+      if (onSwitchToLogin) {
+        onSwitchToLogin(true);
+      } else {
+        toast.error("Please log in to book this service.");
+        navigate("/login");
+      }
+    }
+  };
+
+  const handleAddToCart = async () => {
+    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
+    if (!isLoggedIn) {
+      toast.error("Please log in to add items to your cart.");
+      if (onSwitchToLogin) {
+        onSwitchToLogin(true);
+      } else {
+        navigate("/login");
+      }
+      return;
+    }
+    try {
+      await axios.post(`${BACKEND_URL}/cart/add`, { serviceId: serviceId });
+      toast.success("Service added to your cart!");
+    } catch (err) {
+      if (err.response && err.response.status === 409) {
+        toast.error("This service is already in your cart.");
+      } else {
+        toast.error("Failed to add service. Please try again.");
+      }
+    }
+  };
+
+  const handleNotifyMe = async (e) => {
+    e.stopPropagation();
+    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
+    if (!isLoggedIn) {
+      toast.error("Please log in to get notifications.");
+      if (onSwitchToLogin) onSwitchToLogin(true);
+      return;
+    }
+    try {
+      await axios.post(`${BACKEND_URL}/notifications/notify-when-available`, {
+        serviceId,
+      });
+      toast.success("You'll be notified when this service becomes available!");
+    } catch (err) {
+      toast.error("Failed to set up notification.");
+      console.error("Notify me error:", err);
+    }
+  };
+
   if (loading) return <p>Loading service details...</p>;
   if (error || !service) return <p>{error || "Service not found."}</p>;
 
   return (
     <div className="dj">
       <div className="section_one">
-        {/* Left Section */}
         <div className="left-fixed">
           <div className="dj-img">
             <div className="thumbnail-list">
@@ -139,21 +161,50 @@ const Service = ({ onSwitchToLogin }) => {
                   onClick={() => setSelectMedia(media)}
                   className="li1"
                 >
-                  <img src={media.src} alt={`media-${index}`} />
+                  <img
+                    src={media.src}
+                    alt={`media-${index}`}
+                    className={
+                      !isVendorAvailable ? "grayscale brightness-75" : ""
+                    }
+                  />
                 </div>
               ))}
             </div>
-            <div className="big-image">
-              <img src={selectMedia?.src} alt="Selected media" />
+            <div className="big-image relative">
+              <img
+                src={selectMedia?.src}
+                alt="Selected media"
+                className={`transition-all duration-300 ${
+                  !isVendorAvailable ? "grayscale brightness-50" : ""
+                }`}
+              />
+
+              {!isVendorAvailable && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40">
+                  <div className="rounded-lg bg-red-600 px-6 py-5 text-center shadow-lg">
+                    <p className="text-sm font-bold text-white">
+                      OUT OF SERVICE
+                    </p>
+                    <p className="text-xs text-red-100">
+                      Oops! We’re on a quick break, back soon.
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-          <div className="flex justify-center flex-col sm:flex-row-reverse gap-4">
-            {available ? (
+
+          {/* THIS IS THE CORRECTED LINE */}
+          <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-4">
+            {isVendorAvailable ? (
               <>
-                <button className="w-full sm:w-44 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-md transition-all duration-300">
+                <button
+                  className="w-full sm:w-44 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-md transition-all duration-300"
+                  onClick={handleAddToCart}
+                >
                   Add to Cart
                 </button>
-
                 <button
                   className="w-full sm:w-44 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-green-700 shadow-md hover:from-green-500 hover:to-green-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-400"
                   onClick={handleBookNow}
@@ -163,31 +214,18 @@ const Service = ({ onSwitchToLogin }) => {
               </>
             ) : (
               <button
-                onClick={handleNotifyClick}
-                className={`w-full sm:w-44 flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-blue-900 bg-transparent border border-blue-900
-        hover:bg-blue-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-md transition-all duration-300`}
+                className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-full border-none bg-gradient-to-br from-[#6c757d] to-[#495057] px-12 py-3 text-sm font-semibold text-white normal-case shadow-[0_4px_15px_rgba(108,117,125,0.3)] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:from-[#5a6268] hover:to-[#343a40] hover:shadow-[0_6px_20px_rgba(108,117,125,0.4)] sm:w-auto sm:min-w-[140px]"
+                onClick={handleNotifyMe}
               >
-                {!notified ? (
-                  "Notify"
-                ) : (
-                  <span
-                    className={`flex items-center gap-1 ${
-                      isAnimating ? "animate-bell" : ""
-                    }`}
-                  >
-                    <FaBell className="text-base" />
-                  </span>
-                )}
+                <FaBell className="text-sm" />
+                Notify Me
               </button>
             )}
           </div>
         </div>
 
-        {/* Right Section */}
         <div className="right-scrollable">
-          {/* Dynamic Service Info */}
           <DJServiceCard service={service} />
-
           <div className="why-choose">
             <h2>Why Choose Us?</h2>
             <ul>
@@ -197,25 +235,19 @@ const Service = ({ onSwitchToLogin }) => {
               <li>Custom Packages & Friendly Support</li>
             </ul>
           </div>
-
           <div className="reviews">
             <h3>DJ Ratings & Reviews</h3>
             <RatingDetails />
             <hr />
-
-            {/* ✅ Update latestReview on submission */}
             <h4 style={{ marginTop: "30px", fontWeight: "bold" }}>
               Write a Review
             </h4>
             <ReviewForm onNewReview={(review) => setLatestReview(review)} />
-
-            {/* ✅ Pass latestReview to ReviewList */}
             <ReviewList newReview={latestReview} />
           </div>
         </div>
       </div>
 
-      {/* Similar Services */}
       <div className="view-dj-section">
         <h2 className="people-also-book">People Also Booked</h2>
         <div className="view-dj">

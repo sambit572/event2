@@ -1,16 +1,53 @@
 import mongoose from "mongoose";
 import { User } from "../../model/user/user.model.js";
-import Review from "../../model/user/userReview.model.js";
+import { Review } from "../../model/common/review.model.js";
 
 // Add a new review
 export const addReview = async (req, res) => {
   try {
-    const { serviceId, rating, reviewMessage } = req.body;
+    console.log("Received review request body:", req.body); // Debug log
 
-    if (!req.user) {
-      return res
-        .status(401)
-        .json({ success: false, message: "User not logged in" });
+    const { userEmail, reviewMessage, rating, reviewType } = req.body;
+
+    // Enhanced validation with specific error messages
+    const errors = [];
+    if (!userEmail) errors.push("userEmail is required");
+    if (!reviewMessage) errors.push("reviewMessage is required");
+    if (!rating) errors.push("rating is required");
+    if (!reviewType) errors.push("reviewType is required");
+
+    if (errors.length > 0) {
+      console.log("Validation errors:", errors);
+      return res.status(400).json({
+        success: false,
+        message: errors.join(", ") + ".",
+        errors: errors,
+      });
+    }
+
+    // Validate rating range
+    if (rating < 1 || rating > 5) {
+      return res.status(400).json({
+        success: false,
+        message: "Rating must be between 1 and 5.",
+      });
+    }
+
+    // Validate reviewType
+    if (!["product", "vendorService"].includes(reviewType)) {
+      return res.status(400).json({
+        success: false,
+        message: "reviewType must be either 'product' or 'vendorService'.",
+      });
+    }
+
+    // Validate email format (basic)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(userEmail)) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide a valid email address.",
+      });
     }
 
     const userId = req.user._id;
@@ -50,7 +87,11 @@ export const getReviewsByService = async (req, res) => {
     }
 
     const reviews = await Review.aggregate([
-      { $match: { serviceId: new mongoose.Types.ObjectId(serviceId) } },
+      {
+        $match: {
+          serviceId: mongoose.Types.ObjectId.createFromHexString(serviceId),
+        },
+      },
       {
         $lookup: {
           from: "users",
@@ -135,5 +176,142 @@ export const getServiceRatingSummary = async (req, res) => {
   } catch (err) {
     console.error("getServiceRatingSummary error:", err);
     res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+export const getAllReviews = async (req, res) => {
+  try {
+    console.log("Fetching reviews with query:", req.query); // Debug log
+
+    // Pagination parameters (default: page 1, 10 per page)
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    // Validate pagination parameters
+    if (page < 1) {
+      return res.status(400).json({
+        success: false,
+        message: "Page number must be greater than 0",
+      });
+    }
+
+    if (limit < 1 || limit > 100) {
+      return res.status(400).json({
+        success: false,
+        message: "Limit must be between 1 and 100",
+      });
+    }
+
+    // Optional filter by reviewType
+    const reviewType = req.query.reviewType;
+    const filter = {};
+
+    if (reviewType) {
+      if (!["product", "vendorService"].includes(reviewType)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid reviewType. Must be 'product' or 'vendorService'",
+        });
+      }
+      filter.reviewType = reviewType;
+    }
+
+    console.log("Using filter:", filter);
+
+    // Fetch reviews sorted by creation date (newest first)
+    const reviews = await Review.find(filter)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    const totalReviews = await Review.countDocuments(filter);
+
+    console.log(`Found ${reviews.length} reviews out of ${totalReviews} total`);
+
+    // console.log("Reviews fetched:", reviews);
+
+    // Enrich each review with profile image and name
+    const enrichedReviews = await Promise.all(
+      reviews.map(async (review) => {
+        try {
+          // Find user by email (case-insensitive)
+          const user = await User.findOne({
+            email: { $regex: new RegExp(`^${review.userEmail}$`, "i") },
+          });
+
+          // console.log(user ? `Found user: ${user.email}` : "User not found");
+
+          let userName = "";
+          let profileImage = "";
+          let initials = "";
+
+          if (user) {
+            // Prefer full name
+            if (user.fullName) {
+              userName = user.fullName;
+            } else if (user.firstName || user.lastName) {
+              userName = `${user.firstName || ""} ${
+                user.lastName || ""
+              }`.trim();
+            } else {
+              userName = review.userEmail.split("@")[0];
+            }
+
+            // Get profile image from either field
+            profileImage = user.profilePhoto || user.profileImage || "";
+          } else {
+            // User not found — fallback to email prefix
+            console.log(`User not found for email: ${review.userEmail}`);
+            userName = review.userEmail.split("@")[0];
+          }
+
+          // Generate initials from userName
+          if (userName) {
+            const parts = userName.trim().split(" ");
+            initials = parts
+              .map((p) => p[0])
+              .join("")
+              .toUpperCase()
+              .slice(0, 2);
+          } else {
+            initials = review.userEmail.charAt(0).toUpperCase();
+          }
+
+          return {
+            ...review.toObject(),
+            userName,
+            profileImage,
+            initials,
+          };
+        } catch (userError) {
+          console.error(`Error enriching review ${review._id}:`, userError);
+          // Return basic review data if enrichment fails
+          return {
+            ...review.toObject(),
+            userName: review.userEmail.split("@")[0],
+            profileImage: "",
+            initials: review.userEmail.charAt(0).toUpperCase(),
+          };
+        }
+      })
+    );
+
+    // Send response
+    res.status(200).json({
+      success: true,
+      totalReviews,
+      currentPage: page,
+      totalPages: Math.ceil(totalReviews / limit),
+      reviewsPerPage: limit,
+      reviews: enrichedReviews,
+    });
+  } catch (error) {
+    console.error("Error fetching reviews:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch reviews",
+      error: process.env.NODE_ENV === "development" ? error.message : undefined,
+    });
   }
 };

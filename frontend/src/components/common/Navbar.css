@@ -768,3 +768,33 @@
     width: 120px;
   }
 }
+.navbarCartIcon {
+  /* This is the anchor for the badge */
+  position: relative;
+  display: flex; /* Helps with icon alignment */
+  align-items: center;
+}
+
+.cart-badge {
+  /* Positions the badge on top of the icon */
+  position: absolute;
+  top: -8px; /* Adjust to move up/down */
+  right: -8px; /* Adjust to move left/right */
+
+  /* Styling for the red circle */
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  border: 1px solid white;
+
+  /* Sizing and centering the number */
+  font-size: 11px;
+  font-weight: bold;
+  height: 16px;
+  min-width: 16px;
+  padding: 0 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 2; /* Ensures number is vertically centered */
+}

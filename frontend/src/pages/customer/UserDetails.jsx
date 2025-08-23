@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
+import { BACKEND_URL } from "../../utils/constant.js";
+import { useSelector } from "react-redux";
+
 
 // Data objects (stateDistricts, districtCities, aliases) remain the same...
 const stateDistricts = {
@@ -287,10 +291,16 @@ const FormField = ({
 };
 
 const UserDetails = () => {
+  const userId = useSelector((state) => state.user.user?._id);
+  const navigate = useNavigate();
   const [userName, setUserName] = useState("");
   const [showPopup, setShowPopup] = useState(false);
   const [locationMessage, setLocationMessage] = useState("");
+  const { serviceId } = useParams();
   const [formData, setFormData] = useState({
+    serviceId: serviceId,
+    bookedBy:"",
+    bookedById: "",
     phone: "",
     altPhone: "",
     startDate: "",
@@ -392,7 +402,7 @@ const UserDetails = () => {
     }
   };
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
     const { pincode } = formData;
     const pincodeRegex = /^\d{6}$/;
@@ -400,14 +410,28 @@ const UserDetails = () => {
       alert("Pincode must be exactly 6 digits.");
       return;
     }
+    formData.bookedById = userId;
+    formData.bookedBy = userName.trim() || "Anonymous User";
     console.log("Form Data:", formData);
     const allFieldsFilled =
       userName.trim() !== "" &&
       Object.values(formData).every((value) => String(value).trim() !== "");
     console.log("All fields filled:", allFieldsFilled);
     if (allFieldsFilled) {
+      console.log("Saving user details... ");
+      const response = await axios.post(
+        `${BACKEND_URL}/user/save-details`,
+        {
+          formData,
+        },
+        { withCredentials: true }
+      );
+      // console.log("User details saved:", response.data.data);
+      const userDetailsId = response.data.data._id;
       setShowPopup(true);
       setTimeout(() => setShowPopup(false), 3000);
+      navigate(`/pop-up/${userDetailsId}`);
+     
     } else {
       alert("Please fill in all fields before saving.");
     }
@@ -739,7 +763,7 @@ const UserDetails = () => {
           {showPopup && (
             <div className="px-5 py-4 mt-5 text-base text-center text-green-800 bg-gradient-to-r from-green-100 to-green-200 border-l-[6px] border-l-green-500 rounded-xl animate-fadeIn">
               <strong className="block text-lg font-bold">{userName},</strong>
-              <p className="mt-1 text-sm">
+              <p className="mt-1 text-sm text-black">
                 Your User Details Saved Successfully!
               </p>
             </div>

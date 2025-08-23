@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-
+import axios from "axios";
 // Core Components
 import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
@@ -34,7 +34,7 @@ import Wishlist from "./pages/customer/Wishlist.jsx";
 import Profile from "./components/customer/profile/Profile.jsx";
 import UserDetails from "./pages/customer/UserDetails.jsx";
 
-import PopUp from "./components/customer/CustomerNegotiationModal";
+import PopUp from "./socket/user/CustomerNegotiationModal.jsx";
 import VendorResetPassword from "./pages/vendor/VendorResetPass.jsx";
 
 // Vendor Pages
@@ -46,8 +46,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 
 import BackToTop from "./pages/common/BackToTop";
 
-import { useDispatch } from "react-redux";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "./redux/UserSlice.js";
 import { setVendor } from "./redux/VendorSlice.js";
 import ScrollToTop from "./components/common/ScrollToTop.jsx";
@@ -59,21 +58,48 @@ import RefundPolicy from "./components/common/RefundPolicy.jsx";
 import TermsAndConditions from "./components/common/TermsAndConditions.jsx";
 //Feedback
 import Feedback from "./pages/common/Feedback.jsx";
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 import FaqSection from "./components/customer/home/FaqSection.jsx";
 import ErrorPage from "./pages/common/ErrorPage.jsx";
 import ReviewSlider from "./components/customer/home/ReviewSlider.jsx";
+import VendorSocketManager from "./socket/vendor/VendorSocketManager.jsx";
+import OrderSummary from "./components/customer/YourCart/orderSummary.jsx";
+import { BACKEND_URL } from "./utils/constant.js";
+import ComingSoon from "./utils/ComingSoon.jsx";
+
 import MyReports from "./pages/common/myreports/MyReports.jsx";
 const App = () => {
   const location = useLocation();
-  // Modal states for user
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
-
-  // Modal states for vendor
   const [showVendorRegisterModal, setShowVendorRegisterModal] = useState(false);
   const [showVendorLoginModal, setShowVendorLoginModal] = useState(false);
+  const vendor = useSelector((state) => state.vendor.vendor);
+  const dispatch = useDispatch();
+
+  // All your other functions for handling modals, etc. remain here
+  // For brevity, I'm omitting them, but you should keep them in your file.
+  const handleOpenLogin = () => {
+    setShowLoginModal(true);
+    document.body.classList.add("modal-open");
+  };
+
+  const handleOpenRegister = () => {
+    setShowRegisterModal(true);
+    document.body.classList.add("modal-open");
+  };
+
+  const handleOpenVendorLogin = () => {
+    setShowVendorLoginModal(true);
+    document.body.classList.add("modal-open");
+  };
+
+  const handleCloseModals = () => {
+    setShowLoginModal(false);
+    setShowRegisterModal(false);
+    setShowVendorLoginModal(false);
+    document.body.classList.remove("modal-open");
+  };
 
   const handleOpenVendorRegister = () => {
     setShowVendorRegisterModal(true);
@@ -86,41 +112,13 @@ const App = () => {
     document.body.classList.remove("modal-open");
   };
 
-  // Hide Footer on specific pages
   const pagesWithoutFooter = [
     "/vendor/thank-you",
     "/admin",
     "/dashboard",
     "/profile",
     "/reset-password",
-    "/report",
-    // "/service/:serviceId",
-    // "/category/:categoryId",
   ];
-  const handleOpenLogin = () => {
-    setShowLoginModal(true);
-    setShowRegisterModal(false);
-    document.body.classList.add("modal-open");
-  };
-
-  const handleOpenRegister = () => {
-    setShowRegisterModal(true);
-    setShowLoginModal(false);
-    document.body.classList.add("modal-open");
-  };
-  const handleOpenVendorLogin = () => {
-    setShowVendorLoginModal(true);
-    document.body.classList.add("modal-open");
-  };
-
-  const handleCloseModals = () => {
-    setShowLoginModal(false);
-    setShowRegisterModal(false);
-    setShowVendorLoginModal(false);
-    // Re-enable body scroll
-    document.body.classList.remove("modal-open");
-  };
-  const dispatch = useDispatch();
 
   useEffect(() => {
     const storedVendor = localStorage.getItem("vendor");
@@ -162,7 +160,7 @@ const App = () => {
     };
 
     checkVendorAuth();
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const openLoginListener = () => handleOpenLogin();
@@ -174,7 +172,6 @@ const App = () => {
   return (
     <>
       <ScrollToTop />
-      {/* Conditionally render Navbar */}
       {location.pathname !== "/admin" && (
         <Navbar
           onOpenLogin={handleOpenLogin}
@@ -190,14 +187,14 @@ const App = () => {
       )}
 
       <main className="custom-mt mt-[52px]  sm:mt-[52px] md:mt-[62px]">
+        {vendor?._id && <VendorSocketManager />}
         <Routes>
-          {/* Customer Routes */}
+          {/* ... All your <Route> components ... */}
           <Route path="/" element={<Home />} />
           <Route
             path="/category/:categoryId"
             element={<ServiceList onSwitchToLogin={handleOpenLogin} />}
           />
-          {/* <Route path="/categories" element={<CategoryCard />}></Route> */}
           <Route path="/reviews" element={<ReviewSlider />} />
           <Route
             path="/service/:categoryId/:serviceId"
@@ -227,7 +224,6 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-          {/* Vendor Routes */}
           <Route
             path="/vendor/register"
             element={
@@ -251,7 +247,6 @@ const App = () => {
               </DashboardEnforcement>
             }
           />
-          {/* <Route path="/vendor-login" element={<VendorLogin />} /> */}
           <Route
             path="/vendor/services/addServices"
             element={<AddServiceInDashboard />}
@@ -265,7 +260,6 @@ const App = () => {
             path="/vendor/reset-password/:resetToken"
             element={<VendorResetPassword />}
           />
-          {/* Misc */}
           <Route path="/your-cart" element={<AddToCart />} />
           <Route path="/about_us" element={<AboutUs />} />
           <Route path="/help_us" element={<HelpUs />} />
@@ -274,8 +268,12 @@ const App = () => {
           <Route path="/feedback" element={<Feedback />} /> {/* Feedback */}
           <Route path="/Wishlist" element={<Wishlist />}></Route>
           <Route path="/profile" element={<Profile />}></Route>
-          <Route path="/userdetails" element={<UserDetails />}></Route>
-          <Route path="/pop-up" element={<PopUp />}></Route>
+          <Route
+            path="/userdetails/:serviceId"
+            element={<UserDetails />}
+          ></Route>
+          <Route path="/pop-up/:userDetailsId" element={<PopUp />}></Route>
+          <Route path="/feedback" element={<Feedback />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="*" element={<ErrorPage />} />
           <Route path="/report" element={<MyReports />} />
@@ -286,37 +284,36 @@ const App = () => {
             path="/terms-and-conditions"
             element={<TermsAndConditions />}
           />
+          <Route
+            path="/order-summary/:userDetailsId"
+            element={<OrderSummary />}
+          />
+          <Route path="/coming-soon" element={<ComingSoon />} />
         </Routes>
       </main>
       <BackToTop />
       <Chatbot />
-
-      {/* Auth Modals */}
       {showLoginModal && (
         <Login
           onClose={handleCloseModals}
           onSwitchToRegister={handleOpenRegister}
         />
       )}
-
       {showRegisterModal && (
         <Register
           onClose={handleCloseModals}
           onSwitchToLogin={handleOpenLogin}
         />
       )}
-
       {showVendorRegisterModal && (
         <VendorRegistration onClose={handleCloseVendorModals} />
       )}
-
       {showVendorLoginModal && (
         <VendorLogin
           onClose={handleCloseModals}
           onSwitchToLogin={handleOpenVendorLogin}
         />
       )}
-      {/* Conditionally render Footer */}
       {!pagesWithoutFooter.includes(location.pathname) && <Footer />}
       <Toaster
         toastOptions={{
@@ -330,11 +327,10 @@ const App = () => {
             overflow: "hidden",
           },
         }}
-        position="top-right"
+        position="bottom-center"
         reverseOrder={false}
       />
     </>
   );
 };
-
 export default App;

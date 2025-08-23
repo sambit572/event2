@@ -4,11 +4,10 @@ import axios from "axios";
 import "./ServiceList.css";
 import Filter from "../../components/customer/serviceList/Filter.jsx";
 import ServiceCard from "./../../components/customer/serviceList/ServiceCard";
-import { Link } from "react-router-dom";
 import { BACKEND_URL } from "../../utils/constant.js";
 import { setCategoryServices } from "../../redux/categorySlice";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const ServiceList = ({ onSwitchToLogin }) => {
   const dispatch = useDispatch();
@@ -35,6 +34,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
         setLoading(false);
       } catch (error) {
         console.error("Error fetching services:", error);
+      } finally {
         setLoading(false);
       }
     };
@@ -46,7 +46,6 @@ const ServiceList = ({ onSwitchToLogin }) => {
   return (
     <div className="serviceList">
       <Filter />
-
       <div className="serviceCardDetails">
         {loading ? (
           <p>Loading services...</p>
@@ -69,6 +68,5 @@ const ServiceList = ({ onSwitchToLogin }) => {
       </div>
     </div>
   );
-};
-
+};  
 export default ServiceList;

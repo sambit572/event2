@@ -11,6 +11,8 @@ import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 import { User } from "../../model/user/user.model.js";
+import { ref } from "process";
+import { Service } from "../../model/vendor/service.model.js";
 
 const isProd = process.env.NODE_ENV === "production";
 
@@ -28,8 +30,9 @@ const accessTokenOption = {
 
 const refreshTokenOption = {
   ...baseOption,
-  expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000), // 10 days
+  expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000), // 10 days
 };
+
 const updateProgress = async (vendorId, step) => {
   await Vendor.findByIdAndUpdate(vendorId, {
     registrationProgress: step,
@@ -120,8 +123,8 @@ const registerVendor = async (req, res) => {
     // 5. Return success response
     return res
       .status(200)
-      .cookie("vendorAccessToken", accessTokenOption)
-      .cookie("vendorRefreshToken", refreshTokenOption)
+      .cookie("vendorAccessToken", accessToken, accessTokenOption)
+      .cookie("vendorRefreshToken", refreshToken, refreshTokenOption)
       .json(new ApiResponse(200, newVendor, "Vendor registered successfully."));
   } catch (error) {
     console.error("Vendor registration error:", error);
@@ -273,8 +276,8 @@ const loginVendor = async (req, res) => {
   );
   return res
     .status(200)
-    .cookie("vendorAccessToken", accessTokenOption)
-    .cookie("vendorRefreshToken", refreshTokenOption)
+    .cookie("vendorAccessToken", accessToken, accessTokenOption)
+    .cookie("vendorRefreshToken", refreshToken, refreshTokenOption)
     .json(
       new ApiResponse(
         200,
@@ -396,8 +399,8 @@ const vendorSilentLogin = async (req, res) => {
 
   return res
     .status(200)
-    .cookie("vendorAccessToken", accessTokenOption)
-    .cookie("vendorRefreshToken", refreshTokenOption)
+    .cookie("vendorAccessToken", accessToken, accessTokenOption)
+    .cookie("vendorRefreshToken", refreshToken, refreshTokenOption)
     .json(
       new ApiResponse(
         200,

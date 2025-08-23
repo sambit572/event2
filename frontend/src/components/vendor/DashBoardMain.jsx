@@ -4,19 +4,15 @@ import DashboardServices from "./DashboardServices.jsx";
 import DashBoardBooking from "./DashBoardBooking.jsx";
 import ToggleTabs from "./ToggleTabs.jsx";
 import "./DashboardMain.css";
-import { io } from "socket.io-client";
+import socket from "../../socket/socketClient.js";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { UseVendorProfile } from "./UseVendorProfile.jsx";
-import PasswordInput from "../../utils/PasswordInput.jsx";
-import { BACKEND_URL } from "../../utils/constant.js"; // ✅ Reused from Profile.jsx
-
-const VENDOR_NAME = "Horse-Carriage Odisha";
-const socket = io(import.meta.env.VITE_BACKEND_URL);
+import { useSelector } from "react-redux";
 
 function DashBoardMain() {
   const navigate = useNavigate();
-  const { form, updateBank, updateVendor, updateField } = UseVendorProfile();
+
+  const vendor = useSelector((state) => state.vendor.vendor);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("services");
@@ -92,7 +88,7 @@ function DashBoardMain() {
   };
 
   useEffect(() => {
-    socket.emit("vendor-online", VENDOR_NAME);
+    socket.emit("vendor-online", vendor?._id);
 
     socket.on("pending-negotiations", (requests) => {
       if (requests?.length) {
@@ -103,7 +99,7 @@ function DashBoardMain() {
     });
 
     socket.on("negotiation_to_vendor", (data) => {
-      if (data.vendorName === VENDOR_NAME) {
+      if (data.vendorId === vendor?._id) {
         setPopupData(data);
       }
     });
@@ -134,13 +130,6 @@ function DashBoardMain() {
 
     setPopupData(null);
   };
-
-  useEffect(() => {
-    if (popupData) {
-      const timer = setTimeout(() => setPopupData(null), 30000);
-      return () => clearTimeout(timer);
-    }
-  }, [popupData]);
 
   return (
     <div className="dashboard-container-box">
@@ -307,7 +296,7 @@ function DashBoardMain() {
               <h3 className="popup-title">New Booking Request</h3>
               <div className="popup-content">
                 <p>
-                  <strong>Service:</strong> {popupData.vendorName}
+                  <strong>Service:</strong> {popupData.serviceName}
                 </p>
                 <p>
                   <strong>Venue:</strong> {popupData.venueLocation}
@@ -315,25 +304,39 @@ function DashBoardMain() {
                 <p>
                   <strong>Type:</strong> {popupData.type}
                 </p>
+                {/* Updated to display the price range */}
                 <p>
-                  <strong>Original Price:</strong> ₹{popupData.originalPrice}
+                  <strong>Original Price Range:</strong> ₹
+                  {popupData.originalPriceRange.min} - ₹
+                  {popupData.originalPriceRange.max}
                 </p>
                 <p>
-                  <strong>Proposed Price:</strong> ₹{popupData.proposedPrice}
+                  <strong>Proposed Price:</strong>{" "}
+                  {popupData.type === "No Negotiation Requested"
+                    ? "To be negotiated upon discussion."
+                    : `₹${popupData.proposedPrice}`}
                 </p>
-                {popupData.proposedPrice < popupData.originalPrice && (
+                {popupData && (
                   <p>
                     <strong>Enter Final Price:</strong>
                     <input
                       type="text"
                       placeholder="Enter Your Final Price"
                       className="VenueInput"
+                      required
                     />
                   </p>
                 )}
                 <p>
                   <strong>Date:</strong>{" "}
-                  {new Date(popupData.date).toLocaleDateString()}
+                  {new Date(popupData.date.startDate).toLocaleDateString() ===
+                  new Date(popupData.date.endDate).toLocaleDateString()
+                    ? new Date(popupData.date.startDate).toLocaleDateString()
+                    : `${new Date(
+                        popupData.date.startDate
+                      ).toLocaleDateString()} to ${new Date(
+                        popupData.date.endDate
+                      ).toLocaleDateString()}`}
                 </p>
               </div>
               <div className="popup-actions">
@@ -347,7 +350,7 @@ function DashBoardMain() {
                   className="btn-decline"
                   onClick={() => handleResponse("decline")}
                 >
-                  Cancel
+                  Reject
                 </button>
               </div>
             </div>

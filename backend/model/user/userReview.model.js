@@ -31,5 +31,5 @@ const userReviewSchema = new mongoose.Schema(
 userReviewSchema.index({ serviceId: 1, userId: 1 }, { unique: true });
 
 // Prevent OverwriteModelError during hot reload/dev
-export default mongoose.models.UserReview ||
-  mongoose.model("UserReview", userReviewSchema);
+export const UserReview = mongoose.model("UserReview", userReviewSchema);
+

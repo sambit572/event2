@@ -3,6 +3,7 @@
   margin-top: 75px;
   width: 100%;
 }
+
 .singleServiceCard {
   display: flex;
   flex-direction: column;
@@ -14,6 +15,7 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-right: 10px;
 }
+
 .serviceCardDetails {
   width: 100%;
   margin: 10px;
@@ -22,15 +24,14 @@
   height: 100vh;
   overflow-y: auto;
   scrollbar-width: none;
-  /* position: absolute; */
-
   z-index: 1;
 }
 
 /* For screen widths between 1012px and 1350px */
 @media screen and (min-width: 1024px) and (max-width: 1350px) {
   .serviceCardDetails {
-    width: 80%;
+    /* THIS IS THE FIX: Changed from 80% to 100% */
+    width: 100%; 
   }
   .singleServiceCard {
     width: 100%;

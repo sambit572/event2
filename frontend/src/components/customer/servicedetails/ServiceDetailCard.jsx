@@ -1,10 +1,14 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import toast from "react-hot-toast";
 import { FaRegCalendarCheck } from "react-icons/fa6";
 import { FaRegHeart, FaHeart } from "react-icons/fa6";
 import { BACKEND_URL } from "../../../utils/constant";
+
 const ServiceDetailCard = ({ service }) => {
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [showShareMenu, setShowShareMenu] = useState(false);
+  const shareContainerRef = useRef(null);
   const [ratingData, setRatingData] = useState(null);
 
   if (!service) return null;
@@ -28,19 +32,23 @@ const ServiceDetailCard = ({ service }) => {
 
   const totalReviews = reviews?.length || reviews || 0;
   const averageRating = rating || 0;
-  const id = _id || service.id;
+  const serviceId = _id || service.id;
+  const title = serviceName || "Untitled Service";
+
+  // ADDED: Logic to check for vendor availability
+  // IMPORTANT: Assumes your 'service' object has a boolean property 'available'.
+  const isVendorAvailable = service.available !== false;
 
   const formatDuration = (durationInMinutes) => {
+    // ... (rest of the function is unchanged)
     const totalMinutes = parseInt(durationInMinutes, 10) || 0;
     const days = Math.floor(totalMinutes / (24 * 60));
     const hours = Math.floor((totalMinutes % (24 * 60)) / 60);
     const minutes = totalMinutes % 60;
-
     let result = "";
     if (days > 0) result += `${days}d`;
     if (hours > 0) result += (result ? " : " : "") + `${hours}h`;
     if (minutes > 0) result += (result ? " : " : "") + `${minutes}m`;
-
     return result || "0m";
   };
 
@@ -65,11 +73,11 @@ const ServiceDetailCard = ({ service }) => {
         : `${minPrice} - ${maxPrice}`
       : `${minPrice}`
     : "N/A";
+
   console.log("SERVICE PROPS:", service);
 
-  const serviceId = service._id || service.id;
-  // Fetch wishlist status
   useEffect(() => {
+    // ... (rest of the useEffect is unchanged)
     const fetchWishlistStatus = async () => {
       try {
         const res = await axios.get(`${BACKEND_URL}/wishlist/getwishlist`, {
@@ -81,21 +89,33 @@ const ServiceDetailCard = ({ service }) => {
         console.error("Error fetching wishlist:", err);
       }
     };
-
     fetchWishlistStatus();
-
-    // Event listener to update state when wishlist is changed elsewhere
     const handleWishlistUpdate = (e) => {
       if (e.detail?.serviceId === serviceId) {
         fetchWishlistStatus();
       }
     };
-
     window.addEventListener("wishlistUpdated", handleWishlistUpdate);
     return () => {
       window.removeEventListener("wishlistUpdated", handleWishlistUpdate);
     };
   }, [serviceId]);
+
+  useEffect(() => {
+    // ... (rest of the useEffect is unchanged)
+    const handleClickOutside = (event) => {
+      if (
+        shareContainerRef.current &&
+        !shareContainerRef.current.contains(event.target)
+      ) {
+        setShowShareMenu(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchRatingSummary = async () => {
@@ -124,46 +144,198 @@ const ServiceDetailCard = ({ service }) => {
       );
       const newStatus = !isWishlisted;
       setIsWishlisted(newStatus);
-
-      // Notify other components (like Wishlist.jsx)
       window.dispatchEvent(
-        new CustomEvent("wishlistUpdated", {
-          detail: { serviceId },
-        })
+        new CustomEvent("wishlistUpdated", { detail: { serviceId } })
       );
-
-      console.log("Wishlist toggled:", newStatus);
     } catch (err) {
       console.error("Toggle error:", err);
     }
   };
 
+  const handleShare = () => {
+    setShowShareMenu(!showShareMenu);
+  };
+
+  const shareService = (platform) => {
+    // ... (rest of the function is unchanged)
+    const serviceUrl = `${window.location.origin}/service/${serviceId}`;
+    const shareText = `Check out this service: ${title} by ${vendorName}`;
+    let shareUrl = "";
+    switch (platform) {
+      case "facebook":
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+          serviceUrl
+        )}`;
+        break;
+      case "twitter":
+        shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+          shareText
+        )}&url=${encodeURIComponent(serviceUrl)}`;
+        break;
+      case "whatsapp":
+        shareUrl = `https://wa.me/?text=${encodeURIComponent(
+          shareText + " " + serviceUrl
+        )}`;
+        break;
+      case "instagram":
+        navigator.clipboard
+          .writeText(serviceUrl)
+          .then(() => {
+            toast.success("Link copied! You can now share it on Instagram.");
+            setShowShareMenu(false);
+          })
+          .catch(() => {
+            toast.error("Failed to copy link");
+          });
+        return;
+      case "telegram":
+        shareUrl = `https://t.me/share/url?url=${encodeURIComponent(
+          serviceUrl
+        )}&text=${encodeURIComponent(shareText)}`;
+        break;
+      case "copy":
+        navigator.clipboard
+          .writeText(serviceUrl)
+          .then(() => {
+            toast.success("Link copied to clipboard!");
+            setShowShareMenu(false);
+          })
+          .catch(() => {
+            toast.error("Failed to copy link");
+          });
+        return;
+      default:
+        return;
+    }
+    if (shareUrl) {
+      window.open(shareUrl, "_blank", "width=600,height=400");
+      setShowShareMenu(false);
+    }
+  };
+
   return (
-    <div className="p-4 bg-white mt-5 rounded-lg border border-gray-200 w-full">
-      <div className="flex justify-end h-0">
+    <div className="relative w-full rounded-lg border border-gray-200 bg-white p-4 mt-5">
+      <div className="absolute top-4 right-4 z-20 flex flex-col items-end gap-3">
         <div
-          className={`h-10 w-10 flex items-center justify-center rounded-full bg-gray-200 shadow-md cursor-pointer transition-all duration-300
-                  ${
-                    isWishlisted
-                      ? "text-red-600 ring-2 ring-red-300 shadow-red-200"
-                      : "text-gray-600 hover:text-red-500"
-                  }`}
-          onClick={handleToggle}
+          className={`h-10 w-10 flex items-center justify-center rounded-full bg-gray-200 shadow-md cursor-pointer transition-all duration-300 ${
+            isWishlisted
+              ? "text-red-600 ring-2 ring-red-300 shadow-red-200"
+              : "text-gray-600 hover:text-red-500"
+          }`}
+          onClick={handleToggleWishlist}
         >
           {isWishlisted ? <FaHeart /> : <FaRegHeart />}
         </div>
+
+        <div className="relative" ref={shareContainerRef}>
+          <div
+            className="h-10 w-10 cursor-pointer overflow-hidden rounded-full shadow-md transition-all duration-300 ease-in-out hover:scale-110 hover:shadow-lg"
+            onClick={handleShare}
+          >
+            <img
+              src="/send.png"
+              alt="Share"
+              className="h-full w-full rounded-full object-cover"
+            />
+          </div>
+
+          <div
+            className={`absolute top-full right-0 mt-2 min-w-[160px] origin-top-right rounded-xl border border-gray-200 bg-white shadow-2xl transition-all duration-200 ease-out ${
+              showShareMenu
+                ? "opacity-100 scale-100"
+                : "opacity-0 scale-95 pointer-events-none"
+            }`}
+          >
+            <div className="py-2">
+              {/* ... Share options ... */}
+              <div
+                className="flex cursor-pointer items-center gap-3 px-4 py-3 text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
+                onClick={() => shareService("facebook")}
+              >
+                <img
+                  src="/facebook.png"
+                  alt="Facebook"
+                  className="h-5 w-5 object-contain"
+                />{" "}
+                Facebook
+              </div>
+              <div
+                className="flex cursor-pointer items-center gap-3 px-4 py-3 text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
+                onClick={() => shareService("twitter")}
+              >
+                <img
+                  src="/twitter 1.png"
+                  alt="X"
+                  className="h-5 w-5 object-contain"
+                />{" "}
+                X
+              </div>
+              <div
+                className="flex cursor-pointer items-center gap-3 px-4 py-3 text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
+                onClick={() => shareService("whatsapp")}
+              >
+                <img
+                  src="/whatsapp.png"
+                  alt="WhatsApp"
+                  className="h-5 w-5 object-contain"
+                />{" "}
+                WhatsApp
+              </div>
+              <div
+                className="flex cursor-pointer items-center gap-3 px-4 py-3 text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
+                onClick={() => shareService("instagram")}
+              >
+                <img
+                  src="/instagram.png"
+                  alt="Instagram"
+                  className="h-5 w-5 object-contain"
+                />{" "}
+                Instagram
+              </div>
+              <div
+                className="flex cursor-pointer items-center gap-3 px-4 py-3 text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
+                onClick={() => shareService("telegram")}
+              >
+                <img
+                  src="/telegram.png"
+                  alt="Telegram"
+                  className="h-5 w-5 object-contain"
+                />{" "}
+                Telegram
+              </div>
+              <div
+                className="flex cursor-pointer items-center gap-3 px-4 py-3 text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
+                onClick={() => shareService("copy")}
+              >
+                <img
+                  src="/connection.png"
+                  alt="Copy Link"
+                  className="h-5 w-5 object-contain"
+                />{" "}
+                Copy Link
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <h2 className="text-xl font-semibold text-gray-800 mb-2">
-        {serviceName || "Untitled Service"}
+
+      <h2 className="text-xl font-semibold text-gray-800 mb-2 pr-12">
+        {title}
       </h2>
 
-      <div className="flex items-center gap-2 text-sm font-medium text-black mb-2">
+      <div className="flex items-center gap-2 text-sm font-medium text-black mb-2 flex-wrap">
         <span className="font-semibold">{vendorName || "Unknown Vendor"}</span>
         <span className="text-gray-400 text-xs">|</span>
         <span className="flex items-center gap-1 bg-yellow-200 text-yellow-900 px-2 py-0.5 rounded-md text-xs">
           <FaRegCalendarCheck className="text-sm" />
           Event Hosted: 0
         </span>
+        {/* ADDED: "Service Unavailable" Badge */}
+        {!isVendorAvailable && (
+          <span className="flex items-center gap-1.5 rounded-full border border-red-200 bg-red-100 px-3 py-1 text-[11px] font-medium text-red-800 sm:text-xs">
+            Service Unavailable
+          </span>
+        )}
       </div>
 
       <p className="text-sm text-black mb-2">{location}</p>

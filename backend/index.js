@@ -1,3 +1,4 @@
+import 'dotenv/config';
 console.log("🚀 Initializing server... branch-3.o");
 
 // ✅ Import required modules

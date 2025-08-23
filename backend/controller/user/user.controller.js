@@ -28,8 +28,9 @@ const accessTokenOption = {
 
 const refreshTokenOption = {
   ...baseOption,
-  expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000), // 10 days
+  expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000), // 10 days
 };
+
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Helper function to generate profile picture URL with first name initial
@@ -156,8 +157,8 @@ const registerUser = async (req, res) => {
 
     return res
       .status(200)
-      .cookie("accessToken", accessTokenOption)
-      .cookie("refreshToken", refreshTokenOption)
+      .cookie("accessToken", accessToken, accessTokenOption)
+      .cookie("refreshToken", refreshToken, refreshTokenOption)
       .json(
         new ApiResponse(
           200,
@@ -221,8 +222,8 @@ const loginUser = async (req, res) => {
 
     return res
       .status(200)
-      .cookie("accessToken", accessTokenOption)
-      .cookie("refreshToken", refreshTokenOption)
+      .cookie("accessToken", accessToken, accessTokenOption)
+      .cookie("refreshToken", refreshToken, refreshTokenOption)
       .json(
         new ApiResponse(
           200,
@@ -248,6 +249,8 @@ const logoutUser = async (req, res) => {
       .status(200)
       .clearCookie("accessToken", accessTokenOption)
       .clearCookie("refreshToken", refreshTokenOption)
+      .clearCookie("accessToken", accessTokenOption)
+      .clearCookie("refreshToken", refreshTokenOption)
       .json(new ApiResponse(200, {}, "User logged out successfully"));
   } catch (error) {
     console.error("Logout error:", error);
@@ -265,9 +268,16 @@ const googleAuth = async (req, res) => {
       idToken: token,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
-    console.log("✅ GOOGLE PAYLOAD RECEIVED:", ticket.getPayload());
+
+    // console.log("✅ GOOGLE PAYLOAD RECEIVED:", ticket.getPayload());
+
+
     const { email, name, picture } = ticket.getPayload();
-    console.log("Google profile picture URL:", picture);
+
+    
+    // console.log("Google profile picture URL:", picture);
+
+
     // 2. find or create user
     let user = await User.findOne({ email });
     let isNewUser = false;
@@ -381,8 +391,8 @@ const googleAuth = async (req, res) => {
     // 4. respond
     return res
       .status(200)
-      .cookie("accessToken", accessTokenOption)
-      .cookie("refreshToken", refreshTokenOption)
+      .cookie("accessToken", accessToken, accessTokenOption)
+      .cookie("refreshToken", refreshToken, refreshTokenOption)
       .json(
         new ApiResponse(
           200,
@@ -695,7 +705,7 @@ const noNeedToLogin = async (req, res) => {
 
       return res
         .status(200)
-        .cookie("refreshToken", newRefreshToken, option)
+        .cookie("refreshToken", newRefreshToken, refreshTokenOption)
         .json(new ApiResponse(200, user, "Session valid (access token ok)"));
     }
 
