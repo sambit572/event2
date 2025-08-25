@@ -51,9 +51,15 @@ const OTPVerification = ({
       const result = await window.confirmationResult.confirm(otpCode);
       console.log("Phone auth success:", result.user);
 
-      const response = await axios.post(`${BACKEND_URL}/user/verify-otp`, {
-        phoneNo: phoneNum,
-      });
+      const response = await axios.post(
+        `${BACKEND_URL}/user/verify-otp`,
+        {
+          phoneNo: phoneNum,
+        },
+        {
+          withCredentials: true,
+        }
+      );
 
       console.log("OTP verification response:", response.data.data);
 
@@ -62,7 +68,10 @@ const OTPVerification = ({
       dispatch(setUser(loggedInUser));
 
       localStorage.setItem("currentlyLoggedIn", "true");
-      localStorage.setItem("userFirstName", loggedInUser.fullName.split(" ")[0]);
+      localStorage.setItem(
+        "userFirstName",
+        loggedInUser.fullName.split(" ")[0]
+      );
       localStorage.setItem("userLastName", loggedInUser.fullName.split(" ")[1]);
 
       window.dispatchEvent(new Event("userLoggedIn"));

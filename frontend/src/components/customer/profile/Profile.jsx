@@ -110,27 +110,13 @@ function Profile({ onProfileChange }) {
     <div className="profile_section  relative w-full  flex bg-white ">
       {showSuccessPopup && (
         <div
-            style={{
-              position: "fixed",
-              top: "115px",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              padding: "20px 32px",
-              borderRadius: "8px",
-              background: "rgba(255, 255, 255, 0.1)",
-              boxShadow: "0 8px 32px rgba(31, 38, 135, 0.37)",
-              backdropFilter: "blur(10px)",
-              WebkitBackdropFilter: "blur(10px)",
-              border: "2px solid black",
-              fontWeight: "bold",
-              color: "black",
-              zIndex: 9999,
-              textAlign: "center",
-              animation: "popIn 0.3s ease-out forwards",
-            }}
-          >
-            You password updated successfully!
-          </div>
+          className="fixed top-[115px] left-1/2 -translate-x-1/2 -translate-y-1/2
+               py-5 px-8 rounded-lg bg-white/10 shadow-[0_8px_32px_rgba(31,38,135,0.37)]
+               backdrop-blur-[10px] border-2 border-black
+               font-bold text-black text-center z-[9999] animate-popIn"
+        >
+          You password updated successfully!
+        </div>
       )}
       <div className="profile-sidebar-fixed">
         <button
