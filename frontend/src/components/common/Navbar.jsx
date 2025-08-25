@@ -518,9 +518,11 @@ const Navbar = ({
         {/* Logo */}
         <div className="logo">
           {/* <img src={logo} alt="logo" /> */}
-          <span onClick={handleHomeClick}>𝐄𝐕𝐄𝐍𝐓𝐒𝐁𝐑𝐈𝐃𝐆𝐄</span>
+          <span onClick={handleHomeClick}>EVENTSBRIDGE</span>
         </div>
-        <div className="search-and-nav-icons-container ">
+
+        <div className="search-and-nav-icons-container items-center">
+          {/* Search Bar */}
           <div
             ref={searchBarRef}
             className={`search-bar ${showMobileSearchBar ? "active" : ""}`}
@@ -597,276 +599,313 @@ const Navbar = ({
               )}
             </div>
           )}
-          <div className="nav-icons">
-            <div
-              className="nav-item profile-dropdown-container"
-              ref={profileRef}
-            >
-              <div className="flex items-center gap-2 text-gray-700 cursor-pointer login">
-                <span
-                  className="flex items-center gap-2 max-[1024px]:flex-row max-[1024px]:text-[12px] max-[820px]:text-[11px]"
-                  onClick={!userFirstName ? handleLoginClick : undefined}
-                >
-                  {!userFirstName ? (
-                    <>
-                      <CgProfile className="text-2xl" />
-                      <span className="font-medium vendorNameText">Login</span>
-                    </>
-                  ) : (
-                    <>
-                      <UserProfileIcon currentUser={currentUser} />
-                      <span className="font-medium vendorNameText">{`Hi, ${userFirstName}`}</span>
-                    </>
-                  )}
-                </span>
-                <span onClick={handleToggleProfileDropdown}>
-                  {showProfileDropdown ? (
-                    <FaChevronUp className="text-sm" />
-                  ) : (
-                    <FaChevronDown className="text-sm" />
-                  )}
-                </span>
-              </div>
-              {showProfileDropdown && (
-                <div className="dropdown-menu profile-menu">
-                  {!userFirstName ? (
-                    <>
-                      <h4 className="login-h4">Welcome</h4>
-                      <p className="login-p">
-                        To access account and manage services
-                      </p>
-                      <div className="dropdown-header">
-                        <span className="text-[#001f3f]">New Customer?</span>
-                        <button
-                          className="bg-[#e5e5de] hover:bg-gray-900 hover:text-white"
-                          onClick={handleSignupClick}
-                        >
-                          Sign Up
-                        </button>
-                      </div>
-                      <hr />
-                    </>
-                  ) : (
-                    <>
-                      <div
-                        className="flex flex-row gap-1 mb-[10px] text-[#001f3f] text-center hover:text-[#022f5d] hover:font-bold text-[15px] cursor-pointer"
-                        onClick={() => navigate("/profile")}
-                      >
-                        <FaUser style={{ marginRight: "8px" }} />
-                        My Profile
-                      </div>
-                      <div className="dropdown-item hover:text-[#001f3f] hover:font-bold">
-                        <FaHeart
-                          className="navbar_icon "
-                          style={{ marginRight: "4px" }}
-                        />
-                        <a href="/wishlist">Wishlist</a>
-                      </div>
-                      <div className="dropdown-item">
-                        <FaSignOutAlt
-                          className="navbar_icon hover:text-[#001f3f] hover:font-bold"
-                          style={{ marginRight: "4px" }}
-                        />
-                        <button
-                          className="signOutButton hover:text-[#001f3f] hover:font-bold"
-                          onClick={handleLogout}
-                        >
-                          Sign Out
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              )}
-            </div>
-            <div
-              className="nav-item profile-dropdown-container"
-              ref={vendorRef}
-            >
-              <div className="nav-items max-[1024px]:flex-col max-[1024px]:text-[12px] max-[820px]:text-[11px] cursor-pointer">
-                <div className="flex items-center gap-1">
-                  <FaStore
-                    className="icons max-[1024px]:h-[18px] max-[1024px]:w-[18px] max-[820px]:h-[15px]"
-                    onClick={handleVendorClick}
-                  />
+          <div className="flex items-center justify-between ml-2 ">
+            {/* Nav Icons */}
+            <div className="nav-icons">
+              {/* Profile Dropdown */}
+              <div
+                className="nav-item profile-dropdown-container"
+                ref={profileRef}
+              >
+                <div className="flex items-center gap-2 text-gray-700 cursor-pointer login">
                   <span
-                    className="text-[#001F3F]  font-semibold  max-[820px]:text-[11px] max-[820px]:w-max"
-                    onClick={() => {
-                      setShowVendorDropdown((prev) => {
-                        if (!prev) {
-                          setShowProfileDropdown(false);
-                          setShowEllipsisDropdown(false);
-                        }
-                        return !prev;
-                      });
-                      if (!userFirstName) {
-                        const toastId = toast.custom((t) => (
-                          <div
-                            className={`${
-                              t.visible
-                                ? "animate-toast-wiggle"
-                                : "animate-leave"
-                            } fixed top-4 right-10 z-50 mt-12`}
-                          >
-                            <div className="relative bg-white border-10 border-[#001f3f] text-black px-6 py-3 rounded-xl w-fit max-w-sm">
-                              <div className="absolute -top-2 right-4 w-0 h-0 border-l-8 border-r-8 border-b-[10px] border-l-transparent border-r-transparent"></div>
-                              <span className="font-semibold block">
-                                Please register as a user first.
-                              </span>
-                            </div>
-                          </div>
-                        ));
-                        setTimeout(() => toast.dismiss(toastId), 2000);
-                      } else {
-                        handleVendorClick();
-                      }
-                    }}
+                    className="flex items-center gap-2 max-[1024px]:flex-row max-[1024px]:text-[12px] max-[820px]:text-[11px]"
+                    onClick={!userFirstName ? handleLoginClick : undefined}
                   >
-                    {!VendorFirstName ? (
-                      <span className="font-medium vendorNameText transition-colors">
-                        Be a Vendor
-                      </span>
+                    {!userFirstName ? (
+                      <>
+                        <CgProfile className="text-2xl" />
+                        <span className="font-medium vendorNameText">
+                          Login
+                        </span>
+                      </>
                     ) : (
                       <>
-                        <span className="font-medium vendorNameText">
-                          {VendorFirstName}
-                        </span>
+                        <UserProfileIcon currentUser={currentUser} />
+                        <span className="font-medium vendorNameText">{`Hi, ${userFirstName}`}</span>
                       </>
                     )}
                   </span>
-                  <span
-                    onClick={() => {
-                      setShowVendorDropdown((prev) => {
-                        if (!prev) {
-                          setShowProfileDropdown(false);
-                          setShowEllipsisDropdown(false);
-                        }
-                        return !prev;
-                      });
-                    }}
-                  >
-                    {" "}
-                    {showVendorDropdown ? (
-                      <FaChevronUp className="text-sm icons" />
+
+                  {/* ⬇ Always show dropdown toggle arrow */}
+                  <span onClick={handleToggleProfileDropdown}>
+                    {showProfileDropdown ? (
+                      <FaChevronUp className="text-sm" />
                     ) : (
-                      <FaChevronDown className="text-sm icons" />
+                      <FaChevronDown className="text-sm" />
                     )}
                   </span>
                 </div>
-              </div>
-              {showVendorDropdown && (
-                <div className="vendor_dropdown-menu absolute top-[75px]  right-[50px] bg-[#e5e5de] rounded-lg border border-white shadow-[0_4px_12px_rgba(0,0,0,0.1)] p-4 z-[2000] w-[278px] ">
-                  <h4 className="text-lg font-semibold text-[#001F3F] text-center mb-1">
-                    Welcome Vendor
-                  </h4>
-                  <p className="text-gray-600 text-center mb-3">
-                    Access your vendor tools and profile
-                  </p>
-                  {!VendorFirstName && (
-                    <>
-                      <div className="dropdown-header">
-                        <span className="text-[#001f3f] font-lg">
-                          New Vendor?
-                        </span>
-                      </div>
-                      <div className="flex flex-row gap-2 mt-2">
-                        <button
-                          className="w-1/2 bg-black hover:bg-gray-800 text-white rounded px-3 py-2 transition-colors"
-                          onClick={() => {
-                            setShowVendorDropdown(false);
-                            if (!userFirstName) {
-                              const toastId = toast.custom((t) => (
-                                <div
-                                  className={`${
-                                    t.visible
-                                      ? "animate-toast-wiggle"
-                                      : "animate-leave"
-                                  } fixed top-4 right-10 z-50 mt-12`}
-                                >
-                                  <div className="relative bg-white border-[#001f3f] text-black px-6 py-3 rounded-xl w-fit max-w-sm">
-                                    <div className="absolute -top-2 right-4 w-0 h-0 border-l-8 border-r-8 border-b-[10px] border-l-transparent border-r-transparent"></div>
-                                    <span className="font-semibold block">
-                                      Please register as a user first.
-                                    </span>
-                                  </div>
-                                </div>
-                              ));
-                              setTimeout(() => toast.dismiss(toastId), 2000);
-                            } else {
-                              navigate("/vendor/register");
-                            }
-                          }}
-                        >
-                          Register
-                        </button>
-                        <button
-                          className="w-1/2 bg-blue-500 font-bold text-white hover:bg-blue-800 rounded px-3 py-2 transition-colors"
-                          onClick={() => {
-                            setShowVendorDropdown(false);
-                            if (!userFirstName) {
-                              const toastId = toast.custom((t) => (
-                                <div
-                                  className={`${
-                                    t.visible
-                                      ? "animate-toast-wiggle"
-                                      : "animate-leave"
-                                  } fixed top-4 right-10 z-50 mt-12`}
-                                >
-                                  <div className="relative bg-white border-[#001f3f] text-black px-6 py-3 rounded-xl w-fit max-w-sm">
-                                    <div className="absolute -top-2 right-4 w-0 h-0 border-l-8 border-r-8 border-b-[10px] border-l-transparent border-r-transparent"></div>
-                                    <span className="font-semibold block">
-                                      Please register as a user first.
-                                    </span>
-                                  </div>
-                                </div>
-                              ));
-                              setTimeout(() => toast.dismiss(toastId), 2000);
-                            } else {
-                              onOpenVendorLogin();
-                            }
-                          }}
-                        >
-                          Login
-                        </button>
-                      </div>
-                    </>
-                  )}
-                  {VendorFirstName && (
-                    <>
-                      <hr className="my-2" />
-                      <div className="flex flex-col gap-2">
-                        <button
-                          className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-3 rounded"
-                          onClick={() => navigate("/dashboard")}
-                        >
-                          My Dashboard
-                        </button>
 
-                        <button
-                          className="bg-red-500 hover:bg-red-600 text-white py-3 px-3 rounded"
-                          onClick={() => {
-                            setShowVendorDropdown(false);
-                            vendorLogout();
-                          }}
+                {showProfileDropdown && (
+                  <div className="dropdown-menu profile-menu">
+                    {!userFirstName ? (
+                      <>
+                        <h4 className="login-h4">Welcome</h4>
+                        <p className="login-p">
+                          To access account and manage services
+                        </p>
+                        <div className="dropdown-header">
+                          <span className="text-[#001f3f]">New Customer?</span>
+                          <button
+                            className="bg-[#e5e5de] hover:bg-gray-900 hover:text-white"
+                            onClick={handleSignupClick}
+                          >
+                            Sign Up
+                          </button>
+                        </div>
+                        <hr />
+                      </>
+                    ) : (
+                      <>
+                        <div
+                          className="flex flex-row gap-1 mb-[10px] text-[#001f3f] text-center hover:text-[#022f5d] hover:font-bold text-[15px] cursor-pointer"
+                          onClick={() => navigate("/profile")}
                         >
-                          Sign Out
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              )}
-            </div>
-            <div className="navbarCart" onClick={handleAddToCart}>
-              <div className="navbarCartIcon">
-                <FaCartShopping />
-                {cartCount > 0 && (
-                  <span className="cart-badge">{cartCount}</span>
+                          <FaUser style={{ marginRight: "8px" }} />
+                          My Profile
+                        </div>
+                        <div className="dropdown-item hover:text-[#001f3f] hover:font-bold">
+                          <FaHeart
+                            className="navbar_icon "
+                            style={{ marginRight: "4px" }}
+                          />
+                          <a href="/wishlist">Wishlist</a>
+                        </div>
+                        <div className="dropdown-item">
+                          <FaSignOutAlt
+                            className="navbar_icon hover:text-[#001f3f] hover:font-bold"
+                            style={{ marginRight: "4px" }}
+                          />
+                          <button
+                            className="signOutButton hover:text-[#001f3f] hover:font-bold"
+                            onClick={handleLogout}
+                          >
+                            Sign Out
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
                 )}
               </div>
-              <div className="navbarCartText">Cart</div>
+
+              {/* Become Vendor */}
+              <div
+                className="nav-item profile-dropdown-container"
+                ref={vendorRef}
+              >
+                <div className="nav-items max-[1024px]:flex-col max-[1024px]:text-[12px] max-[820px]:text-[11px] cursor-pointer">
+                  <div className="flex items-center gap-1">
+                    <FaStore
+                      className="icons max-[1024px]:h-[18px] max-[1024px]:w-[18px] max-[820px]:h-[15px]"
+                      onClick={handleVendorClick}
+                    />
+                    <span
+                      className="text-[#001F3F]  font-semibold  max-[820px]:text-[11px] max-[820px]:w-max"
+                      onClick={() => {
+                        setShowVendorDropdown((prev) => {
+                          if (!prev) {
+                            setShowProfileDropdown(false);
+                            setShowEllipsisDropdown(false);
+                          }
+                          return !prev;
+                        });
+                        if (!userFirstName) {
+                          const toastId = toast.custom((t) => (
+                            <div
+                              className={`${
+                                t.visible
+                                  ? "animate-toast-wiggle"
+                                  : "animate-leave"
+                              } fixed top-4 right-10 z-50 mt-12`}
+                            >
+                              {/* Toast Box */}
+                              <div className="relative bg-white border-10 border-[#001f3f] text-black px-6 py-3 rounded-xl w-fit max-w-sm">
+                                {/* Triangle */}
+                                <div className="absolute -top-2 right-4 w-0 h-0 border-l-8 border-r-8 border-b-[10px] border-l-transparent border-r-transparent"></div>
+
+                                {/* Toast Message */}
+                                <span className="font-semibold block">
+                                  Please register as a user first.
+                                </span>
+                              </div>
+                            </div>
+                          ));
+
+                          setTimeout(() => toast.dismiss(toastId), 2000);
+                        } else {
+                          handleVendorClick();
+                        }
+                      }}
+                    >
+                      {!VendorFirstName ? (
+                        <span className="font-medium vendorNameText transition-colors">
+                          Be a Vendor
+                        </span>
+                      ) : (
+                        <>
+                          <span className="font-medium vendorNameText">
+                            {VendorFirstName}
+                          </span>
+                        </>
+                      )}
+                    </span>
+
+                    <span
+                      onClick={() => {
+                        setShowVendorDropdown((prev) => {
+                          if (!prev) {
+                            setShowProfileDropdown(false);
+                            setShowEllipsisDropdown(false);
+                          }
+                          return !prev;
+                        });
+                      }}
+                    >
+                      {" "}
+                      {showVendorDropdown ? (
+                        <FaChevronUp className="text-sm icons" />
+                      ) : (
+                        <FaChevronDown className="text-sm icons" />
+                      )}
+                    </span>
+                  </div>
+                </div>
+
+                {showVendorDropdown && (
+                  <div className="vendor_dropdown-menu absolute top-[75px]  right-[50px] bg-[#e5e5de] rounded-lg border border-white shadow-[0_4px_12px_rgba(0,0,0,0.1)] p-4 z-[2000] w-[278px] ">
+                    <h4 className="text-lg font-semibold text-[#001F3F] text-center mb-1">
+                      Welcome Vendor
+                    </h4>
+                    <p className="text-gray-600 text-center mb-3">
+                      Access your vendor tools and profile
+                    </p>
+
+                    {/* If NOT logged in → Show Register */}
+                    {!VendorFirstName && (
+                      <>
+                        <div className="dropdown-header">
+                          <span className="text-[#001f3f] font-lg">
+                            New Vendor?
+                          </span>
+                        </div>
+                        <div className="flex flex-row gap-2 mt-2">
+                          {/* Register Button */}
+                          <button
+                            className="w-1/2 bg-black hover:bg-gray-800 text-white rounded px-3 py-2 transition-colors"
+                            onClick={() => {
+                              setShowVendorDropdown(false);
+                              if (!userFirstName) {
+                                const toastId = toast.custom((t) => (
+                                  <div
+                                    className={`${
+                                      t.visible
+                                        ? "animate-toast-wiggle"
+                                        : "animate-leave"
+                                    } fixed top-4 right-10 z-50 mt-12`}
+                                  >
+                                    {/* Toast Box */}
+                                    <div className="relative bg-white border-[#001f3f] text-black px-6 py-3 rounded-xl w-fit max-w-sm">
+                                      {/* Triangle */}
+                                      <div className="absolute -top-2 right-4 w-0 h-0 border-l-8 border-r-8 border-b-[10px] border-l-transparent border-r-transparent"></div>
+
+                                      {/* Toast Message */}
+                                      <span className="font-semibold block">
+                                        Please register as a user first.
+                                      </span>
+                                    </div>
+                                  </div>
+                                ));
+
+                                setTimeout(() => toast.dismiss(toastId), 2000);
+                              } else {
+                                navigate("/vendor/register");
+                              }
+                            }}
+                          >
+                            Register
+                          </button>
+
+                          {/* Login Button */}
+                          <button
+                            className="w-1/2 bg-blue-500 font-bold text-white hover:bg-blue-800 rounded px-3 py-2 transition-colors"
+                            onClick={() => {
+                              setShowVendorDropdown(false); // ✅ Close the dropdown
+
+                              if (!userFirstName) {
+                                const toastId = toast.custom((t) => (
+                                  <div
+                                    className={`${
+                                      t.visible
+                                        ? "animate-toast-wiggle"
+                                        : "animate-leave"
+                                    } fixed top-4 right-10 z-50 mt-12`}
+                                  >
+                                    {/* Toast Box */}
+                                    <div className="relative bg-white border-[#001f3f] text-black px-6 py-3 rounded-xl w-fit max-w-sm">
+                                      {/* Triangle */}
+                                      <div className="absolute -top-2 right-4 w-0 h-0 border-l-8 border-r-8 border-b-[10px] border-l-transparent border-r-transparent"></div>
+
+                                      {/* Toast Message */}
+                                      <span className="font-semibold block">
+                                        Please register as a user first.
+                                      </span>
+                                    </div>
+                                  </div>
+                                ));
+
+                                setTimeout(() => toast.dismiss(toastId), 2000);
+                              } else {
+                                onOpenVendorLogin();
+                              }
+
+                              // ✅ Always go to login (or open modal)
+                            }}
+                          >
+                            Login
+                          </button>
+                        </div>
+                      </>
+                    )}
+
+                    {/* If logged in → Show Change Password + Sign Out */}
+                    {VendorFirstName && (
+                      <>
+                        <hr className="my-2" />
+                        <div className="flex flex-col gap-2">
+                          <button
+                            className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-3 rounded"
+                            onClick={() => navigate("/dashboard")}
+                          >
+                            My Dashboard
+                          </button>
+
+                          <button
+                            className="bg-red-500 hover:bg-red-600 text-white py-3 px-3 rounded"
+                            onClick={() => {
+                              setShowVendorDropdown(false);
+                              vendorLogout();
+                            }}
+                          >
+                            Sign Out
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
+              {/* cart */}
+              <div className="navbarCart" onClick={handleAddToCart}>
+                <div className="navbarCartIcon">
+                  <FaCartShopping />
+                </div>
+                <div className="navbarCartText">Cart</div>
+              </div>
             </div>
-            <div className="nav-item ellipsis-container" ref={ellipsisRef}>
+            {/* Three Dots Dropdown */}
+            <div className="nav-item ml-2 ellipsis-container" ref={ellipsisRef}>
               <FaEllipsisV
                 className="three-dot"
                 onClick={() => {

@@ -135,7 +135,7 @@ const ServiceDetailCard = ({ service }) => {
   }, [serviceId]);
 
   // Toggle wishlist state
-  const handleToggle = async () => {
+  const handleToggleWishlist = async () => {
     try {
       await axios.post(
         `${BACKEND_URL}/wishlist/toggle/${serviceId}`,

@@ -13,6 +13,7 @@ import {
   changePassword,
   getUserProfile,
   googleAuth,
+  verifyLogin,
 } from "../../controller/user/user.controller.js";
 
 import { verifyJwt } from "../../middleware/auth.middleware.js";
@@ -31,6 +32,7 @@ router.post("/logout", logoutUser);
 router.post("/auth/google", googleAuth);
 router.post("/forgot-password", sendPasswordResetLink);
 router.post("/reset-password/:resetToken", resetPassword);
+router.post("/verify-otp", verifyLogin);
 
 //
 // 🔒 PROTECTED ROUTES (Require JWT)

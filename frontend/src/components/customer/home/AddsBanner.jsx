@@ -5,7 +5,7 @@ import mediumbanner from "../../../assets/home/bannerImages/mediumbanner.png";
 import xmedium from "../../../assets/home/bannerImages/xmedium.png";
 import xxmedium from "../../../assets/home/bannerImages/xxmedium.png";
 import smallbanner from "../../../assets/home/bannerImages/smallbanner.png";
-import xsmallBanner from "../../../assets/home/bannerImages/xsmallBanner.png";
+import xsmallBanner from "../../../assets/home/bannerImages/xsmallbanner.png";
 
 // import largebanner from "../../../assets/home/bannerImages/largebanner.png";
 

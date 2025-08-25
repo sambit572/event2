@@ -25,6 +25,9 @@ import categories from "../../utils/CatogoryData.jsx";
 import StepsSection from "../../components/customer/home/StepsSection.jsx";
 const images = [
   {
+    desktop: slider_9,
+  },
+  {
     // mobile: shaadiMobile,
     // tablet: shaadiTablet,
     desktop: slider_1,
@@ -52,9 +55,7 @@ const images = [
   {
     desktop: slider_8,
   },
-  {
-    desktop: slider_9,
-  },
+
   {
     desktop: slider_10,
   },
