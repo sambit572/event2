@@ -1,21 +1,45 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { FaBell } from "react-icons/fa6";
+import toast from "react-hot-toast";
 import axios from "axios";
-import "./ServiceDetails.css";
 
-import { similarServiceData } from "../../components/customer/ServiceDetails/SimilarServiceData.jsx";
-import RatingDetails from "../../components/customer/ServiceDetails/RatingDetails.jsx";
-import SimilarProductCard from "../../components/customer/ServiceDetails/PeopleAlsoBooked.jsx";
-import DJServiceCard from "../../components/customer/ServiceDetails/ServiceDetailCard.jsx";
-import ReviewList from "../../components/customer/ServiceDetails/ReviewList";
-import ReviewForm from "../../components/customer/ServiceDetails/ReviewForm.jsx";
+import "./ServiceDetails.css";
+// import { similarServiceData } from "../../components/customer/ServiceDetails/SimilarServiceData.jsx";
+import RatingDetails from "../../components/customer/servicedetails/RatingDetails.jsx";
+import SimilarProductCard from "../../components/customer/servicedetails/PeopleAlsoBooked.jsx";
+import DJServiceCard from "../../components/customer/servicedetails/ServiceDetailCard.jsx";
+import ReviewList from "../../components/customer/servicedetails/ReviewList.jsx";
+import ReviewForm from "../../components/customer/servicedetails/ReviewForm.jsx";
+import { FaBell } from "react-icons/fa6";
 import { BACKEND_URL } from "../../utils/constant.js";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { setCategoryServices } from "../../redux/categorySlice";
+// import SimilarProductCard from "./../../components/customer/ServiceDetails/PeopleAlsoBooked";
 
 const Service = ({ onSwitchToLogin }) => {
   const navigate = useNavigate();
   const { serviceId } = useParams();
+  const categoryServices = useSelector(
+    (state) => state.category.categoryServices
+  );
+  const dispatch = useDispatch();
+  const { categoryId } = useParams(); // This is the category name passed in URL
+  // console.log("Category ID:", categoryId);
+  // console.log("Fetched services2:", categoryServices);
+  useEffect(() => {
+    if (!categoryServices || categoryServices.length === 0) {
+      axios
 
+        .get(`${BACKEND_URL}/common/category/${categoryId}`)
+        .then((res) => {
+          dispatch(setCategoryServices(res.data.data));
+        })
+        .catch((err) => console.error(err));
+    }
+  }, [categoryId]);
+
+ 
   const [service, setService] = useState(null);
   const [mediaList, setMediaList] = useState([]);
   const [selectMedia, setSelectMedia] = useState(null);
@@ -29,14 +53,6 @@ const Service = ({ onSwitchToLogin }) => {
   const [loggedInUserEmail, setLoggedInUserEmail] = useState("");
   const [currentUser, setCurrentUser] = useState(null);
   const [reviews, setReviews] = useState([]);
-  const handleBookNow = () => {
-    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
-    if (isLoggedIn) {
-      navigate("/userdetails");
-    } else {
-      onSwitchToLogin(true);
-    }
-  };
   const handleUserReview = () => {
     const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
     if (isLoggedIn) {
@@ -53,16 +69,9 @@ const Service = ({ onSwitchToLogin }) => {
       setIsAnimating(false);
     }, 2000);
   };
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const parsed = JSON.parse(storedUser);
-      console.log("Parsed user from localStorage:", parsed); // 👈 check shape
-      setCurrentUser(parsed);
-    }
-  }, []);
-
+  const handleClick = () => {
+    setIsWishlisted(!isWishlisted);
+  };
   useEffect(() => {
     const fetchService = async () => {
       try {
@@ -89,7 +98,65 @@ const Service = ({ onSwitchToLogin }) => {
     fetchService();
   }, [serviceId]);
 
-  const available = service?.available || false;
+
+  const isVendorAvailable = service?.available !== false;
+
+  const handleBookNow = () => {
+    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
+    if (isLoggedIn) {
+      navigate(`/userdetails/${serviceId}`);
+    } else {
+      if (onSwitchToLogin) {
+        onSwitchToLogin(true);
+      } else {
+        toast.error("Please log in to book this service.");
+        navigate("/login");
+      }
+    }
+  };
+
+  const handleAddToCart = async () => {
+    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
+    if (!isLoggedIn) {
+      toast.error("Please log in to add items to your cart.");
+      if (onSwitchToLogin) {
+        onSwitchToLogin(true);
+      } else {
+        navigate("/login");
+      }
+      return;
+    }
+    try {
+      await axios.post(`${BACKEND_URL}/cart/add`, { serviceId: serviceId });
+      toast.success("Service added to your cart!");
+    } catch (err) {
+      if (err.response && err.response.status === 409) {
+        toast.error("This service is already in your cart.");
+      } else {
+        toast.error("Failed to add service. Please try again.");
+      }
+    }
+  };
+
+  const handleNotifyMe = async (e) => {
+    e.stopPropagation();
+    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
+    if (!isLoggedIn) {
+      toast.error("Please log in to get notifications.");
+      if (onSwitchToLogin) onSwitchToLogin(true);
+      return;
+    }
+    try {
+      await axios.post(`${BACKEND_URL}/notifications/notify-when-available`, {
+        serviceId,
+      });
+      toast.success("You'll be notified when this service becomes available!");
+    } catch (err) {
+      toast.error("Failed to set up notification.");
+      console.error("Notify me error:", err);
+    }
+  };
+
 
   if (loading) return <p>Loading service details...</p>;
   if (error || !service) return <p>{error || "Service not found."}</p>;
@@ -97,7 +164,6 @@ const Service = ({ onSwitchToLogin }) => {
   return (
     <div className="dj">
       <div className="section_one">
-        {/* Left Section */}
         <div className="left-fixed">
           <div className="dj-img">
             <div className="thumbnail-list">
@@ -107,18 +173,48 @@ const Service = ({ onSwitchToLogin }) => {
                   onClick={() => setSelectMedia(media)}
                   className="li1"
                 >
-                  <img src={media.src} alt={`media-${index}`} />
+                  <img
+                    src={media.src}
+                    alt={`media-${index}`}
+                    className={
+                      !isVendorAvailable ? "grayscale brightness-75" : ""
+                    }
+                  />
                 </div>
               ))}
             </div>
-            <div className="big-image">
-              <img src={selectMedia?.src} alt="Selected media" />
+            <div className="big-image relative">
+              <img
+                src={selectMedia?.src}
+                alt="Selected media"
+                className={`transition-all duration-300 ${
+                  !isVendorAvailable ? "grayscale brightness-50" : ""
+                }`}
+              />
+
+              {!isVendorAvailable && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40">
+                  <div className="rounded-lg bg-red-600 px-6 py-5 text-center shadow-lg">
+                    <p className="text-sm font-bold text-white">
+                      OUT OF SERVICE
+                    </p>
+                    <p className="text-xs text-red-100">
+                      Oops! We’re on a quick break, back soon.
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-          <div className="flex justify-center flex-col sm:flex-row-reverse gap-4">
-            {available ? (
+
+          {/* THIS IS THE CORRECTED LINE */}
+          <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-4">
+            {isVendorAvailable ? (
               <>
-                <button className="w-full sm:w-44 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-md transition-all duration-300">
+                <button
+                  className="w-full sm:w-44 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-md transition-all duration-300"
+                  onClick={handleAddToCart}
+                >
                   Add to Cart
                 </button>
                 <button
@@ -147,10 +243,8 @@ const Service = ({ onSwitchToLogin }) => {
           </div>
         </div>
 
-        {/* Right Section */}
         <div className="right-scrollable">
           <DJServiceCard service={service} />
-
           <div className="why-choose">
             <h2>Why Choose Us?</h2>
             <ul>
@@ -160,7 +254,6 @@ const Service = ({ onSwitchToLogin }) => {
               <li>Custom Packages & Friendly Support</li>
             </ul>
           </div>
-
           <div className="reviews">
             <h3>DJ Ratings & Reviews</h3>
             <RatingDetails serviceId={serviceId} />
@@ -193,11 +286,10 @@ const Service = ({ onSwitchToLogin }) => {
         </div>
       </div>
 
-      {/* Similar Services */}
       <div className="view-dj-section">
         <h2 className="people-also-book">People Also Booked</h2>
         <div className="view-dj">
-          {similarServiceData.map((product) => (
+          {categoryServices.map((product) => (
             <SimilarProductCard key={product.id} product={product} />
           ))}
         </div>

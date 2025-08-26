@@ -13,10 +13,12 @@ import {
   changePassword,
   getUserProfile,
   googleAuth,
+  verifyLogin,
 } from "../../controller/user/user.controller.js";
 
 import { verifyJwt } from "../../middleware/auth.middleware.js";
 import { upload } from "../../middleware/multer.middleware.js";
+import { getDetails, saveDetails } from "../../controller/user/userDetails.controller.js";
 
 const router = Router();
 
@@ -30,6 +32,7 @@ router.post("/logout", logoutUser);
 router.post("/auth/google", googleAuth);
 router.post("/forgot-password", sendPasswordResetLink);
 router.post("/reset-password/:resetToken", resetPassword);
+router.post("/verify-otp", verifyLogin);
 
 //
 // 🔒 PROTECTED ROUTES (Require JWT)
@@ -48,5 +51,9 @@ router.put(
   updateUserAvatar
 );
 router.delete("/remove-profile-photo", verifyJwt, removeProfilePhoto);
+
+// User Details Routes
+router.post("/save-details", verifyJwt, saveDetails);
+router.get("/bookings/:userDetailsId", verifyJwt, getDetails);
 
 export default router;

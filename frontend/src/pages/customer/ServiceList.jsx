@@ -4,11 +4,22 @@ import axios from "axios";
 import "./ServiceList.css";
 import Filter from "../../components/customer/serviceList/Filter.jsx";
 import ServiceCard from "./../../components/customer/serviceList/ServiceCard";
-import { Link } from "react-router-dom";
 import { BACKEND_URL } from "../../utils/constant.js";
+import { setCategoryServices } from "../../redux/categorySlice";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const ServiceList = ({ onSwitchToLogin }) => {
+  const dispatch = useDispatch();
+  // const [services, setServices] = useState([]);
+
+  const categoryServices = useSelector(
+    (state) => state.category.categoryServices
+  );
   const { categoryId } = useParams(); // This is the category name passed in URL
+  console.log("################################");
+  console.log(categoryId);
+  console.log("################################");
 
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,19 +28,25 @@ const ServiceList = ({ onSwitchToLogin }) => {
   const [selectedCity, setSelectedCity] = useState("");
 
   useEffect(() => {
-    console.log("Category ID:", categoryId);
+    // console.log("Category ID:", categoryId);
     const fetchServices = async () => {
       try {
         setLoading(true);
         const response = await axios.get(
           `${BACKEND_URL}/common/category/${categoryId}`
         );
+        console.log(response.data);
+        // console.log("Fetched services1:", response.data.data);
+        dispatch(setCategoryServices(response.data.data)); // save to redux
+        // console.log("My data", response.data.data);
+        // setServices(response.data.data);
         console.log("Fetched services data:", response.data.data); // Debugging log
         setServices(response.data.data);
         setFilteredServices(response.data.data); // Initialize filtered services
         setLoading(false);
       } catch (error) {
         console.error("Error fetching services:", error);
+      } finally {
         setLoading(false);
       }
     };
@@ -145,7 +162,7 @@ const handleApplyFilters = (filters) => {
           filteredServices.map((service, idx) => (
             <div className="singleServiceCard" key={idx}>
               <Link
-                to={`/service/${service._id}`}
+                to={`/service/${categoryId}/${service._id}`}
                 style={{ textDecoration: "none", color: "inherit" }}
               ></Link>
               <ServiceCard
@@ -160,6 +177,5 @@ const handleApplyFilters = (filters) => {
       </div>
     </div>
   );
-};
-
+};  
 export default ServiceList;

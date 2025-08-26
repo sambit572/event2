@@ -12,14 +12,25 @@ import {
   deleteFromCloudinary,
 } from "../../utilities/cloudinary.js";
 import { sendEmail } from "../../utilities/sendEmail.js";
+const isProd = process.env.NODE_ENV === "production";
 
-const option = {
+const baseOption = {
   httpOnly: true,
-  secure: false, // for localhost
-  // secure : true, // for production
-  sameSite: "Lax",
-  maxAge: 10 * 24 * 60 * 60 * 1000, // 10 days
+  secure: isProd ? "true" : "false", // true in prod, false in dev
+  sameSite: isProd ? "None" : "Lax",
+  path: "/",
 };
+
+const accessTokenOption = {
+  ...baseOption,
+  expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 day
+};
+
+const refreshTokenOption = {
+  ...baseOption,
+  expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000), // 10 days
+};
+
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Helper function to generate profile picture URL with first name initial
@@ -91,7 +102,7 @@ const registerUser = async (req, res) => {
       return res.status(400).json(new ApiError(400, "Invalid email format"));
     }
 
-    if (password.length < 6) {
+    if (password.length < 8) {
       return res
         .status(400)
         .json(new ApiError(400, "Password must be 6 characters long"));
@@ -101,8 +112,8 @@ const registerUser = async (req, res) => {
 
     if (userExist) {
       return res
-        .status(200)
-        .json(new ApiResponse(200, userExist, "User already exists"));
+        .status(400)
+        .json(new ApiResponse(400, userExist, "User already exists"));
     }
 
     const user = await User.create({
@@ -146,12 +157,12 @@ const registerUser = async (req, res) => {
 
     return res
       .status(200)
-      .cookie("accessToken", accessToken, option)
-      .cookie("refreshToken", refreshToken, option)
+      .cookie("accessToken", accessToken, accessTokenOption)
+      .cookie("refreshToken", refreshToken, refreshTokenOption)
       .json(
         new ApiResponse(
           200,
-          { user: createdUser, accessToken, refreshToken },
+          { user: createdUser, accessToken, option },
           "User created successfully"
         )
       );
@@ -211,8 +222,8 @@ const loginUser = async (req, res) => {
 
     return res
       .status(200)
-      .cookie("accessToken", accessToken, option)
-      .cookie("refreshToken", refreshToken, option)
+      .cookie("accessToken", accessToken, accessTokenOption)
+      .cookie("refreshToken", refreshToken, refreshTokenOption)
       .json(
         new ApiResponse(
           200,
@@ -236,8 +247,10 @@ const logoutUser = async (req, res) => {
 
     return res
       .status(200)
-      .clearCookie("accessToken", option)
-      .clearCookie("refreshToken", option)
+      .clearCookie("accessToken", accessTokenOption)
+      .clearCookie("refreshToken", refreshTokenOption)
+      .clearCookie("accessToken", accessTokenOption)
+      .clearCookie("refreshToken", refreshTokenOption)
       .json(new ApiResponse(200, {}, "User logged out successfully"));
   } catch (error) {
     console.error("Logout error:", error);
@@ -255,9 +268,13 @@ const googleAuth = async (req, res) => {
       idToken: token,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
-    console.log("✅ GOOGLE PAYLOAD RECEIVED:", ticket.getPayload());
+
+    // console.log("✅ GOOGLE PAYLOAD RECEIVED:", ticket.getPayload());
+
     const { email, name, picture } = ticket.getPayload();
-    console.log("Google profile picture URL:", picture);
+
+    // console.log("Google profile picture URL:", picture);
+
     // 2. find or create user
     let user = await User.findOne({ email });
     let isNewUser = false;
@@ -371,8 +388,8 @@ const googleAuth = async (req, res) => {
     // 4. respond
     return res
       .status(200)
-      .cookie("accessToken", accessToken, option)
-      .cookie("refreshToken", refreshToken, option)
+      .cookie("accessToken", accessToken, accessTokenOption)
+      .cookie("refreshToken", refreshToken, refreshTokenOption)
       .json(
         new ApiResponse(
           200,
@@ -634,6 +651,37 @@ const changePassword = async (req, res) => {
   }
 };
 
+const verifyLogin = async (req, res) => {
+  const { phoneNo } = req.body;
+
+  if (!phoneNo || !isValidPhoneNumber(phoneNo, "IN")) {
+    return res.status(400).json(new ApiError(400, "Invalid phone number"));
+  }
+
+  const user = await User.findOne({ phoneNo });
+  if (!user) return res.status(404).json(new ApiError(404, "User not found"));
+
+  const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
+    user._id
+  );
+
+  const loggedInUser = await User.findById(user._id).select(
+    "-password -refreshToken"
+  );
+
+  return res
+    .status(200)
+    .cookie("accessToken", accessToken, accessTokenOption)
+    .cookie("refreshToken", refreshToken, refreshTokenOption)
+    .json(
+      new ApiResponse(
+        200,
+        { loggedInUser, accessToken, refreshToken },
+        "Login successful"
+      )
+    );
+};
+
 // ------------------ TOKEN AUTH CONTROLLER ------------------
 
 const noNeedToLogin = async (req, res) => {
@@ -685,7 +733,7 @@ const noNeedToLogin = async (req, res) => {
 
       return res
         .status(200)
-        .cookie("refreshToken", newRefreshToken, option)
+        .cookie("refreshToken", newRefreshToken, refreshTokenOption)
         .json(new ApiResponse(200, user, "Session valid (access token ok)"));
     }
 
@@ -710,7 +758,7 @@ const noNeedToLogin = async (req, res) => {
 
         return res
           .status(200)
-          .cookie("accessToken", newAccessToken, option)
+          .cookie("accessToken", newAccessToken, accessTokenOption)
           .json(
             new ApiResponse(
               200,
@@ -777,4 +825,5 @@ export {
   getUserEmail,
   getUserProfile,
   googleAuth,
+  verifyLogin,
 };

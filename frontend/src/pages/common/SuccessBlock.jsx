@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import namaste from "../../assets/home/categoriesImages/Namaste.gif";
+import namaste from "../../assets/home/categoriesImages/NAMASTE.png";
 import "./LoginRegister.css"; // Reuse same styles for consistent layout
 
 const SuccessBlock = ({ onClose }) => {

@@ -41,7 +41,7 @@ export default function VendorPayment() {
   };
 
   // PAN verification function
-  const verifyPAN = async (panNumber) => {
+ /*  const verifyPAN = async (panNumber) => {
     if (!panNumber || panNumber.length !== 10) {
       setPanVerification({
         isVerifying: false,
@@ -96,7 +96,7 @@ export default function VendorPayment() {
         verifiedName: "",
       });
     }
-  };
+  }; */
 
   // Handle PAN input with auto-verification
   const handlePANChange = (e) => {
@@ -107,19 +107,19 @@ export default function VendorPayment() {
     }));
 
     // Reset verification state when PAN changes
-    if (panVerification.isVerified && panValue !== formData.panNumber) {
+   /*  if (panVerification.isVerified && panValue !== formData.panNumber) {
       setPanVerification({
         isVerifying: false,
         isVerified: false,
         verificationMessage: "",
         verifiedName: "",
       });
-    }
+    } */
 
     // Auto-verify when PAN is 10 characters
-    if (panValue.length === 10 && /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(panValue)) {
-      verifyPAN(panValue);
-    }
+    // if (panValue.length === 10 && /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(panValue)) {
+    //   verifyPAN(panValue);
+    // }
   };
 
   const handleBack = () => {
@@ -153,11 +153,11 @@ export default function VendorPayment() {
     }
 
     // Check PAN verification
-    if (!panVerification.isVerified) {
-      setIsLoading(false);
-      alert("Please verify your PAN number before proceeding.");
-      return;
-    }
+    // if (!panVerification.isVerified) {
+    //   setIsLoading(false);
+    //   alert("Please verify your PAN number before proceeding.");
+    //   return;
+    // }
 
     try {
       const vendorId = localStorage.getItem("vendorId");
@@ -302,14 +302,14 @@ export default function VendorPayment() {
               name="panNumber"
               value={formData.panNumber}
               onChange={handlePANChange}
-              onBlur={() => {
+              /* onBlur={() => {
                 if (
                   formData.panNumber.length === 10 &&
                   !panVerification.isVerified
                 ) {
                   verifyPAN(formData.panNumber);
                 }
-              }}
+              }} */
               placeholder="ABCDE1234F"
               pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
               maxLength="10"

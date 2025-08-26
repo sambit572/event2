@@ -1,6 +1,6 @@
 .home {
   width: 100%;
-  margin-top: 70px;
+  /* margin-top: 70px; */
 }
 
 .categories-head1 {
@@ -14,7 +14,7 @@
   color: #001f3f; /* dark text */
   padding: 5px 20px;
   text-align: center;
-  font-size: 2.2rem;
+  font-size: 1.5rem;
   font-weight: bold;
   width: fit-content;
   border: 6px double #001f3f;
@@ -34,13 +34,14 @@
   margin-top: 17px;
   padding-top: 10px;
   font-weight: 600;
+  margin-bottom: 10px;
   color: #3b0340e1;
 }
 .category_section {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   gap: 30px;
-  padding: 32px;
+  padding: 0 32px 32px 32px;
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
@@ -49,7 +50,7 @@
 }
 
 .browse-all-btn {
-  padding: 12px 32px;
+  padding: 10px 25px;
   background-color: #001f3f;
   color: #ffffff;
   font-size: 16px;
@@ -70,6 +71,8 @@
 .arrow {
   transition: all 0.3s ease;
   display: inline-block;
+  font-size: 20px;
+  font-weight: 1000;
 }
 
 .browse-all-btn:hover .arrow {
@@ -79,6 +82,20 @@
 @media (max-width: 820px) {
   .browse_all {
     margin-right: 35px;
+  }
+}
+@media (max-width: 640px) {
+  .category-subheads {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    padding-top: 10px;
+    margin-bottom: 10px;
+  }
+  .browse-all-btn {
+    font-size: 14px;
+    font-weight: 700;
+
+    padding: 0.5rem 1.5rem;
   }
 }
 @media (min-width: 640px) {

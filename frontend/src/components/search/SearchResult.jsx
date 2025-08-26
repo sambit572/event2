@@ -24,7 +24,7 @@ export const SearchResult = ({
   };
 
   const handleServiceClick = (serviceId) => {
-    navigate(`/service/${serviceId}`);
+    navigate(`/service/${categories}/${serviceId}`);
   };
 
   const handleCategoryClick = (categoryName) => {

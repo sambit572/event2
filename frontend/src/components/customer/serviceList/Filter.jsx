@@ -107,6 +107,7 @@ const Filter = ({ onApply, onCancel }) => {
         </button>
       )}
 
+
       <div className={`filterBox ${showFilter ? "show" : ""}`}>
         <div className="filter m-2">
           {showFilter && (
@@ -117,6 +118,7 @@ const Filter = ({ onApply, onCancel }) => {
               <span className="filter-text">Close</span>
             </button>
           )}
+
 
           <h3 className="filter-heading">Filters</h3>
           <div className="mb-6">
@@ -196,6 +198,7 @@ const Filter = ({ onApply, onCancel }) => {
           </div>
           <hr className="line" />
 
+          {/* Location Filter */}
           <div className="filter-section">
             <h4>Customer Rating</h4>
             <div className="dropdown">
@@ -282,4 +285,4 @@ const Filter = ({ onApply, onCancel }) => {
   );
 };
 
-export default Filter;
+export default Filter

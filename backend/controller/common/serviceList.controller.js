@@ -4,6 +4,8 @@ export const getServicesByCategory = async (req, res) => {
   try {
     const { category } = req.params;
 
+    // console.log(`$$$$$$$$$$$$$$$$$$$$$$$$$category: ${category}`);
+
     const services = await Service.aggregate([
       {
         $match: {
@@ -72,6 +74,8 @@ export const getServicesByCategory = async (req, res) => {
       },
     ]);
 
+    console.log(services);
+
     return res.status(200).json({ success: true, data: services });
   } catch (err) {
     console.error("Error in getServicesByCategory:", err);
@@ -89,7 +93,9 @@ export const getServiceById = async (req, res) => {
     });
 
     if (!service) {
-      return res.status(404).json({ success: false, message: "Service not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Service not found" });
     }
 
     // Transform the response to include vendorName
@@ -102,7 +108,8 @@ export const getServiceById = async (req, res) => {
     return res.status(200).json({ success: true, data: transformed });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ success: false, message: "Internal Server Error" });
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
   }
 };
-

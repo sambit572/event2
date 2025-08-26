@@ -103,7 +103,11 @@ export const createService = async (req, res) => {
     }
 
     // ✅ Save service document to DB
-    const newService = await Service.create({
+    // ✅ Create or Update service document in DB
+    let newService;
+    let responseMessage;
+
+    const serviceData = {
       vendorId: req.vendor._id,
       serviceCategory,
       serviceImage: imageUrls,
@@ -114,18 +118,33 @@ export const createService = async (req, res) => {
       locationOffered: locationsArray, // ✅ store array
       serviceDes,
       duration,
-    });
+    };
 
-    // ✅ Update vendor registration progress if needed
+    // If vendor is still registering, they can only have ONE service.
+    // We use "upsert" to create it if it's their first time, or update it if they're editing.
     if (req.vendor.isRegistrationComplete === false) {
+      console.log("🔵 Vendor registration not complete. Upserting service...");
+      newService = await Service.findOneAndUpdate(
+        { vendorId: req.vendor._id }, // Condition to find the service
+        serviceData,                  // The data to update or insert
+        { new: true, upsert: true }   // Options: return the new doc, and create if it doesn't exist
+      );
+
+      // Also update their registration progress
       await Vendor.findByIdAndUpdate(req.vendor._id, {
         $set: { registrationProgress: 2 },
       });
+      responseMessage = "Service saved successfully during registration";
+    } else {
+      // If registration is complete, they can add multiple services, so we always create a new one.
+      console.log("🟢 Vendor registration complete. Creating new service...");
+      newService = await Service.create(serviceData);
+      responseMessage = "New service created successfully";
     }
 
     return res
       .status(200)
-      .json(new ApiResponse(200, newService, "Service created successfully"));
+      .json(new ApiResponse(200, newService, responseMessage));
   } catch (error) {
     console.error("❌ Service creation error:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -154,7 +173,7 @@ export const getMyServices = async (req, res) => {
     const services = await Service.find({ vendorId: vendorId }).sort({
       createdAt: -1,
     });
-    console.log("services of current vendor fetched from database :", services);
+    // console.log("services of current vendor fetched from database :", services);
     res
       .status(200)
       .json(
@@ -235,7 +254,7 @@ export const updateService = async (req, res) => {
         serviceCategory,
         minPrice,
         maxPrice,
-        stateLocationOffered:stateLocationsArray,
+        stateLocationOffered: stateLocationsArray,
         locationOffered: locationsArray,
         duration,
         serviceImage, // ✅ Uses URLs from frontend
@@ -307,9 +326,7 @@ export const updateAvailability = async (req, res) => {
     if (typeof available !== "boolean") {
       return res
         .status(400)
-        .json(
-          new ApiError(400, "`available` must be a boolean (true or false)")
-        );
+        .json(new ApiError(400, "available must be a boolean (true or false)"));
     }
 
     const service = await Service.findOne({

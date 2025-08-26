@@ -11,6 +11,7 @@ function DashBoardSideBar({
   isVerified,
   setConfirmPasswordModal,
   onSaveComplete,
+  setVendorShowPasswordModal,
 }) {
   const dispatch = useDispatch();
   const vendor = useSelector((state) => state.vendor.vendor);
@@ -282,6 +283,13 @@ function DashBoardSideBar({
               form.upiId
             )}
           </li>
+          
+          <button
+          className="change-password"
+          onClick={() => setVendorShowPasswordModal(true)}
+        >
+          Change Password
+        </button>
 
           <li className="typography bank-dropdown">
             <div

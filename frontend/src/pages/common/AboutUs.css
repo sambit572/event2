@@ -21,7 +21,6 @@
 }
 
 .aboutus-right {
-  
   width: 765px;
   height: 642px;
 }
@@ -174,7 +173,6 @@
   }
 }
 
-
 /* Desktop View */
 @media screen and (min-width: 1024px) {
   .aboutus-left {
@@ -193,7 +191,7 @@
   max-width: 800px;
   margin: auto;
   padding: 2rem;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
   background-color: #fff;
   border-radius: 12px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
@@ -246,7 +244,6 @@
 }
 
 @media (max-width: 768px) {
-  
   .services-grid {
     grid-template-columns: 1fr;
   }
@@ -268,6 +265,3 @@
     padding: 25px;
   }
 }
-
-
-

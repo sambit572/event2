@@ -10,7 +10,6 @@
   box-sizing: border-box;
 }
 
-
 .navigation-buttons button {
   padding: 12px 24px;
   font-weight: 600;
@@ -24,7 +23,7 @@
 }
 
 .back-button {
-  background-color: #2E2E2E;
+  background-color: #2e2e2e;
   color: #ffffff;
   flex: 0 0 auto;
   margin-left: 35px;
@@ -64,6 +63,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
+  color: white;
   white-space: nowrap;
 }
 

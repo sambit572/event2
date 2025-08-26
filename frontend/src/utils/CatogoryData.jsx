@@ -97,21 +97,24 @@ import mehendi2 from "../assets/service/makeup/mehendi2.jpg";
 import mehendi3 from "../assets/service/makeup/mehendi3.jpg";
 import mehendi4 from "../assets/service/makeup/mehendi4.jpg";
 
-import image1 from "../assets/home/categoriesImages/dj.png";
-import image2 from "../assets/home/categoriesImages/bass-brand.png";
-import image3 from "../assets/home/categoriesImages/tenthouse.png";
+import image1 from "../assets/home/categoriesImages/dj_image.png";
+import image2 from "../assets/home/categoriesImages/bass-brand.webp";
+import image3 from "../assets/home/categoriesImages/tent_house.jpg";
 import image4 from "../assets/home/categoriesImages/photographer.png";
 import image5 from "../assets/home/categoriesImages/pandit.png";
 import image6 from "../assets/home/categoriesImages/magician.png";
-import image7 from "../assets/home/categoriesImages/orchestra.png";
+import image7 from "../assets/home/categoriesImages/classical_music_and_dance.jpg";
 import image8 from "../assets/home/categoriesImages/moulbi.png";
 import image9 from "../assets/home/categoriesImages/father.png";
 import image10 from "../assets/aboutus/catering_img.png";
 import image11 from "../assets/home/categoriesImages/bride-mehendi-&-makeup.png";
 import image12 from "../assets/home/categoriesImages/flower-decor.png";
-import image13 from "../assets/home/categoriesImages/horse-cart.png";
+import image13 from "../assets/home/categoriesImages/ceremonial_ride.png";
 import image14 from "../assets/home/categoriesImages/fireworks.png";
 import image15 from "../assets/home/categoriesImages/marriage-card.png";
+import image16 from "../assets/home/categoriesImages/banquithall.jpeg";
+import image17 from "../assets/home/categoriesImages/stage_decor.png";
+import image18 from "../assets/home/categoriesImages/event_company.png";
 
 export const CategoryData = [
   {
@@ -212,7 +215,7 @@ export const CategoryData = [
   },
   {
     id: "band",
-    title: "Orchesta And Music Concert",
+    title: "Music Concert And Orchesta",
     image: image2,
     tagline: "Brass Beats the Best",
     icon: "🎺",
@@ -499,18 +502,18 @@ export const CategoryData = [
     ],
   },
   {
-    id: "pandit",
-    title: "Hindu Pandit",
-    image: image5,
-    tagline: "Mantras Meet Moments",
-    icon: "🕉",
+    id: "catering",
+    title: "Food & Catering",
+    image: image10,
+    tagline: "Flavours that Speak Love",
+    icon: "🍽️",
     services: [
       {
-        id: "pandit1",
-        img: [pandit1, pandit2, pandit3, pandit4, pandit5],
-        title: "Arya Samaj Panditji",
+        id: "cater1",
+        img: [catering2, catering1, camera3, catering4, catering5],
+        title: "Gopalji Catering Services",
         description:
-          "Expert in conducting various Hindu rituals including havan, puja, weddings, naming ceremonies (namkaran), mundan, bhoomi puja and griha pravesh.",
+          "A cost-effective, highly professional team emphasizing fresh ingredients, customized menus, and hospitality-driven service excellence.",
         address: {
           country: "India",
           state: "Odisha",
@@ -518,28 +521,28 @@ export const CategoryData = [
           area: "Patia",
           pincode: 123344,
         },
-        vandor: "Aarav Mehta",
-        rating: 4.0,
+        vandor: "Arjun Nayak",
+        rating: 4,
         reviews: 4000,
         price: "10,000",
         originalPrice: 40000,
         discountPercent: 50,
-        category: "Hindu Religious Services",
-        idealFor: "Weddings, Griha Pravesh, Namkaran, Mundan, Bhoomi Pujan",
+        category: "Wedding Catering / Event Food Services",
+        idealFor: "Weddings, Engagements, Anniversaries, Corporate Events",
         inclusions: [
-          "Complete Havan Kit (Samagri)",
-          "Customized Puja Vidhi Based on Region",
-          "Puja Mandap Setup Guidance",
-          "Auspicious Muhurat Consultation",
-          "Post-puja Prasad & Ritual Guidance",
+          "Multi-cuisine Buffet Setup (Veg/Non-Veg)",
+          "Live Food Counters (Chaat, Tandoor, Dessert)",
+          "Staffed Waiters & On-site Chefs",
+          "Utensils, Decorated Counters, Cutlery",
+          "Customizable Menu with Tasting Session",
         ],
       },
       {
-        id: "pandit2",
-        img: [pandit6, pandit4, pandit3, pandit1, pandit2],
-        title: "Pandit Gopal Chandra Panda",
+        id: "cater2",
+        img: [catering3, catering5, catering4, catering2, catering1],
+        title: "Sumangalam Caterers",
         description:
-          "A highly experienced pandit combining Vedic rituals with modern-day astrological and vastu consultation for holistic event guidance.",
+          "Innovative high-quality food curated by professional chefs with a touch of Odisha’s tradition and modern hospitality. Premium wedding catering experience.",
         address: {
           country: "India",
           state: "Odisha",
@@ -553,88 +556,86 @@ export const CategoryData = [
         price: "15,000",
         originalPrice: 30000,
         discountPercent: 50,
-        category: "Pandit & Astrology Services",
-        idealFor:
-          "Horoscope Matching, Griha Pravesh, Satyanarayan Puja, Marriage",
+        category: "Catering & Food Management",
+        idealFor: "Grand Weddings, Corporate Feasts, Cultural Celebrations",
         inclusions: [
-          "Horoscope Matching Consultation",
-          "Vastu Puja & Remedies",
-          "Satyanarayan Katha with Pujan",
-          "Travel to Home/Venue Included",
-          "Sanskrit or Local Language Chanting Option",
+          "Custom Wedding Menu (South Indian, Mughlai, Odia Traditional)",
+          "Chef Special Live Counters (Dosa, Grill, Pasta)",
+          "Themed Buffet Display",
+          "Premium Crockery & Table Setup",
+          "Waste Management & Post-cleaning Service",
         ],
       },
     ],
   },
   {
-    id: "magic",
-    title: "Magic Shows",
-    image: image6,
-    tagline: "Illusions that Amaze All",
-    icon: "🎩",
+    id: "banquet-hall",
+    title: "Banquet Hall & Mandap",
+    image: image16,
+    tagline: "Where Celebrations Begin",
+    icon: "🎉",
     services: [
       {
-        id: "magic1",
-        img: [magic1, magic2, magic3, magic4, magic5],
-        title: "Magic World",
+        id: "banquet1",
+        img: [card1, card2, card3, card4, card2],
+        title: "Shubham Banquet Hall",
         description:
-          "Village qawwali night show with interactive illusions and crowd-pulling acts, attracting audiences of 10,000+.",
+          "Spacious banquet hall in the heart of Mumbai, perfect for weddings, receptions, and corporate events. AC, valet parking & catering available.",
         address: {
           country: "India",
-          state: "Odisha",
-          city: "Bhubaneswar",
-          area: "Patia",
-          pincode: 123344,
+          state: "Maharashtra",
+          city: "Mumbai",
+          area: "Andheri West",
+          pincode: 400053,
         },
-        vandor: "Jadugar A. Sarkar",
-        rating: 4,
-        reviews: 4000,
-        price: "10,000",
-        originalPrice: 40000,
-        discountPercent: 50,
-        category: "Live Illusion Shows",
-        idealFor:
-          "Weddings, Receptions, Public Gatherings, Fairs, Cultural Events",
+        vandor: "Rakesh Tiwari",
+        rating: 4.6,
+        reviews: 1200,
+        price: "85,000",
+        originalPrice: 120000,
+        discountPercent: 30,
+        category: "Premium Banquet Hall",
+        idealFor: "Weddings, Receptions, Parties, Conferences",
         inclusions: [
-          "60-minute Live Magic Performance",
-          "Levitation & Vanishing Acts",
-          "Audience Participation Tricks",
-          "Kids Magic Segment",
-          "Travel & Sound Setup Included",
+          "AC Banquet Hall (300 Capacity)",
+          "In-house Decor & DJ",
+          "Catering up to 4-course meals",
+          "Valet Parking",
+          "Backup Generator",
         ],
       },
       {
-        id: "magic2",
-        img: [magic5, magic4, magic3, magic2, magic1],
-        title: "Mazick",
+        id: "mandap1",
+        img: [card4, card1, card2, card3, card2],
+        title: "Mandap Mahal Decorators",
         description:
-          "Modern magic performance with large-scale illusions, big bubble acts, fire illusions, and child-safe comedy tricks.",
+          "Beautifully crafted mandap setups with floral themes, lighting, and customizable props. Traditional, modern & destination-ready.",
         address: {
           country: "India",
-          state: "Odisha",
-          city: "Puri",
-          area: "Pipil",
-          pincode: 129745,
+          state: "Maharashtra",
+          city: "Mumbai",
+          area: "Dadar",
+          pincode: 400014,
         },
-        vandor: "Dr. Ojoy",
-        rating: 4.4,
-        reviews: 3000,
-        price: "15,000",
-        originalPrice: 30000,
-        discountPercent: 50,
-        category: "Stage Magic & Illusions",
-        idealFor:
-          "Birthday Parties, School Functions, Mela Events, Cultural Shows",
+        vandor: "Suhana Events",
+        rating: 4.7,
+        reviews: 950,
+        price: "35,000",
+        originalPrice: 50000,
+        discountPercent: 30,
+        category: "Mandap Setup & Decor",
+        idealFor: "Weddings, Engagements, Pujas",
         inclusions: [
-          "Fire Illusion Show",
-          "Bubble & Rope Magic Segment",
-          "Stage Lighting & Mic Setup",
-          "Child Engagement Routines",
-          "Live Doves & Props",
+          "Designer Mandap Structure",
+          "Fresh Floral Decoration",
+          "Lighting & Drapes",
+          "Setup + Dismantling",
+          "Optional Stage Seating",
         ],
       },
     ],
   },
+
   {
     id: "cultural-troupe",
     title: "Classical Music and Dance",
@@ -839,18 +840,18 @@ export const CategoryData = [
     ],
   },
   {
-    id: "catering",
-    title: "Food & Catering",
-    image: image10,
-    tagline: "Flavours that Speak Love",
-    icon: "🍽️",
+    id: "pandit",
+    title: "Hindu Pandit",
+    image: image5,
+    tagline: "Mantras Meet Moments",
+    icon: "🕉",
     services: [
       {
-        id: "cater1",
-        img: [catering2, catering1, camera3, catering4, catering5],
-        title: "Gopalji Catering Services",
+        id: "pandit1",
+        img: [pandit1, pandit2, pandit3, pandit4, pandit5],
+        title: "Arya Samaj Panditji",
         description:
-          "A cost-effective, highly professional team emphasizing fresh ingredients, customized menus, and hospitality-driven service excellence.",
+          "Expert in conducting various Hindu rituals including havan, puja, weddings, naming ceremonies (namkaran), mundan, bhoomi puja and griha pravesh.",
         address: {
           country: "India",
           state: "Odisha",
@@ -858,28 +859,28 @@ export const CategoryData = [
           area: "Patia",
           pincode: 123344,
         },
-        vandor: "Arjun Nayak",
-        rating: 4,
+        vandor: "Aarav Mehta",
+        rating: 4.0,
         reviews: 4000,
         price: "10,000",
         originalPrice: 40000,
         discountPercent: 50,
-        category: "Wedding Catering / Event Food Services",
-        idealFor: "Weddings, Engagements, Anniversaries, Corporate Events",
+        category: "Hindu Religious Services",
+        idealFor: "Weddings, Griha Pravesh, Namkaran, Mundan, Bhoomi Pujan",
         inclusions: [
-          "Multi-cuisine Buffet Setup (Veg/Non-Veg)",
-          "Live Food Counters (Chaat, Tandoor, Dessert)",
-          "Staffed Waiters & On-site Chefs",
-          "Utensils, Decorated Counters, Cutlery",
-          "Customizable Menu with Tasting Session",
+          "Complete Havan Kit (Samagri)",
+          "Customized Puja Vidhi Based on Region",
+          "Puja Mandap Setup Guidance",
+          "Auspicious Muhurat Consultation",
+          "Post-puja Prasad & Ritual Guidance",
         ],
       },
       {
-        id: "cater2",
-        img: [catering3, catering5, catering4, catering2, catering1],
-        title: "Sumangalam Caterers",
+        id: "pandit2",
+        img: [pandit6, pandit4, pandit3, pandit1, pandit2],
+        title: "Pandit Gopal Chandra Panda",
         description:
-          "Innovative high-quality food curated by professional chefs with a touch of Odisha’s tradition and modern hospitality. Premium wedding catering experience.",
+          "A highly experienced pandit combining Vedic rituals with modern-day astrological and vastu consultation for holistic event guidance.",
         address: {
           country: "India",
           state: "Odisha",
@@ -893,20 +894,22 @@ export const CategoryData = [
         price: "15,000",
         originalPrice: 30000,
         discountPercent: 50,
-        category: "Catering & Food Management",
-        idealFor: "Grand Weddings, Corporate Feasts, Cultural Celebrations",
+        category: "Pandit & Astrology Services",
+        idealFor:
+          "Horoscope Matching, Griha Pravesh, Satyanarayan Puja, Marriage",
         inclusions: [
-          "Custom Wedding Menu (South Indian, Mughlai, Odia Traditional)",
-          "Chef Special Live Counters (Dosa, Grill, Pasta)",
-          "Themed Buffet Display",
-          "Premium Crockery & Table Setup",
-          "Waste Management & Post-cleaning Service",
+          "Horoscope Matching Consultation",
+          "Vastu Puja & Remedies",
+          "Satyanarayan Katha with Pujan",
+          "Travel to Home/Venue Included",
+          "Sanskrit or Local Language Chanting Option",
         ],
       },
     ],
   },
+
   {
-    id: "makeup",
+    id: "Beauty Makeover",
     title: "Beauty Makeover",
     image: image11,
     tagline: "Beauty in Every Brush",
@@ -1173,6 +1176,7 @@ export const CategoryData = [
       },
     ],
   },
+
   {
     id: "card-design",
     title: "Card Design & Printing",
@@ -1241,68 +1245,70 @@ export const CategoryData = [
     ],
   },
   {
-    id: "banquet-hall",
-    title: "Banquet Hall & Mandap",
-    image: image11,
-    tagline: "Where Celebrations Begin",
-    icon: "🎉",
+    id: "magic",
+    title: "Magic Shows",
+    image: image6,
+    tagline: "Illusions that Amaze All",
+    icon: "🎩",
     services: [
       {
-        id: "banquet1",
-        img: [card1, card2, card3, card4, card2],
-        title: "Shubham Banquet Hall",
+        id: "magic1",
+        img: [magic1, magic2, magic3, magic4, magic5],
+        title: "Magic World",
         description:
-          "Spacious banquet hall in the heart of Mumbai, perfect for weddings, receptions, and corporate events. AC, valet parking & catering available.",
+          "Village qawwali night show with interactive illusions and crowd-pulling acts, attracting audiences of 10,000+.",
         address: {
           country: "India",
-          state: "Maharashtra",
-          city: "Mumbai",
-          area: "Andheri West",
-          pincode: 400053,
+          state: "Odisha",
+          city: "Bhubaneswar",
+          area: "Patia",
+          pincode: 123344,
         },
-        vandor: "Rakesh Tiwari",
-        rating: 4.6,
-        reviews: 1200,
-        price: "85,000",
-        originalPrice: 120000,
-        discountPercent: 30,
-        category: "Premium Banquet Hall",
-        idealFor: "Weddings, Receptions, Parties, Conferences",
+        vandor: "Jadugar A. Sarkar",
+        rating: 4,
+        reviews: 4000,
+        price: "10,000",
+        originalPrice: 40000,
+        discountPercent: 50,
+        category: "Live Illusion Shows",
+        idealFor:
+          "Weddings, Receptions, Public Gatherings, Fairs, Cultural Events",
         inclusions: [
-          "AC Banquet Hall (300 Capacity)",
-          "In-house Decor & DJ",
-          "Catering up to 4-course meals",
-          "Valet Parking",
-          "Backup Generator",
+          "60-minute Live Magic Performance",
+          "Levitation & Vanishing Acts",
+          "Audience Participation Tricks",
+          "Kids Magic Segment",
+          "Travel & Sound Setup Included",
         ],
       },
       {
-        id: "mandap1",
-        img: [card4, card1, card2, card3, card2],
-        title: "Mandap Mahal Decorators",
+        id: "magic2",
+        img: [magic5, magic4, magic3, magic2, magic1],
+        title: "Mazick",
         description:
-          "Beautifully crafted mandap setups with floral themes, lighting, and customizable props. Traditional, modern & destination-ready.",
+          "Modern magic performance with large-scale illusions, big bubble acts, fire illusions, and child-safe comedy tricks.",
         address: {
           country: "India",
-          state: "Maharashtra",
-          city: "Mumbai",
-          area: "Dadar",
-          pincode: 400014,
+          state: "Odisha",
+          city: "Puri",
+          area: "Pipil",
+          pincode: 129745,
         },
-        vandor: "Suhana Events",
-        rating: 4.7,
-        reviews: 950,
-        price: "35,000",
-        originalPrice: 50000,
-        discountPercent: 30,
-        category: "Mandap Setup & Decor",
-        idealFor: "Weddings, Engagements, Pujas",
+        vandor: "Dr. Ojoy",
+        rating: 4.4,
+        reviews: 3000,
+        price: "15,000",
+        originalPrice: 30000,
+        discountPercent: 50,
+        category: "Stage Magic & Illusions",
+        idealFor:
+          "Birthday Parties, School Functions, Mela Events, Cultural Shows",
         inclusions: [
-          "Designer Mandap Structure",
-          "Fresh Floral Decoration",
-          "Lighting & Drapes",
-          "Setup + Dismantling",
-          "Optional Stage Seating",
+          "Fire Illusion Show",
+          "Bubble & Rope Magic Segment",
+          "Stage Lighting & Mic Setup",
+          "Child Engagement Routines",
+          "Live Doves & Props",
         ],
       },
     ],
@@ -1310,7 +1316,7 @@ export const CategoryData = [
   {
     id: "stage-decor",
     title: "Stage Decor",
-    image: image10, // Replace with your actual image import
+    image: image17, // Replace with your actual image import
     tagline: "Designs That Dazzle, Moments That Matter",
     icon: "🌸",
     services: [
@@ -1376,8 +1382,8 @@ export const CategoryData = [
   },
   {
     id: "event-management",
-    title: "Event Management",
-    image: image14, // Replace with actual image
+    title: "Event Company",
+    image: image18, // Replace with actual image
     tagline: "Crafting Moments, Managing Memories",
     icon: "🎉",
     services: [

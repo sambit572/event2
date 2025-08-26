@@ -606,7 +606,11 @@ function VendorService({ currentStep }) {
               {selectedState && (
                 <span className="selected-chip">
                   {selectedState}
-                  <button type="button" className="ml-2 mr-2" onClick={() => setSelectedState("")}>
+                  <button
+                    type="button"
+                    className="ml-2 mr-2"
+                    onClick={() => setSelectedState("")}
+                  >
                     ✕
                   </button>
                 </span>

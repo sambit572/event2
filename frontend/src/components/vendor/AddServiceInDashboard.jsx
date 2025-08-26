@@ -752,15 +752,15 @@ function VendorService({ currentStep }) {
             marginTop: "20px",
           }}
         >
-          <div className="flex flex-row gap-4 ml-5">
+          <div className="flex flex-row text-white gap-4 ml-5">
             <button
-              className="bg-[#001f3f] font-semibold hover:bg-blue-600 ease-in-out"
+              className="bg-[#001f3f] p-2 font-semibold hover:bg-blue-600 ease-in-out"
               onClick={handleAdd}
             >
               Add
             </button>
             <button
-              className="bg-[#001f3f] font-semibold hover:bg-red-600 ease-in-out"
+              className="bg-[#001f3f] p-2 font-semibold hover:bg-red-600 ease-in-out"
               onClick={handleCancel}
             >
               Cancel
