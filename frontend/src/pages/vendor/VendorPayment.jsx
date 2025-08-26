@@ -107,14 +107,14 @@ export default function VendorPayment() {
     }));
 
     // Reset verification state when PAN changes
-   /*  if (panVerification.isVerified && panValue !== formData.panNumber) {
+    /*  if (panVerification.isVerified && panValue !== formData.panNumber) {
       setPanVerification({
         isVerifying: false,
         isVerified: false,
         verificationMessage: "",
         verifiedName: "",
-      });
-    } */
+      });*/
+  } 
 
     // Auto-verify when PAN is 10 characters
     // if (panValue.length === 10 && /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(panValue)) {
