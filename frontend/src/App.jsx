@@ -214,7 +214,7 @@ const App = () => {
             path="/category/:categoryId"
             element={<ServiceList onSwitchToLogin={handleOpenLogin} />}
           />
-          <Route path="/search" element={<SearchPage/>}/>
+          <Route path="/search" element={<SearchPage />} />
           {/* <Route path="/categories" element={<CategoryCard />}></Route> */}
           <Route path="/reviews" element={<ReviewSlider />} />
           <Route
@@ -254,6 +254,7 @@ const App = () => {
             }
           />
           <Route path="/category/VendorService" element={<VendorService />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/vendor/payment-info" element={<VendorPayment />} />
           <Route
             path="/vendor/legal-consent"
