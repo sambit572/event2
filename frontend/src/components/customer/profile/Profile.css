@@ -218,7 +218,7 @@
 /* !!!!! fully aware user sidebar css should not be handled here but please do not change !!!!! */
 
 .user-sidebar {
-  width: 240px;
+  width: 280px;
   height: 100vh;
   position: sticky;
   /* top: 0;
@@ -243,6 +243,7 @@
 .user-sidebar.open {
   background-color: #004989;
   margin-top: 10px;
+
   transform: translateX(0);
 }
 .sortby-dropdown {
@@ -320,9 +321,9 @@
     top: 20px;
   }
   .user-sidebar.closed {
-  transform: translateX(-100%);
-  margin-top: -10px;
-}
+    transform: translateX(-100%);
+    margin-top: -10px;
+  }
 
   .open {
     top: 25px;

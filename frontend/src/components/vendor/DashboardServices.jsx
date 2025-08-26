@@ -302,7 +302,7 @@ const DashboardServices = () => {
                   />
                   <div className="buttons-dashboard">
                     <button
-                      className="vendor-edit-btn flex gap-1"
+                      className="vendor-edit-btn flex  gap-1"
                       onClick={() => handleEdit(index)}
                     >
                       <FaEdit className="mt-[2.9px]" /> Edit

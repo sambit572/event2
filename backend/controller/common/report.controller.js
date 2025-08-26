@@ -36,14 +36,7 @@ export const fetchReports = async (req, res) => {
   try {
     const { userId } = req.params;
     const { targetType } = req.query; // Assuming targetType is passed as a query parameter
-    // console.log("Fetching req.query:", req.query);
-    // console.log(
-    //   "Fetching reports for user ID:",
-    //   userId,
-    //   "and target type:",
-    //   targetType
-    // );
-    // console.log("Fetching reports for user ID:", userId);
+
     if (!userId) {
       return res
         .status(400)

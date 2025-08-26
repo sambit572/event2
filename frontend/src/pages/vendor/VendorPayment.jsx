@@ -41,7 +41,7 @@ export default function VendorPayment() {
   };
 
   // PAN verification function
-  const verifyPAN = async (panNumber) => {
+  /*  const verifyPAN = async (panNumber) => {
     if (!panNumber || panNumber.length !== 10) {
       setPanVerification({
         isVerifying: false,
@@ -58,11 +58,11 @@ export default function VendorPayment() {
       verificationMessage: "Verifying PAN...",
     }));
 
-    console.log(`🔍 [VendorPayment] Verifying PAN: ${panNumber}`);
+    console.log(🔍 [VendorPayment] Verifying PAN: ${panNumber});
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/vendors/verify-pan`,
+        ${import.meta.env.VITE_BACKEND_URL}/vendors/verify-pan,
         { panNumber, name: formData.accountHolderName },
         {
           headers: { "Content-Type": "application/json" },
@@ -96,7 +96,7 @@ export default function VendorPayment() {
         verifiedName: "",
       });
     }
-  };
+  }; */
 
   // Handle PAN input with auto-verification
   const handlePANChange = (e) => {
@@ -107,14 +107,14 @@ export default function VendorPayment() {
     }));
 
     // Reset verification state when PAN changes
-    if (panVerification.isVerified && panValue !== formData.panNumber) {
+    /*  if (panVerification.isVerified && panValue !== formData.panNumber) {
       setPanVerification({
         isVerifying: false,
         isVerified: false,
         verificationMessage: "",
         verifiedName: "",
       });
-    }
+    } */
 
     // Auto-verify when PAN is 10 characters
     // if (panValue.length === 10 && /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(panValue)) {
@@ -198,10 +198,8 @@ export default function VendorPayment() {
       {showPopup && (
         <div className="popup-message">Please fill all required fields!</div>
       )}
-
       <StepProgress currentStep={2} />
       {isLoading && <Spinner />}
-
       <div className="payment-box">
         <h2 className="payment-box-title">Bank Details</h2>
 
@@ -302,14 +300,14 @@ export default function VendorPayment() {
               name="panNumber"
               value={formData.panNumber}
               onChange={handlePANChange}
-              onBlur={() => {
+              /* onBlur={() => {
                 if (
                   formData.panNumber.length === 10 &&
                   !panVerification.isVerified
                 ) {
                   verifyPAN(formData.panNumber);
                 }
-              }}
+              }} */
               placeholder="ABCDE1234F"
               pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
               maxLength="10"
@@ -381,7 +379,6 @@ export default function VendorPayment() {
 
         <Button onBack={handleBack} onNext={handleNext} />
       </div>
-
       <style jsx>{`
         @keyframes spin {
           0% {
@@ -392,6 +389,7 @@ export default function VendorPayment() {
           }
         }
       `}</style>
+         
     </div>
   );
 }

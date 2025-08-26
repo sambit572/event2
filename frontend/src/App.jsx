@@ -81,6 +81,7 @@ const App = () => {
   // For brevity, I'm omitting them, but you should keep them in your file.
   const handleOpenLogin = () => {
     setShowLoginModal(true);
+    showRegisterModal(!showRegisterModal);
     document.body.classList.add("modal-open");
   };
 

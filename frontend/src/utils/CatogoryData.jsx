@@ -119,7 +119,7 @@ import image18 from "../assets/home/categoriesImages/event_company.png";
 export const CategoryData = [
   {
     id: "dj",
-    title: "DJ Services and Brash Band",
+    title: "DJ Services & Brash Band",
     image: image1,
     tagline: "Beats That Breathe Fun",
     icon: "🎧",
@@ -215,7 +215,7 @@ export const CategoryData = [
   },
   {
     id: "band",
-    title: "Music Concert And Orchesta",
+    title: "Music Concert & Orchesta",
     image: image2,
     tagline: "Brass Beats the Best",
     icon: "🎺",
@@ -407,7 +407,7 @@ export const CategoryData = [
   },
   {
     id: "photographer",
-    title: "Photographer and Videographer",
+    title: "Photographer & Videographer",
     image: image4,
     tagline: "Freeze Time with Frames",
     icon: "📸",
@@ -638,7 +638,7 @@ export const CategoryData = [
 
   {
     id: "cultural-troupe",
-    title: "Classical Music and Dance",
+    title: "Classical Music & Dance",
     image: image7,
     tagline: "Echoes of Celebration",
     icon: "🕺",

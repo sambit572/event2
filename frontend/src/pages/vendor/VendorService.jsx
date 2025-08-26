@@ -33,21 +33,24 @@ function VendorService({ currentStep }) {
   const fileInputRef = useRef(null);
 
   const categories = [
-    "DJ Services and Brass Band",
-    "Orchesta And Music Concert",
+    "DJ Services & Brass Band",
+    "Music Concert & Orchestra",
     "Food & Catering",
     "Floral Decor",
     "Venue Styling & Decor",
-    "Photographer and Videographer",
+    "Photographer & Videographer",
     "Hindu Pandit",
     "Magic Shows",
-    "Classical Music and Dance",
+    "Classical Music & Dance",
     "Islamic Maulbi",
     "Christian Priest",
     "Beauty Makeover",
     "Ceremonial Rides",
     "Fireworks",
     "Card Design & Printing",
+    "Stage Decor",
+    "Decor & Tenthouse",
+    "Event Company",
   ];
 
   const allLocations = {

@@ -30,24 +30,29 @@ export const createBankDetails = async (req, res) => {
       !ifscCode ||
       !panNumber
     ) {
-      console.warn("⚠️ [BankDetails] Missing required fields");
+      console.warn("⚠ [BankDetails] Missing required fields");
       return res.status(400).json(new ApiError(400, "Missing required fields"));
     }
 
     // PAN Verification
-    let verifyResp;
+    /* let verifyResp;
     try {
-      console.log(`🔍 [BankDetails] Verifying PAN: ${panNumber}`);
+      console.log(🔍 [BankDetails] Verifying PAN: ${panNumber});
       verifyResp = await verifyPAN(panNumber);
     } catch (error) {
       console.error("❌ [BankDetails] PAN verification failed:", error.message);
       return res.status(400).json(new ApiError(400, error.message));
-    }
+    } */
 
-    const verifiedName = verifyResp.data?.full_name || accountHolderName;
+    /For Testing Purpose/;
+    const verifiedName = accountHolderName;
+
+    /Real Code/;
+    /* const verifiedName = verifyResp?.data?.full_name || accountHolderName; */
 
     // Save bank details
-    const newDetails = await BankDetails.create({
+    // Create or Update bank details using upsert
+    const bankData = {
       vendorId: req.vendor._id,
       accountHolderName: verifiedName,
       accountNumber,
@@ -56,12 +61,18 @@ export const createBankDetails = async (req, res) => {
       gst,
       upiId,
       panNumber,
-    });
+    };
+
+    const newDetails = await BankDetails.findOneAndUpdate(
+      { vendorId: req.vendor._id }, // Condition to find the document
+      bankData, // The data to update or insert
+      { new: true, upsert: true } // Options: return new doc, create if it doesn't exist
+    );
 
     // Update vendor registration progress
     await Vendor.findByIdAndUpdate(req.vendor._id, { registrationProgress: 3 });
 
-    console.log("✅ [BankDetails] Created successfully:", newDetails._id);
+    console.log("✅ [BankDetails] Saved successfully:", newDetails._id);
     return res
       .status(201)
       .json(
@@ -78,13 +89,13 @@ export const createBankDetails = async (req, res) => {
  */
 export const deleteBankDetails = async (req, res) => {
   try {
-    console.log("🗑️ [BankDetails] Delete request for vendor:", req.vendor._id);
+    console.log("🗑 [BankDetails] Delete request for vendor:", req.vendor._id);
     const bankDetail = await BankDetails.findOneAndDelete({
       vendorId: req.vendor._id,
     });
 
     if (!bankDetail) {
-      console.warn("⚠️ [BankDetails] No bank details found for deletion");
+      console.warn("⚠ [BankDetails] No bank details found for deletion");
       return res.status(404).json(new ApiError(404, "Bank details not found"));
     }
 
@@ -110,7 +121,7 @@ export const getBankDetailsByVendor = async (req, res) => {
     const bankDetails = await BankDetails.findOne({ vendorId: req.vendor._id });
 
     if (!bankDetails) {
-      console.warn("⚠️ [BankDetails] No bank details found");
+      console.warn("⚠ [BankDetails] No bank details found");
       return res.status(404).json(new ApiError(404, "Bank details not found"));
     }
 
@@ -140,17 +151,17 @@ export const updateBankDetails = async (req, res) => {
       upiId,
       panNumber,
     } = req.body;
-    console.log("✏️ [BankDetails] Update request:", req.body);
+    console.log("✏ [BankDetails] Update request:", req.body);
 
     if (!panNumber) {
-      console.warn("⚠️ [BankDetails] PAN number missing in update request");
+      console.warn("⚠ [BankDetails] PAN number missing in update request");
       return res.status(400).json(new ApiError(400, "PAN number is required"));
     }
 
     // PAN Verification
     let verifyResp;
     try {
-      console.log(`🔍 [BankDetails] Verifying PAN: ${panNumber}`);
+      console.log("🔍[BankDetails] Verifying PAN:"`${panNumber}`);
       verifyResp = await verifyPAN(panNumber);
     } catch (error) {
       console.error("❌ [BankDetails] PAN verification failed:", error.message);
@@ -174,7 +185,7 @@ export const updateBankDetails = async (req, res) => {
     );
 
     if (!updatedDetails) {
-      console.warn("⚠️ [BankDetails] No bank details found for update");
+      console.warn("⚠ [BankDetails] No bank details found for update");
       return res.status(404).json(new ApiError(404, "Bank details not found"));
     }
 
@@ -207,7 +218,7 @@ export const beforeHandPanVerification = async (req, res) => {
       name.trim() === ""
     ) {
       console.warn(
-        "⚠️ [BankDetails] Missing or invalid PAN number in request:",
+        "⚠ [BankDetails] Missing or invalid PAN number in request:",
         req.body
       );
       return res
@@ -215,7 +226,7 @@ export const beforeHandPanVerification = async (req, res) => {
         .json(new ApiError(400, "Valid PAN number is required"));
     }
 
-    console.log(`🔍 [BankDetails] Initiating PAN verification: ${panNumber}`);
+    console.log("🔍 [BankDetails] Initiating PAN verification:"`${panNumber}`);
 
     // Call Cashfree verification
     const verifyResp = await verifyPAN(panNumber, name);
@@ -239,7 +250,7 @@ export const beforeHandPanVerification = async (req, res) => {
     // Handle unsuccessful verification
     if (verifyResp.status !== "SUCCESS") {
       console.warn(
-        `⚠️ [BankDetails] PAN verification failed for ${panNumber}: ${verifyResp.message}`
+        "⚠ [BankDetails] PAN verification failed for ${panNumber}:"`${verifyResp.message}`
       );
       return res
         .status(400)

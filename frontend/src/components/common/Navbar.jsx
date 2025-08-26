@@ -648,7 +648,7 @@ const Navbar = ({
                         <div className="dropdown-header">
                           <span className="text-[#001f3f]">New Customer?</span>
                           <button
-                            className="bg-[#e5e5de] hover:bg-gray-900 hover:text-white"
+                            className="bg-[#e5e5de] hover:bg-gray-900 hover:pl-2 hover:pr-2 hover:text-white text-blue-700"
                             onClick={handleSignupClick}
                           >
                             Sign Up
@@ -796,14 +796,19 @@ const Navbar = ({
                             className="w-1/2 bg-black hover:bg-gray-800 text-white rounded px-3 py-2 transition-colors"
                             onClick={() => {
                               setShowVendorDropdown(false);
+
                               if (!userFirstName) {
+                                console.log(
+                                  "Vendor Register clicked",
+                                  !userFirstName
+                                );
                                 const toastId = toast.custom((t) => (
                                   <div
                                     className={`${
                                       t.visible
                                         ? "animate-toast-wiggle"
                                         : "animate-leave"
-                                    } fixed top-4 right-10 z-50 mt-12`}
+                                    } fixed top-4 right-10 z-50000 mt-12`}
                                   >
                                     {/* Toast Box */}
                                     <div className="relative bg-white border-[#001f3f] text-black px-6 py-3 rounded-xl w-fit max-w-sm">

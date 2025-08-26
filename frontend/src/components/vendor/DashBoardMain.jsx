@@ -8,7 +8,7 @@ import socket from "../../socket/socketClient.js";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-
+import PasswordInput from "./../../utils/PasswordInput";
 function DashBoardMain() {
   const navigate = useNavigate();
 
@@ -38,7 +38,9 @@ function DashBoardMain() {
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/vendors/verify-password`,
-        { password },
+        {
+          assword,
+        },
         { withCredentials: true }
       );
 

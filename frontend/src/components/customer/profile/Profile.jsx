@@ -110,27 +110,27 @@ function Profile({ onProfileChange }) {
     <div className="profile_section  relative w-full  flex bg-white ">
       {showSuccessPopup && (
         <div
-            style={{
-              position: "fixed",
-              top: "115px",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              padding: "20px 32px",
-              borderRadius: "8px",
-              background: "rgba(255, 255, 255, 0.1)",
-              boxShadow: "0 8px 32px rgba(31, 38, 135, 0.37)",
-              backdropFilter: "blur(10px)",
-              WebkitBackdropFilter: "blur(10px)",
-              border: "2px solid black",
-              fontWeight: "bold",
-              color: "black",
-              zIndex: 9999,
-              textAlign: "center",
-              animation: "popIn 0.3s ease-out forwards",
-            }}
-          >
-            You password updated successfully!
-          </div>
+          style={{
+            position: "fixed",
+            top: "115px",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            padding: "20px 32px",
+            borderRadius: "8px",
+            background: "rgba(255, 255, 255, 0.1)",
+            boxShadow: "0 8px 32px rgba(31, 38, 135, 0.37)",
+            backdropFilter: "blur(10px)",
+            WebkitBackdropFilter: "blur(10px)",
+            border: "2px solid black",
+            fontWeight: "bold",
+            color: "black",
+            zIndex: 9999,
+            textAlign: "center",
+            animation: "popIn 0.3s ease-out forwards",
+          }}
+        >
+          You password updated successfully!
+        </div>
       )}
       <div className="profile-sidebar-fixed">
         <button
@@ -207,7 +207,7 @@ function Profile({ onProfileChange }) {
         )}
       </div>
 
-      <div className="profile-scrollable-content max-[430px]:flex-row">
+      <div className="profile-scrollable-content md:ml-8 max-[430px]:flex-row">
         <h2 className="boking-text  text-2xl md:text-3xl font-bold text-center mb-4">
           My Bookings
         </h2>
