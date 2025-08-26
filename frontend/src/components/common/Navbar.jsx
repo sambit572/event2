@@ -152,35 +152,21 @@ const Navbar = ({
   const fetchDynamicSuggestions = async (query) => {
     try {
       if (query.trim().length <= 1) {
-        const localHistory =
-          JSON.parse(localStorage.getItem("searchHistory")) || [];
-        setSuggestions(localHistory.slice(0, 5));
-        setShowSuggestions(true);
+        setSuggestions([]);
+        setShowSuggestions(false);
         return;
       }
       const res = await axios.get(
-        `${BACKEND_URL}/vendors/search-suggestions?query=${query}`
+        `http://localhost:8001/api/search/suggestion?q=${query}`
       );
-      const backendSuggestions = res.data.data || [];
-      const localHistory =
-        JSON.parse(localStorage.getItem("searchHistory")) || [];
-      const matchingCategories = CATEGORIES.filter((cat) =>
-        cat.toLowerCase().includes(query.toLowerCase())
-      );
-      const matchingHistory = localHistory.filter((term) =>
-        term.toLowerCase().includes(query.toLowerCase())
-      );
-      const combined = [
-        ...new Set([
-          ...backendSuggestions,
-          ...matchingCategories,
-          ...matchingHistory,
-        ]),
-      ].slice(0, 5);
-      setSuggestions(combined);
-      setShowSuggestions(true);
+      if (res.data.success) {
+        setSuggestions(res.data.suggestions);
+        setShowSuggestions(true);
+      }
     } catch (err) {
-      console.error("Error fetching backend suggestions:", err);
+      console.error("Error fetching suggestions:", err);
+      setSuggestions([]);
+      setShowSuggestions(false);
     }
   };
 
@@ -197,19 +183,25 @@ const Navbar = ({
   const handleSearchNavigate = (text) => {
     if (!text.trim()) return;
     const searchText = text.toLowerCase().trim();
-    const matchedCategory = RELATED_TERMS[searchText];
-    if (matchedCategory) {
-      navigate(`/category/${matchedCategory}`);
-    } else {
-      const foundCategory = Object.keys(RELATED_TERMS).find((key) =>
-        searchText.includes(key)
-      );
-      if (foundCategory) {
-        navigate(`/category/${RELATED_TERMS[foundCategory]}`);
-      } else {
-        navigate(`/search-results?q=${encodeURIComponent(searchText)}`);
-      }
-    }
+    navigate(`/search?query=${encodeURIComponent(text.trim())}`);
+    // Check for direct alias mapping
+    // const matchedCategory = RELATED_TERMS[searchText];
+
+    // if (matchedCategory) {
+    //   navigate(`/category/${matchedCategory}`);
+    // } else {
+    //   // Try partial match within the search text
+    //   const foundCategory = Object.keys(RELATED_TERMS).find((key) =>
+    //     searchText.includes(key)
+    //   );
+
+    //   if (foundCategory) {
+    //     navigate(`/category/${RELATED_TERMS[foundCategory]}`);
+    //   } else {
+    //     // Fallback: full search results
+    //     navigate(`/search-results?q=${encodeURIComponent(searchText)}`);
+    //   }
+    // }
   };
 
   const fetchUserProfile = async () => {
@@ -585,7 +577,7 @@ const Navbar = ({
                     className="suggestion-item"
                     onClick={() => {
                       setSearchInput(suggestion);
-                      inputRef.current.focus();
+                      navigate(`/search?query=${encodeURIComponent(suggestion.trim())}`);
                       setShowSuggestions(false);
                     }}
                   >

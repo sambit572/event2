@@ -909,7 +909,7 @@ export const CategoryData = [
   },
 
   {
-    id: "makeup",
+    id: "Beauty Makeover",
     title: "Beauty Makeover",
     image: image11,
     tagline: "Beauty in Every Brush",

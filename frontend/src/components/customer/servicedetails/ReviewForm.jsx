@@ -32,6 +32,7 @@ const ReviewForm = ({
       console.log("Submitting review:", payload);
 
       const token = localStorage.getItem("token");
+      console.log(token);
       const { data } = await axios.post(`${BACKEND_URL}/reviews/add`, payload, {
         withCredentials: true, // ✅ include credentials for auth
         headers: {

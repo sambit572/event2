@@ -114,8 +114,8 @@ export const createService = async (req, res) => {
       minPrice,
       maxPrice,
       serviceName,
-      stateLocationOffered: stateLocationsArray,
-      locationOffered: locationsArray,
+      stateLocationOffered:stateLocationsArray,
+      locationOffered: locationsArray, // ✅ store array
       serviceDes,
       duration,
     };
@@ -215,13 +215,13 @@ export const updateService = async (req, res) => {
       serviceCategory = existingService.serviceCategory,
       minPrice = existingService.minPrice,
       maxPrice = existingService.maxPrice,
-      stateLocationOffered = existingService.stateLocationOffered,
+      stateLocationOffered=existingService.stateLocationOffered,
       locationOffered = existingService.locationOffered,
       duration = existingService.duration,
       serviceImage = existingService.serviceImage, // ✅ Cloudinary URLs from frontend
     } = req.body;
 
-    // ✅ Ensure locationOffered is always an array
+      // ✅ Ensure locationOffered is always an array
     const stateLocationsArray = Array.isArray(stateLocationOffered)
       ? stateLocationOffered
       : [stateLocationOffered];

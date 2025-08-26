@@ -4,12 +4,12 @@ import { useNavigate } from "react-router-dom";
 
 const CategoryCard = ({ category }) => {
   const navigate = useNavigate();
-
+  console.log(category);
   return (
     <div
       className="courseCard"
       onClick={() => {
-        navigate(`/category/${category.id}`);
+        navigate(`/category/${category.title}`);
       }}
     >
       <span className="brandLabel">EventsBridge</span>

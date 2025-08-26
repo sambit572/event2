@@ -320,7 +320,7 @@ const ServiceDetailCard = ({ service }) => {
       </div>
 
       <h2 className="text-xl font-semibold text-gray-800 mb-2 pr-12">
-        {title}
+        {title.toUpperCase()}
       </h2>
 
       <div className="flex items-center gap-2 text-sm font-medium text-black mb-2 flex-wrap">

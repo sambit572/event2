@@ -67,6 +67,7 @@ import { BACKEND_URL } from "./utils/constant.js";
 import ComingSoon from "./utils/ComingSoon.jsx";
 
 import MyReports from "./pages/common/myreports/MyReports.jsx";
+import SearchPage from "./pages/search/SearchPage.jsx";
 const App = () => {
   const location = useLocation();
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -119,6 +120,8 @@ const App = () => {
     "/dashboard",
     "/profile",
     "/reset-password",
+    "/service/:categoryId/:serviceId",
+    "/category/:categoryId",
   ];
 
   useEffect(() => {
@@ -211,6 +214,8 @@ const App = () => {
             path="/category/:categoryId"
             element={<ServiceList onSwitchToLogin={handleOpenLogin} />}
           />
+          <Route path="/search" element={<SearchPage/>}/>
+          {/* <Route path="/categories" element={<CategoryCard />}></Route> */}
           <Route path="/reviews" element={<ReviewSlider />} />
           <Route
             path="/service/:categoryId/:serviceId"

@@ -42,23 +42,35 @@ const Service = ({ onSwitchToLogin }) => {
   const [service, setService] = useState(null);
   const [mediaList, setMediaList] = useState([]);
   const [selectMedia, setSelectMedia] = useState(null);
+  const [isWishlisted, setIsWishlisted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [latestReview, setLatestReview] = useState(null);
   const [notified, setNotified] = useState(false);
-
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [loggedInUserEmail, setLoggedInUserEmail] = useState("");
+  const [currentUser, setCurrentUser] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const handleUserReview = () => {
+    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
+    if (isLoggedIn) {
+      setIsReviewModalOpen(true);
+    } else {
+      onSwitchToLogin(true);
+    }
+  };
 
   const handleNotifyClick = () => {
     setNotified(true);
     setIsAnimating(true);
-
     setTimeout(() => {
-      setIsAnimating(false); // stop vibrating after 10 seconds
-      console.log("animation stopped");
+      setIsAnimating(false);
     }, 2000);
   };
-
+  const handleClick = () => {
+    setIsWishlisted(!isWishlisted);
+  };
   useEffect(() => {
     const fetchService = async () => {
       try {
@@ -75,7 +87,6 @@ const Service = ({ onSwitchToLogin }) => {
         }));
         setMediaList(formattedMedia);
         setSelectMedia(formattedMedia[0]);
-
         setLoading(false);
       } catch (err) {
         console.error("Error fetching service:", err);
@@ -83,9 +94,9 @@ const Service = ({ onSwitchToLogin }) => {
         setLoading(false);
       }
     };
-
     fetchService();
   }, [serviceId]);
+
 
   const isVendorAvailable = service?.available !== false;
 
@@ -147,6 +158,7 @@ const Service = ({ onSwitchToLogin }) => {
     }
   };
 
+
   if (loading) return <p>Loading service details...</p>;
   if (error || !service) return <p>{error || "Service not found."}</p>;
 
@@ -207,7 +219,7 @@ const Service = ({ onSwitchToLogin }) => {
                   Add to Cart
                 </button>
                 <button
-                  className="w-full sm:w-44 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-green-700 shadow-md hover:from-green-500 hover:to-green-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-400"
+                  className="w-full sm:w-44 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-green-600 hover:bg-green-700 shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-400"
                   onClick={handleBookNow}
                 >
                   Book Now
@@ -215,11 +227,18 @@ const Service = ({ onSwitchToLogin }) => {
               </>
             ) : (
               <button
-                className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-full border-none bg-gradient-to-br from-[#6c757d] to-[#495057] px-12 py-3 text-sm font-semibold text-white normal-case shadow-[0_4px_15px_rgba(108,117,125,0.3)] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:from-[#5a6268] hover:to-[#343a40] hover:shadow-[0_6px_20px_rgba(108,117,125,0.4)] sm:w-auto sm:min-w-[140px]"
-                onClick={handleNotifyMe}
+                onClick={handleNotifyClick}
+                className={`w-full sm:w-44 flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-blue-900 bg-transparent border border-blue-900 hover:bg-blue-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-md transition-all duration-300`}
               >
-                <FaBell className="text-sm" />
-                Notify Me
+                {!notified ? (
+                  "Notify"
+                ) : (
+                  <FaBell
+                    className={`text-base ${
+                      isAnimating ? "animate-bounce" : ""
+                    }`}
+                  />
+                )}
               </button>
             )}
           </div>
@@ -238,13 +257,32 @@ const Service = ({ onSwitchToLogin }) => {
           </div>
           <div className="reviews">
             <h3>DJ Ratings & Reviews</h3>
-            <RatingDetails />
+            <RatingDetails serviceId={serviceId} />
             <hr />
-            <h4 style={{ marginTop: "30px", fontWeight: "bold" }}>
-              Write a Review
-            </h4>
-            <ReviewForm onNewReview={(review) => setLatestReview(review)} />
-            <ReviewList newReview={latestReview} />
+
+            {/* Add Feedback Button */}
+            <div className="flex justify-center">
+              <button
+                onClick={handleUserReview}
+                className="flex items-center gap-2 mt-5 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2.5 rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1 active:scale-95 text-sm sm:text-base md:text-lg"
+              >
+                <span className="text-lg sm:text-xl">💬</span>
+                Add Feedback
+              </button>
+            </div>
+            {/* {latestReview && (
+              <div className="mt-4 p-4 bg-gray-50 border rounded-lg shadow-sm">
+                <p className="font-semibold">
+                  {latestReview.userName || "You"}
+                </p>
+                <p className="text-yellow-500">
+                  {"★".repeat(latestReview.rating)}
+                </p>
+                <p className="text-gray-700 mt-1">{latestReview.reviewText}</p>
+              </div>
+            )} */}
+            {/* Review List */}
+            <ReviewList newReview={latestReview} serviceId={serviceId} />
           </div>
         </div>
       </div>
@@ -257,6 +295,32 @@ const Service = ({ onSwitchToLogin }) => {
           ))}
         </div>
       </div>
+
+      {/* Review Modal */}
+      {isReviewModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
+            <button
+              onClick={() => setIsReviewModalOpen(false)}
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-xl font-bold"
+            >
+              ×
+            </button>
+
+            <ReviewForm
+              serviceId={service._id}
+              userName={currentUser?.fullName || "Guest"}
+              userId={currentUser?.id} // 👈 id is fine
+              onNewReview={(newReview) => {
+                setLatestReview(newReview);
+                setReviews((prev) => [newReview, ...prev]);
+                setIsReviewModalOpen(false);
+              }}
+              closePopup={() => setIsReviewModalOpen(false)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

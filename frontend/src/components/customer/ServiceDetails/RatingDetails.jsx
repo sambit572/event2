@@ -9,9 +9,7 @@ const RatingDetails = ({ serviceId }) => {
   useEffect(() => {
     const fetchRatingSummary = async () => {
       try {
-        const res = await axios.get(
-          `${BACKEND_URL}/reviews/rating/${serviceId}`
-        );
+        const res = await axios.get(`${BACKEND_URL}/reviews/rating/${serviceId}`);
         if (res.data.success) {
           const data = res.data.data;
 
@@ -44,7 +42,7 @@ const RatingDetails = ({ serviceId }) => {
   const maxCount = Math.max(...ratingsData.breakdown.map((r) => r.count));
 
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
+    <div style={{ display: "flex", flexWrap: "wrap",gap:"1rem" }}>
       {/* Average Rating Section */}
       <div style={{ minWidth: "120px" }}>
         <div

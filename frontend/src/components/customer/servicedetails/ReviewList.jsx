@@ -45,7 +45,7 @@ const ReviewList = ({ serviceId, newReview }) => {
       console.log("New review received:", newReview);
       const updated = {
         ...newReview,
-
+    
         date: new Date().toISOString().split("T")[0],
         // images: [dummyImages[Math.floor(Math.random() * dummyImages.length)]],
         helpful: 0,

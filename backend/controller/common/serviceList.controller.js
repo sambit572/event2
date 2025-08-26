@@ -1,7 +1,14 @@
 import { Service } from "../../model/vendor/service.model.js";
+
 export const getServicesByCategory = async (req, res) => {
   try {
+
+
+    // console.log("Inside getServicesByCategory .............")
+
     const { category } = req.params;
+
+    // console.log(`$$$$$$$$$$$$$$$$$$$$$$$$$category: ${category}`);
 
     const services = await Service.aggregate([
       {
@@ -26,6 +33,27 @@ export const getServicesByCategory = async (req, res) => {
           preserveNullAndEmptyArrays: true,
         },
       },
+      // 🔹 Lookup reviews from UserReview model to calculate average rating
+      {
+        $lookup: {
+          from: "userreviews", // collection name of UserReview model
+          localField: "_id",
+          foreignField: "serviceId",
+          as: "reviews",
+        },
+      },
+      {
+        $addFields: {
+          avgRating: {
+            $cond: {
+              if: { $gt: [{ $size: "$reviews" }, 0] },
+              then: { $avg: "$reviews.rating" },
+              else: 0,
+            },
+          },
+          totalReviews: { $size: "$reviews" },
+        },
+      },
       {
         $project: {
           _id: 1,
@@ -43,12 +71,14 @@ export const getServicesByCategory = async (req, res) => {
           vendorId: 1,
           vendorName: "$vendorDetails.fullName",
           vendorEmail: "$vendorDetails.email",
-          rating: 1,
-          reviews: 1,
+          avgRating: 1, // Ensure avgRating is included
+          totalReviews: 1,
           available: 1,
         },
       },
     ]);
+
+    // console.log(services);
 
     return res.status(200).json({ success: true, data: services });
   } catch (err) {

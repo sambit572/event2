@@ -16,12 +16,13 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
   const [isReadMore, setIsReadMore] = useState(false);
   const [showShareMenu, setShowShareMenu] = useState(false);
   const shareContainerRef = useRef(null); // Ref for the share container
-  const { categoryId } = useParams();
+
   if (!service) {
     return null;
   }
+  const [ratingData, setRatingData] = useState(null);
 
-  const serviceId = service._id || service.id;
+  const serviceId = service._id || service._id;
   const title = service.serviceName || service.title || "Untitled Service";
   const vendorName = service.vendorName || "Unknown Vendor";
   const description = service.serviceDes || service.description || "";
@@ -43,7 +44,12 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
   };
 
   const duration = formatDuration(rawDuration);
-
+  const stateLocation = Array.isArray(service.stateLocationOffered)
+    ? service.stateLocationOffered.join(", ")
+    : service.stateLocationOffered ||
+      (service.address
+        ? `${service.address.area}, ${service.address.city}, ${service.address.state} - ${service.address.pincode}`
+        : "Location not provided");
   const location = Array.isArray(service.locationOffered)
     ? service.locationOffered.join(", ")
     : service.locationOffered ||
@@ -113,23 +119,23 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
       window.removeEventListener("wishlistUpdated", handleWishlistUpdate);
     };
   }, [serviceId]);
-
-  // Close share menu when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        shareContainerRef.current &&
-        !shareContainerRef.current.contains(event.target)
-      ) {
-        setShowShareMenu(false);
+    const fetchRatingSummary = async () => {
+      try {
+        const res = await axios.get(
+          `${BACKEND_URL}/reviews/rating/${serviceId}`
+        );
+        if (res.data.success) {
+          setRatingData(res.data.data);
+        }
+      } catch (err) {
+        console.error("Error fetching rating summary:", err);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
+    if (serviceId) fetchRatingSummary();
+  }, [serviceId]);
+  // Toggle wishlist state
   const handleToggleWishlist = async (e) => {
     e.stopPropagation();
     const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
@@ -278,7 +284,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
   };
 
   return (
-    <section className="relative pl-4 flex h-full flex-col bg-[#e5e5de]  text-gray-800 ">
+    <section className="relative flex h-full flex-col bg-white p-4 text-gray-800 md:p-5">
       <div className="absolute top-4 right-4 z-20 flex flex-col items-end gap-3 md:top-5 md:right-5">
         <div
           className={`h-10 w-10 flex items-center justify-center rounded-full bg-gray-200 shadow-md cursor-pointer transition-all duration-300 ${
@@ -385,14 +391,14 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
       <div className="flex flex-grow flex-col">
         <div>
           <Link
-            to={`/service/${categoryId}/${serviceId}`}
+            to={`/service/${serviceId}`}
             className="text-inherit no-underline pr-12"
           >
             <h3 className="text-lg font-bold leading-tight text-[#2c3e50] sm:text-xl md:text-2xl">
-              {title}
+              {title.toUpperCase()}
             </h3>
           </Link>
-          <div className="mb-3 flex flex-wrap items-center gap-2 md:flex-row md:gap-2">
+          <div className="mt-3 mb-3 flex flex-wrap items-center gap-2 md:flex-row md:gap-2">
             <span className="text-sm font-semibold text-[#3498db] sm:text-base">
               {vendorName}
             </span>

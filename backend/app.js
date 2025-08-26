@@ -17,6 +17,7 @@ import serviceRoutes from "./routes/common/serviceList.routes.js";
 import reportRoutes from "./routes/common/report.routes.js";
 import wishlistRoutes from "./routes/user/wishlist.routes.js"; // Import wishlist routes
 import cartRouter from "./routes/user/cart.routes.js";
+import { searchRouter } from "./routes/common/search.routes.js";
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -57,6 +58,7 @@ app.use(cookieParser());
 // ✅ API Routes
 app.use("/api/reports", reportRoutes);
 
+app.use("/api/search",searchRouter);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/user", userRouter);
 app.use("/api/vendors", vendor_router);
