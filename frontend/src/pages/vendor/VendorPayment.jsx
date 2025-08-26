@@ -52,32 +52,32 @@ export default function VendorPayment() {
       return;
     }
 
-    setPanVerification((prev) => ({
-      ...prev,
-      isVerifying: true,
-      verificationMessage: "Verifying PAN...",
-    }));
+  //   setPanVerification((prev) => ({
+  //     ...prev,
+  //     isVerifying: true,
+  //     verificationMessage: "Verifying PAN...",
+  //   }));
 
-    console.log(`🔍 [VendorPayment] Verifying PAN: ${panNumber}`);
+  //   console.log(`🔍 [VendorPayment] Verifying PAN: ${panNumber}`);
 
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/vendors/verify-pan`,
-        { panNumber, name: formData.accountHolderName },
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
+  //   try {
+  //     const response = await axios.post(
+  //       `${import.meta.env.VITE_BACKEND_URL}/vendors/verify-pan`,
+  //       { panNumber, name: formData.accountHolderName },
+  //       {
+  //         headers: { "Content-Type": "application/json" },
+  //         withCredentials: true,
+  //       }
+  //     );
 
-      if (response.data.success) {
-        const verifiedName = response.data.data?.full_name || "";
-        setPanVerification({
-          isVerifying: false,
-          isVerified: true,
-          verificationMessage: "PAN verified successfully!",
-          verifiedName,
-        });
+  //     if (response.data.success) {
+  //       const verifiedName = response.data.data?.full_name || "";
+  //       setPanVerification({
+  //         isVerifying: false,
+  //         isVerified: true,
+  //         verificationMessage: "PAN verified successfully!",
+  //         verifiedName,
+  //       });
 
         // Auto-fill account holder name if verified name is available
         if (verifiedName && !formData.accountHolderName) {
@@ -107,20 +107,18 @@ export default function VendorPayment() {
     }));
 
     // Reset verification state when PAN changes
-   /*  if (panVerification.isVerified && panValue !== formData.panNumber) {
+    /*  if (panVerification.isVerified && panValue !== formData.panNumber) {
       setPanVerification({
         isVerifying: false,
         isVerified: false,
         verificationMessage: "",
         verifiedName: "",
-      });
-    } */
+      });*/
+  } 
 
     // Auto-verify when PAN is 10 characters
     // if (panValue.length === 10 && /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(panValue)) {
     //   verifyPAN(panValue);
-    // }
-  };
 
   const handleBack = () => {
     navigate("/category/VendorService");
