@@ -35,23 +35,24 @@ export const createBankDetails = async (req, res) => {
     }
 
     // PAN Verification
-    // let verifyResp;
-    // try {
-    //   console.log(`🔍 [BankDetails] Verifying PAN: ${panNumber}`);
-    //   verifyResp = await verifyPAN(panNumber);
-    // } catch (error) {
-    //   console.error("❌ [BankDetails] PAN verification failed:", error.message);
-    //   return res.status(400).json(new ApiError(400, error.message));
-    // }
+    /* let verifyResp;
+    try {
+      console.log(`🔍 [BankDetails] Verifying PAN: ${panNumber}`);
+      verifyResp = await verifyPAN(panNumber);
+    } catch (error) {
+      console.error("❌ [BankDetails] PAN verification failed:", error.message);
+      return res.status(400).json(new ApiError(400, error.message));
+    } */
 
-    // const verifiedName = verifyResp.data?.full_name || accountHolderName;
-    const verifiedName = accountHolderName;
+      /*For Testing Purpose*/
+      const verifiedName = accountHolderName;
+
+      /*Real Code*/
+    /* const verifiedName = verifyResp?.data?.full_name || accountHolderName; */
 
     // Save bank details
-
-    
-
-    const newDetails = await BankDetails.create({
+    // Create or Update bank details using upsert
+    const bankData = {
       vendorId: req.vendor._id,
       accountHolderName: verifiedName,
       accountNumber,
@@ -60,12 +61,18 @@ export const createBankDetails = async (req, res) => {
       gst,
       upiId,
       panNumber,
-    });
+    };
+
+    const newDetails = await BankDetails.findOneAndUpdate(
+      { vendorId: req.vendor._id }, // Condition to find the document
+      bankData,                     // The data to update or insert
+      { new: true, upsert: true }   // Options: return new doc, create if it doesn't exist
+    );
 
     // Update vendor registration progress
     await Vendor.findByIdAndUpdate(req.vendor._id, { registrationProgress: 3 });
 
-    console.log("✅ [BankDetails] Created successfully:", newDetails._id);
+    console.log("✅ [BankDetails] Saved successfully:", newDetails._id);
     return res
       .status(201)
       .json(

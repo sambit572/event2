@@ -41,16 +41,16 @@ export default function VendorPayment() {
   };
 
   // PAN verification function
-  // const verifyPAN = async (panNumber) => {
-  //   if (!panNumber || panNumber.length !== 10) {
-  //     setPanVerification({
-  //       isVerifying: false,
-  //       isVerified: false,
-  //       verificationMessage: "",
-  //       verifiedName: "",
-  //     });
-  //     return;
-  //   }
+ /*  const verifyPAN = async (panNumber) => {
+    if (!panNumber || panNumber.length !== 10) {
+      setPanVerification({
+        isVerifying: false,
+        isVerified: false,
+        verificationMessage: "",
+        verifiedName: "",
+      });
+      return;
+    }
 
   //   setPanVerification((prev) => ({
   //     ...prev,
@@ -79,24 +79,24 @@ export default function VendorPayment() {
   //         verifiedName,
   //       });
 
-  //       // Auto-fill account holder name if verified name is available
-  //       if (verifiedName && !formData.accountHolderName) {
-  //         setFormData((prev) => ({
-  //           ...prev,
-  //           accountHolderName: verifiedName,
-  //         }));
-  //       }
-  //     }
-  //   } catch (error) {
-  //     setPanVerification({
-  //       isVerifying: false,
-  //       isVerified: false,
-  //       verificationMessage:
-  //         error.response?.data?.message || "PAN verification failed",
-  //       verifiedName: "",
-  //     });
-  //   }
-  // };
+        // Auto-fill account holder name if verified name is available
+        if (verifiedName && !formData.accountHolderName) {
+          setFormData((prev) => ({
+            ...prev,
+            accountHolderName: verifiedName,
+          }));
+        }
+      }
+    } catch (error) {
+      setPanVerification({
+        isVerifying: false,
+        isVerified: false,
+        verificationMessage:
+          error.response?.data?.message || "PAN verification failed",
+        verifiedName: "",
+      });
+    }
+  }; */
 
   // Handle PAN input with auto-verification
   const handlePANChange = (e) => {
@@ -107,16 +107,14 @@ export default function VendorPayment() {
     }));
 
     // Reset verification state when PAN changes
-    // if (panVerification.isVerified && panValue !== formData.panNumber) {
-    //   setPanVerification({
-    //     isVerifying: false,
-    //     isVerified: false,
-    //     verificationMessage: "",
-    //     verifiedName: "",
-    //   });
-    // }
-    // }
-  };
+   /*  if (panVerification.isVerified && panValue !== formData.panNumber) {
+      setPanVerification({
+        isVerifying: false,
+        isVerified: false,
+        verificationMessage: "",
+        verifiedName: "",
+      });
+    } */
 
     // Auto-verify when PAN is 10 characters
     // if (panValue.length === 10 && /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(panValue)) {
@@ -302,14 +300,14 @@ export default function VendorPayment() {
               name="panNumber"
               value={formData.panNumber}
               onChange={handlePANChange}
-              // onBlur={() => {
-              //   if (
-              //     formData.panNumber.length === 10 &&
-              //     !panVerification.isVerified
-              //   ) {
-              //     verifyPAN(formData.panNumber);
-              //   }
-              // }}
+              /* onBlur={() => {
+                if (
+                  formData.panNumber.length === 10 &&
+                  !panVerification.isVerified
+                ) {
+                  verifyPAN(formData.panNumber);
+                }
+              }} */
               placeholder="ABCDE1234F"
               pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
               maxLength="10"
