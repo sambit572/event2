@@ -189,6 +189,21 @@ const App = () => {
 
       <main className="custom-mt mt-[52px]  sm:mt-[52px] md:mt-[62px]">
         {vendor?._id && <VendorSocketManager />}
+        <Toaster
+          toastOptions={{
+            duration: 5000,
+            style: {
+              padding: "16px",
+              color: "#fff",
+              background: "#1f2937",
+              borderRadius: "8px",
+              position: "relative",
+              overflow: "hidden",
+              zIndex: 9999,
+            },
+          }}
+          containerClassName="!fixed !top-1/2 !left-1/2 !-translate-x-1/2 !-translate-y-1/2"
+        />
         <Routes>
           {/* ... All your <Route> components ... */}
           <Route path="/" element={<Home />} />
@@ -252,7 +267,7 @@ const App = () => {
             path="/vendor/services/addServices"
             element={<AddServiceInDashboard />}
           />
-          <Route path="/forgot-password" element={<ForgotPass />} />
+          <Route path="/vendor/forgot-password" element={<ForgotPass />} />
           <Route
             path="/reset-password/:resetToken"
             element={<ResetPassword />}
@@ -316,20 +331,6 @@ const App = () => {
         />
       )}
       {!pagesWithoutFooter.includes(location.pathname) && <Footer />}
-      <Toaster
-        toastOptions={{
-          duration: 5000,
-          style: {
-            padding: "16px",
-            color: "#fff",
-            background: "#1f2937",
-            borderRadius: "8px",
-            position: "relative",
-            overflow: "hidden",
-          },
-        }}
-        containerClassName="!fixed !top-1/2 !left-1/2 !-translate-x-1/2 !-translate-y-1/2"
-      />
     </>
   );
 };

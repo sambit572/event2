@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
+import toast from "react-hot-toast";
+
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../utils/firebase.js";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
@@ -8,7 +10,7 @@ import OTPVerification from "../common/OTPVerification.jsx";
 import SuccessBlock from "../common/SuccessBlock.jsx";
 import axios from "axios";
 import "../common/LoginRegister.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setVendor } from "../../redux/VendorSlice.js";
 import { FiEyeOff, FiEye } from "react-icons/fi";
 import { RxCross2 } from "react-icons/rx";
@@ -28,7 +30,8 @@ const VendorLogin = ({ onClose, onSwitchToLogin }) => {
     password: "",
   });
   const [errorMsg, setErrorMsg] = useState("");
-
+  const { user } = useSelector((state) => state.user);
+  console.log("Current user in login:", user);
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add("overflow-hidden");
@@ -100,6 +103,13 @@ const VendorLogin = ({ onClose, onSwitchToLogin }) => {
   async function handleLogin(e) {
     e.preventDefault();
     setErrorMsg("");
+    console.log("user", user);
+    if (!user) {
+      console.log("userInside", !user);
+      toast("Please login as a user first.", { duration: 2000 });
+
+      return; // stop vendor login here
+    }
     if (!formData.email && !formData.phoneNo)
       return setErrorMsg("Enter email or phone to log in.");
 

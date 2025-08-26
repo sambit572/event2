@@ -343,7 +343,7 @@ const Navbar = ({
   };
 
   const handleVendorClick = async () => {
-    console.log("clicked vendor button ...");
+    // console.log("clicked vendor button ...");
     if (!userFirstName) {
       onOpenVendorLogin();
       return;

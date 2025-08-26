@@ -1,5 +1,6 @@
 // Login.jsx
 import { GoogleLogin } from "@react-oauth/google";
+
 import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
@@ -32,7 +33,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
     password: "",
   });
   const [errorMsg, setErrorMsg] = useState("");
-
+  // console.log("Current user in login:", user);
   const recaptchaVerifierRef = useRef(null);
 
   // ✅ Initialize reCAPTCHA only once
@@ -129,6 +130,10 @@ const Login = ({ onClose, onSwitchToRegister }) => {
   async function handleLogin(e) {
     e.preventDefault();
     setErrorMsg("");
+
+    // continue vendor login...
+
+    // continue vendor login...
 
     if (!formData.email && !formData.phoneNo) {
       return setErrorMsg("Enter email or phone to log in.");
