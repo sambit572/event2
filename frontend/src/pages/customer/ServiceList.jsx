@@ -43,6 +43,8 @@ const ServiceList = ({ onSwitchToLogin }) => {
   }, [categoryId]);
   // console.log("Fetched services:", categoryServices);
 
+  console.log("categoryId:",categoryId)
+
   return (
     <div className="serviceList">
       <Filter />

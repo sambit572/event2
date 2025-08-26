@@ -12,10 +12,10 @@ import ReviewList from "../../components/customer/servicedetails/ReviewList.jsx"
 import ReviewForm from "../../components/customer/servicedetails/ReviewForm.jsx";
 import { FaBell } from "react-icons/fa6";
 import { BACKEND_URL } from "../../utils/constant.js";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+
 import { setCategoryServices } from "../../redux/categorySlice";
-// import SimilarProductCard from "./../../components/customer/ServiceDetails/PeopleAlsoBooked";
+
 
 const Service = ({ onSwitchToLogin }) => {
   const navigate = useNavigate();

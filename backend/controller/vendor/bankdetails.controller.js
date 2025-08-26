@@ -35,18 +35,22 @@ export const createBankDetails = async (req, res) => {
     }
 
     // PAN Verification
-    let verifyResp;
-    try {
-      console.log(`🔍 [BankDetails] Verifying PAN: ${panNumber}`);
-      verifyResp = await verifyPAN(panNumber);
-    } catch (error) {
-      console.error("❌ [BankDetails] PAN verification failed:", error.message);
-      return res.status(400).json(new ApiError(400, error.message));
-    }
+    // let verifyResp;
+    // try {
+    //   console.log(`🔍 [BankDetails] Verifying PAN: ${panNumber}`);
+    //   verifyResp = await verifyPAN(panNumber);
+    // } catch (error) {
+    //   console.error("❌ [BankDetails] PAN verification failed:", error.message);
+    //   return res.status(400).json(new ApiError(400, error.message));
+    // }
 
-    const verifiedName = verifyResp.data?.full_name || accountHolderName;
+    // const verifiedName = verifyResp.data?.full_name || accountHolderName;
+    const verifiedName = accountHolderName;
 
     // Save bank details
+
+    
+
     const newDetails = await BankDetails.create({
       vendorId: req.vendor._id,
       accountHolderName: verifiedName,

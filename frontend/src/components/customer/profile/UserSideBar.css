@@ -397,9 +397,6 @@
 }
 
 /* Enhanced spinning animation */
-.spinning {
-  animation: spin 1s linear infinite;
-}
 
 @keyframes spin {
   from {
