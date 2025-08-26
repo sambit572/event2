@@ -15,7 +15,7 @@ export default function PrivacyPolicy({
     <main className="pp-container">
       <article className="pp-card">
         <header className="pp-header">
-          <h1>Legal Information</h1>
+          <h1>Privacy Policy</h1>
         </header>
 
         <section className="pp-section">
@@ -37,30 +37,7 @@ export default function PrivacyPolicy({
         </section>
 
         <section className="pp-section">
-          <h2>1. Platform Fee Structure</h2>
-          <ol>
-            <li>
-              <strong>Fee on advance payment:</strong> We charge 5% on the
-              advance payment collected at booking time. The advance payment
-              equals 20% of the total booking amount.
-            </li>
-            <br />
-            <li>
-              <strong>Effective fee:</strong> Because the advance is 20% of the
-              total, a 5% fee on that advance equals an effective fee of 1.5% of
-              the total booking value.
-            </li>{" "}
-            <br />
-            <li>
-              <strong>Example:</strong> If total = ₹10,000 → advance = ₹2,000 →
-              platform fee = 5% of ₹2,000 = ₹100 → effective fee = 1.5% of
-              ₹10,000.
-            </li>
-          </ol>
-        </section>
-
-        <section className="pp-section">
-          <h2>2. Cookie & Data Practices</h2>
+          <h2>1. Cookie & Data Practices</h2>
           <ol>
             <li>
               We use cookies to improve your experience, remember preferences,
@@ -98,9 +75,9 @@ export default function PrivacyPolicy({
         </section>
 
         <section className="pp-section">
-          <h2>3. User Policy</h2>
+          <h2>2. User Policy</h2>
           <ol>
-            <h3>3.1 Damage Liability</h3>
+            <h3>2.1 Damage Liability</h3>
             <ol>
               <li>
                 If a user damages vendor property, equipment, or materials while
@@ -109,7 +86,7 @@ export default function PrivacyPolicy({
               </li>
             </ol>
 
-            <h3>3.2 Cancellation by User</h3>
+            <h3>2.2 Cancellation by User</h3>
             <ol>
               <li>
                 Users may cancel per the refund policy. Cancellations made less
@@ -118,7 +95,7 @@ export default function PrivacyPolicy({
               </li>
             </ol>
 
-            <h3>3.3 Payment of Remaining Amount</h3>
+            <h3>2.3 Payment of Remaining Amount</h3>
             <ol>
               <li>
                 The user must pay the remaining balance (80% of the total). If
@@ -128,7 +105,7 @@ export default function PrivacyPolicy({
               </li>
             </ol>
 
-            <h3>3.4 Vendor Cancellation Protection</h3>
+            <h3>2.4 Vendor Cancellation Protection</h3>
             <ol>
               <li>
                 If the vendor cancels within five (5) days of the event, we will
@@ -149,9 +126,9 @@ export default function PrivacyPolicy({
         </section>
 
         <section className="pp-section">
-          <h2>4. Vendor Policy</h2>
+          <h2>3. Vendor Policy</h2>
           <ol>
-            <h3>4.1 Data Handling</h3>
+            <h3>3.1 Data Handling</h3>
             <ol>
               <li>
                 We collect and securely store vendor information (e.g., PAN,
@@ -163,7 +140,7 @@ export default function PrivacyPolicy({
               </li>
             </ol>
 
-            <h3>4.2 Payment Terms</h3>
+            <h3>3.2 Payment Terms</h3>
             <ol>
               <li>
                 Vendors will receive their portion of the advance within one to
@@ -183,7 +160,7 @@ export default function PrivacyPolicy({
               </li>
             </ol>
 
-            <h3>4.3 Cancellation by Vendor</h3>
+            <h3>3.3 Cancellation by Vendor</h3>
             <ol>
               <li>
                 Vendors must refund 100% of the advance if they cancel a
@@ -199,7 +176,7 @@ export default function PrivacyPolicy({
               </li>
             </ol>
 
-            <h3>4.4 Vendor Payment Protection</h3>
+            <h3>3.4 Vendor Payment Protection</h3>
             <ol>
               <li>
                 If a vendor lawfully provides services but the user refuses or
@@ -213,7 +190,7 @@ export default function PrivacyPolicy({
         </section>
 
         <section className="pp-section">
-          <h2>5. Contact & Legal</h2>
+          <h2>4. Contact & Legal</h2>
           <ol>
             <li>
               For questions about this policy or data processing, contact us via

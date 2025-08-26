@@ -81,7 +81,7 @@ const App = () => {
   // For brevity, I'm omitting them, but you should keep them in your file.
   const handleOpenLogin = () => {
     setShowLoginModal(true);
-    showRegisterModal(!showRegisterModal);
+    setShowRegisterModal(false);
     document.body.classList.add("modal-open");
   };
 
@@ -328,8 +328,7 @@ const App = () => {
             overflow: "hidden",
           },
         }}
-        position="bottom-center"
-        reverseOrder={false}
+        containerClassName="!fixed !top-1/2 !left-1/2 !-translate-x-1/2 !-translate-y-1/2"
       />
     </>
   );

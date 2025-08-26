@@ -278,7 +278,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
   };
 
   return (
-    <section className="relative flex h-full flex-col bg-white p-4 text-gray-800 md:p-5">
+    <section className="relative pl-4 flex h-full flex-col bg-[#e5e5de]  text-gray-800 ">
       <div className="absolute top-4 right-4 z-20 flex flex-col items-end gap-3 md:top-5 md:right-5">
         <div
           className={`h-10 w-10 flex items-center justify-center rounded-full bg-gray-200 shadow-md cursor-pointer transition-all duration-300 ${
@@ -392,7 +392,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
               {title}
             </h3>
           </Link>
-          <div className="mt-3 mb-3 flex flex-wrap items-center gap-2 md:flex-row md:gap-2">
+          <div className="mb-3 flex flex-wrap items-center gap-2 md:flex-row md:gap-2">
             <span className="text-sm font-semibold text-[#3498db] sm:text-base">
               {vendorName}
             </span>

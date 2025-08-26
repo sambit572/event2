@@ -660,7 +660,10 @@ const Navbar = ({
                       <>
                         <div
                           className="flex flex-row gap-1 mb-[10px] text-[#001f3f] text-center hover:text-[#022f5d] hover:font-bold text-[15px] cursor-pointer"
-                          onClick={() => navigate("/profile")}
+                          onClick={() => {
+                            setShowProfileDropdown(false);
+                            navigate("/profile");
+                          }}
                         >
                           <FaUser style={{ marginRight: "8px" }} />
                           My Profile
@@ -798,28 +801,17 @@ const Navbar = ({
                               setShowVendorDropdown(false);
 
                               if (!userFirstName) {
-                                console.log(
-                                  "Vendor Register clicked",
-                                  !userFirstName
-                                );
                                 const toastId = toast.custom((t) => (
                                   <div
                                     className={`${
                                       t.visible
                                         ? "animate-toast-wiggle"
                                         : "animate-leave"
-                                    } fixed top-4 right-10 z-50000 mt-12`}
+                                    } bg-white border border-[#001f3f] text-black px-6 py-3 rounded-xl shadow-lg`}
                                   >
-                                    {/* Toast Box */}
-                                    <div className="relative bg-white border-[#001f3f] text-black px-6 py-3 rounded-xl w-fit max-w-sm">
-                                      {/* Triangle */}
-                                      <div className="absolute -top-2 right-4 w-0 h-0 border-l-8 border-r-8 border-b-[10px] border-l-transparent border-r-transparent"></div>
-
-                                      {/* Toast Message */}
-                                      <span className="font-semibold block">
-                                        Please register as a user first.
-                                      </span>
-                                    </div>
+                                    <span className="font-semibold block whitespace-nowrap">
+                                      Please register as a user first.
+                                    </span>
                                   </div>
                                 ));
 
@@ -836,7 +828,7 @@ const Navbar = ({
                           <button
                             className="w-1/2 bg-blue-500 font-bold text-white hover:bg-blue-800 rounded px-3 py-2 transition-colors"
                             onClick={() => {
-                              setShowVendorDropdown(false); // ✅ Close the dropdown
+                              setShowVendorDropdown(false);
 
                               if (!userFirstName) {
                                 const toastId = toast.custom((t) => (
@@ -845,18 +837,11 @@ const Navbar = ({
                                       t.visible
                                         ? "animate-toast-wiggle"
                                         : "animate-leave"
-                                    } fixed top-4 right-10 z-50 mt-12`}
+                                    } bg-white border border-[#001f3f] text-black px-6 py-3 rounded-xl shadow-lg`}
                                   >
-                                    {/* Toast Box */}
-                                    <div className="relative bg-white border-[#001f3f] text-black px-6 py-3 rounded-xl w-fit max-w-sm">
-                                      {/* Triangle */}
-                                      <div className="absolute -top-2 right-4 w-0 h-0 border-l-8 border-r-8 border-b-[10px] border-l-transparent border-r-transparent"></div>
-
-                                      {/* Toast Message */}
-                                      <span className="font-semibold block">
-                                        Please register as a user first.
-                                      </span>
-                                    </div>
+                                    <span className="font-semibold block whitespace-nowrap">
+                                      Please register as a user first.
+                                    </span>
                                   </div>
                                 ));
 
@@ -864,8 +849,6 @@ const Navbar = ({
                               } else {
                                 onOpenVendorLogin();
                               }
-
-                              // ✅ Always go to login (or open modal)
                             }}
                           >
                             Login
@@ -881,7 +864,10 @@ const Navbar = ({
                         <div className="flex flex-col gap-2">
                           <button
                             className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-3 rounded"
-                            onClick={() => navigate("/dashboard")}
+                            onClick={() => {
+                              setShowVendorDropdown(false);
+                              navigate("/dashboard");
+                            }}
                           >
                             My Dashboard
                           </button>

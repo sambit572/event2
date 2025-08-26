@@ -91,7 +91,7 @@ function Footer() {
             </p>
           </div>
           <div>
-            <h4>Privacy Policy</h4>
+            <h4>Legal Information</h4>
             <p
               className="hover:text-[#ffc107]"
               onClick={() => navigate("/terms-and-conditions")}
@@ -108,7 +108,7 @@ function Footer() {
               className="hover:text-[#ffc107]"
               onClick={() => navigate("/privacy-policy")}
             >
-              Legal Information
+              Privacy Policy
             </p>
           </div>
           <div>
@@ -215,7 +215,7 @@ function Footer() {
 
               <div className="footer-dropdown">
                 <h4 onClick={() => toggleSection("privacy")}>
-                  Privacy Policy
+                  Legal Information
                   <img
                     src={openSections.privacy ? "/up-arrow.png" : "/down.png"}
                     className="dropdown-icon"
@@ -243,7 +243,7 @@ function Footer() {
                     className="hover:text-[#ffc107]"
                     onClick={() => navigate("/privacy-policy")}
                   >
-                    Legal Information
+                    Privacy Policy
                   </p>
                 </div>
               </div>

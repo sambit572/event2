@@ -44,10 +44,10 @@ export const createBankDetails = async (req, res) => {
       return res.status(400).json(new ApiError(400, error.message));
     } */
 
-    /For Testing Purpose/;
+    /*For Testing Purpose*/
     const verifiedName = accountHolderName;
 
-    /Real Code/;
+    /*Real Code*/
     /* const verifiedName = verifyResp?.data?.full_name || accountHolderName; */
 
     // Save bank details

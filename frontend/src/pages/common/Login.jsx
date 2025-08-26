@@ -15,11 +15,12 @@ import ForgotPass from "./../customer/ForgotPass";
 import { FiEyeOff, FiEye } from "react-icons/fi";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+import Spinner from "./../../components/common/Spinner";
 
 const Login = ({ onClose, onSwitchToRegister }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState("form");
   const [showSuccessIcon, setShowSuccessIcon] = useState(false);
   const [showForgotModal, setShowForgotModal] = useState(false);
@@ -86,15 +87,18 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
   async function handleGetOTP(e) {
     e.preventDefault();
+    setIsLoading(true);
     setErrorMsg("");
     const phone = formData.phoneNo.replace(/\D/g, "");
     const phoneNumber = "+91" + phone;
 
     if (!recaptchaVerifierRef.current) {
+      setIsLoading(false);
       return setErrorMsg("ReCAPTCHA is not ready. Please wait...");
     }
 
     if (!/^\+91\d{10}$/.test(phoneNumber)) {
+      setIsLoading(false);
       return setErrorMsg("Invalid Indian phone number.");
     }
 
@@ -119,6 +123,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
         setErrorMsg("OTP send failed. Check number or reCAPTCHA.");
       }
     }
+    setIsLoading(false);
   }
 
   async function handleLogin(e) {
@@ -232,7 +237,14 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
   const renderStep = () => {
     if (step === "success") return <SuccessBlock onClose={onClose} />;
-    if (step === "otp") return <OTPVerification setStep={setStep} />;
+    if (step === "otp")
+      return (
+        <OTPVerification
+          phoneNum={formData.phoneNo}
+          onClose={onClose}
+          setStep={setStep}
+        />
+      );
 
     if (step === "google-phone") {
       return (
@@ -363,6 +375,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
   return (
     <div className="login-wrapper" onClick={onClose}>
+      {isLoading && <Spinner />}
       <div className="login-modal" onClick={(e) => e.stopPropagation()}>
         {onClose && (
           <button className="modal-close" onClick={onClose}>

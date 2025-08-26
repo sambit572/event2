@@ -548,9 +548,6 @@
   }
 }
 @media (max-width: 780px) {
-  /* .search-bar {
-    width: 50px;
-  } */
   .search-bar.active {
     width: 250px;
     margin-left: -10px;
@@ -579,6 +576,12 @@
     /* margin-right: 140px; */
     z-index: 100000;
   }
+  .search-bar .search-icon {
+    color: #001f3f;
+  }
+  .search-bar .search-icon:hover {
+    color: #fff;
+  }
 
   .search-bar.active .searchbarIcon {
     margin-left: 0px;
@@ -596,6 +599,7 @@
   .searchbarIcon {
     margin: 0;
     padding: 0;
+
     margin-left: 160px;
     background-color: transparent;
     border: 0px solid transparent;
