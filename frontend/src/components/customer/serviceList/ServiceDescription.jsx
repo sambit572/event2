@@ -284,8 +284,8 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
   };
 
   return (
-    <section className="relative flex h-full flex-col bg-white p-4 text-gray-800 md:p-5">
-      <div className="absolute top-4 right-4 z-20 flex flex-col items-end gap-3 md:top-5 md:right-5">
+    <section className="relative flex h-full flex-col bg-[#e5e5de] p-4 text-gray-800 md:p-5">
+      <div className="absolute top-4 right-4 z-20 flex flPex-col items-end gap-3 md:top-5 md:right-5">
         <div
           className={`h-10 w-10 flex items-center justify-center rounded-full bg-gray-200 shadow-md cursor-pointer transition-all duration-300 ${
             isWishlisted

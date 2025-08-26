@@ -577,7 +577,9 @@ const Navbar = ({
                     className="suggestion-item"
                     onClick={() => {
                       setSearchInput(suggestion);
-                      navigate(`/search?query=${encodeURIComponent(suggestion.trim())}`);
+                      navigate(
+                        `/search?query=${encodeURIComponent(suggestion.trim())}`
+                      );
                       setShowSuggestions(false);
                     }}
                   >
@@ -706,32 +708,6 @@ const Navbar = ({
                           }
                           return !prev;
                         });
-                        if (!userFirstName) {
-                          const toastId = toast.custom((t) => (
-                            <div
-                              className={`${
-                                t.visible
-                                  ? "animate-toast-wiggle"
-                                  : "animate-leave"
-                              } fixed top-4 right-10 z-50 mt-12`}
-                            >
-                              {/* Toast Box */}
-                              <div className="relative bg-white border-10 border-[#001f3f] text-black px-6 py-3 rounded-xl w-fit max-w-sm">
-                                {/* Triangle */}
-                                <div className="absolute -top-2 right-4 w-0 h-0 border-l-8 border-r-8 border-b-[10px] border-l-transparent border-r-transparent"></div>
-
-                                {/* Toast Message */}
-                                <span className="font-semibold block">
-                                  Please register as a user first.
-                                </span>
-                              </div>
-                            </div>
-                          ));
-
-                          setTimeout(() => toast.dismiss(toastId), 2000);
-                        } else {
-                          handleVendorClick();
-                        }
                       }}
                     >
                       {!VendorFirstName ? (

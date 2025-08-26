@@ -26,7 +26,7 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
       className="mt-5 flex cursor-pointer flex-col overflow-hidden rounded-lg border border-gray-200 bg-white transition-shadow duration-300 ease-in-out hover:shadow-lg md:flex-row"
       onClick={handleCardClick}
     >
-      <div className="flex w-full flex-shrink-0 bg-gray-200 md:w-[45%]">
+      <div className="flex w-full flex-shrink-0 bg-[#e5e5de] md:w-[45%]">
         {/* Main image (on the left) */}
         <div className="relative h-64 w-full">
           {Array.isArray(images) && images.length > 0 ? (
