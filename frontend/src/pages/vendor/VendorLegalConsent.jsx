@@ -6,7 +6,7 @@ import StepProgress from "./StepProgress";
 import LegalButton from "./LegalButton";
 import "./VendorLegalConsent.css";
 
-import "./StepProgress.css";
+
 import "./LegalButton.css";
 import axios from "axios";
 import Spinner from "./../../components/common/Spinner";
