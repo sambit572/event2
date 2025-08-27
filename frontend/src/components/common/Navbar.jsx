@@ -60,7 +60,8 @@ const Navbar = ({
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { cartCount } = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user);
+  console.log("Cart count from Redux:", user.cartCount);
 
   const [currentUser, setCurrentUser] = useState(null);
   const [userFirstName, setUserFirstName] = useState(null);
@@ -455,54 +456,14 @@ const Navbar = ({
       <div className="navbar">
         {/* ✅ User Logout Popup */}
         {showLogoutPopup && (
-          <div
-            className="mt-[20px] sm:mt-[-50px]  md:mt-[80px] lg:mt-[100px] xl:mt-[120px]"
-            style={{
-              position: "fixed",
-              top: "115px",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              padding: "20px 32px",
-              borderRadius: "8px",
-              background: "rgba(255, 255, 255, 0.1)",
-              boxShadow: "0 8px 32px rgba(31, 38, 135, 0.37)",
-              backdropFilter: "blur(10px)",
-              WebkitBackdropFilter: "blur(10px)",
-              border: "2px solid white",
-              fontWeight: "bold",
-              color: "yellow",
-              zIndex: 9999,
-              textAlign: "center",
-              animation: "popIn 0.3s ease-out forwards",
-            }}
-          >
+          <div className="fixed top-[115px] left-1/2 -translate-x-1/2 -translate-y-1/2 z-[9999] p-5 px-8 rounded-lg bg-white/10 backdrop-blur-[10px] border-2 border-white font-bold text-yellow-400 text-center animate-pulse">
             You are logged out successfully!
           </div>
         )}
 
         {/* ✅ Vendor Logout Popup */}
         {showVendorLogoutPopup && (
-          <div
-            className="mt-[40px] sm:mt-[60px] w-full md:mt-[80px] lg:mt-[100px] xl:mt-[120px]"
-            style={{
-              position: "fixed",
-              top: "115px",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              padding: "20px 32px",
-              borderRadius: "8px",
-              background: "rgba(255, 255, 255, 0.1)",
-              boxShadow: "0 8px 32px rgba(31, 38, 135, 0.37)",
-              backdropFilter: "blur(10px)",
-              WebkitBackdropFilter: "blur(10px)",
-              border: "2px solid black",
-              fontWeight: "bold",
-              color: "black",
-              zIndex: 9999,
-              textAlign: "center",
-              animation: "popIn 0.3s ease-out forwards",
-            }}
-          >
+          <div className="fixed top-[115px] left-1/2 -translate-x-1/2 -translate-y-1/2 z-[9999] p-5 px-8 rounded-lg bg-white/10 backdrop-blur-[10px] border-2 border-black font-bold text-black text-center animate-pulse">
             You are logged out successfully!
           </div>
         )}
@@ -859,8 +820,8 @@ const Navbar = ({
               <div className="navbarCart" onClick={handleAddToCart}>
                 <div className="navbarCartIcon">
                   <FaCartShopping />
-                  {cartCount > 0 && (
-                    <span className="cart-badge">{cartCount}</span>
+                  {user.cartCount > 0 && (
+                    <span className="cart-badge">{user.cartCount}</span>
                   )}
                 </div>
                 <div className="navbarCartText">Cart</div>

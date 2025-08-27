@@ -9,8 +9,11 @@ import {
 import { BACKEND_URL } from "../../../utils/constant";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { incrementCartCount, setCartCount } from "../../../redux/UserSlice.js";
 
 const ServiceDescription = ({ service, onSwitchToLogin }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [isReadMore, setIsReadMore] = useState(false);
@@ -240,6 +243,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
         { serviceId },
         { withCredentials: true }
       );
+      dispatch(incrementCartCount());
       toast.success("Service added to your cart!");
     } catch (err) {
       if (err.response && err.response.status === 409) {

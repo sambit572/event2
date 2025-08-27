@@ -12,9 +12,9 @@ import ReviewList from "../../components/customer/servicedetails/ReviewList.jsx"
 import ReviewForm from "../../components/customer/servicedetails/ReviewForm.jsx";
 import { FaBell } from "react-icons/fa6";
 import { BACKEND_URL } from "../../utils/constant.js";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
-import { setCategoryServices } from "../../redux/categorySlice";
+import { useSelector, useDispatch } from "react-redux";
+import { setCategoryServices } from "../../redux/categorySlice.js";
+import { incrementCartCount } from "../../redux/UserSlice.js";
 // import SimilarProductCard from "./../../components/customer/ServiceDetails/PeopleAlsoBooked";
 
 const Service = ({ onSwitchToLogin }) => {
@@ -49,7 +49,6 @@ const Service = ({ onSwitchToLogin }) => {
   const [notified, setNotified] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
-  const [loggedInUserEmail, setLoggedInUserEmail] = useState("");
   const [currentUser, setCurrentUser] = useState(null);
   const [reviews, setReviews] = useState([]);
   const handleUserReview = () => {
@@ -128,6 +127,7 @@ const Service = ({ onSwitchToLogin }) => {
         { serviceId },
         { withCredentials: true }
       );
+      dispatch(incrementCartCount());
       toast.success("Service added to your cart!");
     } catch (err) {
       if (err.response && err.response.status === 409) {
