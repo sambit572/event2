@@ -5,9 +5,9 @@ import axios from "axios";
 
 import "./ServiceDetails.css";
 // import { similarServiceData } from "../../components/customer/ServiceDetails/SimilarServiceData.jsx";
-import RatingDetails from "../../components/customer/servicedetails/RatingDetails.jsx";
+import RatingDetails from "../../components/customer/ServiceDetails/RatingDetails.jsx";
 import SimilarProductCard from "../../components/customer/servicedetails/PeopleAlsoBooked.jsx";
-import DJServiceCard from "../../components/customer/servicedetails/ServiceDetailCard.jsx";
+import DJServiceCard from "../../components/customer/ServiceDetails/ServiceDetailCard.jsx";
 import ReviewList from "../../components/customer/servicedetails/ReviewList.jsx";
 import ReviewForm from "../../components/customer/servicedetails/ReviewForm.jsx";
 import { FaBell } from "react-icons/fa6";
