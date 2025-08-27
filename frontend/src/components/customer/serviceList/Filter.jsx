@@ -135,7 +135,7 @@ const Filter = ({ onApply, onCancel }) => {
             </select>
           </div>
           {/* Price Filter */}
-          <div className="price-range-wrapper">
+          {/* <div className="price-range-wrapper">
             <h4 className="heading4">Price Range</h4>
             <div
               className="slider"
@@ -169,7 +169,7 @@ const Filter = ({ onApply, onCancel }) => {
               />
             </div>
           </div>
-          <div className="flex items-center justify-center">OR </div>
+          <div className="flex items-center justify-center">OR </div> */}
           <div className="space-y-3">
             <div>
               <label className="block text-xs text-gray-900 mb-1">
@@ -212,7 +212,6 @@ const Filter = ({ onApply, onCancel }) => {
               </select>
             </div>
           </div>
-          <hr className="line" />
 
           {/* Location Filter */}
           <div className="filter-section">
