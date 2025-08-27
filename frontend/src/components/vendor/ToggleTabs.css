@@ -95,10 +95,11 @@
 }
 
 @media (max-width: 431px) {
-  */ .tab-btn button {
+   /* .tab-btn button {
     font-size: 12px;
     width: max-content;
-  }
+  } */
+  
 
   /* .bg-slider.services {
     left: 5%;
