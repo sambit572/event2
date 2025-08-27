@@ -11,7 +11,6 @@ import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 import { User } from "../../model/user/user.model.js";
-import { ref } from "process";
 import { Service } from "../../model/vendor/service.model.js";
 
 const isProd = process.env.NODE_ENV === "production";
@@ -668,5 +667,4 @@ export {
   getVendorProfile,
   updateVendorProfilePicture,
   verifyConfirmPassword,
-  // updateTheBankDetails,
 };
