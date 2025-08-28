@@ -482,6 +482,11 @@ const UserDetails = () => {
         return;
       }
 
+      if (preparedFormData.altPhone === preparedFormData.phone) {
+        alert("Alternate phone cannot be the same as primary phone.");
+        return;
+      }
+
       // Call backend
       const response = await axios.post(
         `${BACKEND_URL}/user/save-details`,

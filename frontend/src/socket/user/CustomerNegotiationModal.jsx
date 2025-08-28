@@ -8,6 +8,8 @@ const CustomerNegotiationModal = () => {
   const navigate = useNavigate();
 
   const [bookingDetails, setBookingDetails] = useState(null);
+  const [serviceDetails, setServiceDetails] = useState([]);
+  const [vendorDetails, setVendorDetails] = useState([]);
   const [venueInput, setVenueInput] = useState("");
   const [proposedPrice, setProposedPrice] = useState("");
   const [selectedServiceIndex, setSelectedServiceIndex] = useState(0);
@@ -19,36 +21,14 @@ const CustomerNegotiationModal = () => {
     useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [dataLoading, setDataLoading] = useState(true);
 
   const BACKEND = import.meta.env.VITE_BACKEND_URL;
 
-  // Get current selected service details
-  const getCurrentService = () => {
-    if (!bookingDetails?.serviceDetails) return null;
-
-    // Handle both single service (object) and multiple services (array)
-    if (Array.isArray(bookingDetails.serviceDetails)) {
-      return bookingDetails.serviceDetails[selectedServiceIndex] || null;
-    }
-    return bookingDetails.serviceDetails;
-  };
-
-  const getCurrentVendor = () => {
-    if (!bookingDetails?.vendorDetails) return null;
-
-    // Handle both single vendor (object) and multiple vendors (array)
-    if (Array.isArray(bookingDetails.vendorDetails)) {
-      return bookingDetails.vendorDetails[selectedServiceIndex] || null;
-    }
-    return bookingDetails.vendorDetails;
-  };
-
-  const isMultipleServices = () => {
-    return (
-      Array.isArray(bookingDetails?.serviceDetails) &&
-      bookingDetails.serviceDetails.length > 1
-    );
-  };
+  // Get current selected service and vendor
+  const getCurrentService = () => serviceDetails[selectedServiceIndex] || null;
+  const getCurrentVendor = () => vendorDetails[selectedServiceIndex] || null;
+  const isMultipleServices = () => serviceDetails.length > 1;
 
   // Socket listeners
   useEffect(() => {
@@ -61,28 +41,49 @@ const CustomerNegotiationModal = () => {
     };
   }, []);
 
-  // Fetch booking details
+  // Fetch booking details with embedded service/vendor data
   useEffect(() => {
-    const fetchBookingDetails = async () => {
+    const fetchAllData = async () => {
       try {
-        const res = await axios.get(
+        setDataLoading(true);
+
+        // Single API call to get booking with all services and vendors
+        const bookingRes = await axios.get(
           `${BACKEND}/user/bookings/${userDetailsId}`,
-          {
-            withCredentials: true,
-          }
+          { withCredentials: true }
         );
 
-        const result = res?.data?.data ?? res?.data ?? null;
+        const result = bookingRes?.data?.data ?? bookingRes?.data ?? null;
         console.log("Fetched booking details:", result);
         const details = Array.isArray(result) ? result[0] : result;
 
-        setBookingDetails(details || null);
-        setVenueInput((details && details.address) || "");
+        if (!details) {
+          throw new Error("No booking details found");
+        }
+
+        setBookingDetails(details);
+        setVenueInput(details.address || "");
+
+        // Extract services and vendors from the optimized response
+        const services = details.serviceDetails || [];
+        const vendors = services
+          .map((service) => service.vendorDetails)
+          .filter(Boolean);
+
+        console.log("Extracted services:", services);
+        console.log("Extracted vendors:", vendors);
+
+        setServiceDetails(services);
+        setVendorDetails(vendors);
       } catch (error) {
-        console.error("Error fetching booking details:", error);
+        console.error("Error fetching data:", error);
+        setErrorMsg("❗ Failed to load booking details. Please try again.");
+      } finally {
+        setDataLoading(false);
       }
     };
-    if (userDetailsId) fetchBookingDetails();
+
+    if (userDetailsId) fetchAllData();
   }, [userDetailsId, BACKEND]);
 
   // Timer functions
@@ -141,17 +142,17 @@ const CustomerNegotiationModal = () => {
     }
 
     const negotiationData = {
-      vendorName: currentVendor.fullName,
-      serviceName: currentService.serviceName,
-      serviceId: currentService._id,
-      vendorId: currentVendor._id,
+      vendorName: currentVendor.fullName || currentVendor.name,
+      serviceName: currentService.serviceName || currentService.name,
+      serviceId: currentService._id?.$oid || currentService._id,
+      vendorId: currentVendor._id?.$oid || currentVendor._id,
       bookedBy: bookingDetails.bookedBy,
-      bookedById: bookingDetails.bookedById,
+      bookedById: bookingDetails.bookedById?.$oid || bookingDetails.bookedById,
       venueLocation: venueInput,
       proposedPrice,
       date: {
-        startDate: bookingDetails.startDate,
-        endDate: bookingDetails.endDate,
+        startDate: bookingDetails.startDate?.$date || bookingDetails.startDate,
+        endDate: bookingDetails.endDate?.$date || bookingDetails.endDate,
       },
       originalPriceRange: {
         min: currentService.minPrice,
@@ -164,7 +165,9 @@ const CustomerNegotiationModal = () => {
     setTimeout(() => {
       emitNegotiation(negotiationData);
       alert(
-        `✅ Your price ₹${proposedPrice} has been sent to ${currentVendor.fullName} for ${currentService.serviceName}!`
+        `✅ Your price ₹${proposedPrice} has been sent to ${
+          currentVendor.fullName || currentVendor.name
+        } for ${currentService.serviceName || currentService.name}!`
       );
       setErrorMsg("");
       setIsLoading(false);
@@ -176,31 +179,29 @@ const CustomerNegotiationModal = () => {
   const handleProceedWithoutNegotiation = () => {
     setIsLoading(true);
 
-    // Handle both single and multiple services
-    const services = Array.isArray(bookingDetails.serviceDetails)
-      ? bookingDetails.serviceDetails
-      : [bookingDetails.serviceDetails];
-
-    const vendors = Array.isArray(bookingDetails.vendorDetails)
-      ? bookingDetails.vendorDetails
-      : [bookingDetails.vendorDetails];
-
     // Send negotiation data for each service
-    services.forEach((service, index) => {
-      const vendor = vendors[index] || vendors[0]; // Fallback to first vendor if mismatch
+    serviceDetails.forEach((service, index) => {
+      const vendor = vendorDetails[index];
+
+      if (!service || !vendor) {
+        console.warn(`Missing service or vendor data at index ${index}`);
+        return;
+      }
 
       const negotiationData = {
-        vendorName: vendor.fullName,
-        serviceName: service.serviceName,
-        serviceId: service._id,
-        vendorId: vendor._id,
+        vendorName: vendor.fullName || vendor.name,
+        serviceName: service.serviceName || service.name,
+        serviceId: service._id?.$oid || service._id,
+        vendorId: vendor._id?.$oid || vendor._id,
         bookedBy: bookingDetails.bookedBy,
-        bookedById: bookingDetails.bookedById,
+        bookedById:
+          bookingDetails.bookedById?.$oid || bookingDetails.bookedById,
         venueLocation: venueInput,
         proposedPrice: 0,
         date: {
-          startDate: bookingDetails.startDate,
-          endDate: bookingDetails.endDate,
+          startDate:
+            bookingDetails.startDate?.$date || bookingDetails.startDate,
+          endDate: bookingDetails.endDate?.$date || bookingDetails.endDate,
         },
         originalPriceRange: {
           min: service.minPrice,
@@ -251,10 +252,33 @@ const CustomerNegotiationModal = () => {
     setCallStarted(false);
   };
 
-  if (!bookingDetails) {
+  if (dataLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-100">
-        <div className="text-xl text-slate-600">Loading booking details...</div>
+        <div className="text-center">
+          <div className="text-xl text-slate-600 mb-4">
+            Loading booking details...
+          </div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!bookingDetails || serviceDetails.length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-100">
+        <div className="text-center bg-white p-8 rounded-xl shadow-lg">
+          <div className="text-xl text-red-600 mb-4">
+            ❗ Unable to load booking details
+          </div>
+          <button
+            onClick={() => navigate("/userdetails")}
+            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Go Back
+          </button>
+        </div>
       </div>
     );
   }
@@ -284,9 +308,12 @@ const CustomerNegotiationModal = () => {
               onChange={handleServiceChange}
               className="w-full p-3 bg-white border-2 border-blue-300 rounded-xl text-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
             >
-              {bookingDetails.serviceDetails.map((service, index) => (
-                <option key={service._id || index} value={index}>
-                  {service.serviceName} - ₹{service.minPrice}-₹
+              {serviceDetails.map((service, index) => (
+                <option
+                  key={service._id?.$oid || service._id || index}
+                  value={index}
+                >
+                  {service.serviceName || service.name} - ₹{service.minPrice}-₹
                   {service.maxPrice}
                 </option>
               ))}
@@ -301,14 +328,22 @@ const CustomerNegotiationModal = () => {
               {isMultipleServices() ? "Selected Service:" : "Service:"}
             </strong>
             <span className="font-semibold text-slate-800 text-right">
-              {currentService?.serviceName?.toUpperCase() || "N/A"}
+              {(
+                currentService?.serviceName ||
+                currentService?.name ||
+                "N/A"
+              ).toUpperCase()}
             </span>
           </div>
 
           <div className="flex flex-col sm:flex-row justify-between sm:items-center py-2">
             <strong className="text-slate-500 mb-1 sm:mb-0">Vendor:</strong>
             <span className="font-semibold text-slate-800 text-right">
-              {currentVendor?.fullName?.toUpperCase() || "N/A"}
+              {(
+                currentVendor?.fullName ||
+                currentVendor?.name ||
+                "N/A"
+              ).toUpperCase()}
             </span>
           </div>
 
@@ -337,9 +372,9 @@ const CustomerNegotiationModal = () => {
             </strong>
             <span className="font-semibold text-slate-800">
               {`${new Date(
-                bookingDetails.startDate
+                bookingDetails.startDate?.$date || bookingDetails.startDate
               ).toLocaleDateString()} - ${new Date(
-                bookingDetails.endDate
+                bookingDetails.endDate?.$date || bookingDetails.endDate
               ).toLocaleDateString()}`}
             </span>
           </div>
@@ -362,7 +397,7 @@ const CustomerNegotiationModal = () => {
                 Total Services:
               </strong>
               <span className="font-semibold text-slate-800">
-                {bookingDetails.serviceDetails.length} services booked
+                {serviceDetails.length} services booked
               </span>
             </div>
           )}
@@ -420,8 +455,7 @@ const CustomerNegotiationModal = () => {
                 id="proposed-price"
                 type="number"
                 placeholder={`e.g., ${
-                  Math.floor((currentService?.maxPrice || 100000) * 0.75) ||
-                  "75,000"
+                  Math.floor((currentService?.maxPrice || 100000) * 0.75)
                 }`}
                 value={proposedPrice}
                 onChange={(e) => setProposedPrice(e.target.value)}
@@ -443,7 +477,9 @@ const CustomerNegotiationModal = () => {
               >
                 {isLoading
                   ? "Sending..."
-                  : `Send to ${currentVendor?.fullName || "Vendor"}`}
+                  : `Send to ${
+                      currentVendor?.fullName || currentVendor?.name || "Vendor"
+                    }`}
               </button>
 
               <button
@@ -464,8 +500,8 @@ const CustomerNegotiationModal = () => {
                 <p className="text-sm text-yellow-800">
                   📝 <strong>Note:</strong> "Send to Vendor" will negotiate only
                   the selected service. "Proceed Without Negotiation" will
-                  confirm all {bookingDetails.serviceDetails.length} services at
-                  their listed prices.
+                  confirm all {serviceDetails.length} services at their listed
+                  prices.
                 </p>
               </div>
             )}

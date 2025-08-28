@@ -10,7 +10,6 @@ const initialState = {
 export const fetchCart = createAsyncThunk("user/fetchCart", async () => {
   // No need to get token manually, the api handler does it automatically
   try {
-   
     const res = await axios.get(`${BACKEND_URL}/cart`, {
       withCredentials: true,
     });
@@ -39,6 +38,9 @@ const userSlice = createSlice({
     setCartCount: (state, action) => {
       state.cartCount = action.payload;
     },
+    incrementCartCount: (state) => {
+      state.cartCount += 1;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -52,5 +54,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { setUser, clearUser, setCartCount } = userSlice.actions;
+export const { setUser, clearUser, setCartCount, incrementCartCount } =
+  userSlice.actions;
 export default userSlice.reducer;
