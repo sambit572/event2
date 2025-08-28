@@ -155,7 +155,7 @@ const handleApplyFilters = (filters) => {
       <div className="serviceCardDetails">
         {loading ? (
           <p>Loading services...</p>
-        ) : filteredServices.length > 0 ? (
+        ) : filteredServices?.length > 0 ? (
           filteredServices.map((service, idx) => (
             <div className="singleServiceCard hover:shadow-lg" key={idx}>
               <Link
