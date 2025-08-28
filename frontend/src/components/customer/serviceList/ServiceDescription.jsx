@@ -65,8 +65,8 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
 
   const price = service.minPrice
     ? service.maxPrice
-      ? `${service.minPrice} - ${service.maxPrice}`
-      : `${service.minPrice}`
+      ? `₹${service.minPrice} - ₹${service.maxPrice}`
+      : `₹${service.minPrice}`
     : "N/A";
 
   const originalPrice = service.originalPrice;
@@ -84,7 +84,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
       console.log("animation stopped");
     }, 2000);
   };
-  const MAX_LENGTH = 200;
+  const MAX_LENGTH = 120;
   const shouldTruncate = description.length > MAX_LENGTH;
   const displayDescription =
     isReadMore || !shouldTruncate
@@ -288,10 +288,10 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
   };
 
   return (
-    <section className="relative flex h-full flex-col bg-[#e5e5de] p-4 text-gray-800 md:p-5">
-      <div className="absolute top-4 right-4 z-20 flex flPex-col items-end gap-3 md:top-5 md:right-5">
+    <section className="relative flex h-full flex-col bg-[#e5e5de] p-4 text-gray-800 md:py-0 px-5">
+      <div className="absolute top-[0.5rem] right-4 z-20 flex flex-col items-end gap-3 md:right-5">
         <div
-          className={`h-10 w-10 flex items-center justify-center rounded-full bg-gray-200 shadow-md cursor-pointer transition-all duration-300 ${
+          className={`h-10 w-10 flex items-center justify-center rounded-full bg-white shadow-md cursor-pointer transition-all duration-300 ${
             isWishlisted
               ? "text-red-600 ring-2 ring-red-300 shadow-red-200"
               : "text-gray-600 hover:text-red-500"
@@ -314,15 +314,15 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
           </div>
 
           <div
-            className={`absolute top-full right-0 mt-2 min-w-[160px] origin-top-right rounded-xl border border-gray-200 bg-white shadow-2xl transition-all duration-200 ease-out ${
+            className={`absolute top-full right-0 min-w-[160px] origin-top-right rounded-xl border border-gray-200 bg-white shadow-2xl transition-all duration-200 ease-out ${
               showShareMenu
-                ? "opacity-100 scale-100"
-                : "opacity-0 scale-95 pointer-events-none"
+                ? "opacity-100 scale-100 z-[9999]"
+                : "opacity-0 scale-95 pointer-events-none z-[-1]"
             }`}
           >
-            <div className="py-2">
+            <div>
               <div
-                className="flex cursor-pointer items-center gap-3 px-4 py-3 text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
+                className="flex cursor-pointer items-center gap-3 px-4 pt-2 pb-[0.2rem] text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
                 onClick={() => shareService("facebook")}
               >
                 <img
@@ -333,7 +333,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
                 Facebook
               </div>
               <div
-                className="flex cursor-pointer items-center gap-3 px-4 py-3 text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
+                className="flex cursor-pointer items-center gap-3 px-4 pt-2 pb-[0.2rem] text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
                 onClick={() => shareService("twitter")}
               >
                 <img
@@ -344,7 +344,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
                 X
               </div>
               <div
-                className="flex cursor-pointer items-center gap-3 px-4 py-3 text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
+                className="flex cursor-pointer items-center gap-3 px-4 pt-2 pb-[0.2rem] text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
                 onClick={() => shareService("whatsapp")}
               >
                 <img
@@ -356,7 +356,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
               </div>
               {/* ADDED INSTAGRAM BUTTON */}
               <div
-                className="flex cursor-pointer items-center gap-3 px-4 py-3 text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
+                className="flex cursor-pointer items-center gap-3 px-4 pt-2 pb-[0.2rem] text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
                 onClick={() => shareService("instagram")}
               >
                 <img
@@ -367,7 +367,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
                 Instagram
               </div>
               <div
-                className="flex cursor-pointer items-center gap-3 px-4 py-3 text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
+                className="flex cursor-pointer items-center gap-3 px-4 pt-2 pb-[0.2rem] text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
                 onClick={() => shareService("telegram")}
               >
                 <img
@@ -378,7 +378,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
                 Telegram
               </div>
               <div
-                className="flex cursor-pointer items-center gap-3 px-4 py-3 text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
+                className="flex cursor-pointer items-center gap-3 px-4 pt-2 pb-[0.2rem] text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
                 onClick={() => shareService("copy")}
               >
                 <img
@@ -396,13 +396,13 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
         <div>
           <Link
             to={`/service/${serviceId}`}
-            className="text-inherit no-underline pr-12"
+            className="text-inherit no-underline "
           >
             <h3 className="text-lg font-bold leading-tight text-[#2c3e50] sm:text-xl md:text-2xl">
               {title.toUpperCase()}
             </h3>
           </Link>
-          <div className="mt-3 mb-3 flex flex-wrap items-center gap-2 md:flex-row md:gap-2">
+          <div className="mb-[0.2rem] flex flex-wrap items-center gap-2 md:flex-row md:gap-2">
             <span className="text-sm font-semibold text-[#3498db] sm:text-base">
               {vendorName}
             </span>
@@ -417,16 +417,17 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
               </span>
             )}
           </div>
-          <p className="mb-3 text-sm leading-snug text-gray-500">{location}</p>
-          <div className="mb-3 flex flex-wrap items-center gap-3">
+          <p className="mb-[0.2rem] text-sm leading-snug text-gray-500">{location}</p>
+          <p className="mb-[0.2rem] text-sm leading-snug text-gray-500">{stateLocation.toUpperCase()}</p>
+          <div className="mb-[0.2rem] flex flex-wrap items-center gap-3">
             <span className="rounded-full bg-[#27ae60] px-3 py-1.5 text-sm font-semibold text-white">
               {rating}
             </span>
             <span className="text-sm text-gray-500">{reviews} reviews</span>
           </div>
-          <div className="mb-3 flex flex-wrap items-center gap-1.5 md:flex-row md:gap-3">
+          <div className="mb-[0.2rem] flex flex-wrap items-center gap-1.5 md:flex-row md:gap-3">
             <span className="text-xl font-bold text-[#2c3e50] sm:text-[22px]">
-              ₹{price}
+              {price}
             </span>
             {originalPrice && (
               <>
@@ -439,12 +440,12 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
               </>
             )}
           </div>
-          <p className="mb-4 text-sm text-gray-500">
+          <p className="mb-[0.2rem] text-sm text-gray-500">
             <span className="font-semibold text-[#34495e]">Prep Time: </span>
             {duration}
           </p>
         </div>
-        <div className="mb-5 flex-grow">
+        <div className="mb-[0.5rem] flex-grow">
           <p className="inline text-sm leading-relaxed text-[#34495e]">
             {displayDescription}
             {shouldTruncate && (

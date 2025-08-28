@@ -61,7 +61,7 @@ const Navbar = ({
   const location = useLocation();
 
   const user = useSelector((state) => state.user);
-  console.log("Cart count from Redux:", user.cartCount);
+  // console.log("Cart count from Redux:", user.cartCount);
 
   const [currentUser, setCurrentUser] = useState(null);
   const [userFirstName, setUserFirstName] = useState(null);
