@@ -70,7 +70,7 @@ export const addReview = async (req, res) => {
       userId: userId,
       rating: rating,
       reviewMessage: reviewMessage,
-    })
+    });
 
     res.status(201).json({ success: true, review });
   } catch (err) {
@@ -164,8 +164,8 @@ export const getServiceRatingSummary = async (req, res) => {
 
     // --- Count only those with reviewMessage ---
     const totalReviews = await UserReview.countDocuments({
-      serviceId: new mongoose.Types.ObjectId(serviceId),
-      reviewMessage: { $ne: null, $ne: "" }, // only if review text exists
+      serviceId: new mongoose.Types.ObjectId.createFromHexString(serviceId),
+      reviewMessage: { $nin: [null, ""] }, // only if review text exists
     });
 
     res.json({
@@ -259,7 +259,9 @@ export const getAllReviews = async (req, res) => {
                 user.lastName || ""
               }`.trim();
             } else {
-              userName = review.userEmail.split("@")[0];
+              userName = review.userEmail
+                ? review.userEmail.split("@")[0]
+                : "Unknown User";
             }
 
             // Get profile image from either field
@@ -267,7 +269,9 @@ export const getAllReviews = async (req, res) => {
           } else {
             // User not found — fallback to email prefix
             console.log(`User not found for email: ${review.userEmail}`);
-            userName = review.userEmail.split("@")[0];
+            userName = review.userEmail
+              ? review.userEmail.split("@")[0]
+              : "Unknown User";
           }
 
           // Generate initials from userName
