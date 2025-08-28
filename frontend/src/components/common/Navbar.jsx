@@ -60,7 +60,8 @@ const Navbar = ({
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { cartCount } = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user.user);
+  
 
   const [currentUser, setCurrentUser] = useState(null);
   const [userFirstName, setUserFirstName] = useState(null);
@@ -900,6 +901,9 @@ const Navbar = ({
               <div className="navbarCart" onClick={handleAddToCart}>
                 <div className="navbarCartIcon">
                   <FaCartShopping />
+                  {user.cartCount > 0 && (
+                    <span className="cart-badge">{user.cartCount}</span>
+                  )}
                 </div>
                 <div className="navbarCartText">Cart</div>
               </div>
