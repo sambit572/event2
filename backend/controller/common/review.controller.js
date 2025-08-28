@@ -185,14 +185,13 @@ export const getServiceRatingSummary = async (req, res) => {
 
 export const getAllReviews = async (req, res) => {
   try {
-    console.log("Fetching reviews with query:", req.query); // Debug log
+    console.log("Fetching reviews with query:", req.query);
 
-    // Pagination parameters (default: page 1, 10 per page)
+    // Pagination parameters
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
-    // Validate pagination parameters
     if (page < 1) {
       return res.status(400).json({
         success: false,
@@ -223,7 +222,7 @@ export const getAllReviews = async (req, res) => {
 
     console.log("Using filter:", filter);
 
-    // Fetch reviews sorted by creation date (newest first)
+    // Fetch reviews
     const reviews = await Review.find(filter)
       .sort({ createdAt: -1 })
       .skip(skip)
@@ -233,48 +232,34 @@ export const getAllReviews = async (req, res) => {
 
     console.log(`Found ${reviews.length} reviews out of ${totalReviews} total`);
 
-    // console.log("Reviews fetched:", reviews);
-
-    // Enrich each review with profile image and name
+    // Enrich reviews
     const enrichedReviews = await Promise.all(
       reviews.map(async (review) => {
         try {
-          // Find user by email (case-insensitive)
-          const user = await User.findOne({
-            email: { $regex: new RegExp(`^${review.userEmail}$`, "i") },
-          });
+          const email = review.userEmail || "";
+          const emailPrefix = email ? email.split("@")[0] : "Unknown User";
+          const emailInitial = email ? email.charAt(0).toUpperCase() : "U";
 
-          // console.log(user ? `Found user: ${user.email}` : "User not found");
+          const user = await User.findOne({
+            email: { $regex: new RegExp(`^${email}$`, "i") },
+          });
 
           let userName = "";
           let profileImage = "";
           let initials = "";
 
           if (user) {
-            // Prefer full name
-            if (user.fullName) {
-              userName = user.fullName;
-            } else if (user.firstName || user.lastName) {
-              userName = `${user.firstName || ""} ${
-                user.lastName || ""
-              }`.trim();
-            } else {
-              userName = review.userEmail
-                ? review.userEmail.split("@")[0]
-                : "Unknown User";
-            }
-
-            // Get profile image from either field
+            userName =
+              user.fullName ||
+              `${user.firstName || ""} ${user.lastName || ""}`.trim() ||
+              emailPrefix;
             profileImage = user.profilePhoto || user.profileImage || "";
           } else {
-            // User not found — fallback to email prefix
             console.log(`User not found for email: ${review.userEmail}`);
-            userName = review.userEmail
-              ? review.userEmail.split("@")[0]
-              : "Unknown User";
+            userName = emailPrefix;
           }
 
-          // Generate initials from userName
+          // Generate initials
           if (userName) {
             const parts = userName.trim().split(" ");
             initials = parts
@@ -283,7 +268,7 @@ export const getAllReviews = async (req, res) => {
               .toUpperCase()
               .slice(0, 2);
           } else {
-            initials = review.userEmail.charAt(0).toUpperCase();
+            initials = emailInitial;
           }
 
           return {
@@ -294,18 +279,21 @@ export const getAllReviews = async (req, res) => {
           };
         } catch (userError) {
           console.error(`Error enriching review ${review._id}:`, userError);
-          // Return basic review data if enrichment fails
           return {
             ...review.toObject(),
-            userName: review.userEmail.split("@")[0],
+            userName: review.userEmail
+              ? review.userEmail.split("@")[0]
+              : "Unknown User",
             profileImage: "",
-            initials: review.userEmail.charAt(0).toUpperCase(),
+            initials: review.userEmail
+              ? review.userEmail.charAt(0).toUpperCase()
+              : "U",
           };
         }
       })
     );
 
-    // Send response
+    // Response
     res.status(200).json({
       success: true,
       totalReviews,
@@ -323,3 +311,4 @@ export const getAllReviews = async (req, res) => {
     });
   }
 };
+
