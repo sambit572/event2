@@ -264,7 +264,7 @@ const App = () => {
           <Route
             path="/dashboard"
             element={
-              <DashboardEnforcement>
+              <DashboardEnforcement onOpenVendorLogin={handleOpenVendorLogin}>
                 <DashBoardMain />
               </DashboardEnforcement>
             }
