@@ -507,7 +507,7 @@
     width: 200px;
     transition: width 0.4s ease;
     margin-left: 0px;
-    height: 36px;
+    height: 37px;
   }
   .search-bar input {
     width: 100px;
@@ -545,6 +545,14 @@
   }
   .dropdown-menu {
     right: 10px;
+  }
+  .suggestions-dropdown {
+    width: 32%;
+    left: 50%;
+    margin: 0 auto;
+    top: 110%; /* Slightly below the search bar */
+    z-index: 9999;
+    margin-left: 299px;
   }
 }
 @media (max-width: 780px) {
@@ -691,6 +699,13 @@
   .nav-icons {
     margin-left: 0px;
   }
+  .searchbarIcon {
+    margin-right: -9px;
+  }
+  .search-bar.active .searchbarIcon {
+    margin-left: -24px;
+    width: 69px;
+  }
 }
 @media (max-width: 410px) {
   .logo {
@@ -700,7 +715,7 @@
 @media (max-width: 391px) {
   .nav-icons {
     width: 130px;
-    gap: 10px;
+    gap: 17px;
     margin-left: 0px;
   }
 }
@@ -708,6 +723,7 @@
 @media (max-width: 376px) {
   .navbar {
     padding: 0px 10px;
+    height: 50px;
   }
   .logo {
     font-size: 17px;
@@ -726,25 +742,31 @@
   .search-bar input {
     margin-left: 6px;
   }
+  .search-bar.active .searchbarIcon {
+    margin-left: -13px;
+  }
+  .mobile-search-bar-container {
+    top: 39px;
+  }
 }
 /* 🔍 Suggestion Dropdown Styling */
 .suggestions-dropdown {
   position: absolute;
   top: 85%; /* just below search bar */
   left: 0;
-  width: 27%;
+  width: 29%;
   background-color: #ffffff;
   border: 1px solid #ddd;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   z-index: 3000;
   overflow: hidden;
-  margin-left: 565px;
+  margin-left: 400px;
 }
 @media (max-width: 768px) {
   .suggestions-dropdown {
-    width: 90%;
-    left: 5%;
+    width: 32%;
+    left: 35%;
     margin: 0 auto;
     top: 110%; /* Slightly below the search bar */
     z-index: 9999;
@@ -782,6 +804,12 @@
 @media (max-width: 360px) {
   .nav-icons {
     margin-right: 0px;
+  }
+  .search-and-nav-icons-container {
+    margin-left: -9px;
+  }
+  .search-bar.active .searchbarIcon {
+    margin-left: -22px;
   }
 }
 @media (max-width: 348px) {
