@@ -63,7 +63,7 @@ const handleApplyFilters = (filters) => {
     // ✅ Price overlap check
     const priceMatch =
       (!filters.minPrice && !filters.maxPrice) ||
-      (serviceMax >= filters.minPrice && serviceMin <= filters.maxPrice);
+      (serviceMin >= filters.minPrice && serviceMax <= filters.maxPrice);
 
     // ✅ Rating check
     const ratingValue =
@@ -155,9 +155,9 @@ const handleApplyFilters = (filters) => {
       <div className="serviceCardDetails">
         {loading ? (
           <p>Loading services...</p>
-        ) : filteredServices.length > 0 ? (
+        ) : filteredServices?.length > 0 ? (
           filteredServices.map((service, idx) => (
-            <div className="singleServiceCard" key={idx}>
+            <div className="singleServiceCard hover:shadow-lg" key={idx}>
               <Link
                 to={`/service/${categoryId}/${service._id}`}
                 style={{ textDecoration: "none", color: "inherit" }}

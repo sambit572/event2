@@ -7,6 +7,8 @@ import xxmedium from "../../../assets/home/bannerImages/xxmedium.png";
 import smallbanner from "../../../assets/home/bannerImages/smallbanner.png";
 import xsmallBanner from "../../../assets/home/bannerImages/xsmallbanner.png";
 
+import newComingSoon from "../../../../public/coomingSoon/newComingSoon.webp";
+
 // import largebanner from "../../../assets/home/bannerImages/largebanner.png";
 
 const AddsBanner = () => {
@@ -27,7 +29,7 @@ const AddsBanner = () => {
 
         {/* Mobile (less than 640px) */}
         <img
-          src={xsmallBanner}
+          src={newComingSoon}
           alt="Responsive"
           className="w-full h-full object-fill rounded-lg"
         />

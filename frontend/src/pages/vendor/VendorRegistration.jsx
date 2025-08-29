@@ -6,7 +6,7 @@ import StepProgress from "./StepProgress";
 import VendorAutoFillConfirmModal from "../../components/vendor/VendorAutoFillConfirmModal";
 import Spinner from "./../../components/common/Spinner";
 import axios from "axios";
-
+import laptopBackground from "../../../public/vendorRegistration/laptop_background.webp";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const VendorRegister = () => {
@@ -226,7 +226,10 @@ const VendorRegister = () => {
           {/* LEFT SIDE: Form area - Full width on mobile */}
           <div
             className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8 lg:p-12 bg-cover bg-center relative"
-            style={{ backgroundImage: "url('/laptop-background.jpg')" }}
+            style={{
+              backgroundImage:
+                `url(${laptopBackground})`,
+            }}
           >
             <div className="absolute inset-0 bg-black/30 "></div>
             <div className="relative z-10 w-full max-w-md">

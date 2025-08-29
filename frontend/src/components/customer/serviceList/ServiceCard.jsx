@@ -23,7 +23,7 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
   return (
     // Added onClick handler and cursor-pointer here
     <div
-      className="mt-5 flex cursor-pointer flex-col overflow-hidden rounded-lg border border-gray-200 bg-white transition-shadow duration-300 ease-in-out hover:shadow-lg md:flex-row"
+      className="mt-5 flex cursor-pointer flex-col overflow-hidden rounded-lg border border-gray-200 bg-white transition-shadow duration-300 ease-in-out md:flex-row"
       onClick={handleCardClick}
     >
       <div className="flex w-full flex-shrink-0 bg-[#e5e5de] md:w-[45%]">
@@ -34,7 +34,7 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
               <img
                 src={images[currentIndex]}
                 alt="Service preview"
-                className={`h-full w-full object-cover transition-all duration-300 ${
+                className={`h-full w-full rounded-lg object-cover transition-all duration-300 ${
                   !isVendorAvailable ? "grayscale brightness-50" : ""
                 }`}
               />
@@ -69,7 +69,7 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
 
         {/* Thumbnails (on the right) */}
         {Array.isArray(images) && images.length > 1 && (
-          <div className="flex flex-col gap-0.5 bg-gray-200 p-1.5">
+          <div className="flex flex-col gap-0.5 bg-gray-200 py-0 px-1.5">
             {images.map((thumb, idx) => (
               <img
                 key={idx}

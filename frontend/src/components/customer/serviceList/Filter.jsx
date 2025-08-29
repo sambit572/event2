@@ -12,8 +12,8 @@ const Filter = ({ onApply, onCancel }) => {
   const minGap = 1000;
 
   const defaultFilters = {
-    minPrice: 0,
-    maxPrice: priceCap,
+    minPrice: "",
+    maxPrice: "",
     rating: "",
     state: "",
     subdistrict: "",
@@ -36,37 +36,12 @@ const Filter = ({ onApply, onCancel }) => {
 
   // Price change handlers (snap to step)
   const handleMinChange = (e) => {
-    let value = Number(e.target.value);
-    // snap to step
-    value = Math.round(value / STEP_MIN) * STEP_MIN;
-    // keep within gap
-    if (value + minGap <= filters.maxPrice) {
-      setFilters((prev) => ({ ...prev, minPrice: value }));
-    }
-  };
+  setFilters((prev) => ({ ...prev, minPrice: e.target.value }));
+};
 
-  const handleMaxChange = (e) => {
-    let value = Number(e.target.value);
-    // snap to step
-    value = Math.round(value / STEP_MAX) * STEP_MAX;
-    // keep within gap
-    if (value - minGap >= filters.minPrice) {
-      setFilters((prev) => ({ ...prev, maxPrice: value }));
-    }
-  };
-
-  // // Rating selection
-  // const handleRatingChange = (rating) => {
-  //   setFilters((prev) => {
-  //     const alreadySelected = prev.ratings.includes(rating);
-  //     return {
-  //       ...prev,
-  //       ratings: alreadySelected
-  //         ? prev.ratings.filter((r) => r !== rating)
-  //         : [...prev.ratings, rating],
-  //     };
-  //   });
-  // };
+const handleMaxChange = (e) => {
+  setFilters((prev) => ({ ...prev, maxPrice: e.target.value }));
+};
 
   // State change → update subdistricts
   const handleStateChange = (e) => {
@@ -107,9 +82,8 @@ const Filter = ({ onApply, onCancel }) => {
         </button>
       )}
 
-
       <div className={`filterBox ${showFilter ? "show" : ""}`}>
-        <div className="filter m-2">
+        <div className="filter ">
           {showFilter && (
             <button
               className="close-filter-btn"
@@ -119,10 +93,9 @@ const Filter = ({ onApply, onCancel }) => {
             </button>
           )}
 
-
           <h3 className="filter-heading">Filters</h3>
-          <div className="mb-6">
-            <h3 className="font-medium text-gray-800 mb-3">Sort By</h3>
+          <div className="mb-2">
+            <h3 className="font-medium text-gray-800 mb-[0.5rem]">Sort By</h3>
             <select
               value={sortBy} // Update the Sort By dropdown to use state
               onChange={(e) => setSortBy(e.target.value)}
@@ -135,8 +108,8 @@ const Filter = ({ onApply, onCancel }) => {
             </select>
           </div>
           {/* Price Filter */}
-          <div className="price-range-wrapper">
-            <h4 className="heading4">Price Range</h4>
+          {/* <div className="price-range-wrapper">
+            // <h4 className="heading4">Price Range</h4>
             <div
               className="slider"
               style={{
@@ -169,17 +142,18 @@ const Filter = ({ onApply, onCancel }) => {
               />
             </div>
           </div>
-          <div className="flex items-center justify-center">OR </div>
-          <div className="space-y-3">
+          <div className="flex items-center justify-center">OR </div> */}
+          <div className="space-y-1">
+            <h4 className="heading4">Price Range</h4>
             <div>
               <label className="block text-xs text-gray-900 mb-1">
                 Min Price (₹)
               </label>
               <input
                 type="number"
-                placeholder="0"
-                value={filters.minPrice} // Ensure price inputs update filters
-                onChange={(e) => handleMinChange(e)}
+                placeholder="Enter Min Price"
+                value={filters.minPrice}
+                onChange={handleMinChange}
                 className="w-full px-3 py-[0.3rem] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
               />
             </div>
@@ -189,9 +163,9 @@ const Filter = ({ onApply, onCancel }) => {
               </label>
               <input
                 type="number"
-                placeholder="200000"
-                value={filters.maxPrice} // Ensure price inputs update filters
-                onChange={(e) => handleMaxChange(e)}
+                placeholder="Enter Max Price"
+                value={filters.maxPrice}
+                onChange={handleMaxChange}
                 className="w-full px-3 py-[0.3rem] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
               />
             </div>
@@ -212,7 +186,6 @@ const Filter = ({ onApply, onCancel }) => {
               </select>
             </div>
           </div>
-          <hr className="line" />
 
           {/* Location Filter */}
           <div className="filter-section">
@@ -231,13 +204,13 @@ const Filter = ({ onApply, onCancel }) => {
             </div>
 
             <div className="dropdown">
-              <label>City/District</label>
+              <label>District</label>
               <select
                 value={filters.subdistrict}
                 onChange={handleSubdistrictChange}
                 disabled={!filters.state}
               >
-                <option value="">Select City/District</option>
+                <option value="">Select District</option>
                 {subdistricts.map((sub) => (
                   <option key={sub} value={sub}>
                     {sub}
@@ -285,4 +258,4 @@ const Filter = ({ onApply, onCancel }) => {
   );
 };
 
-export default Filter
+export default Filter;

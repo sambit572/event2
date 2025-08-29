@@ -215,7 +215,7 @@ export const CategoryData = [
   },
   {
     id: "band",
-    title: "Music Concert & Orchesta",
+    title: "Music Concert & Orchestra",
     image: image2,
     tagline: "Brass Beats the Best",
     icon: "🎺",
