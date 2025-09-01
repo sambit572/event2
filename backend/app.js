@@ -5,10 +5,11 @@ import path from "path";
 import helmet from "helmet";
 import { fileURLToPath } from "url";
 
+import client from "./utilities/redisClient.js";
 import userRouter from "./routes/user/user.routes.js";
 import { vendor_router } from "./routes/vendor/vendor.routes.js";
 import { errorHandler } from "./middleware/error.middleware.js";
-import reviewRoutes from "./routes/common/review.routes.js"; 
+import reviewRoutes from "./routes/common/review.routes.js";
 import test_router from "./routes/agenda/agenda.routes.js";
 import startAgenda from "./agenda/startAgenda.js";
 import "./cronjobs/startCronjobs.js";
@@ -54,11 +55,37 @@ app.use(cookieParser());
     console.error("❌ Agenda init failed:", err);
   }
 })();
+//rads api for testing
+// Cached API with Redis
+app.get("/api/slow-api", async (req, res) => {
+  const cacheKey = "user:data";
+
+  // 1. Check Redis first
+  const cached = await client.get(cacheKey);
+
+  if (cached) {
+    return res.json({ source: "cache", data: JSON.parse(cached) });
+  }
+
+  // 2. If not in cache → simulate slow API (5 sec)
+  await new Promise((resolve) => setTimeout(resolve, 5000));
+
+  const data = {
+    name: "Rahul Yadav",
+    role: "Developer",
+    time: new Date().toISOString(),
+  };
+
+  // 3. Save in Redis for future (set expiry 30 sec)
+  await client.setEx(cacheKey, 30, JSON.stringify(data));
+
+  res.json({ source: "API", data });
+});
 
 // ✅ API Routes
 app.use("/api/reports", reportRoutes);
 
-app.use("/api/search",searchRouter);
+app.use("/api/search", searchRouter);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/user", userRouter);
 app.use("/api/vendors", vendor_router);

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const CategoryCard = ({ category }) => {
   const navigate = useNavigate();
-  console.log(category);
+  // console.log("category.title", category.title);
   return (
     <div
       className="courseCard"
