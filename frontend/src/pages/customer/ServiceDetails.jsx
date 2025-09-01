@@ -4,7 +4,6 @@ import toast from "react-hot-toast";
 import axios from "axios";
 
 import "./ServiceDetails.css";
-// import { similarServiceData } from "../../components/customer/ServiceDetails/SimilarServiceData.jsx";
 import RatingDetails from "../../components/customer/servicedetails/RatingDetails.jsx";
 import SimilarProductCard from "../../components/customer/servicedetails/PeopleAlsoBooked.jsx";
 import DJServiceCard from "../../components/customer/servicedetails/ServiceDetailCard.jsx";
@@ -15,7 +14,7 @@ import { BACKEND_URL } from "../../utils/constant.js";
 import { useSelector, useDispatch } from "react-redux";
 
 import { setCategoryServices } from "../../redux/categorySlice";
-
+import { incrementCartCount } from "../../redux/UserSlice.js";
 
 const Service = ({ onSwitchToLogin }) => {
   const navigate = useNavigate();
@@ -39,7 +38,6 @@ const Service = ({ onSwitchToLogin }) => {
     }
   }, [categoryId]);
 
- 
   const [service, setService] = useState(null);
   const [mediaList, setMediaList] = useState([]);
   const [selectMedia, setSelectMedia] = useState(null);
@@ -117,6 +115,7 @@ const Service = ({ onSwitchToLogin }) => {
     }
     try {
       await axios.post(`${BACKEND_URL}/cart/add`, { serviceId: serviceId });
+      dispatch(incrementCartCount());
       toast.success("Service added to your cart!");
     } catch (err) {
       if (err.response && err.response.status === 409) {

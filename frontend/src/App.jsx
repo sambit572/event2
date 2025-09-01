@@ -242,14 +242,18 @@ const App = () => {
           <Route
             path="/dashboard"
             element={
-              <DashboardEnforcement>
+              <DashboardEnforcement onOpenVendorLogin={handleOpenVendorLogin}>
                 <DashBoardMain />
               </DashboardEnforcement>
             }
           />
           <Route
             path="/vendor/services/addServices"
-            element={<AddServiceInDashboard />}
+            element={
+              <DashboardEnforcement onOpenVendorLogin={handleOpenVendorLogin}>
+                <AddServiceInDashboard />
+              </DashboardEnforcement>
+            }
           />
           <Route path="/forgot-password" element={<ForgotPass />} />
           <Route

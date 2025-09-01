@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 
-function DashboardEnforcement({ children }) {
+function DashboardEnforcement({ children, onOpenVendorLogin }) {
   const [loading, setLoading] = useState(true);
   const [allowed, setAllowed] = useState(false);
   const navigate = useNavigate();
@@ -13,12 +13,15 @@ function DashboardEnforcement({ children }) {
       console.log("🔍 Checking vendor registration status...");
 
       try {
-        const { data } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/vendors/currentStep-status`, {
-          withCredentials: true,
-          params: {
-            currentPath: location.pathname, // ⬅️ send current route
-          },
-        });
+        const { data } = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/vendors/currentStep-status`,
+          {
+            withCredentials: true,
+            params: {
+              currentPath: location.pathname, // ⬅️ send current route
+            },
+          }
+        );
 
         console.log("✅ Vendor status response:", data);
 
@@ -33,7 +36,8 @@ function DashboardEnforcement({ children }) {
         }
       } catch (error) {
         console.error("❌ Error during vendor status check:", error);
-        navigate("/vendor-login");
+        onOpenVendorLogin();
+        navigate("/");
       } finally {
         console.log("🔁 Finished vendor status check");
         setLoading(false);

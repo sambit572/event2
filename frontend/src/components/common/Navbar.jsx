@@ -901,8 +901,8 @@ const Navbar = ({
               <div className="navbarCart" onClick={handleAddToCart}>
                 <div className="navbarCartIcon">
                   <FaCartShopping />
-                  {user.cartCount > 0 && (
-                    <span className="cart-badge">{user.cartCount}</span>
+                  {user?.cartCount > 0 && (
+                    <span className="cart-badge">{user?.cartCount || 0}</span>
                   )}
                 </div>
                 <div className="navbarCartText">Cart</div>

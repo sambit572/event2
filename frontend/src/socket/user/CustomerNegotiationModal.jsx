@@ -15,8 +15,6 @@ const CustomerNegotiationModal = () => {
   const [selectedServiceIndex, setSelectedServiceIndex] = useState(0);
   const [showTimer, setShowTimer] = useState(false);
   const [timeLeft, setTimeLeft] = useState(15 * 60);
-  const [callStarted, setCallStarted] = useState(false);
-  const [callStatus, setCallStatus] = useState("Not Started");
   const [proceededWithoutNegotiation, setProceededWithoutNegotiation] =
     useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -240,18 +238,6 @@ const CustomerNegotiationModal = () => {
     return () => clearTimeout(timer);
   }, [showTimer, timeLeft, onClose]);
 
-  // Call functions
-  const handleStartCall = () => {
-    setCallStatus("Connecting...");
-    setCallStarted(true);
-    setTimeout(() => setCallStatus("Call Live"), 1500);
-  };
-
-  const handleEndCall = () => {
-    setCallStatus("Call Ended");
-    setCallStarted(false);
-  };
-
   if (dataLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-100">
@@ -403,43 +389,6 @@ const CustomerNegotiationModal = () => {
           )}
         </div>
 
-        {/* Call Status Section */}
-        <div className="mt-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
-          <div className="flex flex-col sm:flex-row items-center gap-4">
-            <div className="flex-1">
-              <span className="text-slate-600">Call Status: </span>
-              <span
-                className={`font-semibold ${
-                  callStatus === "Call Live"
-                    ? "text-green-600"
-                    : callStatus === "Connecting..."
-                    ? "text-yellow-600"
-                    : "text-slate-600"
-                }`}
-              >
-                {callStatus}
-              </span>
-            </div>
-            <div className="flex gap-2">
-              {!callStarted ? (
-                <button
-                  onClick={handleStartCall}
-                  className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
-                >
-                  Start Call
-                </button>
-              ) : (
-                <button
-                  onClick={handleEndCall}
-                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
-                >
-                  End Call
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-
         {!showTimer && (
           <>
             <div className="mt-8">
@@ -454,9 +403,9 @@ const CustomerNegotiationModal = () => {
               <input
                 id="proposed-price"
                 type="number"
-                placeholder={`e.g., ${
-                  Math.floor((currentService?.maxPrice || 100000) * 0.75)
-                }`}
+                placeholder={`e.g., ${Math.floor(
+                  (currentService?.maxPrice || 100000) * 0.75
+                )}`}
                 value={proposedPrice}
                 onChange={(e) => setProposedPrice(e.target.value)}
                 className="w-full p-3 bg-white border-2 border-slate-300 rounded-xl text-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
