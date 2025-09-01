@@ -341,7 +341,7 @@ const VendorRegister = () => {
                         </div>
                         <h1 className="text-4xl font-bold text-gray-800 mb-4 mt-[-10px] ">Register Here</h1>
                         <p className="text-lg text-gray-600 max-w-md mx-auto leading-relaxed">
-                            Join EventsBridge, your one-stop platform for discovering and booking trusted vendors, planning events, and creating unforgettable experiences. We make event planning simple, fast, and hassle-freeregister today and take the first step toward smarter celebrations.
+                            Join EventsBridge, your one-stop platform for discovering and booking trusted vendors, planning events, and creating unforgettable experiences. We make event planning simple, fast, and hassle-free register today and take the first step toward smarter celebrations.
                         </p>
                     </div>
                 </div>
