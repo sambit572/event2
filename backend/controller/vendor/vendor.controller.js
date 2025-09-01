@@ -11,7 +11,6 @@ import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 import { User } from "../../model/user/user.model.js";
-import { ref } from "process";
 import { Service } from "../../model/vendor/service.model.js";
 
 const isProd = process.env.NODE_ENV === "production";
@@ -33,11 +32,6 @@ const refreshTokenOption = {
   expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000), // 10 days
 };
 
-const updateProgress = async (vendorId, step) => {
-  await Vendor.findByIdAndUpdate(vendorId, {
-    registrationProgress: step,
-  });
-};
 const registerVendor = async (req, res) => {
   try {
     const { fullName, email, phoneNumber, password } = req.body;
