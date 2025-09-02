@@ -2,7 +2,7 @@ import Vendor from "../../model/vendor/vendor.model.js";
 import { ApiError } from "../../utilities/ApiError.js";
 import { ApiResponse } from "../../utilities/ApiResponse.js";
 import fs from "fs/promises";
-import path from "path";
+import { isValidPhoneNumber } from "libphonenumber-js";
 import { uploadOnCloudinary } from "../../utilities/cloudinary.js";
 import { validateEmailDomain } from "../../utilities/verifyDNS.js";
 import { sendEmail } from "../../utilities/sendEmail.js";
@@ -32,11 +32,6 @@ const refreshTokenOption = {
   expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000), // 10 days
 };
 
-const updateProgress = async (vendorId, step) => {
-  await Vendor.findByIdAndUpdate(vendorId, {
-    registrationProgress: step,
-  });
-};
 const registerVendor = async (req, res) => {
   try {
     const { fullName, email, phoneNumber, password } = req.body;
@@ -140,7 +135,7 @@ const registerVendor = async (req, res) => {
   }
 };
 
-export const updateVendor = async (req, res) => {
+const updateVendor = async (req, res) => {
   try {
     const { id } = req.params;
     const updateData = { ...req.body };
@@ -521,7 +516,7 @@ const updateVendorProfilePicture = async (req, res, next) => {
   }
 };
 // ✅  Get Vendor Search Suggestions
-export const getSearchSuggestions = async (req, res) => {
+const getSearchSuggestions = async (req, res) => {
   try {
     const { query } = req.query;
 
@@ -613,7 +608,7 @@ export const getSearchSuggestions = async (req, res) => {
 };
 
 // dashboard
-export const getVendorDashboard = async (req, res) => {
+const getVendorDashboard = async (req, res) => {
   console.log("📍 getVendorDashboard called");
   try {
     const currentStep = req.vendor.registrationProgress;
@@ -655,10 +650,42 @@ export const getVendorDashboard = async (req, res) => {
   }
 };
 
+const verifyVendorLogin = async (req, res) => {
+  const { phoneNo } = req.body;
+
+  console.log("verifyVendorLogin called with phoneNo:", phoneNo);
+  if (!phoneNo || !isValidPhoneNumber(phoneNo, "IN")) {
+    return res.status(400).json(new ApiError(400, "Invalid phone number"));
+  }
+
+  const vendor = await Vendor.findOne({ phoneNumber: phoneNo });
+  if (!vendor)
+    return res.status(404).json(new ApiError(404, "Vendor not found"));
+
+  const { accessToken, refreshToken } = await generateVendorTokens(vendor._id);
+
+  const loggedInVendor = await Vendor.findById(vendor._id).select(
+    "-password -refreshToken"
+  );
+
+  return res
+    .status(200)
+    .cookie("vendorAccessToken", accessToken, accessTokenOption)
+    .cookie("vendorRefreshToken", refreshToken, refreshTokenOption)
+    .json(
+      new ApiResponse(
+        200,
+        { loggedInVendor, accessToken, refreshToken },
+        "Vendor Login successful"
+      )
+    );
+};
+
 export {
   registerVendor,
   loginVendor,
   vendorLogout,
+  updateVendor,
   sendVendorResetLink,
   resetVendorPassword,
   changeVendorPassword,
@@ -667,4 +694,7 @@ export {
   getVendorProfile,
   updateVendorProfilePicture,
   verifyConfirmPassword,
+  getVendorDashboard,
+  getSearchSuggestions,
+  verifyVendorLogin,
 };

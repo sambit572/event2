@@ -248,6 +248,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
           phoneNum={formData.phoneNo}
           onClose={onClose}
           setStep={setStep}
+          type="user"
         />
       );
 

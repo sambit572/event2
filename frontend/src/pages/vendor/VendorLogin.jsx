@@ -152,7 +152,15 @@ const VendorLogin = ({ onClose, onSwitchToLogin }) => {
   const renderStep = () => {
     if (step === "success")
       return <SuccessBlock showSuccessIcon={showSuccessIcon} />;
-    if (step === "otp") return <OTPVerification setStep={setStep} />;
+    if (step === "otp")
+      return (
+        <OTPVerification
+          setStep={setStep}
+          onClose={onClose}
+          phoneNum={formData.phoneNo}
+          type="vendor"
+        />
+      );
     if (step === "form") {
       return (
         <form className="login-form" onSubmit={handleLogin}>
