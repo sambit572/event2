@@ -464,7 +464,7 @@ const Navbar = ({
         {/* ✅ Vendor Logout Popup */}
         {showVendorLogoutPopup && (
           <div className="fixed top-[115px] left-1/2 -translate-x-1/2 -translate-y-1/2 z-[9999] p-5 px-8 rounded-lg bg-white/10 backdrop-blur-[10px] border-2 border-black font-bold text-black text-center animate-pulse">
-            You are logged out successfully!
+            You are signed out successfully!
           </div>
         )}
 

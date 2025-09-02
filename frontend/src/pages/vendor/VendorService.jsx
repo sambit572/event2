@@ -372,7 +372,7 @@ function VendorService({ currentStep }) {
                   />
                   {categorySearchTerm && (
                     <img
-                      src="/public/close.png"
+                      src="../../../public/close.png"
                       alt="Clear"
                       className="clear-icon-img"
                       onClick={() => setCategorySearchTerm("")}
