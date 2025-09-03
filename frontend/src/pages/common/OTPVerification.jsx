@@ -7,6 +7,7 @@ import { BACKEND_URL } from "../../utils/constant.js";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/UserSlice.js";
 import Spinner from "./../../components/common/Spinner";
+import { setVendor } from "../../redux/VendorSlice.js";
 
 const OTPVerification = ({
   error,
@@ -16,6 +17,7 @@ const OTPVerification = ({
   setStep,
   onClose,
   phoneNum,
+  type,
 }) => {
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const dispatch = useDispatch();
@@ -54,30 +56,66 @@ const OTPVerification = ({
       const result = await window.confirmationResult.confirm(otpCode);
       console.log("Phone auth success:", result.user);
 
-      const response = await axios.post(
-        `${BACKEND_URL}/user/verify-otp`,
-        {
-          phoneNo: phoneNum,
-        },
-        {
-          withCredentials: true,
-        }
-      );
+      if (type === "user") {
+        const response = await axios.post(
+          `${BACKEND_URL}/user/verify-otp`,
+          {
+            phoneNo: phoneNum,
+          },
+          {
+            withCredentials: true,
+          }
+        );
 
-      console.log("OTP verification response:", response.data.data);
+        console.log("OTP verification response:", response.data.data);
 
-      const { loggedInUser } = response.data.data;
-      console.log("Verified user data:", loggedInUser);
-      dispatch(setUser(loggedInUser));
+        const { loggedInUser } = response.data.data;
+        console.log("Verified user data:", loggedInUser);
+        dispatch(setUser(loggedInUser));
 
-      localStorage.setItem("currentlyLoggedIn", "true");
-      localStorage.setItem(
-        "userFirstName",
-        loggedInUser.fullName.split(" ")[0]
-      );
-      localStorage.setItem("userLastName", loggedInUser.fullName.split(" ")[1]);
+        localStorage.setItem("currentlyLoggedIn", "true");
+        localStorage.setItem(
+          "userFirstName",
+          loggedInUser.fullName.split(" ")[0]
+        );
+        localStorage.setItem(
+          "userLastName",
+          loggedInUser.fullName.split(" ")[1]
+        );
 
-      window.dispatchEvent(new Event("userLoggedIn"));
+        window.dispatchEvent(new Event("userLoggedIn"));
+      }
+
+      if (type === "vendor") {
+        const response = await axios.post(
+          `${BACKEND_URL}/vendors/verify-otp`,
+          {
+            phoneNo: phoneNum,
+          },
+          {
+            withCredentials: true,
+          }
+        );
+
+        console.log("OTP verification response:", response.data.data);
+
+        const { loggedInVendor } = response.data.data;
+        console.log("Verified user data:", loggedInVendor);
+        dispatch(setVendor(loggedInVendor));
+
+        const fullName = loggedInVendor.fullName || "";
+        const firstName = fullName.split(" ")[0];
+        const firstLetter = firstName?.charAt(0).toUpperCase() || "";
+        const profilePic = loggedInVendor.profilePic || "";
+
+        localStorage.setItem("VendorCurrentlyLoggedIn", "true");
+        localStorage.setItem("VendorFullName", fullName);
+        localStorage.setItem("VendorFirstName", firstName);
+        localStorage.setItem("VendorInitial", firstLetter);
+        if (profilePic) localStorage.setItem("VendorProfilePic", profilePic);
+
+        window.dispatchEvent(new Event("vendorLoggedIn")); // Do not remember what it does : RD
+      }
 
       setStep("success");
     } catch (err) {

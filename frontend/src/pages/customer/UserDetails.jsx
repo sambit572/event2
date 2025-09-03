@@ -68,7 +68,7 @@ const districtCities = {
   Dhenkanal: ["Dhenkanal", "Indipur", "Bhuban", "Kamakshyanagar"],
   Gajapati: ["Paralakhemundi", "Kashinagar"],
   Ganjam: [
-    "Berhampur",
+    "Brahmapur",
     "Chhatrapur",
     "Bhanjanagar",
     "Digapahandi",
