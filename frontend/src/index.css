@@ -33,6 +33,18 @@
       margin-top: 50px !important;
     }
   }
+
+  @media (width: 1024px) and (height: 600px) {
+    .only-1024x600-vendor-forgot-pass {
+      @apply mb-9 !important; /* replace with your overrides */
+    }
+  }
+
+  @media (width: 912px) and (height: 1368px) {
+    .only-912x1368-vendor-forgot-pass {
+      @apply mb-[50rem] !important; /* replace with your overrides */
+    }
+  }
 }
 
 @keyframes toast-wiggle {

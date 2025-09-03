@@ -68,6 +68,7 @@ import ComingSoon from "./utils/ComingSoon.jsx";
 
 import MyReports from "./pages/common/myreports/MyReports.jsx";
 import SearchPage from "./pages/search/SearchPage.jsx";
+import VendorForgotPass from "./pages/vendor/VendorForgetPass.jsx";
 const App = () => {
   const location = useLocation();
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -273,7 +274,7 @@ const App = () => {
             path="/vendor/services/addServices"
             element={<AddServiceInDashboard />}
           />
-          <Route path="/vendor/forgot-password" element={<ForgotPass />} />
+          <Route path="/vendor/forgot-password" element={<VendorForgotPass />} />
           <Route
             path="/reset-password/:resetToken"
             element={<ResetPassword />}
