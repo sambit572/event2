@@ -6,6 +6,7 @@ import {
 import { ApiResponse } from "../../utilities/ApiResponse.js";
 import { ApiError } from "../../utilities/ApiError.js";
 import Vendor from "../../model/vendor/vendor.model.js";
+import client from "../../utilities/redisClient.js";
 
 export const createService = async (req, res) => {
   try {
@@ -26,19 +27,12 @@ export const createService = async (req, res) => {
 
     // ✅ Validate required fields
     if (!serviceCategory || !serviceName || !locationOffered || !serviceDes) {
-      console.error("❌ Validation failed: required fields missing", {
-        serviceCategory,
-        serviceName,
-        stateLocationOffered,
-        locationOffered,
-        serviceDes,
-      });
       return res
         .status(400)
         .json({ message: "All required fields must be filled" });
     }
 
-    // ✅ Ensure stateLocationOffered is always an array (multi-location support)
+    // ✅ Ensure stateLocationOffered is always an array
     const stateLocationsArray = Array.isArray(stateLocationOffered)
       ? stateLocationOffered
       : [stateLocationOffered];
@@ -49,7 +43,7 @@ export const createService = async (req, res) => {
         .json({ message: "Please select at least one location" });
     }
 
-    // ✅ Ensure locationOffered is always an array (multi-location support)
+    // ✅ Ensure locationOffered is always an array
     const locationsArray = Array.isArray(locationOffered)
       ? locationOffered
       : [locationOffered];
@@ -81,7 +75,6 @@ export const createService = async (req, res) => {
     const duration =
       parseInt(days) * 24 * 60 + parseInt(hrs) * 60 + parseInt(mins);
     if (isNaN(duration) || duration <= 0) {
-      console.error("❌ Invalid estimated duration:", { days, hrs, mins });
       return res.status(400).json({ message: "Invalid estimated duration" });
     }
 
@@ -102,11 +95,7 @@ export const createService = async (req, res) => {
         .json({ message: "Please upload at least one image" });
     }
 
-    // ✅ Save service document to DB
-    // ✅ Create or Update service document in DB
-    let newService;
-    let responseMessage;
-
+    // ✅ Prepare service data
     const serviceData = {
       vendorId: req.vendor._id,
       serviceCategory,
@@ -114,33 +103,38 @@ export const createService = async (req, res) => {
       minPrice,
       maxPrice,
       serviceName,
-      stateLocationOffered:stateLocationsArray,
-      locationOffered: locationsArray, // ✅ store array
+      stateLocationOffered: stateLocationsArray,
+      locationOffered: locationsArray,
       serviceDes,
       duration,
     };
 
-    // If vendor is still registering, they can only have ONE service.
-    // We use "upsert" to create it if it's their first time, or update it if they're editing.
+    let newService;
+    let responseMessage;
+
+    // ✅ If vendor registration is not complete → upsert (only one service)
     if (req.vendor.isRegistrationComplete === false) {
-      console.log("🔵 Vendor registration not complete. Upserting service...");
       newService = await Service.findOneAndUpdate(
-        { vendorId: req.vendor._id }, // Condition to find the service
-        serviceData, // The data to update or insert
-        { new: true, upsert: true } // Options: return the new doc, and create if it doesn't exist
+        { vendorId: req.vendor._id },
+        serviceData,
+        { new: true, upsert: true }
       );
 
-      // Also update their registration progress
       await Vendor.findByIdAndUpdate(req.vendor._id, {
         $set: { registrationProgress: 2 },
       });
+
       responseMessage = "Service saved successfully during registration";
     } else {
-      // If registration is complete, they can add multiple services, so we always create a new one.
-      console.log("🟢 Vendor registration complete. Creating new service...");
+      // ✅ Otherwise, allow multiple services → create new one
       newService = await Service.create(serviceData);
       responseMessage = "New service created successfully";
     }
+
+    // 🔥 Invalidate Redis cache for this category + all services list
+    await client.del(`services:category:${serviceCategory.toLowerCase()}`);
+    await client.del(`services:id:${newService._id}`);
+    await client.del(`services:all`); // optional, if you have a "getAllServices"
 
     return res
       .status(200)
@@ -153,28 +147,56 @@ export const createService = async (req, res) => {
 
 export const checkServiceExists = async (req, res) => {
   try {
+    const cacheKey = "check_service_exists";
+
+    // 1️⃣ Check cache
+    const cachedData = await client.get(cacheKey);
+    if (cachedData) {
+      return res.status(200).json(JSON.parse(cachedData));
+    }
+
+    // 2️⃣ Query MongoDB
     const existingService = await Service.findOne().sort({ createdAt: -1 });
 
-    if (existingService) {
-      return res.status(200).json({ exists: true });
-    } else {
-      return res.status(200).json({ exists: false });
-    }
+    const response = existingService ? { exists: true } : { exists: false };
+
+    // 3️⃣ Save in Redis (short expiry, 60 sec)
+    await client.setEx(cacheKey, 60, JSON.stringify(response));
+
+    return res.status(200).json(response);
   } catch (error) {
     console.error("Error checking service:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
 export const getMyServices = async (req, res) => {
   try {
-    const vendorId = req.vendor._id;
-    // console.log("vendor obj from beckend inside my services: ", req.vendor);
-    const services = await Service.find({ vendorId: vendorId }).sort({
-      createdAt: -1,
-    });
-    // console.log("services of current vendor fetched from database :", services);
-    res
+    const vendorId = req.vendor._id.toString();
+    const cacheKey = `vendor:${vendorId}:services`;
+
+    // 1️⃣ Check Redis cache
+    const cachedData = await client.get(cacheKey);
+    if (cachedData) {
+      console.log("⚡ Returning services from Redis cache");
+      return res
+        .status(200)
+        .json(
+          new ApiResponse(
+            200,
+            JSON.parse(cachedData),
+            "Services for the current vendor fetched successfully (from cache)"
+          )
+        );
+    }
+
+    // 2️⃣ If not cached → fetch from MongoDB
+    const services = await Service.find({ vendorId }).sort({ createdAt: -1 });
+
+    // 3️⃣ Save result in Redis (expire in 5 min for freshness)
+    await client.setEx(cacheKey, 300, JSON.stringify(services));
+
+    console.log("✅ Fetched services from DB and cached in Redis");
+    return res
       .status(200)
       .json(
         new ApiResponse(
@@ -208,30 +230,26 @@ export const updateService = async (req, res) => {
         .json(new ApiError(404, "Service not found or not authorized"));
     }
 
-    // Extract updated fields (default to existing values if not provided)
     const {
       serviceName = existingService.serviceName,
       serviceDes = existingService.serviceDes,
       serviceCategory = existingService.serviceCategory,
       minPrice = existingService.minPrice,
       maxPrice = existingService.maxPrice,
-      stateLocationOffered=existingService.stateLocationOffered,
+      stateLocationOffered = existingService.stateLocationOffered,
       locationOffered = existingService.locationOffered,
       duration = existingService.duration,
-      serviceImage = existingService.serviceImage, // ✅ Cloudinary URLs from frontend
+      serviceImage = existingService.serviceImage,
     } = req.body;
 
-      // ✅ Ensure locationOffered is always an array
     const stateLocationsArray = Array.isArray(stateLocationOffered)
       ? stateLocationOffered
       : [stateLocationOffered];
 
-    // ✅ Ensure locationOffered is always an array
     const locationsArray = Array.isArray(locationOffered)
       ? locationOffered
       : [locationOffered];
 
-    // ✅ Validate prices if updated
     if (minPrice && maxPrice) {
       if (parseInt(minPrice) <= 0 || parseInt(maxPrice) <= 0) {
         return res
@@ -245,7 +263,6 @@ export const updateService = async (req, res) => {
       }
     }
 
-    // ✅ Update service
     const updatedService = await Service.findByIdAndUpdate(
       serviceId,
       {
@@ -257,10 +274,18 @@ export const updateService = async (req, res) => {
         stateLocationOffered: stateLocationsArray,
         locationOffered: locationsArray,
         duration,
-        serviceImage, // ✅ Uses URLs from frontend
+        serviceImage,
       },
       { new: true }
     );
+
+    // ✅ Invalidate Redis cache
+    try {
+      await client.del(`vendor_services_${vendorId}`); // vendor services cache
+      await client.del("all_services"); // if you cache all services somewhere
+    } catch (cacheErr) {
+      console.error("Redis cache clear failed:", cacheErr);
+    }
 
     return res
       .status(200)
@@ -278,10 +303,7 @@ export const deleteService = async (req, res) => {
     const vendorId = req.vendor._id;
     const serviceId = req.params.id;
 
-    const existingService = await Service.findOne({
-      _id: serviceId,
-      vendorId,
-    });
+    const existingService = await Service.findOne({ _id: serviceId, vendorId });
 
     if (!existingService) {
       return res
@@ -289,11 +311,17 @@ export const deleteService = async (req, res) => {
         .json(new ApiError(404, "Service not found or not authorized"));
     }
 
-    // Delete all images from Cloudinary
-    const deletionResults = [];
-    for (const imageUrl of existingService.serviceImage) {
-      const result = await deleteFromCloudinary(imageUrl);
-      deletionResults.push(result);
+    // Delete all images from Cloudinary (if any)
+    let deletionResults = [];
+    if (
+      Array.isArray(existingService.serviceImage) &&
+      existingService.serviceImage.length > 0
+    ) {
+      deletionResults = await Promise.allSettled(
+        existingService.serviceImage.map((imageUrl) =>
+          deleteFromCloudinary(imageUrl)
+        )
+      );
     }
 
     // Delete service from DB
@@ -313,13 +341,13 @@ export const deleteService = async (req, res) => {
     console.error("❌ Error deleting service:", error);
     return res
       .status(500)
-      .json(new ApiError(500, "Internal server error", [], error.stack));
+      .json(new ApiError(500, "Internal server error", [], error.message));
   }
 };
 
 export const updateAvailability = async (req, res) => {
   try {
-    const vendorId = req.vendor._id; // assumes vendor is attached via auth middleware
+    const vendorId = req.vendor._id; // attached via auth middleware
     const serviceId = req.params.id;
     const { available } = req.body;
 
@@ -344,6 +372,10 @@ export const updateAvailability = async (req, res) => {
     service.available = available;
     await service.save();
 
+    // ✅ Invalidate cache after update
+    const cacheKey = `vendor:${vendorId}:services`;
+    await client.del(cacheKey);
+
     return res
       .status(200)
       .json(new ApiResponse(200, service, "Availability updated successfully"));
@@ -354,31 +386,45 @@ export const updateAvailability = async (req, res) => {
 };
 
 export const updateServiceImageFirst = async (req, res) => {
-  const imageUrls = [];
-  if (req.files && req.files.length > 0) {
-    console.log("Uploading images to Cloudinary...");
-    for (const file of req.files) {
-      console.log("Processing file:", file.originalname, "at path:", file.path);
-      const cloudRes = await uploadOnCloudinary(file.path);
-      console.log("Cloudinary response for", file.originalname, ":", cloudRes);
-      if (cloudRes?.secure_url) {
-        console.log("✅ Image uploaded successfully:", cloudRes.secure_url);
-        imageUrls.push(cloudRes.secure_url);
-      } else {
-        console.error("❌ Failed to upload image:", file.originalname);
-      }
-    }
-    console.log("Final image URLs:", imageUrls);
+  try {
+    const vendorId = req.vendor._id;
+    const serviceId = req.params.id;
 
-    return res
-      .status(200)
-      .json(
-        new ApiResponse(200, imageUrls, "Images are upload to cloudinary only ")
-      );
-  } else {
-    console.error("❌ No images uploaded");
-    return res
-      .status(400)
-      .json({ message: "Please upload at least one image" });
+    const service = await Service.findOne({ _id: serviceId, vendorId });
+    if (!service) {
+      return res
+        .status(404)
+        .json({ message: "Service not found or not authorized" });
+    }
+
+    const imageUrls = [];
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        const cloudRes = await uploadOnCloudinary(file.path);
+        if (cloudRes?.secure_url) {
+          imageUrls.push(cloudRes.secure_url);
+        }
+      }
+
+      // Update DB
+      service.serviceImage = [...service.serviceImage, ...imageUrls];
+      await service.save();
+
+      // 🚀 Invalidate Redis cache for this service
+      await client.del(`service:${serviceId}`);
+
+      return res.status(200).json({
+        success: true,
+        data: service,
+        message: "Images uploaded & service updated successfully",
+      });
+    } else {
+      return res
+        .status(400)
+        .json({ message: "Please upload at least one image" });
+    }
+  } catch (error) {
+    console.error("❌ Error updating service images:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };

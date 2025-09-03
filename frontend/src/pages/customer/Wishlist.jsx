@@ -10,9 +10,13 @@ const Wishlist = () => {
   useEffect(() => {
     const fetchWishlist = async () => {
       try {
+        const start = performance.now();
         const res = await axios.get(`${BACKEND_URL}/wishlist/getwishlist`, {
           withCredentials: true,
         });
+
+        const end = performance.now();
+        console.log(`wishlistFetch took ${end - start} ms`);
         setWishlist(res.data);
         console.log("Wishlist fetched successfully:", res.data);
       } catch (error) {

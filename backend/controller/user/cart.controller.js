@@ -1,11 +1,12 @@
 import { Cart } from "../../model/user/cart.model.js";
 import { Service } from "../../model/vendor/service.model.js";
 import { ApiError } from "../../utilities/ApiError.js";
-import { getIO } from "../../socket/index.js"; 
+import { getIO } from "../../socket/index.js";
 import { Negotiation } from "../../model/common/Negotiation.model.js";
 import { UserDetails } from "../../model/user/userDetails.model.js";
 import { ApiResponse } from "../../utilities/ApiResponse.js";
 import mongoose from "mongoose";
+import client from "../../utilities/redisClient.js";
 
 // ➕ Add to Cart
 export const addToCart = async (req, res) => {
@@ -27,10 +28,15 @@ export const addToCart = async (req, res) => {
 
     const service = await Service.findById(serviceId);
     if (!service || !service.available) {
-      return res.status(404).json(new ApiError(404, "Service not available or doesn't exist."));
+      return res
+        .status(404)
+        .json(new ApiError(404, "Service not available or doesn't exist."));
     }
 
     await Cart.create({ userId, serviceId });
+
+    // Invalidate Redis cache for this user's cart
+    await client.del(`cart:${userId}`);
 
     const io = getIO();
     io.to(userId.toString()).emit("cart-updated", {
@@ -42,9 +48,10 @@ export const addToCart = async (req, res) => {
       message: "Service added to cart.",
     });
   } catch (error) {
-      console.error("Add to cart error:", error);
-      // Use the ApiError utility for consistent error responses
-      return res.status(500).json(new ApiError(500, "Internal Server Error in case of add to cart"));
+    console.error("Add to cart error:", error);
+    return res
+      .status(500)
+      .json(new ApiError(500, "Internal Server Error in add to cart"));
   }
 };
 
@@ -53,21 +60,38 @@ export const getCart = async (req, res) => {
   try {
     const userId = req.user._id;
 
+    // 1️⃣ Try Redis cache first
+    const cacheKey = `cart:${userId}`;
+    const cachedData = await client.get(cacheKey);
+
+    if (cachedData) {
+      console.log("⚡ Returning cart from Redis cache");
+      return res.status(200).json(JSON.parse(cachedData));
+    }
+
+    // 2️⃣ If not in cache → Fetch from DB
     const items = await Cart.find({ userId })
       .populate({
-          path: "serviceId",
-          model: "Service" // Explicitly specify the model name
+        path: "serviceId",
+        model: "Service",
       })
       .sort({ createdAt: -1 });
 
-    return res.status(200).json({
+    const response = {
       success: true,
       count: items.length,
       data: items,
-    });
+    };
+
+    // 3️⃣ Store in Redis for 1 hour
+    await client.set(cacheKey, JSON.stringify(response), "EX", 3600);
+
+    console.log("✅ Fetched cart from DB and cached in Redis");
+
+    return res.status(200).json(response);
   } catch (error) {
-      console.error("Get cart error:", error);
-      return res.status(500).json(new ApiError(500, "Internal Server Error"));
+    console.error("Get cart error:", error);
+    return res.status(500).json(new ApiError(500, "Internal Server Error"));
   }
 };
 
@@ -86,6 +110,9 @@ export const removeFromCart = async (req, res) => {
       });
     }
 
+    // Invalidate Redis cache for this user's cart
+    await client.del(`cart:${userId}`);
+
     const io = getIO();
     io.to(userId.toString()).emit("cart-updated", {
       count: await Cart.countDocuments({ userId }),
@@ -96,11 +123,10 @@ export const removeFromCart = async (req, res) => {
       message: "Service removed from cart.",
     });
   } catch (error) {
-      console.error("Remove from cart error:", error);
-      return res.status(500).json(new ApiError(500, "Internal Server Error"));
+    console.error("Remove from cart error:", error);
+    return res.status(500).json(new ApiError(500, "Internal Server Error"));
   }
 };
-
 
 export const getSingleCart = async (req, res) => {
   try {
@@ -144,7 +170,11 @@ export const getSingleCart = async (req, res) => {
     // Use this above console log to understand the structure of the item
 
     if (!item) {
-      return res.status(404).json(new ApiError(404, "Negotiation not found for given user details."));
+      return res
+        .status(404)
+        .json(
+          new ApiError(404, "Negotiation not found for given user details.")
+        );
     }
 
     return res
