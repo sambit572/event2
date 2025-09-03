@@ -76,6 +76,14 @@ const bookingSchema = new mongoose.Schema(
       default: "PENDING",
     },
 
+    // Tracking milestones
+    milestones: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Milestone",
+      },
+    ],
+
     // Flags and Metadata
     isReviewed: {
       type: Boolean,
