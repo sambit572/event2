@@ -182,7 +182,7 @@ export default function VendorLegalConsent() {
       <StepProgress currentStep={currentStepIndex} />
       {isLoading && <Spinner />}
 
-      <div className="bg-[#e5e5de] rounded-[10px] max-w-[600px] h-[600px] my-[90px] mx-auto p-[30px] shadow-sm flex flex-col max-lg:max-w-[95%] max-lg:h-auto max-lg:p-[25px] max-lg:my-[70px] max-md:max-w-[95%] max-md:p-5 max-md:my-[60px] max-[480px]:max-w-[94%] max-[480px]:p-4 max-[480px]:h-auto max-[480px]:my-10 max-[480px]:overflow-x-hidden">
+      <div className="bg-[#e5e5de] rounded-[10px] max-w-[600px] h-[600px] my-[10px] mx-auto p-[30px] shadow-sm flex flex-col max-lg:max-w-[95%] max-lg:h-auto max-lg:p-[25px] max-md:max-w-[95%] max-md:p-5  max-[480px]:max-w-[94%] max-[480px]:p-4 max-[480px]:h-auto  max-[480px]:overflow-x-hidden">
         <p className="text-base mb-5 leading-[1.8] text-black max-md:text-[15px] max-[480px]:text-sm max-[480px]:leading-[1.6]">
           Before submitting your registration, please review and agree to the
           following terms and authorizations.
