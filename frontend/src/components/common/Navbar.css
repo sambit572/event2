@@ -96,7 +96,7 @@
   display: flex;
   /* background-color: red; */
   align-items: center;
-  gap: 30px;
+  gap: 20px;
   height: 36px;
 }
 
@@ -225,7 +225,7 @@
 
 @media (max-width: 1024px) {
   .search-bar {
-    width: 200px;
+    width: 230px;
     transition: width 0.4s ease;
     margin-left: 0px;
     margin-right: 20px;
@@ -237,7 +237,7 @@
     height: 36px;
   }
   .search-bar.active {
-    width: 220px;
+    width: 300px;
     margin-left: 0px;
     margin-right: 25px;
   }
@@ -250,7 +250,7 @@
     width: 200px;
     transition: width 0.4s ease;
     margin-left: 0px;
-    height: 36px;
+    height: 37px;
   }
   .search-bar input {
     width: 100px;
@@ -281,7 +281,18 @@
     margin-right: 20px;
   }
   .nav-icons {
-    gap: 17px;
+    gap: 3px;
+  }
+  .dropdown-menu {
+    right: 10px;
+  }
+  .suggestions-dropdown {
+    width: 32%;
+    left: 50%;
+    margin: 0 auto;
+    top: 110%; /* Slightly below the search bar */
+    z-index: 9999;
+    margin-left: 299px;
   }
 }
 @media (max-width: 780px) {
@@ -413,9 +424,14 @@
 @media (max-width: 430px) {
   .nav-icons {
     margin-left: 0px;
+    gap: 0;
+  }
+  .searchbarIcon {
+    margin-right: -9px;
   }
   .search-bar.active .searchbarIcon {
-    margin-left: -10px;
+    margin-left: -24px;
+    width: 69px;
   }
 }
 @media (max-width: 410px) {
@@ -425,8 +441,8 @@
 }
 @media (max-width: 391px) {
   .nav-icons {
-    width: 130px;
-    gap: 10px;
+    width: 138px;
+    gap: 0;
     margin-left: 0px;
   }
 }
@@ -434,6 +450,7 @@
 @media (max-width: 376px) {
   .navbar {
     padding: 0px 10px;
+    height: 50px;
   }
   .logo {
     font-size: 17px;
@@ -443,13 +460,76 @@
     margin-left: 6px;
   }
   .search-bar.active .searchbarIcon {
-    margin-left: -0px;
+    margin-left: -13px;
   }
+  .mobile-search-bar-container {
+    top: 39px;
+  }
+}
+/* 🔍 Suggestion Dropdown Styling */
+.suggestions-dropdown {
+  position: absolute;
+  top: 85%; /* just below search bar */
+  left: 0;
+  width: 29%;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  z-index: 3000;
+  overflow: hidden;
+  margin-left: 400px;
+}
+@media (max-width: 768px) {
+  .suggestions-dropdown {
+    width: 32%;
+    left: 35%;
+    margin: 0 auto;
+    top: 110%; /* Slightly below the search bar */
+    z-index: 9999;
+  }
+  .nav-icons{
+    gap: 5px;
+  }
+}
+
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  color: #001f3f;
+  transition: background 0.2s ease;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* faded separator */
+}
+
+.suggestion-item:hover {
+  background-color: #f1f1f1;
+}
+
+/* Optional: Add icon */
+.suggestion-item::before {
+  margin-right: 10px;
+  font-size: 16px;
+}
+.suggestion-item.no-results {
+  color: #999;
+  padding: 10px;
+  font-style: sans-serif;
+  text-align: center;
 }
 
 @media (max-width: 360px) {
   .nav-icons {
     margin-right: 0px;
+  }
+  .search-and-nav-icons-container {
+    margin-left: -9px;
+  }
+  .search-bar.active .searchbarIcon {
+    margin-left: -22px;
   }
 }
 @media (max-width: 348px) {
