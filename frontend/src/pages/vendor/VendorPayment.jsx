@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./VendorPayment.css";
 import StepProgress from "./StepProgress";
-import "./StepProgress.css";
+// import "./StepProgress.css";
 import Button from "./../../components/vendor/register/VendorButton";
 import Spinner from "./../../components/common/Spinner";
 
