@@ -205,7 +205,7 @@ const VendorLogin = ({ onClose, onSwitchToLogin }) => {
             </span>
           </div>
 
-          <div className="Login-forget-password-link text-blue-500 mb-5">
+          <div className="text-black mb-5">
             <span onClick={() => setShowForgotModal(true)}>Forgot your password?</span>
           </div>
 

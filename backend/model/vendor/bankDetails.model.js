@@ -34,7 +34,6 @@ const bankDetailsSchema = new Schema(
 
     panNumber: {
       type: String,
-      required: true,
       match: [/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN card format"],
     },
   },

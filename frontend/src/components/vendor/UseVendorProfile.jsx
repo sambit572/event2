@@ -82,11 +82,12 @@ export function UseVendorProfile() {
   };
 
   const updateBank = async () => {
+    console.log("before updating bank:", form);
     const res = await axios.put(
       `${import.meta.env.VITE_BACKEND_URL}/vendors/bank-details/${vendor._id}`,
       {
         upiId: form.upiId,
-        tempAccountNumber: form.tempAccountNumber,
+        accountNumber: form.tempAccountNumber,
         ifscCode: form.tempIfscCode,
       },
       { withCredentials: true }

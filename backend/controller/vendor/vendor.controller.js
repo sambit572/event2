@@ -9,7 +9,6 @@ import { sendEmail } from "../../utilities/sendEmail.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
-import nodemailer from "nodemailer";
 import { User } from "../../model/user/user.model.js";
 import { Service } from "../../model/vendor/service.model.js";
 
@@ -144,6 +143,8 @@ const updateVendor = async (req, res) => {
     // Never allow password updates through this route
     delete updateData.password;
     delete updateData.confirmPassword;
+
+    console.log("Update data received:", updateData);
 
     const vendor = await Vendor.findById(id);
     if (!vendor) {
@@ -308,17 +309,20 @@ const sendVendorResetLink = async (req, res) => {
   await vendor.save();
 
   const resetUrl = `${process.env.FRONTEND_URL}/vendor/reset-password/${resetToken}`;
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
-  });
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
+
+  // use your central mailer
+  const result = await sendEmail({
     to: vendor.email,
     subject: "Vendor Password Reset",
     html: `<p>Click <a href="${resetUrl}">here</a> to reset your password.</p>`,
-  };
-  await transporter.sendMail(mailOptions);
+  });
+
+  if (!result.success) {
+    return res
+      .status(500)
+      .json(new ApiError(500, "Failed to send reset email", result.error));
+  }
+
   return res
     .status(200)
     .json(new ApiResponse(200, null, "Reset link sent to vendor email"));

@@ -184,11 +184,11 @@ const Service = ({ onSwitchToLogin }) => {
                 </div>
               ))}
             </div>
-            <div className="big-image relative">
+            <div className="big-image relative ">
               <img
                 src={selectMedia?.src}
                 alt="Selected media"
-                className={`transition-all duration-300 ${
+                className={`transition-all duration-300  ${
                   !isVendorAvailable ? "grayscale brightness-50" : ""
                 }`}
               />
