@@ -24,6 +24,7 @@ const VendorLogin = ({ onClose, onSwitchToLogin }) => {
   const [showSuccessIcon, setShowSuccessIcon] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
+  const [showForgotModal, setShowForgotModal] = useState(false);
   const [formData, setFormData] = useState({
     phoneNo: "",
     email: "",
@@ -205,7 +206,7 @@ const VendorLogin = ({ onClose, onSwitchToLogin }) => {
           </div>
 
           <div className="Login-forget-password-link text-blue-500 mb-5">
-            <a href="/vendor/forgot-password">Forgot your password?</a>
+            <span onClick={() => setShowForgotModal(true)}>Forgot your password?</span>
           </div>
 
           {errorMsg && <p className="error">{errorMsg}</p>}
@@ -241,6 +242,11 @@ const VendorLogin = ({ onClose, onSwitchToLogin }) => {
         <h2 className="login-title">Vendor Login</h2>
         {renderStep()}
       </div>
+      {showForgotModal && (
+        <div onClick={(e) => e.stopPropagation()}>
+          <VendorForgotPass onClose={() => setShowForgotModal(false)} />
+        </div>
+      )}
     </div>
   );
 
