@@ -42,7 +42,7 @@
 /* Thumbnail column on left, vertically stacked */
 .thumbnail-column-dashboard {
   display: flex;
-  margin-left: -105px;
+  margin-left: -100px;
   flex-direction: column;
   gap: 10px;
   align-items: center;
@@ -51,7 +51,6 @@
 
 /* Main image and btn to the right of thumbnails */
 .main-image-and-buttons {
-  margin-left: 8px;
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -136,7 +135,7 @@
   border: 2px solid #00897b;
   color: #00897b;
   font-weight: 600;
-  padding: 4px 8px;
+  padding: 6px 6px;
 }
 
 .vendor-edit-btn:hover {
@@ -149,7 +148,7 @@
   border: 2px solid #b71c1c;
   color: #b71c1c;
   font-weight: 600;
-  padding: 4px 8px;
+  padding: 6px 6px;
   border-radius: 10px;
 }
 
@@ -263,7 +262,7 @@
     width: 900px;
     max-width: 640px;
     height: 415px;
-    margin-left: -30px;
+    /* margin-left: -30px; */
     background: white;
     border-radius: 10px;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
@@ -676,7 +675,7 @@
     width: 750px;
     height: 410px;
     margin: 20px;
-    margin-left: -25px;
+    /* margin-left: -25px; */
     padding: 12px;
     overflow: hidden;
     transition: height 0.3s ease;
@@ -989,7 +988,7 @@
   }
 
   .details {
-    max-width: 280px;
+    max-width: 250px;
     font-size: 12.5px;
   }
 

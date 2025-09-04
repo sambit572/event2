@@ -9,6 +9,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import PasswordInput from "./../../utils/PasswordInput";
+import { BACKEND_URL } from "../../utils/constant.js";
 function DashBoardMain() {
   const navigate = useNavigate();
 
@@ -29,17 +30,13 @@ function DashBoardMain() {
   const [password, setPassword] = useState("");
 
   const [showSuccessPopup, setShowSuccessPopup] = useState(false); // ✅ Success popup state
-
-  const handleOpenAddService = () => {
-    navigate("/vendor/services/addServices");
-  };
-
+  
   const handleConfirmPassword = async () => {
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/vendors/verify-password`,
         {
-          assword,
+          password,
         },
         { withCredentials: true }
       );
@@ -157,7 +154,7 @@ function DashBoardMain() {
             animation: "popIn 0.3s ease-out forwards",
           }}
         >
-          You password updated successfully!
+          Your password updated successfully!
         </div>
       )}
 
@@ -179,20 +176,7 @@ function DashBoardMain() {
       <div className="main-contain">
         <ToggleTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
-        <div className="relative w-full">
-          <button
-            className="absolute top-[-40px] right-4 md:top-[-70px] md:right-[10px] 
-  flex items-center justify-center gap-2 
-  rounded-[10px] bg-[#2251c9] font-semibold text-[#fff] px-4 py-2
-  mb-4 sm:mb-0"
-            onClick={handleOpenAddService}
-          >
-            <span className="text-xl font-bold">+</span>
-            <span className="text-base tracking-wide">Services</span>
-          </button>
-        </div>
-
-        <div className="relative max-h-[70vh] overflow-y-auto">
+        <div className="relative h-screen ">
           {activeTab === "services" ? (
             <DashboardServices />
           ) : (

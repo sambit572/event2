@@ -134,7 +134,7 @@ const ReviewSlider = () => {
           >
             {duplicatedReviews.map((review, index) => (
               <div
-                key={`${review.userName}-${review.reviewMessage.slice(
+                key={`${review.userName}-${review.reviewMessage?.slice(
                   0,
                   10
                 )}-${index}`}

@@ -62,7 +62,7 @@ const Wishlist = () => {
               >
                 {/* Entire left section is clickable */}
                 <Link
-                  to={`/service/${service._id}`}
+                  to={`/service/${service.serviceCategory}/${service._id}`}
                   className="flex flex-col md:flex-row gap-6 w-full hover:opacity-80"
                 >
                   {/* Image */}
@@ -101,7 +101,6 @@ const Wishlist = () => {
                           : "text-red-600"
                       }`}
                     >
-                     
                       {item.service.available ? null : "Out Of Service"}
                     </p>
                     <p className="text-gray-600 text-sm">

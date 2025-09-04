@@ -173,10 +173,12 @@ const Register = ({ onClose, onSwitchToLogin }) => {
           <button type="submit" className="otp-button" disabled={loading}>
             {loading ? "Registering..." : "Register"}
           </button>
-
           <p className="signup-text">
             Already have an account?{" "}
-            <span className="login-link" onClick={onSwitchToLogin}>
+            <span
+              className="login-link text-blue-600 cursor-pointer hover:underline underline-offset-2"
+              onClick={onSwitchToLogin}
+            >
               Log In
             </span>
           </p>
