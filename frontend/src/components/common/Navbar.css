@@ -388,12 +388,24 @@
 
     margin-left: 13px;
   }
+  .searchbarIcon {
+    margin-right: -30px;
+  }
 }
 @media (max-width: 580px) {
   .logo {
     font-size: 25px;
   }
-
+  /* .searchbarIcon {
+    margin-right: 10px;
+  } */
+  .searchbarIcon {
+    margin-right: 0px;
+  }
+  .search-bar.active .searchbarIcon {
+    margin-left: -39px;
+    width: 69px;
+  }
   .nav-icons {
     gap: 17px;
     width: 130px;
@@ -427,10 +439,10 @@
     gap: 0;
   }
   .searchbarIcon {
-    margin-right: -9px;
+    margin-right: 10px;
   }
   .search-bar.active .searchbarIcon {
-    margin-left: -24px;
+    margin-left: -39px;
     width: 69px;
   }
 }
@@ -438,12 +450,29 @@
   .logo {
     font-size: 18px;
   }
+  .searchbarIcon {
+    margin-right: 5px;
+  }
+  .search-bar.active .searchbarIcon {
+    margin-left: -39px;
+    width: 69px;
+  }
 }
 @media (max-width: 391px) {
   .nav-icons {
     width: 138px;
-    gap: 0;
+    gap: 0px !important;
     margin-left: 0px;
+  }
+  .searchbarIcon {
+    margin-right: -10px;
+  }
+  .search-bar.active .searchbarIcon {
+    margin-left: -17px;
+    width: 69px;
+  }
+  .search-and-nav-icons-container {
+    margin-left: -10px;
   }
 }
 
@@ -460,7 +489,7 @@
     margin-left: 6px;
   }
   .search-bar.active .searchbarIcon {
-    margin-left: -13px;
+    margin-left: -19px;
   }
   .mobile-search-bar-container {
     top: 39px;
@@ -488,7 +517,7 @@
     top: 110%; /* Slightly below the search bar */
     z-index: 9999;
   }
-  .nav-icons{
+  .nav-icons {
     gap: 5px;
   }
 }
@@ -524,20 +553,35 @@
 @media (max-width: 360px) {
   .nav-icons {
     margin-right: 0px;
+    gap: 0;
   }
   .search-and-nav-icons-container {
-    margin-left: -9px;
+    margin-left: -20px;
+  }
+  .searchbarIcon {
+    margin-right: -14px;
   }
   .search-bar.active .searchbarIcon {
-    margin-left: -22px;
+    margin-left: -16px;
+    width: 69px;
   }
 }
 @media (max-width: 348px) {
+  .logo {
+    font-size: 15px;
+  }
   .searchbarIcon {
     width: 30px;
     height: 30px;
   }
   .nav-icons {
     width: 120px;
+  }
+  .searchbarIcon {
+    margin-right: -1px;
+  }
+  .search-bar.active .searchbarIcon {
+    margin-left: -35px;
+    width: 69px;
   }
 }
