@@ -6,12 +6,6 @@ import {
   FaRegCalendarCheck,
   FaBell,
 } from "react-icons/fa6";
-import {
-  FaRegHeart,
-  FaHeart,
-  FaRegCalendarCheck,
-  FaBell,
-} from "react-icons/fa6";
 import { BACKEND_URL } from "../../../utils/constant";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -37,10 +31,8 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
   const description = service.serviceDes || service.description || "";
   const rawDuration = service.duration || 0;
 
-
   // Check if vendor is available - based on your dashboard structure
   const isVendorAvailable = service.available !== false;
-
 
   const formatDuration = (durationInMinutes) => {
     const totalMinutes = parseInt(durationInMinutes, 10) || 0;
@@ -67,7 +59,6 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
       (service.address
         ? `${service.address.area}, ${service.address.city}, ${service.address.state} - ${service.address.pincode}`
         : "Location not provided");
-
 
   const rating = service.rating || "★";
   const reviews = service.reviews || 0;
@@ -176,12 +167,10 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
     }
   };
 
-
   const handleShare = (e) => {
     e.stopPropagation();
     setShowShareMenu(!showShareMenu);
   };
-
 
   const shareService = (platform) => {
     const serviceUrl = `${window.location.origin}/service/${serviceId}`;
@@ -240,7 +229,6 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
     }
   };
 
-
   const handleAddToCart = async (e) => {
     e.stopPropagation();
     const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
@@ -266,7 +254,6 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
       console.error("Add to cart error:", err);
     }
   };
-
 
   const handleBookNow = (e) => {
     e.stopPropagation();
@@ -302,6 +289,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
 
   return (
     <section className="relative flex h-full flex-col bg-[#e5e5de] p-4 text-gray-800 md:py-0 px-5">
+      {/* ABSOLUTE ACTION STACK (wishlist + share) */}
       <div className="absolute top-[0.5rem] right-4 z-20 flex flex-col items-end gap-3 md:right-5">
         <div
           className={`h-10 w-10 flex items-center justify-center rounded-full bg-white shadow-md cursor-pointer transition-all duration-300 ${
@@ -325,23 +313,12 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
               className="h-full w-full rounded-full object-cover"
             />
           </div>
-        <div className="relative" ref={shareContainerRef}>
-          <div
-            className="h-10 w-10 cursor-pointer overflow-hidden rounded-full shadow-md transition-all duration-300 ease-in-out hover:scale-110 hover:shadow-lg"
-            onClick={handleShare}
-          >
-            <img
-              src="/send.png"
-              alt="Share"
-              className="h-full w-full rounded-full object-cover"
-            />
-          </div>
 
           <div
             className={`absolute top-full right-0 min-w-[160px] origin-top-right rounded-xl border border-gray-200 bg-white shadow-2xl transition-all duration-200 ease-out ${
               showShareMenu
-                ? "opacity-100 scale-100 z-[9999]"
-                : "opacity-0 scale-95 pointer-events-none z-[-1]"
+                ? "opacity-100 scale-100 z[9999]"
+                : "opacity-0 scale-95 pointer-events-none z[-1]"
             }`}
           >
             <div>
@@ -356,6 +333,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
                 />{" "}
                 Facebook
               </div>
+
               <div
                 className="flex cursor-pointer items-center gap-3 px-4 pt-2 pb-[0.2rem] text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
                 onClick={() => shareService("twitter")}
@@ -367,6 +345,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
                 />{" "}
                 X
               </div>
+
               <div
                 className="flex cursor-pointer items-center gap-3 px-4 pt-2 pb-[0.2rem] text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
                 onClick={() => shareService("whatsapp")}
@@ -378,7 +357,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
                 />{" "}
                 WhatsApp
               </div>
-              {/* ADDED INSTAGRAM BUTTON */}
+
               <div
                 className="flex cursor-pointer items-center gap-3 px-4 pt-2 pb-[0.2rem] text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
                 onClick={() => shareService("instagram")}
@@ -390,6 +369,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
                 />{" "}
                 Instagram
               </div>
+
               <div
                 className="flex cursor-pointer items-center gap-3 px-4 pt-2 pb-[0.2rem] text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
                 onClick={() => shareService("telegram")}
@@ -401,6 +381,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
                 />{" "}
                 Telegram
               </div>
+
               <div
                 className="flex cursor-pointer items-center gap-3 px-4 pt-2 pb-[0.2rem] text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
                 onClick={() => shareService("copy")}
@@ -415,7 +396,9 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
             </div>
           </div>
         </div>
-      </div>
+      </div>{" "}
+      {/* <-- IMPORTANT: close the absolute container with </div>, NOT </section> */}
+      {/* MAIN CONTENT COLUMN */}
       <div className="flex flex-grow flex-col">
         <div>
           <Link
@@ -426,6 +409,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
               {title.toUpperCase()}
             </h3>
           </Link>
+
           <div className="mb-[0.2rem] flex flex-wrap items-center gap-2 md:flex-row md:gap-2">
             <span className="text-sm font-semibold text-[#3498db] sm:text-base">
               {vendorName}
@@ -441,14 +425,21 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
               </span>
             )}
           </div>
-          <p className="mb-[0.2rem] text-sm leading-snug text-gray-500">{location}</p>
-          <p className="mb-[0.2rem] text-sm leading-snug text-gray-500">{stateLocation.toUpperCase()}</p>
+
+          <p className="mb-[0.2rem] text-sm leading-snug text-gray-500">
+            {location}
+          </p>
+          <p className="mb-[0.2rem] text-sm leading-snug text-gray-500">
+            {stateLocation.toUpperCase()}
+          </p>
+
           <div className="mb-[0.2rem] flex flex-wrap items-center gap-3">
             <span className="rounded-full bg-[#27ae60] px-3 py-1.5 text-sm font-semibold text-white">
               {rating}
             </span>
             <span className="text-sm text-gray-500">{reviews} reviews</span>
           </div>
+
           <div className="mb-[0.2rem] flex flex-wrap items-center gap-1.5 md:flex-row md:gap-3">
             <span className="text-xl font-bold text-[#2c3e50] sm:text-[22px]">
               {price}
@@ -464,11 +455,13 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
               </>
             )}
           </div>
+
           <p className="mb-[0.2rem] text-sm text-gray-500">
             <span className="font-semibold text-[#34495e]">Prep Time: </span>
             {duration}
           </p>
         </div>
+
         <div className="mb-[0.5rem] flex-grow">
           <p className="inline text-sm leading-relaxed text-[#34495e]">
             {displayDescription}
@@ -485,6 +478,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
             )}
           </p>
         </div>
+
         <div className="flex flex-col gap-2.5 lg:flex-row lg:justify-center lg:gap-3">
           {isVendorAvailable ? (
             <>
@@ -512,9 +506,9 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
           )}
         </div>
       </div>
+      {/* OUTER SECTION CLOSES HERE */}
     </section>
   );
 };
 
 export default ServiceDescription;
-

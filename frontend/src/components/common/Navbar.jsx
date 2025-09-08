@@ -64,7 +64,8 @@ const Navbar = ({
   const navigate = useNavigate();
   const location = useLocation();
 
-  const user = useSelector((state) => state.user.user);
+  const user = useSelector((state) => state.user);
+  // console.log("Cart count from Redux:", user.cartCount);
 
   const [currentUser, setCurrentUser] = useState(null);
   const [userFirstName, setUserFirstName] = useState(null);
@@ -188,6 +189,24 @@ const Navbar = ({
     if (!text.trim()) return;
     const searchText = text.toLowerCase().trim();
     navigate(`/search?query=${encodeURIComponent(text.trim())}`);
+    // Check for direct alias mapping
+    // const matchedCategory = RELATED_TERMS[searchText];
+
+    // if (matchedCategory) {
+    //   navigate(`/category/${matchedCategory}`);
+    // } else {
+    //   // Try partial match within the search text
+    //   const foundCategory = Object.keys(RELATED_TERMS).find((key) =>
+    //     searchText.includes(key)
+    //   );
+
+    //   if (foundCategory) {
+    //     navigate(`/category/${RELATED_TERMS[foundCategory]}`);
+    //   } else {
+    //     // Fallback: full search results
+    //     navigate(`/search-results?q=${encodeURIComponent(searchText)}`);
+    //   }
+    // }
   };
 
   const fetchUserProfile = async () => {

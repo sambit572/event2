@@ -2,13 +2,10 @@ import jwt from "jsonwebtoken";
 import Vendor from "../model/vendor/vendor.model.js";
 import { ApiError } from "../utilities/ApiError.js";
 
-// ✅ Middleware to verify vendor JWT token
+// ✅ Middleware to verify vendor JWT token and refresh if expired
 export const verifyVendorJwt = async (req, res, next) => {
   try {
     let token = req.cookies?.vendorAccessToken;
-
-    console.log("Verifying vendor JWT token...");
-    console.log("token from vendor:", token);
 
     if (!token) {
       const authHeader = req.header("Authorization");
@@ -17,30 +14,60 @@ export const verifyVendorJwt = async (req, res, next) => {
         : undefined;
     }
 
+    // If no access token, try refresh
     if (!token) {
-      throw new ApiError(401, "Unauthorized: Vendor token not found");
+      return await handleRefreshFlow(req, res, next);
     }
 
-    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    const vendor = await Vendor.findById(decoded._id);
+    try {
+      // ✅ Verify access token
+      const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+      const vendor = await Vendor.findById(decoded._id);
 
-    if (!vendor) {
-      throw new ApiError(401, "Vendor not found");
+      if (!vendor) throw new ApiError(401, "Vendor not found");
+
+      req.vendor = vendor;
+      return next();
+    } catch (err) {
+      // If token expired, check refresh
+      if (err.name === "TokenExpiredError") {
+        return await handleRefreshFlow(req, res, next);
+      }
+      throw new ApiError(401, "Invalid vendor access token");
     }
-
-    req.vendor = vendor; // ✅ Attach vendor to request
-    next();
   } catch (err) {
     return res
       .status(401)
-      .json({ message: err.message || "Invalid vendor token" });
+      .json({ message: err.message || "Unauthorized: Vendor token invalid" });
   }
 };
 
-// ✅ Middleware to ensure that the logged-in user is a vendor
-export const authenticateVendor = (req, res, next) => {
-  if (!req.vendor || req.vendor.role !== "vendor") {
-    return res.status(403).json({ message: "Forbidden: Not a vendor" });
+// ✅ Helper: refresh flow
+const handleRefreshFlow = async (req, res, next) => {
+  try {
+    const refreshToken = req.cookies?.vendorRefreshToken;
+    if (!refreshToken) throw new ApiError(401, "Refresh token missing");
+
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const vendor = await Vendor.findById(decoded._id);
+    if (!vendor) throw new ApiError(401, "Vendor not found");
+
+    // ✅ Generate new access token
+    const newAccessToken = vendor.generateAccessToken();
+    vendor.accessToken = newAccessToken;
+    await vendor.save();
+
+    // ✅ Send back in cookie
+    res.cookie("vendorAccessToken", newAccessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    });
+
+    req.vendor = vendor;
+    return next();
+  } catch (err) {
+    return res.status(401).json({
+      message: err.message || "Refresh token invalid or expired",
+    });
   }
-  next();
 };
