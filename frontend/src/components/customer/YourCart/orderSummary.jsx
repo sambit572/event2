@@ -9,22 +9,27 @@ const OrderSummary = () => {
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [orderType, setOrderType] = useState("single"); // 'single' or 'multiple'
 
   const fetchCartItems = useCallback(async () => {
+    // Return early if there's no user ID
+    if (!userDetailsId) return;
+
+    setLoading(true);
     try {
-      setLoading(true);
       const response = await axios.get(
-        `${BACKEND_URL}/cart/single/${userDetailsId}`,
+        `${BACKEND_URL}/cart/${userDetailsId}`, // The new consolidated endpoint
         { withCredentials: true }
       );
 
-      if (response.data.success && response.data.message) {
-        setItems(
-          Array.isArray(response.data.message)
-            ? response.data.message
-            : [response.data.message]
-        );
+      // Destructure the consistent response from the backend
+      const { orderType, items } = response.data.data;
+
+      if (items && items.length > 0) {
+        setItems(items);
+        setOrderType(orderType); // Set type directly from backend response
       } else {
+        // This handles the "empty" case gracefully
         setItems([]);
       }
     } catch (error) {
@@ -52,17 +57,17 @@ const OrderSummary = () => {
       };
     }
 
+    // --- SIMPLIFIED LOGIC ---
+    // The structure of 'item' is now consistent for both single and multiple order types.
+    // We can directly reduce the array without the unnecessary if/else check.
     const finalTotal = items.reduce(
-      (acc, item) =>
-        acc + (item.proposedPrice || item.serviceId?.maxPrice * 0.65 || 0),
+      (acc, item) => acc + (item.proposedPrice || 0),
       0
     );
 
-    // Calculate 10% platform discount
-    const platformDiscountAmount = finalTotal * 0.1;
+    const platformDiscountAmount = Math.round(finalTotal * 0.1);
     const totalAfterDiscount = finalTotal - platformDiscountAmount;
 
-    // Calculate taxes on the price after discount
     const cgst = Math.round(totalAfterDiscount * 0.09);
     const sgst = Math.round(totalAfterDiscount * 0.09);
     const grandTotal = totalAfterDiscount + cgst + sgst;
@@ -79,6 +84,22 @@ const OrderSummary = () => {
 
   const handlePlaceOrder = () => navigate("/coming-soon"); // need to change
   const handleBackToCart = () => navigate("/cart");
+
+  // Helper function to get service details based on order type
+  const getServiceDetails = (item) => {
+    return {
+      serviceName: item.serviceId?.serviceName || "Unnamed Service",
+      serviceImage:
+        item.serviceId?.serviceImage?.[0] || "https://via.placeholder.com/150",
+      serviceDes: item.serviceId?.serviceDes || "No description available",
+      locationOffered:
+        item.serviceId?.locationOffered?.[0] || "Location not specified",
+      proposedPrice: item.proposedPrice || 0,
+      minPrice: item.serviceId?.minPrice,
+      maxPrice: item.serviceId?.maxPrice,
+      priceRange: item.serviceId?.priceRange,
+    };
+  };
 
   if (loading) {
     return (
@@ -129,7 +150,6 @@ const OrderSummary = () => {
     );
   }
 
-  // --- Main JSX (unchanged styles) ---
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 py-8 px-4 mt-16">
       {/* Header */}
@@ -141,7 +161,21 @@ const OrderSummary = () => {
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
             Review your selected services before proceeding to checkout
           </p>
-          <div className="w-24 h-1 bg-gray-400 mx-auto mt-4 rounded-full"></div>
+          <div className="flex items-center justify-center mt-4 gap-2">
+            <div className="w-24 h-1 bg-gray-400 rounded-full"></div>
+            <span
+              className={`px-3 py-1 rounded-full text-sm font-medium ${
+                orderType === "single"
+                  ? "bg-blue-100 text-blue-800"
+                  : "bg-green-100 text-green-800"
+              }`}
+            >
+              {orderType === "single"
+                ? "Single Service"
+                : `${items.length} Services`}
+            </span>
+            <div className="w-24 h-1 bg-gray-400 rounded-full"></div>
+          </div>
         </div>
       </div>
 
@@ -178,24 +212,14 @@ const OrderSummary = () => {
               <div className="p-6">
                 <div className="space-y-6">
                   {items.map((item, index) => {
-                    let displayPrice = "Price not available";
-                    let priceColor = "text-gray-500";
-
-                    if (item.serviceId?.minPrice && item.serviceId?.maxPrice) {
-                      if (item.serviceId.minPrice === item.serviceId.maxPrice) {
-                        displayPrice = `₹${item.serviceId.minPrice.toLocaleString()}`;
-                        priceColor = "text-green-600";
-                      } else {
-                        displayPrice = `₹${item.serviceId.minPrice.toLocaleString()} - ₹${item.serviceId.maxPrice.toLocaleString()}`;
-                        priceColor = "text-blue-600";
-                      }
-                    } else if (item.serviceId?.priceRange) {
-                      displayPrice = item.serviceId.priceRange;
-                      priceColor = "text-blue-600";
-                    }
+                    const serviceDetails = getServiceDetails(item);
+                    const proposedPrice = serviceDetails.proposedPrice;
 
                     return (
-                      <div key={item._id} className="group relative">
+                      <div
+                        key={item._id || `item-${index}`}
+                        className="group relative"
+                      >
                         <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
                         <div className="flex items-start gap-6 p-6 border border-gray-100 rounded-2xl bg-gradient-to-r from-gray-50 to-white hover:shadow-lg hover:border-blue-200 transition-all duration-300 ml-2">
                           <div className="relative">
@@ -205,7 +229,9 @@ const OrderSummary = () => {
                                   item.serviceId?.serviceImage?.[0] ||
                                   "https://via.placeholder.com/150"
                                 }
-                                alt={item.serviceId?.serviceName}
+                                alt={
+                                  item.serviceId?.serviceName || "Service Image"
+                                }
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                               />
                             </div>
@@ -215,9 +241,42 @@ const OrderSummary = () => {
                           </div>
 
                           <div className="flex-1 min-w-0">
-                            <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-700 transition-colors">
-                              {item.serviceId?.serviceName.toUpperCase() || "Unnamed Service"}
-                            </h3>
+                            {/* --- MODIFICATION START --- */}
+                            <div className="flex justify-between items-start mb-2">
+                              <h3 className="flex-1 text-xl font-bold text-gray-900 group-hover:text-blue-700 transition-colors">
+                                {(
+                                  item.serviceId?.serviceName ||
+                                  "Unnamed Service"
+                                ).toUpperCase()}
+                              </h3>
+
+                              <div className="relative group flex flex-col items-center ml-4">
+                                <a
+                                  href={`tel:"+911169320147`}
+                                  className="p-3 rounded-full bg-emerald-500 hover:bg-emerald-600 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
+                                  aria-label="Contact Vendor"
+                                >
+                                  <svg
+                                    className="w-6 h-6 text-white"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                                    />
+                                  </svg>
+                                </a>
+                                <div className="absolute bottom-full mb-2 w-max px-3 py-1.5 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                                  Contact Vendor
+                                  <div className="absolute left-1/2 transform -translate-x-1/2 top-full w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-gray-900"></div>
+                                </div>
+                              </div>
+                            </div>
+                            {/* --- MODIFICATION END --- */}
 
                             <div className="flex items-center gap-2 mb-3">
                               <svg
@@ -246,22 +305,56 @@ const OrderSummary = () => {
                             </div>
 
                             <p className="text-gray-600 text-sm leading-relaxed mb-4">
-                              {item.serviceId?.serviceDes?.substring(0, 120) ||
-                                "No description available"}
-                              {item.serviceId?.serviceDes?.length > 120 &&
-                                "..."}
+                              {(item.serviceId?.serviceDes || "").substring(
+                                0,
+                                120
+                              )}
+                              {(item.serviceId?.serviceDes?.length || 0) >
+                                120 && "..."}
                             </p>
 
                             <div className="flex items-center justify-between">
-                              <div
-                                className={`text-lg font-bold ${priceColor}`}
-                              >
-                                {displayPrice}
+                              <div className="flex flex-col gap-1">
+                                {item.proposedPrice > 0 ? (
+                                  <>
+                                    <div className="text-lg font-bold text-green-600">
+                                      Negotiated: ₹
+                                      {item.proposedPrice.toLocaleString()}
+                                    </div>
+                                    {item.serviceId?.minPrice &&
+                                      item.serviceId?.maxPrice && (
+                                        <div className="text-sm text-gray-500">
+                                          Original: ₹
+                                          {item.serviceId.minPrice.toLocaleString()}{" "}
+                                          - ₹
+                                          {item.serviceId.maxPrice.toLocaleString()}
+                                        </div>
+                                      )}
+                                  </>
+                                ) : (
+                                  <div className="text-lg font-bold text-red-500">
+                                    Price not negotiated
+                                  </div>
+                                )}
                               </div>
                               <div className="flex items-center gap-2">
-                                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                                <span className="text-sm text-green-600 font-medium">
-                                  Available
+                                <div
+                                  className={`w-2 h-2 rounded-full ${
+                                    item.proposedPrice > 0
+                                      ? "bg-green-500"
+                                      : "bg-yellow-500"
+                                  }`}
+                                ></div>
+                                <span
+                                  className={`text-sm font-medium ${
+                                    item.proposedPrice > 0
+                                      ? "text-green-600"
+                                      : "text-yellow-600"
+                                  }`}
+                                >
+                                  {item.proposedPrice > 0
+                                    ? "Ready to Order"
+                                    : "Pending Negotiation"}
                                 </span>
                               </div>
                             </div>
@@ -303,7 +396,7 @@ const OrderSummary = () => {
                 <div className="p-6">
                   <div className="space-y-4 mb-6">
                     <div className="flex justify-between items-center py-2">
-                      <span className="text-gray-600">Service Price</span>
+                      <span className="text-gray-600">Negotiated Price</span>
                       <span className="font-semibold text-gray-800">
                         ₹{orderSummary.finalTotal.toLocaleString()}
                       </span>
@@ -383,7 +476,12 @@ const OrderSummary = () => {
                   <div className="space-y-3">
                     <button
                       onClick={handlePlaceOrder}
-                      className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-4 rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center group"
+                      disabled={orderSummary.finalTotal === 0}
+                      className={`w-full font-bold py-4 rounded-2xl shadow-lg transform transition-all duration-200 flex items-center justify-center group ${
+                        orderSummary.finalTotal > 0
+                          ? "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white hover:shadow-xl hover:-translate-y-0.5"
+                          : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      }`}
                     >
                       <svg
                         className="w-5 h-5 mr-2 group-hover:animate-pulse"
@@ -398,7 +496,9 @@ const OrderSummary = () => {
                           d="M13 10V3L4 14h7v7l9-11h-7z"
                         />
                       </svg>
-                      PLACE ORDER
+                      {orderSummary.finalTotal > 0
+                        ? "PLACE ORDER"
+                        : "COMPLETE NEGOTIATIONS FIRST"}
                     </button>
 
                     <button

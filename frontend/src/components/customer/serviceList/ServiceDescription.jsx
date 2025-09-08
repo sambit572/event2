@@ -6,6 +6,12 @@ import {
   FaRegCalendarCheck,
   FaBell,
 } from "react-icons/fa6";
+import {
+  FaRegHeart,
+  FaHeart,
+  FaRegCalendarCheck,
+  FaBell,
+} from "react-icons/fa6";
 import { BACKEND_URL } from "../../../utils/constant";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -31,8 +37,10 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
   const description = service.serviceDes || service.description || "";
   const rawDuration = service.duration || 0;
 
+
   // Check if vendor is available - based on your dashboard structure
   const isVendorAvailable = service.available !== false;
+
 
   const formatDuration = (durationInMinutes) => {
     const totalMinutes = parseInt(durationInMinutes, 10) || 0;
@@ -60,6 +68,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
         ? `${service.address.area}, ${service.address.city}, ${service.address.state} - ${service.address.pincode}`
         : "Location not provided");
 
+
   const rating = service.rating || "★";
   const reviews = service.reviews || 0;
 
@@ -73,7 +82,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
   const discountPercent = service.discountPercent;
   const [notified, setNotified] = useState(false);
 
-  const [isAnimating, setIsAnimating] = useState(false);
+  // const [isAnimating, setIsAnimating] = useState(false);
 
   const handleNotifyClick = () => {
     setNotified(true);
@@ -167,10 +176,12 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
     }
   };
 
+
   const handleShare = (e) => {
     e.stopPropagation();
     setShowShareMenu(!showShareMenu);
   };
+
 
   const shareService = (platform) => {
     const serviceUrl = `${window.location.origin}/service/${serviceId}`;
@@ -229,6 +240,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
     }
   };
 
+
   const handleAddToCart = async (e) => {
     e.stopPropagation();
     const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
@@ -254,6 +266,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
       console.error("Add to cart error:", err);
     }
   };
+
 
   const handleBookNow = (e) => {
     e.stopPropagation();
@@ -301,6 +314,17 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
           {isWishlisted ? <FaHeart /> : <FaRegHeart />}
         </div>
 
+        <div className="relative" ref={shareContainerRef}>
+          <div
+            className="h-10 w-10 cursor-pointer overflow-hidden rounded-full shadow-md transition-all duration-300 ease-in-out hover:scale-110 hover:shadow-lg"
+            onClick={handleShare}
+          >
+            <img
+              src="/send.png"
+              alt="Share"
+              className="h-full w-full rounded-full object-cover"
+            />
+          </div>
         <div className="relative" ref={shareContainerRef}>
           <div
             className="h-10 w-10 cursor-pointer overflow-hidden rounded-full shadow-md transition-all duration-300 ease-in-out hover:scale-110 hover:shadow-lg"
@@ -493,3 +517,4 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
 };
 
 export default ServiceDescription;
+

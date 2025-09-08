@@ -117,7 +117,9 @@ export const getDetails = async (req, res) => {
   try {
     const userDetails = await UserDetails.aggregate([
       {
-        $match: { _id: mongoose.Types.ObjectId.createFromHexString(userDetailsId) },
+        $match: {
+          _id: mongoose.Types.ObjectId.createFromHexString(userDetailsId),
+        },
       },
       {
         $lookup: {
@@ -127,11 +129,10 @@ export const getDetails = async (req, res) => {
           as: "serviceDetails",
         },
       },
-      {
-        $addFields: {
-          serviceDetails: {
-            $arrayElemAt: ["$serviceDetails", 0],
-          },
+      { 
+        $unwind: {
+          path: "$serviceDetails",
+          preserveNullAndEmptyArrays: false,
         },
       },
       {
@@ -139,15 +140,59 @@ export const getDetails = async (req, res) => {
           from: "vendors",
           localField: "serviceDetails.vendorId",
           foreignField: "_id",
-          as: "vendorDetails",
+          as: "vendorInfo",
         },
       },
       {
         $addFields: {
-          vendorDetails: { $arrayElemAt: ["$vendorDetails", 0] },
+          "serviceDetails.vendorDetails": {
+            $arrayElemAt: ["$vendorInfo", 0],
+          },
         },
       },
       {
+        $group: {
+          _id: "$_id",
+          bookedById: { $first: "$bookedById" },
+          bookedBy: { $first: "$bookedBy" },
+          serviceId: { $first: "$serviceId" },
+          phone: { $first: "$phone" },
+          altPhone: { $first: "$altPhone" },
+          startDate: { $first: "$startDate" },
+          endDate: { $first: "$endDate" },
+          address: { $first: "$address" },
+          landmark: { $first: "$landmark" },
+          state: { $first: "$state" },
+          district: { $first: "$district" },
+          city: { $first: "$city" },
+          pincode: { $first: "$pincode" },
+          country: { $first: "$country" },
+          createdAt: { $first: "$createdAt" },
+          updatedAt: { $first: "$updatedAt" },
+          // Collect all services with their vendor details
+          serviceDetails: {
+            $push: {
+              _id: "$serviceDetails._id",
+              serviceName: "$serviceDetails.serviceName",
+              maxPrice: "$serviceDetails.maxPrice",
+              minPrice: "$serviceDetails.minPrice",
+              vendorId: "$serviceDetails.vendorId",
+              serviceCategory: "$serviceDetails.serviceCategory",
+              description: "$serviceDetails.description",
+              images: "$serviceDetails.images",
+              vendorDetails: {
+                _id: "$serviceDetails.vendorDetails._id",
+                fullName: "$serviceDetails.vendorDetails.fullName",
+                email: "$serviceDetails.vendorDetails.email",
+                phone: "$serviceDetails.vendorDetails.phone",
+                businessName: "$serviceDetails.vendorDetails.businessName",
+              },
+            },
+          },
+        },
+      },
+      {
+        // Final projection to clean up the response
         $project: {
           _id: 1,
           bookedById: 1,
@@ -164,32 +209,24 @@ export const getDetails = async (req, res) => {
           city: 1,
           pincode: 1,
           country: 1,
-          serviceDetails: {
-            _id: "$serviceDetails._id",
-            serviceName: "$serviceDetails.serviceName",
-            maxPrice: "$serviceDetails.maxPrice",
-            minPrice: "$serviceDetails.minPrice",
-            vendorId: "$serviceDetails.vendorId",
-            serviceCategory: "$serviceDetails.serviceCategory",
-          },
-          vendorDetails: {
-            _id: "$vendorDetails._id",
-            fullName: "$vendorDetails.fullName",
-            email: "$vendorDetails.email",
-          },
+          createdAt: 1,
+          updatedAt: 1,
+          serviceDetails: 1,
         },
       },
-    ]);
+    ]
+  );
+
     if (userDetails.length === 0) {
       return res.status(404).json(new ApiError(404, "User details not found"));
     }
+
     const data = userDetails[0];
-    // console.log("Fetched user details:", data);
+    console.log("Fetched user details with services:", data);
+
     return res
       .status(200)
-      .json(
-        new ApiResponse(200, data, "User details fetched successfully")
-      );
+      .json(new ApiResponse(200, data, "User details fetched successfully"));
   } catch (error) {
     console.error("Error fetching user details:", error);
     return res.status(500).json(new ApiError(500, "Internal Server Error"));

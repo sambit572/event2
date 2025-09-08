@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { BACKEND_URL } from "../../utils/constant.js";
@@ -298,7 +298,7 @@ const UserDetails = () => {
   const [locationMessage, setLocationMessage] = useState("");
   const { serviceId } = useParams();
   const [formData, setFormData] = useState({
-    serviceId: serviceId,
+    serviceId: "",
     bookedBy:"",
     bookedById: "",
     phone: "",
@@ -313,6 +313,37 @@ const UserDetails = () => {
     pincode: "",
     country: "India",
   });
+
+
+  useEffect(() => {
+    console.log("Params:", { serviceId });
+    if (!serviceId && userId) {
+      console.log("No service ID found, fetching cart items..."); 
+      const fetchCart = async () => {
+        try {
+          const { data } = await axios.get(`${BACKEND_URL}/cart`,{
+            withCredentials: true,
+          });
+          // console.log("Cart data:", data);
+          const serviceIds = data.data.map((item) => item.serviceId._id);
+          console.log("Service IDs from cart:", serviceIds);
+          setFormData((prev) => ({
+            ...prev,
+            serviceId: serviceIds, // now it's an array
+          }));
+        } catch (err) {
+          console.error("Error fetching cart:", err);
+        }
+      };
+      fetchCart();
+    } else {
+      // Book Now flow
+      setFormData((prev) => ({
+        ...prev,
+        serviceId: serviceId,
+      }));
+    }
+  }, [serviceId, userId]);
 
   const findStateMatch = (stateName) => {
     const stateKeys = Object.keys(stateDistricts);
@@ -404,38 +435,84 @@ const UserDetails = () => {
 
   const handleSave = async (e) => {
     e.preventDefault();
-    const { pincode } = formData;
-    const pincodeRegex = /^\d{6}$/;
-    if (!pincodeRegex.test(pincode)) {
-      alert("Pincode must be exactly 6 digits.");
-      return;
-    }
-    formData.bookedById = userId;
-    formData.bookedBy = userName.trim() || "Anonymous User";
-    console.log("Form Data:", formData);
-    const allFieldsFilled =
-      userName.trim() !== "" &&
-      Object.values(formData).every((value) => String(value).trim() !== "");
-    console.log("All fields filled:", allFieldsFilled);
-    if (allFieldsFilled) {
-      console.log("Saving user details... ");
+
+    try {
+      // Attach user info safely
+      const preparedFormData = {
+        ...formData,
+        bookedById: userId,
+        bookedBy: userName.trim() || "Anonymous User",
+      };
+
+      const missingFields = Object.keys(preparedFormData).filter((field) => {
+        const value = preparedFormData[field];
+        if (value === undefined || value === null) return true;
+
+        if (Array.isArray(value)) return value.length === 0;
+
+        if (typeof value === "string") return value.trim() === "";
+
+        return false;
+      });
+
+
+      if (missingFields.length > 0) {
+        alert(
+          `Please fill in all required fields: ${missingFields.join(", ")}.`
+        );
+        return;
+      }
+
+      // Pincode validation
+      if (!/^\d{6}$/.test(preparedFormData.pincode)) {
+        alert("Pincode must be exactly 6 digits.");
+        return;
+      }
+
+      // Phone validation
+      if (!/^\d{10}$/.test(preparedFormData.phone)) {
+        alert("Phone must be exactly 10 digits.");
+        return;
+      }
+      if (
+        preparedFormData.altPhone &&
+        !/^\d{10}$/.test(preparedFormData.altPhone)
+      ) {
+        alert("Alternate phone must be exactly 10 digits.");
+        return;
+      }
+
+      if (preparedFormData.altPhone === preparedFormData.phone) {
+        alert("Alternate phone cannot be the same as primary phone.");
+        return;
+      }
+
+      // Call backend
       const response = await axios.post(
         `${BACKEND_URL}/user/save-details`,
-        {
-          formData,
-        },
+        { formData: preparedFormData },
         { withCredentials: true }
       );
-      // console.log("User details saved:", response.data.data);
-      const userDetailsId = response.data.data._id;
+
+      const userDetailsId = response?.data?.data?._id;
+
+      if (!userDetailsId) {
+        throw new Error("Unexpected response from server.");
+      }
+
       setShowPopup(true);
       setTimeout(() => setShowPopup(false), 3000);
       navigate(`/pop-up/${userDetailsId}`);
-     
-    } else {
-      alert("Please fill in all fields before saving.");
+    } catch (err) {
+      console.error("Error saving details:", err);
+      if (err.response?.data?.message) {
+        alert(`Error: ${err.response.data.message}`);
+      } else {
+        alert("Something went wrong. Please try again later.");
+      }
     }
   };
+
 
   const handleCancel = () => {
     alert("Cancelled");

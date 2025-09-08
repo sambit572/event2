@@ -13,9 +13,9 @@ import ReviewForm from "../../components/customer/servicedetails/ReviewForm.jsx"
 import { FaBell } from "react-icons/fa6";
 import { BACKEND_URL } from "../../utils/constant.js";
 import { useSelector, useDispatch } from "react-redux";
-import { setCategoryServices } from "../../redux/categorySlice.js";
+
+import { setCategoryServices } from "../../redux/categorySlice";
 import { incrementCartCount } from "../../redux/UserSlice.js";
-// import SimilarProductCard from "./../../components/customer/ServiceDetails/PeopleAlsoBooked";
 
 const Service = ({ onSwitchToLogin }) => {
   const navigate = useNavigate();

@@ -145,6 +145,8 @@ const handleApplyFilters = (filters) => {
     setFilteredServices(services);
   };
 
+  console.log("categoryId:",categoryId)
+
   return (
     <div className="serviceList">
       <Filter

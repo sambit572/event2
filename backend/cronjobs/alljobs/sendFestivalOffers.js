@@ -40,13 +40,13 @@ const sendFestivalOffers = () => {
             to: vendor.email,
             subject: `🎉 Celebrate ${festName} with Special Offers!`,
             html: `
-      <div style="font-family: Arial; color: #333;">
-        <h2>🎊 ${festName} is Here!</h2>
-        <p>${festDescription}</p>
-        <p><strong>Boost your vendor visibility today by offering festival promotions on EventsBridge!</strong></p>
-        <p style="margin-top: 20px;">📅 Date: ${festDate}</p>
-      </div>
-    `,
+            <div style="font-family: Arial; color: #333;">
+              <h2>🎊 ${festName} is Here!</h2>
+              <p>${festDescription}</p>
+              <p><strong>Boost your vendor visibility today by offering festival promotions on EventsBridge!</strong></p>
+              <p style="margin-top: 20px;">📅 Date: ${festDate}</p>
+            </div>
+          `,
           });
 
           //  Log the response so it's not unused
