@@ -4,11 +4,11 @@ export const getServicesByCategory = async (req, res) => {
   try {
 
 
-    // console.log("Inside getServicesByCategory .............")
+    console.log("Inside getServicesByCategory .............")
 
     const { category } = req.params;
 
-    // console.log(`$$$$$$$$$$$$$$$$$$$$$$$$$category: ${category}`);
+    console.log(`$$$$$$$$$$$$$$$$$$$$$$$$$category: ${category}`);
 
     const services = await Service.aggregate([
       {

@@ -7,6 +7,9 @@ export const verifyVendorJwt = async (req, res, next) => {
   try {
     let token = req.cookies?.vendorAccessToken;
 
+    console.log("Verifying vendor JWT token...");
+    console.log("token from vendor:", token);
+
     if (!token) {
       const authHeader = req.header("Authorization");
       token = authHeader?.startsWith("Bearer ")
