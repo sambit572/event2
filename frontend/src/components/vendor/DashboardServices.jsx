@@ -14,6 +14,14 @@ const DashboardServices = () => {
   const [newImages, setNewImages] = useState([]);
   const [newImagePreviews, setNewImagePreviews] = useState([]);
   const [expanded, setExpanded] = useState(false);
+  const [expandedLocations, setExpandedLocations] = useState({});
+
+  const toggleExpandLocation = (index) => {
+    setExpandedLocations((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
+  };
 
   function formatDuration(totalMinutes) {
     const days = Math.floor(totalMinutes / (24 * 60));
@@ -78,11 +86,11 @@ const DashboardServices = () => {
       const serviceId = services[index]._id;
       const existingImages = editedData.serviceImage || [];
       const totalImages = existingImages.length + newImages.length;
-      if (totalImages > 5) {
+      if (totalImages > 10) {
         alert(
-          `You can upload a maximum of 5 images.\nYou already have ${
+          `You can upload a maximum of 10 images.\nYou already have ${
             existingImages.length
-          } images.\nPlease remove ${totalImages - 5} image(s) before saving.`
+          } images.\nPlease remove ${totalImages - 10} image(s) before saving.`
         );
         return;
       }
@@ -111,10 +119,12 @@ const DashboardServices = () => {
         serviceName: editedData.serviceName,
         serviceDes: editedData.serviceDes,
         serviceCategory: editedData.serviceCategory,
-        minPrice: editedData.minPrice,
-        maxPrice: editedData.maxPrice,
-        locationOffered: editedData.locationOffered,
-        duration: editedData.duration,
+        minPrice: Number(editedData.minPrice),
+        maxPrice: Number(editedData.maxPrice),
+        locationOffered: Array.isArray(editedData.locationOffered)
+          ? editedData.locationOffered
+          : [editedData.locationOffered],
+        duration: Number(editedData.duration),
         serviceImage: allImages,
       };
       const updateRes = await axios.put(
@@ -176,10 +186,10 @@ const DashboardServices = () => {
     if (files.length === 0) return;
     const totalSelected =
       editedData.serviceImage.length + newImages.length + files.length;
-    if (totalSelected > 5) {
+    if (totalSelected > 10) {
       alert(
-        `You can only upload up to 5 images in total. Remove ${
-          totalSelected - 5
+        `You can only upload up to 10 images in total. Remove ${
+          totalSelected - 10
         } image(s).`
       );
       return;
@@ -259,62 +269,92 @@ const DashboardServices = () => {
                   {service.available ? "Available" : "Unavailable"}
                 </span>
               </div>
-              {/* Images */}
-              <div className="flex flex-col sm:flex-row justify-center items-center sm:items-start gap-[0.5rem] mt-[2rem] w-full">
-                {/* Thumbnails */}
-                <div className="flex flex-row sm:flex-col gap-2 sm:gap-3 w-full sm:w-[70px] sm:shrink-0 justify-center">
+              {/* Image Slider Section */}
+              <div className="relative w-full sm:w-[400px] sm:h-[200px] mt-5 mx-auto group">
+                {/* Big Image */}
+                <img
+                  src={selectedImages[index] || service.serviceImage?.[0]}
+                  alt="Service"
+                  className="w-full h-full object-cover rounded-md"
+                />
+
+                {/* Left Arrow */}
+                {service.serviceImage?.length > 1 && (
+                  <button
+                    onClick={() => {
+                      const currentIndex = service.serviceImage.indexOf(
+                        selectedImages[index] || service.serviceImage[0]
+                      );
+                      const prevIndex =
+                        (currentIndex - 1 + service.serviceImage.length) %
+                        service.serviceImage.length;
+                      handleImageSelect(index, service.serviceImage[prevIndex]);
+                    }}
+                    className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
+                  >
+                    ❮
+                  </button>
+                )}
+
+                {/* Right Arrow */}
+                {service.serviceImage?.length > 1 && (
+                  <button
+                    onClick={() => {
+                      const currentIndex = service.serviceImage.indexOf(
+                        selectedImages[index] || service.serviceImage[0]
+                      );
+                      const nextIndex =
+                        (currentIndex + 1) % service.serviceImage.length;
+                      handleImageSelect(index, service.serviceImage[nextIndex]);
+                    }}
+                    className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
+                  >
+                    ❯
+                  </button>
+                )}
+
+                {/* Dots */}
+                <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-2">
                   {service.serviceImage?.map((img, i) => (
-                    <img
+                    <button
                       key={i}
-                      src={img}
-                      alt={`thumb-${i}`}
-                      className={`w-[52px] h-[41px] sm:w-[70px] sm:h-[38px] object-cover rounded cursor-pointer border ${
-                        selectedImage === img
-                          ? "border-[#00897b]"
-                          : "border-gray-300"
-                      }`}
                       onClick={() => handleImageSelect(index, img)}
+                      className={`w-1 h-1 rounded-full px-1 py-1 ${
+                        selectedImages[index] === img
+                          ? "bg-white"
+                          : "bg-gray-400"
+                      }`}
                     />
                   ))}
                 </div>
 
-                {/* Main Image + Buttons */}
-                <div className="flex flex-col gap-3 items-center">
-                  {/* Big Image */}
-                  <img
-                    src={selectedImage}
-                    alt="Service"
-                    className="w-[75%] sm:w-[400px] sm:h-[240px] object-cover rounded-md"
-                  />
-
-                  {/* Buttons */}
-                  <div className="flex flex-wrap justify-center gap-3">
-                    <button
-                      onClick={() => handleEdit(index)}
-                      className="flex items-center gap-2 px-3 py-1.5 text-white font-medium rounded-lg bg-gradient-to-r from-emerald-500 to-teal-600 shadow-md hover:scale-105"
-                    >
-                      <FaEdit className="text-sm" />
-                      <span>Edit</span>
-                    </button>
-                    <button
-                      onClick={() => handleDelete(index)}
-                      className="flex items-center gap-2 px-3 py-1.5 text-white font-medium rounded-lg bg-gradient-to-r from-red-500 to-red-600 shadow-md hover:scale-105"
-                    >
-                      <FaTrash className="text-sm" />
-                      <span>Delete</span>
-                    </button>
-                    <button
-                      onClick={() =>
-                        navigate("/report", {
-                          state: { selectedType: "vendor" },
-                        })
-                      }
-                      className="flex items-center gap-2 px-3 py-2 text-white font-semibold rounded-lg bg-gradient-to-r from-[#001F3F] to-[#003366] shadow-md hover:scale-105"
-                    >
-                      <MdReportGmailerrorred className="text-lg" />
-                      <span>Report</span>
-                    </button>
-                  </div>
+                {/* Buttons */}
+                <div className="flex flex-wrap mt-2 justify-center gap-3">
+                  <button
+                    onClick={() => handleEdit(index)}
+                    className="flex items-center gap-2 px-3 py-1.5 text-white font-medium rounded-lg bg-gradient-to-r from-emerald-500 to-teal-600 shadow-md hover:scale-105"
+                  >
+                    <FaEdit className="text-sm" />
+                    <span>Edit</span>
+                  </button>
+                  <button
+                    onClick={() => handleDelete(index)}
+                    className="flex items-center gap-2 px-3 py-1.5 text-white font-medium rounded-lg bg-gradient-to-r from-red-500 to-red-600 shadow-md hover:scale-105"
+                  >
+                    <FaTrash className="text-sm" />
+                    <span>Delete</span>
+                  </button>
+                  <button
+                    onClick={() =>
+                      navigate("/report", {
+                        state: { selectedType: "vendor" },
+                      })
+                    }
+                    className="flex items-center gap-2 px-3 py-2 text-white font-semibold rounded-lg bg-gradient-to-r from-[#001F3F] to-[#003366] shadow-md hover:scale-105"
+                  >
+                    <MdReportGmailerrorred className="text-lg" />
+                    <span>Report</span>
+                  </button>
                 </div>
               </div>
 
@@ -507,7 +547,7 @@ const DashboardServices = () => {
 
                       {editedData.serviceImage.length +
                         newImagePreviews.length <
-                        5 && (
+                        10 && (
                         <label className="w-14 h-14 border-2 border-dashed border-[#001f3f] rounded flex items-center justify-center cursor-pointer shrink-0">
                           <FaPlus className="text-gray-500 text-xs" />
                           <input
@@ -539,10 +579,28 @@ const DashboardServices = () => {
                     <h2 className="details-h2 mt-6">{service.serviceName}</h2>
                     <div className="l">
                       <strong>Locations: </strong>
-                      {Array.isArray(service.locationOffered)
-                        ? service.locationOffered.join(", ")
-                        : service.locationOffered}
+                      {Array.isArray(service.locationOffered) ? (
+                        <>
+                          {expandedLocations[index]
+                            ? service.locationOffered.join(", ")
+                            : service.locationOffered.slice(0, 3).join(", ") +
+                              (service.locationOffered.length > 3 ? "..." : "")}
+                          {service.locationOffered.length > 3 && (
+                            <button
+                              onClick={() => toggleExpandLocation(index)}
+                              className="ml-2 text-sm font-semibold text-blue-600 hover:text-blue-800"
+                            >
+                              {expandedLocations[index]
+                                ? "Read Less"
+                                : "Read More"}
+                            </button>
+                          )}
+                        </>
+                      ) : (
+                        service.locationOffered
+                      )}
                     </div>
+
                     <div className="pr">
                       <strong>Price: </strong>₹ {service.minPrice} - ₹{" "}
                       {service.maxPrice}

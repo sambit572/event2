@@ -228,7 +228,7 @@ const FormField = ({
   const isSelect = children.type === "select";
 
   const commonInputClasses =
-    "w-full px-4 py-3.5 rounded-xl border border-slate-300 text-base text-gray-800 font-medium focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 focus:outline-none";
+    "w-full px-2 py-2 rounded-xl border border-slate-400 text-base text-gray-800 font-medium focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 focus:outline-none";
 
   if (useStaticLabel) {
     return (
@@ -576,12 +576,12 @@ const UserDetails = () => {
 
   return (
     <div className="font-sans px-4">
-      <div className="max-w-2xl p-8 mx-auto my-24 text-gray-800 bg-[#c0bcbc] rounded-2xl border-[3px] border-[#001F3F] shadow-[0_8px_32px_rgba(31,38,135,0.2)] backdrop-blur-lg">
-        <h3 className="mb-3 text-center text-3xl font-bold tracking-wide bg-gradient-to-r from-[#004989] to-[#001F3F] bg-clip-text text-transparent">
+      <div className="max-w-2xl p-8 mx-auto my-20 text-gray-800 bg-[#fff] rounded-2xl border-[3px] border-[#001F3F] shadow-[0_8px_32px_rgba(31,38,135,0.2)] backdrop-blur-lg">
+        <h3 className="mb-[-10px] text-center text-3xl font-bold tracking-wide bg-gradient-to-r from-[#004989] to-[#001F3F] bg-clip-text text-transparent">
           Fill Out Your Event Details
         </h3>
-
-        <form className="flex flex-col gap-5 mt-8" onSubmit={handleSave}>
+<div className="mx-auto mt-3.5 h-1 w-48 rounded-full bg-gradient-to-r from-[#004989] to-[#001F3F]"></div>
+        <form className="flex flex-col gap-5 mt-6" onSubmit={handleSave}>
           <FormField id="userName" label="User Name">
             <input
               type="text"

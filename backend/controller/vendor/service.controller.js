@@ -386,6 +386,7 @@ export const updateAvailability = async (req, res) => {
 };
 
 export const updateServiceImageFirst = async (req, res) => {
+  console.log("Incoming update data:", req.body);
   try {
     const vendorId = req.vendor._id;
     const serviceId = req.params.id;
@@ -406,11 +407,9 @@ export const updateServiceImageFirst = async (req, res) => {
         }
       }
 
-      // Update DB
       service.serviceImage = [...service.serviceImage, ...imageUrls];
       await service.save();
 
-      // 🚀 Invalidate Redis cache for this service
       await client.del(`service:${serviceId}`);
 
       return res.status(200).json({

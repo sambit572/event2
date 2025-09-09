@@ -31,7 +31,7 @@ function VendorService({ currentStep }) {
   const fileInputRef = useRef(null);
 
   const categories = [
-    "DJ Services & Brass Band",
+    "DJ Services & Brash Band",
     "Music Concert & Orchestra",
     "Decor & Tenthouse",
     "Photographer & Videographer",

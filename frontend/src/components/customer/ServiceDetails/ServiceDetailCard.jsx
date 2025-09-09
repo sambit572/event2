@@ -338,7 +338,7 @@ const ServiceDetailCard = ({ service }) => {
         )}
       </div>
 
-      <p className="text-sm text-black mb-2">{location}</p>
+      <p className="text-sm text-black mr-5 mb-2">{location}</p>
       <p className="text-sm text-black mb-2 mt-0">
         {stateLocation.toUpperCase()}
       </p>
