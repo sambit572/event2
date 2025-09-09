@@ -44,7 +44,7 @@ export const SearchResult = ({
               <div
                 key={service._id}
                 onClick={() => handleServiceClick(service._id)}
-                className="bg-[#e5e5de] rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+                className=" rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer"
               >
                 <div className="relative h-48">
                   <img
@@ -211,7 +211,7 @@ export const SearchResult = ({
               <div
                 key={index}
                 onClick={() => handleCategoryClick(category.name)}
-                className="bg-[#e5e5de] rounded-lg shadow-md p-3 hover:shadow-lg transition-shadow duration-300 text-center cursor-pointer"
+                className=" rounded-lg shadow-md p-3 hover:shadow-lg transition-shadow duration-300 text-center cursor-pointer"
               >
                 <span className="text-sm font-medium text-gray-800">
                   {category.name}

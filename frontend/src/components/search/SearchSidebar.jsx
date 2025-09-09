@@ -75,7 +75,7 @@ export const SearchSidebar = ({
   };
 
   return (
-    <div className="w-full lg:w-[250px] rounded-lg shadow-md p-6 h-fit bg-[#e5e5de]">
+    <div className="w-full lg:w-[250px] rounded-lg shadow-md p-6 h-fit ">
       <h3
         className="
     flex items-center gap-[10px] 
