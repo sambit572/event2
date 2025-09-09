@@ -1,5 +1,7 @@
 import { Service } from "../../model/vendor/service.model.js";
+import client from "../../utilities/redisClient.js"; // 🔹 Make sure you have a redis client
 
+// ========== Get Services by Category ==========
 export const getServicesByCategory = async (req, res) => {
   try {
 
@@ -7,8 +9,18 @@ export const getServicesByCategory = async (req, res) => {
     console.log("Inside getServicesByCategory .............")
 
     const { category } = req.params;
+    const cacheKey = `services:category:${category.toLowerCase()}`;
 
-    console.log(`$$$$$$$$$$$$$$$$$$$$$$$$$category: ${category}`);
+    // 🔹 Check Redis cache first
+    const cachedData = await client.get(cacheKey);
+    if (cachedData) {
+      console.log("⚡ Returning services from Redis cache");
+      return res
+        .status(200)
+        .json({ success: true, data: JSON.parse(cachedData) });
+    }
+
+    console.time("servicesByCategory");
 
     const services = await Service.aggregate([
       {
@@ -16,9 +28,7 @@ export const getServicesByCategory = async (req, res) => {
           serviceCategory: { $regex: category, $options: "i" },
         },
       },
-      {
-        $sort: { createdAt: -1 },
-      },
+      { $sort: { createdAt: -1 } },
       {
         $lookup: {
           from: "vendors",
@@ -33,10 +43,9 @@ export const getServicesByCategory = async (req, res) => {
           preserveNullAndEmptyArrays: true,
         },
       },
-      // 🔹 Lookup reviews from UserReview model to calculate average rating
       {
         $lookup: {
-          from: "userreviews", // collection name of UserReview model
+          from: "userreviews",
           localField: "_id",
           foreignField: "serviceId",
           as: "reviews",
@@ -71,14 +80,17 @@ export const getServicesByCategory = async (req, res) => {
           vendorId: 1,
           vendorName: "$vendorDetails.fullName",
           vendorEmail: "$vendorDetails.email",
-          avgRating: 1, // Ensure avgRating is included
+          avgRating: 1,
           totalReviews: 1,
           available: 1,
         },
       },
     ]);
 
-    // console.log(services);
+    console.timeEnd("servicesByCategory");
+
+    // 🔹 Store in Redis for 10 minutes
+    await client.setEx(cacheKey, 600, JSON.stringify(services));
 
     return res.status(200).json({ success: true, data: services });
   } catch (err) {
@@ -87,13 +99,26 @@ export const getServicesByCategory = async (req, res) => {
   }
 };
 
+// ========== Get Service by ID ==========
 export const getServiceById = async (req, res) => {
   try {
     const { id } = req.params;
+    const cacheKey = `services:id:${id}`;
+
+    // 🔹 Check Redis first
+    const cachedData = await client.get(cacheKey);
+    if (cachedData) {
+      console.log("⚡ Returning service by ID from Redis cache");
+      return res
+        .status(200)
+        .json({ success: true, data: JSON.parse(cachedData) });
+    }
+
+    console.time("serviceById");
 
     const service = await Service.findById(id).populate({
       path: "vendorId",
-      select: "fullName email", // fetch only needed fields
+      select: "fullName email",
     });
 
     if (!service) {
@@ -102,16 +127,20 @@ export const getServiceById = async (req, res) => {
         .json({ success: false, message: "Service not found" });
     }
 
-    // Transform the response to include vendorName
     const transformed = {
       ...service._doc,
       vendorName: service.vendorId?.fullName,
       vendorEmail: service.vendorId?.email,
     };
 
+    console.timeEnd("serviceById");
+
+    // 🔹 Store in Redis for 10 minutes
+    await client.setEx(cacheKey, 600, JSON.stringify(transformed));
+
     return res.status(200).json({ success: true, data: transformed });
   } catch (error) {
-    console.error(error);
+    console.error("Error in getServiceById:", error);
     return res
       .status(500)
       .json({ success: false, message: "Internal Server Error" });

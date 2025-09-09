@@ -16,6 +16,8 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { setCategoryServices } from "../../redux/categorySlice";
 import { incrementCartCount } from "../../redux/UserSlice.js";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+// import SimilarProductCard from "./../../components/customer/ServiceDetails/PeopleAlsoBooked";
 
 const Service = ({ onSwitchToLogin }) => {
   const navigate = useNavigate();
@@ -51,6 +53,23 @@ const Service = ({ onSwitchToLogin }) => {
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [reviews, setReviews] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [hovered, setHovered] = useState(false);
+
+  // helpers + effects (place inside the component, after state)
+  const prevSlide = () =>
+    setCurrentIndex((i) =>
+      i === 0 ? Math.max(mediaList.length - 1, 0) : i - 1
+    );
+
+  const nextSlide = () =>
+    setCurrentIndex((i) => (mediaList.length ? (i + 1) % mediaList.length : 0));
+
+  // reset to first image when list changes
+  useEffect(() => {
+    setCurrentIndex(0);
+  }, [mediaList.length]);
+
   const handleUserReview = () => {
     const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
     if (isLoggedIn) {
@@ -95,7 +114,6 @@ const Service = ({ onSwitchToLogin }) => {
     };
     fetchService();
   }, [serviceId]);
-
 
   const isVendorAvailable = service?.available !== false;
 
@@ -158,7 +176,6 @@ const Service = ({ onSwitchToLogin }) => {
     }
   };
 
-
   if (loading) return <p>Loading service details...</p>;
   if (error || !service) return <p>{error || "Service not found."}</p>;
 
@@ -166,46 +183,80 @@ const Service = ({ onSwitchToLogin }) => {
     <div className="dj">
       <div className="section_one">
         <div className="left-fixed">
-          <div className="dj-img">
-            <div className="thumbnail-list">
-              {mediaList.map((media, index) => (
-                <div
-                  key={index}
-                  onClick={() => setSelectMedia(media)}
-                  className="li1"
-                >
+          <div
+            className="relative w-full h-[260px] mb-5 sm:h-[400px] lg:h-[430px] overflow-hidden rounded-lg"
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+          >
+            {/* Images */}
+            {mediaList.length > 0 ? (
+              <>
+                {mediaList.map((media, idx) => (
                   <img
+                    key={idx}
                     src={media.src}
-                    alt={`media-${index}`}
-                    className={
-                      !isVendorAvailable ? "grayscale brightness-75" : ""
-                    }
+                    alt={`slide-${idx}`}
+                    className={`absolute top-0 left-0 w-full h-full  rounded-lg object-cover transition-opacity duration-700 ${
+                      idx === currentIndex ? "opacity-100" : "opacity-0"
+                    } ${!isVendorAvailable ? "grayscale brightness-50" : ""}`}
                   />
-                </div>
-              ))}
-            </div>
-            <div className="big-image relative ">
-              <img
-                src={selectMedia?.src}
-                alt="Selected media"
-                className={`transition-all duration-300  ${
-                  !isVendorAvailable ? "grayscale brightness-50" : ""
-                }`}
-              />
+                ))}
 
-              {!isVendorAvailable && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40">
-                  <div className="rounded-lg bg-red-600 px-6 py-5 text-center shadow-lg">
-                    <p className="text-sm font-bold text-white">
+                {/* Left Arrow */}
+                {hovered && mediaList.length > 1 && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      prevSlide();
+                    }}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
+                  >
+                    <FaChevronLeft />
+                  </button>
+                )}
+
+                {/* Right Arrow */}
+                {hovered && mediaList.length > 1 && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      nextSlide();
+                    }}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
+                  >
+                    <FaChevronRight />
+                  </button>
+                )}
+
+                {/* Dots */}
+                {mediaList.length > 1 && (
+                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+                    {mediaList.map((_, idx) => (
+                      <span
+                        key={idx}
+                        onClick={() => setCurrentIndex(idx)}
+                        className={`h-2 w-2 rounded-full cursor-pointer ${
+                          idx === currentIndex ? "bg-white" : "bg-gray-400"
+                        }`}
+                      ></span>
+                    ))}
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="flex h-full w-full items-center justify-center bg-gray-300 text-gray-500">
+                {!isVendorAvailable ? (
+                  <div className="text-center">
+                    <p className="text-sm font-bold text-red-600">
                       OUT OF SERVICE
                     </p>
-                    <p className="text-xs text-red-100">
-                      Oops! We’re on a quick break, back soon.
-                    </p>
+                    <p className="text-xs text-gray-600">No Image Available</p>
                   </div>
-                </div>
-              )}
-            </div>
+                ) : (
+                  "No Image Available"
+                )}
+              </div>
+            )}
           </div>
 
           {/* THIS IS THE CORRECTED LINE */}
@@ -213,16 +264,22 @@ const Service = ({ onSwitchToLogin }) => {
             {isVendorAvailable ? (
               <>
                 <button
-                  className="w-full sm:w-44 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-md transition-all duration-300"
-                  onClick={handleAddToCart}
-                >
-                  Add to Cart
-                </button>
-                <button
-                  className="w-full sm:w-44 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-green-600 hover:bg-green-700 shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-400"
+                  className="flex w-full cursor-pointer items-center justify-center 
+  rounded-full border-none 
+  bg-[#7f00ff] px-12 py-3 text-sm font-semibold text-white 
+  transition-colors duration-300 ease-in-out 
+  hover:bg-[#5e00cc] 
+  active:bg-[#4b0099] 
+  lg:w-auto lg:min-w-[220px]"
                   onClick={handleBookNow}
                 >
                   Book Now
+                </button>
+                <button
+                  className="w-full lg:w-auto lg:min-w-[220px] px-4 py-3 rounded-full text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-md transition-all duration-300"
+                  onClick={handleAddToCart}
+                >
+                  Add to Cart
                 </button>
               </>
             ) : (

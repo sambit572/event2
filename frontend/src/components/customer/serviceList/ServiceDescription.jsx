@@ -18,8 +18,8 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [isReadMore, setIsReadMore] = useState(false);
   const [showShareMenu, setShowShareMenu] = useState(false);
-  const shareContainerRef = useRef(null);
-
+  const shareContainerRef = useRef(null); // Ref for the share container
+  const [isReadMoreLocation, setIsReadMoreLocation] = useState(false);
   if (!service) {
     return null;
   }
@@ -64,13 +64,32 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
 
   const originalPrice = service.originalPrice;
   const discountPercent = service.discountPercent;
+  const [notified, setNotified] = useState(false);
 
-  const MAX_LENGTH = 200;
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const handleNotifyClick = () => {
+    setNotified(true);
+    setIsAnimating(true);
+
+    setTimeout(() => {
+      setIsAnimating(false); // stop vibrating after 10 seconds
+      console.log("animation stopped");
+    }, 2000);
+  };
+  const MAX_LENGTH = 120;
+  const MAX_LOCATION_LENGTH = 50;
   const shouldTruncate = description.length > MAX_LENGTH;
+  const shouldTruncateLocation = location.length > MAX_LOCATION_LENGTH;
   const displayDescription =
     isReadMore || !shouldTruncate
       ? description
       : `${description.substring(0, MAX_LENGTH)}...`;
+
+  const displayLocation =
+    isReadMoreLocation || !shouldTruncateLocation
+      ? location
+      : `${location.substring(0, MAX_LOCATION_LENGTH)}...`;
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -83,10 +102,27 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("wishlistUpdated", handleWishlistUpdate);
     };
-  }, []);
+  }, [serviceId]);
+  useEffect(() => {
+    const fetchRatingSummary = async () => {
+      try {
+        const res = await axios.get(
+          `${BACKEND_URL}/reviews/rating/${serviceId}`
+        );
+        if (res.data.success) {
+          setRatingData(res.data.data);
+        }
+        console.log("Rating summary data:", res.data);
+      } catch (err) {
+        console.error("Error fetching rating summary:", err);
+      }
+    };
 
+    if (serviceId) fetchRatingSummary();
+  }, [serviceId]);
+  // Toggle wishlist state
   const handleToggleWishlist = async (e) => {
     e.stopPropagation();
     const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
@@ -300,10 +336,10 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
   }, [service]);
 
   return (
-    <section className="relative flex h-full flex-col bg-white p-4 text-gray-800 md:p-5">
-      <div className="absolute top-4 right-4 z-20 flex flex-col items-end gap-3 md:top-5 md:right-5">
+    <section className="relative flex h-full flex-col bg-[#fff] p-4 sm:pr-[40px] text-gray-800 md:py-0 px-5">
+      <div className="absolute top-[0.5rem] right-4 z-20 flex flex-col items-end gap-3 md:right-5">
         <div
-          className={`h-10 w-10 flex items-center justify-center rounded-full bg-gray-200 shadow-md cursor-pointer transition-all duration-300 ${
+          className={`h-10 w-10 flex items-center justify-center rounded-full bg-gray-100 shadow-md cursor-pointer transition-all duration-300 ${
             isWishlisted
               ? "text-red-600 ring-2 ring-red-300 shadow-red-200"
               : "text-gray-600 hover:text-red-500"
@@ -447,14 +483,37 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
               </span>
             )}
           </div>
-          <p className="mb-3 text-sm leading-snug text-gray-500">{location}</p>
-          <div className="mb-3 flex flex-wrap items-center gap-3">
-            <span className="rounded-full bg-[#27ae60] px-3 py-1.5 text-sm font-semibold text-white">
-              {rating}
-            </span>
-            <span className="text-sm text-gray-500">{reviews} reviews</span>
-          </div>
-          <div className="mb-3 flex flex-wrap items-center gap-1.5 md:flex-row md:gap-3">
+          <p className="mb-[0.2rem] text-sm leading-snug text-gray-500">
+            {displayLocation}
+            {shouldTruncateLocation && (
+              <button
+                className="ml-1 inline cursor-pointer border-none bg-transparent p-0 text-sm font-semibold text-[#3498db] no-underline transition-colors duration-200 ease-in-out hover:text-[#2980b9] hover:underline"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsReadMoreLocation(!isReadMoreLocation);
+                }}
+              >
+                {isReadMoreLocation ? " Read Less" : " Read More"}
+              </button>
+            )}
+          </p>
+
+          <p className="mb-[0.2rem] text-sm leading-snug text-gray-500">
+            {stateLocation.toUpperCase()}
+          </p>
+          {ratingData ? (
+            <div className="flex items-center gap-2 mb-3">
+              <span className="bg-green-600 text-white px-2 py-1 rounded-full text-sm font-semibold">
+                {ratingData.averageRating.toFixed(1)} ★
+              </span>
+              <span className="text-gray-500 text-sm">
+                ({ratingData.totalReviews} reviews)
+              </span>
+            </div>
+          ) : (
+            <p className="text-gray-500 text-sm mb-3">Loading rating...</p>
+          )}
+          <div className="mb-[0.2rem] flex flex-wrap items-center gap-1.5 md:flex-row md:gap-3">
             <span className="text-xl font-bold text-[#2c3e50] sm:text-[22px]">
               ₹{price}
             </span>
@@ -494,13 +553,23 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
           {isVendorAvailable ? (
             <>
               <button
-                className="flex w-full cursor-pointer items-center justify-center rounded-full border-none bg-gradient-to-br from-[#28a745] to-[#34ce57] px-12 py-3 text-sm font-semibold text-white normal-case shadow-[0_4px_15px_rgba(40,167,69,0.3)] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:from-[#218838] hover:to-[#28a745] hover:shadow-[0_6px_20px_rgba(40,167,69,0.4)] lg:w-auto lg:min-w-[120px]"
+  className="flex w-full cursor-pointer items-center justify-center 
+  rounded-full border-none 
+  bg-[#7f00ff] px-12 py-3 text-sm font-semibold text-white 
+  transition-colors duration-300 ease-in-out 
+  hover:bg-[#5e00cc] 
+  active:bg-[#4b0099] 
+  lg:w-auto lg:min-w-[120px]"
                 onClick={handleBookNow}
               >
                 Book Now
               </button>
+
               <button
-                className="flex w-full cursor-pointer items-center justify-center rounded-full border-none bg-gradient-to-br from-[#fd7e14] to-[#e67e22] px-12 py-3 text-sm font-semibold text-white normal-case shadow-[0_4px_15px_rgba(253,126,20,0.3)] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:from-[#e67e22] hover:to-[#dc3545] hover:shadow-[0_6px_20px_rgba(253,126,20,0.4)] lg:w-auto lg:min-w-[120px]"
+       className="flex w-full cursor-pointer items-center justify-center 
+  rounded-full border-none px-12 py-3 text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600   transition-colors duration-300 ease-in-out 
+  active:bg-orange-500 
+  lg:w-auto lg:min-w-[120px] "
                 onClick={handleAddToCart}
               >
                 Add to Cart

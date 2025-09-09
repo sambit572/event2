@@ -7,14 +7,21 @@
 .singleServiceCard {
   display: flex;
   flex-direction: column;
-  background: #e5e5de;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 16px;
-  margin-top: 10px;
-    margin-bottom: 17px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-right: 10px;
+  background: #ffffff;
+  border: 1px solid #b9b5b5;
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin: 12px 10px 18px 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); /* light shadow */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+/* Hover effect (edges only, not inside the card) */
+.singleServiceCard:hover {
+  border-color: #3498db; /* highlight border */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12); /* slightly stronger shadow */
+  background-color: #ffffff; /* stays white (no tint in the middle) */
 }
 
 .serviceCardDetails {
@@ -32,7 +39,7 @@
 @media screen and (min-width: 1024px) and (max-width: 1350px) {
   .serviceCardDetails {
     /* THIS IS THE FIX: Changed from 80% to 100% */
-    width: 100%; 
+    width: 100%;
   }
   .singleServiceCard {
     width: 100%;

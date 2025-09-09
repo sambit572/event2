@@ -1,13 +1,13 @@
 import { ApiError } from "../utilities/ApiError.js";
 import jwt from "jsonwebtoken";
 import { User } from "../model/user/user.model.js";
+import { performance } from "perf_hooks"; // ✅ import performance
 
 export const verifyJwt = async (req, res, next) => {
+  const start = performance.now(); // ✅ start timer
   try {
     // Get token from cookies or authorization header
     let token = req.cookies?.accessToken;
-
-  // console.log("Token from cookies:", token);
 
     if (!token) {
       const authHeader = req.header("Authorization");
@@ -36,8 +36,15 @@ export const verifyJwt = async (req, res, next) => {
     }
 
     req.user = user;
+
+    const end = performance.now(); // ✅ end timer
+    console.log(`⏱️ verifyJwt took ${(end - start).toFixed(2)} ms`);
+
     next();
   } catch (error) {
+    const end = performance.now();
+    console.log(`❌ verifyJwt failed after ${(end - start).toFixed(2)} ms`);
+
     console.error("Error in JWT verification:", error.message);
     return res
       .status(401)

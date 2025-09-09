@@ -31,22 +31,7 @@ export const addReview = async (req, res) => {
         .json({ success: false, message: "User not logged in" });
     }
 
-    // Validate reviewType
-    // if (!["product", "vendorService"].includes(reviewType)) {
-    //   return res.status(400).json({
-    //     success: false,
-    //     message: "reviewType must be either 'product' or 'vendorService'.",
-    //   });
-    // }
 
-    // Validate email format (basic)
-    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    // if (!emailRegex.test(userEmail)) {
-    //   return res.status(400).json({
-    //     success: false,
-    //     message: "Please provide a valid email address.",
-    //   });
-    // }
 
     const userId = req.user._id;
 
@@ -56,13 +41,6 @@ export const addReview = async (req, res) => {
       reviewMessage,
       userId,
     });
-
-    // const review = new Review({
-    //   serviceId,
-    //   userId,
-    //   rating,
-    //   reviewMessage,
-    // });
 
     // await review.save();
     const review = await UserReview.create({
@@ -312,4 +290,3 @@ export const getAllReviews = async (req, res) => {
     });
   }
 };
-

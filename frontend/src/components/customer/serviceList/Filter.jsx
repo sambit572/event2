@@ -36,12 +36,12 @@ const Filter = ({ onApply, onCancel }) => {
 
   // Price change handlers (snap to step)
   const handleMinChange = (e) => {
-  setFilters((prev) => ({ ...prev, minPrice: e.target.value }));
-};
+    setFilters((prev) => ({ ...prev, minPrice: e.target.value }));
+  };
 
-const handleMaxChange = (e) => {
-  setFilters((prev) => ({ ...prev, maxPrice: e.target.value }));
-};
+  const handleMaxChange = (e) => {
+    setFilters((prev) => ({ ...prev, maxPrice: e.target.value }));
+  };
 
   // State change → update subdistricts
   const handleStateChange = (e) => {
@@ -95,11 +95,14 @@ const handleMaxChange = (e) => {
 
           <h3 className="filter-heading">Filters</h3>
           <div className="mb-2">
-            <h3 className="font-medium text-gray-800 mb-[0.5rem]">Sort By</h3>
+            <h3 className="text-lg font-semibold text-blue-800 mb-0 tracking-wide">
+              Sort By
+            </h3>
+
             <select
               value={sortBy} // Update the Sort By dropdown to use state
               onChange={(e) => setSortBy(e.target.value)}
-              className="w-full px-3 py-[0.3rem] border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              className="w-full px-3 py-[0.2rem] border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
             >
               <option value="price">Price</option>
               <option value="name">Name</option>
@@ -144,7 +147,7 @@ const handleMaxChange = (e) => {
           </div>
           <div className="flex items-center justify-center">OR </div> */}
           <div className="space-y-1">
-            <h4 className="heading4">Price Range</h4>
+            <h6 className="text-lg font-semibold text-blue-800 mb-0 tracking-wide">Price Range</h6>
             <div>
               <label className="block text-xs text-gray-900 mb-1">
                 Min Price (₹)
@@ -154,7 +157,7 @@ const handleMaxChange = (e) => {
                 placeholder="Enter Min Price"
                 value={filters.minPrice}
                 onChange={handleMinChange}
-                className="w-full px-3 py-[0.3rem] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                className="w-full px-3 py-[0.2rem] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
               />
             </div>
             <div>
@@ -166,15 +169,14 @@ const handleMaxChange = (e) => {
                 placeholder="Enter Max Price"
                 value={filters.maxPrice}
                 onChange={handleMaxChange}
-                className="w-full px-3 py-[0.3rem] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                className="w-full px-3 py-[0.2rem] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
               />
             </div>
           </div>
-          <hr className="line" />
 
           {/* Location Filter */}
           <div className="filter-section">
-            <h4>Customer Rating</h4>
+            <h6 className="text-lg font-semibold text-blue-800 mb-0 tracking-wide">Customer Rating</h6>
             <div className="dropdown">
               <select value={filters.rating} onChange={handleRatingChange}>
                 <option value="">Any Rating</option>
@@ -189,7 +191,7 @@ const handleMaxChange = (e) => {
 
           {/* Location Filter */}
           <div className="filter-section">
-            <h4>Location</h4>
+             <h6 className="text-lg font-semibold text-blue-800 mb-0 tracking-wide">Location</h6>
 
             <div className="dropdown">
               <label>State</label>
@@ -219,11 +221,10 @@ const handleMaxChange = (e) => {
               </select>
             </div>
           </div>
-          <hr className="line" />
 
           {/* Service Ready Within */}
           <div className="dropdown">
-            <h4 className="head4">Service Ready Within</h4>
+            <h6 className="text-lg font-semibold text-blue-800 mb-0 tracking-wide">Service Ready Within</h6>
             <select
               value={filters.duration}
               onChange={(e) =>

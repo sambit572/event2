@@ -1,39 +1,66 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import ServiceDescription from "./ServiceDescription";
 
 const ServiceCard = ({ service, onSwitchToLogin }) => {
   const navigate = useNavigate();
-  if (!service) return null;
-  const isAvailable = service.available;
   const { categoryId } = useParams();
-  const images = service.serviceImage || [];
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [hovered, setHovered] = useState(false);
 
+  if (!service) return null;
+
+  const images = service.serviceImage || [];
   const serviceId = service._id || service.id;
-
   const isVendorAvailable = service.available !== false;
 
+  // Navigate to service details
   const handleCardClick = () => {
     navigate(`/service/${categoryId}/${serviceId}`);
   };
 
+  // Next/Prev functions
+  const nextImage = (e) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const prevImage = (e) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  };
+
   return (
     <div
-      className="mt-5 flex cursor-pointer flex-col overflow-hidden rounded-lg border border-gray-200 bg-white transition-shadow duration-300 ease-in-out hover:shadow-lg md:flex-row"
+      className=" flex cursor-pointer flex-col overflow-hidden rounded-lg bg-white transition-shadow duration-300 ease-in-out md:flex-row"
       onClick={handleCardClick}
     >
-      <div className="flex w-full flex-shrink-0 bg-gray-200 md:w-[45%]">
-        <div className="relative h-64 w-full">
+      <div
+        className="relative overflow-hidden rounded-lg 
+             w-full md:w-[400px] lg:w-[480px] 
+             h-[280px] lg:h-[290px] 
+             bg-gray-100 flex-shrink-0 md:sticky"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      >
+        <div className="relative w-full h-full">
           {Array.isArray(images) && images.length > 0 ? (
             <>
-              <img
-                src={images[currentIndex]}
-                alt="Service preview"
-                className={`h-full w-full object-cover transition-all duration-300 ${
-                  !isVendorAvailable ? "grayscale brightness-50" : ""
-                }`}
-              />
+              {images.map((img, idx) => (
+                <img
+                  key={idx}
+                  src={img}
+                  alt={`slide-${idx}`}
+                  className={`absolute top-0 left-0 w-full h-full 
+                        object-cover object-center 
+                        transition-opacity duration-500 
+                        ${idx === currentIndex ? "opacity-100" : "opacity-0"} 
+                        ${!isVendorAvailable ? "grayscale brightness-50" : ""}`}
+                />
+              ))}
+
+              {/* Overlay if vendor not available */}
               {!isVendorAvailable && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40">
                   <div className="rounded-lg bg-red-600 px-4 py-5 text-center shadow-lg">
@@ -44,6 +71,44 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
                       Oops! We’re on a quick break, back soon.
                     </p>
                   </div>
+                </div>
+              )}
+
+              {/* Left Arrow */}
+              {hovered && images.length > 1 && (
+                <button
+                  onClick={prevImage}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
+                >
+                  <FaChevronLeft />
+                </button>
+              )}
+
+              {/* Right Arrow */}
+              {hovered && images.length > 1 && (
+                <button
+                  onClick={nextImage}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
+                >
+                  <FaChevronRight />
+                </button>
+              )}
+
+              {/* Dots */}
+              {images.length > 1 && (
+                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2">
+                  {images.map((_, idx) => (
+                    <span
+                      key={idx}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setCurrentIndex(idx);
+                      }}
+                      className={`h-2 w-2 rounded-full cursor-pointer ${
+                        idx === currentIndex ? "bg-white" : "bg-gray-400"
+                      }`}
+                    ></span>
+                  ))}
                 </div>
               )}
             </>

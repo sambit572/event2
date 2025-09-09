@@ -5,6 +5,7 @@ import { Negotiation } from "../../model/common/Negotiation.model.js";
 import { ApiError } from "../../utilities/ApiError.js";
 import { ApiResponse } from "../../utilities/ApiResponse.js";
 import mongoose from "mongoose";
+import client from "../../utilities/redisClient.js";
 import { getIO } from "../../socket/index.js";
 
 export const addToCart = async (req, res) => {
@@ -33,6 +34,9 @@ export const addToCart = async (req, res) => {
 
     await Cart.create({ userId, serviceId });
 
+    // Invalidate Redis cache for this user's cart
+    await client.del(`cart:${userId}`);
+
     const io = getIO();
     io.to(userId.toString()).emit("cart-updated", {
       count: await Cart.countDocuments({ userId }),
@@ -55,6 +59,16 @@ export const getCart = async (req, res) => {
   try {
     const userId = req.user._id;
 
+    // 1️⃣ Try Redis cache first
+    const cacheKey = `cart:${userId}`;
+    const cachedData = await client.get(cacheKey);
+
+    if (cachedData) {
+      console.log("⚡ Returning cart from Redis cache");
+      return res.status(200).json(JSON.parse(cachedData));
+    }
+
+    // 2️⃣ If not in cache → Fetch from DB
     const items = await Cart.find({ userId })
       .populate({
         path: "serviceId",
@@ -62,11 +76,18 @@ export const getCart = async (req, res) => {
       })
       .sort({ createdAt: -1 });
 
-    return res.status(200).json({
+    const response = {
       success: true,
       count: items.length,
       data: items,
-    });
+    };
+
+    // 3️⃣ Store in Redis for 1 hour
+    await client.set(cacheKey, JSON.stringify(response), "EX", 3600);
+
+    console.log("✅ Fetched cart from DB and cached in Redis");
+
+    return res.status(200).json(response);
   } catch (error) {
     console.error("Get cart error:", error);
     return res.status(500).json(new ApiError(500, "Internal Server Error"));
@@ -87,6 +108,9 @@ export const removeFromCart = async (req, res) => {
         message: "Service not found in cart.",
       });
     }
+
+    // Invalidate Redis cache for this user's cart
+    await client.del(`cart:${userId}`);
 
     const io = getIO();
     io.to(userId.toString()).emit("cart-updated", {

@@ -10,9 +10,13 @@ const Wishlist = () => {
   useEffect(() => {
     const fetchWishlist = async () => {
       try {
+        const start = performance.now();
         const res = await axios.get(`${BACKEND_URL}/wishlist/getwishlist`, {
           withCredentials: true,
         });
+
+        const end = performance.now();
+        console.log(`wishlistFetch took ${end - start} ms`);
         setWishlist(res.data);
         console.log("Wishlist fetched successfully:", res.data);
       } catch (error) {
@@ -62,7 +66,7 @@ const Wishlist = () => {
               >
                 {/* Entire left section is clickable */}
                 <Link
-                  to={`/service/${service._id}`}
+                  to={`/service/${service.serviceCategory}/${service._id}`}
                   className="flex flex-col md:flex-row gap-6 w-full hover:opacity-80"
                 >
                   {/* Image */}
@@ -101,7 +105,6 @@ const Wishlist = () => {
                           : "text-red-600"
                       }`}
                     >
-                     
                       {item.service.available ? null : "Out Of Service"}
                     </p>
                     <p className="text-gray-600 text-sm">
