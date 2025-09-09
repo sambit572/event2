@@ -24,6 +24,8 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
     return null;
   }
 
+  const [ratingData, setRatingData] = useState(null);
+
   const serviceId = service._id || service.id;
   const title = service.serviceName || service.title || "Untitled Service";
   const vendorName = service.vendorName || "Unknown Vendor";
@@ -45,6 +47,13 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
   };
 
   const duration = formatDuration(rawDuration);
+
+  const stateLocation = Array.isArray(service.stateLocationOffered)
+    ? service.stateLocationOffered.join(", ")
+    : service.stateLocationOffered ||
+      (service.address
+        ? `${service.address.area}, ${service.address.city}, ${service.address.state} - ${service.address.pincode}`
+        : "Location not provided");
 
   const location = Array.isArray(service.locationOffered)
     ? service.locationOffered.join(", ")
@@ -122,6 +131,13 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
 
     if (serviceId) fetchRatingSummary();
   }, [serviceId]);
+
+  const handleWishlistUpdate = (e) => {
+    if (e.detail?.serviceId === serviceId) {
+      fetchWishlistStatus();
+    }
+  };
+
   // Toggle wishlist state
   const handleToggleWishlist = async (e) => {
     e.stopPropagation();
@@ -322,12 +338,6 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
     };
 
     fetchWishlistStatus();
-
-    const handleWishlistUpdate = (e) => {
-      if (e.detail?.serviceId === serviceId) {
-        fetchWishlistStatus();
-      }
-    };
 
     window.addEventListener("wishlistUpdated", handleWishlistUpdate);
     return () => {
@@ -553,23 +563,23 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
           {isVendorAvailable ? (
             <>
               <button
-  className="flex w-full cursor-pointer items-center justify-center 
-  rounded-full border-none 
-  bg-[#7f00ff] px-12 py-3 text-sm font-semibold text-white 
-  transition-colors duration-300 ease-in-out 
-  hover:bg-[#5e00cc] 
-  active:bg-[#4b0099] 
-  lg:w-auto lg:min-w-[120px]"
+                className="flex w-full cursor-pointer items-center justify-center 
+                rounded-full border-none 
+                bg-[#7f00ff] px-12 py-3 text-sm font-semibold text-white 
+                transition-colors duration-300 ease-in-out 
+                hover:bg-[#5e00cc] 
+                active:bg-[#4b0099] 
+                lg:w-auto lg:min-w-[120px]"
                 onClick={handleBookNow}
               >
                 Book Now
               </button>
 
               <button
-       className="flex w-full cursor-pointer items-center justify-center 
-  rounded-full border-none px-12 py-3 text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600   transition-colors duration-300 ease-in-out 
-  active:bg-orange-500 
-  lg:w-auto lg:min-w-[120px] "
+                className="flex w-full cursor-pointer items-center justify-center 
+                rounded-full border-none px-12 py-3 text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600   transition-colors duration-300 ease-in-out 
+                active:bg-orange-500 
+                lg:w-auto lg:min-w-[120px] "
                 onClick={handleAddToCart}
               >
                 Add to Cart
