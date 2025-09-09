@@ -114,7 +114,7 @@ const OTPVerification = ({
         localStorage.setItem("VendorInitial", firstLetter);
         if (profilePic) localStorage.setItem("VendorProfilePic", profilePic);
 
-        window.dispatchEvent(new Event("vendorLoggedIn")); // Do not remember what it does : RD
+        window.dispatchEvent(new Event("userLoggedIn")); // Do not remember what it does : RD
       }
 
       setStep("success");

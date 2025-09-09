@@ -5,6 +5,7 @@ import { Negotiation } from "../../model/common/Negotiation.model.js";
 import { ApiError } from "../../utilities/ApiError.js";
 import { ApiResponse } from "../../utilities/ApiResponse.js";
 import mongoose from "mongoose";
+import { getIO } from "../../socket/index.js";
 
 export const addToCart = async (req, res) => {
   try {
