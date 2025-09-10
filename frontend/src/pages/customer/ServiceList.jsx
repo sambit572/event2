@@ -25,7 +25,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
   const [selectedCity, setSelectedCity] = useState("");
 
   useEffect(() => {
-    // console.log("Category ID:", categoryId);
+    console.log("Category ID:", categoryId);
     const fetchServices = async () => {
       try {
         setLoading(true);

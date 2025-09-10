@@ -8,7 +8,8 @@ import socket from "../../socket/socketClient.js";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import PasswordInput from "./../../utils/PasswordInput";
+import PasswordInput from "./../../utils/PasswordInput.jsx";
+import { BACKEND_URL } from "../../utils/constant.js";
 function DashBoardMain() {
   const navigate = useNavigate();
 
@@ -39,7 +40,7 @@ function DashBoardMain() {
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/vendors/verify-password`,
         {
-          assword,
+          password,
         },
         { withCredentials: true }
       );
@@ -173,7 +174,7 @@ function DashBoardMain() {
         isVerified={isVerified}
         setConfirmPasswordModal={setConfirmPasswordModal}
         setVendorShowPasswordModal={setVendorShowPasswordModal} // ✅ Added to trigger password modal
-        onSaveComplete={() => setIsVerified(false)}
+        setIsVerified={setIsVerified}
       />
 
       <div className="main-contain">
@@ -182,9 +183,9 @@ function DashBoardMain() {
         <div className="relative w-full">
           <button
             className="absolute top-[-40px] right-4 md:top-[-70px] md:right-[10px] 
-  flex items-center justify-center gap-2 
-  rounded-[10px] bg-[#2251c9] font-semibold text-[#fff] px-4 py-2
-  mb-4 sm:mb-0"
+            flex items-center justify-center gap-2 
+            rounded-[10px] bg-[#2251c9] font-semibold text-[#fff] px-4 py-2
+            mb-4 sm:mb-0"
             onClick={handleOpenAddService}
           >
             <span className="text-xl font-bold">+</span>

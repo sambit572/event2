@@ -142,6 +142,12 @@ export const getBankDetailsByVendor = async (req, res) => {
  */
 export const updateBankDetails = async (req, res) => {
   try {
+    const currentBankDetails = await BankDetails.findOne({
+      vendorId: req.params.vendorId,
+    });
+
+    console.log("✏ [BankDetails] Vendor found for update:", currentBankDetails);
+
     const {
       accountHolderName,
       accountNumber,
@@ -149,7 +155,7 @@ export const updateBankDetails = async (req, res) => {
       ifscCode,
       gst,
       upiId,
-      panNumber,
+      panNumber = currentBankDetails.panNumber,
     } = req.body;
     console.log("✏ [BankDetails] Update request:", req.body);
 
@@ -159,19 +165,20 @@ export const updateBankDetails = async (req, res) => {
     }
 
     // PAN Verification
-    let verifyResp;
-    try {
-      console.log("🔍[BankDetails] Verifying PAN:"`${panNumber}`);
-      verifyResp = await verifyPAN(panNumber);
-    } catch (error) {
-      console.error("❌ [BankDetails] PAN verification failed:", error.message);
-      return res.status(400).json(new ApiError(400, error.message));
-    }
+    // let verifyResp;
+    // try {
+    //   console.log("🔍[BankDetails] Verifying PAN:"`${panNumber}`);
+    //   verifyResp = await verifyPAN(panNumber);
+    // } catch (error) {
+    //   console.error("❌ [BankDetails] PAN verification failed:", error.message);
+    //   return res.status(400).json(new ApiError(400, error.message));
+    // }
 
-    const verifiedName = verifyResp.data?.full_name || accountHolderName;
+    // const verifiedName = verifyResp.data?.full_name || accountHolderName;
+    const verifiedName = accountHolderName; // For Testing Purpose
 
     const updatedDetails = await BankDetails.findOneAndUpdate(
-      { vendorId: req.vendor._id },
+      { vendorId: req.params.vendorId },
       {
         accountHolderName: verifiedName,
         accountNumber,
@@ -189,7 +196,7 @@ export const updateBankDetails = async (req, res) => {
       return res.status(404).json(new ApiError(404, "Bank details not found"));
     }
 
-    console.log("✅ [BankDetails] Updated successfully:", updatedDetails._id);
+    console.log("✅ [BankDetails] Updated successfully:", updatedDetails);
     return res
       .status(200)
       .json(

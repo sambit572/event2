@@ -164,9 +164,10 @@ export const getServiceRatingSummary = async (req, res) => {
 
     // --- Count only those with reviewMessage ---
     const totalReviews = await UserReview.countDocuments({
-      serviceId: new mongoose.Types.ObjectId.createFromHexString(serviceId),
-      reviewMessage: { $nin: [null, ""] }, // only if review text exists
+      serviceId: new mongoose.Types.ObjectId(serviceId),
+      reviewMessage: { $nin: [null, ""] },
     });
+
 
     res.json({
       success: true,
