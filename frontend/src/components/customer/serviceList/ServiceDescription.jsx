@@ -472,13 +472,13 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
           {/* This Link component also needs the categoryId to work correctly */}
           <Link
             to={`/service/${service.categoryId}/${serviceId}`}
-            className="text-inherit no-underline pr-12"
+              className="text-inherit no-underline "
           >
-            <h3 className="text-lg font-bold leading-tight text-[#2c3e50] sm:text-xl md:text-2xl">
-              {title}
+             <h3 className="text-lg font-bold leading-tight text-[#2c3e50] sm:text-xl md:text-2xl">
+              {title.toUpperCase()}
             </h3>
           </Link>
-          <div className="mt-3 mb-3 flex flex-wrap items-center gap-2 md:flex-row md:gap-2">
+          <div className="flex flex-wrap items-center gap-2 md:flex-row md:gap-2">
             <span className="text-sm font-semibold text-[#3498db] sm:text-base">
               {vendorName}
             </span>
@@ -512,7 +512,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
             {stateLocation.toUpperCase()}
           </p>
           {ratingData ? (
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-2 mb-[0.3rem]">
               <span className="bg-green-600 text-white px-2 py-1 rounded-full text-sm font-semibold">
                 {ratingData.averageRating.toFixed(1)} ★
               </span>
@@ -538,12 +538,12 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
               </>
             )}
           </div>
-          <p className="mb-4 text-sm text-gray-500">
+          <p className="mb-[0.2rem] text-sm text-gray-500">
             <span className="font-semibold text-[#34495e]">Prep Time: </span>
             {duration}
           </p>
         </div>
-        <div className="mb-5 flex-grow">
+        <div className="mb-[0.5rem] flex-grow">
           <p className="inline text-sm leading-relaxed text-[#34495e]">
             {displayDescription}
             {shouldTruncate && (
