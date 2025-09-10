@@ -232,7 +232,7 @@ const DashboardServices = () => {
   }, [newImagePreviews]);
 
   return (
-    <div className="flex flex-col overflow-y-auto h-[480px]">
+    <div className="flex flex-col overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden h-[480px]">
       {services.length > 0 ? (
         services.map((service, index) => {
           const isEditing = editingIndex === index;

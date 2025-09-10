@@ -495,23 +495,14 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
           {isVendorAvailable ? (
             <>
               <button
-  className="flex w-full cursor-pointer items-center justify-center 
-  rounded-full border-none 
-  bg-[#7f00ff] px-12 py-3 text-sm font-semibold text-white 
-  transition-colors duration-300 ease-in-out 
-  hover:bg-[#5e00cc] 
-  active:bg-[#4b0099] 
-  lg:w-auto lg:min-w-[120px]"
+                className="flex w-full cursor-pointer items-center justify-center rounded-full border-none bg-[#7f00ff] px-12 py-3 text-sm font-semibold text-white transition-colors duration-300 ease-in-out hover:bg-[#5e00cc] active:bg-[#4b0099] lg:w-auto lg:min-w-[120px"
                 onClick={handleBookNow}
               >
                 Book Now
               </button>
 
               <button
-       className="flex w-full cursor-pointer items-center justify-center 
-  rounded-full border-none px-12 py-3 text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600   transition-colors duration-300 ease-in-out 
-  active:bg-orange-500 
-  lg:w-auto lg:min-w-[120px] "
+                className="flex w-full cursor-pointer items-center justify-center rounded-full border-none px-12 py-3 text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600 transition-colors duration-300 ease-in-out active:bg-orange-500 lg:w-auto lg:min-w [120px] "
                 onClick={handleAddToCart}
               >
                 Add to Cart

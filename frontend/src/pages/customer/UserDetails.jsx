@@ -746,14 +746,14 @@ const UserDetails = () => {
           <div className="flex flex-col justify-center gap-3.5 mt-2.5 md:flex-row">
             <button
               type="submit"
-              className="w-full px-5 py-3 text-base font-semibold tracking-wider text-white uppercase transition-transform duration-200 ease-in-out bg-green-600 rounded-lg cursor-pointer hover:shadow-lg md:w-36"
+              className="w-full px-5 py-3 text-base font-semibold tracking-wider text-white uppercase transition-transform duration-200 ease-in-out bg-[#7f00ff] rounded-lg cursor-pointer hover:shadow-[0_6px_15px_rgba(127,0,255,0.4)] md:w-36"
               onClick={handleSave}
             >
               Save
             </button>
             <button
               type="button"
-              className="w-full px-5 py-3 text-base font-semibold tracking-wider text-white uppercase transition-transform duration-200 ease-in-out bg-gradient-to-r from-rose-500 to-rose-600 rounded-lg cursor-pointer hover:shadow-lg md:w-36"
+              className="w-full px-5 py-3 font-semibold tracking-wider text-white uppercase bg-gradient-to-r from-rose-500 to-rose-600 rounded-lg cursor-pointer hover:shadow-lg md:w-36 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 hover:shadow-md"
               onClick={handleCancel}
             >
               Cancel

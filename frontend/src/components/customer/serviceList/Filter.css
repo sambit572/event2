@@ -235,12 +235,13 @@ input[type="range"].thumb-right {
 
 /* Solid teal for Cancel */
 .cancelbtn {
-  background-color: #008080;
+  background: linear-gradient(to right, #ef4444, #dc2626);
 }
 
 .cancelbtn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(0, 128, 128, 0.4);
+  background: linear-gradient(to right, #dc2626, #b91c1c);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Shine effect */
@@ -269,7 +270,6 @@ input[type="range"].thumb-right {
     left: 125%;
   }
 }
-
 
 .filter-toggle-btn {
   display: none;

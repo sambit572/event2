@@ -8,27 +8,27 @@ import enjoyImg from "/category/family.png";
 const steps = [
   {
     title: "Search Services",
-    text: "Browse event services by category & budget.",
+    text: "Find event services easily by category and budget.",
     image: searchImg,
   },
   {
     title: "Compare Options",
-    text: "View vendor profiles, pricing & reviews.",
+    text: "Check vendor profiles, pricing details, and reviews.",
     image: compareImg,
   },
   {
-    title: "Live Negotiate",
-    text: "Call & finalize details directly with vendors.",
+    title: "Live Negotiation",
+    text: "Connect directly with vendors to finalize all details.",
     image: negotiateImg,
   },
   {
     title: "Secure Booking",
-    text: "Confirm with safe online payment.",
+    text: "Complete your booking safely with secure online payment.",
     image: bookingImg,
   },
   {
     title: "Enjoy Your Event",
-    text: "Enjoy the moment, leave the hassle to us.",
+    text: "Relax and celebrate while we handle all the hassle.",
     image: enjoyImg,
   },
 ];
@@ -40,27 +40,19 @@ const StepsSection = () => {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        // We only observe one element, so we can grab the first entry.
         const entry = entries[0];
-        // Set visibility based on whether the element is intersecting or not.
         setIsVisible(entry.isIntersecting);
       },
       { threshold: 0.3 }
     );
 
     const currentHeadingRef = headingRef.current;
+    if (currentHeadingRef) observer.observe(currentHeadingRef);
 
-    if (currentHeadingRef) {
-      observer.observe(currentHeadingRef);
-    }
-
-    // Cleanup function to unobserve when the component unmounts.
     return () => {
-      if (currentHeadingRef) {
-        observer.unobserve(currentHeadingRef);
-      }
+      if (currentHeadingRef) observer.unobserve(currentHeadingRef);
     };
-  }, []); // Empty dependency array ensures this runs only once on mount.
+  }, []);
 
   return (
     <div className="mt-3 py-10 px-4 rounded-md ml-5 mr-5 sm:px-6 lg:px-12 mb-5 sm:mb-12 md:mb-10 lg:mb-16">
@@ -69,13 +61,11 @@ const StepsSection = () => {
         <h2
           ref={headingRef}
           className={`relative inline-block text-xl mb-10 sm:text-2xl md:text-5xl font-semibold text-[#001f3f]
-          after:content-[''] after:block after:w-0 after:h-[4px]
-          after:bg-gradient-to-r after:from-[#001f3f] after:via-yellow-500 after:to-[#001f3f] 
-          after:rounded-full
-          after:transition-all after:duration-[1000ms] after:ease-in-out after:mt-2 after:mx-auto
-          ${
-            isVisible ? "after:w-3/4" : "after:w-0"
-          }`} /* This line is the key change */
+            after:content-[''] after:block after:w-0 after:h-[4px]
+            after:bg-gradient-to-r after:from-[#001f3f] after:via-yellow-500 after:to-[#001f3f] 
+            after:rounded-full
+            after:transition-all after:duration-[1000ms] after:ease-in-out after:mt-2 after:mx-auto
+            ${isVisible ? "after:w-3/4" : "after:w-0"}`}
         >
           𝐇𝐨𝐰 𝐄𝐯𝐞𝐧𝐭𝐬𝐁𝐫𝐢𝐝𝐠𝐞 𝐖𝐨𝐫𝐤𝐬
         </h2>
@@ -98,10 +88,11 @@ const StepsSection = () => {
           <div
             key={index}
             className={`
-              flex flex-col items-center text-center border border-gray-900
-              w-40 sm:w-48 md:w-52 lg:w-56 px-4 py-6
+              flex flex-col items-center justify-center text-center border border-gray-900
               bg-yellow-50 rounded-2xl shadow-md 
               hover:shadow-2xl transition-shadow duration-300
+              aspect-[4/5] w-36 sm:w-44 md:w-48 lg:w-56 
+              p-4
               ${
                 index === 4
                   ? "col-span-2 justify-self-center [@media(min-width:855px)]:col-span-1"
@@ -109,10 +100,10 @@ const StepsSection = () => {
               }
             `}
           >
-            {/* Image instead of icon */}
+            {/* Image */}
             <div
               className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center rounded-full 
-                            bg-[#e8eff7] shadow-md mb-4 overflow-hidden"
+                          bg-[#e8eff7] shadow-md mb-4 overflow-hidden"
             >
               <img
                 src={step.image}
@@ -127,7 +118,7 @@ const StepsSection = () => {
             </h3>
 
             {/* Description */}
-            <p className="text-[#001f3f] text-sm sm:text-base leading-relaxed max-w-[240px]">
+            <p className="text-[#001f3f] text-xs sm:text-sm md:text-base leading-relaxed px-2">
               {step.text}
             </p>
           </div>

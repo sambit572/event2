@@ -330,8 +330,8 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 50%, #ff4757 100%);
-  color: white;
+    background: linear-gradient(135deg, #FFD93D 0%, #E6B800 100%); /* golden yellow shades */
+  color: #2D004D;/* dark blue/purple for contrast */
   padding: 12px 20px;
   border-radius: 30px;
   cursor: pointer;
@@ -367,7 +367,7 @@
 }
 
 .remove-photo-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #ff5252 0%, #f44336 50%, #e53935 100%);
+  background: linear-gradient(135deg, #FFE866 0%, #FFCC00 100%);
   transform: translateY(-3px);
   box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
 }
@@ -404,7 +404,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: white;
+  /* color: white; */
 }
 
 

@@ -149,8 +149,7 @@ const VendorMenu = ({
               <hr className="my-2 border-gray-300" />
               <div className="flex flex-col gap-2">
                 <button
-                  className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-3 py-3 rounded transition-all duration-300
-                             hover:from-indigo-700 hover:to-blue-700 hover:scale-105 hover:shadow-md"
+                  className="bg-[#7f00ff] text-white px-3 py-3 rounded transition-all duration-300 hover:bg-[#5e00cc] hover:scale-105 hover:shadow-md"
                   onClick={() => {
                     setShowVendorDropdown(false);
                     navigate("/dashboard");
@@ -160,8 +159,7 @@ const VendorMenu = ({
                 </button>
 
                 <button
-                  className="bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-3 rounded transition-all duration-300
-                             hover:from-red-600 hover:to-red-700 hover:scale-105 hover:shadow-md"
+                  className="bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-3 rounded transition-all duration-300 hover:from-red-600 hover:to-red-700 hover:scale-105 hover:shadow-md"
                   onClick={() => {
                     setShowVendorDropdown(false);
                     vendorLogout();
