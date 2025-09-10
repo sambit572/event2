@@ -297,7 +297,11 @@ function Footer() {
           >
             <img src="/whatsapp.png" alt="Whatsapp" className="social-icon" />
           </a>
-          <a href="" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://youtube.com/@eventsbridge-k5y?si=UIIpVriO9ySmNW0R"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <img src="/youtube.png" alt="Youtube" className="social-icon" />
           </a>
         </div>

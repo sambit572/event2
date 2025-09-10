@@ -64,10 +64,16 @@ const images = [
   },
 ];
 const Home = () => {
-  const [showAll, setShowAll] = useState(false);
+  const [showAll, setShowAll] = useState(
+    () => sessionStorage.getItem("showAll") === "true"
+  );
   const [hovered, setHovered] = useState(false);
   const visibleCategories = showAll ? categories : categories.slice(0, 6);
 
+  const handleShowAll = () => {
+    sessionStorage.setItem("showAll", "true");
+    setShowAll(true);
+  };
   useEffect(() => {
     const checkUser = async () => {
       try {
@@ -76,8 +82,8 @@ const Home = () => {
           { withCredentials: true }
         );
 
-        console.log(response.data.message);
-        console.log(response.data.data);
+        // console.log(response.data.message);
+        // console.log(response.data.data);
 
         const data = response.data.data;
 
@@ -123,20 +129,6 @@ const Home = () => {
         planning.
       </p>
 
-      {/* View All Button */}
-      <div className="flex justify-end w-full items-center mb-4">
-        {!showAll && categories.length > 6 && (
-          <button
-            className="browse-all-btn "
-            onClick={() => setShowAll(true)}
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
-          >
-            View All <span className="arrow">{hovered ? "⇒" : "→"}</span>
-          </button>
-        )}
-      </div>
-
       {/* Category Grid */}
       <div className="align_center category_section">
         {visibleCategories.map((category, index) => (
@@ -144,6 +136,19 @@ const Home = () => {
             <CategoryCard category={category} />
           </div>
         ))}
+      </div>
+      {/* View All Button */}
+      <div className="flex justify-center w-full items-center mb-4">
+        {!showAll && categories.length > 6 && (
+          <button
+            className="browse-all-btn "
+            onClick={handleShowAll}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+          >
+            View All <span className="arrow">{hovered ? "⇓" : "↓"}</span>
+          </button>
+        )}
       </div>
       <StepsSection />
       <Milestones />
