@@ -4,10 +4,12 @@ import axios from "axios";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 export const attemptVendorSilentLogin = async () => {
+  console.log("Attempting silent login for vendor...");
   try {
     const response = await axios.get(`${BACKEND_URL}/vendors/silent-login`, {
       withCredentials: true,
     });
+    console.log("Silent login response for vendor:", response.data);
     return { success: true, vendor: response.data.data.vendor };
   } catch (err) {
     return { success: false, error: err.response?.data?.message || "Failed" };

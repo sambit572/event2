@@ -27,6 +27,7 @@ import {
   verifyConfirmPassword,
   getSearchSuggestions,
   getVendorDashboard,
+  verifyVendorLogin,
   // updateTheBankDetails,
 } from "../../controller/vendor/vendor.controller.js";
 
@@ -69,6 +70,7 @@ vendor_router.get("/silent-login", verifyVendorJwt, vendorSilentLogin);
 vendor_router.post("/check-email", checkVendorEmailStatus);
 vendor_router.get("/me", verifyVendorJwt, getVendorProfile);
 vendor_router.get("/category/:category", getServicesByCategory);
+vendor_router.post("/verify-otp", verifyVendorLogin);
 
 vendor_router.get("/service/:id", getServiceById); // --- PROFILE ROUTES --- //
 vendor_router.put("/:id", upload.single("profilePicture"), updateVendor);

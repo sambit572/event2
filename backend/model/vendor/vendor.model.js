@@ -9,7 +9,7 @@ const vendorSchema = new mongoose.Schema(
       required: [true, "Full name is required"],
       trim: true,
       minlength: [2, "Full name must be at least 2 characters long"],
-      maxLength: [50, "Full name cannot exceed 50 characters"],
+      maxlength: [50, "Full name cannot exceed 50 characters"],
     },
     email: {
       type: String,

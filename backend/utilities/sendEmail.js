@@ -1,6 +1,5 @@
 import nodemailer from "nodemailer";
 
-
 export const sendEmail = async ({ to, subject, html, attachments }) => {
   try {
     if (!to || !subject || !html) {
@@ -26,14 +25,14 @@ export const sendEmail = async ({ to, subject, html, attachments }) => {
   </div>
 `;
 
-const plainText = html.replace(/<[^>]+>/g, '');
+    const plainText = html.replace(/<[^>]+>/g, "");
 
     const mailOptions = {
       from: `"EventsBridge" <${process.env.EMAIL_USER}>`,
       to,
       subject,
-      html:wrappedHtml,
-      text:plainText,
+      html: wrappedHtml,
+      text: plainText,
       ...(attachments && { attachments }), // ✅ safely include if exists
     };
 

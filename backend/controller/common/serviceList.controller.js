@@ -4,6 +4,10 @@ import client from "../../utilities/redisClient.js"; // 🔹 Make sure you have 
 // ========== Get Services by Category ==========
 export const getServicesByCategory = async (req, res) => {
   try {
+
+
+    console.log("Inside getServicesByCategory .............")
+
     const { category } = req.params;
     const cacheKey = `services:category:${category.toLowerCase()}`;
 

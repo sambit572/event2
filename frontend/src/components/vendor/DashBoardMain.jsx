@@ -8,7 +8,7 @@ import socket from "../../socket/socketClient.js";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import PasswordInput from "./../../utils/PasswordInput";
+import PasswordInput from "./../../utils/PasswordInput.jsx";
 import { BACKEND_URL } from "../../utils/constant.js";
 function DashBoardMain() {
   const navigate = useNavigate();
@@ -170,13 +170,15 @@ function DashBoardMain() {
         isVerified={isVerified}
         setConfirmPasswordModal={setConfirmPasswordModal}
         setVendorShowPasswordModal={setVendorShowPasswordModal} // ✅ Added to trigger password modal
-        onSaveComplete={() => setIsVerified(false)}
+        setIsVerified={setIsVerified}
       />
 
       <div className="main-contain">
         <ToggleTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
-        <div className="relative h-screen ">
+        
+
+        <div className="relative max-h-[70vh] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden h-[480px]">
           {activeTab === "services" ? (
             <DashboardServices />
           ) : (

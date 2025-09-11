@@ -25,7 +25,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
   const [selectedCity, setSelectedCity] = useState("");
 
   useEffect(() => {
-    // console.log("Category ID:", categoryId);
+    console.log("Category ID:", categoryId);
     const fetchServices = async () => {
       try {
         setLoading(true);
@@ -146,6 +146,8 @@ const ServiceList = ({ onSwitchToLogin }) => {
   const handleCancelFilters = () => {
     setFilteredServices(services);
   };
+
+  console.log("categoryId:",categoryId)
 
   return (
     <div className="serviceList">

@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-
 const negotiationSchema = new mongoose.Schema(
   {
     vendorName: {
