@@ -38,10 +38,16 @@ export const addToCart = async (req, res) => {
     // Invalidate Redis cache for this user's cart
     await client.del(`cart:${userId}`);
 
-    const io = getIO();
-    io.to(userId.toString()).emit("cart-updated", {
-      count: await Cart.countDocuments({ userId }),
-    });
+    // In addToCart method
+    try {
+      const io = getIO();
+      io.to(userId.toString()).emit("cart-updated", {
+        count: await Cart.countDocuments({ userId }),
+      });
+    } catch (socketError) {
+      // Log but don't fail the request if Socket.IO has issues
+      console.warn("Socket.IO notification failed:", socketError.message);
+    }
 
     return res.status(201).json({
       success: true,
@@ -113,10 +119,15 @@ export const removeFromCart = async (req, res) => {
     // Invalidate Redis cache for this user's cart
     await client.del(`cart:${userId}`);
 
-    const io = getIO();
-    io.to(userId.toString()).emit("cart-updated", {
-      count: await Cart.countDocuments({ userId }),
-    });
+    try {
+      const io = getIO();
+      io.to(userId.toString()).emit("cart-updated", {
+        count: await Cart.countDocuments({ userId }),
+      });
+    } catch (socketError) {
+      // Log but don't fail the request if Socket.IO has issues
+      console.warn("Socket.IO notification failed:", socketError.message);
+    }
 
     return res.status(200).json({
       success: true,
