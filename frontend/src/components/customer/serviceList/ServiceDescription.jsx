@@ -576,7 +576,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
               </button>
 
               <button
-                className="bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 text-white font-semibold transition-all duration-300 shadow-md hover:shadow-lg flex w-full cursor-pointer items-center justify-center 
+                className="bg-gradient-to-r from-red-600 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold transition-all duration-300 shadow-md hover:shadow-lg flex w-full cursor-pointer items-center justify-center 
                 rounded-full border-none px-12 py-3 text-sm font-semibold 
                 lg:w-auto lg:min-w-[120px] "
                 onClick={handleAddToCart}

@@ -270,7 +270,7 @@ const Service = ({ onSwitchToLogin }) => {
                   Book Now
                 </button>
                 <button
-                  className="w-full lg:w-auto lg:min-w-[220px] px-4 py-3 rounded-full text-sm font-semibold text-white bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-md transition-all duration-300"
+                  className="w-full lg:w-auto lg:min-w-[220px] px-4 py-3 rounded-full text-sm font-semibold text-white bg-gradient-to-r from-red-600 to-red-600 hover:from-red-600 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-md transition-all duration-300"
                   onClick={handleAddToCart}
                 >
                   Add to Cart
