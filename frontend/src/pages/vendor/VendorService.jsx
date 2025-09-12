@@ -36,7 +36,7 @@ function VendorService({ currentStep }) {
     "DJ Services & Brash Band",
     "Music Concert & Orchestra",
     "Decor & Tenthouse",
-    "Photographer & Videographer",
+    "Photo & Videography",
     "Food & Catering",
     "Banquet Hall & Mandap",
     "Classical Music & Dance",

@@ -407,7 +407,7 @@ export const CategoryData = [
   },
   {
     id: "photographer",
-    title: "Photographer & Videographer",
+    title: "Photo & Videography",
     image: image4,
     tagline: "Freeze Time with Frames",
     icon: "📸",

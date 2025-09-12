@@ -20,7 +20,7 @@ const ProfileMenu = ({
   handleLogout,
   navigate,
   setShowVendorDropdown,
-  setShowEllipsisDropdown
+  setShowEllipsisDropdown,
 }) => {
   const profileRef = useRef(null);
   const toggleProfileDropdown = () => {
@@ -48,7 +48,10 @@ const ProfileMenu = ({
         >
           {!userFirstName ? (
             <>
-              <CgProfile className="text-2xl text-[#001f3f] group-hover:text-white group-hover:scale-110 transition-all duration-300" onClick={toggleProfileDropdown} />
+              <CgProfile
+                className="text-2xl text-[#001f3f] group-hover:text-white group-hover:scale-110 transition-all duration-300"
+                onClick={toggleProfileDropdown}
+              />
               <span className="font-semibold vendorNameText max-[900px]:hidden max-[580px]:hidden group-hover:text-white transition-colors duration-300">
                 Login
               </span>
@@ -79,7 +82,7 @@ const ProfileMenu = ({
       {/* Dropdown menu */}
       {/* Dropdown menu */}
       {showProfileDropdown && (
-        <div className="absolute top-[50px] left-[-120px] bg-[#f8f8f5] border border-gray-200 rounded-xl shadow-xl p-4 w-[240px] z-[2000] cursor-default animate-fadeIn max-[430px]:top-[40px] max-[430px]:left-[-120px]">
+        <div className="absolute top-[50px] left-[-90px] bg-[#f8f8f5] border border-gray-200 rounded-xl shadow-xl p-4 w-[240px] z-[2000] cursor-default animate-fadeIn max-[430px]:top-[40px] max-[800px]:left-[-120px]">
           {!userFirstName ? (
             <>
               <h4 className="text-[16px] text-black font-semibold cursor-default">
