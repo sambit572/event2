@@ -67,9 +67,9 @@ const ServiceDetailCard = ({ service }) => {
   const price = minPrice
     ? maxPrice
       ? minPrice === maxPrice
-        ? `${minPrice}`
-        : `${minPrice} - ${maxPrice}`
-      : `${minPrice}`
+        ? `₹${minPrice}`
+        : `₹${minPrice} - ₹${maxPrice}`
+      : `₹${minPrice}`
     : "N/A";
 
   useEffect(() => {
@@ -347,7 +347,7 @@ const ServiceDetailCard = ({ service }) => {
       )}
 
       <div className="flex flex-wrap gap-3 items-center mb-2 text-sm">
-        <span className="text-xl font-bold text-black">₹{price}</span>
+        <span className="text-xl font-bold text-black">{price}</span>
         {originalPrice && (
           <>
             <span className="line-through text-gray-500 font-medium">
