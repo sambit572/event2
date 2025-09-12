@@ -1,13 +1,13 @@
-// import Review from "../../model/common/booking.model.js";
-
-import Report from "../../model/common/report.model.js"; // adjust path to your model
+import Report from "../../model/common/report.model.js";
 import { ApiError } from "../../utilities/ApiError.js";
+import client from "../../utilities/redisClient.js"; // your Redis client
 
-// Create a new report
+// Create a new report (POST)
 export const createReport = async (req, res) => {
   try {
     const { reporterId, selectedType, reason, description } = req.body;
     console.log("Creating report with data:", req.body);
+
     if (!reporterId || !selectedType || !reason || !description) {
       return res.status(400).json(new ApiError(400, "All fields are required"));
     }
@@ -18,20 +18,22 @@ export const createReport = async (req, res) => {
       reason,
       description,
     });
-    // console.log("ReportsId form backend", reporterId);
+
     const createdReport = await Report.findById(report._id);
-    // console.log("Created Report:", createdReport);
     if (!createdReport) {
       return res.status(500).json(new ApiError(500, "Unable to create Report"));
     }
 
-    // console.log("Report created:", report);
+    // ❌ Invalidate Redis cache for this user+type (important!)
+    await client.del(`reports:${reporterId}:${selectedType}`);
+
     res.status(201).json(report);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 };
 
+// Fetch reports (GET)
 export const fetchReports = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -48,6 +50,16 @@ export const fetchReports = async (req, res) => {
         .json({ success: false, message: "selectedType not found" });
     }
 
+    // 1️⃣ Try Redis cache first
+    const cachedReports = await client.get(`reports:${userId}:${targetType}`);
+    if (cachedReports) {
+      console.log("⚡ Returning reports from Redis cache");
+      return res
+        .status(200)
+        .json({ success: true, data: JSON.parse(cachedReports) });
+    }
+
+    // 2️⃣ Fetch from DB if not cached
     const reports = await Report.find({
       reporterId: userId,
       selectedType: targetType,
@@ -59,6 +71,14 @@ export const fetchReports = async (req, res) => {
         .json({ success: false, message: "No reports found for this user" });
     }
 
+    // 3️⃣ Store in Redis (expires in 10 mins)
+    await client.setEx(
+      `reports:${userId}:${targetType}`,
+      600, // 10 minutes
+      JSON.stringify(reports)
+    );
+
+    console.log("✅ Fetched reports from DB and cached in Redis");
     res.status(200).json({ success: true, data: reports });
   } catch (error) {
     console.error("Error fetching reports:", error);

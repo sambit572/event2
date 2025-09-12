@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { BACKEND_URL } from "../../utils/constant.js";
@@ -228,7 +228,7 @@ const FormField = ({
   const isSelect = children.type === "select";
 
   const commonInputClasses =
-    "w-full px-4 py-3.5 rounded-xl border border-slate-300 text-base text-gray-800 font-medium focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 focus:outline-none";
+    "w-full px-2 py-2 rounded-xl border border-slate-400 text-base text-gray-800 font-medium focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 focus:outline-none";
 
   if (useStaticLabel) {
     return (
@@ -298,7 +298,7 @@ const UserDetails = () => {
   const [locationMessage, setLocationMessage] = useState("");
   const { serviceId } = useParams();
   const [formData, setFormData] = useState({
-    serviceId: serviceId,
+    serviceId: "",
     bookedBy:"",
     bookedById: "",
     phone: "",
@@ -313,6 +313,37 @@ const UserDetails = () => {
     pincode: "",
     country: "India",
   });
+
+
+  useEffect(() => {
+    console.log("Params:", { serviceId });
+    if (!serviceId && userId) {
+      console.log("No service ID found, fetching cart items..."); 
+      const fetchCart = async () => {
+        try {
+          const { data } = await axios.get(`${BACKEND_URL}/cart`,{
+            withCredentials: true,
+          });
+          // console.log("Cart data:", data);
+          const serviceIds = data.data.map((item) => item.serviceId._id);
+          console.log("Service IDs from cart:", serviceIds);
+          setFormData((prev) => ({
+            ...prev,
+            serviceId: serviceIds, // now it's an array
+          }));
+        } catch (err) {
+          console.error("Error fetching cart:", err);
+        }
+      };
+      fetchCart();
+    } else {
+      // Book Now flow
+      setFormData((prev) => ({
+        ...prev,
+        serviceId: serviceId,
+      }));
+    }
+  }, [serviceId, userId]);
 
   const findStateMatch = (stateName) => {
     const stateKeys = Object.keys(stateDistricts);
@@ -404,38 +435,84 @@ const UserDetails = () => {
 
   const handleSave = async (e) => {
     e.preventDefault();
-    const { pincode } = formData;
-    const pincodeRegex = /^\d{6}$/;
-    if (!pincodeRegex.test(pincode)) {
-      alert("Pincode must be exactly 6 digits.");
-      return;
-    }
-    formData.bookedById = userId;
-    formData.bookedBy = userName.trim() || "Anonymous User";
-    console.log("Form Data:", formData);
-    const allFieldsFilled =
-      userName.trim() !== "" &&
-      Object.values(formData).every((value) => String(value).trim() !== "");
-    console.log("All fields filled:", allFieldsFilled);
-    if (allFieldsFilled) {
-      console.log("Saving user details... ");
+
+    try {
+      // Attach user info safely
+      const preparedFormData = {
+        ...formData,
+        bookedById: userId,
+        bookedBy: userName.trim() || "Anonymous User",
+      };
+
+      const missingFields = Object.keys(preparedFormData).filter((field) => {
+        const value = preparedFormData[field];
+        if (value === undefined || value === null) return true;
+
+        if (Array.isArray(value)) return value.length === 0;
+
+        if (typeof value === "string") return value.trim() === "";
+
+        return false;
+      });
+
+
+      if (missingFields.length > 0) {
+        alert(
+          `Please fill in all required fields: ${missingFields.join(", ")}.`
+        );
+        return;
+      }
+
+      // Pincode validation
+      if (!/^\d{6}$/.test(preparedFormData.pincode)) {
+        alert("Pincode must be exactly 6 digits.");
+        return;
+      }
+
+      // Phone validation
+      if (!/^\d{10}$/.test(preparedFormData.phone)) {
+        alert("Phone must be exactly 10 digits.");
+        return;
+      }
+      if (
+        preparedFormData.altPhone &&
+        !/^\d{10}$/.test(preparedFormData.altPhone)
+      ) {
+        alert("Alternate phone must be exactly 10 digits.");
+        return;
+      }
+
+      if (preparedFormData.altPhone === preparedFormData.phone) {
+        alert("Alternate phone cannot be the same as primary phone.");
+        return;
+      }
+
+      // Call backend
       const response = await axios.post(
         `${BACKEND_URL}/user/save-details`,
-        {
-          formData,
-        },
+        { formData: preparedFormData },
         { withCredentials: true }
       );
-      // console.log("User details saved:", response.data.data);
-      const userDetailsId = response.data.data._id;
+
+      const userDetailsId = response?.data?.data?._id;
+
+      if (!userDetailsId) {
+        throw new Error("Unexpected response from server.");
+      }
+
       setShowPopup(true);
       setTimeout(() => setShowPopup(false), 3000);
       navigate(`/pop-up/${userDetailsId}`);
-     
-    } else {
-      alert("Please fill in all fields before saving.");
+    } catch (err) {
+      console.error("Error saving details:", err);
+      if (err.response?.data?.message) {
+        alert(`Error: ${err.response.data.message}`);
+      } else {
+        alert("Something went wrong. Please try again later.");
+      }
     }
   };
+
 
   const handleCancel = () => {
     alert("Cancelled");
@@ -576,12 +653,12 @@ const UserDetails = () => {
 
   return (
     <div className="font-sans px-4">
-      <div className="max-w-2xl p-8 mx-auto my-24 text-gray-800 bg-[#c0bcbc] rounded-2xl border-[3px] border-[#001F3F] shadow-[0_8px_32px_rgba(31,38,135,0.2)] backdrop-blur-lg">
-        <h3 className="mb-3 text-center text-3xl font-bold tracking-wide bg-gradient-to-r from-[#004989] to-[#001F3F] bg-clip-text text-transparent">
+      <div className="max-w-2xl p-8 mx-auto my-20 text-gray-800 bg-[#fff] rounded-2xl border-[3px] border-[#001F3F] shadow-[0_8px_32px_rgba(31,38,135,0.2)] backdrop-blur-lg">
+        <h3 className="mb-[-10px] text-center text-3xl font-bold tracking-wide bg-gradient-to-r from-[#004989] to-[#001F3F] bg-clip-text text-transparent">
           Fill Out Your Event Details
         </h3>
-
-        <form className="flex flex-col gap-5 mt-8" onSubmit={handleSave}>
+<div className="mx-auto mt-3.5 h-1 w-48 rounded-full bg-gradient-to-r from-[#004989] to-[#001F3F]"></div>
+        <form className="flex flex-col gap-5 mt-6" onSubmit={handleSave}>
           <FormField id="userName" label="User Name">
             <input
               type="text"
@@ -746,14 +823,14 @@ const UserDetails = () => {
           <div className="flex flex-col justify-center gap-3.5 mt-2.5 md:flex-row">
             <button
               type="submit"
-              className="w-full px-5 py-3 text-base font-semibold tracking-wider text-white uppercase transition-transform duration-200 ease-in-out bg-green-600 rounded-lg cursor-pointer hover:shadow-lg md:w-36"
+              className="w-full px-5 py-3 text-base font-semibold tracking-wider text-white uppercase transition-transform duration-200 ease-in-out bg-[#7f00ff] rounded-lg cursor-pointer hover:shadow-[0_6px_15px_rgba(127,0,255,0.4)] md:w-36"
               onClick={handleSave}
             >
               Save
             </button>
             <button
               type="button"
-              className="w-full px-5 py-3 text-base font-semibold tracking-wider text-white uppercase transition-transform duration-200 ease-in-out bg-gradient-to-r from-rose-500 to-rose-600 rounded-lg cursor-pointer hover:shadow-lg md:w-36"
+              className="w-full px-5 py-3 font-semibold tracking-wider text-white uppercase bg-gradient-to-r from-rose-500 to-rose-600 rounded-lg cursor-pointer hover:shadow-lg md:w-36 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 hover:shadow-md"
               onClick={handleCancel}
             >
               Cancel

@@ -17,7 +17,11 @@ const bookingSchema = new mongoose.Schema(
       ref: "Service", // optional if you want to link specific service
       required:true,
     },
-    eventDate: {
+    startDate: {
+      type: Date,
+      required: true,
+    },
+    endDate: {
       type: Date,
       required: true,
     },
@@ -71,6 +75,14 @@ const bookingSchema = new mongoose.Schema(
       enum: ["PENDING", "CONFIRMED", "CANCELLED", "COMPLETED", "EXPIRED"],
       default: "PENDING",
     },
+
+    // Tracking milestones
+    milestones: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Milestone",
+      },
+    ],
 
     // Flags and Metadata
     isReviewed: {

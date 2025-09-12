@@ -45,7 +45,7 @@ const ThreeDot = ({
         >
           {/* About Us */}
           <div
-            className={`flex items-center gap-2 px-3 py-2 text-[15px] rounded 
+            className={`flex items-center gap-2 px-3 py-2 cursor-pointer text-[15px] rounded 
               ${
                 location.pathname === "/about_us" ? "bg-[#f8dd8b]" : "bg-white"
               } 
@@ -60,7 +60,7 @@ const ThreeDot = ({
 
           {/* Help Us */}
           <div
-            className={`flex items-center gap-2 px-3 py-2 text-[15px] rounded 
+            className={`flex items-center cursor-pointer gap-2 px-3 py-2 text-[15px] rounded 
               ${location.pathname === "/help_us" ? "bg-[#f8dd8b]" : "bg-white"} 
               text-[#001f3f] hover:font-bold hover:bg-gray-100 transition`}
             onClick={() => {

@@ -454,21 +454,40 @@ const Navbar = ({
       onOpenLogin(true);
     }
   };
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(event.target) &&
+        vendorRef.current &&
+        !vendorRef.current.contains(event.target) &&
+        ellipsisRef.current &&
+        !ellipsisRef.current.contains(event.target)
+      ) {
+        setShowProfileDropdown(false);
+        setShowVendorDropdown(false);
+        setShowEllipsisDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <div>
       <div className="navbar">
         {/* ✅ User Logout Popup */}
         {showLogoutPopup && (
-          <div className="fixed top-[115px] left-1/2 -translate-x-1/2 -translate-y-1/2 z-[9999] p-5 px-8 rounded-lg bg-white/10 backdrop-blur-[10px] border-2 border-white font-bold text-yellow-400 text-center animate-pulse">
+          <div className="fixed top-[250px] left-1/2 -translate-x-1/2 -translate-y-1/2 z-[9999] px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 text-white font-bold text-lg shadow-2xl border border-blue-700 animate">
             You are logged out successfully!
           </div>
         )}
 
         {/* ✅ Vendor Logout Popup */}
         {showVendorLogoutPopup && (
-          <div className="fixed top-[115px] left-1/2 -translate-x-1/2 -translate-y-1/2 z-[9999] p-5 px-8 rounded-lg bg-white/10 backdrop-blur-[10px] border-2 border-black font-bold text-black text-center animate-pulse">
-            You are signed out successfully!
+          <div className="fixed top-[115px] left-1/2 -translate-x-1/2 -translate-y-1/2 z-[9999] px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 text-white font-bold text-lg shadow-2xl border border-blue-700 animate">
+            You are logged out successfully!
           </div>
         )}
 
@@ -562,29 +581,35 @@ const Navbar = ({
             {/* Nav Icons */}
             <div className="nav-icons">
               {/* Profile Dropdown */}
-              <ProfileMenu
-                userFirstName={userFirstName}
-                currentUser={currentUser}
-                showProfileDropdown={showProfileDropdown}
-                setShowProfileDropdown={setShowProfileDropdown}
-                handleLoginClick={handleLoginClick}
-                handleSignupClick={handleSignupClick}
-                handleLogout={handleLogout}
-                navigate={navigate}
-              />
+              <div ref={profileRef}>
+                <ProfileMenu
+                  userFirstName={userFirstName}
+                  currentUser={currentUser}
+                  showProfileDropdown={showProfileDropdown}
+                  setShowProfileDropdown={setShowProfileDropdown}
+                  handleLoginClick={handleLoginClick}
+                  handleSignupClick={handleSignupClick}
+                  handleLogout={handleLogout}
+                  navigate={navigate}
+                  setShowEllipsisDropdown={setShowEllipsisDropdown}
+                  setShowVendorDropdown={setShowVendorDropdown}
+                />
+              </div>
 
               {/* Become Vendor */}
-              <VendorMenu
-                VendorFirstName={VendorFirstName}
-                userFirstName={userFirstName}
-                showVendorDropdown={showVendorDropdown}
-                setShowVendorDropdown={setShowVendorDropdown}
-                setShowProfileDropdown={setShowProfileDropdown}
-                setShowEllipsisDropdown={setShowEllipsisDropdown}
-                navigate={navigate}
-                onOpenVendorLogin={onOpenVendorLogin}
-                vendorLogout={vendorLogout}
-              />
+              <div ref={vendorRef}>
+                <VendorMenu
+                  VendorFirstName={VendorFirstName}
+                  userFirstName={userFirstName}
+                  showVendorDropdown={showVendorDropdown}
+                  setShowVendorDropdown={setShowVendorDropdown}
+                  setShowProfileDropdown={setShowProfileDropdown}
+                  setShowEllipsisDropdown={setShowEllipsisDropdown}
+                  navigate={navigate}
+                  onOpenVendorLogin={onOpenVendorLogin}
+                  vendorLogout={vendorLogout}
+                />
+              </div>
               {/* cart */}
               <CartButton
                 cartCount={user.cartCount}
@@ -592,12 +617,14 @@ const Navbar = ({
               />
             </div>
             {/* Three Dots Dropdown */}
-            <ThreeDot
-              showEllipsisDropdown={showEllipsisDropdown}
-              setShowEllipsisDropdown={setShowEllipsisDropdown}
-              setShowVendorDropdown={setShowVendorDropdown}
-              setShowProfileDropdown={setShowProfileDropdown}
-            />
+            <div ref={ellipsisRef}>
+              <ThreeDot
+                showEllipsisDropdown={showEllipsisDropdown}
+                setShowEllipsisDropdown={setShowEllipsisDropdown}
+                setShowVendorDropdown={setShowVendorDropdown}
+                setShowProfileDropdown={setShowProfileDropdown}
+              />
+            </div>
           </div>
         </div>
       </div>

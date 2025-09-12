@@ -13,7 +13,7 @@
 }
 .left-fixed {
   position: sticky;
-  top: 100px;
+  top: 80px;
   width: 50%;
   height: fit-content;
   color: white;

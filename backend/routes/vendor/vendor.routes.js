@@ -80,7 +80,7 @@ vendor_router.post(
   "/create-service",
   verifyVendorJwt,
   (req, res, next) => {
-    upload.array("images", 5)(req, res, function (err) {
+    upload.array("images", 10)(req, res, function (err) {
       if (err) {
         return res.status(400).json({ success: false, message: err.message });
       }
@@ -101,9 +101,19 @@ vendor_router
 
 vendor_router.post(
   "/upload-new-service-image/:id",
-  upload.array("images", 5),
+  verifyVendorJwt,
+  (req, res, next) => {
+    upload.array("images", 10)(req, res, function (err) {
+      if (err) {
+        return res.status(400).json({ success: false, message: err.message });
+      }
+      next();
+    });
+  },
   updateServiceImageFirst
 );
+
+
 
 // --- BANK DETAILS ROUTES --- //
 vendor_router.post("/bank-details", verifyVendorJwt, createBankDetails);

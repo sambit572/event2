@@ -12,7 +12,7 @@ const userDetailsSchema = new mongoose.Schema(
       required: true,
     },
     serviceId: {
-      type: mongoose.Schema.Types.ObjectId, // assuming it's from your services collection
+      type: [mongoose.Schema.Types.ObjectId], // assuming it's from your services collection
       ref: "Service",
       required: true,
     },

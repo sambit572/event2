@@ -1,9 +1,6 @@
 import React from "react";
 
-/**
- * @param {{currentStep: number}} props - The props for the component.
- * @param {number} props.currentStep - The index of the current active step (0-based).
- */
+
 function StepProgress({ currentStep }) {
   const steps = [
     { label: "Registration", icon: "/verify.png" },
