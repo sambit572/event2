@@ -67,8 +67,8 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
 
   const price = service.minPrice
     ? service.maxPrice
-      ? `${service.minPrice} - ${service.maxPrice}`
-      : `${service.minPrice}`
+      ? `₹${service.minPrice} - ₹${service.maxPrice}`
+      : `₹${service.minPrice}`
     : "N/A";
 
   const originalPrice = service.originalPrice;
@@ -525,7 +525,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
           )}
           <div className="mb-[0.2rem] flex flex-wrap items-center gap-1.5 md:flex-row md:gap-3">
             <span className="text-xl font-bold text-[#2c3e50] sm:text-[22px]">
-              ₹{price}
+              {price}
             </span>
             {originalPrice && (
               <>
