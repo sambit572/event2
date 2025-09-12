@@ -1,6 +1,5 @@
 import axios from "axios";
 import React, { useState } from "react";
-// import "./ForgotPass.css";
 
 function ForgotPass({ onClose }) {
   const [email, setEmail] = useState("");

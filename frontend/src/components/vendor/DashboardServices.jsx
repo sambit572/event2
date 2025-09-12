@@ -646,10 +646,10 @@ const DashboardServices = () => {
       ) : (
         <p className="text-center text-gray-600 mt-20">No services found.</p>
       )}
-      <div className="relative w-full">
+      <div className="w-full flex justify-center items-center relative">
         <button
           onClick={handleOpenAddService}
-          className="absolute top-[-14px] right-4 md:top-[-10px] md:right-[50px] flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 via-indigo-600 to-blue-700 font-semibold text-white px-5 py-2.5 shadow-md hover:scale-105"
+          className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 via-indigo-600 to-blue-700 font-semibold text-white px-5 py-2.5 shadow-md hover:scale-105"
         >
           <span className="text-xl font-bold">+</span>
           <span className="text-base">Services</span>

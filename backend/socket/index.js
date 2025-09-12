@@ -2,10 +2,9 @@ import { Server } from "socket.io";
 import jwt from "jsonwebtoken";
 import registerNegotiationHandler from "./handlers/negotiation.handlers.js";
 
-let io; 
+let io;
 let apiNameSpace;
 const vendorSocketMap = new Map();
-
 
 export default function initSocket(server) {
   try {
@@ -17,7 +16,7 @@ export default function initSocket(server) {
       },
     });
     console.log("✅ Socket.IO initialized successfully");
-    apiNameSpace = io.of("/api")
+    apiNameSpace = io.of("/api");
   } catch (err) {
     console.error("❌ Failed to initialize Socket.IO:", err);
     throw err; // Stop server if Socket.IO fails
@@ -25,8 +24,6 @@ export default function initSocket(server) {
 
   apiNameSpace.on("connection", (socket) => {
     console.log("🟢 User connected:", socket.id);
-
-   
 
     try {
       // register your negotiation handlers

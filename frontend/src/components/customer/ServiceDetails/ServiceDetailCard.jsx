@@ -4,8 +4,10 @@ import toast from "react-hot-toast";
 import { FaRegCalendarCheck } from "react-icons/fa6";
 import { FaRegHeart, FaHeart } from "react-icons/fa6";
 import { BACKEND_URL } from "../../../utils/constant";
+import { useParams } from "react-router-dom"; // 1. IMPORT useParams
 
 const ServiceDetailCard = ({ service }) => {
+  const { categoryId } = useParams(); // 2. GET categoryId FROM URL
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [showShareMenu, setShowShareMenu] = useState(false);
   const shareContainerRef = useRef(null);
@@ -34,13 +36,9 @@ const ServiceDetailCard = ({ service }) => {
   const averageRating = rating || 0;
   const serviceId = _id || service.id;
   const title = serviceName || "Untitled Service";
-
-  // ADDED: Logic to check for vendor availability
-  // IMPORTANT: Assumes your 'service' object has a boolean property 'available'.
   const isVendorAvailable = service.available !== false;
 
   const formatDuration = (durationInMinutes) => {
-    // ... (rest of the function is unchanged)
     const totalMinutes = parseInt(durationInMinutes, 10) || 0;
     const days = Math.floor(totalMinutes / (24 * 60));
     const hours = Math.floor((totalMinutes % (24 * 60)) / 60);
@@ -74,10 +72,7 @@ const ServiceDetailCard = ({ service }) => {
       : `₹${minPrice}`
     : "N/A";
 
-  console.log("SERVICE PROPS:", service);
-
   useEffect(() => {
-    // ... (rest of the useEffect is unchanged)
     const fetchWishlistStatus = async () => {
       try {
         const res = await axios.get(`${BACKEND_URL}/wishlist/getwishlist`, {
@@ -102,7 +97,6 @@ const ServiceDetailCard = ({ service }) => {
   }, [serviceId]);
 
   useEffect(() => {
-    // ... (rest of the useEffect is unchanged)
     const handleClickOutside = (event) => {
       if (
         shareContainerRef.current &&
@@ -134,7 +128,6 @@ const ServiceDetailCard = ({ service }) => {
     if (serviceId) fetchRatingSummary();
   }, [serviceId]);
 
-  // Toggle wishlist state
   const handleToggleWishlist = async () => {
     try {
       await axios.post(
@@ -157,8 +150,8 @@ const ServiceDetailCard = ({ service }) => {
   };
 
   const shareService = (platform) => {
-    // ... (rest of the function is unchanged)
-    const serviceUrl = `${window.location.origin}/service/${serviceId}`;
+    // 3. USE categoryId TO BUILD THE CORRECT URL
+    const serviceUrl = `${window.location.origin}/service/${categoryId}/${serviceId}`;
     const shareText = `Check out this service: ${title} by ${vendorName}`;
     let shareUrl = "";
     switch (platform) {
@@ -247,7 +240,6 @@ const ServiceDetailCard = ({ service }) => {
             }`}
           >
             <div className="py-2">
-              {/* ... Share options ... */}
               <div
                 className="flex cursor-pointer items-center gap-3 px-4 py-3 text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
                 onClick={() => shareService("facebook")}
@@ -320,7 +312,7 @@ const ServiceDetailCard = ({ service }) => {
       </div>
 
       <h2 className="text-xl font-semibold text-gray-800 mb-2 pr-12">
-        {title.toUpperCase()}
+        {title}
       </h2>
 
       <div className="flex items-center gap-2 text-sm font-medium text-black mb-2 flex-wrap">
@@ -330,7 +322,6 @@ const ServiceDetailCard = ({ service }) => {
           <FaRegCalendarCheck className="text-sm" />
           Event Hosted: 0
         </span>
-        {/* ADDED: "Service Unavailable" Badge */}
         {!isVendorAvailable && (
           <span className="flex items-center gap-1.5 rounded-full border border-red-200 bg-red-100 px-3 py-1 text-[11px] font-medium text-red-800 sm:text-xs">
             Service Unavailable

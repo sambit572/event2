@@ -1,20 +1,18 @@
+/* --- CONTAINER FOR BOTH BUTTONS --- */
 .form-buttons {
   display: flex;
-  justify-content: space-between;
+  justify-content: center; /* Center the buttons within the container */
   align-items: center;
   gap: 20px;
-  margin-top: 20px;
-  flex-wrap: nowrap;
-  max-width: 320px;
-  margin-left: auto;
-  margin-right: auto;
-  flex-direction: row;
+  max-width: 320px; /* Keep a max-width for desktop */
+  margin: 0 auto; /* Center the container itself */
 }
-.back-btn {
-  width: 140px;
+
+/* --- COMMON STYLES FOR BOTH BUTTONS --- */
+.back-btn,
+.submits-btn {
+  flex: 1; /* IMPROVEMENT: Let buttons share space equally */
   height: 42px;
-  background-color: #b5afaf;
-  color: white;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -25,6 +23,12 @@
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+}
+
+/* --- INDIVIDUAL BUTTON STYLES --- */
+.back-btn {
+  background-color: #b5afaf;
+  color: white;
 }
 
 .back-btn:hover {
@@ -37,82 +41,24 @@
 }
 
 .submits-btn {
-  width: 140px;
-  height: 42px;
-  background-color: #32CD32;
+  background-color: #32cd32;
   color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 6px;
-  font-size: 14px;
-  font-weight: bold;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
-.submit-btn:hover {
+/* --- FIX: Corrected class name from .submit-btn to .submits-btn --- */
+.submits-btn:hover {
   background-color: #28a428;
 }
 
-/* ============ Responsive ============ */
-@media (max-width: 1024px) {
-  .form-buttons {
-    gap: 18px;
-  }
-
-  .back-btn {
-    width: 130px;
-    height: 40px;
-    font-size: 13.5px;
-  }
-
-  .submit-btn {
-    width: 130px;
-    height: 40px;
-    font-size: 13.5px;
-  }
-}
-
-@media (max-width: 768px) {
-  .form-buttons {
-    gap: 15px;
-  }
-
-  .back-btn {
-    width: 120px;
-    height: 38px;
-    font-size: 13px;
-  }
-
-  .submit-btn {
-    width: 120px;
-    height: 38px;
-    font-size: 13px;
-  }
-}
-
+/* ============ RESPONSIVE (SIMPLIFIED & FIXED) ============ */
 @media (max-width: 480px) {
   .form-buttons {
-    flex-direction: column;
+    flex-direction: column; /* Stack buttons vertically */
     gap: 12px;
-    max-width: 100%;
-    
   }
 
-  .back-btn {
-    width: 100%;
-    max-width: 260px;
-    height: 30px;
-    font-size: 12.5px;
-  }
-
-  .submit-btn {
-    width: 100%;
-    max-width: 260px;
-    height: 30px;
-    font-size: 12.5px;
+  .back-btn,
+  .submits-btn {
+    width: 100%; /* IMPROVEMENT: Buttons take full width when stacked */
   }
 }

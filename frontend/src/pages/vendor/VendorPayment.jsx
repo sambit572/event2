@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./VendorPayment.css";
 import StepProgress from "./StepProgress";
-import "./StepProgress.css";
+
 import Button from "./../../components/vendor/register/VendorButton";
 import Spinner from "./../../components/common/Spinner";
 
@@ -52,13 +52,13 @@ export default function VendorPayment() {
       return;
     }
 
-    setPanVerification((prev) => ({
-      ...prev,
-      isVerifying: true,
-      verificationMessage: "Verifying PAN...",
-    }));
+  //   setPanVerification((prev) => ({
+  //     ...prev,
+  //     isVerifying: true,
+  //     verificationMessage: "Verifying PAN...",
+  //   }));
 
-    console.log(🔍 [VendorPayment] Verifying PAN: ${panNumber});
+  //   console.log(`🔍 [VendorPayment] Verifying PAN: ${panNumber}`);
 
     try {
       const response = await axios.post(
@@ -70,14 +70,14 @@ export default function VendorPayment() {
         }
       );
 
-      if (response.data.success) {
-        const verifiedName = response.data.data?.full_name || "";
-        setPanVerification({
-          isVerifying: false,
-          isVerified: true,
-          verificationMessage: "PAN verified successfully!",
-          verifiedName,
-        });
+  //     if (response.data.success) {
+  //       const verifiedName = response.data.data?.full_name || "";
+  //       setPanVerification({
+  //         isVerifying: false,
+  //         isVerified: true,
+  //         verificationMessage: "PAN verified successfully!",
+  //         verifiedName,
+  //       });
 
         // Auto-fill account holder name if verified name is available
         if (verifiedName && !formData.accountHolderName) {
@@ -113,14 +113,12 @@ export default function VendorPayment() {
         isVerified: false,
         verificationMessage: "",
         verifiedName: "",
-      });
-    } */
-
-    // Auto-verify when PAN is 10 characters
-    // if (panValue.length === 10 && /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(panValue)) {
-    //   verifyPAN(panValue);
-    // }
+      });*/
   };
+
+  // Auto-verify when PAN is 10 characters
+  // if (panValue.length === 10 && /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(panValue)) {
+  //   verifyPAN(panValue);
 
   const handleBack = () => {
     navigate("/category/VendorService");

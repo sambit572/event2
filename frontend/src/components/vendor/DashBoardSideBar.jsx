@@ -10,7 +10,7 @@ function DashBoardSideBar({
   isOpen,
   isVerified,
   setConfirmPasswordModal,
-  onSaveComplete,
+  setIsVerified,
   setVendorShowPasswordModal,
 }) {
   const dispatch = useDispatch();
@@ -23,17 +23,26 @@ function DashBoardSideBar({
 
   const { form, updateField, updateVendor, updateBank } = UseVendorProfile();
 
+  console.log("DashBoardSideBar render - isVerified:", isVerified);
+  console.log("DashBoardSideBar render - editMode:", editMode);
+
+
   useEffect(() => {
-    const updateAfterVerification = async () => {
-      if (isVerified && editMode) {
+    if (!isVerified) return; // only run when verified
+
+    if (editMode) {
+      (async () => {
         await updateVendor();
+        console.log("Vendor updated successfully");
+
         await updateBank();
-        setEditMode(false);
-        if (onSaveComplete) onSaveComplete();
-      }
-    };
-    updateAfterVerification();
-  }, [isVerified]);
+        console.log("Bank updated successfully");
+
+        setEditMode(false); // exit edit mode
+        setIsVerified(false); // reset verification flag
+      })();
+    }
+  }, [isVerified]); // 🚨 only depend on isVerified
 
   const handleToggleEdit = () => {
     if (editMode) {
@@ -45,7 +54,7 @@ function DashBoardSideBar({
 
   const getInitialsAvatar = (name) => {
     if (!name) return "NA";
-      return name
+    return name
       .split(" ")
       .map((n) => n[0]?.toUpperCase())
       .join("")
@@ -269,7 +278,9 @@ function DashBoardSideBar({
             )}
           </li>
 
-          <li className="typography">Events Hosted: {vendor?.eventsHosted ?? 0}</li>
+          <li className="typography">
+            Events Hosted: {vendor?.eventsHosted ?? 0}
+          </li>
 
           <li className="typography">
             {editMode ? (
@@ -283,13 +294,13 @@ function DashBoardSideBar({
               form.upiId
             )}
           </li>
-          
+
           <button
-          className="change-password"
-          onClick={() => setVendorShowPasswordModal(true)}
-        >
-          Change Password
-        </button>
+            className="change-password"
+            onClick={() => setVendorShowPasswordModal(true)}
+          >
+            Change Password
+          </button>
 
           <li className="typography bank-dropdown">
             <div
@@ -339,7 +350,13 @@ function DashBoardSideBar({
         </ul>
 
         <button className="edit-buttons flex gap-1" onClick={handleToggleEdit}>
-          {editMode ? "Save" : <><FaEdit /> Edit</>}
+          {editMode ? (
+            "Save"
+          ) : (
+            <>
+              <FaEdit /> Edit
+            </>
+          )}
         </button>
       </div>
     </div>

@@ -9,8 +9,8 @@ import {
 import { BACKEND_URL } from "../../../utils/constant";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { incrementCartCount } from "../../../redux/UserSlice.js";
 import { useDispatch } from "react-redux";
-import { incrementCartCount, setCartCount } from "../../../redux/UserSlice.js";
 
 const ServiceDescription = ({ service, onSwitchToLogin }) => {
   const dispatch = useDispatch();
@@ -23,15 +23,15 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
   if (!service) {
     return null;
   }
+
   const [ratingData, setRatingData] = useState(null);
 
-  const serviceId = service._id || service._id;
+  const serviceId = service._id || service.id;
   const title = service.serviceName || service.title || "Untitled Service";
   const vendorName = service.vendorName || "Unknown Vendor";
   const description = service.serviceDes || service.description || "";
   const rawDuration = service.duration || 0;
 
-  // Check if vendor is available - based on your dashboard structure
   const isVendorAvailable = service.available !== false;
 
   const formatDuration = (durationInMinutes) => {
@@ -47,12 +47,14 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
   };
 
   const duration = formatDuration(rawDuration);
+
   const stateLocation = Array.isArray(service.stateLocationOffered)
     ? service.stateLocationOffered.join(", ")
     : service.stateLocationOffered ||
       (service.address
         ? `${service.address.area}, ${service.address.city}, ${service.address.state} - ${service.address.pincode}`
         : "Location not provided");
+
   const location = Array.isArray(service.locationOffered)
     ? service.locationOffered.join(", ")
     : service.locationOffered ||
@@ -99,32 +101,15 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
       : `${location.substring(0, MAX_LOCATION_LENGTH)}...`;
 
   useEffect(() => {
-    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
-    if (!isLoggedIn) return;
-
-    const fetchWishlistStatus = async () => {
-      try {
-        const res = await axios.get(`${BACKEND_URL}/wishlist/getwishlist`, {
-          withCredentials: true,
-        });
-        const found =
-          Array.isArray(res.data) &&
-          res.data.some((item) => item.service?._id === serviceId);
-        setIsWishlisted(found);
-      } catch (err) {
-        console.error("Error fetching wishlist:", err);
+    const handleClickOutside = (event) => {
+      if (
+        shareContainerRef.current &&
+        !shareContainerRef.current.contains(event.target)
+      ) {
+        setShowShareMenu(false);
       }
     };
-
-    fetchWishlistStatus();
-
-    const handleWishlistUpdate = (e) => {
-      if (e.detail?.serviceId === serviceId) {
-        fetchWishlistStatus();
-      }
-    };
-
-    window.addEventListener("wishlistUpdated", handleWishlistUpdate);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
       window.removeEventListener("wishlistUpdated", handleWishlistUpdate);
     };
@@ -146,6 +131,13 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
 
     if (serviceId) fetchRatingSummary();
   }, [serviceId]);
+
+  const handleWishlistUpdate = (e) => {
+    if (e.detail?.serviceId === serviceId) {
+      fetchWishlistStatus();
+    }
+  };
+
   // Toggle wishlist state
   const handleToggleWishlist = async (e) => {
     e.stopPropagation();
@@ -180,10 +172,26 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
     setShowShareMenu(!showShareMenu);
   };
 
+  // --- THIS IS THE ADJUSTED PORTION ---
   const shareService = (platform) => {
-    const serviceUrl = `${window.location.origin}/service/${serviceId}`;
+    // Get the category from the service object prop
+    const categoryId = service.categoryId;
+
+    // Important check: If categoryId is missing, the link will be wrong.
+    if (!categoryId) {
+      toast.error("Cannot generate share link: Category ID is missing.");
+      console.error(
+        "Service object is missing 'categoryId' property.",
+        service
+      );
+      return;
+    }
+
+    // Build the correct URL
+    const serviceUrl = `${window.location.origin}/service/${categoryId}/${serviceId}`;
     const shareText = `Check out this service: ${title} by ${vendorName}`;
     let shareUrl = "";
+
     switch (platform) {
       case "facebook":
         shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
@@ -200,7 +208,6 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
           shareText + " " + serviceUrl
         )}`;
         break;
-      // ADDED INSTAGRAM LOGIC
       case "instagram":
         navigator.clipboard
           .writeText(serviceUrl)
@@ -209,7 +216,9 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
             setShowShareMenu(false);
           })
           .catch(() => {
-            toast.error("Failed to copy link");
+            toast.error(
+              "Failed to copy link. Please use a secure (HTTPS) connection."
+            );
           });
         return;
       case "telegram":
@@ -225,17 +234,31 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
             setShowShareMenu(false);
           })
           .catch(() => {
-            toast.error("Failed to copy link");
+            toast.error(
+              "Failed to copy link. Please use a secure (HTTPS) connection."
+            );
           });
         return;
       default:
         return;
     }
+
     if (shareUrl) {
-      window.open(shareUrl, "_blank", "width=600,height=400");
+      const newWindow = window.open(shareUrl, "_blank", "width=600,height=400");
       setShowShareMenu(false);
+
+      if (
+        !newWindow ||
+        newWindow.closed ||
+        typeof newWindow.closed === "undefined"
+      ) {
+        toast.error(
+          "Pop-up blocked! Please allow pop-ups for this site to share."
+        );
+      }
     }
   };
+  // --- END OF ADJUSTED PORTION ---
 
   const handleAddToCart = async (e) => {
     e.stopPropagation();
@@ -282,7 +305,6 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
       return;
     }
     try {
-      // You'll need to implement this endpoint on your backend
       await axios.post(
         `${BACKEND_URL}/notifications/notify-when-available`,
         { serviceId },
@@ -294,6 +316,34 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
       console.error("Notify me error:", err);
     }
   };
+
+  useEffect(() => {
+    if (!service) return;
+    const serviceId = service._id || service.id;
+    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
+    if (!isLoggedIn) return;
+
+    const fetchWishlistStatus = async () => {
+      try {
+        const res = await axios.get(`${BACKEND_URL}/wishlist/getwishlist`, {
+          withCredentials: true,
+        });
+        const found =
+          Array.isArray(res.data) &&
+          res.data.some((item) => item.service?._id === serviceId);
+        setIsWishlisted(found);
+      } catch (err) {
+        console.error("Error fetching wishlist:", err);
+      }
+    };
+
+    fetchWishlistStatus();
+
+    window.addEventListener("wishlistUpdated", handleWishlistUpdate);
+    return () => {
+      window.removeEventListener("wishlistUpdated", handleWishlistUpdate);
+    };
+  }, [service]);
 
   return (
     <section className="relative flex h-full flex-col bg-[#fff] p-4 sm:pr-[40px] text-gray-800 md:py-0 px-5">
@@ -322,16 +372,19 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
           </div>
 
           <div
-            className={`absolute top-full right-0 min-w-[160px] origin-top-right rounded-xl border border-gray-200 bg-white shadow-2xl transition-all duration-200 ease-out ${
+            className={`absolute top-full right-0 mt-2 min-w-[160px] origin-top-right rounded-xl border border-gray-200 bg-white shadow-2xl transition-all duration-200 ease-out ${
               showShareMenu
-                ? "opacity-100 scale-100 z-[9999]"
-                : "opacity-0 scale-95 pointer-events-none z-[-1]"
+                ? "opacity-100 scale-100"
+                : "opacity-0 scale-95 pointer-events-none"
             }`}
           >
-            <div>
+            <div className="py-2">
               <div
-                className="flex cursor-pointer items-center gap-3 px-4 pt-2 pb-[0.2rem] text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
-                onClick={() => shareService("facebook")}
+                className="flex cursor-pointer items-center gap-3 px-4 py-3 text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  shareService("facebook");
+                }}
               >
                 <img
                   src="/facebook.png"
@@ -341,8 +394,11 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
                 Facebook
               </div>
               <div
-                className="flex cursor-pointer items-center gap-3 px-4 pt-2 pb-[0.2rem] text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
-                onClick={() => shareService("twitter")}
+                className="flex cursor-pointer items-center gap-3 px-4 py-3 text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  shareService("twitter");
+                }}
               >
                 <img
                   src="/twitter 1.png"
@@ -352,8 +408,11 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
                 X
               </div>
               <div
-                className="flex cursor-pointer items-center gap-3 px-4 pt-2 pb-[0.2rem] text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
-                onClick={() => shareService("whatsapp")}
+                className="flex cursor-pointer items-center gap-3 px-4 py-3 text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  shareService("whatsapp");
+                }}
               >
                 <img
                   src="/whatsapp.png"
@@ -362,10 +421,12 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
                 />{" "}
                 WhatsApp
               </div>
-              {/* ADDED INSTAGRAM BUTTON */}
               <div
-                className="flex cursor-pointer items-center gap-3 px-4 pt-2 pb-[0.2rem] text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
-                onClick={() => shareService("instagram")}
+                className="flex cursor-pointer items-center gap-3 px-4 py-3 text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  shareService("instagram");
+                }}
               >
                 <img
                   src="/instagram.png"
@@ -375,8 +436,11 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
                 Instagram
               </div>
               <div
-                className="flex cursor-pointer items-center gap-3 px-4 pt-2 pb-[0.2rem] text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
-                onClick={() => shareService("telegram")}
+                className="flex cursor-pointer items-center gap-3 px-4 py-3 text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  shareService("telegram");
+                }}
               >
                 <img
                   src="/telegram.png"
@@ -386,8 +450,11 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
                 Telegram
               </div>
               <div
-                className="flex cursor-pointer items-center gap-3 px-4 pt-2 pb-[0.2rem] text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
-                onClick={() => shareService("copy")}
+                className="flex cursor-pointer items-center gap-3 px-4 py-3 text-sm text-gray-800 transition-colors duration-200 ease-in-out hover:bg-gray-50"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  shareService("copy");
+                }}
               >
                 <img
                   src="/connection.png"
@@ -402,15 +469,16 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
       </div>
       <div className="flex flex-grow flex-col">
         <div>
+          {/* This Link component also needs the categoryId to work correctly */}
           <Link
-            to={`/service/${serviceId}`}
-            className="text-inherit no-underline "
+            to={`/service/${service.categoryId}/${serviceId}`}
+              className="text-inherit no-underline "
           >
-            <h3 className="text-lg font-bold leading-tight text-[#2c3e50] sm:text-xl md:text-2xl">
+             <h3 className="text-lg font-bold leading-tight text-[#2c3e50] sm:text-xl md:text-2xl">
               {title.toUpperCase()}
             </h3>
           </Link>
-          <div className="mb-[0.2rem] flex flex-wrap items-center gap-2 md:flex-row md:gap-2">
+          <div className="flex flex-wrap items-center gap-2 md:flex-row md:gap-2">
             <span className="text-sm font-semibold text-[#3498db] sm:text-base">
               {vendorName}
             </span>
@@ -444,7 +512,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
             {stateLocation.toUpperCase()}
           </p>
           {ratingData ? (
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-2 mb-[0.3rem]">
               <span className="bg-green-600 text-white px-2 py-1 rounded-full text-sm font-semibold">
                 {ratingData.averageRating.toFixed(1)} ★
               </span>
@@ -495,14 +563,22 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
           {isVendorAvailable ? (
             <>
               <button
-                className="flex w-full cursor-pointer items-center justify-center rounded-full border-none bg-[#7f00ff] px-12 py-3 text-sm font-semibold text-white transition-colors duration-300 ease-in-out hover:bg-[#5e00cc] active:bg-[#4b0099] lg:w-auto lg:min-w-[120px"
+                className="flex w-full cursor-pointer items-center justify-center 
+                rounded-full border-none 
+                bg-[#7f00ff] px-12 py-3 text-sm font-semibold text-white 
+                transition-colors duration-300 ease-in-out 
+                hover:bg-[#5e00cc] 
+                active:bg-[#4b0099] 
+                lg:w-auto lg:min-w-[120px]"
                 onClick={handleBookNow}
               >
                 Book Now
               </button>
 
               <button
-                className="flex w-full cursor-pointer items-center justify-center rounded-full border-none px-12 py-3 text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600 transition-colors duration-300 ease-in-out active:bg-orange-500 lg:w-auto lg:min-w [120px] "
+                className="bg-gradient-to-r from-red-600 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold transition-all duration-300 shadow-md hover:shadow-lg flex w-full cursor-pointer items-center justify-center 
+                rounded-full border-none px-12 py-3 text-sm font-semibold 
+                lg:w-auto lg:min-w-[120px] "
                 onClick={handleAddToCart}
               >
                 Add to Cart

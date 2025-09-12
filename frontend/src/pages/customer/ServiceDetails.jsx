@@ -13,7 +13,8 @@ import ReviewForm from "../../components/customer/servicedetails/ReviewForm.jsx"
 import { FaBell } from "react-icons/fa6";
 import { BACKEND_URL } from "../../utils/constant.js";
 import { useSelector, useDispatch } from "react-redux";
-import { setCategoryServices } from "../../redux/categorySlice.js";
+
+import { setCategoryServices } from "../../redux/categorySlice";
 import { incrementCartCount } from "../../redux/UserSlice.js";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 // import SimilarProductCard from "./../../components/customer/ServiceDetails/PeopleAlsoBooked";
@@ -269,7 +270,7 @@ const Service = ({ onSwitchToLogin }) => {
                   Book Now
                 </button>
                 <button
-                  className="w-full lg:w-auto lg:min-w-[220px] px-4 py-3 rounded-full text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-md transition-all duration-300"
+                  className="w-full lg:w-auto lg:min-w-[220px] px-4 py-3 rounded-full text-sm font-semibold text-white bg-gradient-to-r from-red-600 to-red-600 hover:from-red-600 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-md transition-all duration-300"
                   onClick={handleAddToCart}
                 >
                   Add to Cart
@@ -314,7 +315,7 @@ const Service = ({ onSwitchToLogin }) => {
             <div className="flex justify-center">
               <button
                 onClick={handleUserReview}
-                className="flex items-center gap-2 mt-5 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2.5 rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1 active:scale-95 text-sm sm:text-base md:text-lg"
+                className="flex items-center gap-2 mt-5 bg-[#7f00ff] hover:bg-[#5e00cc] text-white font-semibold px-5 py-2.5 rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1 active:scale-95 text-sm sm:text-base md:text-lg"
               >
                 <span className="text-lg sm:text-xl">💬</span>
                 Add Feedback

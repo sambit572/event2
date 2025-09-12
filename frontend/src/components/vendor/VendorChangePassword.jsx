@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./VendorChangePassword.css";
 import PasswordInput from "../../utils/PasswordInput";
 import axios from "axios";
-import { BACKEND_URL } from "../../utils/constant";
+import { BACKEND_URL } from "../../utils/constant.js";
 const VendorChangePassword = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -92,7 +92,7 @@ const VendorChangePassword = () => {
           </button>
           <button
             onClick={() => {
-              setShowPasswordModal(false);
+              setVendorShowPasswordModal(false);
               setOldPassword("");
               setNewPassword("");
               setConfirmPassword("");
