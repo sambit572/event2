@@ -472,9 +472,9 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
           {/* This Link component also needs the categoryId to work correctly */}
           <Link
             to={`/service/${service.categoryId}/${serviceId}`}
-              className="text-inherit no-underline "
+            className="text-inherit no-underline "
           >
-             <h3 className="text-lg font-bold leading-tight text-[#2c3e50] sm:text-xl md:text-2xl">
+            <h3 className="text-lg font-bold leading-tight text-[#2c3e50] sm:text-xl md:text-2xl">
               {title.toUpperCase()}
             </h3>
           </Link>
@@ -577,7 +577,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
 
               <button
                 className="bg-gradient-to-r from-red-600 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold transition-all duration-300 shadow-md hover:shadow-lg flex w-full cursor-pointer items-center justify-center 
-                rounded-full border-none px-12 py-3 text-sm font-semibold 
+                rounded-full border-none px-12 py-3 text-sm 
                 lg:w-auto lg:min-w-[120px] "
                 onClick={handleAddToCart}
               >
