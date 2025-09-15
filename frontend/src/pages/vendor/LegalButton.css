@@ -13,6 +13,7 @@
 .submits-btn {
   flex: 1; /* IMPROVEMENT: Let buttons share space equally */
   height: 42px;
+  width: 93px;
   display: flex;
   justify-content: center;
   align-items: center;

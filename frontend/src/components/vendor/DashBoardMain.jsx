@@ -10,6 +10,8 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import PasswordInput from "./../../utils/PasswordInput.jsx";
 import { BACKEND_URL } from "../../utils/constant.js";
+import { FiEye, FiEyeOff } from "react-icons/fi";
+
 function DashBoardMain() {
   const navigate = useNavigate();
 
@@ -18,6 +20,7 @@ function DashBoardMain() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("services");
   const [popupData, setPopupData] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const [vendorShowPasswordModal, setVendorShowPasswordModal] = useState(false); // ✅ Added
   const [oldPassword, setOldPassword] = useState(""); // ✅ Added
@@ -30,7 +33,7 @@ function DashBoardMain() {
   const [password, setPassword] = useState("");
 
   const [showSuccessPopup, setShowSuccessPopup] = useState(false); // ✅ Success popup state
-  
+
   const handleConfirmPassword = async () => {
     try {
       const res = await axios.post(
@@ -176,8 +179,6 @@ function DashBoardMain() {
       <div className="main-contain">
         <ToggleTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
-        
-
         <div className="relative max-h-[70vh] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden h-[480px]">
           {activeTab === "services" ? (
             <DashboardServices />
@@ -252,13 +253,22 @@ function DashBoardMain() {
               <h3 className="text-lg font-semibold mb-4 text-center">
                 Enter your password to confirm
               </h3>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-                className="w-full px-3 py-2 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+              <div className="relative w-full mb-3">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder={password}
+                  className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
+                />
+                <span
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                >
+                  {showPassword ? <FiEyeOff /> : <FiEye />}
+                </span>
+              </div>
+
               <div className="flex justify-end space-x-2">
                 <button
                   onClick={handleConfirmPassword}

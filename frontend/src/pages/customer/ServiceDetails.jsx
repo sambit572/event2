@@ -340,7 +340,7 @@ const Service = ({ onSwitchToLogin }) => {
 
       <div className="view-dj-section">
         <h2 className="people-also-book">People Also Booked</h2>
-        <div className="view-dj">
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-6 mt-5 mb-5">
           {categoryServices.map((product) => (
             <SimilarProductCard key={product.id} product={product} />
           ))}

@@ -25,22 +25,44 @@ const ServiceList = ({ onSwitchToLogin }) => {
   const [selectedCity, setSelectedCity] = useState("");
 
   useEffect(() => {
-    console.log("Category ID:", categoryId);
     const fetchServices = async () => {
       try {
         setLoading(true);
+
         const response = await axios.get(
           `${BACKEND_URL}/common/category/${categoryId}`
         );
-        console.log("category data", response.data);
-        // console.log("Fetched services1:", response.data.data);
-        dispatch(setCategoryServices(response.data.data)); // save to redux
-        // console.log("My data", response.data.data);
-        // setServices(response.data.data);
-        console.log("Fetched services data:", response.data.data); // Debugging log
-        setServices(response.data.data);
-        setFilteredServices(response.data.data); // Initialize filtered services
-        setLoading(false);
+
+        let servicesData = response.data.data;
+        console.log("Fetched services:", servicesData);
+        // Attach ratings for each service
+        servicesData = await Promise.all(
+          servicesData.map(async (service) => {
+            try {
+              const ratingRes = await axios.get(
+                `${BACKEND_URL}/reviews/rating/${service._id}`
+              );
+              return {
+                ...service,
+                ratingData: ratingRes.data.data, // ✅ attach averageRating, totalReviews, etc.
+              };
+            } catch (err) {
+              console.error(`Failed to fetch rating for ${service._id}`, err);
+              return {
+                ...service,
+                ratingData: {
+                  averageRating: 0,
+                  totalRatings: 0,
+                  totalReviews: 0,
+                },
+              };
+            }
+          })
+        );
+
+        dispatch(setCategoryServices(servicesData)); // save to redux
+        setServices(servicesData);
+        setFilteredServices(servicesData); // Initialize filtered services
       } catch (error) {
         console.error("Error fetching services:", error);
       } finally {
@@ -49,7 +71,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
     };
 
     fetchServices();
-  }, [categoryId]);
+  }, [categoryId, dispatch]);
 
   const handleApplyFilters = (filters) => {
     console.log("Applying filters:", filters);
@@ -126,12 +148,17 @@ const ServiceList = ({ onSwitchToLogin }) => {
             return a.serviceName.localeCompare(b.serviceName);
           case "duration":
             return (a.duration || 0) - (b.duration || 0);
-          case "rating":
-            const ratingA =
-              Number(a.rating) || Number(a?.ratingData?.averageRating) || 0;
-            const ratingB =
-              Number(b.rating) || Number(b?.ratingData?.averageRating) || 0;
-            return ratingB - ratingA; // Higher rating first
+          case "rating": {
+            const ratingA = parseFloat(
+              a?.ratingData?.averageRating ?? a.rating ?? 0
+            );
+            const ratingB = parseFloat(
+              b?.ratingData?.averageRating ?? b.rating ?? 0
+            );
+            console.log("Sorting Ratings:", ratingA, ratingB);
+            return ratingB - ratingA; // higher rating first
+          }
+
           default:
             return 0;
         }
@@ -147,7 +174,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
     setFilteredServices(services);
   };
 
-  console.log("categoryId:",categoryId)
+  console.log("categoryId:", categoryId);
 
   return (
     <div className="serviceList">

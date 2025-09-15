@@ -1,23 +1,22 @@
 import { BsCurrencyRupee } from "react-icons/bs";
 import { IoIosStar } from "react-icons/io";
-import { FaHeart } from "react-icons/fa6"; // FontAwesome shopping cart
-import "./PeopleAlsoBooked.css"; // Extracted CSSs for maintainability
+import { FaHeart } from "react-icons/fa6";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { BACKEND_URL } from "../../../utils/constant";
 import axios from "axios";
-const SimilarProductCard = ({ product }) => {
-    const [ratingData, setRatingData] = useState(null);
-  const navigate = useNavigate();
 
+const SimilarProductCard = ({ product }) => {
+  const [ratingData, setRatingData] = useState(null);
+  const navigate = useNavigate();
   const { categoryId } = useParams();
-  // console.log("Category ID & Service ID:", categoryId, product._id);
+
   const handleClick = () => {
     navigate(`/service/${categoryId}/${product._id}`);
   };
+
   const serviceId = product._id;
+
   useEffect(() => {
     const fetchRatingSummary = async () => {
       try {
@@ -36,47 +35,57 @@ const SimilarProductCard = ({ product }) => {
   }, [serviceId]);
 
   return (
-    <div className="similar-card" onClick={handleClick}>
-      <div className="similar-image">
-        <img src={product.serviceImage[0]} alt="DJ Service" />
+    <div
+      className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col hover:border-blue-500 border"
+      onClick={handleClick}
+    >
+      {/* Image */}
+      <div className="relative w-full max-w-sm aspect-[4/3] overflow-hidden flex items-center justify-center bg-gray-100">
+        <img
+          src={product.serviceImage[0]}
+          alt="DJ Service"
+          className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+        />
       </div>
 
-      <div className="similar-container">
-        <h3 className="similar-title">{product.serviceName}</h3>
+      {/* Content */}
+      <div className="flex flex-col justify-between flex-grow p-4">
+        <h3 className="text-lg font-semibold text-gray-800 mb-2 line-clamp-2">
+          {product.serviceName}
+        </h3>
 
-        <div className="price-block">
-          <div className="prices">
-            <span>₹{product.minPrice}</span> 
-            <span className="ml-1">- ₹{product.maxPrice}</span>
+        {/* Price */}
+        <div className="mb-2">
+          <span className="text-black-700 font-semibold text-lg">
+            ₹{product.minPrice}
+          </span>
+          <span className="text-black-700 font-semibold text-lg ml-1">
+            - ₹{product.maxPrice}
+          </span>
+        </div>
+
+        {/* Ratings */}
+        {ratingData ? (
+          <div className="flex items-center gap-2 mb-2">
+            <span className="bg-green-600 text-white px-2 py-0.5 rounded-lg text-sm font-semibold">
+              {ratingData.averageRating.toFixed(1)} ★
+            </span>
+            <span className="text-gray-500 text-sm">
+              ({ratingData.totalReviews} reviews)
+            </span>
           </div>
-          {/* <div className="original-prices">
-            <span>₹{product.maxPrice}</span>
-          </div> */}
-          {/* <div className="discounts">40% off</div> */}
-        </div>
+        ) : (
+          <p className="text-gray-400 text-sm mb-2">Loading rating...</p>
+        )}
 
-         {ratingData ? (
-        <div className="flex items-center gap-2 mb-3">
-          <span className="bg-green-600 text-white px-2 py-1 rounded-full text-sm font-semibold">
-            {ratingData.averageRating.toFixed(1)} ★
-          </span>
-          <span className="text-gray-500 text-sm">
-            ({ratingData.totalReviews} reviews)
-          </span>
-        </div>
-      ) : (
-        <p className="text-gray-500 text-sm mb-3">Loading rating...</p>
-      )}
+        {/* View button */}
         <Link
           to={`/service/${categoryId}/${product._id}`}
-          className="viewBtn"
-          style={{ textDecoration: "none", color: "inherit" }}
+          className="flex items-center justify-center gap-2 mt-1 border-2 border-[#7f00ff] text-[#7f00ff] font-semibold px-5 py-1 rounded-lg shadow-md transition-all duration-300 hover:bg-[#7f00ff] hover:text-white hover:shadow-lg hover:-translate-y-1 active:scale-95 text-sm sm:text-base md:text-lg"
+          onClick={(e) => e.stopPropagation()} // Prevent parent click
         >
           View
         </Link>
-        {/* <button  
-          
-        </button> */}
       </div>
     </div>
   );

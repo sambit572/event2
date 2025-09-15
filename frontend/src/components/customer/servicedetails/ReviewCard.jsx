@@ -7,8 +7,8 @@ const ReviewCard = ({ review }) => {
 
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Limit message to ~150 chars (≈ 2 lines), adjust as needed
-  const charLimit = 150;
+  // Limit message to ~120 chars (≈ 2 lines), adjust as needed
+  const charLimit = 120;
   const isLong = review.reviewMessage?.length > charLimit;
   const displayMessage = isExpanded
     ? review.reviewMessage
@@ -61,22 +61,23 @@ const ReviewCard = ({ review }) => {
         className="text-black"
       >
         {displayMessage}
+        {isLong && (
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            style={{
+              background: "none",
+              border: "none",
+              color: "#007bff",
+              fontSize: "14px",
+              marginLeft: "7px",
+              cursor: "pointer",
+              padding: 0,
+            }}
+          >
+            {isExpanded ? "Read less" : "Read more"}
+          </button>
+        )}
       </p>
-      {isLong && (
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          style={{
-            background: "none",
-            border: "none",
-            color: "#007bff",
-            fontSize: "14px",
-            cursor: "pointer",
-            padding: 0,
-          }}
-        >
-          {isExpanded ? "Read less" : "Read more"}
-        </button>
-      )}
 
       {/* Optional Images (if you plan to store images in reviews later) */}
       {review.images?.length > 0 && (

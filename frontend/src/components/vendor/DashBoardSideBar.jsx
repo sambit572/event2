@@ -282,7 +282,7 @@ function DashBoardSideBar({
             Events Hosted: {vendor?.eventsHosted ?? 0}
           </li>
 
-          <li className="typography">
+          {/* <li className="typography">
             {editMode ? (
               <input
                 type="text"
@@ -293,7 +293,7 @@ function DashBoardSideBar({
             ) : (
               form.upiId
             )}
-          </li>
+          </li> */}
 
           <button
             className="change-password"

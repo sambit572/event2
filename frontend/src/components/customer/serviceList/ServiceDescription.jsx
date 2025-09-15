@@ -86,7 +86,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
       console.log("animation stopped");
     }, 2000);
   };
-  const MAX_LENGTH = 120;
+  const MAX_LENGTH = 100;
   const MAX_LOCATION_LENGTH = 50;
   const shouldTruncate = description.length > MAX_LENGTH;
   const shouldTruncateLocation = location.length > MAX_LOCATION_LENGTH;
