@@ -43,7 +43,7 @@ function VendorService({ currentStep }) {
     "Hindu Pandit",
     "Beauty Makeover",
     "Floral Decor",
-    "Ceremonial Rides",
+    "Ceremonial Ride",
     "Fireworks",
     "Card Design & Printing",
     "Magic Shows",
