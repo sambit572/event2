@@ -316,7 +316,7 @@ const ServiceDetailCard = ({ service }) => {
       </h2>
 
       <div className="flex items-center gap-2 text-sm font-medium text-black mb-2 flex-wrap">
-        <span className="font-semibold">{vendorName || "Unknown Vendor"}</span>
+        <span className="font-semibold text-blue-600 text-base">{vendorName || "Unknown Vendor"}</span>
         <span className="text-gray-400 text-xs">|</span>
         <span className="flex items-center gap-1 bg-yellow-200 text-yellow-900 px-2 py-0.5 rounded-md text-xs">
           <FaRegCalendarCheck className="text-sm" />
