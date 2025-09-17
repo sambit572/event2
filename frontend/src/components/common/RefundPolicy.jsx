@@ -38,7 +38,7 @@ export default function RefundPolicy({
               <strong>
                 more than fifteen (15) days prior to the event date
               </strong>
-              , ninety percent (50%) of the advance amount will be refunded,
+              , fifty percent (50%) of the advance amount will be refunded,
               excluding applicable payment gateway charges.
             </li>
             <li>
@@ -46,7 +46,7 @@ export default function RefundPolicy({
               <strong>
                 between ten (10) and fifteen (15) days prior to the event date
               </strong>
-              , seventy percent (20%) of the advance amount will be refunded,
+              , twenty percent (20%) of the advance amount will be refunded,
               excluding applicable payment gateway charges.
             </li>
             <li>
