@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
 
@@ -115,11 +115,14 @@ const Service = ({ onSwitchToLogin }) => {
   }, [serviceId]);
 
   const isVendorAvailable = service?.available !== false;
+  const location = useLocation();
 
   const handleBookNow = () => {
     const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
     if (isLoggedIn) {
-      navigate(`/userdetails/${serviceId}`);
+      navigate(`/userdetails/${serviceId}`, {
+        state: { from: location.pathname },
+      });
     } else {
       if (onSwitchToLogin) {
         onSwitchToLogin(true);

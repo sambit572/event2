@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import ServiceDescription from "./ServiceDescription";
 
 const ServiceCard = ({ service, onSwitchToLogin }) => {
   const navigate = useNavigate();
   const { categoryId } = useParams();
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [hovered, setHovered] = useState(false);
 
