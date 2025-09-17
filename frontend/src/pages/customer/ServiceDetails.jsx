@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
 
 import "./ServiceDetails.css";
-// import { similarServiceData } from "../../components/customer/ServiceDetails/SimilarServiceData.jsx";
 import RatingDetails from "../../components/customer/ServiceDetails/RatingDetails.jsx";
 import SimilarProductCard from "../../components/customer/servicedetails/PeopleAlsoBooked.jsx";
 import DJServiceCard from "../../components/customer/ServiceDetails/ServiceDetailCard.jsx";
@@ -13,33 +12,17 @@ import ReviewForm from "../../components/customer/servicedetails/ReviewForm.jsx"
 import { FaBell } from "react-icons/fa6";
 import { BACKEND_URL } from "../../utils/constant.js";
 import { useSelector, useDispatch } from "react-redux";
-
 import { setCategoryServices } from "../../redux/categorySlice";
 import { incrementCartCount } from "../../redux/UserSlice.js";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-// import SimilarProductCard from "./../../components/customer/ServiceDetails/PeopleAlsoBooked";
 
 const Service = ({ onSwitchToLogin }) => {
   const navigate = useNavigate();
-  const { serviceId } = useParams();
+  const { serviceId, categoryId } = useParams();
   const categoryServices = useSelector(
     (state) => state.category.categoryServices
   );
   const dispatch = useDispatch();
-  const { categoryId } = useParams(); // This is the category name passed in URL
-  // console.log("Category ID:", categoryId);
-  // console.log("Fetched services2:", categoryServices);
-  useEffect(() => {
-    if (!categoryServices || categoryServices.length === 0) {
-      axios
-
-        .get(`${BACKEND_URL}/common/category/${categoryId}`)
-        .then((res) => {
-          dispatch(setCategoryServices(res.data.data));
-        })
-        .catch((err) => console.error(err));
-    }
-  }, [categoryId]);
 
   const [service, setService] = useState(null);
   const [mediaList, setMediaList] = useState([]);
@@ -56,7 +39,11 @@ const Service = ({ onSwitchToLogin }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [hovered, setHovered] = useState(false);
 
-  // helpers + effects (place inside the component, after state)
+  // swipe states
+  const [touchStartX, setTouchStartX] = useState(0);
+  const [touchEndX, setTouchEndX] = useState(0);
+  const minSwipeDistance = 50;
+
   const prevSlide = () =>
     setCurrentIndex((i) =>
       i === 0 ? Math.max(mediaList.length - 1, 0) : i - 1
@@ -65,7 +52,17 @@ const Service = ({ onSwitchToLogin }) => {
   const nextSlide = () =>
     setCurrentIndex((i) => (mediaList.length ? (i + 1) % mediaList.length : 0));
 
-  // reset to first image when list changes
+  useEffect(() => {
+    if (!categoryServices || categoryServices.length === 0) {
+      axios
+        .get(`${BACKEND_URL}/common/category/${categoryId}`)
+        .then((res) => {
+          dispatch(setCategoryServices(res.data.data));
+        })
+        .catch((err) => console.error(err));
+    }
+  }, [categoryId]);
+
   useEffect(() => {
     setCurrentIndex(0);
   }, [mediaList.length]);
@@ -86,9 +83,11 @@ const Service = ({ onSwitchToLogin }) => {
       setIsAnimating(false);
     }, 2000);
   };
+
   const handleClick = () => {
     setIsWishlisted(!isWishlisted);
   };
+
   useEffect(() => {
     const fetchService = async () => {
       try {
@@ -116,11 +115,14 @@ const Service = ({ onSwitchToLogin }) => {
   }, [serviceId]);
 
   const isVendorAvailable = service?.available !== false;
+  const location = useLocation();
 
   const handleBookNow = () => {
     const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
     if (isLoggedIn) {
-      navigate(`/userdetails/${serviceId}`);
+      navigate(`/userdetails/${serviceId}`, {
+        state: { from: location.pathname },
+      });
     } else {
       if (onSwitchToLogin) {
         onSwitchToLogin(true);
@@ -176,6 +178,27 @@ const Service = ({ onSwitchToLogin }) => {
     }
   };
 
+  // swipe handlers
+  const onTouchStart = (e) => {
+    setTouchEndX(0);
+    setTouchStartX(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e) => {
+    setTouchEndX(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStartX || !touchEndX) return;
+    const distance = touchStartX - touchEndX;
+    if (distance > minSwipeDistance) {
+      nextSlide();
+    }
+    if (distance < -minSwipeDistance) {
+      prevSlide();
+    }
+  };
+
   if (loading) return <p>Loading service details...</p>;
   if (error || !service) return <p>{error || "Service not found."}</p>;
 
@@ -184,11 +207,13 @@ const Service = ({ onSwitchToLogin }) => {
       <div className="section_one">
         <div className="left-fixed">
           <div
-            className="relative w-full h-[260px] mb-5 sm:h-[400px] lg:h-[430px] overflow-hidden rounded-lg"
+            className="relative w-full h-[260px] mb-5 sm:h-[400px] lg:h-[430px] overflow-hidden rounded-lg mt-3 sm:mt-0"
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
           >
-            {/* Images */}
             {mediaList.length > 0 ? (
               <>
                 {mediaList.map((media, idx) => (
@@ -196,36 +221,68 @@ const Service = ({ onSwitchToLogin }) => {
                     key={idx}
                     src={media.src}
                     alt={`slide-${idx}`}
-                    className={`absolute top-0 left-0 w-full h-full  rounded-lg object-cover transition-opacity duration-700 ${
+                    className={`absolute top-0 left-0 w-full h-full rounded-lg object-cover transition-opacity duration-700 ${
                       idx === currentIndex ? "opacity-100" : "opacity-0"
                     } ${!isVendorAvailable ? "grayscale brightness-50" : ""}`}
                   />
                 ))}
 
                 {/* Left Arrow */}
-                {hovered && mediaList.length > 1 && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      prevSlide();
-                    }}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
-                  >
-                    <FaChevronLeft />
-                  </button>
+                {mediaList.length > 1 && (
+                  <>
+                    {/* Mobile: always visible */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        prevSlide();
+                      }}
+                      className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white sm:hidden"
+                    >
+                      <FaChevronLeft className="text-lg" />
+                    </button>
+
+                    {/* Desktop: only on hover */}
+                    {hovered && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          prevSlide();
+                        }}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 hidden sm:block"
+                      >
+                        <FaChevronLeft />
+                      </button>
+                    )}
+                  </>
                 )}
 
                 {/* Right Arrow */}
-                {hovered && mediaList.length > 1 && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      nextSlide();
-                    }}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
-                  >
-                    <FaChevronRight />
-                  </button>
+                {mediaList.length > 1 && (
+                  <>
+                    {/* Mobile: always visible */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        nextSlide();
+                      }}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white sm:hidden"
+                    >
+                      <FaChevronRight className="text-lg" />
+                    </button>
+
+                    {/* Desktop: only on hover */}
+                    {hovered && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          nextSlide();
+                        }}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 hidden sm:block"
+                      >
+                        <FaChevronRight />
+                      </button>
+                    )}
+                  </>
                 )}
 
                 {/* Dots */}
@@ -259,7 +316,6 @@ const Service = ({ onSwitchToLogin }) => {
             )}
           </div>
 
-          {/* THIS IS THE CORRECTED LINE */}
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-4">
             {isVendorAvailable ? (
               <>
@@ -311,7 +367,6 @@ const Service = ({ onSwitchToLogin }) => {
             <RatingDetails serviceId={serviceId} />
             <hr />
 
-            {/* Add Feedback Button */}
             <div className="flex justify-center">
               <button
                 onClick={handleUserReview}
@@ -321,18 +376,7 @@ const Service = ({ onSwitchToLogin }) => {
                 Add Feedback
               </button>
             </div>
-            {/* {latestReview && (
-              <div className="mt-4 p-4 bg-gray-50 border rounded-lg shadow-sm">
-                <p className="font-semibold">
-                  {latestReview.userName || "You"}
-                </p>
-                <p className="text-yellow-500">
-                  {"★".repeat(latestReview.rating)}
-                </p>
-                <p className="text-gray-700 mt-1">{latestReview.reviewText}</p>
-              </div>
-            )} */}
-            {/* Review List */}
+
             <ReviewList newReview={latestReview} serviceId={serviceId} />
           </div>
         </div>
@@ -347,7 +391,6 @@ const Service = ({ onSwitchToLogin }) => {
         </div>
       </div>
 
-      {/* Review Modal */}
       {isReviewModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
@@ -361,7 +404,7 @@ const Service = ({ onSwitchToLogin }) => {
             <ReviewForm
               serviceId={service._id}
               userName={currentUser?.fullName || "Guest"}
-              userId={currentUser?.id} // 👈 id is fine
+              userId={currentUser?.id}
               onNewReview={(newReview) => {
                 setLatestReview(newReview);
                 setReviews((prev) => [newReview, ...prev]);

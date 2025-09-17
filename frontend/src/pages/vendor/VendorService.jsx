@@ -5,7 +5,39 @@ import StepProgress from "./StepProgress";
 import Button from "../../components/vendor/register/VendorButton";
 import axios from "axios";
 import Spinner from "./../../components/common/Spinner";
+import ReactCrop, { centerCrop } from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
 
+const getCroppedImg = (image, crop) => {
+  const canvas = document.createElement("canvas");
+  const scaleX = image.naturalWidth / image.width;
+  const scaleY = image.naturalHeight / image.height;
+  canvas.width = crop.width;
+  canvas.height = crop.height;
+  const ctx = canvas.getContext("2d");
+
+  ctx.drawImage(
+    image,
+    crop.x * scaleX,
+    crop.y * scaleY,
+    crop.width * scaleX,
+    crop.height * scaleY,
+    0,
+    0,
+    crop.width,
+    crop.height
+  );
+
+  return new Promise((resolve) => {
+    canvas.toBlob((blob) => {
+      if (!blob) {
+        console.error("Canvas is empty");
+        return;
+      }
+      resolve(blob);
+    }, "image/jpeg");
+  });
+};
 function VendorService({ currentStep }) {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -31,6 +63,14 @@ function VendorService({ currentStep }) {
     useState(false);
   const [stateLocationSearchTerm, setStateLocationSearchTerm] = useState("");
   const fileInputRef = useRef(null);
+
+  // State variables for the image cropper
+  const [cropQueue, setCropQueue] = useState([]);
+  const [imageToCrop, setImageToCrop] = useState(undefined);
+  const [showCropperModal, setShowCropperModal] = useState(false);
+  const [crop, setCrop] = useState();
+  const [completedCrop, setCompletedCrop] = useState(null);
+  const imgRef = useRef(null);
 
   const categories = [
     "DJ Services & Brash Band",
@@ -118,10 +158,24 @@ function VendorService({ currentStep }) {
   const filteredStates = Object.keys(allLocations).filter((state) =>
     state.toLowerCase().includes((stateLocationSearchTerm || "").toLowerCase())
   );
-
+  useEffect(() => {
+    if (cropQueue.length > 0) {
+      const reader = new FileReader();
+      reader.addEventListener("load", () => {
+        setImageToCrop(reader.result?.toString() || "");
+        setShowCropperModal(true);
+      });
+      reader.readAsDataURL(cropQueue[0]);
+    } else {
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  }, [cropQueue]);
   // Enhanced image upload with validation
   const handleImageUpload = (e) => {
     try {
+      if (showCropperModal) return;
       const newFiles = Array.from(e.target.files);
       const valid = [
         "image/jpeg",
@@ -136,20 +190,68 @@ function VendorService({ currentStep }) {
         "video/webm",
       ];
       const max = 50 * 1024 * 1024;
-
+      const validatedFiles = [];
       for (let f of newFiles) {
-        if (!valid.includes(f.type)) return alert("JPEG/PNG/GIF only");
-        if (f.size > max) return alert("Image < 5 MB, please");
+        if (!valid.includes(f.type)) {
+          alert("Invalid file type. Only images and videos are allowed.");
+          continue;
+        }
+        if (f.size > max) {
+          alert(`File ${f.name} is too large (> 50 MB).`);
+          continue;
+        }
+        validatedFiles.push(f);
       }
 
-      const newUrls = newFiles.map((f) => URL.createObjectURL(f));
+      const imageFiles = validatedFiles.filter((file) =>
+        file.type.startsWith("image/")
+      );
+      const videoFiles = validatedFiles.filter((file) =>
+        file.type.startsWith("video/")
+      );
 
-      setPreviewImages((prev) => [...prev, ...newUrls]);
-      setSelectedFiles((prev) => [...prev, ...newFiles]);
-      setSelectedImageIndex((prev) => (prev === -1 ? 0 : prev));
+      if (videoFiles.length > 0) {
+        const videoUrls = videoFiles.map((f) => URL.createObjectURL(f));
+        setPreviewImages((prev) => [...prev, ...videoUrls]);
+        setSelectedFiles((prev) => [...prev, ...videoFiles]);
+        if (selectedImageIndex === -1) setSelectedImageIndex(0);
+      }
+
+      if (imageFiles.length > 0) {
+        setCropQueue((prev) => [...prev, ...imageFiles]);
+      } else {
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+      }
     } catch (err) {
-      console.error("Image upload error:", err);
+      console.error("Image selection error:", err);
     }
+  };
+  const handleCropImage = async () => {
+    if (!completedCrop || !imgRef.current || completedCrop.width === 0) {
+      alert("Please select an area to crop.");
+      return;
+    }
+
+    const originalFile = cropQueue[0];
+    const croppedImageBlob = await getCroppedImg(imgRef.current, completedCrop);
+    const croppedFile = new File([croppedImageBlob], originalFile.name, {
+      type: "image/jpeg",
+      lastModified: Date.now(),
+    });
+
+    const newUrl = URL.createObjectURL(croppedFile);
+
+    setPreviewImages((prev) => [...prev, newUrl]);
+    setSelectedFiles((prev) => [...prev, croppedFile]);
+    if (selectedImageIndex === -1) setSelectedImageIndex(0);
+
+    setImageToCrop(undefined);
+    setShowCropperModal(false);
+    setCompletedCrop(null);
+    setCrop(undefined);
+    setCropQueue((prev) => prev.slice(1));
   };
   const handleDeleteImage = (index) => {
     const updatedImages = [...previewImages];
@@ -352,6 +454,59 @@ function VendorService({ currentStep }) {
     <>
       <StepProgress currentStep={1} />
       {isLoading && <Spinner />}
+      {/* Cropper Modal */}
+      {showCropperModal && (
+        <div className="crop-modal-backdrop">
+          <div className="crop-modal-content">
+            <h2>Crop Your Image</h2>
+            <p style={{ textAlign: "center", margin: 0, color: "#555" }}>
+              Adjust the selection to crop
+            </p>
+            <div className="crop-container">
+              <ReactCrop
+                crop={crop}
+                onChange={(_, percentCrop) => setCrop(percentCrop)}
+                onComplete={(c) => setCompletedCrop(c)}
+                minWidth={100}
+              >
+                <img
+                  ref={imgRef}
+                  src={imageToCrop}
+                  className="ReactCrop__image" // Add class for styling
+                  onLoad={(e) => {
+                    const { width, height } = e.currentTarget;
+                    const newCrop = centerCrop(
+                      { unit: "px", width: width * 0.9, height: height * 0.9 },
+                      width,
+                      height
+                    );
+                    setCrop(newCrop);
+                    setCompletedCrop(newCrop);
+                  }}
+                  alt="Crop preview"
+                />
+              </ReactCrop>
+            </div>
+            <div className="crop-modal-actions">
+              <button
+                onClick={() => {
+                  setShowCropperModal(false);
+                  setImageToCrop(undefined);
+                  setCropQueue((prev) => prev.slice(1));
+                }}
+                className="crop-cancel-btn"
+              >
+                Skip
+              </button>
+              <button onClick={handleCropImage} className="crop-confirm-btn">
+                Crop & Add
+              </button>
+            </div>
+          </div>
+           
+        </div>
+      )}
+
       <div className="form-container">
         <div className="form-wrapper">
           {/* Left Side: Form Column */}

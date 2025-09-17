@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { BACKEND_URL } from "../../utils/constant.js";
 import { useSelector } from "react-redux";
-
 
 // Data objects (stateDistricts, districtCities, aliases) remain the same...
 const stateDistricts = {
@@ -299,7 +298,7 @@ const UserDetails = () => {
   const { serviceId } = useParams();
   const [formData, setFormData] = useState({
     serviceId: "",
-    bookedBy:"",
+    bookedBy: "",
     bookedById: "",
     phone: "",
     altPhone: "",
@@ -313,15 +312,18 @@ const UserDetails = () => {
     pincode: "",
     country: "India",
   });
+  const locationPath = useLocation();
+  const from = locationPath.state?.from || "/";
 
+  console.log("pathname", from);
 
   useEffect(() => {
     console.log("Params:", { serviceId });
     if (!serviceId && userId) {
-      console.log("No service ID found, fetching cart items..."); 
+      console.log("No service ID found, fetching cart items...");
       const fetchCart = async () => {
         try {
-          const { data } = await axios.get(`${BACKEND_URL}/cart`,{
+          const { data } = await axios.get(`${BACKEND_URL}/cart`, {
             withCredentials: true,
           });
           // console.log("Cart data:", data);
@@ -455,7 +457,6 @@ const UserDetails = () => {
         return false;
       });
 
-
       if (missingFields.length > 0) {
         alert(
           `Please fill in all required fields: ${missingFields.join(", ")}.`
@@ -513,8 +514,8 @@ const UserDetails = () => {
     }
   };
 
-
   const handleCancel = () => {
+    navigate(from);
     alert("Cancelled");
   };
 
@@ -657,7 +658,7 @@ const UserDetails = () => {
         <h3 className="mb-[-10px] text-center text-3xl font-bold tracking-wide bg-gradient-to-r from-[#004989] to-[#001F3F] bg-clip-text text-transparent">
           Fill Out Your Event Details
         </h3>
-<div className="mx-auto mt-3.5 h-1 w-48 rounded-full bg-gradient-to-r from-[#004989] to-[#001F3F]"></div>
+        <div className="mx-auto mt-3.5 h-1 w-48 rounded-full bg-gradient-to-r from-[#004989] to-[#001F3F]"></div>
         <form className="flex flex-col gap-5 mt-6" onSubmit={handleSave}>
           <FormField id="userName" label="User Name">
             <input
@@ -830,7 +831,7 @@ const UserDetails = () => {
             </button>
             <button
               type="button"
-              className="w-full px-5 py-3 font-semibold tracking-wider text-white uppercase bg-gradient-to-r from-rose-500 to-rose-600 rounded-lg cursor-pointer hover:shadow-lg md:w-36 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 hover:shadow-md"
+              className="w-full px-5 py-3 font-semibold tracking-wider text-white uppercase bg-gradient-to-r from-rose-500 to-rose-600 rounded-lg cursor-pointer hover:shadow-lg md:w-36  hover:from-red-600 hover:to-red-700"
               onClick={handleCancel}
             >
               Cancel
