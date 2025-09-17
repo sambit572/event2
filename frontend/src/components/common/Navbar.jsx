@@ -494,7 +494,7 @@ const Navbar = ({
         {/* Logo */}
         <div className="logo">
           {/* <img src={logo} alt="logo" /> */}
-          <span onClick={handleHomeClick}>EVENTSBRIDGE</span>
+          <span onClick={handleHomeClick}>EventsBridge</span>
         </div>
 
         <div className="search-and-nav-icons-container items-center">

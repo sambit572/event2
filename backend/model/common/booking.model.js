@@ -15,7 +15,7 @@ const bookingSchema = new mongoose.Schema(
     service: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Service", // optional if you want to link specific service
-      required:true,
+      required: true,
     },
     startDate: {
       type: Date,
@@ -50,15 +50,15 @@ const bookingSchema = new mongoose.Schema(
       type: String,
       enum: ["ONLINE", "COD", "WALLET", "UPI", "BANK_TRANSFER"],
       default: "ONLINE",
-      required:true,
+      required: true,
     },
     paymentDate: {
       type: Date,
-      required:true,
+      required: true,
     },
     transactionId: {
       type: String,
-      required:true,
+      required: true,
     },
 
     // Invoice
@@ -88,7 +88,7 @@ const bookingSchema = new mongoose.Schema(
     isReviewed: {
       type: Boolean,
       default: false,
-      required:true,
+      required: true,
     },
     isNotified: {
       type: Boolean,

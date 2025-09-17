@@ -263,6 +263,8 @@ export const updateService = async (req, res) => {
       }
     }
 
+    
+
     const updatedService = await Service.findByIdAndUpdate(
       serviceId,
       {
@@ -386,44 +388,30 @@ export const updateAvailability = async (req, res) => {
 };
 
 export const updateServiceImageFirst = async (req, res) => {
-  console.log("Incoming update data:", req.body);
+  console.log("Incoming files:", req.files);
   try {
-    const vendorId = req.vendor._id;
-    const serviceId = req.params.id;
-
-    const service = await Service.findOne({ _id: serviceId, vendorId });
-    if (!service) {
+    if (!req.files || req.files.length === 0) {
       return res
-        .status(404)
-        .json({ message: "Service not found or not authorized" });
+        .status(400)
+        .json(new ApiError(400, "Please upload at least one image"));
     }
 
     const imageUrls = [];
-    if (req.files && req.files.length > 0) {
-      for (const file of req.files) {
-        const cloudRes = await uploadOnCloudinary(file.path);
-        if (cloudRes?.secure_url) {
-          imageUrls.push(cloudRes.secure_url);
-        }
-      }
-
-      service.serviceImage = [...service.serviceImage, ...imageUrls];
-      await service.save();
-
-      await client.del(`service:${serviceId}`);
-
-      return res.status(200).json({
-        success: true,
-        data: service,
-        message: "Images uploaded & service updated successfully",
-      });
-    } else {
-      return res
-        .status(400)
-        .json({ message: "Please upload at least one image" });
+    for (const file of req.files) {
+      const cloudRes = await uploadOnCloudinary(file.path);
+      if (cloudRes?.secure_url) imageUrls.push(cloudRes.secure_url);
     }
+
+    if (imageUrls.length === 0) {
+      return res
+        .status(500)
+        .json(new ApiError(500, "Image upload failed, please try again"));
+    }
+
+    return res.status(200).json(new ApiResponse(200, imageUrls, "Images uploaded successfully"));
   } catch (error) {
-    console.error("❌ Error updating service images:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    console.error("❌ Error uploading service images:", error);
+    return res.status(500).json(new ApiError(500, "Internal server error"));
   }
 };
+

@@ -86,20 +86,23 @@ const DashboardServices = () => {
       const serviceId = services[index]._id;
       const existingImages = editedData.serviceImage || [];
       const totalImages = existingImages.length + newImages.length;
+
       if (totalImages > 10) {
         alert(
-          `You can upload a maximum of 10 images.\nYou already have ${
-            existingImages.length
-          } images.\nPlease remove ${totalImages - 10} image(s) before saving.`
+          `You can upload a maximum of 10 images.\n` +
+            `You already have ${existingImages.length} images.\n` +
+            `Please remove ${totalImages - 10} image(s) before saving.`
         );
         return;
       }
+
+      // 🟢 [CHANGED] Step 1: Only upload new images to Cloudinary, DO NOT save to DB here
       let uploadedUrls = [];
       if (newImages.length > 0) {
         const formData = new FormData();
-        newImages.forEach((file) => {
-          formData.append("images", file);
-        });
+        newImages.forEach((file) => formData.append("images", file));
+
+        console.log("Uploading new service images to Cloudinary…"); // 🟢 [CHANGED] clearer log
         const res = await axios.post(
           `${BACKEND_URL}/vendors/upload-new-service-image/${serviceId}`,
           formData,
@@ -108,13 +111,16 @@ const DashboardServices = () => {
             headers: { "Content-Type": "multipart/form-data" },
           }
         );
+
+        console.log("Image upload response:", res.data); // 🟢 [CHANGED] clearer log
         if (Array.isArray(res.data?.data)) {
-          uploadedUrls = res.data.data;
-        } else if (typeof res.data?.data === "string") {
-          uploadedUrls.push(res.data.data);
+          uploadedUrls = res.data.data; // 🟢 [CHANGED] now expect only URLs, not full object
         }
       }
+
+      // 🟢 [CHANGED] Step 2: Merge old + new image URLs and send full payload to DB
       const allImages = [...existingImages, ...uploadedUrls];
+
       const payload = {
         serviceName: editedData.serviceName,
         serviceDes: editedData.serviceDes,
@@ -125,18 +131,25 @@ const DashboardServices = () => {
           ? editedData.locationOffered
           : [editedData.locationOffered],
         duration: Number(editedData.duration),
-        serviceImage: allImages,
+        serviceImage: allImages, // 🟢 [CHANGED] using merged image array
       };
+
+      console.log("Sending final service update payload:", payload); // 🟢 [CHANGED] clearer log
       const updateRes = await axios.put(
         `${BACKEND_URL}/vendors/update-service/${serviceId}`,
         payload,
         { withCredentials: true }
       );
+
+      console.log("Update response from DB:", updateRes.data); // 🟢 [CHANGED] clearer log
+
       const updatedService = updateRes.data.data;
       const updatedList = [...services];
       updatedList[index] = updatedService;
+
       setServices(updatedList);
       setEditingIndex(null);
+      setNewImages([]); // 🟢 [CHANGED] reset newImages after successful update
     } catch (error) {
       console.error("❌ Failed to update service:", error);
       alert(error.response?.data?.message || "Update failed");
