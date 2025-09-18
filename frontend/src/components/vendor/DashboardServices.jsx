@@ -156,8 +156,6 @@ const DashboardServices = () => {
             error.response?.data?.message ||
               "Failed to upload images. Please check your internet connection and try again."
           );
-          // This alert was redundant with the error message display, but kept to match the provided code
-          alert("Image upload failed. Please try again.");
           setIsSaving(false);
           return; // Stop the save process if upload fails
         }
@@ -202,8 +200,6 @@ const DashboardServices = () => {
         error.response?.data?.message ||
           "Failed to update service. Please check all fields and try again."
       );
-      // This alert was redundant with the error message display, but kept to match the provided code
-      alert(error.response?.data?.message || "Update failed");
       setIsSaving(false);
     }
   };
