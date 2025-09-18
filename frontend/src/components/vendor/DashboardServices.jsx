@@ -5,6 +5,7 @@ import { BACKEND_URL } from "../../utils/constant.js";
 import { MdReportGmailerrorred } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import "./DashboardServices.css";
+
 const DashboardServices = () => {
   const navigate = useNavigate();
   const [services, setServices] = useState([]);
@@ -15,6 +16,11 @@ const DashboardServices = () => {
   const [newImagePreviews, setNewImagePreviews] = useState([]);
   const [expanded, setExpanded] = useState(false);
   const [expandedLocations, setExpandedLocations] = useState({});
+
+  // Added states for enhanced UX
+  const [isSaving, setIsSaving] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [fileSizeError, setFileSizeError] = useState("");
 
   const toggleExpandLocation = (index) => {
     setExpandedLocations((prev) => ({
@@ -79,20 +85,47 @@ const DashboardServices = () => {
     setEditingIndex(index);
     setEditedData(services[index]);
     setNewImages([]);
+    // Reset error states when entering edit mode
+    setErrorMessage("");
+    setFileSizeError("");
+    setIsSaving(false);
+  };
+
+  // Added cancel handler
+  const handleCancel = (index) => {
+    if (!isSaving) {
+      setEditingIndex(null);
+      setEditedData({});
+      setNewImages([]);
+      setNewImagePreviews([]);
+      setErrorMessage("");
+      setFileSizeError("");
+    }
   };
 
   const handleSave = async (index) => {
+    // Set saving state and clear previous errors
+    setIsSaving(true);
+    setErrorMessage("");
+
     try {
       const serviceId = services[index]._id;
       const existingImages = editedData.serviceImage || [];
       const totalImages = existingImages.length + newImages.length;
 
       if (totalImages > 10) {
+        setErrorMessage(
+          `You can upload a maximum of 10 images. ` +
+            `You already have ${existingImages.length} images. ` +
+            `Please remove ${totalImages - 10} image(s) before saving.`
+        );
+        // This alert was redundant with the error message display, but kept to match the provided code
         alert(
           `You can upload a maximum of 10 images.\n` +
             `You already have ${existingImages.length} images.\n` +
             `Please remove ${totalImages - 10} image(s) before saving.`
         );
+        setIsSaving(false);
         return;
       }
 
@@ -102,23 +135,34 @@ const DashboardServices = () => {
         const formData = new FormData();
         newImages.forEach((file) => formData.append("images", file));
 
-        console.log("Uploading new service images to Cloudinary…"); // 🟢 [CHANGED] clearer log
-        const res = await axios.post(
-          `${BACKEND_URL}/vendors/upload-new-service-image/${serviceId}`,
-          formData,
-          {
-            withCredentials: true,
-            headers: { "Content-Type": "multipart/form-data" },
-          }
-        );
+        try {
+          console.log("Uploading new service images to Cloudinary…"); // 🟢 [CHANGED] clearer log
+          const res = await axios.post(
+            `${BACKEND_URL}/vendors/upload-new-service-image/${serviceId}`,
+            formData,
+            {
+              withCredentials: true,
+              headers: { "Content-Type": "multipart/form-data" },
+            }
+          );
 
-        console.log("Image upload response:", res.data); // 🟢 [CHANGED] clearer log
-        if (Array.isArray(res.data?.data)) {
-          uploadedUrls = res.data.data; // 🟢 [CHANGED] now expect only URLs, not full object
+          console.log("Image upload response:", res.data);
+          if (Array.isArray(res.data?.data)) {
+            uploadedUrls = res.data.data;
+          }
+        } catch (error) {
+          console.error("❌ Failed to upload images:", error);
+          setErrorMessage(
+            error.response?.data?.message ||
+              "Failed to upload images. Please check your internet connection and try again."
+          );
+          // This alert was redundant with the error message display, but kept to match the provided code
+          alert("Image upload failed. Please try again.");
+          setIsSaving(false);
+          return; // Stop the save process if upload fails
         }
       }
 
-      // 🟢 [CHANGED] Step 2: Merge old + new image URLs and send full payload to DB
       const allImages = [...existingImages, ...uploadedUrls];
 
       const payload = {
@@ -131,17 +175,17 @@ const DashboardServices = () => {
           ? editedData.locationOffered
           : [editedData.locationOffered],
         duration: Number(editedData.duration),
-        serviceImage: allImages, // 🟢 [CHANGED] using merged image array
+        serviceImage: allImages,
       };
 
-      console.log("Sending final service update payload:", payload); // 🟢 [CHANGED] clearer log
+      console.log("Sending final service update payload:", payload);
       const updateRes = await axios.put(
         `${BACKEND_URL}/vendors/update-service/${serviceId}`,
         payload,
         { withCredentials: true }
       );
 
-      console.log("Update response from DB:", updateRes.data); // 🟢 [CHANGED] clearer log
+      console.log("Update response from DB:", updateRes.data);
 
       const updatedService = updateRes.data.data;
       const updatedList = [...services];
@@ -149,10 +193,18 @@ const DashboardServices = () => {
 
       setServices(updatedList);
       setEditingIndex(null);
-      setNewImages([]); // 🟢 [CHANGED] reset newImages after successful update
+      setNewImages([]);
+      setErrorMessage("");
+      setIsSaving(false);
     } catch (error) {
       console.error("❌ Failed to update service:", error);
+      setErrorMessage(
+        error.response?.data?.message ||
+          "Failed to update service. Please check all fields and try again."
+      );
+      // This alert was redundant with the error message display, but kept to match the provided code
       alert(error.response?.data?.message || "Update failed");
+      setIsSaving(false);
     }
   };
 
@@ -197,6 +249,21 @@ const DashboardServices = () => {
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
+
+    // Check file sizes (max 9MB per file)
+    const MAX_FILE_SIZE = 9 * 1024 * 1024; // 9MB in bytes
+    const oversizedFiles = files.filter((file) => file.size > MAX_FILE_SIZE);
+
+    if (oversizedFiles.length > 0) {
+      setFileSizeError(
+        `The following file(s) exceed 9MB limit: ${oversizedFiles
+          .map((f) => f.name)
+          .join(", ")}`
+      );
+      setTimeout(() => setFileSizeError(""), 5000); // Clear error after 5 seconds
+      return;
+    }
+
     const totalSelected =
       editedData.serviceImage.length + newImages.length + files.length;
     if (totalSelected > 10) {
@@ -210,6 +277,7 @@ const DashboardServices = () => {
     const newPreviews = files.map((file) => URL.createObjectURL(file));
     setNewImages((prev) => [...prev, ...files]);
     setNewImagePreviews((prev) => [...prev, ...newPreviews]);
+    setFileSizeError(""); // Clear any previous file size errors
   };
 
   const handleToggleAvailability = async (index) => {
@@ -374,7 +442,24 @@ const DashboardServices = () => {
               {/* Editing Mode */}
               {isEditing ? (
                 <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-start sm:items-center px-4 py-6 overflow-y-auto">
-                  <form className="dashboard-custom-form">
+                  <form className="dashboard-custom-form relative">
+                    {/* Loading overlay */}
+                    {isSaving && (
+                      <div className="absolute inset-0 bg-white bg-opacity-90 z-10 flex flex-col items-center justify-center rounded-md">
+                        <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                        <p className="mt-4 text-gray-700 font-semibold">
+                          Saving changes...
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Error message display */}
+                    {errorMessage && (
+                      <div className="mb-3 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md">
+                        <p className="text-sm font-medium">{errorMessage}</p>
+                      </div>
+                    )}
+
                     <div className="flex flex-col space-y-2">
                       {/* Service Name */}
                       <input
@@ -384,6 +469,7 @@ const DashboardServices = () => {
                         onChange={handleChange}
                         placeholder="Service Name"
                         className="w-full p-1 bg-[#f1f1f1] border border-[#001f3f] rounded-md"
+                        disabled={isSaving}
                       />
 
                       {/* Locations */}
@@ -405,6 +491,7 @@ const DashboardServices = () => {
                         }
                         placeholder="Locations (comma separated)"
                         className="w-full p-1 bg-[#f1f1f1] border border-[#001f3f] rounded-md"
+                        disabled={isSaving}
                       />
 
                       {/* Price Inputs */}
@@ -421,6 +508,7 @@ const DashboardServices = () => {
                           }
                           placeholder="Min Price"
                           className="w-1/2 p-1 bg-[#f1f1f1] border border-[#001f3f] rounded-md"
+                          disabled={isSaving}
                         />
                         <input
                           type="number"
@@ -434,6 +522,7 @@ const DashboardServices = () => {
                           }
                           placeholder="Max Price"
                           className="w-1/2 p-1 bg-[#f1f1f1] border border-[#001f3f] rounded-md"
+                          disabled={isSaving}
                         />
                       </div>
 
@@ -445,6 +534,7 @@ const DashboardServices = () => {
                         onChange={handleChange}
                         placeholder="Service Category"
                         className="w-full p-1 bg-[#f1f1f1] border border-[#001f3f] rounded-md"
+                        disabled={isSaving}
                       />
 
                       {/* Duration */}
@@ -458,6 +548,7 @@ const DashboardServices = () => {
                               updateDuration(e.target.value, "days")
                             }
                             placeholder="Days"
+                            disabled={isSaving}
                           />
                           <span>D</span>
                         </div>
@@ -473,6 +564,7 @@ const DashboardServices = () => {
                               updateDuration(e.target.value, "hours")
                             }
                             placeholder="Hours"
+                            disabled={isSaving}
                           />
                           <span>H</span>
                         </div>
@@ -486,6 +578,7 @@ const DashboardServices = () => {
                               updateDuration(e.target.value, "minutes")
                             }
                             placeholder="Minutes"
+                            disabled={isSaving}
                           />
                           <span>M</span>
                         </div>
@@ -499,7 +592,21 @@ const DashboardServices = () => {
                         placeholder="Description"
                         maxLength={500}
                         className="w-full min-h-[90px] p-1 bg-[#f1f1f1] border border-[#001f3f] rounded-md"
+                        disabled={isSaving}
                       />
+                    </div>
+
+                    {/* Image upload info and file size error */}
+                    <div className="mt-2">
+                      <p className="text-xs text-gray-600 mb-1">
+                        Maximum file size: 9MB per photo. You can upload up to
+                        10 photos total.
+                      </p>
+                      {fileSizeError && (
+                        <div className="p-2 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded text-sm mb-2">
+                          {fileSizeError}
+                        </div>
+                      )}
                     </div>
 
                     {/* Image Preview */}
@@ -525,6 +632,7 @@ const DashboardServices = () => {
                                 serviceImage: updatedImgs,
                               }));
                             }}
+                            disabled={isSaving}
                           >
                             ✕
                           </button>
@@ -552,6 +660,7 @@ const DashboardServices = () => {
                               setNewImages(updatedFiles);
                               setNewImagePreviews(updatedPreviews);
                             }}
+                            disabled={isSaving}
                           >
                             ✕
                           </button>
@@ -561,26 +670,43 @@ const DashboardServices = () => {
                       {editedData.serviceImage.length +
                         newImagePreviews.length <
                         10 && (
-                        <label className="w-14 h-14 border-2 border-dashed border-[#001f3f] rounded flex items-center justify-center cursor-pointer shrink-0">
+                        <label
+                          className={`w-14 h-14 border-2 border-dashed border-[#001f3f] rounded flex items-center justify-center shrink-0 ${
+                            isSaving
+                              ? "cursor-not-allowed opacity-50"
+                              : "cursor-pointer"
+                          }`}
+                        >
                           <FaPlus className="text-gray-500 text-xs" />
                           <input
                             type="file"
                             accept="image/*"
+                            multiple // Allow multiple file selection
                             className="hidden"
                             onChange={handleImageUpload}
+                            disabled={isSaving}
                           />
                         </label>
                       )}
                     </div>
 
-                    {/* Save Button */}
+                    {/* Save and Cancel Buttons */}
                     <div className="flex justify-center gap-4 pt-4">
                       <button
                         type="button"
                         onClick={() => handleSave(index)}
-                        className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 shadow"
+                        className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 shadow disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={isSaving}
                       >
-                        Save
+                        {isSaving ? "Saving..." : "Save"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleCancel(index)}
+                        className="px-4 py-2 rounded bg-gray-500 text-white hover:bg-gray-600 shadow disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={isSaving}
+                      >
+                        Cancel
                       </button>
                     </div>
                   </form>
