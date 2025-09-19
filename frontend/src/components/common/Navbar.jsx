@@ -1,30 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
-import UserProfileIcon from "../../pages/common/UserProfileIcon.jsx";
-import toast from "react-hot-toast";
-import logo from "../../assets/serverLogo.png";
-// import "../../pages/vendor/VendorLogin.jsx";
+
 import "./Navbar.css";
-import { CgProfile } from "react-icons/cg";
-import {
-  FaSearch,
-  FaUser,
-  FaChevronDown,
-  FaChevronUp,
-  FaStore,
-  FaEllipsisV,
-  FaHandsHelping,
-  FaHeart,
-  FaSignOutAlt,
-} from "react-icons/fa";
-import { FcAbout, FcAssistant } from "react-icons/fc";
+
+import { FaSearch } from "react-icons/fa";
+
 import axios from "axios";
-import { useNavigate, Navigate, useLocation } from "react-router-dom";
-import { FaCartShopping } from "react-icons/fa6";
-import {
-  attemptVendorSilentLogin,
-  checkVendorEmailStatus,
-} from "../../utils/VendorAuth.jsx";
+import { useNavigate, useLocation } from "react-router-dom";
+
 import { useDispatch, useSelector } from "react-redux";
 import { clearUser, fetchCart, setCartCount } from "../../redux/UserSlice.js";
 import socket from "../../socket/socketClient.js";
@@ -53,19 +36,12 @@ const CATEGORIES = [
   "card-design",
 ];
 
-const Navbar = ({
-  onOpenLogin,
-  onOpenRegister,
-  onOpenVendorLogin,
-  isOpen,
-  setShowPasswordModal,
-}) => {
+const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
   const user = useSelector((state) => state.user);
-  // console.log("Cart count from Redux:", user.cartCount);
 
   const [currentUser, setCurrentUser] = useState(null);
   const [userFirstName, setUserFirstName] = useState(null);
@@ -145,15 +121,6 @@ const Navbar = ({
     };
   }, [dispatch]);
 
-  const handleInputFocus = () => {
-    const localHistory =
-      JSON.parse(localStorage.getItem("searchHistory")) || [];
-    if (localHistory.length > 0) {
-      setSuggestions(localHistory);
-      setShowSuggestions(true);
-    }
-  };
-
   const fetchDynamicSuggestions = async (query) => {
     try {
       if (query.trim().length <= 1) {
@@ -187,26 +154,7 @@ const Navbar = ({
 
   const handleSearchNavigate = (text) => {
     if (!text.trim()) return;
-    const searchText = text.toLowerCase().trim();
     navigate(`/search?query=${encodeURIComponent(text.trim())}`);
-    // Check for direct alias mapping
-    // const matchedCategory = RELATED_TERMS[searchText];
-
-    // if (matchedCategory) {
-    //   navigate(`/category/${matchedCategory}`);
-    // } else {
-    //   // Try partial match within the search text
-    //   const foundCategory = Object.keys(RELATED_TERMS).find((key) =>
-    //     searchText.includes(key)
-    //   );
-
-    //   if (foundCategory) {
-    //     navigate(`/category/${RELATED_TERMS[foundCategory]}`);
-    //   } else {
-    //     // Fallback: full search results
-    //     navigate(`/search-results?q=${encodeURIComponent(searchText)}`);
-    //   }
-    // }
   };
 
   const fetchUserProfile = async () => {
@@ -235,16 +183,6 @@ const Navbar = ({
     } else {
       navigate("/");
     }
-  };
-
-  const handleToggleProfileDropdown = () => {
-    setShowProfileDropdown((prev) => {
-      if (!prev) {
-        setShowVendorDropdown(false);
-        setShowEllipsisDropdown(false);
-      }
-      return !prev;
-    });
   };
 
   const handleLogout = async () => {
@@ -300,35 +238,6 @@ const Navbar = ({
     }
   };
 
-  const handleSearch = (e) => {
-    if (e.key === "Enter" && searchInput.trim()) {
-      const term = searchInput.trim().toLowerCase();
-      let history = JSON.parse(localStorage.getItem("searchHistory")) || [];
-      history.unshift(term);
-      history = [...new Set(history)].slice(0, 5);
-      localStorage.setItem("searchHistory", JSON.stringify(history));
-      let matchedCategory = CATEGORIES.find((cat) =>
-        term.includes(cat.toLowerCase())
-      );
-      if (!matchedCategory) {
-        const words = term.split(/\s+/);
-        for (let word of words) {
-          const cleaned = word.toLowerCase();
-          if (RELATED_TERMS[cleaned]) {
-            matchedCategory = RELATED_TERMS[cleaned];
-            break;
-          }
-        }
-      }
-      if (matchedCategory) {
-        navigate(`/category/${matchedCategory.toLowerCase()}`);
-      } else {
-        navigate(`/search-results?query=${encodeURIComponent(term)}`);
-      }
-      setSearchInput("");
-    }
-  };
-
   const handleLoginClick = () => {
     setShowProfileDropdown(false);
     onOpenLogin();
@@ -337,29 +246,6 @@ const Navbar = ({
   const handleSignupClick = () => {
     setShowProfileDropdown(false);
     onOpenRegister();
-  };
-
-  const handleVendorClick = async () => {
-    // console.log("clicked vendor button ...");
-    if (!userFirstName) {
-      onOpenVendorLogin();
-      return;
-    }
-    const silentRes = await attemptVendorSilentLogin();
-    if (silentRes.success) {
-      navigate("/dashboard");
-      return;
-    }
-    const response = await axios.get(`${BACKEND_URL}/user/get-email`, {
-      withCredentials: true,
-    });
-    const emailStatus = await checkVendorEmailStatus(response.data.data.email);
-    console.log("Email status from backend:", emailStatus);
-    if (emailStatus.existsInVendor) {
-      onOpenVendorLogin();
-    } else {
-      navigate("/vendor/register");
-    }
   };
 
   useEffect(() => {
@@ -474,6 +360,14 @@ const Navbar = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && searchInput.trim()) {
+      handleSearchNavigate(searchInput.trim());
+      setSearchInput("");
+      setShowSuggestions(false);
+    }
+  };
+
   return (
     <div>
       <div className="navbar">
@@ -538,6 +432,7 @@ const Navbar = ({
                   setShowSuggestions(true);
                 }}
                 autoFocus
+                onKeyDown={handleKeyDown}
               />
             )}
             <div className="searchbarIcon">
