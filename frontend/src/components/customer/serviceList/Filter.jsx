@@ -3,6 +3,8 @@ import "../../customer/serviceList/Filter.css";
 import { TiStarFullOutline } from "react-icons/ti";
 import locationData from "./LocationData"; // { "Maharashtra": ["Mumbai", "Pune"], ... }
 import { IoFilterOutline } from "react-icons/io5";
+import { FaFilter } from "react-icons/fa";
+import { FaWindowClose } from "react-icons/fa";
 
 const Filter = ({ onApply, onCancel }) => {
   const ratingOptions = [4.9, 4, 3];
@@ -77,8 +79,8 @@ const Filter = ({ onApply, onCancel }) => {
           className="filter-toggle-btn"
           onClick={() => setShowFilter(true)}
         >
-          <IoFilterOutline className="filter-icon" />
-          <span className="filter-text">Filters</span>
+          <FaFilter className="filter-icon" />
+          {/* <span className="filter-text">Filters</span> */}
         </button>
       )}
 
@@ -89,13 +91,14 @@ const Filter = ({ onApply, onCancel }) => {
               className="close-filter-btn"
               onClick={() => setShowFilter(false)}
             >
-              <span className="filter-text">Close</span>
+              <FaWindowClose />
+              {/* <span className="filter-text">Close</span> */}
             </button>
           )}
 
           <h3 className="filter-heading">Filters</h3>
           <div className="mb-2">
-            <h3 className="text-lg font-semibold text-blue-800 mb-0 tracking-wide">
+            <h3 className="text-lg font-semibold text-black-700 mb-0 tracking-wide">
               Sort By
             </h3>
 
@@ -147,7 +150,7 @@ const Filter = ({ onApply, onCancel }) => {
           </div>
           <div className="flex items-center justify-center">OR </div> */}
           <div className="space-y-1">
-            <h6 className="text-lg font-semibold text-blue-800 mb-0 tracking-wide">Price Range</h6>
+            <h6 className="text-lg font-semibold text-black-700 mb-0 tracking-wide">Price Range</h6>
             <div>
               <label className="block text-xs text-gray-900 mb-1">
                 Min Price (₹)
@@ -176,7 +179,7 @@ const Filter = ({ onApply, onCancel }) => {
 
           {/* Location Filter */}
           <div className="filter-section">
-            <h6 className="text-lg font-semibold text-blue-800 mb-0 tracking-wide">Customer Rating</h6>
+            <h6 className="text-lg font-semibold text-black-700 mb-0 tracking-wide">Customer Rating</h6>
             <div className="dropdown">
               <select value={filters.rating} onChange={handleRatingChange}>
                 <option value="">Any Rating</option>
@@ -191,7 +194,7 @@ const Filter = ({ onApply, onCancel }) => {
 
           {/* Location Filter */}
           <div className="filter-section">
-             <h6 className="text-lg font-semibold text-blue-800 mb-0 tracking-wide">Location</h6>
+             <h6 className="text-lg font-semibold text-black-700 mb-0 tracking-wide">Location</h6>
 
             <div className="dropdown">
               <label>State</label>
@@ -224,7 +227,7 @@ const Filter = ({ onApply, onCancel }) => {
 
           {/* Service Ready Within */}
           <div className="dropdown">
-            <h6 className="text-lg font-semibold text-blue-800 mb-0 tracking-wide">Service Ready Within</h6>
+            <h6 className="text-lg font-semibold text-black-700 mb-0 tracking-wide">Service Ready Within</h6>
             <select
               value={filters.duration}
               onChange={(e) =>
@@ -247,7 +250,7 @@ const Filter = ({ onApply, onCancel }) => {
           {/* Buttons */}
           <div className="filter-btn">
             <button className="applybtn" onClick={handleApply}>
-              Apply
+              Apply 
             </button>
             <button className="cancelbtn" onClick={handleCancel}>
               Cancel

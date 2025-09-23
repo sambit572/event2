@@ -81,7 +81,7 @@ const SimilarProductCard = ({ product }) => {
         {/* View button */}
         <Link
           to={`/service/${categoryId}/${product._id}`}
-          className="flex items-center justify-center gap-2 mt-1 border-2 border-[#7f00ff] text-[#7f00ff] font-semibold px-5 py-1 rounded-lg shadow-md transition-all duration-300 hover:bg-[#7f00ff] hover:text-white hover:shadow-lg hover:-translate-y-1 active:scale-95 text-sm sm:text-base md:text-lg"
+          className="flex items-center justify-center gap-2 mt-1 border-2 border-[#001f3f] text-[#001f3f] font-semibold px-5 py-1 rounded-lg shadow-md transition-all duration-300 hover:bg-[#001f3f] hover:text-white hover:shadow-lg hover:-translate-y-1 active:scale-95 text-sm sm:text-base md:text-lg"
           onClick={(e) => e.stopPropagation()} // Prevent parent click
         >
           View

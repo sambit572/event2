@@ -7,9 +7,11 @@ const CategoryCard = ({ category }) => {
   // console.log("category.title", category.title);
   return (
     <div
-      className="courseCard"
+       className="courseCard"
       onClick={() => {
-        navigate(`/category/${category.title}`);
+        navigate(`/category/${category.title}`, {
+          state: { category }, // ✅ pass full category object
+        });
       }}
     >
       <span className="brandLabel">EventsBridge</span>

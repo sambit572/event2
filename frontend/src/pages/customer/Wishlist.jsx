@@ -149,7 +149,7 @@ const Wishlist = () => {
                   {/* Remove Button */}
                   <button
                     onClick={() => handleDelete(item._id, service._id)}
-                    className="mt-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold px-4 py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
+                    className="mt-2 border-2 border-[#001f3f] hover:bg-gray-200 text-[#001f3f] font-semibold px-4 py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
                   >
                     Remove
                   </button>

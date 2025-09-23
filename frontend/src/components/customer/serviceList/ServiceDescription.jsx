@@ -559,29 +559,27 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
             )}
           </p>
         </div>
-        <div className="flex flex-col gap-2.5 lg:flex-row lg:justify-center lg:gap-3">
+        <div className="flex flex-row gap-2.5 lg:flex-row lg:justify-center lg:gap-3">
           {isVendorAvailable ? (
             <>
               <button
-                className="flex w-full cursor-pointer items-center justify-center 
-                rounded-full border-none 
-                bg-[#7f00ff] px-12 py-3 text-sm font-semibold text-white 
-                transition-colors duration-300 ease-in-out 
-                hover:bg-[#5e00cc] 
-                active:bg-[#4b0099] 
-                lg:w-auto lg:min-w-[120px]"
+                className="flex w-full cursor-pointer items-center justify-center rounded-full bg-[#001f3f] lg:px-12 lg:py-3 px-1 py-1 text-xs lg:text-sm font-bold text-white transition-colors duration-300 ease-in-out hover:bg-[#002366] hover:border-[#FFD700] active:bg-[#000d1a] active:border-[#F3C12D] lg:w-auto lg:min-w-[120px] shadow-md hover:shadow-lg"
                 onClick={handleBookNow}
               >
-                Book Now
+                BOOK NOW
               </button>
 
               <button
-                className="bg-gradient-to-r from-red-600 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold transition-all duration-300 shadow-md hover:shadow-lg flex w-full cursor-pointer items-center justify-center 
-                rounded-full border-none px-12 py-3 text-sm 
-                lg:w-auto lg:min-w-[120px] "
+                className="flex w-full cursor-pointer items-center justify-center 
+             rounded-full border-none 
+             bg-gradient-to-r from-[#fb923c] to-[#ef4444] 
+             text-white font-bold transition-all duration-300 shadow-md 
+             hover:shadow-lg hover:from-[#fca5a5] hover:to-[#dc2626] 
+             lg:px-12 lg:py-3 px-1 py-2 lg:text-sm text-xs 
+             lg:w-auto lg:min-w-[120px]"
                 onClick={handleAddToCart}
               >
-                Add to Cart
+                ADD TO CART
               </button>
             </>
           ) : (

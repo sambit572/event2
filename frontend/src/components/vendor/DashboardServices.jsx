@@ -270,7 +270,7 @@ const DashboardServices = () => {
                 </span>
               </div>
               {/* Image Slider Section */}
-              <div className="relative w-full sm:w-[400px] sm:h-[200px] mt-5 mx-auto group">
+              <div className="relative w-full sm:w-[400px] lg:h-[190px] sm:h-[200px] mt-5 mx-auto group">
                 {/* Big Image */}
                 <img
                   src={selectedImages[index] || service.serviceImage?.[0]}
