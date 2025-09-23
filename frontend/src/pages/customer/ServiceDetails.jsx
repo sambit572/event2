@@ -95,10 +95,12 @@ const Service = ({ onSwitchToLogin }) => {
         const res = await axios.get(
           `${BACKEND_URL}/common/service/${serviceId}`
         );
-        const data = res.data.data;
+        console.log("Service Fetching", res.data);
+
+        const data = res.data.service;
         setService(data);
 
-        const formattedMedia = (data.serviceImage || []).map((src) => ({
+        const formattedMedia = (data?.serviceImage || []).map((src) => ({
           type: "image",
           src,
         }));

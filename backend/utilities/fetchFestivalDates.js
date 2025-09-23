@@ -28,15 +28,22 @@ const fetchFestivalDates = async (year = new Date().getFullYear()) => {
         description: festival.description,
         type: festival.type.join(", "),
       }));
-      
+
     // FOR TESTING ONLY
-    festivals.push({
+    /*  festivals.push({
       name: "Test Festival",
       date: new Date().toISOString().split("T")[0],
       description: "This is a test festival to trigger email.",
       type: "test",
+    }); */
+    /* console.log("🧪 RUNNING IN TEST MODE: Adding a temporary festival for today.");
+    festivals.push({
+      name: "My Manual Test Festival",
+      date: new Date().toISOString().split("T")[0], // This makes the festival for TODAY
+      description: "This is a manual test to confirm email sending.",
+      type: "manual-test",
     });
-
+ */
     return festivals;
   } catch (err) {
     console.error("❌ Error fetching from Calendarific:", err.message);
