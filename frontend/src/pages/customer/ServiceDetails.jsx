@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
 
@@ -95,10 +95,12 @@ const Service = ({ onSwitchToLogin }) => {
         const res = await axios.get(
           `${BACKEND_URL}/common/service/${serviceId}`
         );
-        const data = res.data.data;
+        console.log("Service Fetching", res.data);
+
+        const data = res.data.service;
         setService(data);
 
-        const formattedMedia = (data.serviceImage || []).map((src) => ({
+        const formattedMedia = (data?.serviceImage || []).map((src) => ({
           type: "image",
           src,
         }));
@@ -115,11 +117,14 @@ const Service = ({ onSwitchToLogin }) => {
   }, [serviceId]);
 
   const isVendorAvailable = service?.available !== false;
+  const location = useLocation();
 
   const handleBookNow = () => {
     const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
     if (isLoggedIn) {
-      navigate(`/userdetails/${serviceId}`);
+      navigate(`/userdetails/${serviceId}`, {
+        state: { from: location.pathname },
+      });
     } else {
       if (onSwitchToLogin) {
         onSwitchToLogin(true);

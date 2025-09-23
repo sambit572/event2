@@ -11,11 +11,12 @@ const bookingSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Vendor",
       required: true,
+      index: true, //Index for faster queries by vendor
     },
     service: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Service", // optional if you want to link specific service
-      required:true,
+      required: true,
     },
     startDate: {
       type: Date,
@@ -24,6 +25,15 @@ const bookingSchema = new mongoose.Schema(
     endDate: {
       type: Date,
       required: true,
+    },
+    //  Normalized fields for timezone-safe logic
+    startDateNormalized: {
+      type: Date,
+      index: true, // Index for faster date-range queries
+    },
+    endDateNormalized: {
+      type: Date,
+      index: true, // Index for faster date-range queries
     },
     eventTime: {
       type: String,
@@ -50,15 +60,15 @@ const bookingSchema = new mongoose.Schema(
       type: String,
       enum: ["ONLINE", "COD", "WALLET", "UPI", "BANK_TRANSFER"],
       default: "ONLINE",
-      required:true,
+      required: true,
     },
     paymentDate: {
       type: Date,
-      required:true,
+      required: true,
     },
     transactionId: {
       type: String,
-      required:true,
+      required: true,
     },
 
     // Invoice
@@ -88,7 +98,7 @@ const bookingSchema = new mongoose.Schema(
     isReviewed: {
       type: Boolean,
       default: false,
-      required:true,
+      required: true,
     },
     isNotified: {
       type: Boolean,

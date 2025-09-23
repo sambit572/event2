@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   FaRegHeart,
   FaHeart,
@@ -20,6 +20,8 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
   const [showShareMenu, setShowShareMenu] = useState(false);
   const shareContainerRef = useRef(null); // Ref for the share container
   const [isReadMoreLocation, setIsReadMoreLocation] = useState(false);
+  const locationPath = useLocation();
+
   if (!service) {
     return null;
   }
@@ -290,7 +292,9 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
     e.stopPropagation();
     const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
     if (isLoggedIn) {
-      navigate(`/userdetails/${serviceId}`);
+      navigate(`/userdetails/${serviceId}`, {
+        state: { from: locationPath.pathname },
+      });
     } else {
       if (onSwitchToLogin) onSwitchToLogin(true);
     }
