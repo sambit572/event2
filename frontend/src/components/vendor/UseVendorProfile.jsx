@@ -92,7 +92,14 @@ export function UseVendorProfile() {
       },
       { withCredentials: true }
     );
-    console.log("updation done:",res)
+    console.log("updation done:",res.data.data);
+    setForm((prev) => ({
+      ...prev,
+      upiId: res.data.data.upiId,
+      accountNumber: res.data.data.accountNumber,
+      ifscCode: res.data.data.ifscCode,
+    }));
+    console.log("after updating bank:", form);
   };
 
   return {

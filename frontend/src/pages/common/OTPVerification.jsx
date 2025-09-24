@@ -124,7 +124,6 @@ const OTPVerification = ({
       setErrorMessage(
         err.response?.data?.message || "OTP verification failed. Please try again."
       );
-      alert("Invalid OTP. Please try again.");
     }
     setIsLoading(false);
   };

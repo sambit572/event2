@@ -757,13 +757,13 @@ function VendorService({ currentStep }) {
         >
           <div className="flex flex-row text-white gap-4 ml-5">
             <button
-              className="bg-[#001f3f] p-2 font-semibold hover:bg-blue-600 ease-in-out"
+              className="bg-[#001f3f] p-4 pr-7 pl-7 text-base font-semibold hover:bg-blue-600 ease-in-out rounded-2xl"
               onClick={handleAdd}
             >
               Add
             </button>
             <button
-              className="bg-[#001f3f] p-2 font-semibold hover:bg-red-600 ease-in-out"
+              className="bg-[#001f3f] p-4 text-base font-semibold hover:bg-red-600 ease-in-out rounded-2xl"
               onClick={handleCancel}
             >
               Cancel

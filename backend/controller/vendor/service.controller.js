@@ -8,6 +8,9 @@ import { ApiError } from "../../utilities/ApiError.js";
 import Vendor from "../../model/vendor/vendor.model.js";
 import client from "../../utilities/redisClient.js";
 
+
+const vendorServicesCacheKey = (vendorId) => `vendor:${vendorId}:services`;
+
 export const createService = async (req, res) => {
   try {
     console.log("🔵 createService called");
@@ -172,7 +175,7 @@ export const checkServiceExists = async (req, res) => {
 export const getMyServices = async (req, res) => {
   try {
     const vendorId = req.vendor._id.toString();
-    const cacheKey = `vendor:${vendorId}:services`;
+    const cacheKey = vendorServicesCacheKey(vendorId);
 
     // 1️⃣ Check Redis cache
     const cachedData = await client.get(cacheKey);
@@ -263,8 +266,6 @@ export const updateService = async (req, res) => {
       }
     }
 
-    
-
     const updatedService = await Service.findByIdAndUpdate(
       serviceId,
       {
@@ -283,8 +284,8 @@ export const updateService = async (req, res) => {
 
     // ✅ Invalidate Redis cache
     try {
-      await client.del(`vendor_services_${vendorId}`); // vendor services cache
-      await client.del("all_services"); // if you cache all services somewhere
+      await client.del(vendorServicesCacheKey(vendorId));
+      await client.del("all_services");
     } catch (cacheErr) {
       console.error("Redis cache clear failed:", cacheErr);
     }
@@ -299,6 +300,8 @@ export const updateService = async (req, res) => {
     return res.status(500).json(new ApiError(500, "Internal Server Error"));
   }
 };
+
+
 
 export const deleteService = async (req, res) => {
   try {
