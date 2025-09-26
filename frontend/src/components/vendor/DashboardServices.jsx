@@ -246,13 +246,13 @@ const DashboardServices = () => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
 
-    // Check file sizes (max 9MB per file)
-    const MAX_FILE_SIZE = 9 * 1024 * 1024; // 9MB in bytes
+    // Check file sizes (max 6MB per file)
+    const MAX_FILE_SIZE = 6 * 1024 * 1024; // 6MB in bytes
     const oversizedFiles = files.filter((file) => file.size > MAX_FILE_SIZE);
 
     if (oversizedFiles.length > 0) {
       setFileSizeError(
-        `The following file(s) exceed 9MB limit: ${oversizedFiles
+        `The following file(s) exceed 5MB limit: ${oversizedFiles
           .map((f) => f.name)
           .join(", ")}`
       );
@@ -595,8 +595,8 @@ const DashboardServices = () => {
                     {/* Image upload info and file size error */}
                     <div className="mt-2">
                       <p className="text-xs text-gray-600 mb-1">
-                        Maximum file size: 9MB per photo. You can upload up to
-                        10 photos total.
+                        Maximum file size: 5MB per photo. You can upload up to 10
+                        photos total.
                       </p>
                       {fileSizeError && (
                         <div className="p-2 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded text-sm mb-2">
