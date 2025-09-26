@@ -17,7 +17,6 @@ import { FiEyeOff, FiEye } from "react-icons/fi";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-
 const Login = ({ onClose, onSwitchToRegister }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -301,13 +300,16 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
     return (
       <>
-        <GoogleLogin
-          onSuccess={handleGoogleSuccess}
-          onError={() => setErrorMsg("Google login failed.")}
-          text="signup_with"
-          shape="rectangular"
-          logo_alignment="center"
-        />
+        <div className="w-full flex justify-center py-2">
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={() => setErrorMsg("Google login failed.")}
+            text="signup_with"
+            shape="pill"
+            logo_alignment="center"
+            width="100%"
+          />
+        </div>
 
         <div className="flex items-center my-4">
           <div className="flex-grow h-px bg-gray-300" />
@@ -384,7 +386,9 @@ const Login = ({ onClose, onSwitchToRegister }) => {
       {isLoading && (
         <div className="absolute inset-0 bg-white bg-opacity-90 z-10 flex flex-col items-center justify-center rounded-md">
           <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-          <p className="mt-4 text-gray-700 font-semibold">Please Wait a moment..</p>
+          <p className="mt-4 text-gray-700 font-semibold">
+            Please Wait a moment..
+          </p>
         </div>
       )}
       <div className="login-modal" onClick={(e) => e.stopPropagation()}>
