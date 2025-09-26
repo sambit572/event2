@@ -726,7 +726,7 @@ const UserDetails = () => {
 
   return (
     <div className="font-sans px-4">
-      <div className="max-w-2xl p-8 mx-auto my-20 text-gray-800 bg-[#fff] rounded-2xl border-[3px] border-[#001F3F] shadow-[0_8px_32px_rgba(31,38,135,0.2)] backdrop-blur-lg">
+      <div className="max-w-2xl p-4 mx-auto my-20 text-gray-800 bg-[#fff] rounded-2xl border-[3px] border-[#001F3F] shadow-[0_8px_32px_rgba(31,38,135,0.2)] backdrop-blur-lg">
         <h3 className="mb-[-10px] text-center text-3xl font-bold tracking-wide bg-gradient-to-r from-[#004989] to-[#001F3F] bg-clip-text text-transparent">
           Fill Out Your Event Details
         </h3>
@@ -798,7 +798,7 @@ const UserDetails = () => {
               Select Event Dates
             </label>
             {isLoadingAvailability ? (
-              <div className="text-center p-8 bg-gray-100 rounded-lg animate-pulse">
+              <div className="text-center p-8 bg-gray-100 w-full rounded-lg animate-pulse">
                 Checking availability for all vendors...
               </div>
             ) : (

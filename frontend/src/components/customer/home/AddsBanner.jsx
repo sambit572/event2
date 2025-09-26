@@ -1,15 +1,9 @@
 import React from "react";
-
 import comingSoon from "../../../assets/home/bannerImages/coming_soon.png";
 import mediumbanner from "../../../assets/home/bannerImages/mediumbanner.png";
-import xmedium from "../../../assets/home/bannerImages/xmedium.png";
 import xxmedium from "../../../assets/home/bannerImages/xxmedium.png";
 import smallbanner from "../../../assets/home/bannerImages/smallbanner.png";
-import xsmallBanner from "../../../assets/home/bannerImages/xsmallbanner.png";
-
 import newComingSoon from "../../../../public/coomingSoon/newComingSoon.webp";
-
-// import largebanner from "../../../assets/home/bannerImages/largebanner.png";
 
 const AddsBanner = () => {
   return (
@@ -31,6 +25,8 @@ const AddsBanner = () => {
         <img
           src={newComingSoon}
           alt="Responsive"
+          loading="lazy"          // ✅ Lazy load
+          decoding="async"       // ✅ Asynchronous decoding
           className="w-full h-full object-fill rounded-lg"
         />
       </picture>

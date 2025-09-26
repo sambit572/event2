@@ -7,7 +7,7 @@ const CategoryCard = ({ category }) => {
   // console.log("category.title", category.title);
   return (
     <div
-       className="courseCard"
+      className="courseCard"
       onClick={() => {
         navigate(`/category/${category.title}`, {
           state: { category }, // ✅ pass full category object
@@ -20,6 +20,8 @@ const CategoryCard = ({ category }) => {
         <img
           src={category.image}
           alt={category.title}
+          loading="lazy" // ✅ defer loading
+          decoding="async"
           className="courseImage"
         />
 

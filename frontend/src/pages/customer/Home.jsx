@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Suspense } from "react";
 import axios from "axios";
 import "./Home.css";
 
@@ -15,22 +15,23 @@ import slider_10 from "../../assets/home/sliderImages/slider_10.jpeg";
 import slider_11 from "../../assets/home/sliderImages/slider_11.jpeg";
 
 import CategoryCard from "../../components/customer/home/CategoryCard.jsx";
-import ReviewSlider from "../../components/customer/home/ReviewSlider.jsx";
-import FaqSection from "../../components/customer/home/FaqSection.jsx";
 import ImageSlider from "../../components/customer/home/ImageSlider.jsx";
 
 import Milestones from "../../components/common/aboutus/Milestones";
 import AddsBanner from "../../components/customer/home/AddsBanner.jsx";
 import categories from "../../utils/CatogoryData.jsx";
 import StepsSection from "../../components/customer/home/StepsSection.jsx";
+// ✅ Lazy load heavy components below
+const ReviewSlider = React.lazy(() =>
+  import("../../components/customer/home/ReviewSlider.jsx")
+);
+const FaqSection = React.lazy(() =>
+  import("../../components/customer/home/FaqSection.jsx")
+);
+
 const images = [
   {
     desktop: slider_9,
-  },
-  {
-    // mobile: shaadiMobile,
-    // tablet: shaadiTablet,
-    desktop: slider_1,
   },
   {
     // mobile: christianMobile,
@@ -55,7 +56,11 @@ const images = [
   {
     desktop: slider_8,
   },
-
+ {
+    // mobile: shaadiMobile,
+    // tablet: shaadiTablet,
+    desktop: slider_1,
+  },
   {
     desktop: slider_10,
   },
@@ -152,8 +157,13 @@ const Home = () => {
       </div>
       <StepsSection />
       <Milestones />
-      <ReviewSlider />
-      <FaqSection />
+      <Suspense fallback={<div>Loading reviews...</div>}>
+        <ReviewSlider />
+      </Suspense>
+
+      <Suspense fallback={<div>Loading FAQs...</div>}>
+        <FaqSection />
+      </Suspense>
     </div>
   );
 };

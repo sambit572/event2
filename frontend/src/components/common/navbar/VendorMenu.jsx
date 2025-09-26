@@ -1,6 +1,5 @@
-// VendorMenu.jsx
 import { useRef } from "react";
-import { FaStore, FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FaStore, FaSignOutAlt, FaTachometerAlt } from "react-icons/fa";
 import { toast } from "react-hot-toast";
 
 const VendorMenu = ({
@@ -31,66 +30,47 @@ const VendorMenu = ({
       ref={vendorRef}
       className="relative flex items-center text-[15px] font-medium cursor-pointer"
     >
-      {/* Vendor section with group hover */}
+      {/* Vendor section */}
       <div
-        className="group flex items-center gap-1 px-2 py-1 rounded-lg transition-all duration-300
+        className="group flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all duration-300
                    hover:bg-gradient-to-r hover:from-[#001f3f] hover:to-[#004080] hover:text-white
                    max-[1024px]:text-[12px] max-[820px]:text-[11px]"
+        onClick={toggleVendorDropdown}
       >
-        <FaStore
-          className="text-[#001f3f] text-[15px] transition-transform duration-300 group-hover:text-white group-hover:scale-110 
-                     max-[1024px]:h-[18px] max-[1024px]:w-[18px] max-[820px]:h-[15px]"
-          onClick={toggleVendorDropdown}
-        />
-
-        <span
-          className="text-[#001F3F] font-semibold max-[900px]:hidden max-[580px]:hidden group-hover:text-white transition-colors duration-300"
-          onClick={toggleVendorDropdown}
-        >
-          {!VendorFirstName ? (
-            <span className="font-semibold">Be a Vendor</span>
-          ) : (
-            <span className="font-semibold">{VendorFirstName}</span>
-          )}
-        </span>
-
-        <span
-          onClick={toggleVendorDropdown}
-          className="group-hover:text-white group-hover:scale-110 transition-transform duration-300"
-        >
-          {showVendorDropdown ? (
-            <FaChevronUp className="text-sm" />
-          ) : (
-            <FaChevronDown className="text-sm" />
-          )}
+        <FaStore className="text-[#001f3f] text-[18px] transition-all duration-300 group-hover:text-white group-hover:scale-110" />
+        <span className="text-[#001F3F] font-semibold max-[900px]:hidden max-[580px]:hidden group-hover:text-white transition-colors duration-300">
+          {!VendorFirstName ? "Be a Vendor" : `Hi, ${VendorFirstName}`}
         </span>
       </div>
 
       {/* Dropdown menu */}
       {showVendorDropdown && (
-        <div className="absolute top-[45px] right-[-1px] bg-[#f8f8f5] cursor-default border border-gray-200 rounded-xl shadow-xl p-[0.75rem] w-[278px] z-[2000] animate-fadeIn max-[640px]:top-[60px]">
-          <h4 className="text-lg font-semibold text-[#001F3F] text-center">
-            Welcome Vendor
+        <div className="absolute top-[50px] right-[-1px] bg-white border border-gray-200 rounded-2xl shadow-2xl p-[1rem] w-[260px] z-[2000] cursor-default animate-fadeIn max-[640px]:top-[60px]">
+          {/* <h4 className="text-[18px] text-[#001f3f] font-semibold mb-1 text-center">
+            Welcome Vendor 
           </h4>
-          <p className="text-gray-600 text-center mb-1 text-[13px]">
-            Access your vendor tools and profile
-          </p>
+          <p className="text-[13px] text-gray-600 mb-1 text-center">
+            Access your tools and manage services
+          </p> */}
 
           {/* If NOT logged in → Register + Login */}
           {!VendorFirstName && (
             <>
-              <div className="flex justify-between items-center gap-2 mt-[0.2rem] cursor-default">
-                <span className="text-[#001f3f]">New Vendor?</span>
-              </div>
-
-              <div className="flex gap-2 mt-[0.4rem]">
-                {/* Register */}
+              {/* <div className="flex justify-between items-center gap-2 mt-1 cursor-default">
+                <span className="text-[#001f3f] font-medium">New Vendor?</span>
+              </div> */}
+              <h4 className="text-[18px] text-[#001f3f] font-semibold mb-1 text-center">
+                Welcome Vendor
+              </h4>
+              <p className="text-[13px] text-gray-600 mb-1 text-center">
+                Access your tools and manage services
+              </p>
+              <div className="flex gap-2 mt-3">
                 <button
-                  className="w-1/2 bg-black text-white rounded px-3 py-2 transition-all duration-300
-                             hover:bg-gray-800 hover:scale-105 hover:shadow-md"
+                  className="w-1/2 bg-[#001f3f] text-white rounded-full py-2 text-[15px] font-semibold shadow-md 
+                             hover:shadow-lg hover:scale-[1.03] transition-all duration-300"
                   onClick={() => {
                     setShowVendorDropdown(false);
-
                     if (!userFirstName) {
                       const toastId = toast.custom((t) => (
                         <div
@@ -112,13 +92,11 @@ const VendorMenu = ({
                   Register
                 </button>
 
-                {/* Login */}
                 <button
-                  className="w-1/2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded px-3 py-2 transition-all duration-300
-                             hover:from-indigo-600 hover:to-blue-600 hover:scale-105 hover:shadow-md"
+                  className="w-1/2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full py-2 text-[15px] font-semibold shadow-md 
+                             hover:shadow-lg hover:scale-[1.03] transition-all duration-300"
                   onClick={() => {
                     setShowVendorDropdown(false);
-
                     if (!userFirstName) {
                       const toastId = toast.custom((t) => (
                         <div
@@ -146,27 +124,32 @@ const VendorMenu = ({
           {/* If logged in → Dashboard + Sign Out */}
           {VendorFirstName && (
             <>
-              <hr className="my-2 border-gray-300" />
-              <div className="flex flex-col gap-2">
-                <button
-                  className="bg-[#001f3f] text-white px-3 py-3 rounded transition-all duration-300 hover:bg-[#002366] hover:scale-105 hover:shadow-md"
+              <div className="flex flex-col gap-[0.05rem]">
+                <div
+                  className="flex items-center gap-3 text-[#001f3f] text-[15px] cursor-pointer 
+                             px-3 py-2 rounded-lg transition-all duration-300
+                             hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-400 hover:text-white hover:shadow-md"
                   onClick={() => {
                     setShowVendorDropdown(false);
                     navigate("/dashboard");
                   }}
                 >
-                  My Dashboard
-                </button>
+                  <FaTachometerAlt className="text-lg" />
+                  <span>My Dashboard</span>
+                </div>
 
-                <button
-                  className="border-2 border-[#001f3f] text-[#001f3f] px-3 py-3 rounded transition-all duration-300 hover:bg-gray-200 hover:scale-105 hover:shadow-md"
+                <div
+                  className="flex items-center gap-3 text-[#001f3f] text-[15px] cursor-pointer 
+                             px-3 py-2 rounded-lg transition-all duration-300
+                             hover:bg-red-100 hover:text-red-600 hover:shadow-sm"
                   onClick={() => {
                     setShowVendorDropdown(false);
                     vendorLogout();
                   }}
                 >
-                  Sign Out
-                </button>
+                  <FaSignOutAlt className="text-lg" />
+                  <span>Sign Out</span>
+                </div>
               </div>
             </>
           )}

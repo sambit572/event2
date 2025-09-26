@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./ImageSlider.css";
 
 export default function ImageSlider({ images }) {
   const [selectedImage, setSelectedImage] = React.useState(images[0]?.desktop);
+  const containerRef = useRef(null);
+
   React.useEffect(() => {
     const container = document.querySelector(".scroll-container");
 
@@ -49,7 +51,10 @@ export default function ImageSlider({ images }) {
               </a>
             </div>
 
-            <div className="scroll-container flex items-center space-x-5 overflow-x-auto no-scrollbar">
+            <div
+              ref={containerRef}
+              className="scroll-container flex items-center space-x-5 overflow-x-auto no-scrollbar"
+            >
               {images.map((img, index) => (
                 <div
                   key={index}
@@ -58,6 +63,8 @@ export default function ImageSlider({ images }) {
                   <img
                     src={img.desktop}
                     alt={img.alt}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover cursor-pointer"
                     onClick={() => setSelectedImage(img.desktop)}
                   />

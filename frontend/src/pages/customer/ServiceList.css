@@ -110,6 +110,70 @@
 .serviceCardDetails.scrollable {
   overflow-y: auto; /* ✅ enable scroll when filter is fixed */
 }
+.subcategory-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 10px;
+  margin: 15px 0;
+}
+
+.subcategory-tabs {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  flex-wrap: nowrap;
+  padding: 10px 0;
+}
+
+.subcategory-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.subcategory-tab {
+  padding: 8px 18px;
+  border-radius: 25px;
+  background: #f4f4f4;
+  cursor: pointer;
+  font-weight: 500;
+  border: none;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.subcategory-tab:hover {
+  background: #ffd699;
+  color: #333;
+}
+
+.subcategory-tab.active {
+  background: #ff7f50;
+  color: white;
+  box-shadow: 0 4px 12px rgba(255, 127, 80, 0.3);
+}
+
+.scroll-btn {
+  background: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: #ff7f50;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  transition: all 0.2s ease;
+}
+
+.scroll-btn:hover {
+  background: #ff7f50;
+  color: white;
+  transform: scale(1.1);
+}
+
 /* For screen widths between 1012px and 1350px */
 @media screen and (min-width: 1024px) and (max-width: 1350px) {
   .serviceCardDetails {
@@ -154,5 +218,8 @@
 
 .stickyHeader .backArrowSticky {
   font-size: 1rem;
+}
+.subcategory-wrapper{
+  margin-top: 57px;
 }
 }

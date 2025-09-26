@@ -734,7 +734,39 @@ function VendorService({ currentStep }) {
               >
                 <span className="icon-left">🔍</span>
 
-                {/* Search input */}
+                {/* Selected State inline */}
+                {selectedState && (
+                  <span
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      background: "#f7f3ff",
+                      color: "#4b2bb3",
+                      border: "1px solid #4b2bb3",
+                      borderRadius: "6px",
+                      padding: "2px 6px",
+                      fontSize: "14px",
+                    }}
+                  >
+                    {selectedState}
+                    <button
+                      type="button"
+                      onClick={() => setSelectedState("")}
+                      style={{
+                        marginLeft: "4px",
+                        color: "#4b2bb3",
+                        cursor: "pointer",
+                        border: "none",
+                        background: "transparent",
+                        fontSize: "14px",
+                      }}
+                    >
+                      ✕
+                    </button>
+                  </span>
+                )}
+
+                {/* Input field */}
                 <input
                   id="state-location-input"
                   type="text"
@@ -750,7 +782,6 @@ function VendorService({ currentStep }) {
                     background: "transparent",
                   }}
                 />
-
                 {stateLocationSearchTerm && (
                   <img
                     src="/public/close.png"
@@ -760,19 +791,7 @@ function VendorService({ currentStep }) {
                   />
                 )}
               </div>
-              {/* Selected State */}
-              {selectedState && (
-                <span className="selected-chip">
-                  {selectedState}
-                  <button
-                    type="button"
-                    className="ml-2 mr-2"
-                    onClick={() => setSelectedState("")}
-                  >
-                    ✕
-                  </button>
-                </span>
-              )}
+
               {/* Dropdown */}
               {showStateLocationDropdown && (
                 <ul className="state-location-dropdown-list">
