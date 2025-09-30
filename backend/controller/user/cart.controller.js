@@ -5,7 +5,7 @@ import { Negotiation } from "../../model/common/Negotiation.model.js";
 import { ApiError } from "../../utilities/ApiError.js";
 import { ApiResponse } from "../../utilities/ApiResponse.js";
 import mongoose from "mongoose";
-import client from "../../utilities/redisClient.js";
+import client from "../../db/redisClient.js";
 import { getIO } from "../../socket/index.js";
 
 export const addToCart = async (req, res) => {
@@ -232,8 +232,6 @@ export const getCartWithUserDetails = async (req, res) => {
   }
 };
 
-
-
 // Helper function to calculate order summary (can be used in both single and multiple)
 export const calculateOrderSummary = (items, orderType = "single") => {
   if (!items || !items.length) {
@@ -273,7 +271,6 @@ export const calculateOrderSummary = (items, orderType = "single") => {
     orderType,
   };
 };
-
 
 // Get cart item count for a user
 export const getCartItemCount = async (req, res) => {

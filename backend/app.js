@@ -5,7 +5,7 @@ import path from "path";
 import helmet from "helmet";
 import { fileURLToPath } from "url";
 
-import client from "./utilities/redisClient.js";
+import client from "./db/redisClient.js";
 import userRouter from "./routes/user/user.routes.js";
 import { vendor_router } from "./routes/vendor/vendor.routes.js";
 import { errorHandler } from "./middleware/error.middleware.js";
@@ -43,8 +43,8 @@ app.use(
   })
 );
 
-app.use(express.json({limit:"50mb"}));
-app.use(express.urlencoded({ limit:"50mb", extended: true }));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cookieParser());
 
 // ✅ Start Agenda Engine

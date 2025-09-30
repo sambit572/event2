@@ -6,8 +6,7 @@ import {
 import { ApiResponse } from "../../utilities/ApiResponse.js";
 import { ApiError } from "../../utilities/ApiError.js";
 import Vendor from "../../model/vendor/vendor.model.js";
-import client from "../../utilities/redisClient.js";
-
+import client from "../../db/redisClient.js";
 
 const vendorServicesCacheKey = (vendorId) => `vendor:${vendorId}:services`;
 
@@ -301,8 +300,6 @@ export const updateService = async (req, res) => {
   }
 };
 
-
-
 export const deleteService = async (req, res) => {
   try {
     const vendorId = req.vendor._id;
@@ -411,10 +408,11 @@ export const updateServiceImageFirst = async (req, res) => {
         .json(new ApiError(500, "Image upload failed, please try again"));
     }
 
-    return res.status(200).json(new ApiResponse(200, imageUrls, "Images uploaded successfully"));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, imageUrls, "Images uploaded successfully"));
   } catch (error) {
     console.error("❌ Error uploading service images:", error);
     return res.status(500).json(new ApiError(500, "Internal server error"));
   }
 };
-

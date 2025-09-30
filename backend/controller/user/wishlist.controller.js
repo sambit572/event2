@@ -1,6 +1,6 @@
 import { Wishlist } from "../../model/user/wishlist.model.js";
 import { Service } from "../../model/vendor/service.model.js";
-import client from "../../utilities/redisClient.js";
+import client from "../../db/redisClient.js";
 
 // 🗑️ Remove wishlist item
 export const removeFromWishlist = async (req, res) => {

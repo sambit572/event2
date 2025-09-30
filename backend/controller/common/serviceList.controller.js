@@ -1,12 +1,10 @@
 import { Service } from "../../model/vendor/service.model.js";
-import client from "../../utilities/redisClient.js"; // 🔹 Make sure you have a redis client
+import client from "../../db/redisClient.js"; // 🔹 Make sure you have a redis client
 
 // ========== Get Services by Category ==========
 export const getServicesByCategory = async (req, res) => {
   try {
-
-
-    console.log("Inside getServicesByCategory .............")
+    console.log("Inside getServicesByCategory .............");
 
     const { category } = req.params;
     const cacheKey = `services:category:${category.toLowerCase()}`;

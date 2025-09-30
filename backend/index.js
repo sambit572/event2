@@ -3,7 +3,7 @@ console.log("🚀 Initializing server... branch-3.o");
 
 // ✅ Import required modules
 import { config } from "dotenv";
-import "dotenv/config";
+import client from "./db/redisClient.js";
 import { app } from "./app.js";
 import { connectToDb } from "./db/db.js";
 import mongoose from "mongoose"; // ✅ Import mongoose for DB close
@@ -34,7 +34,13 @@ const port = process.env.PORT || 8000;
 
 // Connect to DB and start server
 connectToDb()
-  .then(() => {
+  .then(async () => {
+    try {
+      await client.flushAll();
+      console.log("🧹 All cached data cleared on server restart.");
+    } catch (err) {
+      console.error("⚠️ Failed to clear cache on startup:", err);
+    }
     server.listen(port, () => {
       console.log(`✅ Server running on port ${port}`);
     });
