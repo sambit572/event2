@@ -4,7 +4,7 @@ import fs from "fs";
 import { sendEmail } from "../../utilities/sendEmail.js";
 import { User } from "../../model/user/user.model.js";
 import Vendor from "../../model/vendor/vendor.model.js";
-import {Review} from "../../model/common/review.model.js";
+import { Review } from "../../model/common/review.model.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -515,7 +515,8 @@ const generateMonthlyReport = async () => {
     console.log(`✅ Monthly Report PDF generated: ${filePath}`);
 
     // Send to all admins
-    const adminEmails = ["swainamrit8@gmail.com", "abhijitpati413@gmail.com"];
+    const adminEmails = [];
+    // "swainamrit8@gmail.com", "abhijitpati413@gmail.com"
 
     if (adminEmails.length === 0) {
       console.warn(

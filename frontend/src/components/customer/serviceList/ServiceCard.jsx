@@ -1,7 +1,16 @@
 import React, { useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { useNavigate, useParams } from "react-router-dom";
+// ✅ NEW: Import FaYoutube for the UI
+import { FaChevronLeft, FaChevronRight, FaYoutube } from "react-icons/fa";
 import ServiceDescription from "./ServiceDescription";
+
+// ✅ NEW: Helper function to identify YouTube links and get the video ID
+const getYouTubeID = (url) => {
+  if (typeof url !== "string") return null;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return match && match[2].length === 11 ? match[2] : null;
+};
 
 const ServiceCard = ({ service, onSwitchToLogin }) => {
   const navigate = useNavigate();
@@ -12,25 +21,27 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
 
   if (!service) return null;
 
-  const images = service.serviceImage || [];
+  // ✅ MODIFIED: Use a generic name `media` for the array of URLs
+  const media = service.serviceImage || [];
   const serviceId = service._id || service.id;
   const isVendorAvailable = service.available !== false;
 
-  // Navigate to service details
   const handleCardClick = () => {
     navigate(`/service/${categoryId}/${serviceId}`);
   };
 
-  // Next/Prev functions
-  const nextImage = (e) => {
+  const nextMedia = (e) => {
     e.stopPropagation();
-    setCurrentIndex((prev) => (prev + 1) % images.length);
+    setCurrentIndex((prev) => (prev + 1) % media.length);
   };
 
-  const prevImage = (e) => {
+  const prevMedia = (e) => {
     e.stopPropagation();
-    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+    setCurrentIndex((prev) => (prev === 0 ? media.length - 1 : prev - 1));
   };
+
+  const currentMediaUrl = media[currentIndex];
+  const isVideo = getYouTubeID(currentMediaUrl);
 
   return (
     <div
@@ -38,28 +49,35 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
       onClick={handleCardClick}
     >
       <div
-        className="relative overflow-hidden rounded-lg 
-             w-full md:w-[400px] lg:w-[480px] 
-             h-[280px] lg:h-[290px] 
-             bg-gray-100 flex-shrink-0 md:sticky"
+        className="relative overflow-hidden rounded-lg w-full md:w-[400px] lg:w-[480px] h-[280px] lg:h-[290px] bg-gray-100 flex-shrink-0 md:sticky"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
         <div className="relative w-full h-full">
-          {Array.isArray(images) && images.length > 0 ? (
+          {Array.isArray(media) && media.length > 0 ? (
             <>
-              {images.map((img, idx) => (
+              {/* ✅ MODIFIED: Conditional rendering for video or image */}
+              {isVideo ? (
+                <iframe
+                  key={currentIndex} // Add key to force re-render on change
+                  src={`https://www.youtube.com/embed/${isVideo}?autoplay=1&mute=1&loop=1&playlist=${isVideo}`}
+                  className={`absolute top-0 left-0 w-full h-full object-cover object-center ${
+                    !isVendorAvailable ? "grayscale brightness-50" : ""
+                  }`}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              ) : (
                 <img
-                  key={idx}
-                  src={img}
-                  alt={`slide-${idx}`}
-                  className={`absolute top-0 left-0 w-full h-full 
-                        object-cover object-center 
-                        transition-opacity duration-500 
-                        ${idx === currentIndex ? "opacity-100" : "opacity-0"} 
-                        ${!isVendorAvailable ? "grayscale brightness-50" : ""}`}
+                  key={currentIndex}
+                  src={currentMediaUrl}
+                  alt={`slide-${currentIndex}`}
+                  className={`absolute top-0 left-0 w-full h-full object-cover object-center transition-opacity duration-500 ${
+                    !isVendorAvailable ? "grayscale brightness-50" : ""
+                  }`}
                 />
-              ))}
+              )}
 
               {/* Overlay if vendor not available */}
               {!isVendorAvailable && (
@@ -76,9 +94,9 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
               )}
 
               {/* Left Arrow */}
-              {hovered && images.length > 1 && (
+              {hovered && media.length > 1 && (
                 <button
-                  onClick={prevImage}
+                  onClick={prevMedia}
                   className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
                 >
                   <FaChevronLeft />
@@ -86,29 +104,33 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
               )}
 
               {/* Right Arrow */}
-              {hovered && images.length > 1 && (
+              {hovered && media.length > 1 && (
                 <button
-                  onClick={nextImage}
+                  onClick={nextMedia}
                   className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
                 >
                   <FaChevronRight />
                 </button>
               )}
 
-              {/* Dots */}
-              {images.length > 1 && (
+              {/* ✅ MODIFIED: Dots now show YouTube icon for videos */}
+              {media.length > 1 && (
                 <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2">
-                  {images.map((_, idx) => (
-                    <span
+                  {media.map((mediaUrl, idx) => (
+                    <button
                       key={idx}
                       onClick={(e) => {
                         e.stopPropagation();
                         setCurrentIndex(idx);
                       }}
-                      className={`h-2 w-2 rounded-full cursor-pointer ${
+                      className={`h-3 w-3 rounded-full cursor-pointer flex items-center justify-center ${
                         idx === currentIndex ? "bg-white" : "bg-gray-400"
                       }`}
-                    ></span>
+                    >
+                      {getYouTubeID(mediaUrl) && (
+                        <FaYoutube className="text-red-500 text-xs" />
+                      )}
+                    </button>
                   ))}
                 </div>
               )}
@@ -129,14 +151,13 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
           )}
         </div>
 
-        {Array.isArray(images) && images.length > 1 && (
+        {/* ✅ MODIFIED: Side thumbnail strip now handles videos */}
+        {Array.isArray(media) && media.length > 1 && (
           <div className="flex flex-col gap-0.5 bg-gray-200 p-1.5">
-            {images.map((thumb, idx) => (
-              <img
+            {media.map((thumbUrl, idx) => (
+              <div
                 key={idx}
-                src={thumb}
-                alt={`thumb-${idx}`}
-                className={`h-[50px] w-[85px] cursor-pointer rounded border-2 object-cover transition-all duration-300 ${
+                className={`relative h-[50px] w-[85px] cursor-pointer rounded border-2 object-cover transition-all duration-300 ${
                   idx === currentIndex
                     ? "border-orange-500"
                     : "border-transparent"
@@ -145,14 +166,25 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
                   e.stopPropagation();
                   setCurrentIndex(idx);
                 }}
-              />
+              >
+                {getYouTubeID(thumbUrl) ? (
+                  <div className="w-full h-full bg-black flex items-center justify-center rounded">
+                    <FaYoutube className="text-red-500 text-3xl" />
+                  </div>
+                ) : (
+                  <img
+                    src={thumbUrl}
+                    alt={`thumb-${idx}`}
+                    className="w-full h-full object-cover rounded"
+                  />
+                )}
+              </div>
             ))}
           </div>
         )}
       </div>
 
       <div className="flex-grow">
-        {/* ⭐ THE FIX IS ON THE NEXT LINE ⭐ */}
         <ServiceDescription
           service={{ ...service, categoryId: categoryId }}
           onSwitchToLogin={onSwitchToLogin}

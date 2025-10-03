@@ -1,23 +1,37 @@
 import React, { useState, useEffect } from "react";
-import { FaTrash, FaEdit, FaPlus } from "react-icons/fa";
+import { FaTrash, FaEdit, FaPlus, FaYoutube } from "react-icons/fa";
 import axios from "axios";
 import { BACKEND_URL } from "../../utils/constant.js";
 import { MdReportGmailerrorred } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import "./DashboardServices.css";
 
+const getYouTubeID = (url) => {
+  console.log("Extracting YouTube ID from URL:", url);
+  if (typeof url !== "string") return null;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  console.log("YouTube ID match result:", match);
+  return match && match[2].length === 11 ? match[2] : null;
+};
+
 const DashboardServices = () => {
   const navigate = useNavigate();
   const [services, setServices] = useState([]);
   const [editingIndex, setEditingIndex] = useState(null);
-  const [selectedImages, setSelectedImages] = useState({});
+  // ✅ MODIFIED: Renamed to handle both image and video URLs
   const [editedData, setEditedData] = useState({});
+
+  // ✅ MODIFIED: States to manage new files before they are uploaded
   const [newImages, setNewImages] = useState([]);
-  const [newImagePreviews, setNewImagePreviews] = useState([]);
+
+  const [selectedMedia, setSelectedMedia] = useState({});
+  const [newVideos, setNewVideos] = useState([]); // State for video files
+  const [newMediaPreviews, setNewMediaPreviews] = useState([]); // Unified state for all previews
+
   const [expanded, setExpanded] = useState(false);
   const [expandedLocations, setExpandedLocations] = useState({});
 
-  // Added states for enhanced UX
   const [isSaving, setIsSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [fileSizeError, setFileSizeError] = useState("");
@@ -70,9 +84,10 @@ const DashboardServices = () => {
           setServices(res.data.data);
           const initialImages = {};
           res.data.data.forEach((service, index) => {
-            initialImages[index] = service.serviceImage?.[0] || "";
+            const media = service.serviceImage;
+            initialImages[index] = media?.[0] || "";
           });
-          setSelectedImages(initialImages);
+          setSelectedMedia(initialImages);
         }
       } catch (err) {
         console.error("Failed to fetch vendor services", err);
@@ -97,93 +112,88 @@ const DashboardServices = () => {
       setEditingIndex(null);
       setEditedData({});
       setNewImages([]);
-      setNewImagePreviews([]);
+      setNewMediaPreviews([]);
       setErrorMessage("");
       setFileSizeError("");
     }
   };
 
   const handleSave = async (index) => {
-    // Set saving state and clear previous errors
     setIsSaving(true);
     setErrorMessage("");
 
     try {
       const serviceId = services[index]._id;
-      const existingImages = editedData.serviceImage || [];
-      const totalImages = existingImages.length + newImages.length;
+      const existingMedia = editedData.serviceImage || [];
+      // ✅ NEW: Calculate total media including new videos
+      const totalMedia =
+        existingMedia.length + newImages.length + newVideos.length;
 
-      if (totalImages > 10) {
+      // ✅ NEW: Your validation logic, now for all media types
+      if (totalMedia > 10) {
         setErrorMessage(
-          `You can upload a maximum of 10 images. ` +
-            `You already have ${existingImages.length} images. ` +
-            `Please remove ${totalImages - 10} image(s) before saving.`
+          `You can upload a maximum of 10 media items. ` +
+            `You already have ${existingMedia.length} items. ` +
+            `Please remove ${totalMedia - 10} item(s) before saving.`
         );
-        // This alert was redundant with the error message display, but kept to match the provided code
+        // Re-instating your alert for immediate feedback
         alert(
-          `You can upload a maximum of 10 images.\n` +
-            `You already have ${existingImages.length} images.\n` +
-            `Please remove ${totalImages - 10} image(s) before saving.`
+          `You can upload a maximum of 10 media items.\n` +
+            `You already have ${existingMedia.length} items.\n` +
+            `Please remove ${totalMedia - 10} item(s) before saving.`
         );
         setIsSaving(false);
         return;
       }
 
-      // 🟢 [CHANGED] Step 1: Only upload new images to Cloudinary, DO NOT save to DB here
-      let uploadedUrls = [];
+      let newUploadedImageUrls = [];
+      let newUploadedVideoUrls = [];
+
+      // Step 1: Upload new videos to YouTube
+      if (newVideos.length > 0) {
+        const formData = new FormData();
+        newVideos.forEach((file) => formData.append("images", file));
+
+        const res = await axios.post(
+          `${BACKEND_URL}/vendors/upload-new-service-image/${serviceId}`,
+          formData,
+          { withCredentials: true }
+        );
+        // Assuming your backend returns all URLs in res.data.data
+        newUploadedVideoUrls = res.data.data;
+      }
+
+      // Step 2: Upload new images to Cloudinary
       if (newImages.length > 0) {
         const formData = new FormData();
         newImages.forEach((file) => formData.append("images", file));
 
-        try {
-          console.log("Uploading new service images to Cloudinary…"); // 🟢 [CHANGED] clearer log
-          const res = await axios.post(
-            `${BACKEND_URL}/vendors/upload-new-service-image/${serviceId}`,
-            formData,
-            {
-              withCredentials: true,
-              headers: { "Content-Type": "multipart/form-data" },
-            }
-          );
-
-          console.log("Image upload response:", res.data);
-          if (Array.isArray(res.data?.data)) {
-            uploadedUrls = res.data.data;
-          }
-        } catch (error) {
-          console.error("❌ Failed to upload images:", error);
-          setErrorMessage(
-            error.response?.data?.message ||
-              "Failed to upload images. Please check your internet connection and try again."
-          );
-          setIsSaving(false);
-          return; // Stop the save process if upload fails
-        }
+        const res = await axios.post(
+          `${BACKEND_URL}/vendors/upload-new-service-image/${serviceId}`,
+          formData,
+          { withCredentials: true }
+        );
+        // Assuming your backend returns all URLs in res.data.data
+        newUploadedImageUrls = res.data.data;
       }
 
-      const allImages = [...existingImages, ...uploadedUrls];
+      // Combine all URLs
+      const allMedia = [
+        ...existingMedia,
+        ...newUploadedImageUrls,
+        ...newUploadedVideoUrls,
+      ];
 
       const payload = {
-        serviceName: editedData.serviceName,
-        serviceDes: editedData.serviceDes,
-        serviceCategory: editedData.serviceCategory,
-        minPrice: Number(editedData.minPrice),
-        maxPrice: Number(editedData.maxPrice),
-        locationOffered: Array.isArray(editedData.locationOffered)
-          ? editedData.locationOffered
-          : [editedData.locationOffered],
-        duration: Number(editedData.duration),
-        serviceImage: allImages,
+        ...editedData,
+        serviceImage: allMedia, // Using your `serviceImage` field
       };
 
-      console.log("Sending final service update payload:", payload);
       const updateRes = await axios.put(
         `${BACKEND_URL}/vendors/update-service/${serviceId}`,
         payload,
         { withCredentials: true }
       );
-
-      console.log("Update response from DB:", updateRes.data);
 
       const updatedService = updateRes.data.data;
       const updatedList = [...services];
@@ -192,14 +202,15 @@ const DashboardServices = () => {
       setServices(updatedList);
       setEditingIndex(null);
       setNewImages([]);
+      setNewVideos([]);
+      setNewMediaPreviews([]);
       setErrorMessage("");
-      setIsSaving(false);
     } catch (error) {
       console.error("❌ Failed to update service:", error);
       setErrorMessage(
-        error.response?.data?.message ||
-          "Failed to update service. Please check all fields and try again."
+        error.response?.data?.message || "Failed to update service."
       );
+    } finally {
       setIsSaving(false);
     }
   };
@@ -235,45 +246,61 @@ const DashboardServices = () => {
     }));
   };
 
-  const handleImageSelect = (index, imgUrl) => {
-    setSelectedImages((prev) => ({
+  const handleMediaSelect = (index, mediaUrl) => {
+    setSelectedMedia((prev) => ({
       ...prev,
-      [index]: imgUrl,
+      [index]: mediaUrl,
     }));
   };
 
-  const handleImageUpload = (e) => {
+  const handleMediaUpload = (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
 
-    // Check file sizes (max 6MB per file)
-    const MAX_FILE_SIZE = 6 * 1024 * 1024; // 6MB in bytes
-    const oversizedFiles = files.filter((file) => file.size > MAX_FILE_SIZE);
+    const MAX_IMAGE_SIZE_BYTES = 9 * 1024 * 1024; // 9MB limit for images
 
-    if (oversizedFiles.length > 0) {
-      setFileSizeError(
-        `The following file(s) exceed 5MB limit: ${oversizedFiles
-          .map((f) => f.name)
-          .join(", ")}`
-      );
-      setTimeout(() => setFileSizeError(""), 5000); // Clear error after 5 seconds
+    let imageFiles = [];
+    let videoFiles = [];
+
+    for (const file of files) {
+      if (file.type.startsWith("image/")) {
+        if (file.size > MAX_IMAGE_SIZE_BYTES) {
+          alert(`Image "${file.name}" is too large. The limit is 9MB.`);
+          continue;
+        }
+        imageFiles.push(file);
+      } else if (file.type.startsWith("video/")) {
+        videoFiles.push(file);
+      }
+    }
+
+    const currentImages = editedData.serviceImage || [];
+    const currentMediaCount =
+      currentImages.length + newImages.length + newVideos.length;
+
+    if (currentMediaCount + imageFiles.length + videoFiles.length > 10) {
+      alert(`You can only upload up to 10 media items in total.`);
       return;
     }
 
-    const totalSelected =
-      editedData.serviceImage.length + newImages.length + files.length;
-    if (totalSelected > 10) {
-      alert(
-        `You can only upload up to 10 images in total. Remove ${
-          totalSelected - 10
-        } image(s).`
-      );
-      return;
-    }
-    const newPreviews = files.map((file) => URL.createObjectURL(file));
-    setNewImages((prev) => [...prev, ...files]);
-    setNewImagePreviews((prev) => [...prev, ...newPreviews]);
-    setFileSizeError(""); // Clear any previous file size errors
+    const newImagePreviews = imageFiles.map((file) => ({
+      type: "image",
+      url: URL.createObjectURL(file),
+      file,
+    }));
+    const newVideoPreviews = videoFiles.map((file) => ({
+      type: "video",
+      url: URL.createObjectURL(file),
+      file,
+    }));
+
+    setNewImages((prev) => [...prev, ...imageFiles]);
+    setNewVideos((prev) => [...prev, ...videoFiles]);
+    setNewMediaPreviews((prev) => [
+      ...prev,
+      ...newImagePreviews,
+      ...newVideoPreviews,
+    ]);
   };
 
   const handleToggleAvailability = async (index) => {
@@ -304,17 +331,18 @@ const DashboardServices = () => {
 
   useEffect(() => {
     return () => {
-      newImagePreviews.forEach((url) => URL.revokeObjectURL(url));
+      newMediaPreviews.forEach((preview) => URL.revokeObjectURL(preview.url));
     };
-  }, [newImagePreviews]);
+  }, [newMediaPreviews]);
 
   return (
     <div className="flex flex-col overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden h-[480px]">
       {services.length > 0 ? (
         services.map((service, index) => {
           const isEditing = editingIndex === index;
-          const selectedImage =
-            selectedImages[index] || service.serviceImage?.[0];
+          const currentServiceImages = service.serviceImage || [];
+          const selectedMediaUrl =
+            selectedMedia[index] || currentServiceImages[0];
 
           return (
             <section
@@ -348,24 +376,39 @@ const DashboardServices = () => {
               </div>
               {/* Image Slider Section */}
               <div className="relative w-full sm:w-[400px] sm:h-[200px] mt-5 mx-auto group">
-                {/* Big Image */}
-                <img
-                  src={selectedImages[index] || service.serviceImage?.[0]}
-                  alt="Service"
-                  className="w-full h-full object-cover rounded-md"
-                />
+                {getYouTubeID(selectedMediaUrl) ? (
+                  <iframe
+                    className="w-full h-full object-cover rounded-md"
+                    src={`https://www.youtube.com/embed/${getYouTubeID(
+                      selectedMediaUrl
+                    )}?autoplay=1&mute=1`}
+                    title="Service Video"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                ) : (
+                  <img
+                    src={selectedMediaUrl}
+                    alt="Service"
+                    className="w-full h-full object-cover rounded-md"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src =
+                        "https://placehold.co/400x200/cccccc/ffffff?text=Image+Not+Found";
+                    }}
+                  />
+                )}
 
-                {/* Left Arrow */}
-                {service.serviceImage?.length > 1 && (
+                {currentServiceImages.length > 1 && (
                   <button
                     onClick={() => {
-                      const currentIndex = service.serviceImage.indexOf(
-                        selectedImages[index] || service.serviceImage[0]
-                      );
+                      const currentIndex =
+                        currentServiceImages.indexOf(selectedMediaUrl);
                       const prevIndex =
-                        (currentIndex - 1 + service.serviceImage.length) %
-                        service.serviceImage.length;
-                      handleImageSelect(index, service.serviceImage[prevIndex]);
+                        (currentIndex - 1 + currentServiceImages.length) %
+                        currentServiceImages.length;
+                      handleMediaSelect(index, currentServiceImages[prevIndex]);
                     }}
                     className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
                   >
@@ -373,35 +416,36 @@ const DashboardServices = () => {
                   </button>
                 )}
 
-                {/* Right Arrow */}
-                {service.serviceImage?.length > 1 && (
+                {currentServiceImages.length > 1 && (
                   <button
                     onClick={() => {
-                      const currentIndex = service.serviceImage.indexOf(
-                        selectedImages[index] || service.serviceImage[0]
-                      );
+                      const currentIndex =
+                        currentServiceImages.indexOf(selectedMediaUrl);
                       const nextIndex =
-                        (currentIndex + 1) % service.serviceImage.length;
-                      handleImageSelect(index, service.serviceImage[nextIndex]);
+                        (currentIndex + 1) % currentServiceImages.length;
+                      handleMediaSelect(index, currentServiceImages[nextIndex]);
                     }}
                     className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
                   >
                     ❯
                   </button>
                 )}
-
                 {/* Dots */}
                 <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-2">
-                  {service.serviceImage?.map((img, i) => (
+                  {currentServiceImages.map((mediaUrl, i) => (
                     <button
                       key={i}
-                      onClick={() => handleImageSelect(index, img)}
-                      className={`w-1 h-1 rounded-full px-1 py-1 ${
-                        selectedImages[index] === img
+                      onClick={() => handleMediaSelect(index, mediaUrl)}
+                      className={`w-3 h-3 flex items-center justify-center rounded-full ${
+                        selectedMediaUrl === mediaUrl
                           ? "bg-white"
                           : "bg-gray-400"
                       }`}
-                    />
+                    >
+                      {getYouTubeID(mediaUrl) && (
+                        <FaYoutube className="text-red-500 text-xs" />
+                      )}
+                    </button>
                   ))}
                 </div>
 
@@ -595,8 +639,8 @@ const DashboardServices = () => {
                     {/* Image upload info and file size error */}
                     <div className="mt-2">
                       <p className="text-xs text-gray-600 mb-1">
-                        Maximum file size: 5MB per photo. You can upload up to 10
-                        photos total.
+                        Maximum file size: 5MB per photo. You can upload up to
+                        10 photos total.
                       </p>
                       {fileSizeError && (
                         <div className="p-2 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded text-sm mb-2">
@@ -607,25 +651,31 @@ const DashboardServices = () => {
 
                     {/* Image Preview */}
                     <div className="flex flex-nowrap overflow-x-auto items-center gap-1 pt-2">
-                      {editedData.serviceImage?.map((img, i) => (
+                      {(editedData.serviceImage || []).map((mediaUrl, i) => (
                         <div
                           key={`existing-${i}`}
                           className="relative w-10 h-10 shrink-0"
                         >
-                          <img
-                            src={img}
-                            alt={`thumb-${i}`}
-                            className="w-full h-full object-cover rounded"
-                          />
+                          {getYouTubeID(mediaUrl) ? (
+                            <div className="w-full h-full bg-black rounded flex items-center justify-center">
+                              <FaYoutube className="text-red-500 text-xl" />
+                            </div>
+                          ) : (
+                            <img
+                              src={mediaUrl}
+                              alt={`thumb-${i}`}
+                              className="w-full h-full object-cover rounded"
+                            />
+                          )}
                           <button
                             type="button"
                             className="absolute top-0 right-0 text-red-600 p-[3px] text-[10px] bg-white rounded-full"
                             onClick={() => {
-                              const updatedImgs = [...editedData.serviceImage];
-                              updatedImgs.splice(i, 1);
+                              const currentMedia = [...editedData.serviceImage];
+                              currentMedia.splice(i, 1);
                               setEditedData((prev) => ({
                                 ...prev,
-                                serviceImage: updatedImgs,
+                                serviceImage: currentMedia,
                               }));
                             }}
                             disabled={isSaving}
@@ -635,26 +685,44 @@ const DashboardServices = () => {
                         </div>
                       ))}
 
-                      {newImagePreviews.map((url, i) => (
+                      {newMediaPreviews.map((preview, i) => (
                         <div
                           key={`new-${i}`}
                           className="relative w-10 h-10 shrink-0"
                         >
-                          <img
-                            src={url}
-                            alt={`new-preview-${i}`}
-                            className="w-full h-full object-cover rounded"
-                          />
+                          {preview.type === "image" ? (
+                            <img
+                              src={preview.url}
+                              alt={`new-preview-${i}`}
+                              className="w-full h-full object-cover rounded"
+                            />
+                          ) : (
+                            <video
+                              src={preview.url}
+                              className="w-full h-full object-cover rounded"
+                              muted
+                            />
+                          )}
                           <button
                             type="button"
                             className="absolute top-0 right-0 text-red-600 p-[3px] text-[10px] bg-white rounded-full"
                             onClick={() => {
-                              const updatedPreviews = [...newImagePreviews];
-                              const updatedFiles = [...newImages];
-                              updatedPreviews.splice(i, 1);
-                              updatedFiles.splice(i, 1);
-                              setNewImages(updatedFiles);
-                              setNewImagePreviews(updatedPreviews);
+                              const updatedPreviews = [...newMediaPreviews];
+                              const removedPreview = updatedPreviews.splice(
+                                i,
+                                1
+                              )[0];
+                              setNewMediaPreviews(updatedPreviews);
+
+                              if (removedPreview.type === "image") {
+                                setNewImages((prev) =>
+                                  prev.filter((f) => f !== removedPreview.file)
+                                );
+                              } else {
+                                setNewVideos((prev) =>
+                                  prev.filter((f) => f !== removedPreview.file)
+                                );
+                              }
                             }}
                             disabled={isSaving}
                           >
@@ -663,8 +731,8 @@ const DashboardServices = () => {
                         </div>
                       ))}
 
-                      {editedData.serviceImage.length +
-                        newImagePreviews.length <
+                      {(editedData.serviceImage || []).length +
+                        newMediaPreviews.length <
                         10 && (
                         <label
                           className={`w-14 h-14 border-2 border-dashed border-[#001f3f] rounded flex items-center justify-center shrink-0 ${
@@ -676,10 +744,10 @@ const DashboardServices = () => {
                           <FaPlus className="text-gray-500 text-xs" />
                           <input
                             type="file"
-                            accept="image/*"
-                            multiple // Allow multiple file selection
+                            accept="image/*,video/*"
+                            multiple
                             className="hidden"
-                            onChange={handleImageUpload}
+                            onChange={handleMediaUpload}
                             disabled={isSaving}
                           />
                         </label>

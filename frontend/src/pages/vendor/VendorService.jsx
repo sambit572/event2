@@ -176,12 +176,20 @@ function VendorService({ currentStep }) {
   const handleImageUpload = (e) => {
     try {
       if (showCropperModal) return;
+
+      // Clear any previous error messages
+      setErrorMessage("");
+
       const newFiles = Array.from(e.target.files);
-      const valid = [
+
+      // File type validation
+      const validImageTypes = [
         "image/jpeg",
         "image/jpg",
         "image/png",
         "image/gif",
+      ];
+      const validVideoTypes = [
         "video/mp4",
         "video/avi",
         "video/mov",
@@ -189,18 +197,74 @@ function VendorService({ currentStep }) {
         "video/flv",
         "video/webm",
       ];
-      const max = 50 * 1024 * 1024;
+      const validTypes = [...validImageTypes, ...validVideoTypes];
+
+      // Size limits
+      const IMAGE_SIZE_LIMIT = 5 * 1024 * 1024; // 5MB
+      const VIDEO_SIZE_LIMIT = 200 * 1024 * 1024; // 200MB
+      const MAX_FILE_COUNT = 10;
+
+      // Check total file count
+      const currentFileCount = selectedFiles.length;
+      const newFileCount = newFiles.length;
+      const totalFileCount = currentFileCount + newFileCount;
+
+      if (totalFileCount > MAX_FILE_COUNT) {
+        setErrorMessage(
+          `Cannot upload more than ${MAX_FILE_COUNT} files in total. You currently have ${currentFileCount} file(s) and are trying to add ${newFileCount} more.`
+        );
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+        return;
+      }
+
       const validatedFiles = [];
+      const errors = [];
+
       for (let f of newFiles) {
-        if (!valid.includes(f.type)) {
-          alert("Invalid file type. Only images and videos are allowed.");
+        // Check file type
+        if (!validTypes.includes(f.type)) {
+          errors.push(
+            `"${f.name}" - Invalid file type. Only images (JPEG, PNG, GIF) and videos (MP4, AVI, MOV, WMV, FLV, WEBM) are allowed.`
+          );
           continue;
         }
-        if (f.size > max) {
-          alert(`File ${f.name} is too large (> 50 MB).`);
+
+        // Check file size based on type
+        const isImage = validImageTypes.includes(f.type);
+        const isVideo = validVideoTypes.includes(f.type);
+
+        if (isImage && f.size > IMAGE_SIZE_LIMIT) {
+          const sizeMB = (f.size / (1024 * 1024)).toFixed(2);
+          errors.push(
+            `"${f.name}" (${sizeMB}MB) - Image files must be 5MB or smaller.`
+          );
           continue;
         }
+
+        if (isVideo && f.size > VIDEO_SIZE_LIMIT) {
+          const sizeMB = (f.size / (1024 * 1024)).toFixed(2);
+          errors.push(
+            `"${f.name}" (${sizeMB}MB) - Video files must be 200MB or smaller.`
+          );
+          continue;
+        }
+
         validatedFiles.push(f);
+      }
+
+      // Display all errors at once
+      if (errors.length > 0) {
+        setErrorMessage(errors.join(" • "));
+      }
+
+      // If no valid files, clear input and return
+      if (validatedFiles.length === 0) {
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+        return;
       }
 
       const imageFiles = validatedFiles.filter((file) =>
@@ -226,6 +290,9 @@ function VendorService({ currentStep }) {
       }
     } catch (err) {
       console.error("Image selection error:", err);
+      setErrorMessage(
+        "An error occurred while processing your files. Please try again."
+      );
     }
   };
   const handleCropImage = async () => {
