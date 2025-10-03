@@ -9,7 +9,9 @@ const CategoryCard = ({ category }) => {
     <div
       className="courseCard"
       onClick={() => {
-        navigate(`/category/${category.title}`);
+        navigate(`/category/${category.title}`, {
+          state: { category }, // ✅ pass full category object
+        });
       }}
     >
       <span className="brandLabel">EventsBridge</span>
@@ -18,6 +20,8 @@ const CategoryCard = ({ category }) => {
         <img
           src={category.image}
           alt={category.title}
+          loading="lazy" // ✅ defer loading
+          decoding="async"
           className="courseImage"
         />
 

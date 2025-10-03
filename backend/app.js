@@ -19,6 +19,7 @@ import reportRoutes from "./routes/common/report.routes.js";
 import wishlistRoutes from "./routes/user/wishlist.routes.js"; // Import wishlist routes
 import cartRouter from "./routes/user/cart.routes.js";
 import { searchRouter } from "./routes/common/search.routes.js";
+import calendarRoutes from "./routes/common/calendar.routes.js";
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -94,6 +95,7 @@ app.use("/api/feedback", feedbackRoutes);
 app.use("/api/common", serviceRoutes);
 app.use("/api/wishlist", wishlistRoutes); // Use wishlist routes
 app.use("/api/cart", cartRouter);
+app.use("/api/calendar", calendarRoutes);
 // ✅ Health Check Route
 app.get("/", (req, res) => {
   res.status(200).json({

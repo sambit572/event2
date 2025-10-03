@@ -40,11 +40,24 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
       <div
         className="relative overflow-hidden rounded-lg 
              w-full md:w-[400px] lg:w-[480px] 
-             h-[280px] lg:h-[290px] 
+             h-[200px] lg:h-[290px] 
              bg-gray-100 flex-shrink-0 md:sticky"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
+        onTouchStart={(e) => setTouchStart(e.touches[0].clientX)}
+        onTouchEnd={(e) => {
+          if (!touchStart) return;
+          const touchEnd = e.changedTouches[0].clientX;
+          const diff = touchStart - touchEnd;
+          if (diff > 50) nextImage(e); // swipe left
+          if (diff < -50) prevImage(e); // swipe right
+          setTouchStart(null);
+        }}
       >
+        <span className="absolute top-[10px] left-[10px] z-[3] bg-white/30 backdrop-blur-[30px] text-white text-[11px] font-bold uppercase tracking-[0.8px] px-[7px] py-[3px] rounded-full shadow-[0_3px_10px_rgba(0,0,0,0.3)] border border-white/30 [text-shadow:1px_1px_2px_rgba(0,0,0,0.6),-1px_-1px_1px_rgba(255,255,255,0.4)]">
+          EventsBridge
+        </span>
+
         <div className="relative w-full h-full">
           {Array.isArray(images) && images.length > 0 ? (
             <>
@@ -76,20 +89,24 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
               )}
 
               {/* Left Arrow */}
-              {hovered && images.length > 1 && (
+              {images.length > 1 && (
                 <button
                   onClick={prevImage}
-                  className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
+                  className={`absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 ${
+                    hovered ? "md:block" : "md:hidden"
+                  } block`}
                 >
                   <FaChevronLeft />
                 </button>
               )}
 
               {/* Right Arrow */}
-              {hovered && images.length > 1 && (
+              {images.length > 1 && (
                 <button
                   onClick={nextImage}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
+                  className={`absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 ${
+                    hovered ? "md:block" : "md:hidden"
+                  } block`}
                 >
                   <FaChevronRight />
                 </button>
