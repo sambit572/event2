@@ -81,14 +81,44 @@ vendor_router.post(
   verifyVendorJwt,
   (req, res, next) => {
     upload.array("images", 10)(req, res, function (err) {
-      if (err) {
-        return res.status(400).json({ success: false, message: err.message });
+      // ✅ Multer file size error
+      if (err instanceof multer.MulterError) {
+        if (err.code === "LIMIT_FILE_SIZE") {
+          return res.status(400).json({
+            success: false,
+            message: "Each image must be less than 5MB",
+          });
+        }
+        if (err.code === "LIMIT_UNEXPECTED_FILE") {
+          return res.status(400).json({
+            success: false,
+            message: "Maximum 10 images allowed",
+          });
+        }
       }
+
+      // ✅ Custom validation: if >10 files uploaded
+      if (req.files && req.files.length > 10) {
+        return res.status(400).json({
+          success: false,
+          message: "Maximum 10 images allowed",
+        });
+      }
+
+      // ✅ If no files
+      if (!req.files || req.files.length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Please upload at least one image",
+        });
+      }
+
       next();
     });
   },
   createService
 );
+
 vendor_router.route("/my-services").get(verifyVendorJwt, getMyServices);
 vendor_router.route("/update-service/:id").put(verifyVendorJwt, updateService);
 vendor_router
@@ -104,9 +134,35 @@ vendor_router.post(
   verifyVendorJwt,
   (req, res, next) => {
     upload.array("images", 10)(req, res, function (err) {
-      if (err) {
-        return res.status(400).json({ success: false, message: err.message });
+      if (err instanceof multer.MulterError) {
+        if (err.code === "LIMIT_FILE_SIZE") {
+          return res.status(400).json({
+            success: false,
+            message: "Each image must be less than 5MB",
+          });
+        }
+        if (err.code === "LIMIT_UNEXPECTED_FILE") {
+          return res.status(400).json({
+            success: false,
+            message: "Maximum 10 images allowed",
+          });
+        }
       }
+
+      if (req.files && req.files.length > 10) {
+        return res.status(400).json({
+          success: false,
+          message: "Maximum 10 images allowed",
+        });
+      }
+
+      if (!req.files || req.files.length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Please upload at least one image",
+        });
+      }
+
       next();
     });
   },

@@ -3,6 +3,40 @@ import { useNavigate } from "react-router-dom";
 import "../../pages/vendor/VendorService.css";
 import axios from "axios";
 import Spinner from "./../../components/common/Spinner";
+import ReactCrop, { centerCrop } from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
+import { toast } from "react-toastify";
+
+const getCroppedImg = (image, crop) => {
+  const canvas = document.createElement("canvas");
+  const scaleX = image.naturalWidth / image.width;
+  const scaleY = image.naturalHeight / image.height;
+  canvas.width = crop.width;
+  canvas.height = crop.height;
+  const ctx = canvas.getContext("2d");
+
+  ctx.drawImage(
+    image,
+    crop.x * scaleX,
+    crop.y * scaleY,
+    crop.width * scaleX,
+    crop.height * scaleY,
+    0,
+    0,
+    crop.width,
+    crop.height
+  );
+
+  return new Promise((resolve) => {
+    canvas.toBlob((blob) => {
+      if (!blob) {
+        console.error("Canvas is empty");
+        return;
+      }
+      resolve(blob);
+    }, "image/jpeg");
+  });
+};
 
 function VendorService({ currentStep }) {
   const navigate = useNavigate();
@@ -29,6 +63,16 @@ function VendorService({ currentStep }) {
     useState(false);
   const [stateLocationSearchTerm, setStateLocationSearchTerm] = useState("");
   const fileInputRef = useRef(null);
+
+  // State variables for the image cropper
+  const [cropQueue, setCropQueue] = useState([]);
+  const [imageToCrop, setImageToCrop] = useState(undefined);
+  const [showCropperModal, setShowCropperModal] = useState(false);
+  const [crop, setCrop] = useState();
+  const [completedCrop, setCompletedCrop] = useState(null);
+  const [imageError, setImageError] = useState("");
+
+  const imgRef = useRef(null);
 
   const categories = [
     "DJ Services & Brash Band",
@@ -115,11 +159,40 @@ function VendorService({ currentStep }) {
   const filteredStates = Object.keys(allLocations).filter((state) =>
     state.toLowerCase().includes((stateLocationSearchTerm || "").toLowerCase())
   );
-  // Enhanced image upload with validation
+
+  useEffect(() => {
+    if (cropQueue.length > 0) {
+      const reader = new FileReader();
+      reader.addEventListener("load", () => {
+        setImageToCrop(reader.result?.toString() || "");
+        setShowCropperModal(true);
+      });
+      reader.readAsDataURL(cropQueue[0]);
+    } else {
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  }, [cropQueue]);
+
   const handleImageUpload = (e) => {
     try {
+      if (showCropperModal) return;
+
       const newFiles = Array.from(e.target.files);
-      const valid = [
+      const totalFiles = selectedFiles.length + newFiles.length;
+
+      // ✅ Limit total uploads to 10
+      if (totalFiles > 10 || newFiles.length > 10) {
+        toast.error("You cannot upload more than 10 files.");
+        setImageError("You cannot upload more than 10 files.");
+        if (fileInputRef.current) fileInputRef.current.value = "";
+        return;
+      }
+
+      setImageError("");
+
+      const validTypes = [
         "image/jpeg",
         "image/jpg",
         "image/png",
@@ -131,22 +204,83 @@ function VendorService({ currentStep }) {
         "video/flv",
         "video/webm",
       ];
-      const max = 50 * 1024 * 1024;
+
+      const validatedFiles = [];
 
       for (let f of newFiles) {
-        if (!valid.includes(f.type)) return alert("JPEG/PNG/GIF only");
-        if (f.size > max) return alert("Image < 5 MB, please");
+        // ✅ Validate type
+        if (!validTypes.includes(f.type)) {
+          toast.error(`${f.name} is not a supported file type.`);
+          continue;
+        }
+
+        // ✅ 5 MB limit for images
+        if (f.type.startsWith("image/") && f.size > 5 * 1024 * 1024) {
+          toast.error(`${f.name} is too large. Max 5 MB allowed.`);
+          continue;
+        }
+
+        // ✅ Optional: 50 MB limit for videos
+        if (f.type.startsWith("video/") && f.size > 50 * 1024 * 1024) {
+          toast.error(` ${f.name} is too large. Max 50 MB allowed.`);
+          continue;
+        }
+
+        validatedFiles.push(f);
       }
 
-      const newUrls = newFiles.map((f) => URL.createObjectURL(f));
+      const imageFiles = validatedFiles.filter((file) =>
+        file.type.startsWith("image/")
+      );
+      const videoFiles = validatedFiles.filter((file) =>
+        file.type.startsWith("video/")
+      );
 
-      setPreviewImages((prev) => [...prev, ...newUrls]);
-      setSelectedFiles((prev) => [...prev, ...newFiles]);
-      setSelectedImageIndex((prev) => (prev === -1 ? 0 : prev));
+      if (videoFiles.length > 0) {
+        const videoUrls = videoFiles.map((f) => URL.createObjectURL(f));
+        setPreviewImages((prev) => [...prev, ...videoUrls]);
+        setSelectedFiles((prev) => [...prev, ...videoFiles]);
+        if (selectedImageIndex === -1) setSelectedImageIndex(0);
+      }
+
+      if (imageFiles.length > 0) {
+        setCropQueue((prev) => [...prev, ...imageFiles]);
+      } else {
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+      }
     } catch (err) {
-      console.error("Image upload error:", err);
+      console.error("Image selection error:", err);
     }
   };
+
+  const handleCropImage = async () => {
+    if (!completedCrop || !imgRef.current || completedCrop.width === 0) {
+      alert("Please select an area to crop.");
+      return;
+    }
+
+    const originalFile = cropQueue[0];
+    const croppedImageBlob = await getCroppedImg(imgRef.current, completedCrop);
+    const croppedFile = new File([croppedImageBlob], originalFile.name, {
+      type: "image/jpeg",
+      lastModified: Date.now(),
+    });
+
+    const newUrl = URL.createObjectURL(croppedFile);
+
+    setPreviewImages((prev) => [...prev, newUrl]);
+    setSelectedFiles((prev) => [...prev, croppedFile]);
+    if (selectedImageIndex === -1) setSelectedImageIndex(0);
+
+    setImageToCrop(undefined);
+    setShowCropperModal(false);
+    setCompletedCrop(null);
+    setCrop(undefined);
+    setCropQueue((prev) => prev.slice(1));
+  };
+
   const handleDeleteImage = (index) => {
     const updatedImages = [...previewImages];
     const updatedFiles = [...selectedFiles];
@@ -342,6 +476,59 @@ function VendorService({ currentStep }) {
   return (
     <>
       {isLoading && <Spinner />}
+      {/* Cropper Modal */}
+      {showCropperModal && (
+        <div className="crop-modal-backdrop">
+          <div className="crop-modal-content">
+            <h2>Crop Your Image</h2>
+            <p style={{ textAlign: "center", margin: 0, color: "#555" }}>
+              Adjust the selection to crop
+            </p>
+            <div className="crop-container">
+              <ReactCrop
+                crop={crop}
+                onChange={(_, percentCrop) => setCrop(percentCrop)}
+                onComplete={(c) => setCompletedCrop(c)}
+                minWidth={100}
+              >
+                <img
+                  ref={imgRef}
+                  src={imageToCrop}
+                  className="ReactCrop__image" // Add class for styling
+                  onLoad={(e) => {
+                    const { width, height } = e.currentTarget;
+                    const newCrop = centerCrop(
+                      { unit: "px", width: width * 0.9, height: height * 0.9 },
+                      width,
+                      height
+                    );
+                    setCrop(newCrop);
+                    setCompletedCrop(newCrop);
+                  }}
+                  alt="Crop preview"
+                />
+              </ReactCrop>
+            </div>
+            <div className="crop-modal-actions">
+              <button
+                onClick={() => {
+                  setShowCropperModal(false);
+                  setImageToCrop(undefined);
+                  setCropQueue((prev) => prev.slice(1));
+                }}
+                className="crop-cancel-btn"
+              >
+                Skip
+              </button>
+              <button onClick={handleCropImage} className="crop-confirm-btn">
+                Crop & Add
+              </button>
+            </div>
+          </div>
+           
+        </div>
+      )}
+
       <div className="form-container">
         <div className="form-wrapper">
           {/* Left Side: Form Column */}
@@ -395,7 +582,7 @@ function VendorService({ currentStep }) {
               <input
                 type="file"
                 id="service-images"
-                accept="image/,video/"
+                accept="image/*,video/*"
                 multiple
                 onChange={handleImageUpload}
                 ref={fileInputRef}
@@ -569,7 +756,39 @@ function VendorService({ currentStep }) {
               >
                 <span className="icon-left">🔍</span>
 
-                {/* Search input */}
+                {/* Selected State inline */}
+                {selectedState && (
+                  <span
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      background: "#f7f3ff",
+                      color: "#4b2bb3",
+                      border: "1px solid #4b2bb3",
+                      borderRadius: "6px",
+                      padding: "2px 6px",
+                      fontSize: "14px",
+                    }}
+                  >
+                    {selectedState}
+                    <button
+                      type="button"
+                      onClick={() => setSelectedState("")}
+                      style={{
+                        marginLeft: "4px",
+                        color: "#4b2bb3",
+                        cursor: "pointer",
+                        border: "none",
+                        background: "transparent",
+                        fontSize: "14px",
+                      }}
+                    >
+                      ✕
+                    </button>
+                  </span>
+                )}
+
+                {/* Input field */}
                 <input
                   id="state-location-input"
                   type="text"
@@ -585,7 +804,6 @@ function VendorService({ currentStep }) {
                     background: "transparent",
                   }}
                 />
-
                 {stateLocationSearchTerm && (
                   <img
                     src="/public/close.png"
@@ -595,19 +813,7 @@ function VendorService({ currentStep }) {
                   />
                 )}
               </div>
-              {/* Selected State */}
-              {selectedState && (
-                <span className="selected-chip">
-                  {selectedState}
-                  <button
-                    type="button"
-                    className="ml-2 mr-2"
-                    onClick={() => setSelectedState("")}
-                  >
-                    ✕
-                  </button>
-                </span>
-              )}
+
               {/* Dropdown */}
               {showStateLocationDropdown && (
                 <ul className="state-location-dropdown-list">
@@ -757,13 +963,13 @@ function VendorService({ currentStep }) {
         >
           <div className="flex flex-row text-white gap-4 ml-5">
             <button
-              className="bg-[#001f3f] p-4 pr-7 pl-7 text-base font-semibold hover:bg-blue-600 ease-in-out rounded-2xl"
+              className="bg-blue-500 px-6 py-2 font-semibold rounded-lg hover:bg-blue-800 ease-in-out"
               onClick={handleAdd}
             >
               Add
             </button>
             <button
-              className="bg-[#001f3f] p-4 text-base font-semibold hover:bg-red-600 ease-in-out rounded-2xl"
+              className="bg-red-500 px-4 py-2 rounded-lg font-semibold hover:bg-red-800 ease-in-out"
               onClick={handleCancel}
             >
               Cancel

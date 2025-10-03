@@ -322,7 +322,7 @@ const DashboardServices = () => {
               className="relative flex flex-col xl:flex-row gap-6 shadow-lg w-[90%] mx-auto mb-6 p-4 bg-white rounded-md border-l-4 border-[#00897b]"
             >
               {/* Availability toggle */}
-              <div className="absolute top-3 right-3 flex items-center gap-2">
+              <div className="absolute top-2 right-3 flex items-center gap-2">
                 <label
                   className={`relative w-12 h-6 sm:w-14 sm:h-7 rounded-full cursor-pointer p-[2px] transition-colors duration-300 ${
                     service.available ? "bg-blue-500" : "bg-gray-300"
@@ -347,7 +347,7 @@ const DashboardServices = () => {
                 </span>
               </div>
               {/* Image Slider Section */}
-              <div className="relative w-full sm:w-[400px] sm:h-[200px] mt-5 mx-auto group">
+              <div className="relative w-full sm:w-[400px] sm:h-[200px] lg:h-[175px] mt-5 mx-auto group">
                 {/* Big Image */}
                 <img
                   src={selectedImages[index] || service.serviceImage?.[0]}
