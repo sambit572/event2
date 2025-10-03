@@ -15,6 +15,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setCategoryServices } from "../../redux/categorySlice";
 import { incrementCartCount } from "../../redux/UserSlice.js";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import WhyChooseUs from "../../components/customer/ServiceDetails/WhyChooseUs.jsx";
 
 const Service = ({ onSwitchToLogin }) => {
   const navigate = useNavigate();
@@ -23,7 +24,18 @@ const Service = ({ onSwitchToLogin }) => {
     (state) => state.category.categoryServices
   );
   const dispatch = useDispatch();
+  const vendor = useSelector((state) => state.vendor.vendor);
 
+  useEffect(() => {
+    if (!categoryServices || categoryServices.length === 0) {
+      axios
+        .get(`${BACKEND_URL}/common/category/${categoryId}`)
+        .then((res) => {
+          dispatch(setCategoryServices(res.data.data));
+        })
+        .catch((err) => console.error(err));
+    }
+  }, [categoryId]);
   const [service, setService] = useState(null);
   const [mediaList, setMediaList] = useState([]);
   const [selectMedia, setSelectMedia] = useState(null);
@@ -43,6 +55,7 @@ const Service = ({ onSwitchToLogin }) => {
   const [touchStartX, setTouchStartX] = useState(0);
   const [touchEndX, setTouchEndX] = useState(0);
   const minSwipeDistance = 50;
+  const [whyChooseUsPoints, setWhyChooseUsPoints] = useState([]);
 
   const prevSlide = () =>
     setCurrentIndex((i) =>
@@ -99,7 +112,7 @@ const Service = ({ onSwitchToLogin }) => {
 
         const data = res.data.service;
         setService(data);
-
+        setWhyChooseUsPoints(data.whyChooseUs || []);
         const formattedMedia = (data?.serviceImage || []).map((src) => ({
           type: "image",
           src,
@@ -115,6 +128,56 @@ const Service = ({ onSwitchToLogin }) => {
     };
     fetchService();
   }, [serviceId]);
+
+  // CHECK IF CURRENT VENDOR IS THE SERVICE OWNER
+  const isServiceOwner = () => {
+    // Check if vendor is logged in
+    const isVendorLoggedIn =
+      localStorage.getItem("VendorCurrentlyLoggedIn") === "true";
+
+    if (!isVendorLoggedIn || !vendor || !service) {
+      console.log("Vendor auth check failed:", {
+        isVendorLoggedIn,
+        hasVendor: !!vendor,
+        hasService: !!service,
+      });
+      return false;
+    }
+
+    // Get the vendor ID from service
+    const serviceVendorId =
+      service?.vendor || service?.vendorId?._id || service?.vendorId;
+
+    if (!serviceVendorId) {
+      console.log("No vendor ID found in service");
+      return false;
+    }
+
+    // Get current vendor ID from Redux state
+    const currentVendorId = vendor?._id;
+
+    if (!currentVendorId) {
+      console.log("No vendor ID in Redux state");
+      return false;
+    }
+
+    // Convert both to strings and compare
+    const isOwner = String(currentVendorId) === String(serviceVendorId);
+
+    console.log("Owner Check:", {
+      currentVendorId,
+      serviceVendorId,
+      isOwner,
+      vendorFromRedux: vendor?.fullName,
+    });
+
+    return isOwner;
+  };
+
+  // HANDLE WHY CHOOSE US UPDATE
+  const handleWhyChooseUsUpdate = (newPoints) => {
+    setWhyChooseUsPoints(newPoints);
+  };
 
   const isVendorAvailable = service?.available !== false;
   const location = useLocation();
@@ -221,15 +284,20 @@ const Service = ({ onSwitchToLogin }) => {
             </span>
             {mediaList.length > 0 ? (
               <>
-                {mediaList.map((media, idx) => (
-                  <img
-                    key={idx}
-                    src={media.src}
-                    alt={`slide-${idx}`}
-                    className={`absolute top-0 left-0 w-full h-full rounded-lg object-cover transition-opacity duration-700 ${
-                      idx === currentIndex ? "opacity-100" : "opacity-0"
-                    } ${!isVendorAvailable ? "grayscale brightness-50" : ""}`}
-                  />
+                {mediaList.map((media, index) => (
+                  <div
+                    key={index}
+                    onClick={() => setSelectMedia(media)}
+                    className="li1"
+                  >
+                    <img
+                      src={media.src}
+                      alt={`media-${index}`}
+                      className={
+                        !isVendorAvailable ? "grayscale brightness-75" : ""
+                      }
+                    />
+                  </div>
                 ))}
 
                 {/* Left Arrow */}
@@ -358,15 +426,14 @@ const Service = ({ onSwitchToLogin }) => {
 
         <div className="right-scrollable">
           <DJServiceCard service={service} />
-          <div className="why-choose">
-            <h2>Why Choose Us?</h2>
-            <ul>
-              <li>5-Star Rated Wedding DJs</li>
-              <li>Backup Equipment Always On-Hand</li>
-              <li>Experience With All Cultures & Traditions</li>
-              <li>Custom Packages & Friendly Support</li>
-            </ul>
-          </div>
+          {/* Why choose us component */}
+          <WhyChooseUs
+            serviceId={serviceId}
+            vendorId={service?.vendor || service?.vendorId?._id}
+            whyChooseUsPoints={whyChooseUsPoints}
+            isOwner={isServiceOwner()}
+            onUpdate={handleWhyChooseUsUpdate}
+          />
           <div className="reviews">
             <h3>DJ Ratings & Reviews</h3>
             <RatingDetails serviceId={serviceId} />

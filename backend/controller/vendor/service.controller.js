@@ -1,4 +1,6 @@
 import { Service } from "../../model/vendor/service.model.js";
+import { Category } from "../../model/common/category.model.js";
+
 import {
   deleteFromCloudinary,
   uploadOnCloudinary,
@@ -27,6 +29,13 @@ export const createService = async (req, res) => {
 
     // ✅ Validate required fields
     if (!serviceCategory || !serviceName || !locationOffered || !serviceDes) {
+      console.error("❌ Validation failed: required fields missing", {
+        serviceCategory,
+        serviceName,
+        stateLocationOffered,
+        locationOffered,
+        serviceDes,
+      });
       return res
         .status(400)
         .json({ message: "All required fields must be filled" });
@@ -240,6 +249,7 @@ export const updateService = async (req, res) => {
       locationOffered = existingService.locationOffered,
       duration = existingService.duration,
       serviceImage = existingService.serviceImage,
+      customWhyChooseUs = existingService.customWhyChooseUs,
     } = req.body;
 
     const stateLocationsArray = Array.isArray(stateLocationOffered)
@@ -275,6 +285,7 @@ export const updateService = async (req, res) => {
         locationOffered: locationsArray,
         duration,
         serviceImage,
+        customWhyChooseUs,
       },
       { new: true }
     );

@@ -449,7 +449,16 @@ function VendorService({ currentStep }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+  const handleSelectAllLocations = () => {
+    if (selectedState && allLocations[selectedState]) {
+      setSelectedLocations(allLocations[selectedState]);
+      setShowLocationDropdown(false);
+    }
+  };
 
+  const handleDeselectAllLocations = () => {
+    setSelectedLocations([]);
+  };
   return (
     <>
       <StepProgress currentStep={1} />
@@ -793,6 +802,18 @@ function VendorService({ currentStep }) {
               </div>
 
               {/* Dropdown */}
+              {selectedState && (
+                <span className="selected-chip">
+                  {selectedState}
+                  <button
+                    type="button"
+                    className="ml-2 mr-2"
+                    onClick={() => setSelectedState("")}
+                  >
+                    ✕
+                  </button>
+                </span>
+              )}
               {showStateLocationDropdown && (
                 <ul className="state-location-dropdown-list">
                   {filteredStates.map((state, index) => (
@@ -896,9 +917,86 @@ function VendorService({ currentStep }) {
                   />
                 )}
               </div>
+              {/* Select/Deselect All Buttons */}
+              {selectedState && (
+                <div
+                  style={{
+                    marginTop: "8px",
+                    display: "flex",
+                    gap: "8px",
+                    justifyContent: "flex-start",
+                  }}
+                >
+                  <button
+                    type="button"
+                    onClick={handleSelectAllLocations}
+                    disabled={
+                      selectedLocations.length ===
+                      allLocations[selectedState]?.length
+                    }
+                    style={{
+                      padding: "4px 12px",
+                      fontSize: "12px",
+                      background:
+                        selectedLocations.length ===
+                        allLocations[selectedState]?.length
+                          ? "#e0e0e0"
+                          : "#4b2bb3",
+                      color:
+                        selectedLocations.length ===
+                        allLocations[selectedState]?.length
+                          ? "#999"
+                          : "white",
+                      border: "none",
+                      borderRadius: "4px",
+                      cursor:
+                        selectedLocations.length ===
+                        allLocations[selectedState]?.length
+                          ? "not-allowed"
+                          : "pointer",
+                      fontWeight: "500",
+                    }}
+                  >
+                    Select All ({allLocations[selectedState]?.length || 0})
+                  </button>
 
+                  {selectedLocations.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={handleDeselectAllLocations}
+                      style={{
+                        padding: "4px 12px",
+                        fontSize: "12px",
+                        background: "transparent",
+                        color: "#4b2bb3",
+                        border: "1px solid #4b2bb3",
+                        borderRadius: "4px",
+                        cursor: "pointer",
+                        fontWeight: "500",
+                      }}
+                    >
+                      Deselect All
+                    </button>
+                  )}
+                </div>
+              )}
               {showLocationDropdown && (
                 <ul className="location-dropdown-list">
+                  {/* Select All option in dropdown */}
+                  {selectedState && filteredLocations.length > 0 && (
+                    <li
+                      onClick={handleSelectAllLocations}
+                      style={{
+                        fontWeight: "600",
+                        color: "#4b2bb3",
+                        borderBottom: "1px solid #e0e0e0",
+                        background: "#f7f3ff",
+                      }}
+                    >
+                      ✓ Select All Locations ({filteredLocations.length})
+                    </li>
+                  )}
+
                   {filteredLocations.map((loc, index) => (
                     <li
                       key={index}

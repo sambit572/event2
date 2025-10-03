@@ -1,5 +1,6 @@
 import { Service } from "../../model/vendor/service.model.js";
 import mongoose from "mongoose";
+import { Category } from "../../model/common/category.model.js";
 
 export const getServicesByCategory = async (req, res) => {
   try {
@@ -115,13 +116,58 @@ export const getServiceById = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Service not found" });
     }
+    // DEBUG: Log service category and custom points
+    console.log("Service Category:", service.serviceCategory);
+    console.log("Service Custom Points:", service.customWhyChooseUs);
 
+    // Get Why Choose Us points
+    let whyChooseUsPoints = [];
+
+    // Check if the vendor has set custom points and if the array is not empty
+    if (service.customWhyChooseUs && service.customWhyChooseUs.length > 0) {
+      whyChooseUsPoints = service.customWhyChooseUs;
+    } else {
+      // If not, find the category and use its default points
+      const category = await Category.findOne({
+        name: service.serviceCategory,
+      });
+
+      console.log("Found category:", category);
+
+      if (
+        category &&
+        category.defaultWhyChooseUs &&
+        category.defaultWhyChooseUs.length > 0
+      ) {
+        console.log(
+          "✅ Using category default points:",
+          category.defaultWhyChooseUs
+        );
+
+        whyChooseUsPoints = category.defaultWhyChooseUs;
+      } else {
+        console.log(
+          "⚠️ No category found or no default points, using fallback"
+        );
+
+        // Fallback if category not found or has no default points
+        whyChooseUsPoints = [
+          "Professional service quality",
+          "Experienced team",
+          "Customer satisfaction guaranteed",
+          "Competitive pricing",
+        ];
+      }
+    }
+
+    console.log("Final Why Choose Us Points:", whyChooseUsPoints);
     // Transform the response to include vendorName
     const transformed = {
       ...service._doc,
       vendorName: service.vendorId?.fullName,
       vendorEmail: service.vendorId?.email,
       vendor: service.vendorId?._id,
+      whyChooseUs: whyChooseUsPoints,
     };
 
     return res.status(200).json({ success: true, service: transformed });
