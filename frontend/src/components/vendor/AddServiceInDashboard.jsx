@@ -5,6 +5,7 @@ import axios from "axios";
 import Spinner from "./../../components/common/Spinner";
 import ReactCrop, { centerCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
+import { toast } from "react-toastify";
 
 const getCroppedImg = (image, crop) => {
   const canvas = document.createElement("canvas");
@@ -70,6 +71,7 @@ function VendorService({ currentStep }) {
   const [crop, setCrop] = useState();
   const [completedCrop, setCompletedCrop] = useState(null);
   const imgRef = useRef(null);
+  const [imageError, setImageError] = useState("");
 
   const categories = [
     "DJ Services & Brash Band",
@@ -172,62 +174,147 @@ function VendorService({ currentStep }) {
     }
   }, [cropQueue]);
 
-  // Enhanced image upload with validation
-  const handleImageUpload = (e) => {
-    try {
-      if (showCropperModal) return;
-      const newFiles = Array.from(e.target.files);
-      const valid = [
-        "image/jpeg",
-        "image/jpg",
-        "image/png",
-        "image/gif",
-        "video/mp4",
-        "video/avi",
-        "video/mov",
-        "video/wmv",
-        "video/flv",
-        "video/webm",
-      ];
-      const max = 50 * 1024 * 1024;
-      const validatedFiles = [];
-      for (let f of newFiles) {
-        if (!valid.includes(f.type)) {
-          alert("Invalid file type. Only images and videos are allowed.");
-          continue;
+   
+    const handleImageUpload = (e) => {
+      try {
+        if (showCropperModal) return;
+  
+        // Clear any previous error messages
+        setImageError("");
+  
+        const newFiles = Array.from(e.target.files);
+        const totalFiles = selectedFiles.length + newFiles.length;
+  
+        // ✅ Limit total uploads to 10
+        if (totalFiles > 10 || newFiles.length > 10) {
+          toast.error("You cannot upload more than 10 files.");
+          setImageError("You cannot upload more than 10 files.");
+          if (fileInputRef.current) fileInputRef.current.value = "";
+          return;
         }
-        if (f.size > max) {
-          alert(`File ${f.name} is too large (> 50 MB).`);
-          continue;
+        // File type validation
+        const validImageTypes = [
+          "image/jpeg",
+          "image/jpg",
+          "image/png",
+          "image/gif",
+        ];
+        const validVideoTypes = [
+          "video/mp4",
+          "video/avi",
+          "video/mov",
+          "video/wmv",
+          "video/flv",
+          "video/webm",
+        ];
+        const validTypes = [...validImageTypes, ...validVideoTypes];
+  
+        // Size limits
+        const IMAGE_SIZE_LIMIT = 5 * 1024 * 1024; // 5MB
+        const VIDEO_SIZE_LIMIT = 200 * 1024 * 1024; // 200MB
+        const MAX_FILE_COUNT = 10;
+  
+        // Check total file count
+        const currentFileCount = selectedFiles.length;
+        const newFileCount = newFiles.length;
+        const totalFileCount = currentFileCount + newFileCount;
+  
+        if (totalFileCount > MAX_FILE_COUNT) {
+          setImageError(
+            `Cannot upload more than ${MAX_FILE_COUNT} files in total. You currently have ${currentFileCount} file(s) and are trying to add ${newFileCount} more.`
+          );
+          if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+          }
+          return;
         }
-        validatedFiles.push(f);
-      }
-
-      const imageFiles = validatedFiles.filter((file) =>
-        file.type.startsWith("image/")
-      );
-      const videoFiles = validatedFiles.filter((file) =>
-        file.type.startsWith("video/")
-      );
-
-      if (videoFiles.length > 0) {
-        const videoUrls = videoFiles.map((f) => URL.createObjectURL(f));
-        setPreviewImages((prev) => [...prev, ...videoUrls]);
-        setSelectedFiles((prev) => [...prev, ...videoFiles]);
-        if (selectedImageIndex === -1) setSelectedImageIndex(0);
-      }
-
-      if (imageFiles.length > 0) {
-        setCropQueue((prev) => [...prev, ...imageFiles]);
-      } else {
-        if (fileInputRef.current) {
-          fileInputRef.current.value = "";
+  
+        const validatedFiles = [];
+        const errors = [];
+  
+        for (let f of newFiles) {
+          // Check file type
+          if (!validTypes.includes(f.type)) {
+            errors.push(
+              `"${f.name}" - Invalid file type. Only images (JPEG, PNG, GIF) and videos (MP4, AVI, MOV, WMV, FLV, WEBM) are allowed.`
+            );
+            continue;
+          }
+          if (f.type.startsWith("image/") && f.size > IMAGE_SIZE_LIMIT) {
+            toast.error(`${f.name} is too large. Max 5 MB allowed.`);
+            continue;
+          }
+  
+          if (f.type.startsWith("video/") && f.size > VIDEO_SIZE_LIMIT) {
+            toast.error(`${f.name} is too large. Max 200 MB allowed.`);
+            continue;
+          }
+  
+          // Check file size based on type
+          const isImage = validImageTypes.includes(f.type);
+          const isVideo = validVideoTypes.includes(f.type);
+  
+          if (isImage && f.size > IMAGE_SIZE_LIMIT) {
+            const sizeMB = (f.size / (1024 * 1024)).toFixed(2);
+            errors.push(
+              `"${f.name}" (${sizeMB}MB) - Image files must be 5MB or smaller.`
+            );
+            continue;
+          }
+  
+          if (isVideo && f.size > VIDEO_SIZE_LIMIT) {
+            const sizeMB = (f.size / (1024 * 1024)).toFixed(2);
+            errors.push(
+              `"${f.name}" (${sizeMB}MB) - Video files must be 200MB or smaller.`
+            );
+            continue;
+          }
+  
+          validatedFiles.push(f);
         }
+  
+        // Display all errors at once
+        if (errors.length > 0) {
+          setImageError(errors.join(" • "));
+        }
+  
+        // If no valid files, clear input and return
+        if (validatedFiles.length === 0) {
+          if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+          }
+          return;
+        }
+  
+        const imageFiles = validatedFiles.filter((file) =>
+          file.type.startsWith("image/")
+        );
+        const videoFiles = validatedFiles.filter((file) =>
+          file.type.startsWith("video/")
+        );
+  
+        if (videoFiles.length > 0) {
+          const videoUrls = videoFiles.map((f) => URL.createObjectURL(f));
+          setPreviewImages((prev) => [...prev, ...videoUrls]);
+          setSelectedFiles((prev) => [...prev, ...videoFiles]);
+          if (selectedImageIndex === -1) setSelectedImageIndex(0);
+        }
+  
+        if (imageFiles.length > 0) {
+          setCropQueue((prev) => [...prev, ...imageFiles]);
+        } else {
+          if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+          }
+        }
+      } catch (err) {
+        console.error("Image selection error:", err);
+        setImageError(
+          "An error occurred while processing your files. Please try again."
+        );
       }
-    } catch (err) {
-      console.error("Image selection error:", err);
-    }
-  };
+    };
+  
 
   const handleCropImage = async () => {
     if (!completedCrop || !imgRef.current || completedCrop.width === 0) {
@@ -556,7 +643,7 @@ function VendorService({ currentStep }) {
               <input
                 type="file"
                 id="service-images"
-                accept="image/,video/"
+                accept="image/*,video/*"
                 multiple
                 onChange={handleImageUpload}
                 ref={fileInputRef}

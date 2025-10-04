@@ -5,6 +5,9 @@ import { BACKEND_URL } from "../../utils/constant.js";
 import { MdReportGmailerrorred } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import "./DashboardServices.css";
+import ReactCrop, { centerCrop } from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
+import { useRef } from "react";
 
 const getYouTubeID = (url) => {
   console.log("Extracting YouTube ID from URL:", url);
@@ -35,6 +38,47 @@ const DashboardServices = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [fileSizeError, setFileSizeError] = useState("");
+
+  const [crop, setCrop] = useState({
+    unit: "%",
+    width: 80,
+    height: 45, // 👈 Add height too (16:9 = 80x45)
+    aspect: 16 / 9,
+  });
+  const [cropSrc, setCropSrc] = useState(null);
+  const imgRef = useRef(null);
+
+  // ✅ Fixed getCroppedImg (now takes image + crop explicitly)
+  const getCroppedImg = async (image, crop) => {
+    if (!image || !crop?.width || !crop?.height) {
+      throw new Error("Image or crop data is not available yet.");
+    }
+
+    const canvas = document.createElement("canvas");
+    const scaleX = image.naturalWidth / image.width;
+    const scaleY = image.naturalHeight / image.height;
+    canvas.width = crop.width * scaleX;
+    canvas.height = crop.height * scaleY;
+    const ctx = canvas.getContext("2d");
+
+    ctx.drawImage(
+      image,
+      crop.x * scaleX,
+      crop.y * scaleY,
+      crop.width * scaleX,
+      crop.height * scaleY,
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+    return new Promise((resolve) => {
+      canvas.toBlob((blob) => {
+        resolve(blob);
+      }, "image/jpeg");
+    });
+  };
 
   const toggleExpandLocation = (index) => {
     setExpandedLocations((prev) => ({
@@ -261,7 +305,9 @@ const DashboardServices = () => {
 
     let imageFiles = [];
     let videoFiles = [];
-
+    const reader = new FileReader();
+    reader.onload = () => setCropSrc(reader.result); // 👈 show crop modal
+    reader.readAsDataURL(files[0]);
     for (const file of files) {
       if (file.type.startsWith("image/")) {
         if (file.size > MAX_IMAGE_SIZE_BYTES) {
@@ -839,6 +885,62 @@ const DashboardServices = () => {
 
                     <div className="u flex justify-between">
                       <strong>User Reviews: </strong> {service.userReviews}
+                    </div>
+                  </div>
+                </div>
+              )}
+              {cropSrc && (
+                <div className="fixed inset-0 z-50 bg-black bg-opacity-70 flex justify-center items-center p-4">
+                  <div className="bg-white rounded-md p-4 relative w-[90%] sm:w-[600px]">
+                    <h2 className="text-lg font-semibold mb-2">
+                      Crop Your Image
+                    </h2>
+
+                    <ReactCrop
+                      crop={crop}
+                      onChange={(newCrop) => setCrop(newCrop)}
+                      onComplete={(c) => setCrop(c)}
+                      aspect={16 / 9}
+                    >
+                      <img
+                        ref={imgRef}
+                        src={cropSrc}
+                        alt="Crop preview"
+                        style={{ maxHeight: "400px", objectFit: "contain" }}
+                        onLoad={(e) => {
+                          imgRef.current = e.target;
+                        }}
+                      />
+                    </ReactCrop>
+
+                    <div className="flex justify-end gap-3 mt-4">
+                      <button
+                        className="px-4 py-2 bg-green-600 text-white rounded"
+                        onClick={async () => {
+                          const croppedBlob = await getCroppedImg(
+                            imgRef.current,
+                            crop
+                          );
+                          const croppedFile = new File(
+                            [croppedBlob],
+                            "cropped.jpg",
+                            {
+                              type: "image/jpeg",
+                            }
+                          );
+
+                          setNewImages((prev) => [...prev, croppedFile]);
+                          setCropSrc(null);
+                        }}
+                      >
+                         Crop & Save
+                      </button>
+                      <button
+                        className="px-4 py-2 bg-red-600 text-white rounded"
+                        onClick={() => setCropSrc(null)}
+                      >
+                         Cancel
+                      </button>
                     </div>
                   </div>
                 </div>
