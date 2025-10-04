@@ -79,42 +79,25 @@ vendor_router.put("/:id", upload.single("profilePicture"), updateVendor);
 vendor_router.post(
   "/create-service",
   verifyVendorJwt,
-  (req, res, next) => {
-    upload.array("images", 10)(req, res, function (err) {
-      // ✅ Multer file size error
-      if (err instanceof multer.MulterError) {
-        if (err.code === "LIMIT_FILE_SIZE") {
-          return res.status(400).json({
-            success: false,
-            message: "Each image must be less than 5MB",
-          });
-        }
-        if (err.code === "LIMIT_UNEXPECTED_FILE") {
-          return res.status(400).json({
-            success: false,
-            message: "Maximum 10 images allowed",
-          });
-        }
-      }
+  async (req, res, next) => {
+    const { images } = req.body;
 
-      // ✅ Custom validation: if >10 files uploaded
-      if (req.files && req.files.length > 10) {
-        return res.status(400).json({
-          success: false,
-          message: "Maximum 10 images allowed",
-        });
-      }
+    // ✅ Basic validation if you're expecting an array of URLs or base64 strings
+    if (!images || !Array.isArray(images) || images.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide at least one image.",
+      });
+    }
 
-      // ✅ If no files
-      if (!req.files || req.files.length === 0) {
-        return res.status(400).json({
-          success: false,
-          message: "Please upload at least one image",
-        });
-      }
+    if (images.length > 10) {
+      return res.status(400).json({
+        success: false,
+        message: "Maximum 10 images allowed.",
+      });
+    }
 
-      next();
-    });
+    next();
   },
   createService
 );
@@ -128,48 +111,31 @@ vendor_router
 vendor_router
   .route("/update-availability/:id")
   .patch(verifyVendorJwt, updateAvailability);
-
+// --- UPDATE SERVICE IMAGE (NO MULTER) --- //
 vendor_router.post(
   "/upload-new-service-image/:id",
   verifyVendorJwt,
-  (req, res, next) => {
-    upload.array("images", 10)(req, res, function (err) {
-      if (err instanceof multer.MulterError) {
-        if (err.code === "LIMIT_FILE_SIZE") {
-          return res.status(400).json({
-            success: false,
-            message: "Each image must be less than 5MB",
-          });
-        }
-        if (err.code === "LIMIT_UNEXPECTED_FILE") {
-          return res.status(400).json({
-            success: false,
-            message: "Maximum 10 images allowed",
-          });
-        }
-      }
+  async (req, res, next) => {
+    const { images } = req.body;
 
-      if (req.files && req.files.length > 10) {
-        return res.status(400).json({
-          success: false,
-          message: "Maximum 10 images allowed",
-        });
-      }
+    if (!images || !Array.isArray(images) || images.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide at least one image.",
+      });
+    }
 
-      if (!req.files || req.files.length === 0) {
-        return res.status(400).json({
-          success: false,
-          message: "Please upload at least one image",
-        });
-      }
+    if (images.length > 10) {
+      return res.status(400).json({
+        success: false,
+        message: "Maximum 10 images allowed.",
+      });
+    }
 
-      next();
-    });
+    next();
   },
   updateServiceImageFirst
 );
-
-
 
 // --- BANK DETAILS ROUTES --- //
 vendor_router.post("/bank-details", verifyVendorJwt, createBankDetails);
