@@ -427,7 +427,9 @@ const DashboardServices = () => {
                     className="w-full h-full object-cover rounded-md"
                     src={`https://www.youtube.com/embed/${getYouTubeID(
                       selectedMediaUrl
-                    )}?autoplay=1&mute=1&loop=1&playlist=${isVideo}&rel=0`}
+                    )}?autoplay=1&mute=1&loop=1&playlist=${getYouTubeID(
+                      selectedMediaUrl
+                    )}&rel=0`}
                     title="Service Video"
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -933,13 +935,13 @@ const DashboardServices = () => {
                           setCropSrc(null);
                         }}
                       >
-                         Crop & Save
+                        Crop & Save
                       </button>
                       <button
                         className="px-4 py-2 bg-red-600 text-white rounded"
                         onClick={() => setCropSrc(null)}
                       >
-                         Cancel
+                        Cancel
                       </button>
                     </div>
                   </div>
