@@ -7,6 +7,7 @@ import axios from "axios";
 import Spinner from "./../../components/common/Spinner";
 import ReactCrop, { centerCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
+import { toast } from "react-toastify";
 
 const getCroppedImg = (image, crop) => {
   const canvas = document.createElement("canvas");
@@ -71,6 +72,7 @@ function VendorService({ currentStep }) {
   const [crop, setCrop] = useState();
   const [completedCrop, setCompletedCrop] = useState(null);
   const imgRef = useRef(null);
+  const [imageError, setImageError] = useState("");
 
   const categories = [
     "DJ Services & Brash Band",
@@ -172,16 +174,24 @@ function VendorService({ currentStep }) {
       }
     }
   }, [cropQueue]);
-  // Enhanced image upload with validation
+  
   const handleImageUpload = (e) => {
     try {
       if (showCropperModal) return;
 
       // Clear any previous error messages
-      setErrorMessage("");
+      setImageError("");
 
       const newFiles = Array.from(e.target.files);
+      const totalFiles = selectedFiles.length + newFiles.length;
 
+      // ✅ Limit total uploads to 10
+      if (totalFiles > 10 || newFiles.length > 10) {
+        toast.error("You cannot upload more than 10 files.");
+        setImageError("You cannot upload more than 10 files.");
+        if (fileInputRef.current) fileInputRef.current.value = "";
+        return;
+      }
       // File type validation
       const validImageTypes = [
         "image/jpeg",
@@ -210,7 +220,7 @@ function VendorService({ currentStep }) {
       const totalFileCount = currentFileCount + newFileCount;
 
       if (totalFileCount > MAX_FILE_COUNT) {
-        setErrorMessage(
+        setImageError(
           `Cannot upload more than ${MAX_FILE_COUNT} files in total. You currently have ${currentFileCount} file(s) and are trying to add ${newFileCount} more.`
         );
         if (fileInputRef.current) {
@@ -228,6 +238,15 @@ function VendorService({ currentStep }) {
           errors.push(
             `"${f.name}" - Invalid file type. Only images (JPEG, PNG, GIF) and videos (MP4, AVI, MOV, WMV, FLV, WEBM) are allowed.`
           );
+          continue;
+        }
+        if (f.type.startsWith("image/") && f.size > IMAGE_SIZE_LIMIT) {
+          toast.error(`${f.name} is too large. Max 5 MB allowed.`);
+          continue;
+        }
+
+        if (f.type.startsWith("video/") && f.size > VIDEO_SIZE_LIMIT) {
+          toast.error(`${f.name} is too large. Max 200 MB allowed.`);
           continue;
         }
 
@@ -256,7 +275,7 @@ function VendorService({ currentStep }) {
 
       // Display all errors at once
       if (errors.length > 0) {
-        setErrorMessage(errors.join(" • "));
+        setImageError(errors.join(" • "));
       }
 
       // If no valid files, clear input and return
@@ -290,11 +309,12 @@ function VendorService({ currentStep }) {
       }
     } catch (err) {
       console.error("Image selection error:", err);
-      setErrorMessage(
+      setImageError(
         "An error occurred while processing your files. Please try again."
       );
     }
   };
+
   const handleCropImage = async () => {
     if (!completedCrop || !imgRef.current || completedCrop.width === 0) {
       alert("Please select an area to crop.");
