@@ -14,12 +14,12 @@
   gap: 10px;
   font-size: 1rem;
   font-weight: 800;
-  background: #f5f6ff;
+  background: #f3eace;
   color: #1f2937;
   padding: 8px 20px;
   width: 130px;
   border-radius: 12px;
-  border-left: 6px solid #007bff; /* Indigo highlight */
+  border-left: 6px solid #F3C12D; /* Indigo highlight */
   font-family: "Poppins", sans-serif;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -225,7 +225,7 @@ input[type="range"].thumb-right {
 
 /* Solid purple for Apply */
 .applybtn {
-  background-color: #7f00ff;
+  background-color: #001f3f;
 }
 
 .applybtn:hover {
@@ -235,12 +235,13 @@ input[type="range"].thumb-right {
 
 /* Solid teal for Cancel */
 .cancelbtn {
-  background: linear-gradient(to right, #ef4444, #dc2626);
+  color: #001f3f;
+  border: 2px solid #001f3f;
 }
 
 .cancelbtn:hover {
   transform: translateY(-2px);
-  background: linear-gradient(to right, #dc2626, #b91c1c);
+  background-color: #ccc;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -315,8 +316,9 @@ input[type="range"].thumb-right {
   font-weight: 600;
   font-size: 16px;
   cursor: pointer;
-  margin-left: 155px;
-  margin-bottom: 16px;
+  margin-left: 196px;
+  margin-bottom: -32px;
+  margin-top: -21px;
   align-self: flex-end;
   transition: all 0.3s ease;
 }
@@ -352,7 +354,7 @@ input[type="range"].thumb-right {
   }
 
   .filterBox.show {
-    z-index: 20;
+    z-index: 51;
     transform: translateX(0%);
   }
 
@@ -411,7 +413,7 @@ input[type="range"].thumb-right {
 }
 @media screen and (max-width: 460px) {
   .filter-toggle-btn {
-    top: 70px;
+    top: 55px;
 
     right: 20px;
   }

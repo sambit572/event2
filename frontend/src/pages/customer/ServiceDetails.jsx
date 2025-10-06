@@ -16,6 +16,7 @@ import { setCategoryServices } from "../../redux/categorySlice";
 import { incrementCartCount } from "../../redux/UserSlice.js";
 // ✅ NEW: Import FaYoutube
 import { FaChevronLeft, FaChevronRight, FaYoutube } from "react-icons/fa";
+import WhyChooseUs from "../../components/customer/ServiceDetails/WhyChooseUs.jsx";
 
 // ✅ NEW: Helper function to identify YouTube links
 const getYouTubeID = (url) => {
@@ -32,7 +33,18 @@ const Service = ({ onSwitchToLogin }) => {
     (state) => state.category.categoryServices
   );
   const dispatch = useDispatch();
+  const vendor = useSelector((state) => state.vendor.vendor);
 
+  useEffect(() => {
+    if (!categoryServices || categoryServices.length === 0) {
+      axios
+        .get(`${BACKEND_URL}/common/category/${categoryId}`)
+        .then((res) => {
+          dispatch(setCategoryServices(res.data.data));
+        })
+        .catch((err) => console.error(err));
+    }
+  }, [categoryId]);
   const [service, setService] = useState(null);
   const [mediaList, setMediaList] = useState([]);
   // ❌ REMOVED: selectMedia is no longer needed, we use currentIndex
@@ -53,6 +65,7 @@ const Service = ({ onSwitchToLogin }) => {
   const [touchStartX, setTouchStartX] = useState(0);
   const [touchEndX, setTouchEndX] = useState(0);
   const minSwipeDistance = 50;
+  const [whyChooseUsPoints, setWhyChooseUsPoints] = useState([]);
 
   const prevSlide = () =>
     setCurrentIndex((i) =>
@@ -105,11 +118,13 @@ const Service = ({ onSwitchToLogin }) => {
         const res = await axios.get(
           `${BACKEND_URL}/common/service/${serviceId}`
         );
-        const data = res.data.data;
-        setService(data);
+        console.log("Service Fetching", res.data);
 
+        const data = res.data.service;
+        setService(data);
+        setWhyChooseUsPoints(data.whyChooseUs || []);
         // ✅ MODIFIED: Process media to differentiate between images and videos
-        const serviceMediaUrls = data.serviceImage || [];
+        const serviceMediaUrls = data?.serviceImage || [];
         const formattedMedia = serviceMediaUrls.map((url) => {
           const videoId = getYouTubeID(url);
           if (videoId) {
@@ -130,6 +145,56 @@ const Service = ({ onSwitchToLogin }) => {
     };
     fetchService();
   }, [serviceId]);
+
+  // CHECK IF CURRENT VENDOR IS THE SERVICE OWNER
+  const isServiceOwner = () => {
+    // Check if vendor is logged in
+    const isVendorLoggedIn =
+      localStorage.getItem("VendorCurrentlyLoggedIn") === "true";
+
+    if (!isVendorLoggedIn || !vendor || !service) {
+      console.log("Vendor auth check failed:", {
+        isVendorLoggedIn,
+        hasVendor: !!vendor,
+        hasService: !!service,
+      });
+      return false;
+    }
+
+    // Get the vendor ID from service
+    const serviceVendorId =
+      service?.vendor || service?.vendorId?._id || service?.vendorId;
+
+    if (!serviceVendorId) {
+      console.log("No vendor ID found in service");
+      return false;
+    }
+
+    // Get current vendor ID from Redux state
+    const currentVendorId = vendor?._id;
+
+    if (!currentVendorId) {
+      console.log("No vendor ID in Redux state");
+      return false;
+    }
+
+    // Convert both to strings and compare
+    const isOwner = String(currentVendorId) === String(serviceVendorId);
+
+    console.log("Owner Check:", {
+      currentVendorId,
+      serviceVendorId,
+      isOwner,
+      vendorFromRedux: vendor?.fullName,
+    });
+
+    return isOwner;
+  };
+
+  // HANDLE WHY CHOOSE US UPDATE
+  const handleWhyChooseUsUpdate = (newPoints) => {
+    setWhyChooseUsPoints(newPoints);
+  };
 
   const isVendorAvailable = service?.available !== false;
   const location = useLocation();
@@ -231,6 +296,9 @@ const Service = ({ onSwitchToLogin }) => {
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
           >
+            <span className="absolute top-[10px] left-[10px] z-[3] bg-white/30 backdrop-blur-[30px] text-white text-[11px] font-bold uppercase tracking-[0.8px] px-[7px] py-[3px] rounded-full shadow-[0_3px_10px_rgba(0,0,0,0.3)] border border-white/30 [text-shadow:1px_1px_2px_rgba(0,0,0,0.6),-1px_-1px_1px_rgba(255,255,255,0.4)]">
+              EventsBridge
+            </span>
             {mediaList.length > 0 ? (
               <>
                 {/* ✅ MODIFIED: Loop through media and render iframe or img */}
@@ -238,7 +306,7 @@ const Service = ({ onSwitchToLogin }) => {
                   media.type === "video" ? (
                     <iframe
                       key={idx}
-                      src={`https://www.youtube.com/embed/${media.videoId}?autoplay=1&mute=1&loop=1&playlist=${media.videoId}`}
+                      src={`https://www.youtube.com/embed/${media.videoId}?autoplay=1&mute=1&loop=1&playlist=${media.videoId}&rel=0`}
                       className={`absolute top-0 left-0 w-full h-full rounded-lg object-cover transition-opacity duration-700 ${
                         idx === currentIndex ? "opacity-100 z-10" : "opacity-0"
                       } ${!isVendorAvailable ? "grayscale brightness-50" : ""}`}
@@ -357,16 +425,16 @@ const Service = ({ onSwitchToLogin }) => {
             {isVendorAvailable ? (
               <>
                 <button
-                  className="flex w-full cursor-pointer items-center justify-center rounded-full border-none bg-[#7f00ff] px-12 py-3 text-sm font-semibold text-white transition-colors duration-300 ease-in-out hover:bg-[#5e00cc] active:bg-[#4b0099] lg:w-auto lg:min-w-[220px]"
+                  className="flex w-full cursor-pointer items-center justify-center rounded-full bg-[#001f3f] sm:px-[1rem] lg:px-12 py-3 text-sm font-bold text-white transition-colors duration-300 ease-in-out  hover:bg-[#002366] hover:border-[#FFD700] active:bg-[#000d1a] active:border-[#F3C12D] lg:w-auto lg:min-w-[220px]"
                   onClick={handleBookNow}
                 >
-                  Book Now
+                  BOOK NOW
                 </button>
                 <button
-                  className="w-full lg:w-auto lg:min-w-[220px] px-4 py-3 rounded-full text-sm font-semibold text-white bg-gradient-to-r from-red-600 to-red-600 hover:from-red-600 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-md transition-all duration-300"
+                  className="w-full lg:w-auto lg:min-w-[220px] px-4 py-3 rounded-full text-sm font-bold text-white bg-gradient-to-r from-[#fb923c] to-[#ef4444] hover:shadow-lg hover:from-[#fca5a5] hover:to-[#dc2626] focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-md transition-all duration-300"
                   onClick={handleAddToCart}
                 >
-                  Add to Cart
+                  ADD TO CART
                 </button>
               </>
             ) : (
@@ -390,15 +458,14 @@ const Service = ({ onSwitchToLogin }) => {
 
         <div className="right-scrollable">
           <DJServiceCard service={service} />
-          <div className="why-choose">
-            <h2>Why Choose Us?</h2>
-            <ul>
-              <li>5-Star Rated Wedding DJs</li>
-              <li>Backup Equipment Always On-Hand</li>
-              <li>Experience With All Cultures & Traditions</li>
-              <li>Custom Packages & Friendly Support</li>
-            </ul>
-          </div>
+          {/* Why choose us component */}
+          <WhyChooseUs
+            serviceId={serviceId}
+            vendorId={service?.vendor || service?.vendorId?._id}
+            whyChooseUsPoints={whyChooseUsPoints}
+            isOwner={isServiceOwner()}
+            onUpdate={handleWhyChooseUsUpdate}
+          />
           <div className="reviews">
             <h3>DJ Ratings & Reviews</h3>
             <RatingDetails serviceId={serviceId} />
@@ -407,7 +474,7 @@ const Service = ({ onSwitchToLogin }) => {
             <div className="flex justify-center">
               <button
                 onClick={handleUserReview}
-                className="flex items-center gap-2 mt-5 bg-[#7f00ff] hover:bg-[#5e00cc] text-white font-semibold px-5 py-2.5 rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1 active:scale-95 text-sm sm:text-base md:text-lg"
+                className="flex items-center gap-2 mt-5 bg-[#001F3F] hover:bg-[#002366] text-white font-semibold px-5 py-2.5 rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1 active:scale-95 text-sm sm:text-base md:text-lg"
               >
                 <span className="text-lg sm:text-xl">💬</span>
                 Add Feedback

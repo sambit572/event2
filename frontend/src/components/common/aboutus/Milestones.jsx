@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
-import "./Milestones.css"; 
-
-
-
 
 const Milestone = ({ number, label }) => (
-  <div className="milestone-card">
-    <h2 className="milestone-number">{number}+</h2>
-    <p className="milestone-label">{label}</p>
+  <div className="flex-1 min-w-[160px] text-center p-6 bg-white/30 rounded-xl backdrop-blur-xl transition-transform duration-300 hover:-translate-y-2 hover:shadow-xl">
+    <h2 className="text-4xl font-extrabold text-[#001f3f] mb-2 transition-colors duration-300">
+      {number}+
+    </h2>
+    <p className="uppercase font-semibold text-[#001f3f] tracking-wide text-base transition-colors duration-300">
+      {label}
+    </p>
   </div>
 );
+
 
 const Milestones = () => {
   const [services, setServices] = useState(0);
@@ -54,12 +55,20 @@ const Milestones = () => {
   }, [hasAnimated]);
 
   return (
-    <div className="milestones-wrapper" ref={sectionRef}>
+    <section
+      ref={sectionRef}
+      className="relative min-h-[400px] py-20 px-6 mt-10 flex flex-wrap justify-center items-center gap-8 rounded-xl overflow-hidden bg-fixed bg-cover bg-center"
+      style={{ backgroundImage: "url('/milestome.jpg')" }}
+    >
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-amber-50/70 to-yellow-100/70 -z-10"></div>
+
+      {/* Milestone cards */}
       <Milestone number={services} label="Successful Services" />
       <Milestone number={years} label="Years in Business" />
       <Milestone number={clients} label="Happy Vendors" />
       <Milestone number={satisfaction} label="Client Satisfaction" />
-    </div>
+    </section>
   );
 };
 

@@ -31,7 +31,7 @@ const serviceSchema = new Schema(
       type: Number,
       required: true,
     },
-     stateLocationOffered: {
+    stateLocationOffered: {
       type: [String],
       required: true,
     },
@@ -46,6 +46,16 @@ const serviceSchema = new Schema(
     available: {
       type: Boolean,
       default: true,
+    },
+    customWhyChooseUs: {
+      type: [String],
+      default: [],
+      validate: {
+        validator: function (arr) {
+          return arr.length <= 5; // Maximum 5 points
+        },
+        message: 'Cannot have more than 5 "Why Choose Us" points',
+      },
     },
   },
   { timestamps: true }
