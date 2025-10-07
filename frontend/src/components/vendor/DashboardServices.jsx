@@ -80,6 +80,29 @@ const DashboardServices = () => {
     });
   };
 
+  const handleCropSave = async () => {
+    if (!imgRef.current || !crop?.width || !crop?.height) return;
+
+    const croppedBlob = await getCroppedImg(imgRef.current, crop);
+    const croppedFile = new File([croppedBlob], "cropped.jpg", {
+      type: "image/jpeg",
+    });
+
+    setNewImages((prev) => [...prev, croppedFile]);
+
+    setNewMediaPreviews((prev) => [
+      ...prev,
+      {
+        type: "image",
+        url: URL.createObjectURL(croppedFile),
+        file: croppedFile,
+      },
+    ]);
+
+    // Close crop modal
+    setCropSrc(null);
+  };
+
   const toggleExpandLocation = (index) => {
     setExpandedLocations((prev) => ({
       ...prev,
@@ -340,11 +363,11 @@ const DashboardServices = () => {
       file,
     }));
 
-    setNewImages((prev) => [...prev, ...imageFiles]);
+    // setNewImages((prev) => [...prev, ...imageFiles]);
     setNewVideos((prev) => [...prev, ...videoFiles]);
     setNewMediaPreviews((prev) => [
       ...prev,
-      ...newImagePreviews,
+      // ...newImagePreviews,
       ...newVideoPreviews,
     ]);
   };
@@ -890,56 +913,30 @@ const DashboardServices = () => {
                 </div>
               )}
               {cropSrc && (
-                <div className="fixed inset-0 z-50 bg-black bg-opacity-70 flex justify-center items-center p-4">
-                  <div className="bg-white rounded-md p-4 relative w-[90%] sm:w-[600px]">
-                    <h2 className="text-lg font-semibold mb-2">
-                      Crop Your Image
-                    </h2>
-
-                    <ReactCrop
-                      crop={crop}
-                      onChange={(newCrop) => setCrop(newCrop)}
-                      onComplete={(c) => setCrop(c)}
-                      aspect={16 / 9}
-                    >
+                <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+                  <div className="bg-white p-4 rounded-lg shadow-lg max-w-lg w-full">
+                    <h2 className="text-lg font-semibold mb-3">Crop Image</h2>
+                    <ReactCrop crop={crop} onChange={setCrop} aspect={16 / 9}>
                       <img
                         ref={imgRef}
                         src={cropSrc}
                         alt="Crop preview"
-                        style={{ maxHeight: "400px", objectFit: "contain" }}
-                        onLoad={(e) => {
-                          imgRef.current = e.target;
-                        }}
+                        onLoad={(e) => (imgRef.current = e.currentTarget)}
                       />
                     </ReactCrop>
 
-                    <div className="flex justify-end gap-3 mt-4">
+                    <div className="mt-4 flex justify-end gap-3">
                       <button
-                        className="px-4 py-2 bg-green-600 text-white rounded"
-                        onClick={async () => {
-                          const croppedBlob = await getCroppedImg(
-                            imgRef.current,
-                            crop
-                          );
-                          const croppedFile = new File(
-                            [croppedBlob],
-                            "cropped.jpg",
-                            {
-                              type: "image/jpeg",
-                            }
-                          );
-
-                          setNewImages((prev) => [...prev, croppedFile]);
-                          setCropSrc(null);
-                        }}
+                        onClick={() => setCropSrc(null)}
+                        className="px-4 py-2 bg-gray-400 text-white rounded"
                       >
-                         Crop & Save
+                        Cancel
                       </button>
                       <button
-                        className="px-4 py-2 bg-red-600 text-white rounded"
-                        onClick={() => setCropSrc(null)}
+                        onClick={handleCropSave}
+                        className="relative px-6 py-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg shadow-md transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:from-indigo-600 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
                       >
-                         Cancel
+                        Crop & Save
                       </button>
                     </div>
                   </div>
