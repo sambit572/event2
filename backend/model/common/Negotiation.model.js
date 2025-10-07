@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { type } from "os";
 
 const negotiationSchema = new mongoose.Schema(
   {
@@ -21,8 +20,8 @@ const negotiationSchema = new mongoose.Schema(
       required: true,
     },
     vendorCallStatus: {
-      type: String,
-      default: "Not Picked",
+      type: Boolean, // changed from String to Boolean
+      default: false, // false = "Not Picked"
     },
     vendorLocation: {
       type: [String],
@@ -59,8 +58,8 @@ const negotiationSchema = new mongoose.Schema(
       required: true,
     },
     bookedByUserCallStatus: {
-      type: String,
-      default: "Not Called",
+      type: Boolean, // changed from String to Boolean
+      default: false, // false = "Not Called"
     },
     venueLocation: {
       type: String,
@@ -98,13 +97,29 @@ const negotiationSchema = new mongoose.Schema(
       type: String,
       default: "pending",
     },
-    bookingStatus: {
-      type: String,
-      default: "pending",
+    paymentReceived: {
+      type: Number,
+      default: 0,
     },
     completed: {
-      type: String,
-      default: "No",
+      type: Boolean, // changed from String to Boolean
+      default: false,
+    },
+    progress: {
+      type: Boolean, // optional field based on your frontend
+      default: false,
+    },
+    booked: {
+      type: Boolean, // optional if tracking booking status separately
+      default: false,
+    },
+    picked_call: {
+      type: Boolean, // optional if you're tracking vendor's picked call separately
+      default: false,
+    },
+    call_status: {
+      type: Boolean, // optional if you're tracking called status
+      default: false,
     },
   },
   { timestamps: true }
