@@ -19,14 +19,15 @@ const negotiationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    vendorCallStatus: {
-      type: Boolean, // changed from String to Boolean
-      default: false, // false = "Not Picked"
-    },
     vendorLocation: {
       type: [String],
       required: true,
     },
+    picked_call: {
+      type: Boolean, // optional if you're tracking vendor's picked call separately
+      default: false,
+    },
+
     serviceName: {
       type: String,
       required: true,
@@ -57,9 +58,9 @@ const negotiationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    bookedByUserCallStatus: {
-      type: Boolean, // changed from String to Boolean
-      default: false, // false = "Not Called"
+    call_status: {
+      type: Boolean, // optional if you're tracking called status
+      default: false,
     },
     venueLocation: {
       type: String,
@@ -111,14 +112,6 @@ const negotiationSchema = new mongoose.Schema(
     },
     booked: {
       type: Boolean, // optional if tracking booking status separately
-      default: false,
-    },
-    picked_call: {
-      type: Boolean, // optional if you're tracking vendor's picked call separately
-      default: false,
-    },
-    call_status: {
-      type: Boolean, // optional if you're tracking called status
       default: false,
     },
   },
