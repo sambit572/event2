@@ -129,7 +129,7 @@ export const getDetails = async (req, res) => {
           as: "serviceDetails",
         },
       },
-      { 
+      {
         $unwind: {
           path: "$serviceDetails",
           preserveNullAndEmptyArrays: false,
@@ -151,12 +151,27 @@ export const getDetails = async (req, res) => {
         },
       },
       {
+        $lookup: {
+          from: "users",
+          localField: "bookedById",
+          foreignField: "_id",
+          as: "userDetails",
+        },
+      },
+      {
+        $unwind: {
+          path: "$userDetails",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
         $group: {
           _id: "$_id",
           bookedById: { $first: "$bookedById" },
           bookedBy: { $first: "$bookedBy" },
           serviceId: { $first: "$serviceId" },
           phone: { $first: "$phone" },
+          userEmail: { $first: "$userDetails.email" },
           altPhone: { $first: "$altPhone" },
           startDate: { $first: "$startDate" },
           endDate: { $first: "$endDate" },
@@ -180,11 +195,12 @@ export const getDetails = async (req, res) => {
               serviceCategory: "$serviceDetails.serviceCategory",
               description: "$serviceDetails.description",
               images: "$serviceDetails.images",
+              stateLocationOffered: "$serviceDetails.stateLocationOffered",
               vendorDetails: {
                 _id: "$serviceDetails.vendorDetails._id",
                 fullName: "$serviceDetails.vendorDetails.fullName",
                 email: "$serviceDetails.vendorDetails.email",
-                phone: "$serviceDetails.vendorDetails.phone",
+                phone: "$serviceDetails.vendorDetails.phoneNumber",
                 businessName: "$serviceDetails.vendorDetails.businessName",
               },
             },
@@ -199,6 +215,7 @@ export const getDetails = async (req, res) => {
           bookedBy: 1,
           serviceId: 1,
           phone: 1,
+          userEmail: 1,
           altPhone: 1,
           startDate: 1,
           endDate: 1,
@@ -214,15 +231,14 @@ export const getDetails = async (req, res) => {
           serviceDetails: 1,
         },
       },
-    ]
-  );
+    ]);
 
     if (userDetails.length === 0) {
       return res.status(404).json(new ApiError(404, "User details not found"));
     }
 
     const data = userDetails[0];
-    console.log("Fetched user details with services:", data);
+    // console.log("Fetched user details with services:", data);
 
     return res
       .status(200)

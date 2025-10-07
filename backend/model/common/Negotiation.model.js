@@ -1,14 +1,31 @@
 import mongoose from "mongoose";
+import { type } from "os";
 
 const negotiationSchema = new mongoose.Schema(
   {
+    vendorId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Vendor",
+      required: true,
+    },
     vendorName: {
       type: String,
       required: true,
     },
-    vendorId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Vendor",
+    vendorEmail: {
+      type: String,
+      required: true,
+    },
+    vendorPhoneNumber: {
+      type: String,
+      required: true,
+    },
+    vendorCallStatus: {
+      type: String,
+      default: "Not Picked",
+    },
+    vendorLocation: {
+      type: [String],
       required: true,
     },
     serviceName: {
@@ -20,14 +37,30 @@ const negotiationSchema = new mongoose.Schema(
       ref: "Service",
       required: true,
     },
-    bookedBy: {
-      type: String,
-      required: true,
-    },
-    bookedById: {
+    bookedByUserId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Customer",
       required: true,
+    },
+    bookedByUser: {
+      type: String,
+      required: true,
+    },
+    bookedByUserEmail: {
+      type: String,
+      required: true,
+    },
+    bookedByUserPhoneNumber: {
+      type: String,
+      required: true,
+    },
+    bookedByUserAltPhoneNumber: {
+      type: String,
+      required: true,
+    },
+    bookedByUserCallStatus: {
+      type: String,
+      default: "Not Called",
     },
     venueLocation: {
       type: String,
@@ -61,9 +94,17 @@ const negotiationSchema = new mongoose.Schema(
       type: String,
       default: "No Negotiation Requested",
     },
-    status: {
+    paymentStatus: {
       type: String,
       default: "pending",
+    },
+    bookingStatus: {
+      type: String,
+      default: "pending",
+    },
+    completed: {
+      type: String,
+      default: "No",
     },
   },
   { timestamps: true }
