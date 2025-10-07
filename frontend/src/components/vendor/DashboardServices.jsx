@@ -450,7 +450,9 @@ const DashboardServices = () => {
                     className="w-full h-full object-cover rounded-md"
                     src={`https://www.youtube.com/embed/${getYouTubeID(
                       selectedMediaUrl
-                    )}?autoplay=1&mute=1`}
+                    )}?autoplay=1&mute=1&loop=1&playlist=${getYouTubeID(
+                      selectedMediaUrl
+                    )}&rel=0`}
                     title="Service Video"
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

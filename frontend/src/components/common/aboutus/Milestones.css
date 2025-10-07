@@ -1,66 +1,80 @@
 /* Container for the milestones section */
 .milestones-wrapper {
-  padding: 4rem 3rem;
+  padding: 4rem 2rem;
   margin-top: 40px;
-  color: #fff9c4;
   position: relative;
   overflow: hidden;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   gap: 2rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   z-index: 1;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
 
-/* Blurred background layer */
+/* Background image layer */
 .milestones-wrapper::before {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: url("/milestone.jpg");
+  background-image: url("/milestome.jpg");
   background-size: cover;
-  background-position: center 48%;
-  color: rgba(255, 193, 7, 0.15);
+  background-position: center;
   background-repeat: no-repeat;
-  filter: blur(14px); /* adjust blur strength */
+  filter: blur(12px) brightness(0.8);
+  transform: scale(1.05); /* avoids blur edge cut */
   z-index: -2;
 }
 
-/* Optional dark overlay for readability */
+/* Soft overlay for readability */
 .milestones-wrapper::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right #fff8e1, #ffecb3);
+  background: linear-gradient(
+    to right,
+    rgba(255, 248, 225, 0.8),
+    rgba(255, 236, 179, 0.8)
+  );
   z-index: -1;
+  border-radius: 12px;
 }
 
-/* Individual milestone card */
+
 .milestone-card {
+  flex: 1 1 220px;
+  min-width: 160px;
   text-align: center;
-  flex: 1 1 200px;
-  min-width: 150px;
-  padding: 1rem;
-  background: none;
-  color: #f58300;
+  padding: 1.5rem 1rem;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  backdrop-filter: blur(6px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.milestone-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 /* Milestone number styling */
 .milestone-number {
-  font-weight: bold !important;
-  font-size: 2.5rem;
+  font-size: 2.8rem;
+  font-weight: 800;
   margin-bottom: 0.5rem;
+  color: #f58300; /* Accent orange */
 }
 
 /* Milestone label styling */
 .milestone-label {
-  text-transform: uppercase;
-  margin-bottom: 0;
   font-size: 1rem;
-  color: #1a237e;
   font-weight: 700;
+  text-transform: uppercase;
+  color: #1a237e; /* Deep blue */
+  letter-spacing: 0.5px;
 }
+
 @media (max-width: 500px) {
   .milestones-wrapper {
     margin-top: 0px;

@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ReviewCard from "./ReviewCard";
-import similarimg2 from "../../../assets/service/similar-dj-img2.jfif";
-import similarimg3 from "../../../assets/service/similar-dj-img3.jpg";
-import similarimg4 from "../../../assets/service/similar-dj-img4.jpg";
-import similarimg5 from "../../../assets/service/similar-dj-img5.jpg";
-
-const dummyImages = [similarimg2, similarimg3, similarimg4, similarimg5];
 
 const ReviewList = ({ serviceId, newReview }) => {
   const [allReviews, setAllReviews] = useState([]);

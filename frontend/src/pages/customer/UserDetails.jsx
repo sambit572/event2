@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { BACKEND_URL } from "../../utils/constant.js";
 import { useSelector } from "react-redux";
-
+import toast from "react-hot-toast";
+import VendorCalendar from "../../components/common/VendorCalendar.jsx";
+import { fetchBookedDates } from "./../../utils/calendarApi";
 // Data objects (stateDistricts, districtCities, aliases) remain the same...
 const stateDistricts = {
   Odisha: [
@@ -296,10 +298,15 @@ const UserDetails = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [locationMessage, setLocationMessage] = useState("");
   const { serviceId } = useParams();
+
+  // NEW: State for calendar logic
+  const [disabledDays, setDisabledDays] = useState([]);
+  const [isLoadingAvailability, setIsLoadingAvailability] = useState(true);
+
   const [formData, setFormData] = useState({
     serviceId: "",
     bookedBy: "",
-    bookedById: "",
+    bookedById: userId,
     phone: "",
     altPhone: "",
     startDate: "",
@@ -312,40 +319,102 @@ const UserDetails = () => {
     pincode: "",
     country: "India",
   });
+  const getCombinedAvailability = useCallback(async (services) => {
+    setIsLoadingAvailability(true);
+    try {
+      const vendorIds = [
+        ...new Set(services.map((s) => s.vendor).filter(Boolean)),
+      ];
+      if (vendorIds.length === 0) {
+        setIsLoadingAvailability(false);
+        return;
+      }
+
+      const currentMonth = new Date().getMonth() + 1;
+      const currentYear = new Date().getFullYear();
+
+      const promises = vendorIds.map((vid) =>
+        fetchBookedDates(vid, currentMonth, currentYear)
+      );
+      const results = await Promise.all(promises);
+
+      const allBookedDates = new Set();
+      results.forEach((result) => {
+        result.bookedDates.forEach((dateStr) => allBookedDates.add(dateStr));
+      });
+
+      const disabledDateObjects = [...allBookedDates].map(
+        (d) => new Date(d + "T12:00:00Z")
+      );
+      setDisabledDays(disabledDateObjects);
+    } catch (error) {
+      toast.error("Could not load vendor availability.");
+    } finally {
+      setIsLoadingAvailability(false);
+    }
+  }, []);
   const locationPath = useLocation();
   const from = locationPath.state?.from || "/";
 
   console.log("pathname", from);
 
   useEffect(() => {
-    console.log("Params:", { serviceId });
-    if (!serviceId && userId) {
-      console.log("No service ID found, fetching cart items...");
-      const fetchCart = async () => {
-        try {
+    const fetchInitialData = async () => {
+      let servicesToBook = [];
+      let serviceIdsForForm = [];
+
+      try {
+        if (serviceId) {
+          console.log("Fetching single service:", serviceId);
+          const { data } = await axios.get(
+            `${BACKEND_URL}/common/service/${serviceId}`
+          );
+          console.log("Single service response:", data);
+          if (data.success && data.service) {
+            servicesToBook.push(data.service);
+            serviceIdsForForm = data.service._id;
+          } else {
+            toast.error(data.message || "Service not found.");
+          }
+        } else {
+          console.log("Fetching cart services");
+
           const { data } = await axios.get(`${BACKEND_URL}/cart`, {
             withCredentials: true,
           });
-          // console.log("Cart data:", data);
-          const serviceIds = data.data.map((item) => item.serviceId._id);
-          console.log("Service IDs from cart:", serviceIds);
-          setFormData((prev) => ({
-            ...prev,
-            serviceId: serviceIds, // now it's an array
-          }));
-        } catch (err) {
-          console.error("Error fetching cart:", err);
+          console.log("Cart response:", data);
+
+          if (data.data) {
+            servicesToBook = data.data.map((item) => item.serviceId);
+            serviceIdsForForm = servicesToBook.map((s) => s._id);
+          }
         }
-      };
-      fetchCart();
-    } else {
-      // Book Now flow
-      setFormData((prev) => ({
-        ...prev,
-        serviceId: serviceId,
-      }));
-    }
-  }, [serviceId, userId]);
+        console.log("Final servies to book:", servicesToBook);
+
+        if (servicesToBook.length > 0) {
+          setFormData((prev) => ({ ...prev, serviceId: serviceIdsForForm }));
+          getCombinedAvailability(servicesToBook);
+        } else {
+          toast.error("No services found to book.");
+          setIsLoadingAvailability(false);
+        }
+      } catch (err) {
+        console.log("Error in fetchInitialData:", err);
+
+        toast.error("Failed to load service or cart data.");
+        setIsLoadingAvailability(false);
+      }
+    };
+    if (userId) fetchInitialData();
+  }, [serviceId, userId, getCombinedAvailability]);
+
+  const handleDateSelect = ({ startDate, endDate }) => {
+    setFormData((prev) => ({
+      ...prev,
+      startDate: startDate ? startDate.toISOString().slice(0, 10) : "",
+      endDate: endDate ? endDate.toISOString().slice(0, 10) : "",
+    }));
+  };
 
   const findStateMatch = (stateName) => {
     const stateKeys = Object.keys(stateDistricts);
@@ -437,7 +506,10 @@ const UserDetails = () => {
 
   const handleSave = async (e) => {
     e.preventDefault();
-
+    if (!formData.startDate || !formData.endDate) {
+      toast.error("Please select a valid date range from the calendar.");
+      return;
+    }
     try {
       // Attach user info safely
       const preparedFormData = {
@@ -515,8 +587,8 @@ const UserDetails = () => {
   };
 
   const handleCancel = () => {
-    navigate(from);
-    alert("Cancelled");
+    navigate(-1);
+    // alert("Cancelled");
   };
 
   const handleUseCurrentAddress = () => {
@@ -654,7 +726,7 @@ const UserDetails = () => {
 
   return (
     <div className="font-sans px-4">
-      <div className="max-w-2xl p-8 mx-auto my-20 text-gray-800 bg-[#fff] rounded-2xl border-[3px] border-[#001F3F] shadow-[0_8px_32px_rgba(31,38,135,0.2)] backdrop-blur-lg">
+      <div className="max-w-2xl p-4 mx-auto my-20 text-gray-800 bg-[#fff] rounded-2xl border-[3px] border-[#001F3F] shadow-[0_8px_32px_rgba(31,38,135,0.2)] backdrop-blur-lg">
         <h3 className="mb-[-10px] text-center text-3xl font-bold tracking-wide bg-gradient-to-r from-[#004989] to-[#001F3F] bg-clip-text text-transparent">
           Fill Out Your Event Details
         </h3>
@@ -691,7 +763,7 @@ const UserDetails = () => {
             </FormField>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {/* <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <FormField
               id="startDate"
               label="Start Date"
@@ -720,8 +792,22 @@ const UserDetails = () => {
                 required
               />
             </FormField>
+          </div> */}
+          <div className="mt-4">
+            <label className="block mb-2 text-lg font-semibold text-center text-gray-800">
+              Select Event Dates
+            </label>
+            {isLoadingAvailability ? (
+              <div className="text-center p-8 bg-gray-100 w-full rounded-lg animate-pulse">
+                Checking availability for all vendors...
+              </div>
+            ) : (
+              <VendorCalendar
+                disabledDays={disabledDays}
+                onDateSelect={handleDateSelect}
+              />
+            )}
           </div>
-
           {/* VVV CORRECTED ADDRESS FIELD STRUCTURE VVV */}
           <div>
             <div className="relative">

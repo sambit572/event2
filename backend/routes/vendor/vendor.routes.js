@@ -53,7 +53,31 @@ import {
   getServicesByCategory,
 } from "../../controller/common/serviceList.controller.js";
 
+// Why Choose Us
+import {
+  getWhyChooseUs,
+  updateWhyChooseUs,
+  resetWhyChooseUs,
+} from "../../controller/vendor/whychooseus.controller.js";
+
 const vendor_router = express.Router();
+
+// --- WHY CHOOSE US ROUTES --- //
+vendor_router.get(
+  "/service/:serviceId/why-choose-us",
+  verifyVendorJwt,
+  getWhyChooseUs
+);
+vendor_router.put(
+  "/service/:serviceId/why-choose-us",
+  verifyVendorJwt,
+  updateWhyChooseUs
+);
+vendor_router.delete(
+  "/service/:serviceId/why-choose-us",
+  verifyVendorJwt,
+  resetWhyChooseUs
+);
 
 // --- AUTH ROUTES --- //
 vendor_router.post(
@@ -112,8 +136,6 @@ vendor_router.post(
   },
   uploadServiceMedia
 );
-
-
 
 // --- BANK DETAILS ROUTES --- //
 vendor_router.post("/bank-details", verifyVendorJwt, createBankDetails);

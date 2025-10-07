@@ -11,6 +11,7 @@ const bookingSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Vendor",
       required: true,
+      index: true, //Index for faster queries by vendor
     },
     service: {
       type: mongoose.Schema.Types.ObjectId,
@@ -24,6 +25,15 @@ const bookingSchema = new mongoose.Schema(
     endDate: {
       type: Date,
       required: true,
+    },
+    //  Normalized fields for timezone-safe logic
+    startDateNormalized: {
+      type: Date,
+      index: true, // Index for faster date-range queries
+    },
+    endDateNormalized: {
+      type: Date,
+      index: true, // Index for faster date-range queries
     },
     eventTime: {
       type: String,
