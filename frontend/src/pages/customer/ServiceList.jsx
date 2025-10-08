@@ -13,7 +13,7 @@ import djBanner from "../../assets/home/categoriesImages/dj_image.png";
 import musicBanner from "../../assets/home/categoriesImages/bass-brand.png";
 import decorBanner from "../../assets/home/categoriesImages/tent_house.png";
 import photoBanner from "../../assets/home/categoriesImages/photographer.png";
-import foodBanner from "../../assets/aboutUs/CATERING.png";
+import foodBanner from "../../assets/aboutUs/catering_service.jpg";
 import banquetBanner from "../../assets/home/categoriesImages/banquithall.png";
 import danceBanner from "../../assets/home/categoriesImages/classical_music_and_dance.jpg";
 import islamicBanner from "../../assets/home/categoriesImages/moulbi.png";
