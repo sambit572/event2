@@ -25,7 +25,6 @@ import carBanner from "../../assets/home/categoriesImages/ceremonial_ride.png";
 import fireworksBanner from "../../assets/home/categoriesImages/fireworks.png";
 import cardBanner from "../../assets/home/categoriesImages/marriage-card.png";
 import magicBanner from "../../assets/home/categoriesImages/magician.png";
-import stageBanner from "../../assets/home/categoriesImages/stage_decor.png";
 import eventBanner from "../../assets/home/categoriesImages/event_company.png";
 
 const ServiceCardSkeleton = () => (
@@ -72,10 +71,9 @@ const ServiceList = ({ onSwitchToLogin }) => {
     "Beauty Makeover": makeupBanner,
     "Floral Decor": floralBanner,
     "Ceremonial Ride": carBanner,
-    Fireworks: fireworksBanner,
+    "Fireworks": fireworksBanner,
     "Card Design & Printing": cardBanner,
     "Magic Shows": magicBanner,
-    "Stage Decor": stageBanner,
     "Event Company": eventBanner,
   };
 
