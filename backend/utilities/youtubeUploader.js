@@ -29,7 +29,7 @@ export async function uploadVideoToYouTube(filePath, title, description) {
           description: description,
         },
         status: {
-          privacyStatus: "private", // Uploads as private as requested
+          privacyStatus: "unlisted", // Uploads as unlisted as requested
         },
       },
       media: {

@@ -1,8 +1,6 @@
-import 'dotenv/config';
-console.log("🚀 Initializing server... branch-3.o");
+import "./loadEnv.js";
 
 // ✅ Import required modules
-import { config } from "dotenv";
 import client from "./db/redisClient.js";
 import { app } from "./app.js";
 import { connectToDb } from "./db/db.js";
@@ -10,7 +8,6 @@ import mongoose from "mongoose"; // ✅ Import mongoose for DB close
 import { createServer } from "http";
 import initSocket from "./socket/index.js";
 
-config({ path: "./env" });
 
 let server;
 try {

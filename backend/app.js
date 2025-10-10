@@ -86,7 +86,6 @@ app.get("/api/slow-api", async (req, res) => {
 
 // ✅ API Routes
 app.use("/api/reports", reportRoutes);
-
 app.use("/api/search", searchRouter);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/user", userRouter);

@@ -1,9 +1,8 @@
 // Eventsbridge-Web/backend/seeder.js
 import mongoose from "mongoose";
-import dotenv from "dotenv";
-import { Category } from "./model/common/category.model.js";
 
-dotenv.config();
+import { Category } from "./model/common/category.model.js";
+import "./loadEnv.js";
 
 // EXACT category names matching your CategoryData.jsx
 const categories = [
@@ -14,7 +13,7 @@ const categories = [
       "Backup Equipment Always On-Hand",
       "Experience With All Cultures & Traditions",
       "Custom Packages & Friendly Support",
-      "Professional Sound & Lighting Setup"
+      "Professional Sound & Lighting Setup",
     ],
   },
   {
@@ -24,7 +23,7 @@ const categories = [
       "Wide repertoire of musical genres",
       "High-quality sound equipment",
       "Experienced conductors",
-      "Customizable performance packages"
+      "Customizable performance packages",
     ],
   },
   {
@@ -34,7 +33,7 @@ const categories = [
       "High-quality tents & furniture",
       "Custom setups to match your occasion",
       "Professional setup & timely service",
-      "Elegant ambience for every event"
+      "Elegant ambience for every event",
     ],
   },
   {
@@ -44,7 +43,7 @@ const categories = [
       "Latest equipment & technology",
       "Quick delivery of edited content",
       "Candid & traditional photography styles",
-      "Drone photography available"
+      "Drone photography available",
     ],
   },
   {
@@ -54,7 +53,7 @@ const categories = [
       "Multiple cuisine options available",
       "Professional serving staff",
       "Customizable menu packages",
-      "On-time delivery guaranteed"
+      "On-time delivery guaranteed",
     ],
   },
   {
@@ -64,7 +63,7 @@ const categories = [
       "Traditional & modern mandap designs",
       "Air-conditioned comfortable spaces",
       "Flexible booking arrangements",
-      "Complete venue management services"
+      "Complete venue management services",
     ],
   },
   {
@@ -74,7 +73,7 @@ const categories = [
       "Authentic traditional performances",
       "Cultural expertise & experience",
       "Professional stage setup",
-      "Educational & entertaining programs"
+      "Educational & entertaining programs",
     ],
   },
   {
@@ -84,7 +83,7 @@ const categories = [
       "Traditional ceremony guidance",
       "Flexible scheduling arrangements",
       "Respectful & professional service",
-      "Complete ritual knowledge"
+      "Complete ritual knowledge",
     ],
   },
   {
@@ -94,7 +93,7 @@ const categories = [
       "Traditional & modern ceremony options",
       "Personalized service approach",
       "Professional ceremony guidance",
-      "Flexible scheduling availability"
+      "Flexible scheduling availability",
     ],
   },
   {
@@ -104,7 +103,7 @@ const categories = [
       "Traditional Sanskrit mantras",
       "Complete ritual guidance",
       "Auspicious timing consultation",
-      "Professional ceremony conduct"
+      "Professional ceremony conduct",
     ],
   },
   {
@@ -114,7 +113,7 @@ const categories = [
       "High-quality cosmetic products",
       "Bridal & party makeup expertise",
       "On-location service available",
-      "Personalized beauty consultations"
+      "Personalized beauty consultations",
     ],
   },
   {
@@ -124,7 +123,7 @@ const categories = [
       "Creative & artistic designs",
       "Seasonal flower availability",
       "Custom decoration themes",
-      "Timely setup & installation"
+      "Timely setup & installation",
     ],
   },
   {
@@ -134,7 +133,7 @@ const categories = [
       "Professional chauffeur service",
       "Well-maintained & decorated vehicles",
       "Flexible rental packages",
-      "On-time pickup & drop service"
+      "On-time pickup & drop service",
     ],
   },
   {
@@ -144,7 +143,7 @@ const categories = [
       "Professional pyrotechnic experts",
       "Spectacular visual effects",
       "Safety compliance guaranteed",
-      "Customizable display packages"
+      "Customizable display packages",
     ],
   },
   {
@@ -154,7 +153,7 @@ const categories = [
       "High-quality printing materials",
       "Fast turnaround delivery",
       "Customizable templates available",
-      "Professional design consultation"
+      "Professional design consultation",
     ],
   },
   {
@@ -164,7 +163,7 @@ const categories = [
       "Family-friendly magic shows",
       "Interactive audience participation",
       "Variety of magic performances",
-      "Age-appropriate entertainment"
+      "Age-appropriate entertainment",
     ],
   },
   {
@@ -174,7 +173,7 @@ const categories = [
       "Creative & thematic decorations",
       "High-quality backdrop materials",
       "Lighting & sound integration",
-      "Timely installation & dismantling"
+      "Timely installation & dismantling",
     ],
   },
   {
@@ -184,14 +183,18 @@ const categories = [
       "Experienced & creative team",
       "Customized packages for all budgets",
       "One-stop solution for all event needs",
-      "Hassle-free, professional execution"
+      "Hassle-free, professional execution",
     ],
   },
 ];
 
 const seedCategories = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI || process.env.MONGODB_URL);
+    const mongoUri = process.env.MONGODB_URL;
+    await mongoose.connect(mongoUri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
     console.log("MongoDB Connected...");
 
     for (const categoryData of categories) {

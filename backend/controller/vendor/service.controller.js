@@ -9,7 +9,7 @@ import { ApiResponse } from "../../utilities/ApiResponse.js";
 import { ApiError } from "../../utilities/ApiError.js";
 import Vendor from "../../model/vendor/vendor.model.js";
 import client from "../../db/redisClient.js";
-import { uploadVideoToYouTube,deleteVideoFromYouTube } from "../../utilities/youtubeUploader.js";
+import { uploadVideoToYouTube, deleteVideoFromYouTube } from "../../utilities/youtubeUploader.js";
 
 const vendorServicesCacheKey = (vendorId) => `vendor:${vendorId}:services`;
 
