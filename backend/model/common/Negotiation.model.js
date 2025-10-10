@@ -2,32 +2,15 @@ import mongoose from "mongoose";
 
 const negotiationSchema = new mongoose.Schema(
   {
+    vendorName: {
+      type: String,
+      required: true,
+    },
     vendorId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Vendor",
       required: true,
     },
-    vendorName: {
-      type: String,
-      required: true,
-    },
-    vendorEmail: {
-      type: String,
-      required: true,
-    },
-    vendorPhoneNumber: {
-      type: String,
-      required: true,
-    },
-    vendorLocation: {
-      type: [String],
-      required: true,
-    },
-    picked_call: {
-      type: Boolean, // optional if you're tracking vendor's picked call separately
-      default: false,
-    },
-
     serviceName: {
       type: String,
       required: true,
@@ -37,30 +20,14 @@ const negotiationSchema = new mongoose.Schema(
       ref: "Service",
       required: true,
     },
-    bookedByUserId: {
+    bookedBy: {
+      type: String,
+      required: true,
+    },
+    bookedById: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Customer",
       required: true,
-    },
-    bookedByUser: {
-      type: String,
-      required: true,
-    },
-    bookedByUserEmail: {
-      type: String,
-      required: true,
-    },
-    bookedByUserPhoneNumber: {
-      type: String,
-      required: true,
-    },
-    bookedByUserAltPhoneNumber: {
-      type: String,
-      required: true,
-    },
-    call_status: {
-      type: Boolean, // optional if you're tracking called status
-      default: false,
     },
     venueLocation: {
       type: String,
@@ -94,25 +61,9 @@ const negotiationSchema = new mongoose.Schema(
       type: String,
       default: "No Negotiation Requested",
     },
-    paymentStatus: {
+    status: {
       type: String,
       default: "pending",
-    },
-    paymentReceived: {
-      type: Number,
-      default: 0,
-    },
-    completed: {
-      type: Boolean, // changed from String to Boolean
-      default: false,
-    },
-    progress: {
-      type: Boolean, // optional field based on your frontend
-      default: false,
-    },
-    booked: {
-      type: Boolean, // optional if tracking booking status separately
-      default: false,
     },
   },
   { timestamps: true }

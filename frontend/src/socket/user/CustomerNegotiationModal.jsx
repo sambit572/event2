@@ -52,9 +52,9 @@ const CustomerNegotiationModal = () => {
         );
 
         const result = bookingRes?.data?.data ?? bookingRes?.data ?? null;
-        // console.log("Fetched  result1111:", result);
+        console.log("Fetched booking details:", result);
         const details = Array.isArray(result) ? result[0] : result;
-        // console.log("Fetched details:", details);
+
         if (!details) {
           throw new Error("No booking details found");
         }
@@ -68,8 +68,8 @@ const CustomerNegotiationModal = () => {
           .map((service) => service.vendorDetails)
           .filter(Boolean);
 
-        // console.log("Extracted services:", services);
-        // console.log("Extracted vendors:", vendors);
+        console.log("Extracted services:", services);
+        console.log("Extracted vendors:", vendors);
 
         setServiceDetails(services);
         setVendorDetails(vendors);
@@ -83,7 +83,6 @@ const CustomerNegotiationModal = () => {
 
     if (userDetailsId) fetchAllData();
   }, [userDetailsId, BACKEND]);
-  // console.log("Fetched booking details:", bookingDetails);
 
   // Timer functions
   const formatTime = (seconds) => {
@@ -139,37 +138,25 @@ const CustomerNegotiationModal = () => {
       setErrorMsg("❗ Please enter a price higher than the minimum price.");
       return;
     }
-    // console.log("Current service:", currentService);
-    // console.log("Current vendor:", currentVendor);
-    // console.log("Booking details:", bookingDetails);
+
     const negotiationData = {
-      vendorId: currentVendor._id,
-      vendorName: currentVendor.fullName,
-      vendorEmail: currentVendor.email,
-      vendorPhoneNumber: currentVendor.phone,
-      vendorLocation: currentService?.stateLocationOffered,
-
-      serviceId: currentService._id,
-      serviceName: currentService.serviceName,
-
-      bookedByUserId: bookingDetails.bookedById,
-      bookedByUser: bookingDetails.bookedBy,
-      bookedByUserEmail: bookingDetails.userEmail,
-      bookedByUserPhoneNumber: bookingDetails.phone,
-      bookedByUserAltPhoneNumber: bookingDetails.altPhone,
-
+      vendorName: currentVendor.fullName || currentVendor.name,
+      serviceName: currentService.serviceName || currentService.name,
+      serviceId: currentService._id?.$oid || currentService._id,
+      vendorId: currentVendor._id?.$oid || currentVendor._id,
+      bookedBy: bookingDetails.bookedBy,
+      bookedById: bookingDetails.bookedById?.$oid || bookingDetails.bookedById,
       venueLocation: venueInput,
-      proposedPrice: proposedPrice,
-
+      proposedPrice,
       date: {
-        startDate: new Date(bookingDetails.startDate),
-        endDate: new Date(bookingDetails.endDate),
+        startDate: bookingDetails.startDate?.$date || bookingDetails.startDate,
+        endDate: bookingDetails.endDate?.$date || bookingDetails.endDate,
       },
-
       originalPriceRange: {
         min: currentService.minPrice,
         max: currentService.maxPrice,
       },
+      type: "Negotiation Requested",
     };
 
     setIsLoading(true);
@@ -185,7 +172,7 @@ const CustomerNegotiationModal = () => {
       navigate(`/order-summary/${userDetailsId}`);
     }, 500);
   };
-  // console.log("NegotiationData", negotiationData);
+
   // Send all services without negotiation
   const handleProceedWithoutNegotiation = () => {
     setIsLoading(true);
@@ -208,8 +195,6 @@ const CustomerNegotiationModal = () => {
         bookedById:
           bookingDetails.bookedById?.$oid || bookingDetails.bookedById,
         venueLocation: venueInput,
-
-        vendorLocation: service?.stateLocationOffered,
         proposedPrice: 0,
         date: {
           startDate:

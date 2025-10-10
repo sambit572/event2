@@ -138,208 +138,99 @@ export const removeFromCart = async (req, res) => {
   }
 };
 
-const ObjectId = mongoose.Types.ObjectId;
-
 export const getCartWithUserDetails = async (req, res) => {
   try {
     const { userDetailsId } = req.params;
 
-    if (!ObjectId.isValid(userDetailsId)) {
+    if (!mongoose.Types.ObjectId.isValid(userDetailsId)) {
       return res
         .status(400)
         .json(new ApiError(400, "Invalid userDetailsId format."));
     }
 
-    // Fetch userDetails document
+    // Step 1: Get the complete UserDetails document.
     const userDetails = await UserDetails.findById(userDetailsId);
+
     if (!userDetails) {
       return res.status(404).json(new ApiError(404, "User details not found."));
     }
 
-    console.log("User details found:", userDetails);
+    const { bookedById: userId, serviceId: serviceIds } = userDetails;
 
-    const userId = userDetails.bookedById;
-    const serviceIds = userDetails.serviceId;
-
+    // Step 2: Check if there are any service IDs to process.
     if (!serviceIds || serviceIds.length === 0) {
       console.log(
         "No service IDs found in user details. Returning empty cart."
       );
+      const emptyResponseData = {
+        orderType: "empty",
+        items: [],
+      };
       return res
         .status(200)
         .json(
           new ApiResponse(
             200,
-            { orderType: "empty", items: [] },
+            emptyResponseData,
             "No items found for this order."
           )
         );
     }
 
-    // Validate userId and serviceIds are ObjectId instances or convert if strings
-    const validUserId = ObjectId.isValid(userId) ? new ObjectId(userId) : null;
-    if (!validUserId) {
-      return res
-        .status(400)
-        .json(new ApiError(400, "Invalid bookedByUserId format."));
-    }
-
-    const validServiceIds = serviceIds
-      .filter((id) => ObjectId.isValid(id))
-      .map((id) => new ObjectId(id));
-
-    if (validServiceIds.length === 0) {
-      return res
-        .status(200)
-        .json(
-          new ApiResponse(
-            200,
-            { orderType: "empty", items: [] },
-            "No valid service IDs found."
-          )
-        );
-    }
-
-    console.log(`Checking for negotiations for services:`, validServiceIds);
-    console.log(`With bookedByUserId:`, validUserId);
-
-    // Fetch negotiations in parallel for all services and the given user
-    const negotiationPromises = validServiceIds.map((serviceId) =>
-      Negotiation.findOne({ serviceId, bookedByUserId: validUserId }).populate({
+    // Step 3: Fetch all negotiations for the services in parallel.
+    console.log(
+      `Found ${serviceIds.length} service(s). Fetching negotiations...`
+    );
+    const negotiationPromises = serviceIds.map((id) =>
+      Negotiation.findOne({ serviceId: id, bookedById: userId }).populate({
         path: "serviceId",
         model: "Service",
       })
     );
 
-    const negotiations = await Promise.all(negotiationPromises);
+    const resolvedNegotiations = await Promise.all(negotiationPromises);
 
-    const items = negotiations.filter((item) => item !== null);
+    // Filter out any null results where a negotiation might not have been found for a service
+    const items = resolvedNegotiations.filter((item) => item !== null);
 
     if (items.length === 0) {
-      console.log("No matching negotiations found for these services.");
+      console.log(
+        "Although service IDs were present, no matching negotiations were found."
+      );
+      const emptyResponseData = {
+        orderType: "empty",
+        items: [],
+      };
       return res
         .status(200)
         .json(
           new ApiResponse(
             200,
-            { orderType: "empty", items: [] },
+            emptyResponseData,
             "No negotiated items found for this order."
           )
         );
     }
 
+    // Step 4: Determine order type and construct the final response.
     const orderType = items.length > 1 ? "multiple" : "single";
+    const responseData = {
+      orderType,
+      items,
+    };
 
     return res
       .status(200)
       .json(
-        new ApiResponse(
-          200,
-          { orderType, items },
-          "Order items fetched successfully."
-        )
+        new ApiResponse(200, responseData, "Order items fetched successfully.")
       );
   } catch (error) {
-    console.error("getCartWithUserDetails ERROR:", error);
+    console.error("Unified getCart error:", error);
     return res
       .status(500)
       .json(new ApiError(500, "Internal Server Error while fetching cart."));
   }
 };
-
-// export const getCartWithUserDetails = async (req, res) => {
-//   try {
-//     const { userDetailsId } = req.params;
-
-//     if (!mongoose.Types.ObjectId.isValid(userDetailsId)) {
-//       return res
-//         .status(400)
-//         .json(new ApiError(400, "Invalid userDetailsId format."));
-//     }
-
-//     // Step 1: Get the complete UserDetails document.
-//     const userDetails = await UserDetails.findById(userDetailsId);
-
-//     if (!userDetails) {
-//       return res.status(404).json(new ApiError(404, "User details not found."));
-//     }
-//     console.log("User details found:", userDetails);
-//     const { bookedByUserId: userId, serviceId: serviceIds } = userDetails;
-
-//     // Step 2: Check if there are any service IDs to process.
-//     if (!serviceIds || serviceIds.length === 0) {
-//       console.log(
-//         "No service IDs found in user details. Returning empty cart."
-//       );
-//       const emptyResponseData = {
-//         orderType: "empty",
-//         items: [],
-//       };
-//       return res
-//         .status(200)
-//         .json(
-//           new ApiResponse(
-//             200,
-//             emptyResponseData,
-//             "No items found for this order."
-//           )
-//         );
-//     }
-
-//     // Step 3: Fetch all negotiations for the services in parallel.
-//     console.log(
-//       `Found ${serviceIds.length} service(s). Fetching negotiations...`
-//     );
-//     const negotiationPromises = serviceIds.map((id) =>
-//       Negotiation.findOne({ serviceId: id, bookedByUserId: userId }).populate({
-//         path: "serviceId",
-//         model: "Service",
-//       })
-//     );
-
-//     const resolvedNegotiations = await Promise.all(negotiationPromises);
-
-//     // Filter out any null results where a negotiation might not have been found for a service
-//     const items = resolvedNegotiations.filter((item) => item !== null);
-
-//     if (items.length === 0) {
-//       console.log(
-//         "Although service IDs were present, no matching negotiations were found."
-//       );
-//       const emptyResponseData = {
-//         orderType: "empty",
-//         items: [],
-//       };
-//       return res
-//         .status(200)
-//         .json(
-//           new ApiResponse(
-//             200,
-//             emptyResponseData,
-//             "No negotiated items found for this order."
-//           )
-//         );
-//     }
-
-//     // Step 4: Determine order type and construct the final response.
-//     const orderType = items.length > 1 ? "multiple" : "single";
-//     const responseData = {
-//       orderType,
-//       items,
-//     };
-
-//     return res
-//       .status(200)
-//       .json(
-//         new ApiResponse(200, responseData, "Order items fetched successfully.")
-//       );
-//   } catch (error) {
-//     console.error("Unified getCart error:", error);
-//     return res
-//       .status(500)
-//       .json(new ApiError(500, "Internal Server Error while fetching cart."));
-//   }
-// };
 
 // Helper function to calculate order summary (can be used in both single and multiple)
 export const calculateOrderSummary = (items, orderType = "single") => {

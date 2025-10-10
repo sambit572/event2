@@ -9,14 +9,14 @@ const categorySchema = new Schema(
       trim: true,
     },
     defaultWhyChooseUs: {
-      type: [String],
-      default: [],
+      type: [String], 
+      default: [], 
       validate: {
-        validator: function (arr) {
+        validator: function(arr) {
           return arr.length <= 5; // Maximum 5 points
         },
-        message: 'Cannot have more than 5 default "Why Choose Us" points',
-      },
+        message: 'Cannot have more than 5 default "Why Choose Us" points'
+      }
     },
   },
   { timestamps: true }

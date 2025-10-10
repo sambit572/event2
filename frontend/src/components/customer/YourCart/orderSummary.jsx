@@ -21,7 +21,7 @@ const OrderSummary = () => {
         `${BACKEND_URL}/cart/${userDetailsId}`, // The new consolidated endpoint
         { withCredentials: true }
       );
-      console.log("Cart fetch response:", response.data); // Debug log
+
       // Destructure the consistent response from the backend
       const { orderType, items } = response.data.data;
 
