@@ -100,7 +100,14 @@ const AddToCart = () => {
                 key={item._id}
                 className="flex flex-col sm:flex-row items-start gap-4 border border-gray-300 rounded-2xl shadow-xl p-5 mb-6 bg-gray-100"
               >
-                <div className="relative w-full sm:w-36 h-[15rem] sm:h-36 md:w-40 md:h-40 rounded-xl overflow-hidden shadow-lg border border-gray-200 bg-white flex-shrink-0 mx-auto sm:mx-0">
+                <div
+                  className="relative w-full sm:w-36 h-[15rem] sm:h-36 md:w-40 md:h-40 rounded-xl overflow-hidden shadow-lg border border-gray-200 bg-white flex-shrink-0 mx-auto sm:mx-0"
+                  onClick={() =>
+                    navigate(
+                      `/service/${item.serviceCategory}/${item.serviceId._id}`
+                    )
+                  }
+                >
                   <img
                     src={
                       item.serviceId?.serviceImage?.[0] ||

@@ -5,7 +5,7 @@ import { Negotiation } from "../../model/common/Negotiation.model.js";
 import { ApiError } from "../../utilities/ApiError.js";
 import { ApiResponse } from "../../utilities/ApiResponse.js";
 import mongoose from "mongoose";
-import client from "../../utilities/redisClient.js";
+import client from "../../db/redisClient.js";
 import { getIO } from "../../socket/index.js";
 
 export const addToCart = async (req, res) => {

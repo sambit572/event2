@@ -1,6 +1,6 @@
 import Report from "../../model/common/report.model.js";
 import { ApiError } from "../../utilities/ApiError.js";
-import client from "../../utilities/redisClient.js"; // your Redis client
+import client from "../../db/redisClient.js"; // your Redis client
 
 // Create a new report (POST)
 export const createReport = async (req, res) => {

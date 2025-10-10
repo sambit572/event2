@@ -1,6 +1,6 @@
 import image1 from "../assets/home/categoriesImages/dj_image.png";
-import image2 from "../assets/home/categoriesImages/bass-brand.webp";
-import image3 from "../assets/home/categoriesImages/tent_house.jpg";
+import image2 from "../assets/home/categoriesImages/bass-brand.png";
+import image3 from "../assets/home/categoriesImages/tent_house.png";
 import image4 from "../assets/home/categoriesImages/photographer.png";
 import image5 from "../assets/home/categoriesImages/pandit.png";
 import image6 from "../assets/home/categoriesImages/magician.png";
@@ -13,8 +13,7 @@ import image12 from "../assets/home/categoriesImages/flower-decor.png";
 import image13 from "../assets/home/categoriesImages/ceremonial_ride.png";
 import image14 from "../assets/home/categoriesImages/fireworks.png";
 import image15 from "../assets/home/categoriesImages/marriage-card.png";
-import image16 from "../assets/home/categoriesImages/banquithall.jpeg";
-import image17 from "../assets/home/categoriesImages/stage_decor.png";
+import image16 from "../assets/home/categoriesImages/banquithall.png";
 import image18 from "../assets/home/categoriesImages/event_company.png";
 
 export const CategoryData = [
@@ -118,15 +117,9 @@ export const CategoryData = [
     tagline: "Illusions that Amaze All",
   },
   {
-    id: "stage-decor",
-    title: "Stage Decor",
-    image: image17, // Replace with your actual image import
-    tagline: "Designs That Dazzle, Moments That Matter",
-  },
-  {
     id: "event-management",
     title: "Event Company",
-    image: image18, // Replace with actual image
+    image: image18, 
     tagline: "Crafting Moments, Managing Memories",
   },
 ];

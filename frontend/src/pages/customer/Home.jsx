@@ -156,7 +156,7 @@ const Home = () => {
         )}
       </div>
       <StepsSection />
-      <Milestones />
+      {/* <Milestones /> */}
       <Suspense fallback={<div>Loading reviews...</div>}>
         <ReviewSlider />
       </Suspense>

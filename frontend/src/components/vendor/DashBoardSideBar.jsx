@@ -21,11 +21,12 @@ function DashBoardSideBar({
   const [removing, setRemoving] = useState(false);
   const [showRemoveConfirm, setShowRemoveConfirm] = useState(false);
 
-  const { form, updateField, updateVendor, updateBank } = UseVendorProfile();
+  // ✅ 1. Destructure the new `resetForm` function from your hook.
+  const { form, updateField, updateVendor, updateBank, resetForm } =
+    UseVendorProfile();
 
   console.log("DashBoardSideBar render - isVerified:", isVerified);
   console.log("DashBoardSideBar render - editMode:", editMode);
-
 
   useEffect(() => {
     if (!isVerified) return; // only run when verified
@@ -42,7 +43,7 @@ function DashBoardSideBar({
         setIsVerified(false); // reset verification flag
       })();
     }
-  }, [isVerified]); // 🚨 only depend on isVerified
+  }, [isVerified]);
 
   const handleToggleEdit = () => {
     if (editMode) {
@@ -50,6 +51,12 @@ function DashBoardSideBar({
     } else {
       setEditMode(true);
     }
+  };
+
+  // ✅ 2. Create the handler for the Cancel button.
+  const handleCancelEdit = () => {
+    resetForm(); // This reverts any unsaved changes in the form state.
+    setEditMode(false); // This switches the UI back to view mode.
   };
 
   const getInitialsAvatar = (name) => {
@@ -70,8 +77,8 @@ function DashBoardSideBar({
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-      alert("File size should be less than 5MB");
+    if (file.size > 9 * 1024 * 1024) {
+      alert("File size should be less than 9MB");
       return;
     }
 
@@ -231,13 +238,25 @@ function DashBoardSideBar({
           </li>
 
           {editMode ? (
-            <label className="status-edit-toggle">
-              <input
-                type="checkbox"
-                checked={form.active}
-                onChange={() => updateField("active", !form.active)}
-              />
-              <span className="vendor-active">
+            <label className="flex items-center justify-center gap-3  mt-2 mb-2 cursor-pointer select-none">
+              <div className="relative">
+                <input
+                  type="checkbox"
+                  checked={form.active}
+                  onChange={() => updateField("active", !form.active)}
+                  className="sr-only peer"
+                />
+                <div className="w-12 h-6 rounded-full bg-gray-300 peer-checked:bg-green-500 transition-colors duration-300"></div>
+                <div
+                  className="absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow-md 
+                  transition-all duration-300 peer-checked:translate-x-6"
+                ></div>
+              </div>
+              <span
+                className={`font-semibold transition-colors duration-300 ${
+                  form.active ? "text-white font-bold" : "text-gray-200 font-semibold"
+                }`}
+              >
                 {form.active ? "Active" : "Inactive"}
               </span>
             </label>
@@ -281,19 +300,6 @@ function DashBoardSideBar({
           <li className="typography">
             Events Hosted: {vendor?.eventsHosted ?? 0}
           </li>
-
-          {/* <li className="typography">
-            {editMode ? (
-              <input
-                type="text"
-                value={form.upiId}
-                className="custom-li"
-                onChange={(e) => updateField("upiId", e.target.value)}
-              />
-            ) : (
-              form.upiId
-            )}
-          </li> */}
 
           <button
             className="change-password"
@@ -349,15 +355,36 @@ function DashBoardSideBar({
           </li>
         </ul>
 
-        <button className="edit-buttons flex gap-1" onClick={handleToggleEdit}>
+        {/* ✅ 3. Updated button section to show Save/Cancel in edit mode. */}
+        <div className="edit-buttons-container">
           {editMode ? (
-            "Save"
+            <div className="flex gap-3 items-center justify-center">
+              <button
+                onClick={handleToggleEdit}
+                className="mt-2 px-5 py-2.5 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 
+                shadow-md hover:from-blue-600 hover:to-blue-700 hover:shadow-lg 
+                active:scale-95 active:shadow-inner 
+                transition-all duration-200 ease-in-out"
+              >
+                Save
+              </button>
+
+              <button
+                onClick={handleCancelEdit}
+                className="mt-2 px-5 py-2.5 rounded-xl font-semibold text-white bg-gradient-to-r from-red-500 to-red-600 
+                shadow-md hover:from-red-600 hover:to-red-700 hover:shadow-lg 
+                active:scale-95 active:shadow-inner 
+                transition-all duration-200 ease-in-out ml-3"
+              >
+                Cancel
+              </button>
+            </div>
           ) : (
-            <>
+            <button className="edit-buttons" onClick={handleToggleEdit}>
               <FaEdit /> Edit
-            </>
+            </button>
           )}
-        </button>
+        </div>
       </div>
     </div>
   );

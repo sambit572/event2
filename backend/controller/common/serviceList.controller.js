@@ -1,4 +1,5 @@
 import { Service } from "../../model/vendor/service.model.js";
+import client from "../../db/redisClient.js"; // 🔹 Make sure you have a redis client
 import mongoose from "mongoose";
 import { Category } from "../../model/common/category.model.js";
 
@@ -17,7 +18,7 @@ export const getServicesByCategory = async (req, res) => {
         },
       },
       {
-        $sort: { createdAt: -1 },
+        $sort: { createdAt: 1 },
       },
       {
         $lookup: {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setVendor } from "../../redux/VendorSlice.js";
 import axios from "axios";
@@ -23,49 +23,47 @@ export function UseVendorProfile() {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
+  // ✅ 1. The form population logic is extracted into a reusable function.
+  // We wrap it in useCallback for optimization.
+  const resetForm = useCallback(async () => {
+    if (!vendor?._id) return; // Guard clause
 
-  useEffect(() => {
-    const fetchBankDetails = async () => {
-      try {
-        const res = await axios.get(
-          `${
-            import.meta.env.VITE_BACKEND_URL
-          }/vendors/bank-details/bankDetails`,
-          { withCredentials: true }
-        );
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/vendors/bank-details/bankDetails`,
+        { withCredentials: true }
+      );
 
-        const details = res.data.data;
+      const details = res.data.data;
 
-        setForm((prev) => ({
-          ...prev,
-          fullName: vendor.fullName || "",
-          email: vendor.email || "",
-          phoneNumber: vendor.phoneNumber || "",
-          upiId: details.upiId || "",
-          accountNumber: details.accountNumber || "",
-          ifscCode: details.ifscCode || "",
-          tempAccountNumber: details.accountNumber || "",
-          tempIfscCode: details.ifscCode || "",
-          active: vendor.active ?? true,
-        }));
-      } catch (err) {
-        console.error(
-          "Error fetching bank details:",
-          err.response?.data || err.message
-        );
-      }
-    };
-
-    if (vendor?._id) {
-      fetchBankDetails();
+      setForm((prev) => ({
+        ...prev,
+        fullName: vendor.fullName || "",
+        email: vendor.email || "",
+        phoneNumber: vendor.phoneNumber || "",
+        upiId: details.upiId || "",
+        accountNumber: details.accountNumber || "",
+        ifscCode: details.ifscCode || "",
+        tempAccountNumber: details.accountNumber || "",
+        tempIfscCode: details.ifscCode || "",
+        active: vendor.active ?? true,
+      }));
+    } catch (err) {
+      console.error(
+        "Error fetching bank details:",
+        err.response?.data || err.message
+      );
     }
-  }, [vendor]);
-      
+  }, [vendor]); // This function depends on the `vendor` object
 
+  // ✅ 2. The useEffect hook is now cleaner. It just calls the reset function.
+  useEffect(() => {
+    resetForm();
+  }, [resetForm]); // It runs whenever the memoized resetForm function changes
 
   const updateVendor = async () => {
-    console.log("before updating the form data to be updated : ",form);
-    
+    console.log("before updating the form data to be updated : ", form);
+
     const res = await axios.put(
       `${import.meta.env.VITE_BACKEND_URL}/vendors/${vendor._id}`,
       {
@@ -77,7 +75,7 @@ export function UseVendorProfile() {
       },
       { withCredentials: true }
     );
-    console.log("res from update vendor",res.data.data);
+    console.log("res from update vendor", res.data.data);
     dispatch(setVendor(res.data.data));
   };
 
@@ -92,14 +90,23 @@ export function UseVendorProfile() {
       },
       { withCredentials: true }
     );
-    console.log("updation done:",res)
+    console.log("updation done:", res.data.data);
+    setForm((prev) => ({
+      ...prev,
+      upiId: res.data.data.upiId,
+      accountNumber: res.data.data.accountNumber,
+      ifscCode: res.data.data.ifscCode,
+    }));
+    console.log("after updating bank:", form);
   };
 
+  // ✅ 3. Return the new `resetForm` function so your components can use it.
   return {
     form,
     updateField,
     updateVendor,
     updateBank,
     vendor,
+    resetForm,
   };
 }

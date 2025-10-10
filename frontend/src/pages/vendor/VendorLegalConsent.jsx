@@ -34,7 +34,7 @@ export default function VendorLegalConsent() {
   const validateSignatureImage = (file) => {
     return new Promise((resolve, reject) => {
       // Basic file validations
-      const validTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+      const validTypes = ["image/png", "image/jpeg", "image/jpg"];
       const maxSize = 2 * 1024 * 1024; // 2MB
       const minSize = 1 * 1024; // 1KB
 
@@ -46,28 +46,32 @@ export default function VendorLegalConsent() {
 
       // File size validation
       if (file.size > maxSize) {
-        reject("Signature file is too large. Please upload an image under 2MB.");
+        reject(
+          "Signature file is too large. Please upload an image under 2MB."
+        );
         return;
       }
 
       if (file.size < minSize) {
-        reject("Signature file is too small. Please upload a valid signature image.");
+        reject(
+          "Signature file is too small. Please upload a valid signature image."
+        );
         return;
       }
 
       // Image dimension and content validation
       const img = new Image();
       img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
         canvas.width = img.width;
         canvas.height = img.height;
         ctx.drawImage(img, 0, 0);
 
         // More flexible dimension validation
         const aspectRatio = img.width / img.height;
-        
+
         // Allow more flexible aspect ratios for signatures and names
         // Signatures can be written names (closer to square) or traditional signatures (wider)
         if (aspectRatio < 0.5 || aspectRatio > 10) {
@@ -83,7 +87,9 @@ export default function VendorLegalConsent() {
 
         // Increased maximum dimensions for better flexibility
         if (img.width > 3000 || img.height > 1500) {
-          reject("Signature image is too large. Maximum size: 3000x1500 pixels.");
+          reject(
+            "Signature image is too large. Maximum size: 3000x1500 pixels."
+          );
           return;
         }
 
@@ -91,7 +97,7 @@ export default function VendorLegalConsent() {
         try {
           const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
           const pixels = imageData.data;
-          
+
           let transparentPixels = 0;
           let whitePixels = 0;
           let darkPixels = 0;
@@ -123,30 +129,40 @@ export default function VendorLegalConsent() {
           }
 
           const contentPixelRatio = (darkPixels + coloredPixels) / totalPixels;
-          const backgroundPixelRatio = (whitePixels + transparentPixels) / totalPixels;
+          const backgroundPixelRatio =
+            (whitePixels + transparentPixels) / totalPixels;
 
           // More lenient content validation
           // Signature should have some visible content but mostly background
           if (contentPixelRatio < 0.005) {
-            reject("Image appears to be empty or too faint. Please upload a clearer signature.");
+            reject(
+              "Image appears to be empty or too faint. Please upload a clearer signature."
+            );
             return;
           }
 
           if (contentPixelRatio > 0.8) {
-            reject("Image appears too dense. Please upload a signature with clear background.");
+            reject(
+              "Image appears too dense. Please upload a signature with clear background."
+            );
             return;
           }
 
           // Ensure there's enough background/contrast
           if (backgroundPixelRatio < 0.2) {
-            reject("Signature needs better contrast with background. Please use a clearer image.");
+            reject(
+              "Signature needs better contrast with background. Please use a clearer image."
+            );
             return;
           }
 
           resolve("Signature validation passed");
         } catch (error) {
           // If pixel analysis fails, just do basic validation
-          console.warn("Advanced validation failed, using basic validation:", error);
+          console.warn(
+            "Advanced validation failed, using basic validation:",
+            error
+          );
           resolve("Basic signature validation passed");
         }
       };
@@ -184,7 +200,7 @@ export default function VendorLegalConsent() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     if (!signatureFile) {
       setIsLoading(false);
       alert("Please upload your signature before submitting.");
@@ -192,7 +208,11 @@ export default function VendorLegalConsent() {
     }
 
     // Check if all consents are agreed
-    if (!consents.iAgreeTC || !consents.iAgreeCP || !consents.iAgreeKYCVerifyUsingPanAndAdhar) {
+    if (
+      !consents.iAgreeTC ||
+      !consents.iAgreeCP ||
+      !consents.iAgreeKYCVerifyUsingPanAndAdhar
+    ) {
       setIsLoading(false);
       alert("Please agree to all terms and conditions before submitting.");
       return;
@@ -203,7 +223,10 @@ export default function VendorLegalConsent() {
 
       formData.append("iAgreeTC", consents.iAgreeTC);
       formData.append("iAgreeCP", consents.iAgreeCP);
-      formData.append("iAgreeKYCVerifyUsingPanAndAdhar", consents.iAgreeKYCVerifyUsingPanAndAdhar);
+      formData.append(
+        "iAgreeKYCVerifyUsingPanAndAdhar",
+        consents.iAgreeKYCVerifyUsingPanAndAdhar
+      );
 
       formData.append("signature", signatureFile);
       formData.append("vendorId", vendor?._id || "");
@@ -237,7 +260,7 @@ export default function VendorLegalConsent() {
       <StepProgress currentStep={currentStepIndex} />
 
       {isLoading && <Spinner />}
-      
+
       <div className="bg-[#e5e5de] rounded-[10px] max-w-[600px] h-[600px] my-[90px] mx-auto p-[30px] shadow-sm max-lg:max-w-[95%] max-lg:h-auto max-lg:p-[25px] max-lg:my-[70px] max-md:max-w-[95%] max-md:p-5 max-md:my-[60px] max-[480px]:max-w-[94%] max-[480px]:p-4 max-[480px]:h-auto max-[480px]:my-10 max-[480px]:overflow-x-hidden">
         <p className="text-base mb-5 leading-[1.8] text-black max-md:text-[15px] max-[480px]:text-sm max-[480px]:leading-[1.6]">
           Before submitting your registration, please review and agree to the
@@ -255,7 +278,12 @@ export default function VendorLegalConsent() {
               required
               className="mr-1"
             />
-            <span>I agree to the Terms and Conditions</span>
+            <a
+              href="/terms-and-conditions"
+              className="hover:underline hover:text-blue-600 focus:underline focus:text-blue-600 active:underline active:text-blue-600"
+            >
+              I agree to the Terms and Conditions
+            </a>
             <FiAlertCircle className="text-xs -ml-0.5" />
           </label>
 
@@ -269,7 +297,12 @@ export default function VendorLegalConsent() {
               required
               className="mr-1"
             />
-            <span>I agree to the Commission and Payment Terms</span>
+            <a
+              href="/refund-policy"
+              className="hover:underline hover:text-blue-600 focus:underline focus:text-blue-600 active:underline active:text-blue-600"
+            >
+              I agree to the Commission and Payment Terms
+            </a>
             <FiAlertCircle className="text-xs -ml-0.5" />
           </label>
 
@@ -286,7 +319,12 @@ export default function VendorLegalConsent() {
               required
               className="mr-1"
             />
-            <span>I authorize KYC Verification using PAN/Aadhaar</span>
+            <a
+              href="/privacy-policy"
+              className="hover:underline hover:text-blue-600 focus:underline focus:text-blue-600 active:underline active:text-blue-600"
+            >
+              I authorize KYC Verification using PAN/Aadhaar
+            </a>
             <FiAlertCircle className="text-xs -ml-0.5" />
           </label>
 
@@ -294,7 +332,7 @@ export default function VendorLegalConsent() {
             <label className="block text-base font-medium mb-2.5">
               Signature (digital) or Name as e-sign
             </label>
-            
+
             {/* Updated Validation Guidelines */}
             <div className="text-xs text-gray-600 mb-2.5 text-center leading-relaxed">
               Upload your signature or written name (PNG/JPEG only, max 2MB)
@@ -306,9 +344,10 @@ export default function VendorLegalConsent() {
               className={`
                 cursor-pointer bg-white border-[1.5px] rounded-[10px] p-5 w-[280px] mx-auto 
                 flex items-center justify-between text-base shadow-sm transition-colors
-                ${validationError 
-                  ? 'border-red-500 bg-red-50' 
-                  : 'border-gray-300 hover:border-gray-400'
+                ${
+                  validationError
+                    ? "border-red-500 bg-red-50"
+                    : "border-gray-300 hover:border-gray-400"
                 }
                 max-lg:w-[260px] max-lg:p-[18px] max-lg:text-[15px]
                 max-md:w-[240px] max-md:p-4 max-md:text-sm
@@ -328,7 +367,9 @@ export default function VendorLegalConsent() {
                     alt="Uploaded Signature"
                     className="max-h-[60px] max-w-[220px] object-contain"
                   />
-                  <span className="text-xs text-emerald-500 font-medium">✓ Signature accepted</span>
+                  <span className="text-xs text-emerald-500 font-medium">
+                    ✓ Signature accepted
+                  </span>
                 </div>
               ) : (
                 <>
@@ -340,7 +381,7 @@ export default function VendorLegalConsent() {
                   />
                 </>
               )}
-              
+
               <input
                 type="file"
                 ref={fileInputRef}
@@ -364,8 +405,7 @@ export default function VendorLegalConsent() {
             {/* Helpful Tips */}
             {!signatureFile && !validationError && (
               <div className="mt-3 text-xs text-gray-500 max-w-[280px] mx-auto">
-                <div className="text-left">
-                </div>
+                <div className="text-left"></div>
               </div>
             )}
           </div>

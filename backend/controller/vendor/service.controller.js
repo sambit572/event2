@@ -8,7 +8,10 @@ import {
 import { ApiResponse } from "../../utilities/ApiResponse.js";
 import { ApiError } from "../../utilities/ApiError.js";
 import Vendor from "../../model/vendor/vendor.model.js";
-import client from "../../utilities/redisClient.js";
+import client from "../../db/redisClient.js";
+import { uploadVideoToYouTube, deleteVideoFromYouTube } from "../../utilities/youtubeUploader.js";
+
+const vendorServicesCacheKey = (vendorId) => `vendor:${vendorId}:services`;
 
 export const createService = async (req, res) => {
   try {
@@ -87,28 +90,63 @@ export const createService = async (req, res) => {
       return res.status(400).json({ message: "Invalid estimated duration" });
     }
 
-    // ✅ Upload images to Cloudinary
     const imageUrls = [];
+    const videoUrls = [];
+
     if (req.files && req.files.length > 0) {
       for (const file of req.files) {
-        const cloudRes = await uploadOnCloudinary(file.path);
-        if (cloudRes?.secure_url) {
-          imageUrls.push(cloudRes.secure_url);
-        } else {
-          console.error("❌ Failed to upload image:", file.originalname);
+        // Check the MIME type to differentiate
+        if (file.mimetype.startsWith("image/")) {
+          // This is an image, upload to Cloudinary
+          const cloudRes = await uploadOnCloudinary(file.path);
+          if (cloudRes?.secure_url) {
+            imageUrls.push(cloudRes.secure_url);
+          } else {
+            console.error(
+              "❌ Failed to upload image to Cloudinary:",
+              file.originalname
+            );
+          }
+        } else if (file.mimetype.startsWith("video/")) {
+          // This is a video, upload to YouTube
+          try {
+            const videoTitle = `Service Video: ${serviceName}`;
+            const videoDescription = `A video for our service: ${serviceName}. Provided by EventsBridge.`;
+            const youtubeUrl = await uploadVideoToYouTube(
+              file.path,
+              videoTitle,
+              videoDescription
+            );
+            videoUrls.push(youtubeUrl);
+          } catch (youtubeError) {
+            console.error(
+              "❌ Failed to upload video to YouTube:",
+              file.originalname,
+              youtubeError
+            );
+          }
         }
       }
     } else {
       return res
         .status(400)
-        .json({ message: "Please upload at least one image" });
+        .json(new ApiError(400, "Please upload at least one image or video"));
+    }
+
+    // Combine both arrays into a single media array
+    const mediaUrls = [...imageUrls, ...videoUrls];
+
+    if (mediaUrls.length === 0) {
+      return res
+        .status(500)
+        .json(new ApiError(500, "Media upload failed, please try again."));
     }
 
     // ✅ Prepare service data
     const serviceData = {
       vendorId: req.vendor._id,
       serviceCategory,
-      serviceImage: imageUrls,
+      serviceImage: mediaUrls,
       minPrice,
       maxPrice,
       serviceName,
@@ -135,7 +173,6 @@ export const createService = async (req, res) => {
 
       responseMessage = "Service saved successfully during registration";
     } else {
-      // ✅ Otherwise, allow multiple services → create new one
       newService = await Service.create(serviceData);
       responseMessage = "New service created successfully";
     }
@@ -181,7 +218,7 @@ export const checkServiceExists = async (req, res) => {
 export const getMyServices = async (req, res) => {
   try {
     const vendorId = req.vendor._id.toString();
-    const cacheKey = `vendor:${vendorId}:services`;
+    const cacheKey = vendorServicesCacheKey(vendorId);
 
     // 1️⃣ Check Redis cache
     const cachedData = await client.get(cacheKey);
@@ -292,8 +329,8 @@ export const updateService = async (req, res) => {
 
     // ✅ Invalidate Redis cache
     try {
-      await client.del(`vendor_services_${vendorId}`); // vendor services cache
-      await client.del("all_services"); // if you cache all services somewhere
+      await client.del(vendorServicesCacheKey(vendorId));
+      await client.del("all_services");
     } catch (cacheErr) {
       console.error("Redis cache clear failed:", cacheErr);
     }
@@ -322,30 +359,50 @@ export const deleteService = async (req, res) => {
         .json(new ApiError(404, "Service not found or not authorized"));
     }
 
-    // Delete all images from Cloudinary (if any)
-    let deletionResults = [];
-    if (
-      Array.isArray(existingService.serviceImage) &&
-      existingService.serviceImage.length > 0
-    ) {
-      deletionResults = await Promise.allSettled(
-        existingService.serviceImage.map((imageUrl) =>
-          deleteFromCloudinary(imageUrl)
-        )
-      );
+    // ✅ MODIFIED SECTION: Handle deletion from both Cloudinary and YouTube
+    const cloudinaryDeletionPromises = [];
+    const youtubeDeletionPromises = [];
+
+    const mediaArray = existingService.serviceImage || [];
+
+    if (Array.isArray(mediaArray) && mediaArray.length > 0) {
+      mediaArray.forEach((mediaUrl) => {
+        // Differentiate based on the URL's domain
+        if (mediaUrl.includes("youtube.com") || mediaUrl.includes("youtu.be")) {
+          youtubeDeletionPromises.push(deleteVideoFromYouTube(mediaUrl));
+        } else if (mediaUrl.includes("cloudinary.com")) {
+          cloudinaryDeletionPromises.push(deleteFromCloudinary(mediaUrl));
+        } else {
+          console.warn(
+            `Unknown media URL type, skipping deletion: ${mediaUrl}`
+          );
+        }
+      });
     }
 
-    // Delete service from DB
+    // Execute all deletion promises concurrently and wait for them to settle
+    const mediaDeletionResults = await Promise.allSettled([
+      ...cloudinaryDeletionPromises,
+      ...youtubeDeletionPromises,
+    ]);
+
+    console.log("Media deletion results:", mediaDeletionResults);
+
+    // Finally, delete the service from the database
     await existingService.deleteOne();
+
+    // Invalidate any relevant Redis caches
+    await client.del(vendorServicesCacheKey(vendorId.toString()));
+    await client.del(`services:id:${serviceId}`);
 
     return res.status(200).json(
       new ApiResponse(
         200,
         {
-          deletedService: existingService,
-          imageDeletions: deletionResults,
+          deletedServiceId: existingService._id,
+          mediaDeletions: mediaDeletionResults,
         },
-        "Service and associated images deleted successfully"
+        "Service and associated media deleted successfully"
       )
     );
   } catch (error) {
@@ -396,45 +453,64 @@ export const updateAvailability = async (req, res) => {
   }
 };
 
-export const updateServiceImageFirst = async (req, res) => {
-  console.log("Incoming update data:", req.body);
+export const uploadServiceMedia = async (req, res) => {
+  console.log("Incoming files for media upload:", req.files);
   try {
-    const vendorId = req.vendor._id;
-    const serviceId = req.params.id;
-
-    const service = await Service.findOne({ _id: serviceId, vendorId });
-    if (!service) {
+    if (!req.files || req.files.length === 0) {
       return res
-        .status(404)
-        .json({ message: "Service not found or not authorized" });
+        .status(400)
+        .json(new ApiError(400, "Please upload at least one image or video"));
     }
 
     const imageUrls = [];
-    if (req.files && req.files.length > 0) {
-      for (const file of req.files) {
+    const videoUrls = [];
+    // Extract serviceName from the body to create a descriptive video title
+    const { serviceName = "Service Video" } = req.body;
+
+    for (const file of req.files) {
+      if (file.mimetype.startsWith("image/")) {
         const cloudRes = await uploadOnCloudinary(file.path);
         if (cloudRes?.secure_url) {
           imageUrls.push(cloudRes.secure_url);
+        } else {
+          console.error(
+            "❌ Failed to upload image to Cloudinary:",
+            file.originalname
+          );
+        }
+      } else if (file.mimetype.startsWith("video/")) {
+        try {
+          const videoTitle = `Service Video: ${serviceName}`;
+          const videoDescription = `A video for our service: ${serviceName}.`;
+          const youtubeUrl = await uploadVideoToYouTube(
+            file.path,
+            videoTitle,
+            videoDescription
+          );
+          videoUrls.push(youtubeUrl);
+        } catch (youtubeError) {
+          console.error(
+            "❌ Failed to upload video to YouTube:",
+            file.originalname,
+            youtubeError
+          );
         }
       }
-
-      service.serviceImage = [...service.serviceImage, ...imageUrls];
-      await service.save();
-
-      await client.del(`service:${serviceId}`);
-
-      return res.status(200).json({
-        success: true,
-        data: service,
-        message: "Images uploaded & service updated successfully",
-      });
-    } else {
-      return res
-        .status(400)
-        .json({ message: "Please upload at least one image" });
     }
+
+    const mediaUrls = [...imageUrls, ...videoUrls];
+
+    if (mediaUrls.length === 0) {
+      return res
+        .status(500)
+        .json(new ApiError(500, "Media upload failed, please try again"));
+    }
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, mediaUrls, "Media uploaded successfully"));
   } catch (error) {
-    console.error("❌ Error updating service images:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    console.error("❌ Error uploading service media:", error);
+    return res.status(500).json(new ApiError(500, "Internal server error"));
   }
 };

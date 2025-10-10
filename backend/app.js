@@ -5,7 +5,7 @@ import path from "path";
 import helmet from "helmet";
 import { fileURLToPath } from "url";
 
-import client from "./utilities/redisClient.js";
+import client from "./db/redisClient.js";
 import userRouter from "./routes/user/user.routes.js";
 import { vendor_router } from "./routes/vendor/vendor.routes.js";
 import { errorHandler } from "./middleware/error.middleware.js";
@@ -44,8 +44,8 @@ app.use(
   })
 );
 
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ limit: "50mb", extended: true }));
+app.use(express.json({ limit: "1024mb" }));
+app.use(express.urlencoded({ limit: "1024mb", extended: true }));
 app.use(cookieParser());
 
 // ✅ Start Agenda Engine
@@ -85,7 +85,6 @@ app.get("/api/slow-api", async (req, res) => {
 
 // ✅ API Routes
 app.use("/api/reports", reportRoutes);
-
 app.use("/api/search", searchRouter);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/user", userRouter);
@@ -96,6 +95,7 @@ app.use("/api/common", serviceRoutes);
 app.use("/api/wishlist", wishlistRoutes); // Use wishlist routes
 app.use("/api/cart", cartRouter);
 app.use("/api/calendar", calendarRoutes);
+
 // ✅ Health Check Route
 app.get("/", (req, res) => {
   res.status(200).json({

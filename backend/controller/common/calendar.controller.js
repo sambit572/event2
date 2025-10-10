@@ -1,4 +1,4 @@
-import Booking from "../../model/common/Booking.model.js";
+import Booking from "../../model/common/booking.model.js";
 /* import { Negotiation } from '../../model/common/Negotiation.model.js'; */
 import mongoose from "mongoose";
 
@@ -38,7 +38,6 @@ export const getBookedDates = async (req, res) => {
         }).select('date.startDate date.endDate');
  */
     const unavailableDates = new Set();
-
     // Process confirmed bookings
     bookings.forEach((booking) => {
       let currentDate = new Date(booking.startDate);

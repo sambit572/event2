@@ -262,6 +262,7 @@ color: #ffc107;
   margin-left: 67px;
   position: relative;
   top: 10px;
+  display: flex;
 }
 
 .edit-buttons:hover {
@@ -283,7 +284,7 @@ color: #ffc107;
 .custom-li {
   padding: 3px;
   border-radius: 5px;
-  width: 100%;
+  width: 85%;
   margin-left: 2px;
   border: 1px solid black;
   background: linear-gradient(130deg, #ffffdd, white);
@@ -335,26 +336,18 @@ color: #ffc107;
   /* Red */
 }
 
-.status-edit-toggle {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  font-weight: 600;
-  margin-left: 7px;
-  margin-top: 5px;
-}
+
 
 .custom-font-active {
   font-size: 15px;
 }
 
 .change-password {
-  width: 100%;
+  width: 85%;
   border-radius: 10px;
   border: none;
   position: relative;
   padding: 5px;
-  top: 1px;
   background: rgba(255, 255, 255, 0.1);
   color: white;
   font-size: 16px;
@@ -362,6 +355,7 @@ color: #ffc107;
   cursor: pointer;
   transition: all 0.3s ease;
   text-align: center;
+  margin-left: 1rem;
 }
 
 .ch-password:hover {

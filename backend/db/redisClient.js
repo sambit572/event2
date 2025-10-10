@@ -1,4 +1,4 @@
-// backend/redisClient.js
+
 import { createClient } from "redis";
 
 const client = createClient({

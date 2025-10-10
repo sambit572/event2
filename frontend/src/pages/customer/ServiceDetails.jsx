@@ -14,8 +14,17 @@ import { BACKEND_URL } from "../../utils/constant.js";
 import { useSelector, useDispatch } from "react-redux";
 import { setCategoryServices } from "../../redux/categorySlice";
 import { incrementCartCount } from "../../redux/UserSlice.js";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+// ✅ NEW: Import FaYoutube
+import { FaChevronLeft, FaChevronRight, FaYoutube } from "react-icons/fa";
 import WhyChooseUs from "../../components/customer/ServiceDetails/WhyChooseUs.jsx";
+
+// ✅ NEW: Helper function to identify YouTube links
+const getYouTubeID = (url) => {
+  if (typeof url !== "string") return null;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return match && match[2].length === 11 ? match[2] : null;
+};
 
 const Service = ({ onSwitchToLogin }) => {
   const navigate = useNavigate();
@@ -38,7 +47,8 @@ const Service = ({ onSwitchToLogin }) => {
   }, [categoryId]);
   const [service, setService] = useState(null);
   const [mediaList, setMediaList] = useState([]);
-  const [selectMedia, setSelectMedia] = useState(null);
+  // ❌ REMOVED: selectMedia is no longer needed, we use currentIndex
+  // const [selectMedia, setSelectMedia] = useState(null);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -74,11 +84,11 @@ const Service = ({ onSwitchToLogin }) => {
         })
         .catch((err) => console.error(err));
     }
-  }, [categoryId]);
+  }, [categoryId, dispatch, categoryServices]);
 
   useEffect(() => {
     setCurrentIndex(0);
-  }, [mediaList.length]);
+  }, [serviceId, mediaList.length]);
 
   const handleUserReview = () => {
     const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
@@ -113,12 +123,19 @@ const Service = ({ onSwitchToLogin }) => {
         const data = res.data.service;
         setService(data);
         setWhyChooseUsPoints(data.whyChooseUs || []);
-        const formattedMedia = (data?.serviceImage || []).map((src) => ({
-          type: "image",
-          src,
-        }));
+        // ✅ MODIFIED: Process media to differentiate between images and videos
+        const serviceMediaUrls = data?.serviceImage || [];
+        const formattedMedia = serviceMediaUrls.map((url) => {
+          const videoId = getYouTubeID(url);
+          if (videoId) {
+            return { type: "video", src: url, videoId: videoId };
+          } else {
+            return { type: "image", src: url };
+          }
+        });
+        console.log("Formatted Media List:", formattedMedia);
         setMediaList(formattedMedia);
-        setSelectMedia(formattedMedia[0]);
+        // We now rely on currentIndex, so setting selectMedia is not needed
         setLoading(false);
       } catch (err) {
         console.error("Error fetching service:", err);
@@ -284,21 +301,30 @@ const Service = ({ onSwitchToLogin }) => {
             </span>
             {mediaList.length > 0 ? (
               <>
-                {mediaList.map((media, index) => (
-                  <div
-                    key={index}
-                    onClick={() => setSelectMedia(media)}
-                    className="li1"
-                  >
+                {/* ✅ MODIFIED: Loop through media and render iframe or img */}
+                {mediaList.map((media, idx) =>
+                  media.type === "video" ? (
+                    <iframe
+                      key={idx}
+                      src={`https://www.youtube.com/embed/${media.videoId}?autoplay=1&mute=1&loop=1&playlist=${media.videoId}&rel=0`}
+                      className={`absolute top-0 left-0 w-full h-full rounded-lg object-cover transition-opacity duration-700 ${
+                        idx === currentIndex ? "opacity-100 z-10" : "opacity-0"
+                      } ${!isVendorAvailable ? "grayscale brightness-50" : ""}`}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
+                  ) : (
                     <img
+                      key={idx}
                       src={media.src}
-                      alt={`media-${index}`}
-                      className={
-                        !isVendorAvailable ? "grayscale brightness-75" : ""
-                      }
+                      alt={`slide-${idx}`}
+                      className={`absolute top-0 left-0 w-full h-full rounded-lg object-cover transition-opacity duration-700 ${
+                        idx === currentIndex ? "opacity-100" : "opacity-0"
+                      } ${!isVendorAvailable ? "grayscale brightness-50" : ""}`}
                     />
-                  </div>
-                ))}
+                  )
+                )}
 
                 {/* Left Arrow */}
                 {mediaList.length > 1 && (
@@ -358,17 +384,24 @@ const Service = ({ onSwitchToLogin }) => {
                   </>
                 )}
 
-                {/* Dots */}
+                {/* ✅ MODIFIED: Dots now show YouTube icon */}
                 {mediaList.length > 1 && (
                   <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
-                    {mediaList.map((_, idx) => (
-                      <span
+                    {mediaList.map((media, idx) => (
+                      <button
                         key={idx}
-                        onClick={() => setCurrentIndex(idx)}
-                        className={`h-2 w-2 rounded-full cursor-pointer ${
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setCurrentIndex(idx);
+                        }}
+                        className={`h-3 w-3 rounded-full cursor-pointer flex items-center justify-center ${
                           idx === currentIndex ? "bg-white" : "bg-gray-400"
                         }`}
-                      ></span>
+                      >
+                        {media.type === "video" && (
+                          <FaYoutube className="text-red-500 text-xs" />
+                        )}
+                      </button>
                     ))}
                   </div>
                 )}
@@ -388,8 +421,7 @@ const Service = ({ onSwitchToLogin }) => {
               </div>
             )}
           </div>
-
-          <div className="flex flex-row items-center justify-center gap-4 sm:flex-row sm:gap-4">
+          <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-4">
             {isVendorAvailable ? (
               <>
                 <button
@@ -453,7 +485,6 @@ const Service = ({ onSwitchToLogin }) => {
           </div>
         </div>
       </div>
-
       <div className="view-dj-section">
         <h2 className="people-also-book">People Also Booked</h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-6 mt-5 mb-5">

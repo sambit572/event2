@@ -22,6 +22,7 @@ const OTPVerification = ({
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   // If parent didn't pass inputRefs, create a fallback ref
   const localRefs = useRef([]);
@@ -50,7 +51,7 @@ const OTPVerification = ({
     try {
       if (!window.confirmationResult) {
         setIsLoading(false);
-        alert("OTP session expired. Please try signing in again.");
+        setErrorMessage("OTP session expired. Please try signing in again.");
         return;
       }
       const result = await window.confirmationResult.confirm(otpCode);
@@ -120,7 +121,9 @@ const OTPVerification = ({
       setStep("success");
     } catch (err) {
       console.error("OTP verification failed", err);
-      alert("Invalid OTP. Please try again.");
+      setErrorMessage(
+        err.response?.data?.message || "OTP verification failed. Please try again."
+      );
     }
     setIsLoading(false);
   };
@@ -202,6 +205,7 @@ const OTPVerification = ({
             Help Us
           </span>
         </p>
+        {errorMessage && <p className="text-red-600 text-center">{errorMessage}</p>}
       </div>
     </div>
   );

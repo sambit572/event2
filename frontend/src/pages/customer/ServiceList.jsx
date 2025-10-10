@@ -10,11 +10,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { FaArrowLeft, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import djBanner from "../../assets/home/categoriesImages/dj_image.png";
-import musicBanner from "../../assets/home/categoriesImages/bass-brand.webp";
-import decorBanner from "../../assets/home/categoriesImages/tent_house.jpg";
+import musicBanner from "../../assets/home/categoriesImages/bass-brand.png";
+import decorBanner from "../../assets/home/categoriesImages/tent_house.png";
 import photoBanner from "../../assets/home/categoriesImages/photographer.png";
-import foodBanner from "../../assets/aboutUs/CATERING.png";
-import banquetBanner from "../../assets/home/categoriesImages/banquithall.jpeg";
+import foodBanner from "../../assets/aboutUs/catering_service.jpg";
+import banquetBanner from "../../assets/home/categoriesImages/banquithall.png";
 import danceBanner from "../../assets/home/categoriesImages/classical_music_and_dance.jpg";
 import islamicBanner from "../../assets/home/categoriesImages/moulbi.png";
 import christianBanner from "../../assets/home/categoriesImages/father.png";
@@ -25,7 +25,6 @@ import carBanner from "../../assets/home/categoriesImages/ceremonial_ride.png";
 import fireworksBanner from "../../assets/home/categoriesImages/fireworks.png";
 import cardBanner from "../../assets/home/categoriesImages/marriage-card.png";
 import magicBanner from "../../assets/home/categoriesImages/magician.png";
-import stageBanner from "../../assets/home/categoriesImages/stage_decor.png";
 import eventBanner from "../../assets/home/categoriesImages/event_company.png";
 
 const ServiceCardSkeleton = () => (
@@ -72,10 +71,9 @@ const ServiceList = ({ onSwitchToLogin }) => {
     "Beauty Makeover": makeupBanner,
     "Floral Decor": floralBanner,
     "Ceremonial Ride": carBanner,
-    Fireworks: fireworksBanner,
+    "Fireworks": fireworksBanner,
     "Card Design & Printing": cardBanner,
     "Magic Shows": magicBanner,
-    "Stage Decor": stageBanner,
     "Event Company": eventBanner,
   };
 
@@ -444,7 +442,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
             <img
               src={bannerMap[categoryData.title] || djBanner}
               alt={categoryData.title}
-               loading="lazy"
+              loading="lazy"
             />
 
             <FaArrowLeft
@@ -467,7 +465,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
         </>
       )}
 
-      {currentCategory && subcategoryMap[currentCategory] && (
+      {/* {currentCategory && subcategoryMap[currentCategory] && (
         <div className="subcategory-wrapper">
           <button
             className="scroll-btn prev"
@@ -497,23 +495,31 @@ const ServiceList = ({ onSwitchToLogin }) => {
             <FaChevronRight />
           </button>
         </div>
-      )}
- <div className="serviceList">
+      )} */}
+      <div className="serviceList">
         <Filter onApply={handleApplyFilters} onCancel={handleCancelFilters} />
 
         <div className={`serviceCardDetails ${showSticky ? "scrollable" : ""}`}>
           {loading ? (
             // Show skeletons while loading
-            Array.from({ length: 6 }).map((_, idx) => <ServiceCardSkeleton key={idx} />)
+            Array.from({ length: 6 }).map((_, idx) => (
+              <ServiceCardSkeleton key={idx} />
+            ))
           ) : filteredServices?.length > 0 ? (
             filteredServices.map((service) => (
-              <div className="singleServiceCard hover:shadow-lg" key={service._id}>
+              <div
+                className="singleServiceCard hover:shadow-lg"
+                key={service._id}
+              >
                 <Link
                   to={`/service/${categoryId}/${service._id}`}
                   style={{ textDecoration: "none", color: "inherit" }}
                 ></Link>
                 <Suspense fallback={<ServiceCardSkeleton />}>
-                  <ServiceCard service={service} onSwitchToLogin={onSwitchToLogin} />
+                  <ServiceCard
+                    service={service}
+                    onSwitchToLogin={onSwitchToLogin}
+                  />
                 </Suspense>
               </div>
             ))

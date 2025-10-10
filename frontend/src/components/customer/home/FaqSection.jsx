@@ -26,12 +26,12 @@ const faqData = [
   {
     question: "Can I contact the vendor before the event?",
     answer:
-      "Yes, after booking, you can directly communicate with vendors through the platform’s chat or call features to clarify requirements, discuss event details, and coordinate effectively.",
+      "Yes, after booking, you can communicate with vendors through the platform’s call features to clarify requirements, discuss event details, and coordinate effectively via us.",
   },
   {
     question: "What if I need to cancel or reschedule?",
     answer:
-      "You can cancel or reschedule your booking up to 7days before the event. For cancellations or changes, please contact customer support or manage your bookings via the platform dashboard.",
+      "You can cancel or reschedule your booking up to 7days before the event. For cancellations or changes, please contact customer support or manage your bookings via the platform dashboard and review our Refund policy for any applicable fees.",
   },
   {
     question: "How do I know if a vendor is available on my event date?",
