@@ -340,25 +340,25 @@ const Login = ({ onClose, onSwitchToRegister }) => {
       >
         {/* Left Side - Image + Welcome Message */}
         <div className="hidden md:flex md:w-1/2 relative items-center justify-center bg-gradient-to-b from-purple-800 via-indigo-900 to-black p-3 overflow-hidden">
-          {/* Circular White Background */}
-          {/* <div className="absolute w-72 h-72 bg-white rounded-full mt-8 blur-md opacity-90 top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-2xl"></div> */}
+          {/* Container to center image and text together */}
+          <div className="flex flex-col items-center justify-center text-center space-y-1 z-10">
+            {/* Image */}
+            <img
+              src="../new-illustrator.png"
+              alt="Welcome"
+              className="h-[60%] w-auto object-contain opacity-95 drop-shadow-2xl hover:scale-105 transition-transform duration-500"
+            />
 
-          {/* Image in front of circle */}
-          <img
-            src="../new-illustrator.png"
-            alt="Welcome"
-            className="relative h-[60%] w-auto object-contain mt-[-90px] opacity-95 drop-shadow-2xl hover:scale-105 transition-transform duration-500 z-10"
-          />
-
-          {/* Welcome Text Block */}
-          <div className="absolute bottom-16 left-4 right-4 bg-white/10 backdrop-blur-lg p-3 rounded-xl shadow-lg border border-white/20 text-center z-10">
-            <h2 className="text-yellow-300 text-xl font-bold mb-1 drop-shadow-md">
-              Welcome Back!
-            </h2>
-            <p className="text-indigo-100 text-[10px] leading-relaxed">
-              Sign in to your account and continue exploring endless
-              opportunities with us.
-            </p>
+            {/* Welcome Text Block */}
+            <div className="bg-white/10 backdrop-blur-lg p-3 rounded-xl shadow-lg border border-white/20 max-w-xs">
+              <h2 className="text-yellow-300 text-xl font-bold mb-1 drop-shadow-md">
+                Welcome Back!
+              </h2>
+              <p className="text-indigo-100 text-[10px] leading-relaxed">
+                Sign in to your account and continue exploring endless
+                opportunities with us.
+              </p>
+            </div>
           </div>
         </div>
 
