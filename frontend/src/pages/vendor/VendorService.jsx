@@ -7,6 +7,7 @@ import axios from "axios";
 import Spinner from "./../../components/common/Spinner";
 import ReactCrop, { centerCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
+import { toast } from "react-toastify";
 
 const getCroppedImg = (image, crop) => {
   const canvas = document.createElement("canvas");
@@ -63,6 +64,7 @@ function VendorService({ currentStep }) {
     useState(false);
   const [stateLocationSearchTerm, setStateLocationSearchTerm] = useState("");
   const fileInputRef = useRef(null);
+  const [imageError, setImageError] = useState("");
 
   // State variables for the image cropper
   const [cropQueue, setCropQueue] = useState([]);
@@ -173,61 +175,85 @@ function VendorService({ currentStep }) {
     }
   }, [cropQueue]);
   // Enhanced image upload with validation
-  const handleImageUpload = (e) => {
-    try {
-      if (showCropperModal) return;
-      const newFiles = Array.from(e.target.files);
-      const valid = [
-        "image/jpeg",
-        "image/jpg",
-        "image/png",
-        "image/gif",
-        "video/mp4",
-        "video/avi",
-        "video/mov",
-        "video/wmv",
-        "video/flv",
-        "video/webm",
-      ];
-      const max = 50 * 1024 * 1024;
-      const validatedFiles = [];
-      for (let f of newFiles) {
-        if (!valid.includes(f.type)) {
-          alert("Invalid file type. Only images and videos are allowed.");
-          continue;
-        }
-        if (f.size > max) {
-          alert(`File ${f.name} is too large (> 50 MB).`);
-          continue;
-        }
-        validatedFiles.push(f);
-      }
+const handleImageUpload = (e) => {
+  try {
+    if (showCropperModal) return;
 
-      const imageFiles = validatedFiles.filter((file) =>
-        file.type.startsWith("image/")
-      );
-      const videoFiles = validatedFiles.filter((file) =>
-        file.type.startsWith("video/")
-      );
+    const newFiles = Array.from(e.target.files);
+    const totalFiles = selectedFiles.length + newFiles.length;
 
-      if (videoFiles.length > 0) {
-        const videoUrls = videoFiles.map((f) => URL.createObjectURL(f));
-        setPreviewImages((prev) => [...prev, ...videoUrls]);
-        setSelectedFiles((prev) => [...prev, ...videoFiles]);
-        if (selectedImageIndex === -1) setSelectedImageIndex(0);
-      }
-
-      if (imageFiles.length > 0) {
-        setCropQueue((prev) => [...prev, ...imageFiles]);
-      } else {
-        if (fileInputRef.current) {
-          fileInputRef.current.value = "";
-        }
-      }
-    } catch (err) {
-      console.error("Image selection error:", err);
+    // ✅ Limit total uploads to 10
+    if (totalFiles > 10 || newFiles.length > 10) {
+      toast.error("You cannot upload more than 10 files.");
+      setImageError("You cannot upload more than 10 files.");
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
     }
-  };
+
+    setImageError("");
+
+    const validTypes = [
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+      "image/gif",
+      "video/mp4",
+      "video/avi",
+      "video/mov",
+      "video/wmv",
+      "video/flv",
+      "video/webm",
+    ];
+
+    const validatedFiles = [];
+
+    for (let f of newFiles) {
+      // ✅ Validate type
+      if (!validTypes.includes(f.type)) {
+        toast.error(` ${f.name} is not a supported file type.`);
+        continue;
+      }
+
+      // ✅ 5 MB limit for images
+      if (f.type.startsWith("image/") && f.size > 5 * 1024 * 1024) {
+        toast.error(` ${f.name} is too large. Max 5 MB allowed.`);
+        continue;
+      }
+
+      // ✅ Optional: 50 MB limit for videos
+      if (f.type.startsWith("video/") && f.size > 50 * 1024 * 1024) {
+        toast.error(` ${f.name} is too large. Max 50 MB allowed.`);
+        continue;
+      }
+
+      validatedFiles.push(f);
+    }
+
+    const imageFiles = validatedFiles.filter((file) =>
+      file.type.startsWith("image/")
+    );
+    const videoFiles = validatedFiles.filter((file) =>
+      file.type.startsWith("video/")
+    );
+
+    if (videoFiles.length > 0) {
+      const videoUrls = videoFiles.map((f) => URL.createObjectURL(f));
+      setPreviewImages((prev) => [...prev, ...videoUrls]);
+      setSelectedFiles((prev) => [...prev, ...videoFiles]);
+      if (selectedImageIndex === -1) setSelectedImageIndex(0);
+    }
+
+    if (imageFiles.length > 0) {
+      setCropQueue((prev) => [...prev, ...imageFiles]);
+    } else {
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  } catch (err) {
+    console.error("Image selection error:", err);
+  }
+};
   const handleCropImage = async () => {
     if (!completedCrop || !imgRef.current || completedCrop.width === 0) {
       alert("Please select an area to crop.");
@@ -280,6 +306,7 @@ function VendorService({ currentStep }) {
 
   const handleNext = async () => {
     setIsLoading(true);
+    setErrorMessage("");
     console.log("next button clicked");
 
     if (!validateForm()) {
@@ -329,7 +356,14 @@ function VendorService({ currentStep }) {
       navigate("/vendor/payment-info");
     } catch (error) {
       console.error("Error submitting service:", error);
-      alert("Failed to submit service. Please try again.");
+
+      // Get backend message if available
+      const backendMsg =
+        error.response?.data?.message || // common backend format
+        error.response?.data?.error || // another common field
+        "Failed to submit service. Please try again.";
+
+      setErrorMessage(backendMsg);
     }
     setIsLoading(false);
   };
@@ -734,39 +768,7 @@ function VendorService({ currentStep }) {
               >
                 <span className="icon-left">🔍</span>
 
-                {/* Selected State inline */}
-                {selectedState && (
-                  <span
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      background: "#f7f3ff",
-                      color: "#4b2bb3",
-                      border: "1px solid #4b2bb3",
-                      borderRadius: "6px",
-                      padding: "2px 6px",
-                      fontSize: "14px",
-                    }}
-                  >
-                    {selectedState}
-                    <button
-                      type="button"
-                      onClick={() => setSelectedState("")}
-                      style={{
-                        marginLeft: "4px",
-                        color: "#4b2bb3",
-                        cursor: "pointer",
-                        border: "none",
-                        background: "transparent",
-                        fontSize: "14px",
-                      }}
-                    >
-                      ✕
-                    </button>
-                  </span>
-                )}
-
-                {/* Input field */}
+                {/* Search input */}
                 <input
                   id="state-location-input"
                   type="text"
@@ -782,6 +784,7 @@ function VendorService({ currentStep }) {
                     background: "transparent",
                   }}
                 />
+
                 {stateLocationSearchTerm && (
                   <img
                     src="/public/close.png"
@@ -791,7 +794,19 @@ function VendorService({ currentStep }) {
                   />
                 )}
               </div>
-
+              {/* Selected State */}
+              {selectedState && (
+                <span className="selected-chip">
+                  {selectedState}
+                  <button
+                    type="button"
+                    className="ml-2 mr-2"
+                    onClick={() => setSelectedState("")}
+                  >
+                    ✕
+                  </button>
+                </span>
+              )}
               {/* Dropdown */}
               {showStateLocationDropdown && (
                 <ul className="state-location-dropdown-list">
@@ -933,6 +948,23 @@ function VendorService({ currentStep }) {
             />
           </div>
         </div>
+
+        {imageError && (
+          <div
+            style={{
+              background: "#ffe6e6",
+              color: "#d9534f",
+              padding: "10px 15px",
+              borderRadius: "6px",
+              marginTop: "20px",
+              textAlign: "center",
+              fontWeight: "500",
+            }}
+          >
+            {imageError}
+          </div>
+        )}
+
         <div
           style={{
             display: "flex",

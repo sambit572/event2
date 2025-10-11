@@ -69,6 +69,10 @@ import ComingSoon from "./utils/ComingSoon.jsx";
 import MyReports from "./pages/common/myreports/MyReports.jsx";
 import SearchPage from "./pages/search/SearchPage.jsx";
 import VendorForgotPass from "./pages/vendor/VendorForgetPass.jsx";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "./App.css";
+
 const App = () => {
   const location = useLocation();
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -278,7 +282,10 @@ const App = () => {
               </DashboardEnforcement>
             }
           />
-          <Route path="/vendor/forgot-password" element={<VendorForgotPass />} />
+          <Route
+            path="/vendor/forgot-password"
+            element={<VendorForgotPass />}
+          />
           <Route
             path="/reset-password/:resetToken"
             element={<ResetPassword />}
@@ -319,6 +326,12 @@ const App = () => {
         </Routes>
       </main>
       <BackToTop />
+        <ToastContainer
+        position="top-center" // still required
+        autoClose={3000}
+        toastClassName="custom-toast"
+        bodyClassName="custom-toast-body"
+      />
       <Chatbot />
       {showLoginModal && (
         <Login

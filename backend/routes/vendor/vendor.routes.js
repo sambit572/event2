@@ -89,6 +89,7 @@ vendor_router.post(
   },
   createService
 );
+
 vendor_router.route("/my-services").get(verifyVendorJwt, getMyServices);
 vendor_router.route("/update-service/:id").put(verifyVendorJwt, updateService);
 vendor_router

@@ -33,6 +33,7 @@
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.6.1",
     "react-slick": "^0.30.3",
+    "react-toastify": "^11.0.5",
     "slick-carousel": "^1.8.1",
     "socket.io-client": "^4.8.1",
     "string-convert": "^0.2.1"
