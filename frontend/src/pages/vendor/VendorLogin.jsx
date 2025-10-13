@@ -234,7 +234,7 @@ const VendorLogin = ({ onClose, onSwitchToLogin }) => {
 
   const modalContent = (
     <div className="login-wrapper" onClick={onClose}>
-      <div className="login-modal" onClick={(e) => e.stopPropagation()}>
+      <div className="login-modal max-w-[420px] border border-blue-500 bg-white px-[30px] py-[20px]" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose}>
           <RxCross2 />
         </button>

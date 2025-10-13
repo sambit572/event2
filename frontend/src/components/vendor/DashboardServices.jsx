@@ -3,7 +3,7 @@ import { FaTrash, FaEdit, FaPlus, FaYoutube } from "react-icons/fa";
 import axios from "axios";
 import { BACKEND_URL } from "../../utils/constant.js";
 import { MdReportGmailerrorred } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./DashboardServices.css";
 import ReactCrop, { centerCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
@@ -404,7 +404,7 @@ const handleMediaUpload = (e) => {
           return (
             <section
               key={index}
-              className="relative flex flex-col xl:flex-row gap-6 shadow-lg w-[90%] mx-auto mb-6 p-4 bg-white rounded-md border-l-4 border-[#00897b]"
+              className="relative flex flex-col xl:flex-row gap-6 shadow-lg w-[90%] mx-auto mb-6 p-4 bg-white rounded-md border-l-4 border-[#00897b] cursor-pointer hover:shadow-xl transition"
             >
               {/* Availability toggle */}
               <div className="absolute top-3 right-3 flex items-center gap-2">
@@ -838,15 +838,30 @@ const handleMediaUpload = (e) => {
                 /* View Mode */
                 <div className="right-section xl:w-[600px] items-start xl:ml-3">
                   <div className="details">
-                    <h2 className="details-h2 mt-6">{service.serviceName}</h2>
+                    <Link
+                      to={`/service/${service.serviceCategory}/${service._id}`}
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      <h2 className="details-h2 mt-6">{service.serviceName}</h2>
+                    </Link>
                     <div className="l">
                       <strong>Locations: </strong>
                       {Array.isArray(service.locationOffered) ? (
                         <>
-                          {expandedLocations[index]
-                            ? service.locationOffered.join(", ")
-                            : service.locationOffered.slice(0, 3).join(", ") +
-                              (service.locationOffered.length > 3 ? "..." : "")}
+                          <Link
+                            to={`/service/${service.serviceCategory}/${service._id}`}
+                            style={{
+                              textDecoration: "none",
+                              color: "inherit",
+                            }}
+                          >
+                            {expandedLocations[index]
+                              ? service.locationOffered.join(", ")
+                              : service.locationOffered.slice(0, 3).join(", ") +
+                                (service.locationOffered.length > 3
+                                  ? "..."
+                                  : "")}
+                          </Link>
                           {service.locationOffered.length > 3 && (
                             <button
                               onClick={() => toggleExpandLocation(index)}
@@ -863,28 +878,37 @@ const handleMediaUpload = (e) => {
                       )}
                     </div>
 
-                    <div className="pr">
-                      <strong>Price: </strong>₹ {service.minPrice} - ₹{" "}
-                      {service.maxPrice}
-                    </div>
-                    <div className="c">
-                      <strong>Category: </strong> {service.serviceCategory}
-                    </div>
-                    <div className="d">
-                      <strong>Duration: </strong>{" "}
-                      {formatDuration(service.duration)}
-                    </div>
-
+                    <Link
+                      to={`/service/${service.serviceCategory}/${service._id}`}
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      <div className="pr">
+                        <strong>Price: </strong>₹ {service.minPrice} - ₹{" "}
+                        {service.maxPrice}
+                      </div>
+                      <div className="c">
+                        <strong>Category: </strong> {service.serviceCategory}
+                      </div>
+                      <div className="d">
+                        <strong>Duration: </strong>{" "}
+                        {formatDuration(service.duration)}
+                      </div>
+                    </Link>
                     {/* Description with Read More */}
                     <div className="mt-2">
                       <div className="des font-semibold text-gray-800">
                         Description:
                       </div>
                       <div className="text-gray-700">
-                        {expanded
-                          ? service.serviceDes
-                          : service.serviceDes.slice(0, 80) +
-                            (service.serviceDes.length > 80 ? "..." : "")}
+                        <Link
+                          to={`/service/${service.serviceCategory}/${service._id}`}
+                          style={{ textDecoration: "none", color: "inherit" }}
+                        >
+                          {expanded
+                            ? service.serviceDes
+                            : service.serviceDes.slice(0, 80) +
+                              (service.serviceDes.length > 80 ? "..." : "")}
+                        </Link>
                         {service.serviceDes.length > 80 && (
                           <button
                             onClick={toggleExpand}
@@ -897,7 +921,12 @@ const handleMediaUpload = (e) => {
                     </div>
 
                     <div className="u flex justify-between">
-                      <strong>User Reviews: </strong> {service.userReviews}
+                      <Link
+                        to={`/service/${service.serviceCategory}/${service._id}`}
+                        style={{ textDecoration: "none", color: "inherit" }}
+                      >
+                        <strong>User Reviews </strong> {service.userReviews}
+                      </Link>
                     </div>
                   </div>
                 </div>

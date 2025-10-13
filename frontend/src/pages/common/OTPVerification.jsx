@@ -42,6 +42,13 @@ const OTPVerification = ({
     }
   };
 
+  const handleKeyDown = (e, index) => {
+  if (e.key === "Backspace" && otp[index] === "" && index > 0) {
+    // Focus the previous input box
+    safeRefs.current[index - 1].focus();
+  }
+};
+
   const handleVerify = async () => {
     const otpCode = otp.join("");
     if (otpCode.length !== 6) return;
@@ -170,6 +177,7 @@ const OTPVerification = ({
               maxLength="1"
               value={data}
               onChange={(e) => handleChange(e.target, index)}
+              onKeyDown={(e) => handleKeyDown(e, index)}
               className="otp-input"
             />
           ))}

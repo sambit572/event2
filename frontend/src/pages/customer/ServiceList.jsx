@@ -9,19 +9,19 @@ import { setCategoryServices } from "../../redux/categorySlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { FaArrowLeft, FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import djBanner from "../../assets/home/categoriesImages/dj_image.png";
-import musicBanner from "../../assets/home/categoriesImages/bass-brand.png";
-import decorBanner from "../../assets/home/categoriesImages/tent_house.png";
-import photoBanner from "../../assets/home/categoriesImages/photographer.png";
-import foodBanner from "../../assets/aboutUs/catering_service.jpg";
-import banquetBanner from "../../assets/home/categoriesImages/banquithall.png";
-import danceBanner from "../../assets/home/categoriesImages/classical_music_and_dance.jpg";
-import islamicBanner from "../../assets/home/categoriesImages/moulbi.png";
-import christianBanner from "../../assets/home/categoriesImages/father.png";
+import djBanner from "../../assets/serviceListBanner/dj (1).png";
+import musicBanner from "../../assets/serviceListBanner/music-ban.jpg";
+import decorBanner from "../../assets/serviceListBanner/tent-ban.jpeg";
+import photoBanner from "../../assets/serviceListBanner/photo-ban.png";
+import foodBanner from "../../assets/serviceListBanner/catering-banner.jpeg";
+import banquetBanner from "../../assets/serviceListBanner/banquet-banner.jpeg";
+import danceBanner from "../../assets/serviceListBanner/classical-ban.png";
+import islamicBanner from "../../assets/serviceListBanner/moulib-ban.png";
+import christianBanner from "../../assets/serviceListBanner/christian-ban.png";
 import panditBanner from "../../assets/home/categoriesImages/pandit.png";
-import makeupBanner from "../../assets/home/categoriesImages/bride-mehendi-&-makeup.png";
-import floralBanner from "../../assets/home/categoriesImages/flower-decor.png";
-import carBanner from "../../assets/home/categoriesImages/ceremonial_ride.png";
+import makeupBanner from "../../assets/serviceListBanner/beauty-ban.png";
+import floralBanner from "../../assets/serviceListBanner/flower-ban.jpeg";
+import carBanner from "../../assets/serviceListBanner/car-ban.png";
 import fireworksBanner from "../../assets/home/categoriesImages/fireworks.png";
 import cardBanner from "../../assets/home/categoriesImages/marriage-card.png";
 import magicBanner from "../../assets/home/categoriesImages/magician.png";
@@ -440,7 +440,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
           {/* Banner Header */}
           <div className="categoryHero">
             <img
-              src={bannerMap[categoryData.title] || djBanner}
+              src={bannerMap[categoryData.title] || carBanner}
               alt={categoryData.title}
               loading="lazy"
             />

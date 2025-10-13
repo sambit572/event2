@@ -174,7 +174,7 @@ function VendorService({ currentStep }) {
       }
     }
   }, [cropQueue]);
-  
+
   const handleImageUpload = (e) => {
     try {
       if (showCropperModal) return;
@@ -367,6 +367,7 @@ function VendorService({ currentStep }) {
 
   const handleNext = async () => {
     setIsLoading(true);
+    setErrorMessage("");
     console.log("next button clicked");
 
     if (!validateForm()) {
@@ -416,7 +417,14 @@ function VendorService({ currentStep }) {
       navigate("/vendor/payment-info");
     } catch (error) {
       console.error("Error submitting service:", error);
-      alert("Failed to submit service. Please try again.");
+
+      // Get backend message if available
+      const backendMsg =
+        error.response?.data?.message || // common backend format
+        error.response?.data?.error || // another common field
+        "Failed to submit service. Please try again.";
+
+      setErrorMessage(backendMsg);
     }
     setIsLoading(false);
   };
@@ -830,39 +838,7 @@ function VendorService({ currentStep }) {
               >
                 <span className="icon-left">🔍</span>
 
-                {/* Selected State inline */}
-                {selectedState && (
-                  <span
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      background: "#f7f3ff",
-                      color: "#4b2bb3",
-                      border: "1px solid #4b2bb3",
-                      borderRadius: "6px",
-                      padding: "2px 6px",
-                      fontSize: "14px",
-                    }}
-                  >
-                    {selectedState}
-                    <button
-                      type="button"
-                      onClick={() => setSelectedState("")}
-                      style={{
-                        marginLeft: "4px",
-                        color: "#4b2bb3",
-                        cursor: "pointer",
-                        border: "none",
-                        background: "transparent",
-                        fontSize: "14px",
-                      }}
-                    >
-                      ✕
-                    </button>
-                  </span>
-                )}
-
-                {/* Input field */}
+                {/* Search input */}
                 <input
                   id="state-location-input"
                   type="text"
@@ -878,6 +854,7 @@ function VendorService({ currentStep }) {
                     background: "transparent",
                   }}
                 />
+
                 {stateLocationSearchTerm && (
                   <img
                     src="/public/close.png"
@@ -887,8 +864,7 @@ function VendorService({ currentStep }) {
                   />
                 )}
               </div>
-
-              {/* Dropdown */}
+              {/* Selected State */}
               {selectedState && (
                 <span className="selected-chip">
                   {selectedState}
@@ -901,6 +877,7 @@ function VendorService({ currentStep }) {
                   </button>
                 </span>
               )}
+
               {showStateLocationDropdown && (
                 <ul className="state-location-dropdown-list">
                   {filteredStates.map((state, index) => (
@@ -1118,6 +1095,23 @@ function VendorService({ currentStep }) {
             />
           </div>
         </div>
+
+        {imageError && (
+          <div
+            style={{
+              background: "#ffe6e6",
+              color: "#d9534f",
+              padding: "10px 15px",
+              borderRadius: "6px",
+              marginTop: "20px",
+              textAlign: "center",
+              fontWeight: "500",
+            }}
+          >
+            {imageError}
+          </div>
+        )}
+
         <div
           style={{
             display: "flex",
