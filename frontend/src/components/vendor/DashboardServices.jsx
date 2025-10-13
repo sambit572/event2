@@ -1,84 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { FaTrash, FaEdit, FaPlus, FaYoutube } from "react-icons/fa";
+import { FaTrash, FaEdit, FaPlus } from "react-icons/fa";
 import axios from "axios";
 import { BACKEND_URL } from "../../utils/constant.js";
 import { MdReportGmailerrorred } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import "./DashboardServices.css";
-import ReactCrop, { centerCrop } from "react-image-crop";
-import "react-image-crop/dist/ReactCrop.css";
-import { useRef } from "react";
-
-const getYouTubeID = (url) => {
-  console.log("Extracting YouTube ID from URL:", url);
-  if (typeof url !== "string") return null;
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-  const match = url.match(regExp);
-  console.log("YouTube ID match result:", match);
-  return match && match[2].length === 11 ? match[2] : null;
-};
-
 const DashboardServices = () => {
   const navigate = useNavigate();
   const [services, setServices] = useState([]);
   const [editingIndex, setEditingIndex] = useState(null);
-  // ✅ MODIFIED: Renamed to handle both image and video URLs
+  const [selectedImages, setSelectedImages] = useState({});
   const [editedData, setEditedData] = useState({});
-
-  // ✅ MODIFIED: States to manage new files before they are uploaded
   const [newImages, setNewImages] = useState([]);
-
-  const [selectedMedia, setSelectedMedia] = useState({});
-  const [newVideos, setNewVideos] = useState([]); // State for video files
-  const [newMediaPreviews, setNewMediaPreviews] = useState([]); // Unified state for all previews
-
+  const [newImagePreviews, setNewImagePreviews] = useState([]);
   const [expanded, setExpanded] = useState(false);
   const [expandedLocations, setExpandedLocations] = useState({});
-
-  const [isSaving, setIsSaving] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [fileSizeError, setFileSizeError] = useState("");
-
-  const [crop, setCrop] = useState({
-    unit: "%",
-    width: 80,
-    height: 45, // 👈 Add height too (16:9 = 80x45)
-    aspect: 16 / 9,
-  });
-  const [cropSrc, setCropSrc] = useState(null);
-  const imgRef = useRef(null);
-
-  // ✅ Fixed getCroppedImg (now takes image + crop explicitly)
-  const getCroppedImg = async (image, crop) => {
-    if (!image || !crop?.width || !crop?.height) {
-      throw new Error("Image or crop data is not available yet.");
-    }
-
-    const canvas = document.createElement("canvas");
-    const scaleX = image.naturalWidth / image.width;
-    const scaleY = image.naturalHeight / image.height;
-    canvas.width = crop.width * scaleX;
-    canvas.height = crop.height * scaleY;
-    const ctx = canvas.getContext("2d");
-
-    ctx.drawImage(
-      image,
-      crop.x * scaleX,
-      crop.y * scaleY,
-      crop.width * scaleX,
-      crop.height * scaleY,
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
-
-    return new Promise((resolve) => {
-      canvas.toBlob((blob) => {
-        resolve(blob);
-      }, "image/jpeg");
-    });
-  };
 
   const toggleExpandLocation = (index) => {
     setExpandedLocations((prev) => ({
@@ -128,10 +64,9 @@ const DashboardServices = () => {
           setServices(res.data.data);
           const initialImages = {};
           res.data.data.forEach((service, index) => {
-            const media = service.serviceImage;
-            initialImages[index] = media?.[0] || "";
+            initialImages[index] = service.serviceImage?.[0] || "";
           });
-          setSelectedMedia(initialImages);
+          setSelectedImages(initialImages);
         }
       } catch (err) {
         console.error("Failed to fetch vendor services", err);
@@ -144,118 +79,67 @@ const DashboardServices = () => {
     setEditingIndex(index);
     setEditedData(services[index]);
     setNewImages([]);
-    // Reset error states when entering edit mode
-    setErrorMessage("");
-    setFileSizeError("");
-    setIsSaving(false);
-  };
-
-  // Added cancel handler
-  const handleCancel = (index) => {
-    if (!isSaving) {
-      setEditingIndex(null);
-      setEditedData({});
-      setNewImages([]);
-      setNewMediaPreviews([]);
-      setErrorMessage("");
-      setFileSizeError("");
-    }
   };
 
   const handleSave = async (index) => {
-    setIsSaving(true);
-    setErrorMessage("");
-
     try {
       const serviceId = services[index]._id;
-      const existingMedia = editedData.serviceImage || [];
-      // ✅ NEW: Calculate total media including new videos
-      const totalMedia =
-        existingMedia.length + newImages.length + newVideos.length;
-
-      // ✅ NEW: Your validation logic, now for all media types
-      if (totalMedia > 10) {
-        setErrorMessage(
-          `You can upload a maximum of 10 media items. ` +
-            `You already have ${existingMedia.length} items. ` +
-            `Please remove ${totalMedia - 10} item(s) before saving.`
-        );
-        // Re-instating your alert for immediate feedback
+      const existingImages = editedData.serviceImage || [];
+      const totalImages = existingImages.length + newImages.length;
+      if (totalImages > 10) {
         alert(
-          `You can upload a maximum of 10 media items.\n` +
-            `You already have ${existingMedia.length} items.\n` +
-            `Please remove ${totalMedia - 10} item(s) before saving.`
+          `You can upload a maximum of 10 images.\nYou already have ${
+            existingImages.length
+          } images.\nPlease remove ${totalImages - 10} image(s) before saving.`
         );
-        setIsSaving(false);
         return;
       }
-
-      let newUploadedImageUrls = [];
-      let newUploadedVideoUrls = [];
-
-      // Step 1: Upload new videos to YouTube
-      if (newVideos.length > 0) {
-        const formData = new FormData();
-        newVideos.forEach((file) => formData.append("images", file));
-
-        const res = await axios.post(
-          `${BACKEND_URL}/vendors/upload-new-service-image/${serviceId}`,
-          formData,
-          { withCredentials: true }
-        );
-        // Assuming your backend returns all URLs in res.data.data
-        newUploadedVideoUrls = res.data.data;
-      }
-
-      // Step 2: Upload new images to Cloudinary
+      let uploadedUrls = [];
       if (newImages.length > 0) {
         const formData = new FormData();
-        newImages.forEach((file) => formData.append("images", file));
-
+        newImages.forEach((file) => {
+          formData.append("images", file);
+        });
         const res = await axios.post(
           `${BACKEND_URL}/vendors/upload-new-service-image/${serviceId}`,
           formData,
-          { withCredentials: true }
+          {
+            withCredentials: true,
+            headers: { "Content-Type": "multipart/form-data" },
+          }
         );
-        // Assuming your backend returns all URLs in res.data.data
-        newUploadedImageUrls = res.data.data;
+        if (Array.isArray(res.data?.data)) {
+          uploadedUrls = res.data.data;
+        } else if (typeof res.data?.data === "string") {
+          uploadedUrls.push(res.data.data);
+        }
       }
-
-      // Combine all URLs
-      const allMedia = [
-        ...existingMedia,
-        ...newUploadedImageUrls,
-        ...newUploadedVideoUrls,
-      ];
-
+      const allImages = [...existingImages, ...uploadedUrls];
       const payload = {
-        ...editedData,
-        serviceImage: allMedia, // Using your `serviceImage` field
+        serviceName: editedData.serviceName,
+        serviceDes: editedData.serviceDes,
+        serviceCategory: editedData.serviceCategory,
+        minPrice: Number(editedData.minPrice),
+        maxPrice: Number(editedData.maxPrice),
+        locationOffered: Array.isArray(editedData.locationOffered)
+          ? editedData.locationOffered
+          : [editedData.locationOffered],
+        duration: Number(editedData.duration),
+        serviceImage: allImages,
       };
-
       const updateRes = await axios.put(
         `${BACKEND_URL}/vendors/update-service/${serviceId}`,
         payload,
         { withCredentials: true }
       );
-
       const updatedService = updateRes.data.data;
       const updatedList = [...services];
       updatedList[index] = updatedService;
-
       setServices(updatedList);
       setEditingIndex(null);
-      setNewImages([]);
-      setNewVideos([]);
-      setNewMediaPreviews([]);
-      setErrorMessage("");
     } catch (error) {
       console.error("❌ Failed to update service:", error);
-      setErrorMessage(
-        error.response?.data?.message || "Failed to update service."
-      );
-    } finally {
-      setIsSaving(false);
+      alert(error.response?.data?.message || "Update failed");
     }
   };
 
@@ -290,75 +174,30 @@ const DashboardServices = () => {
     }));
   };
 
-  const handleMediaSelect = (index, mediaUrl) => {
-    setSelectedMedia((prev) => ({
+  const handleImageSelect = (index, imgUrl) => {
+    setSelectedImages((prev) => ({
       ...prev,
-      [index]: mediaUrl,
+      [index]: imgUrl,
     }));
   };
 
-const handleMediaUpload = (e) => {
-  const files = Array.from(e.target.files);
-  if (files.length === 0) return;
-
-  const MAX_IMAGE_SIZE_BYTES = 9 * 1024 * 1024; // 9MB
-
-  // Step 1: Separate files and validate them first
-  let imageFiles = [];
-  let videoFiles = [];
-
-  for (const file of files) {
-    if (file.type.startsWith("image/")) {
-      if (file.size > MAX_IMAGE_SIZE_BYTES) {
-        alert(`Image "${file.name}" is too large. The limit is 9MB.`);
-        continue; 
-      }
-      imageFiles.push(file);
-    } else if (file.type.startsWith("video/")) {
-      videoFiles.push(file);
+  const handleImageUpload = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+    const totalSelected =
+      editedData.serviceImage.length + newImages.length + files.length;
+    if (totalSelected > 10) {
+      alert(
+        `You can only upload up to 10 images in total. Remove ${
+          totalSelected - 10
+        } image(s).`
+      );
+      return;
     }
-  }
-
-  // Step 2: Check if adding the new media exceeds the total limit
-  const currentMediaCount =
-    (editedData.serviceImage || []).length +
-    newImages.length +
-    newVideos.length;
-  if (currentMediaCount + imageFiles.length + videoFiles.length > 10) {
-    alert(`You can only upload up to 10 media items in total.`);
-    return;
-  }
-
-  // Step 3: Trigger cropper ONLY for the first image
-  if (imageFiles.length > 0) {
-    // Take the first image out of the array. It will be handled by the cropper.
-    const imageToCrop = imageFiles.shift();
-
-    const reader = new FileReader();
-    reader.onload = () => setCropSrc(reader.result);
-    reader.readAsDataURL(imageToCrop);
-  }
-
-  // Step 4: Add all videos and any remaining (uncropped) images to the preview
-  const newImagePreviews = imageFiles.map((file) => ({
-    type: "image",
-    url: URL.createObjectURL(file),
-    file,
-  }));
-  const newVideoPreviews = videoFiles.map((file) => ({
-    type: "video",
-    url: URL.createObjectURL(file),
-    file,
-  }));
-
-  setNewImages((prev) => [...prev, ...imageFiles]);
-  setNewVideos((prev) => [...prev, ...videoFiles]);
-  setNewMediaPreviews((prev) => [
-    ...prev,
-    ...newImagePreviews,
-    ...newVideoPreviews,
-  ]);
-};
+    const newPreviews = files.map((file) => URL.createObjectURL(file));
+    setNewImages((prev) => [...prev, ...files]);
+    setNewImagePreviews((prev) => [...prev, ...newPreviews]);
+  };
 
   const handleToggleAvailability = async (index) => {
     const updatedList = [...services];
@@ -388,18 +227,17 @@ const handleMediaUpload = (e) => {
 
   useEffect(() => {
     return () => {
-      newMediaPreviews.forEach((preview) => URL.revokeObjectURL(preview.url));
+      newImagePreviews.forEach((url) => URL.revokeObjectURL(url));
     };
-  }, [newMediaPreviews]);
+  }, [newImagePreviews]);
 
   return (
     <div className="flex flex-col overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden h-[480px]">
       {services.length > 0 ? (
         services.map((service, index) => {
           const isEditing = editingIndex === index;
-          const currentServiceImages = service.serviceImage || [];
-          const selectedMediaUrl =
-            selectedMedia[index] || currentServiceImages[0];
+          const selectedImage =
+            selectedImages[index] || service.serviceImage?.[0];
 
           return (
             <section
@@ -432,42 +270,43 @@ const handleMediaUpload = (e) => {
                 </span>
               </div>
               {/* Image Slider Section */}
-              <div className="relative w-full sm:w-[400px] sm:h-[200px] mt-5 mx-auto group">
-                {getYouTubeID(selectedMediaUrl) ? (
-                  <iframe
-                    className="w-full h-full object-cover rounded-md"
-                    src={`https://www.youtube.com/embed/${getYouTubeID(
-                      selectedMediaUrl
-                    )}?autoplay=1&mute=1&loop=1&playlist=${getYouTubeID(
-                      selectedMediaUrl
-                    )}&rel=0`}
-                    title="Service Video"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
-                ) : (
-                  <img
-                    src={selectedMediaUrl}
-                    alt="Service"
-                    className="w-full h-full object-cover rounded-md"
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src =
-                        "https://placehold.co/400x200/cccccc/ffffff?text=Image+Not+Found";
-                    }}
-                  />
-                )}
+              <div className="relative w-full sm:w-[400px] lg:h-[190px] sm:h-[200px] mt-5 mx-auto group">
+                {/* Big Image */}
+                <div className="relative w-full h-full">
+                  <Link
+                    to={`/service/${service.serviceCategory}/${service._id}`}
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    <img
+                      src={selectedImages[index] || service.serviceImage?.[0]}
+                      alt="Service"
+                      className={`w-full h-full object-cover rounded-md transition-all duration-300 ${
+                        !service.available ? "grayscale brightness-75" : ""
+                      }`}
+                    />
+                  </Link>
 
-                {currentServiceImages.length > 1 && (
+                  {/* Overlay when unavailable */}
+                  {!service.available && (
+                    <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px] flex items-center justify-center rounded-md">
+                      <span className="text-white font-bold text-lg sm:text-sm px-4 py-2 bg-red-600/80 rounded-lg shadow-lg">
+                        Service Unavailable
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Left Arrow */}
+                {service.serviceImage?.length > 1 && (
                   <button
                     onClick={() => {
-                      const currentIndex =
-                        currentServiceImages.indexOf(selectedMediaUrl);
+                      const currentIndex = service.serviceImage.indexOf(
+                        selectedImages[index] || service.serviceImage[0]
+                      );
                       const prevIndex =
-                        (currentIndex - 1 + currentServiceImages.length) %
-                        currentServiceImages.length;
-                      handleMediaSelect(index, currentServiceImages[prevIndex]);
+                        (currentIndex - 1 + service.serviceImage.length) %
+                        service.serviceImage.length;
+                      handleImageSelect(index, service.serviceImage[prevIndex]);
                     }}
                     className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
                   >
@@ -475,36 +314,35 @@ const handleMediaUpload = (e) => {
                   </button>
                 )}
 
-                {currentServiceImages.length > 1 && (
+                {/* Right Arrow */}
+                {service.serviceImage?.length > 1 && (
                   <button
                     onClick={() => {
-                      const currentIndex =
-                        currentServiceImages.indexOf(selectedMediaUrl);
+                      const currentIndex = service.serviceImage.indexOf(
+                        selectedImages[index] || service.serviceImage[0]
+                      );
                       const nextIndex =
-                        (currentIndex + 1) % currentServiceImages.length;
-                      handleMediaSelect(index, currentServiceImages[nextIndex]);
+                        (currentIndex + 1) % service.serviceImage.length;
+                      handleImageSelect(index, service.serviceImage[nextIndex]);
                     }}
                     className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
                   >
                     ❯
                   </button>
                 )}
+
                 {/* Dots */}
                 <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-2">
-                  {currentServiceImages.map((mediaUrl, i) => (
+                  {service.serviceImage?.map((img, i) => (
                     <button
                       key={i}
-                      onClick={() => handleMediaSelect(index, mediaUrl)}
-                      className={`w-3 h-3 flex items-center justify-center rounded-full ${
-                        selectedMediaUrl === mediaUrl
+                      onClick={() => handleImageSelect(index, img)}
+                      className={`w-1 h-1 rounded-full px-1 py-1 ${
+                        selectedImages[index] === img
                           ? "bg-white"
                           : "bg-gray-400"
                       }`}
-                    >
-                      {getYouTubeID(mediaUrl) && (
-                        <FaYoutube className="text-red-500 text-xs" />
-                      )}
-                    </button>
+                    />
                   ))}
                 </div>
 
@@ -541,24 +379,7 @@ const handleMediaUpload = (e) => {
               {/* Editing Mode */}
               {isEditing ? (
                 <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-start sm:items-center px-4 py-6 overflow-y-auto">
-                  <form className="dashboard-custom-form relative">
-                    {/* Loading overlay */}
-                    {isSaving && (
-                      <div className="absolute inset-0 bg-white bg-opacity-90 z-10 flex flex-col items-center justify-center rounded-md">
-                        <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                        <p className="mt-4 text-gray-700 font-semibold">
-                          Saving changes...
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Error message display */}
-                    {errorMessage && (
-                      <div className="mb-3 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md">
-                        <p className="text-sm font-medium">{errorMessage}</p>
-                      </div>
-                    )}
-
+                  <form className="dashboard-custom-form">
                     <div className="flex flex-col space-y-2">
                       {/* Service Name */}
                       <input
@@ -568,7 +389,6 @@ const handleMediaUpload = (e) => {
                         onChange={handleChange}
                         placeholder="Service Name"
                         className="w-full p-1 bg-[#f1f1f1] border border-[#001f3f] rounded-md"
-                        disabled={isSaving}
                       />
 
                       {/* Locations */}
@@ -590,7 +410,6 @@ const handleMediaUpload = (e) => {
                         }
                         placeholder="Locations (comma separated)"
                         className="w-full p-1 bg-[#f1f1f1] border border-[#001f3f] rounded-md"
-                        disabled={isSaving}
                       />
 
                       {/* Price Inputs */}
@@ -607,7 +426,6 @@ const handleMediaUpload = (e) => {
                           }
                           placeholder="Min Price"
                           className="w-1/2 p-1 bg-[#f1f1f1] border border-[#001f3f] rounded-md"
-                          disabled={isSaving}
                         />
                         <input
                           type="number"
@@ -621,7 +439,6 @@ const handleMediaUpload = (e) => {
                           }
                           placeholder="Max Price"
                           className="w-1/2 p-1 bg-[#f1f1f1] border border-[#001f3f] rounded-md"
-                          disabled={isSaving}
                         />
                       </div>
 
@@ -633,7 +450,6 @@ const handleMediaUpload = (e) => {
                         onChange={handleChange}
                         placeholder="Service Category"
                         className="w-full p-1 bg-[#f1f1f1] border border-[#001f3f] rounded-md"
-                        disabled={isSaving}
                       />
 
                       {/* Duration */}
@@ -647,7 +463,6 @@ const handleMediaUpload = (e) => {
                               updateDuration(e.target.value, "days")
                             }
                             placeholder="Days"
-                            disabled={isSaving}
                           />
                           <span>D</span>
                         </div>
@@ -663,7 +478,6 @@ const handleMediaUpload = (e) => {
                               updateDuration(e.target.value, "hours")
                             }
                             placeholder="Hours"
-                            disabled={isSaving}
                           />
                           <span>H</span>
                         </div>
@@ -677,7 +491,6 @@ const handleMediaUpload = (e) => {
                               updateDuration(e.target.value, "minutes")
                             }
                             placeholder="Minutes"
-                            disabled={isSaving}
                           />
                           <span>M</span>
                         </div>
@@ -691,145 +504,88 @@ const handleMediaUpload = (e) => {
                         placeholder="Description"
                         maxLength={500}
                         className="w-full min-h-[90px] p-1 bg-[#f1f1f1] border border-[#001f3f] rounded-md"
-                        disabled={isSaving}
                       />
-                    </div>
-
-                    {/* Image upload info and file size error */}
-                    <div className="mt-2">
-                      <p className="text-xs text-gray-600 mb-1">
-                        Maximum file size: 9MB per photo i.e image size must be below 9MB. You can upload up to
-                        10 photos or videos combined in total.
-                      </p>
-                      {fileSizeError && (
-                        <div className="p-2 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded text-sm mb-2">
-                          {fileSizeError}
-                        </div>
-                      )}
                     </div>
 
                     {/* Image Preview */}
                     <div className="flex flex-nowrap overflow-x-auto items-center gap-1 pt-2">
-                      {(editedData.serviceImage || []).map((mediaUrl, i) => (
+                      {editedData.serviceImage?.map((img, i) => (
                         <div
                           key={`existing-${i}`}
                           className="relative w-10 h-10 shrink-0"
                         >
-                          {getYouTubeID(mediaUrl) ? (
-                            <div className="w-full h-full bg-black rounded flex items-center justify-center">
-                              <FaYoutube className="text-red-500 text-xl" />
-                            </div>
-                          ) : (
-                            <img
-                              src={mediaUrl}
-                              alt={`thumb-${i}`}
-                              className="w-full h-full object-cover rounded"
-                            />
-                          )}
+                          <img
+                            src={img}
+                            alt={`thumb-${i}`}
+                            className="w-full h-full object-cover rounded"
+                          />
                           <button
                             type="button"
                             className="absolute top-0 right-0 text-red-600 p-[3px] text-[10px] bg-white rounded-full"
                             onClick={() => {
-                              const currentMedia = [...editedData.serviceImage];
-                              currentMedia.splice(i, 1);
+                              const updatedImgs = [...editedData.serviceImage];
+                              updatedImgs.splice(i, 1);
                               setEditedData((prev) => ({
                                 ...prev,
-                                serviceImage: currentMedia,
+                                serviceImage: updatedImgs,
                               }));
                             }}
-                            disabled={isSaving}
                           >
                             ✕
                           </button>
                         </div>
                       ))}
 
-                      {newMediaPreviews.map((preview, i) => (
+                      {newImagePreviews.map((url, i) => (
                         <div
                           key={`new-${i}`}
                           className="relative w-10 h-10 shrink-0"
                         >
-                          {preview.type === "image" ? (
-                            <img
-                              src={preview.url}
-                              alt={`new-preview-${i}`}
-                              className="w-full h-full object-cover rounded"
-                            />
-                          ) : (
-                            <video
-                              src={preview.url}
-                              className="w-full h-full object-cover rounded"
-                              muted
-                            />
-                          )}
+                          <img
+                            src={url}
+                            alt={`new-preview-${i}`}
+                            className="w-full h-full object-cover rounded"
+                          />
                           <button
                             type="button"
                             className="absolute top-0 right-0 text-red-600 p-[3px] text-[10px] bg-white rounded-full"
                             onClick={() => {
-                              const updatedPreviews = [...newMediaPreviews];
-                              const removedPreview = updatedPreviews.splice(
-                                i,
-                                1
-                              )[0];
-                              setNewMediaPreviews(updatedPreviews);
-
-                              if (removedPreview.type === "image") {
-                                setNewImages((prev) =>
-                                  prev.filter((f) => f !== removedPreview.file)
-                                );
-                              } else {
-                                setNewVideos((prev) =>
-                                  prev.filter((f) => f !== removedPreview.file)
-                                );
-                              }
+                              const updatedPreviews = [...newImagePreviews];
+                              const updatedFiles = [...newImages];
+                              updatedPreviews.splice(i, 1);
+                              updatedFiles.splice(i, 1);
+                              setNewImages(updatedFiles);
+                              setNewImagePreviews(updatedPreviews);
                             }}
-                            disabled={isSaving}
                           >
                             ✕
                           </button>
                         </div>
                       ))}
 
-                      {(editedData.serviceImage || []).length +
-                        newMediaPreviews.length <
+                      {editedData.serviceImage.length +
+                        newImagePreviews.length <
                         10 && (
-                        <label
-                          className={`w-14 h-14 border-2 border-dashed border-[#001f3f] rounded flex items-center justify-center shrink-0 ${
-                            isSaving
-                              ? "cursor-not-allowed opacity-50"
-                              : "cursor-pointer"
-                          }`}
-                        >
+                        <label className="w-14 h-14 border-2 border-dashed border-[#001f3f] rounded flex items-center justify-center cursor-pointer shrink-0">
                           <FaPlus className="text-gray-500 text-xs" />
                           <input
                             type="file"
-                            accept="image/*,video/*"
-                            multiple
+                            accept="image/*"
                             className="hidden"
-                            onChange={handleMediaUpload}
-                            disabled={isSaving}
+                            onChange={handleImageUpload}
                           />
                         </label>
                       )}
                     </div>
 
-                    {/* Save and Cancel Buttons */}
+                    {/* Save Button */}
                     <div className="flex justify-center gap-4 pt-4">
                       <button
                         type="button"
                         onClick={() => handleSave(index)}
-                        className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 shadow disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled={isSaving}
+                        className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 shadow"
                       >
-                        {isSaving ? "Saving..." : "Save"}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleCancel(index)}
-                        className="px-4 py-2 rounded bg-gray-500 text-white hover:bg-gray-600 shadow disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled={isSaving}
-                      >
-                        Cancel
+                        Save
                       </button>
                     </div>
                   </form>
@@ -927,62 +683,6 @@ const handleMediaUpload = (e) => {
                       >
                         <strong>User Reviews </strong> {service.userReviews}
                       </Link>
-                    </div>
-                  </div>
-                </div>
-              )}
-              {cropSrc && (
-                <div className="fixed inset-0 z-50 bg-black bg-opacity-70 flex justify-center items-center p-4">
-                  <div className="bg-white rounded-md p-4 relative w-[90%] sm:w-[600px]">
-                    <h2 className="text-lg font-semibold mb-2">
-                      Crop Your Image
-                    </h2>
-
-                    <ReactCrop
-                      crop={crop}
-                      onChange={(newCrop) => setCrop(newCrop)}
-                      onComplete={(c) => setCrop(c)}
-                      aspect={16 / 9}
-                    >
-                      <img
-                        ref={imgRef}
-                        src={cropSrc}
-                        alt="Crop preview"
-                        style={{ maxHeight: "400px", objectFit: "contain" }}
-                        onLoad={(e) => {
-                          imgRef.current = e.target;
-                        }}
-                      />
-                    </ReactCrop>
-
-                    <div className="flex justify-end gap-3 mt-4">
-                      <button
-                        className="px-4 py-2 bg-green-600 text-white rounded"
-                        onClick={async () => {
-                          const croppedBlob = await getCroppedImg(
-                            imgRef.current,
-                            crop
-                          );
-                          const croppedFile = new File(
-                            [croppedBlob],
-                            "cropped.jpg",
-                            {
-                              type: "image/jpeg",
-                            }
-                          );
-
-                          setNewImages((prev) => [...prev, croppedFile]);
-                          setCropSrc(null);
-                        }}
-                      >
-                        Crop & Save
-                      </button>
-                      <button
-                        className="px-4 py-2 bg-red-600 text-white rounded"
-                        onClick={() => setCropSrc(null)}
-                      >
-                        Cancel
-                      </button>
                     </div>
                   </div>
                 </div>
