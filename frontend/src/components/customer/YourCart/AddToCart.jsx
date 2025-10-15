@@ -24,7 +24,7 @@ const AddToCart = () => {
         }
       } catch (error) {
         console.error("Failed to fetch cart items:", error);
-        toast.error("Could not load your cart.");
+        toast.error("Could not load your cart.", { duration: 1500 });
       } finally {
         setLoading(false);
       }
@@ -41,10 +41,10 @@ const AddToCart = () => {
         prevItems.filter((item) => item.serviceId._id !== serviceId)
       );
       dispatch(setCartCount(items.length - 1));
-      toast.success("Item removed from cart!");
+      toast.success("Item removed from cart!", { duration: 1500 });
     } catch (error) {
       console.error("Failed to remove item:", error);
-      toast.error("Could not remove item.");
+      toast.error("Could not remove item.", { duration: 1500 });
     }
   };
 

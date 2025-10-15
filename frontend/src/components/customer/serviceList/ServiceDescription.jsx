@@ -145,7 +145,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
     e.stopPropagation();
     const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
     if (!isLoggedIn) {
-      toast.error("Please log in to manage your wishlist.");
+      toast.error("Please log in to manage your wishlist.", { duration: 1500 });
       if (onSwitchToLogin) onSwitchToLogin(true);
       return;
     }
@@ -158,13 +158,14 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
       const newStatus = !isWishlisted;
       setIsWishlisted(newStatus);
       toast.success(
-        newStatus ? "Added to wishlist!" : "Removed from wishlist!"
+        newStatus ? "Added to wishlist!" : "Removed from wishlist!",
+        { duration: 1500 }
       );
       window.dispatchEvent(
         new CustomEvent("wishlistUpdated", { detail: { serviceId } })
       );
     } catch (err) {
-      toast.error("Failed to update wishlist.");
+      toast.error("Failed to update wishlist.", { duration: 1500 });
       console.error("Toggle error:", err);
     }
   };
@@ -181,7 +182,9 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
 
     // Important check: If categoryId is missing, the link will be wrong.
     if (!categoryId) {
-      toast.error("Cannot generate share link: Category ID is missing.");
+      toast.error("Cannot generate share link: Category ID is missing.", {
+        duration: 3000,
+      });
       console.error(
         "Service object is missing 'categoryId' property.",
         service
@@ -214,12 +217,15 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
         navigator.clipboard
           .writeText(serviceUrl)
           .then(() => {
-            toast.success("Link copied! You can now share it on Instagram.");
+            toast.success("Link copied! You can now share it on Instagram.", {
+              duration: 3000,
+            });
             setShowShareMenu(false);
           })
           .catch(() => {
             toast.error(
-              "Failed to copy link. Please use a secure (HTTPS) connection."
+              "Failed to copy link. Please use a secure (HTTPS) connection.",
+              { duration: 3000 }
             );
           });
         return;
@@ -232,12 +238,13 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
         navigator.clipboard
           .writeText(serviceUrl)
           .then(() => {
-            toast.success("Link copied to clipboard!");
+            toast.success("Link copied to clipboard!", { duration: 1500 });
             setShowShareMenu(false);
           })
           .catch(() => {
             toast.error(
-              "Failed to copy link. Please use a secure (HTTPS) connection."
+              "Failed to copy link. Please use a secure (HTTPS) connection.",
+              { duration: 2000 }
             );
           });
         return;
@@ -255,7 +262,8 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
         typeof newWindow.closed === "undefined"
       ) {
         toast.error(
-          "Pop-up blocked! Please allow pop-ups for this site to share."
+          "Pop-up blocked! Please allow pop-ups for this site to share.",
+          { duration: 2000 }
         );
       }
     }
@@ -266,7 +274,9 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
     e.stopPropagation();
     const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
     if (!isLoggedIn) {
-      toast.error("Please log in to add items to your cart.");
+      toast.error("Please log in to add items to your cart.", {
+        duration: 3000,
+      });
       if (onSwitchToLogin) onSwitchToLogin(true);
       return;
     }
@@ -277,12 +287,14 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
         { withCredentials: true }
       );
       dispatch(incrementCartCount());
-      toast.success("Service added to your cart!");
+      toast.success("Service added to your cart!", { duration: 1500 });
     } catch (err) {
       if (err.response && err.response.status === 409) {
-        toast.error("This service is already in your cart.");
+        toast.error("This service is already in your cart.", {
+          duration: 1500,
+        });
       } else {
-        toast.error("Failed to add service.");
+        toast.error("Failed to add service.", { duration: 1500 });
       }
       console.error("Add to cart error:", err);
     }
@@ -304,7 +316,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
     e.stopPropagation();
     const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
     if (!isLoggedIn) {
-      toast.error("Please log in to get notifications.");
+      toast.error("Please log in to get notifications.",{duration:2000});
       if (onSwitchToLogin) onSwitchToLogin(true);
       return;
     }
@@ -314,9 +326,9 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
         { serviceId },
         { withCredentials: true }
       );
-      toast.success("You'll be notified when this service becomes available!");
+      toast.success("You'll be notified when this service becomes available!",{duration:3000});
     } catch (err) {
-      toast.error("Failed to set up notification.");
+      toast.error("Failed to set up notification.",{duration:2000});
       console.error("Notify me error:", err);
     }
   };
