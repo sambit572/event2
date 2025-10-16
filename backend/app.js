@@ -85,7 +85,6 @@ app.get("/api/slow-api", async (req, res) => {
 
 // ✅ API Routes
 app.use("/api/reports", reportRoutes);
-
 app.use("/api/search", searchRouter);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/user", userRouter);
@@ -96,6 +95,7 @@ app.use("/api/common", serviceRoutes);
 app.use("/api/wishlist", wishlistRoutes); // Use wishlist routes
 app.use("/api/cart", cartRouter);
 app.use("/api/calendar", calendarRoutes);
+
 // ✅ Health Check Route
 app.get("/", (req, res) => {
   res.status(200).json({

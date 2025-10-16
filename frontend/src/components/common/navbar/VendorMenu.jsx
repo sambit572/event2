@@ -45,7 +45,7 @@ const VendorMenu = ({
 
       {/* Dropdown menu */}
       {showVendorDropdown && (
-        <div className="absolute top-[50px] right-[-1px] bg-white border border-gray-200 rounded-2xl shadow-2xl p-[1rem] w-[260px] z-[2000] cursor-default animate-fadeIn max-[640px]:top-[60px]">
+        <div className="absolute top-[50px] right-[-75px] bg-white border border-gray-200 rounded-2xl shadow-2xl p-[1rem] w-[260px] z-[2000] cursor-default animate-fadeIn max-[640px]:top-[60px]">
           {/* <h4 className="text-[18px] text-[#001f3f] font-semibold mb-1 text-center">
             Welcome Vendor 
           </h4>

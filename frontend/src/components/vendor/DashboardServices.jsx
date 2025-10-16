@@ -320,48 +320,59 @@ const DashboardServices = () => {
     }));
   };
 
-  const handleMediaUpload = (e) => {
-    const files = Array.from(e.target.files);
-    if (files.length === 0) return;
+const handleMediaUpload = (e) => {
+  const files = Array.from(e.target.files);
+  if (files.length === 0) return;
 
-    const MAX_IMAGE_SIZE_BYTES = 9 * 1024 * 1024; // 9MB limit for images
+  const MAX_IMAGE_SIZE_BYTES = 9 * 1024 * 1024; // 9MB
 
-    let imageFiles = [];
-    let videoFiles = [];
-    const reader = new FileReader();
-    reader.onload = () => setCropSrc(reader.result); // 👈 show crop modal
-    reader.readAsDataURL(files[0]);
-    for (const file of files) {
-      if (file.type.startsWith("image/")) {
-        if (file.size > MAX_IMAGE_SIZE_BYTES) {
-          alert(`Image "${file.name}" is too large. The limit is 9MB.`);
-          continue;
-        }
-        imageFiles.push(file);
-      } else if (file.type.startsWith("video/")) {
-        videoFiles.push(file);
+  // Step 1: Separate files and validate them first
+  let imageFiles = [];
+  let videoFiles = [];
+
+  for (const file of files) {
+    if (file.type.startsWith("image/")) {
+      if (file.size > MAX_IMAGE_SIZE_BYTES) {
+        alert(`Image "${file.name}" is too large. The limit is 9MB.`);
+        continue; 
       }
+      imageFiles.push(file);
+    } else if (file.type.startsWith("video/")) {
+      videoFiles.push(file);
     }
+  }
 
-    const currentImages = editedData.serviceImage || [];
-    const currentMediaCount =
-      currentImages.length + newImages.length + newVideos.length;
+  // Step 2: Check if adding the new media exceeds the total limit
+  const currentMediaCount =
+    (editedData.serviceImage || []).length +
+    newImages.length +
+    newVideos.length;
+  if (currentMediaCount + imageFiles.length + videoFiles.length > 10) {
+    alert(`You can only upload up to 10 media items in total.`);
+    return;
+  }
 
-    if (currentMediaCount + imageFiles.length + videoFiles.length > 10) {
-      alert(`You can only upload up to 10 media items in total.`);
-      return;
-    }
+  // Step 3: Trigger cropper ONLY for the first image
+  if (imageFiles.length > 0) {
+    // Take the first image out of the array. It will be handled by the cropper.
+    const imageToCrop = imageFiles.shift();
 
-    const newImagePreviews = imageFiles.map((file) => ({
-      type: "image",
-      url: URL.createObjectURL(file),
-      file,
-    }));
-    const newVideoPreviews = videoFiles.map((file) => ({
-      type: "video",
-      url: URL.createObjectURL(file),
-      file,
-    }));
+    const reader = new FileReader();
+    reader.onload = () => setCropSrc(reader.result);
+    reader.readAsDataURL(imageToCrop);
+  }
+
+  // Step 4: Add all videos and any remaining (uncropped) images to the preview
+  const newImagePreviews = imageFiles.map((file) => ({
+    type: "image",
+    url: URL.createObjectURL(file),
+    file,
+  }));
+  const newVideoPreviews = videoFiles.map((file) => ({
+    type: "video",
+    url: URL.createObjectURL(file),
+    file,
+  }));
 
     // setNewImages((prev) => [...prev, ...imageFiles]);
     setNewVideos((prev) => [...prev, ...videoFiles]);
@@ -710,8 +721,8 @@ const DashboardServices = () => {
                     {/* Image upload info and file size error */}
                     <div className="mt-2">
                       <p className="text-xs text-gray-600 mb-1">
-                        Maximum file size: 5MB per photo. You can upload up to
-                        10 photos total.
+                        Maximum file size: 9MB per photo i.e image size must be below 9MB. You can upload up to
+                        10 photos or videos combined in total.
                       </p>
                       {fileSizeError && (
                         <div className="p-2 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded text-sm mb-2">

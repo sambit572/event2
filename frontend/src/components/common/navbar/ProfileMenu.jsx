@@ -63,7 +63,7 @@ const ProfileMenu = ({
       {/* Dropdown menu */}
       {showProfileDropdown && (
         <div
-          className="absolute top-[50px] left-[-90px] bg-white border border-gray-200 rounded-2xl shadow-2xl 
+          className="absolute top-[55px] left-[-15px] bg-white border border-gray-200 rounded-2xl shadow-2xl 
                      p-[1rem] w-[220px] z-[2000] cursor-default animate-fadeIn
                      max-[430px]:top-[40px] max-[800px]:left-[-120px]"
         >

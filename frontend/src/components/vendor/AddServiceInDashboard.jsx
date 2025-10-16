@@ -7,6 +7,7 @@ import ReactCrop, { centerCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import { toast } from "react-toastify";
 
+
 const getCroppedImg = (image, crop) => {
   const canvas = document.createElement("canvas");
   const scaleX = image.naturalWidth / image.width;
@@ -37,7 +38,6 @@ const getCroppedImg = (image, crop) => {
     }, "image/jpeg");
   });
 };
-
 function VendorService({ currentStep }) {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -148,6 +148,7 @@ function VendorService({ currentStep }) {
   const filteredCategories = categories.filter((cat) =>
     cat.toLowerCase().includes(categorySearchTerm.toLowerCase())
   );
+
   // Locations based on selected state
   const filteredLocations = selectedState
     ? allLocations[selectedState].filter((loc) =>
@@ -158,7 +159,6 @@ function VendorService({ currentStep }) {
   const filteredStates = Object.keys(allLocations).filter((state) =>
     state.toLowerCase().includes((stateLocationSearchTerm || "").toLowerCase())
   );
-
   useEffect(() => {
     if (cropQueue.length > 0) {
       const reader = new FileReader();
@@ -174,147 +174,145 @@ function VendorService({ currentStep }) {
     }
   }, [cropQueue]);
 
-   
-    const handleImageUpload = (e) => {
-      try {
-        if (showCropperModal) return;
-  
-        // Clear any previous error messages
-        setImageError("");
-  
-        const newFiles = Array.from(e.target.files);
-        const totalFiles = selectedFiles.length + newFiles.length;
-  
-        // ✅ Limit total uploads to 10
-        if (totalFiles > 10 || newFiles.length > 10) {
-          toast.error("You cannot upload more than 10 files.");
-          setImageError("You cannot upload more than 10 files.");
-          if (fileInputRef.current) fileInputRef.current.value = "";
-          return;
-        }
-        // File type validation
-        const validImageTypes = [
-          "image/jpeg",
-          "image/jpg",
-          "image/png",
-          "image/gif",
-        ];
-        const validVideoTypes = [
-          "video/mp4",
-          "video/avi",
-          "video/mov",
-          "video/wmv",
-          "video/flv",
-          "video/webm",
-        ];
-        const validTypes = [...validImageTypes, ...validVideoTypes];
-  
-        // Size limits
-        const IMAGE_SIZE_LIMIT = 5 * 1024 * 1024; // 5MB
-        const VIDEO_SIZE_LIMIT = 200 * 1024 * 1024; // 200MB
-        const MAX_FILE_COUNT = 10;
-  
-        // Check total file count
-        const currentFileCount = selectedFiles.length;
-        const newFileCount = newFiles.length;
-        const totalFileCount = currentFileCount + newFileCount;
-  
-        if (totalFileCount > MAX_FILE_COUNT) {
-          setImageError(
-            `Cannot upload more than ${MAX_FILE_COUNT} files in total. You currently have ${currentFileCount} file(s) and are trying to add ${newFileCount} more.`
-          );
-          if (fileInputRef.current) {
-            fileInputRef.current.value = "";
-          }
-          return;
-        }
-  
-        const validatedFiles = [];
-        const errors = [];
-  
-        for (let f of newFiles) {
-          // Check file type
-          if (!validTypes.includes(f.type)) {
-            errors.push(
-              `"${f.name}" - Invalid file type. Only images (JPEG, PNG, GIF) and videos (MP4, AVI, MOV, WMV, FLV, WEBM) are allowed.`
-            );
-            continue;
-          }
-          if (f.type.startsWith("image/") && f.size > IMAGE_SIZE_LIMIT) {
-            toast.error(`${f.name} is too large. Max 5 MB allowed.`);
-            continue;
-          }
-  
-          if (f.type.startsWith("video/") && f.size > VIDEO_SIZE_LIMIT) {
-            toast.error(`${f.name} is too large. Max 200 MB allowed.`);
-            continue;
-          }
-  
-          // Check file size based on type
-          const isImage = validImageTypes.includes(f.type);
-          const isVideo = validVideoTypes.includes(f.type);
-  
-          if (isImage && f.size > IMAGE_SIZE_LIMIT) {
-            const sizeMB = (f.size / (1024 * 1024)).toFixed(2);
-            errors.push(
-              `"${f.name}" (${sizeMB}MB) - Image files must be 5MB or smaller.`
-            );
-            continue;
-          }
-  
-          if (isVideo && f.size > VIDEO_SIZE_LIMIT) {
-            const sizeMB = (f.size / (1024 * 1024)).toFixed(2);
-            errors.push(
-              `"${f.name}" (${sizeMB}MB) - Video files must be 200MB or smaller.`
-            );
-            continue;
-          }
-  
-          validatedFiles.push(f);
-        }
-  
-        // Display all errors at once
-        if (errors.length > 0) {
-          setImageError(errors.join(" • "));
-        }
-  
-        // If no valid files, clear input and return
-        if (validatedFiles.length === 0) {
-          if (fileInputRef.current) {
-            fileInputRef.current.value = "";
-          }
-          return;
-        }
-  
-        const imageFiles = validatedFiles.filter((file) =>
-          file.type.startsWith("image/")
-        );
-        const videoFiles = validatedFiles.filter((file) =>
-          file.type.startsWith("video/")
-        );
-  
-        if (videoFiles.length > 0) {
-          const videoUrls = videoFiles.map((f) => URL.createObjectURL(f));
-          setPreviewImages((prev) => [...prev, ...videoUrls]);
-          setSelectedFiles((prev) => [...prev, ...videoFiles]);
-          if (selectedImageIndex === -1) setSelectedImageIndex(0);
-        }
-  
-        if (imageFiles.length > 0) {
-          setCropQueue((prev) => [...prev, ...imageFiles]);
-        } else {
-          if (fileInputRef.current) {
-            fileInputRef.current.value = "";
-          }
-        }
-      } catch (err) {
-        console.error("Image selection error:", err);
-        setImageError(
-          "An error occurred while processing your files. Please try again."
-        );
+  const handleImageUpload = (e) => {
+    try {
+      if (showCropperModal) return;
+
+      // Clear any previous error messages
+      setImageError("");
+
+      const newFiles = Array.from(e.target.files);
+      const totalFiles = selectedFiles.length + newFiles.length;
+
+      // ✅ Limit total uploads to 10
+      if (totalFiles > 10 || newFiles.length > 10) {
+        toast.error("You cannot upload more than 10 files.");
+        setImageError("You cannot upload more than 10 files.");
+        if (fileInputRef.current) fileInputRef.current.value = "";
+        return;
       }
-    };
-  
+      // File type validation
+      const validImageTypes = [
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+        "image/gif",
+      ];
+      const validVideoTypes = [
+        "video/mp4",
+        "video/avi",
+        "video/mov",
+        "video/wmv",
+        "video/flv",
+        "video/webm",
+      ];
+      const validTypes = [...validImageTypes, ...validVideoTypes];
+
+      // Size limits
+      const IMAGE_SIZE_LIMIT = 5 * 1024 * 1024; // 5MB
+      const VIDEO_SIZE_LIMIT = 200 * 1024 * 1024; // 200MB
+      const MAX_FILE_COUNT = 10;
+
+      // Check total file count
+      const currentFileCount = selectedFiles.length;
+      const newFileCount = newFiles.length;
+      const totalFileCount = currentFileCount + newFileCount;
+
+      if (totalFileCount > MAX_FILE_COUNT) {
+        setImageError(
+          `Cannot upload more than ${MAX_FILE_COUNT} files in total. You currently have ${currentFileCount} file(s) and are trying to add ${newFileCount} more.`
+        );
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+        return;
+      }
+
+      const validatedFiles = [];
+      const errors = [];
+
+      for (let f of newFiles) {
+        // Check file type
+        if (!validTypes.includes(f.type)) {
+          errors.push(
+            `"${f.name}" - Invalid file type. Only images (JPEG, PNG, GIF) and videos (MP4, AVI, MOV, WMV, FLV, WEBM) are allowed.`
+          );
+          continue;
+        }
+        if (f.type.startsWith("image/") && f.size > IMAGE_SIZE_LIMIT) {
+          toast.error(`${f.name} is too large. Max 5 MB allowed.`);
+          continue;
+        }
+
+        if (f.type.startsWith("video/") && f.size > VIDEO_SIZE_LIMIT) {
+          toast.error(`${f.name} is too large. Max 200 MB allowed.`);
+          continue;
+        }
+
+        // Check file size based on type
+        const isImage = validImageTypes.includes(f.type);
+        const isVideo = validVideoTypes.includes(f.type);
+
+        if (isImage && f.size > IMAGE_SIZE_LIMIT) {
+          const sizeMB = (f.size / (1024 * 1024)).toFixed(2);
+          errors.push(
+            `"${f.name}" (${sizeMB}MB) - Image files must be 5MB or smaller.`
+          );
+          continue;
+        }
+
+        if (isVideo && f.size > VIDEO_SIZE_LIMIT) {
+          const sizeMB = (f.size / (1024 * 1024)).toFixed(2);
+          errors.push(
+            `"${f.name}" (${sizeMB}MB) - Video files must be 200MB or smaller.`
+          );
+          continue;
+        }
+
+        validatedFiles.push(f);
+      }
+
+      // Display all errors at once
+      if (errors.length > 0) {
+        setImageError(errors.join(" • "));
+      }
+
+      // If no valid files, clear input and return
+      if (validatedFiles.length === 0) {
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+        return;
+      }
+
+      const imageFiles = validatedFiles.filter((file) =>
+        file.type.startsWith("image/")
+      );
+      const videoFiles = validatedFiles.filter((file) =>
+        file.type.startsWith("video/")
+      );
+
+      if (videoFiles.length > 0) {
+        const videoUrls = videoFiles.map((f) => URL.createObjectURL(f));
+        setPreviewImages((prev) => [...prev, ...videoUrls]);
+        setSelectedFiles((prev) => [...prev, ...videoFiles]);
+        if (selectedImageIndex === -1) setSelectedImageIndex(0);
+      }
+
+      if (imageFiles.length > 0) {
+        setCropQueue((prev) => [...prev, ...imageFiles]);
+      } else {
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+      }
+    } catch (err) {
+      console.error("Image selection error:", err);
+      setImageError(
+        "An error occurred while processing your files. Please try again."
+      );
+    }
+  };
 
   const handleCropImage = async () => {
     if (!completedCrop || !imgRef.current || completedCrop.width === 0) {
@@ -341,7 +339,6 @@ function VendorService({ currentStep }) {
     setCrop(undefined);
     setCropQueue((prev) => prev.slice(1));
   };
-
   const handleDeleteImage = (index) => {
     const updatedImages = [...previewImages];
     const updatedFiles = [...selectedFiles];
@@ -369,7 +366,7 @@ function VendorService({ currentStep }) {
 
   const handleAdd = async () => {
     setIsLoading(true);
-    console.log("ADD button clicked");
+    console.log("next button clicked");
 
     if (!validateForm()) {
       setIsLoading(false);
@@ -384,12 +381,15 @@ function VendorService({ currentStep }) {
 
       formData.append("minPrice", minPrice);
       formData.append("maxPrice", maxPrice);
-
       formData.append("serviceCategory", categorySearchTerm);
       formData.append("stateLocationOffered", selectedState);
       selectedLocations.forEach((loc) => {
         formData.append("locationOffered[]", loc);
       });
+
+      // selectedLocations.forEach((loc) => {
+      //   formData.append("locationOffered[]", loc);
+      // });
 
       selectedFiles.forEach((file) => {
         formData.append("images", file);
@@ -484,10 +484,12 @@ function VendorService({ currentStep }) {
       alert("Days cannot be negative");
       return false;
     }
+
     if (selectedState.length === 0) {
       alert("Please select at least one state location");
       return false;
     }
+
     // 8. Check location
     if (selectedLocations.length === 0) {
       alert("Please select at least one location");
@@ -533,7 +535,16 @@ function VendorService({ currentStep }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+  const handleSelectAllLocations = () => {
+    if (selectedState && allLocations[selectedState]) {
+      setSelectedLocations(allLocations[selectedState]);
+      setShowLocationDropdown(false);
+    }
+  };
 
+  const handleDeselectAllLocations = () => {
+    setSelectedLocations([]);
+  };
   return (
     <>
       {isLoading && <Spinner />}
@@ -610,7 +621,7 @@ function VendorService({ currentStep }) {
                   />
                   {categorySearchTerm && (
                     <img
-                      src="/public/close.png"
+                      src="../../../public/close.png"
                       alt="Clear"
                       className="clear-icon-img"
                       onClick={() => setCategorySearchTerm("")}
@@ -643,7 +654,7 @@ function VendorService({ currentStep }) {
               <input
                 type="file"
                 id="service-images"
-                accept="image/*,video/*"
+                accept="image/,video/"
                 multiple
                 onChange={handleImageUpload}
                 ref={fileInputRef}
@@ -876,6 +887,18 @@ function VendorService({ currentStep }) {
               </div>
 
               {/* Dropdown */}
+              {selectedState && (
+                <span className="selected-chip">
+                  {selectedState}
+                  <button
+                    type="button"
+                    className="ml-2 mr-2"
+                    onClick={() => setSelectedState("")}
+                  >
+                    ✕
+                  </button>
+                </span>
+              )}
               {showStateLocationDropdown && (
                 <ul className="state-location-dropdown-list">
                   {filteredStates.map((state, index) => (
@@ -894,6 +917,7 @@ function VendorService({ currentStep }) {
                 </ul>
               )}
             </div>
+
             <label htmlFor="locations" className="location-label">
               Locations Offered *
             </label>
@@ -978,9 +1002,86 @@ function VendorService({ currentStep }) {
                   />
                 )}
               </div>
+              {/* Select/Deselect All Buttons */}
+              {selectedState && (
+                <div
+                  style={{
+                    marginTop: "8px",
+                    display: "flex",
+                    gap: "8px",
+                    justifyContent: "flex-start",
+                  }}
+                >
+                  <button
+                    type="button"
+                    onClick={handleSelectAllLocations}
+                    disabled={
+                      selectedLocations.length ===
+                      allLocations[selectedState]?.length
+                    }
+                    style={{
+                      padding: "4px 12px",
+                      fontSize: "12px",
+                      background:
+                        selectedLocations.length ===
+                        allLocations[selectedState]?.length
+                          ? "#e0e0e0"
+                          : "#4b2bb3",
+                      color:
+                        selectedLocations.length ===
+                        allLocations[selectedState]?.length
+                          ? "#999"
+                          : "white",
+                      border: "none",
+                      borderRadius: "4px",
+                      cursor:
+                        selectedLocations.length ===
+                        allLocations[selectedState]?.length
+                          ? "not-allowed"
+                          : "pointer",
+                      fontWeight: "500",
+                    }}
+                  >
+                    Select All ({allLocations[selectedState]?.length || 0})
+                  </button>
 
+                  {selectedLocations.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={handleDeselectAllLocations}
+                      style={{
+                        padding: "4px 12px",
+                        fontSize: "12px",
+                        background: "transparent",
+                        color: "#4b2bb3",
+                        border: "1px solid #4b2bb3",
+                        borderRadius: "4px",
+                        cursor: "pointer",
+                        fontWeight: "500",
+                      }}
+                    >
+                      Deselect All
+                    </button>
+                  )}
+                </div>
+              )}
               {showLocationDropdown && (
                 <ul className="location-dropdown-list">
+                  {/* Select All option in dropdown */}
+                  {selectedState && filteredLocations.length > 0 && (
+                    <li
+                      onClick={handleSelectAllLocations}
+                      style={{
+                        fontWeight: "600",
+                        color: "#4b2bb3",
+                        borderBottom: "1px solid #e0e0e0",
+                        background: "#f7f3ff",
+                      }}
+                    >
+                      ✓ Select All Locations ({filteredLocations.length})
+                    </li>
+                  )}
+
                   {filteredLocations.map((loc, index) => (
                     <li
                       key={index}
