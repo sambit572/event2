@@ -21,6 +21,7 @@ import cartRouter from "./routes/user/cart.routes.js";
 import { searchRouter } from "./routes/common/search.routes.js";
 import calendarRoutes from "./routes/common/calendar.routes.js";
 
+
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
