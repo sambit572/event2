@@ -2,7 +2,7 @@
 .categoryHero {
   position: relative;
   width: 100%;
-  height: 25rem; /* big image height */
+  height: 240px; /* big image height */
   overflow: hidden;
   margin-top: -2px;
 }

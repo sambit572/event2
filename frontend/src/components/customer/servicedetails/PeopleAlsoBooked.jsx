@@ -1,6 +1,4 @@
-import { BsCurrencyRupee } from "react-icons/bs";
-import { IoIosStar } from "react-icons/io";
-import { FaHeart } from "react-icons/fa6";
+
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { BACKEND_URL } from "../../../utils/constant";

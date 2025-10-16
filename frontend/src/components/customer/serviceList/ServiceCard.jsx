@@ -18,6 +18,9 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [hovered, setHovered] = useState(false);
+  const [touchStartX, setTouchStartX] = useState(0);
+  const [touchEndX, setTouchEndX] = useState(0);
+  const minSwipeDistance = 50;
 
   if (!service) return null;
 
@@ -30,18 +33,35 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
     navigate(`/service/${categoryId}/${serviceId}`);
   };
 
-  const nextMedia = (e) => {
-    e.stopPropagation();
-    setCurrentIndex((prev) => (prev + 1) % media.length);
-  };
-
-  const prevMedia = (e) => {
-    e.stopPropagation();
-    setCurrentIndex((prev) => (prev === 0 ? media.length - 1 : prev - 1));
-  };
-
   const currentMediaUrl = media[currentIndex];
   const isVideo = getYouTubeID(currentMediaUrl);
+
+  const prevSlide = () =>
+    setCurrentIndex((i) => (i === 0 ? Math.max(media.length - 1, 0) : i - 1));
+
+  const nextSlide = () =>
+    setCurrentIndex((i) => (media.length ? (i + 1) % media.length : 0));
+
+  // swipe handlers
+  const onTouchStart = (e) => {
+    setTouchEndX(0);
+    setTouchStartX(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e) => {
+    setTouchEndX(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStartX || !touchEndX) return;
+    const distance = touchStartX - touchEndX;
+    if (distance > minSwipeDistance) {
+      nextSlide();
+    }
+    if (distance < -minSwipeDistance) {
+      prevSlide();
+    }
+  };
 
   return (
     <div
@@ -55,15 +75,9 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
              bg-gray-100 flex-shrink-0 md:sticky"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        onTouchStart={(e) => setTouchStart(e.touches[0].clientX)}
-        onTouchEnd={(e) => {
-          if (!touchStart) return;
-          const touchEnd = e.changedTouches[0].clientX;
-          const diff = touchStart - touchEnd;
-          if (diff > 50) nextImage(e); // swipe left
-          if (diff < -50) prevImage(e); // swipe right
-          setTouchStart(null);
-        }}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
       >
         <span className="absolute top-[10px] left-[10px] z-[3] bg-white/30 backdrop-blur-[30px] text-white text-[11px] font-bold uppercase tracking-[0.8px] px-[7px] py-[3px] rounded-full shadow-[0_3px_10px_rgba(0,0,0,0.3)] border border-white/30 [text-shadow:1px_1px_2px_rgba(0,0,0,0.6),-1px_-1px_1px_rgba(255,255,255,0.4)]">
           EventsBridge
@@ -94,6 +108,84 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
                   }`}
                 />
               )}
+              {/* ✅ Left Arrow */}
+              {media.length > 1 && (
+                <>
+                  {/* Mobile: always visible */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      prevSlide();
+                    }}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white sm:hidden"
+                  >
+                    <FaChevronLeft className="text-lg" />
+                  </button>
+
+                  {/* Desktop: visible only on hover */}
+                  {hovered && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        prevSlide();
+                      }}
+                      className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 hidden sm:flex"
+                    >
+                      <FaChevronLeft />
+                    </button>
+                  )}
+                </>
+              )}
+
+              {/* ✅ Right Arrow */}
+              {media.length > 1 && (
+                <>
+                  {/* Mobile: always visible */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      nextSlide();
+                    }}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white sm:hidden"
+                  >
+                    <FaChevronRight className="text-lg" />
+                  </button>
+
+                  {/* Desktop: visible only on hover */}
+                  {hovered && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        nextSlide();
+                      }}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 hidden sm:flex"
+                    >
+                      <FaChevronRight />
+                    </button>
+                  )}
+                </>
+              )}
+              {/* ✅ MODIFIED: Dots now show YouTube icon for videos */}
+              {media.length > 1 && (
+                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2">
+                  {media.map((mediaUrl, idx) => (
+                    <button
+                      key={idx}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setCurrentIndex(idx);
+                      }}
+                      className={`h-2 w-2 rounded-full p-0 cursor-pointer flex items-center justify-center ${
+                        idx === currentIndex ? "bg-white" : "bg-gray-400"
+                      }`}
+                    >
+                      {getYouTubeID(mediaUrl) && (
+                        <FaYoutube className="text-red-500 text-xs" />
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
 
               {/* Overlay if vendor not available */}
               {!isVendorAvailable && (
@@ -109,24 +201,62 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
                 </div>
               )}
 
-              {/* Left Arrow */}
-              {hovered && media.length > 1 && (
-                <button
-                  onClick={prevMedia}
-                  className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
-                >
-                  <FaChevronLeft />
-                </button>
+              {/* ✅ Left Arrow */}
+              {media.length > 1 && (
+                <>
+                  {/* Mobile: always visible */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      prevSlide();
+                    }}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white sm:hidden"
+                  >
+                    <FaChevronLeft className="text-lg" />
+                  </button>
+
+                  {/* Desktop: visible only on hover */}
+                  {hovered && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        prevSlide();
+                      }}
+                      className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 hidden sm:flex"
+                    >
+                      <FaChevronLeft />
+                    </button>
+                  )}
+                </>
               )}
 
-              {/* Right Arrow */}
-              {hovered && media.length > 1 && (
-                <button
-                  onClick={nextMedia}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
-                >
-                  <FaChevronRight />
-                </button>
+              {/* ✅ Right Arrow */}
+              {media.length > 1 && (
+                <>
+                  {/* Mobile: always visible */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      nextSlide();
+                    }}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white sm:hidden"
+                  >
+                    <FaChevronRight className="text-lg" />
+                  </button>
+
+                  {/* Desktop: visible only on hover */}
+                  {hovered && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        nextSlide();
+                      }}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 hidden sm:flex"
+                    >
+                      <FaChevronRight />
+                    </button>
+                  )}
+                </>
               )}
 
               {/* ✅ MODIFIED: Dots now show YouTube icon for videos */}
@@ -139,7 +269,7 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
                         e.stopPropagation();
                         setCurrentIndex(idx);
                       }}
-                      className={`h-3 w-3 rounded-full cursor-pointer flex items-center justify-center ${
+                      className={`h-2 w-2 rounded-full p-0 cursor-pointer flex items-center justify-center ${
                         idx === currentIndex ? "bg-white" : "bg-gray-400"
                       }`}
                     >

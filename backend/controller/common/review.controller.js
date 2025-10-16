@@ -31,8 +31,6 @@ export const addReview = async (req, res) => {
         .json({ success: false, message: "User not logged in" });
     }
 
-
-
     const userId = req.user._id;
 
     console.log("Incoming review data:", {
@@ -51,9 +49,22 @@ export const addReview = async (req, res) => {
     });
 
     res.status(201).json({ success: true, review });
-  } catch (err) {
-    console.error("Add Review Error:", err);
-    res.status(500).json({ success: false, message: "Failed to add review" });
+  } catch (error) {
+    console.error("❌ Error adding review:", error);
+    if (error.code === 11000) {
+      // Duplicate key error
+      return res.status(400).json({
+        success: false,
+        message: "You have already submitted a review for this service",
+      });
+    }
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Failed to add review",
+        error: error.message,
+      });
   }
 };
 
@@ -145,7 +156,6 @@ export const getServiceRatingSummary = async (req, res) => {
       serviceId: new mongoose.Types.ObjectId(serviceId),
       reviewMessage: { $nin: [null, ""] },
     });
-
 
     res.json({
       success: true,

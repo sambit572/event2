@@ -174,11 +174,13 @@ const ServiceDetailCard = ({ service }) => {
         navigator.clipboard
           .writeText(serviceUrl)
           .then(() => {
-            toast.success("Link copied! You can now share it on Instagram.");
+            toast.success("Link copied! You can now share it on Instagram.", {
+              duration: 1500,
+            });
             setShowShareMenu(false);
           })
           .catch(() => {
-            toast.error("Failed to copy link");
+            toast.error("Failed to copy link", { duration: 1500});
           });
         return;
       case "telegram":
@@ -190,11 +192,11 @@ const ServiceDetailCard = ({ service }) => {
         navigator.clipboard
           .writeText(serviceUrl)
           .then(() => {
-            toast.success("Link copied to clipboard!");
+            toast.success("Link copied to clipboard!", { duration: 1500 });
             setShowShareMenu(false);
           })
           .catch(() => {
-            toast.error("Failed to copy link");
+            toast.error("Failed to copy link", { duration: 1500 });
           });
         return;
       default:
@@ -316,7 +318,9 @@ const ServiceDetailCard = ({ service }) => {
       </h2>
 
       <div className="flex items-center gap-2 text-sm font-medium text-black mb-2 flex-wrap">
-        <span className="font-semibold text-blue-600 text-base">{vendorName || "Unknown Vendor"}</span>
+        <span className="font-semibold text-blue-600 text-base">
+          {vendorName || "Unknown Vendor"}
+        </span>
         <span className="text-gray-400 text-xs">|</span>
         <span className="flex items-center gap-1 bg-yellow-200 text-yellow-900 px-2 py-0.5 rounded-md text-xs">
           <FaRegCalendarCheck className="text-sm" />
@@ -359,13 +363,6 @@ const ServiceDetailCard = ({ service }) => {
           </>
         )}
       </div>
-      <p
-        className={`text-sm mb-1 ${
-          available ? "text-green-600" : "text-red-700"
-        }`}
-      >
-        {available ? null : "Out Of Service"}
-      </p>
       <p className="text-sm text-black mb-4">
         <span className="font-bold">Prep Time: </span>
         {formattedDuration}

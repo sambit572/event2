@@ -16,7 +16,7 @@ import photoBanner from "../../assets/serviceListBanner/photo-ban.png";
 import foodBanner from "../../assets/serviceListBanner/catering-banner.jpeg";
 import banquetBanner from "../../assets/serviceListBanner/banquet-banner.jpeg";
 import danceBanner from "../../assets/serviceListBanner/classical-ban.png";
-import islamicBanner from "../../assets/serviceListBanner/moulib-ban.png";
+import islamicBanner from "../../assets/serviceListBanner/moulib-ban (2).png";
 import christianBanner from "../../assets/serviceListBanner/christian-ban.png";
 import panditBanner from "../../assets/home/categoriesImages/pandit.png";
 import makeupBanner from "../../assets/serviceListBanner/beauty-ban.png";
@@ -25,6 +25,7 @@ import carBanner from "../../assets/serviceListBanner/car-ban.png";
 import fireworksBanner from "../../assets/home/categoriesImages/fireworks.png";
 import cardBanner from "../../assets/home/categoriesImages/marriage-card.png";
 import magicBanner from "../../assets/home/categoriesImages/magician.png";
+import stageBanner from "../../assets/home/categoriesImages/stage_decor.png";
 import eventBanner from "../../assets/home/categoriesImages/event_company.png";
 
 const ServiceCardSkeleton = () => (
@@ -74,6 +75,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
     "Fireworks": fireworksBanner,
     "Card Design & Printing": cardBanner,
     "Magic Shows": magicBanner,
+    "Stage Decor":stageBanner,
     "Event Company": eventBanner,
   };
 
