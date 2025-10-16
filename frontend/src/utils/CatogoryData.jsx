@@ -118,12 +118,6 @@ export const CategoryData = [
     tagline: "Illusions that Amaze All",
   },
   {
-    id: "stage-decor",
-    title: "Stage Decor",
-    image: image17, // Replace with your actual image import
-    tagline: "Designs That Dazzle, Moments That Matter",
-  },
-  {
     id: "event-management",
     title: "Event Company",
     image: image18,
