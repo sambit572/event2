@@ -518,7 +518,7 @@ const handleMediaUpload = (e) => {
                     <button
                       key={i}
                       onClick={() => handleMediaSelect(index, mediaUrl)}
-                      className={`w-3 h-3 flex items-center justify-center rounded-full ${
+                      className={`w-2 h-2 p-0 flex items-center justify-center rounded-full ${
                         selectedMediaUrl === mediaUrl
                           ? "bg-white"
                           : "bg-gray-400"
@@ -899,7 +899,7 @@ const handleMediaUpload = (e) => {
                     </div>
 
                     {/* Description with Read More */}
-                    <div className="mt-2">
+                    <div className="mt-1">
                       <div className="des font-semibold text-gray-800">
                         Description:
                       </div>
