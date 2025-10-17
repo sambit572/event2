@@ -3,7 +3,7 @@ import { FaTrash, FaEdit, FaPlus, FaYoutube } from "react-icons/fa";
 import axios from "axios";
 import { BACKEND_URL } from "../../utils/constant.js";
 import { MdReportGmailerrorred } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./DashboardServices.css";
 import ReactCrop, { centerCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
@@ -427,7 +427,7 @@ const DashboardServices = () => {
           return (
             <section
               key={index}
-              className="relative flex flex-col xl:flex-row gap-6 shadow-lg w-[90%] mx-auto mb-6 p-4 bg-white rounded-md border-l-4 border-[#00897b]"
+              className="relative flex flex-col xl:flex-row gap-6 shadow-lg w-[90%] mx-auto mb-6 p-4 bg-white rounded-md border-l-4 border-[#00897b] cursor-pointer hover:shadow-xl transition"
             >
               {/* Availability toggle */}
               <div className="absolute top-3 right-3 flex items-center gap-2">
@@ -456,32 +456,48 @@ const DashboardServices = () => {
               </div>
               {/* Image Slider Section */}
               <div className="relative w-full sm:w-[400px] sm:h-[200px] mt-5 mx-auto group">
-                {getYouTubeID(selectedMediaUrl) ? (
-                  <iframe
-                    className="w-full h-full object-cover rounded-md"
-                    src={`https://www.youtube.com/embed/${getYouTubeID(
-                      selectedMediaUrl
-                    )}?autoplay=1&mute=1&loop=1&playlist=${getYouTubeID(
-                      selectedMediaUrl
-                    )}&rel=0`}
-                    title="Service Video"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
-                ) : (
-                  <img
-                    src={selectedMediaUrl}
-                    alt="Service"
-                    className="w-full h-full object-cover rounded-md"
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src =
-                        "https://placehold.co/400x200/cccccc/ffffff?text=Image+Not+Found";
-                    }}
-                  />
+                <Link
+                  to={`/service/${service.serviceCategory}/${service._id}`}
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  {getYouTubeID(selectedMediaUrl) ? (
+                    <iframe
+                      className={`w-full h-full object-cover rounded-md transition-all duration-300 ${
+                        !service.available ? "grayscale brightness-75" : ""
+                      }`}
+                      src={`https://www.youtube.com/embed/${getYouTubeID(
+                        selectedMediaUrl
+                      )}?autoplay=1&mute=1&loop=1&playlist=${getYouTubeID(
+                        selectedMediaUrl
+                      )}&rel=0`}
+                      title="Service Video"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
+                  ) : (
+                    <img
+                      src={selectedMediaUrl}
+                      alt="Service"
+                      className={`w-full h-full object-cover rounded-md transition-all duration-300 ${
+                        !service.available ? "grayscale brightness-75" : ""
+                      }`}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src =
+                          "https://placehold.co/400x200/cccccc/ffffff?text=Image+Not+Found";
+                      }}
+                    />
+                  )}
+                </Link>
+                {/* Overlay when unavailable */}
+                {!service.available && (
+                  <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px] flex items-center justify-center rounded-md">
+                    <span className="text-white font-bold text-lg sm:text-sm px-4 py-2 bg-red-600/80 rounded-lg shadow-lg">
+                      Service Unavailable
+                    </span>
+                  </div>
                 )}
-
                 {currentServiceImages.length > 1 && (
                   <button
                     onClick={() => {
@@ -518,7 +534,7 @@ const DashboardServices = () => {
                     <button
                       key={i}
                       onClick={() => handleMediaSelect(index, mediaUrl)}
-                      className={`w-3 h-3 flex items-center justify-center rounded-full ${
+                      className={`w-2 h-2 p-0 flex items-center justify-center rounded-full ${
                         selectedMediaUrl === mediaUrl
                           ? "bg-white"
                           : "bg-gray-400"
@@ -862,15 +878,27 @@ const DashboardServices = () => {
                 /* View Mode */
                 <div className="right-section xl:w-[600px] items-start xl:ml-3">
                   <div className="details">
-                    <h2 className="details-h2 mt-6">{service.serviceName}</h2>
+                    <Link
+                      to={`/service/${service.serviceCategory}/${service._id}`}
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      <h2 className="details-h2 mt-6">{service.serviceName}</h2>
+                    </Link>
                     <div className="l">
                       <strong>Locations: </strong>
                       {Array.isArray(service.locationOffered) ? (
                         <>
-                          {expandedLocations[index]
-                            ? service.locationOffered.join(", ")
-                            : service.locationOffered.slice(0, 3).join(", ") +
-                              (service.locationOffered.length > 3 ? "..." : "")}
+                          <Link
+                            to={`/service/${service.serviceCategory}/${service._id}`}
+                            style={{ textDecoration: "none", color: "inherit" }}
+                          >
+                            {expandedLocations[index]
+                              ? service.locationOffered.join(", ")
+                              : service.locationOffered.slice(0, 3).join(", ") +
+                                (service.locationOffered.length > 3
+                                  ? "..."
+                                  : "")}
+                          </Link>
                           {service.locationOffered.length > 3 && (
                             <button
                               onClick={() => toggleExpandLocation(index)}
@@ -886,29 +914,37 @@ const DashboardServices = () => {
                         service.locationOffered
                       )}
                     </div>
-
-                    <div className="pr">
-                      <strong>Price: </strong>₹ {service.minPrice} - ₹{" "}
-                      {service.maxPrice}
-                    </div>
-                    <div className="c">
-                      <strong>Category: </strong> {service.serviceCategory}
-                    </div>
-                    <div className="d">
-                      <strong>Duration: </strong>{" "}
-                      {formatDuration(service.duration)}
-                    </div>
-
+                    <Link
+                      to={`/service/${service.serviceCategory}/${service._id}`}
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      <div className="pr">
+                        <strong>Price: </strong>₹ {service.minPrice} - ₹{" "}
+                        {service.maxPrice}
+                      </div>
+                      <div className="c">
+                        <strong>Category: </strong> {service.serviceCategory}
+                      </div>
+                      <div className="d">
+                        <strong>Duration: </strong>{" "}
+                        {formatDuration(service.duration)}
+                      </div>
+                    </Link>
                     {/* Description with Read More */}
                     <div className="mt-2">
                       <div className="des font-semibold text-gray-800">
                         Description:
                       </div>
                       <div className="text-gray-700">
-                        {expanded
-                          ? service.serviceDes
-                          : service.serviceDes.slice(0, 80) +
-                            (service.serviceDes.length > 80 ? "..." : "")}
+                        <Link
+                          to={`/service/${service.serviceCategory}/${service._id}`}
+                          style={{ textDecoration: "none", color: "inherit" }}
+                        >
+                          {expanded
+                            ? service.serviceDes
+                            : service.serviceDes.slice(0, 80) +
+                              (service.serviceDes.length > 80 ? "..." : "")}
+                        </Link>
                         {service.serviceDes.length > 80 && (
                           <button
                             onClick={toggleExpand}
@@ -919,10 +955,14 @@ const DashboardServices = () => {
                         )}
                       </div>
                     </div>
-
-                    <div className="u flex justify-between">
-                      <strong>User Reviews: </strong> {service.userReviews}
-                    </div>
+                    <Link
+                      to={`/service/${service.serviceCategory}/${service._id}`}
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      <div className="u flex justify-between">
+                        <strong>User Reviews: </strong> {service.userReviews}
+                      </div>
+                    </Link>
                   </div>
                 </div>
               )}
