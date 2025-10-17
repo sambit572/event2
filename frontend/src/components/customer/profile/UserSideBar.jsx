@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./UserSideBar.css";
 import { FaEdit, FaCamera, FaUpload, FaTrash } from "react-icons/fa";
-
+import { MdOutlineEdit } from "react-icons/md";
+import { IoKey } from "react-icons/io5";
 import axios from "axios";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -264,27 +265,6 @@ function UserSideBar({ isOpen, setShowPasswordModal }) {
               style={{ display: "none" }}
               disabled={uploading}
             />
-
-            {/* Remove Photo Button - Only show if photo exists */}
-            {profilePhoto && (
-              <button
-                className={`remove-photo-btn ${removing ? "removing" : ""}`}
-                onClick={() => setShowRemoveConfirm(true)}
-                disabled={uploading || removing}
-              >
-                {removing ? (
-                  <>
-                    <FaUpload className="remove-icon spinning" />
-                    <span className="remove-text">Removing...</span>
-                  </>
-                ) : (
-                  <>
-                    <FaTrash className="remove-icon" />
-                    <span className="remove-text">Remove Photo</span>
-                  </>
-                )}
-              </button>
-            )}
           </div>
         </div>
 
@@ -315,19 +295,19 @@ function UserSideBar({ isOpen, setShowPasswordModal }) {
         )}
 
         <ul className="custom-list-decor ">
-          <li className="typography custom-font ">
+          <li className="text-white font-montserrat text-[20px] not-italic font-bold leading-normal mt-[-10px] text-center tracking-[1px]">
             {editMode ? (
               <input
                 type="text"
                 value={fullName}
-                className="custom-li"
+                className="custom-li uppercase"
                 onChange={(e) => setFullName(e.target.value)}
               />
             ) : (
-              fullName || "N/A"
+              fullName.toUpperCase() || "N/A"
             )}
           </li>
-          <li className="typography">
+          <li className="text-[#d4d4d4] mr-2 text-[13px] text-center not-italic font-medium leading-normal mt-[15px] tracking-[0.5px]">
             {editMode ? (
               <input
                 type="email"
@@ -340,7 +320,7 @@ function UserSideBar({ isOpen, setShowPasswordModal }) {
             )}
           </li>
 
-          <li className="typography">
+          <li className="text-[#fff] text-[16px] ml-1 not-italic font-medium leading-normal mt-[1px] tracking-[0.5px]">
             {editMode ? (
               <input
                 type="text"
@@ -352,26 +332,71 @@ function UserSideBar({ isOpen, setShowPasswordModal }) {
               contact || "N/A"
             )}
           </li>
-
-          <li className="typography">Events Booked: {eventsBooked}</li>
+          <p className="mt-5 ml-1 text-[#fff] font-semibold text-[18px]">
+            Quick Status
+          </p>
+          <li className="text-[15px] ml-1 not-italic font-medium leading-normal mt-[1px] tracking-[0.5px]">
+            {" "}
+            <span className="mr-10 text-[#d4d4d4]">Events Booked</span>{" "}
+            <span className="text-[#fff]">{eventsBooked}</span>
+          </li>
         </ul>
 
-        <button
-          className="ch-password"
+        <div
+          className="flex items-center mt-1 ml-1 cursor-pointer hover:text-[#f3c12d]"
           onClick={() => setShowPasswordModal(true)}
         >
-          Change Password
-        </button>
+          <span className="font-semibold mr-2 mt-0.5 text-[#fff] hover:text-[#f3c12d]">
+            <IoKey className="text-[20px]" />
+          </span>
+          <span>Change Password</span>
+        </div>
 
-        <button className="edit-button flex gap-1" onClick={handleToggleEdit}>
+        <div
+          className="flex items-center ml-1 mt-4 cursor-pointer text-[16px] hover:text-[#f3c12d]"
+          onClick={handleToggleEdit}
+        >
           {editMode ? (
-            "Save"
+            <span    className="mt-2 px-5 py-2.5 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 
+                shadow-md hover:from-blue-600 hover:to-blue-700 hover:shadow-lg 
+                active:scale-95 ml-12 active:shadow-inner 
+                transition-all duration-200 ease-in-out">
+              Save
+            </span>
           ) : (
             <>
-              <FaEdit /> Edit
+              <span className="mr-2 text-lg text-white hover:text-[#f3c12d] transition">
+                <MdOutlineEdit />
+              </span>
+              <span className="text-white hover:text-[#f3c12d] transition">
+                Edit
+              </span>
             </>
           )}
-        </button>
+        </div>
+
+        {/* Remove Photo Button - Only show if photo exists */}
+        {profilePhoto && (
+          <button
+            className={`flex items-center justify-center gap-2 bg-gradient-to-br from-[#FFD93D] to-[#E6B800] text-[#2D004D] px-4 py-2 rounded-[30px] cursor-pointer text-[13px] font-semibold text-center transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] border-0 shadow-[0_4px_15px_rgba(255,107,107,0.3)] relative overflow-hidden mt-3 font-montserrat tracking-[0.5px] remove-photo-btn ${
+              removing ? "removing" : ""
+            }`}
+            onClick={() => setShowRemoveConfirm(true)}
+            disabled={uploading || removing}
+          >
+            {removing ? (
+              <>
+                <FaUpload className="remove-icon spinning" />
+                <span className="remove-text">Removing...</span>
+              </>
+            ) : (
+              <>
+                <FaTrash className="remove-icon" />
+                <span className="remove-text">Remove Photo</span>
+              </>
+            )}
+          </button>
+        )}
       </div>
     </div>
   );
