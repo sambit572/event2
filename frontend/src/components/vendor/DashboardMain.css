@@ -1,14 +1,14 @@
 .dashboard-hamburger {
-  font-size: 28px;
+  font-size: 25px;
   font-weight: bold;
   border: none;
   color: #6a1b9a;
   cursor: pointer;
-  margin: 10px;
+  margin-left: 0.2rem;
   z-index: 30;
   position: fixed;
   left: 220px;
-  padding: 5px;
+  padding-left: 0.5rem;
   background: none;
   display: none;
 }
@@ -235,7 +235,7 @@
   .dashboard-hamburger {
     display: flex;
     left: 0;
-    top: 80px;
+    top: 64px;
   }
 
   .open {
@@ -276,8 +276,9 @@
   }
   .dashboard-hamburger {
     display: flex;
+    font-size: 24px;
     left: 0;
-    top: 60px;
+    top: 45px;
   }
 }
 /* Phone screens (max-width: 430px) */
