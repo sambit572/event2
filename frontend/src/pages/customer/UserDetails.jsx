@@ -356,7 +356,7 @@ const UserDetails = () => {
   const locationPath = useLocation();
   const from = locationPath.state?.from || "/";
 
-  console.log("pathname", from);
+  // console.log("pathname", from);
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -365,11 +365,11 @@ const UserDetails = () => {
 
       try {
         if (serviceId) {
-          console.log("Fetching single service:", serviceId);
+          // console.log("Fetching single service:", serviceId);
           const { data } = await axios.get(
             `${BACKEND_URL}/common/service/${serviceId}`
           );
-          console.log("Single service response:", data);
+          // console.log("Single service response:", data);
           if (data.success && data.service) {
             servicesToBook.push(data.service);
             serviceIdsForForm = data.service._id;
@@ -389,7 +389,7 @@ const UserDetails = () => {
             serviceIdsForForm = servicesToBook.map((s) => s._id);
           }
         }
-        console.log("Final servies to book:", servicesToBook);
+        // console.log("Final servies to book:", servicesToBook);
 
         if (servicesToBook.length > 0) {
           setFormData((prev) => ({ ...prev, serviceId: serviceIdsForForm }));
