@@ -17,7 +17,7 @@ import slider_11 from "../../assets/home/sliderImages/slider_11.jpeg";
 import CategoryCard from "../../components/customer/home/CategoryCard.jsx";
 import ImageSlider from "../../components/customer/home/ImageSlider.jsx";
 
-import Milestones from "../../components/common/aboutus/Milestones";
+// import Milestones from "../../components/common/aboutus/Milestones";
 import AddsBanner from "../../components/customer/home/AddsBanner.jsx";
 import categories from "../../utils/CatogoryData.jsx";
 import StepsSection from "../../components/customer/home/StepsSection.jsx";

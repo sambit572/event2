@@ -143,32 +143,37 @@ const CustomerNegotiationModal = () => {
     // console.log("Current vendor:", currentVendor);
     // console.log("Booking details:", bookingDetails);
     const negotiationData = {
-      vendorId: currentVendor._id,
-      vendorName: currentVendor.fullName,
-      vendorEmail: currentVendor.email,
-      vendorPhoneNumber: currentVendor.phone,
-      vendorLocation: currentService?.stateLocationOffered,
+      vendorId: currentVendor?._id,
+      vendorName: currentVendor?.fullName || "Unknown Vendor",
+      vendorEmail: currentVendor?.email || "no-email@example.com",
+      vendorPhoneNumber: currentVendor?.phone || "N/A",
+      vendorLocation: currentService?.stateLocationOffered || [],
 
-      serviceId: currentService._id,
-      serviceName: currentService.serviceName,
+      serviceId: currentService?._id,
+      serviceName: currentService?.serviceName || "Unknown Service",
 
-      bookedByUserId: bookingDetails.bookedById,
-      bookedByUser: bookingDetails.bookedBy,
-      bookedByUserEmail: bookingDetails.userEmail,
-      bookedByUserPhoneNumber: bookingDetails.phone,
-      bookedByUserAltPhoneNumber: bookingDetails.altPhone,
+      bookedByUserId: bookingDetails?.bookedById,
+      bookedByUser: bookingDetails?.bookedBy || "Unknown User",
+      bookedByUserEmail:
+        bookingDetails?.userEmail || "no-user-email@example.com",
+      bookedByUserPhoneNumber: bookingDetails?.phone || "N/A",
+      bookedByUserAltPhoneNumber: bookingDetails?.altPhone || "N/A",
 
-      venueLocation: venueInput,
-      proposedPrice: proposedPrice,
+      venueLocation: venueInput || "Unknown Venue",
+      proposedPrice: proposedPrice ?? 0,
 
       date: {
-        startDate: new Date(bookingDetails.startDate),
-        endDate: new Date(bookingDetails.endDate),
+        startDate: bookingDetails?.startDate
+          ? new Date(bookingDetails.startDate)
+          : new Date(),
+        endDate: bookingDetails?.endDate
+          ? new Date(bookingDetails.endDate)
+          : new Date(),
       },
 
       originalPriceRange: {
-        min: currentService.minPrice,
-        max: currentService.maxPrice,
+        min: currentService?.minPrice ?? 0,
+        max: currentService?.maxPrice ?? 0,
       },
     };
 
