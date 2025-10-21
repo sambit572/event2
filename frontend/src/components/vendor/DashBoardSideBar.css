@@ -66,14 +66,13 @@ padding-bottom: 50px;
 .profile-photo-wrapper {
   position: relative;
   display: inline-block;
-  margin-top: 20px;
   width: 170px;
 
 }
 
 .user-profile-pic {
-  width: 120px;
-  height: 120px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   object-fit: cover;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
@@ -222,8 +221,6 @@ padding-bottom: 50px;
 .custom-list-decor-dashboard {
   list-style: none;
   position: relative;
-  margin-top: 30px;
-  /* top: -20px; */
 }
 
 .typography {
@@ -322,8 +319,7 @@ color: #ffc107;
   color: #ffffff;
   gap: 8px;
   font-weight: 500;
-  margin-left: 85px;
-  margin-top: 5px;
+  margin-left: 24px;
 }
 
 .status-dot {
@@ -404,7 +400,6 @@ color: #ffc107;
 
   .custom-list-decor-dashboard {
     position: relative;
-    top: -23px;
   }
 }
 
