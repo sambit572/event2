@@ -38,8 +38,8 @@
 }
 
 .stickyHeader {
-  position: fixed;   /* change from sticky → fixed */
-  top: 60px;         /* exactly 60px below navbar */
+  position: fixed; /* change from sticky → fixed */
+  top: 60px; /* exactly 60px below navbar */
   left: 0;
   width: 100%;
   z-index: 50;
@@ -49,16 +49,14 @@
   align-items: center;
   gap: 12px;
   border-bottom: 1px solid #ddd;
-  opacity: 1;        /* always visible */
+  opacity: 1; /* always visible */
   transform: translateY(0); /* no slide-in */
 }
-
 
 .stickyHeader.show {
   opacity: 1;
   transform: translateY(0);
 }
-
 
 .stickyHeader h2 {
   font-size: 1.2rem;
@@ -164,7 +162,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   transition: all 0.2s ease;
 }
 
@@ -213,13 +211,13 @@
     margin-top: 0;
   }
   .stickyHeader h2 {
-  font-size: 0.85rem;
-}
+    font-size: 0.85rem;
+  }
 
-.stickyHeader .backArrowSticky {
-  font-size: 1rem;
-}
-.subcategory-wrapper{
-  margin-top: 57px;
-}
+  .stickyHeader .backArrowSticky {
+    font-size: 1rem;
+  }
+  .subcategory-wrapper {
+    margin-top: 57px;
+  }
 }

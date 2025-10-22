@@ -316,7 +316,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
     e.stopPropagation();
     const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
     if (!isLoggedIn) {
-      toast.error("Please log in to get notifications.",{duration:2000});
+      toast.error("Please log in to get notifications.", { duration: 2000 });
       if (onSwitchToLogin) onSwitchToLogin(true);
       return;
     }
@@ -326,9 +326,11 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
         { serviceId },
         { withCredentials: true }
       );
-      toast.success("You'll be notified when this service becomes available!",{duration:3000});
+      toast.success("You'll be notified when this service becomes available!", {
+        duration: 3000,
+      });
     } catch (err) {
-      toast.error("Failed to set up notification.",{duration:2000});
+      toast.error("Failed to set up notification.", { duration: 2000 });
       console.error("Notify me error:", err);
     }
   };
@@ -362,7 +364,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
   }, [service]);
 
   return (
-    <section className="relative flex h-full flex-col bg-[#fff] p-4 sm:pr-[40px] text-gray-800 md:py-0 px-5">
+    <section className="relative flex h-full flex-col bg-[#ffffff] p-4 sm:pr-[40px] text-gray-800 md:py-0 px-5">
       <div className="absolute top-[0.5rem] right-4 z-20 flex flex-col items-end gap-3 md:right-5">
         <div
           className={`h-10 w-10 flex items-center justify-center rounded-full bg-gray-100 shadow-md cursor-pointer transition-all duration-300 ${
@@ -579,7 +581,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
           {isVendorAvailable ? (
             <>
               <button
-                className="flex w-full cursor-pointer items-center justify-center rounded-full bg-[#001f3f] lg:px-12 lg:py-3 px-1 py-1 text-xs lg:text-sm font-bold text-white transition-colors duration-300 ease-in-out hover:bg-[#002366] hover:border-[#FFD700] active:bg-[#000d1a] active:border-[#F3C12D] lg:w-auto lg:min-w-[120px] shadow-md hover:shadow-lg"
+                className="flex w-full cursor-pointer items-center justify-center rounded-full bg-[#001f3f] lg:px-18 lg:py-3 px-1 py-1 text-xs lg:text-sm font-bold text-white transition-colors duration-300 ease-in-out hover:bg-[#002366] hover:border-[#FFD700] active:bg-[#000d1a] active:border-[#F3C12D]   shadow-md hover:shadow-lg"
                 onClick={handleBookNow}
               >
                 BOOK NOW
@@ -591,8 +593,8 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
              bg-gradient-to-r from-[#fb923c] to-[#ef4444] 
              text-white font-bold transition-all duration-300 shadow-md 
              hover:shadow-lg hover:from-[#fca5a5] hover:to-[#dc2626] 
-             lg:px-12 lg:py-3 px-1 py-2 lg:text-sm text-xs 
-             lg:w-auto lg:min-w-[120px]"
+             lg:px-18 lg:py-3  px-1 py-2 lg:text-sm text-xs 
+             "
                 onClick={handleAddToCart}
               >
                 ADD TO CART

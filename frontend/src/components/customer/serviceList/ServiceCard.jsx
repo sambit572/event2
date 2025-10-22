@@ -70,7 +70,7 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
     >
       <div
         className="relative overflow-hidden rounded-lg 
-             w-full md:w-[400px] lg:w-[480px] 
+             w-full md:w-[400px] lg:w-[400px] xl:w-[550px] 
              h-[200px] lg:h-[290px] 
              bg-gray-100 flex-shrink-0 md:sticky"
         onMouseEnter={() => setHovered(true)}

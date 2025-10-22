@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { BACKEND_URL } from "../../../utils/constant";
@@ -38,7 +37,7 @@ const SimilarProductCard = ({ product }) => {
       onClick={handleClick}
     >
       {/* Image */}
-      <div className="relative w-full max-w-sm aspect-[4/3] overflow-hidden flex items-center justify-center bg-gray-100">
+      <div className="relative w-full max-w-full aspect-[4/3] overflow-hidden flex items-center justify-center bg-gray-100">
         <img
           src={product.serviceImage[0]}
           alt="DJ Service"

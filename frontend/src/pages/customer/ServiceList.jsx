@@ -72,10 +72,10 @@ const ServiceList = ({ onSwitchToLogin }) => {
     "Beauty Makeover": makeupBanner,
     "Floral Decor": floralBanner,
     "Ceremonial Ride": carBanner,
-    "Fireworks": fireworksBanner,
+    Fireworks: fireworksBanner,
     "Card Design & Printing": cardBanner,
     "Magic Shows": magicBanner,
-    "Stage Decor":stageBanner,
+    "Stage Decor": stageBanner,
     "Event Company": eventBanner,
   };
 

@@ -5,7 +5,7 @@ import axios from "axios";
 
 import "./ServiceDetails.css";
 import RatingDetails from "../../components/customer/ServiceDetails/RatingDetails.jsx";
-import SimilarProductCard from "../../components/customer/servicedetails/PeopleAlsoBooked.jsx";
+import SimilarProductCard from "../../components/customer/ServiceDetails/PeopleAlsoBooked.jsx";
 import DJServiceCard from "../../components/customer/ServiceDetails/ServiceDetailCard.jsx";
 import ReviewList from "../../components/customer/servicedetails/ReviewList.jsx";
 import ReviewForm from "../../components/customer/servicedetails/ReviewForm.jsx";
@@ -479,7 +479,7 @@ const Service = ({ onSwitchToLogin }) => {
       </div>
       <div className="view-dj-section">
         <h2 className="people-also-book">People Also Booked</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mt-5 mb-5">
+        <div className="grid grid-cols-1  sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mt-5 mb-5">
           {categoryServices.map((product) => (
             <SimilarProductCard key={product.id} product={product} />
           ))}

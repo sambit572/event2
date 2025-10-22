@@ -180,7 +180,7 @@ const ServiceDetailCard = ({ service }) => {
             setShowShareMenu(false);
           })
           .catch(() => {
-            toast.error("Failed to copy link", { duration: 1500});
+            toast.error("Failed to copy link", { duration: 1500 });
           });
         return;
       case "telegram":
@@ -209,7 +209,7 @@ const ServiceDetailCard = ({ service }) => {
   };
 
   return (
-    <div className="relative w-full rounded-lg border border-gray-200 bg-white p-4 mt-5">
+    <div className="relative w-full rounded-lg border border-gray-200 bg-red p-4 mt-5">
       <div className="absolute top-4 right-4 z-20 flex flex-col items-end gap-3">
         <div
           className={`h-10 w-10 flex items-center justify-center rounded-full bg-gray-200 shadow-md cursor-pointer transition-all duration-300 ${
