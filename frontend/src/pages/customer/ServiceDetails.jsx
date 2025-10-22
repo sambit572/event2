@@ -392,7 +392,7 @@ const Service = ({ onSwitchToLogin }) => {
                           e.stopPropagation();
                           setCurrentIndex(idx);
                         }}
-                        className={`h-2 w-2 rounded-full cursor-pointer flex items-center justify-center ${
+                        className={`h-2 w-2 p-0 rounded-full cursor-pointer flex items-center justify-center ${
                           idx === currentIndex ? "bg-white" : "bg-gray-400"
                         }`}
                       >

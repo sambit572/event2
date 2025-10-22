@@ -430,7 +430,7 @@ const DashboardServices = () => {
               className="relative flex flex-col xl:flex-row gap-6 shadow-lg w-[90%] mx-auto mb-6 p-4 bg-white rounded-md border-l-4 border-[#00897b] cursor-pointer hover:shadow-xl transition"
             >
               {/* Availability toggle */}
-              <div className="absolute top-3 right-3 flex items-center gap-2">
+              <div className="absolute top-[0.5rem] right-3 flex items-center gap-2">
                 <label
                   className={`relative w-12 h-6 sm:w-14 sm:h-7 rounded-full cursor-pointer p-[2px] transition-colors duration-300 ${
                     service.available ? "bg-blue-500" : "bg-gray-300"
@@ -493,7 +493,7 @@ const DashboardServices = () => {
                 {/* Overlay when unavailable */}
                 {!service.available && (
                   <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px] flex items-center justify-center rounded-md">
-                    <span className="text-white font-bold text-lg sm:text-sm px-4 py-2 bg-red-600/80 rounded-lg shadow-lg">
+                    <span className="text-white font-bold text-sm sm:text-sm px-4 py-2 bg-red-600/80 rounded-lg shadow-lg">
                       Service Unavailable
                     </span>
                   </div>
