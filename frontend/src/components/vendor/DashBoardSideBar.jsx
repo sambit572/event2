@@ -141,7 +141,7 @@ function DashBoardSideBar({
 
   return (
     <div className={`dash-sidebar ${isOpen ? "open" : ""}`}>
-      <h2 className="dasgboardHeading">DASHBOARD</h2>
+      <h2 className="dashboardHeading">DASHBOARD</h2>
       <div className="sidebar-content">
         <div className="profile-photo-container">
           <div className="profile-photo-wrapper">
@@ -271,7 +271,7 @@ function DashBoardSideBar({
             )}
           </li>
 
-          <li className="text-[#fff] text-[16px] ml-7 not-italic font-medium leading-normal mt-[1px] tracking-[0.5px]">
+          <li className="text-[#fff] text-[16px] text-center not-italic font-medium leading-normal mt-[1px] tracking-[0.5px]">
             {editMode ? (
               <input
                 type="text"
@@ -283,16 +283,16 @@ function DashBoardSideBar({
               form.phoneNumber
             )}
           </li>
-          <p className="mt-5 ml-7 text-[#fff] font-semibold text-[18px]">
+          <p className="mt-3 text-center text-[#fff] font-semibold text-[18px]">
             Quick Status
           </p>
-          <li className="text-[15px] ml-7 not-italic font-medium leading-normal mt-[1px] tracking-[0.5px]">
-            <span className="mr-12 text-[#d4d4d4]">Event Hosted</span>{" "}
+          <li className="text-[15px] text-center ml-2 not-italic font-medium leading-normal mt-[1px] tracking-[0.5px]">
+            <span className=" text-center text-[#d4d4d4]">Event Hosted</span>{" "}
             <span className="text-[#fff]">{vendor?.eventsHosted ?? 0}</span>
           </li>
 
           <div
-            className="flex items-center mt-6 ml-7 cursor-pointer hover:text-[#f3c12d]"
+            className="flex items-center mt-5 ml-7 cursor-pointer hover:text-[#f3c12d]"
             onClick={() => setVendorShowPasswordModal(true)}
           >
             <span className="font-semibold mr-2 mt-0.5 text-[#fff] hover:text-[#f3c12d]">
@@ -306,12 +306,12 @@ function DashBoardSideBar({
               onClick={() =>
                 updateField("bankDropdownOpen", !form.bankDropdownOpen)
               }
-              className="flex items-center cursor-pointer mt-4 ml-7 hover:text-[#f3c12d] "
+              className="flex items-center cursor-pointer mt-4 ml-8 hover:text-[#f3c12d] "
             >
               <span>
-                <BsBank className="text-[16px] mr-2" />
+                <BsBank className="text-[16px] mr-5" />
               </span>
-              <span className="mr-8">Bank Details </span>{" "}
+              <span className="mr-5">Bank Details </span>{" "}
               <span>
                 {form.bankDropdownOpen ? (
                   <IoIosArrowUp className="text-white text-lg font-bold transition-transform duration-200 hover:text-[#f3c12d]" />
@@ -384,7 +384,7 @@ function DashBoardSideBar({
             </div>
           ) : (
             <div
-              className="flex items-center ml-7 mt-4 cursor-pointer text-[16px] hover:text-[#f3c12d]"
+              className="flex items-center ml-[80px] mt-[10px] cursor-pointer text-[16px] hover:text-[#f3c12d]"
               onClick={handleToggleEdit}
             >
               <span className="mr-2 text-lg">
