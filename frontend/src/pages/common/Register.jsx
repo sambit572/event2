@@ -79,7 +79,10 @@ const Register = ({ onClose, onSwitchToLogin }) => {
 
       // Save user to Redux & localStorage
       dispatch(setUser(user));
-      localStorage.setItem("userFirstName", user?.fullName?.split(" ")[0] || "");
+      localStorage.setItem(
+        "userFirstName",
+        user?.fullName?.split(" ")[0] || ""
+      );
       localStorage.setItem("currentlyLoggedIn", "true");
 
       // Notify other components & show success
@@ -101,90 +104,106 @@ const Register = ({ onClose, onSwitchToLogin }) => {
     if (step === "success") {
       return <SuccessBlock showIcon={showSuccessIcon} onClose={onClose} />;
     }
-
     return (
-      <form onSubmit={handleRegister}>
+      <form
+        onSubmit={handleRegister}
+        className="space-y-4 w-full max-w-md mx-auto"
+      >
+        {/* Full Name */}
         <input
           type="text"
           name="fullName"
-          className="login-input"
-          placeholder="Enter full name"
+          placeholder="Full Name"
           value={formData.fullName}
           onChange={handleChange}
           required
+          className="w-full px-4 py-3 rounded-xl bg-white/80 border border-gray-200 text-gray-700 placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-400 outline-none transition-all"
         />
 
+        {/* Email */}
         <input
           type="email"
           name="email"
-          className="login-input"
-          placeholder="Enter email"
+          placeholder="Email Address"
           value={formData.email}
           onChange={handleChange}
           required
+          className="w-full px-4 py-3 rounded-xl bg-white/80 border border-gray-200 text-gray-700 placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-400 outline-none transition-all"
         />
 
+        {/* Phone */}
         <input
           type="number"
           name="phoneNo"
-          className="login-input"
-          placeholder="+91 | Enter the 10 digit number"
+          placeholder="Phone Number"
           value={formData.phoneNo}
           onChange={handleChange}
           required
+          className="w-full px-4 py-3 rounded-xl bg-white/80 border border-gray-200 text-gray-700 placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-400 outline-none transition-all"
         />
 
-        <div className="relative w-full mb-4">
+        {/* Password */}
+        <div className="relative">
           <input
             type={showPassword ? "text" : "password"}
             name="password"
-            placeholder="Enter password"
+            placeholder="Password"
             value={formData.password}
             onChange={handleChange}
             minLength={8}
             required
-            className="w-full px-2 pr-10 py-2 border border-[#001f3f] rounded-md focus:outline-none"
+            className="w-full px-4 py-3 pr-10 rounded-xl bg-white/80 border border-gray-200 text-gray-700 placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-400 outline-none transition-all"
           />
           <span
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-indigo-600 cursor-pointer"
           >
             {showPassword ? <FiEyeOff /> : <FiEye />}
           </span>
         </div>
 
-        <div className="relative w-full mb-4">
+        {/* Confirm Password */}
+        <div className="relative">
           <input
             type={showConfirmPassword ? "text" : "password"}
             name="confirmPassword"
-            placeholder="Confirm password"
+            placeholder="Confirm Password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             minLength={8}
             required
-            className="w-full px-2 pr-10 py-2 border border-[#001f3f] rounded-md focus:outline-none"
+            className="w-full px-4 py-3 pr-10 rounded-xl bg-white/80 border border-gray-200 text-gray-700 placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-400 outline-none transition-all"
           />
           <span
             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-indigo-600 cursor-pointer"
           >
             {showConfirmPassword ? <FiEyeOff /> : <FiEye />}
           </span>
         </div>
 
-        {errorMsg && <p className="error">{errorMsg}</p>}
+        {errorMsg && (
+          <p className="text-center text-red-500 text-sm font-medium animate-pulse">
+            {errorMsg}
+          </p>
+        )}
 
-        <button type="submit" className="otp-button" disabled={loading}>
-          {loading ? "Registering..." : "Register"}
+        {/* Submit Button */}
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-semibold shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:-translate-y-0.5"
+        >
+          {loading ? "Creating Account..." : "Create Account"}
         </button>
 
-        <p className="signup-text">
+        <p className="text-center text-gray-600 text-sm">
           Already have an account?{" "}
           <span
-            className="login-link text-blue-600 cursor-pointer hover:underline underline-offset-2"
             onClick={onSwitchToLogin}
+            className="text-indigo-600 font-semibold cursor-pointer hover:underline"
           >
-            Log In
+            Log in
           </span>
         </p>
       </form>
@@ -192,15 +211,52 @@ const Register = ({ onClose, onSwitchToLogin }) => {
   };
 
   return (
-    <div className="login-wrapper" onClick={onClose}>
-      <div className="login-modal max-w-[420px] border border-blue-500 bg-white px-[30px] py-[20px]" onClick={(e) => e.stopPropagation()}>
-        {onClose && (
-          <button className="modal-close" onClick={onClose}>
-            ×
-          </button>
-        )}
-        <h2 className="login-title">Sign Up</h2>
-        {renderStep()}
+    <div
+      className="login-wrapper  h-[90vh] flex items-center justify-center z-[9999] backdrop-blur-md"
+      onClick={onClose}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="p-0 login-modal lg:h-[90vh] sm:h-0 max-w-3xl  flex flex-col md:flex-row rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-all duration-300 hover:shadow-purple-500/20"
+      >
+        {/* Left Side */}
+        <div className="hidden md:flex md:w-1/2 relative items-center justify-center bg-gradient-to-b from-purple-800 via-indigo-900 to-black p-3 overflow-hidden">
+          <div className="flex flex-col items-center justify-center text-center space-y-1 z-10">
+            {/* Image */}
+            <img
+              src="../new-illustrator.png"
+              alt="Welcome"
+              className="h-[60%] w-auto object-contain opacity-95 drop-shadow-2xl hover:scale-105 transition-transform duration-500"
+            />
+
+            {/* Welcome Text Block */}
+            <div className="bg-white/10 backdrop-blur-lg p-3 rounded-xl shadow-lg border border-white/20 max-w-xs">
+              <h2 className="text-yellow-300 text-2xl font-bold mb-1 drop-shadow-md">
+                Join EventsBridge !
+              </h2>
+              <p className="text-indigo-100 text-[14px] leading-relaxed">
+                Discover, book, and experience unforgettable event services —
+                all in one place.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Side */}
+        <div className="w-full md:w-1/2 bg-gradient-to-br from-white to-indigo-50 p-4 md:p-6 relative">
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-5 text-2xl text-gray-400 hover:text-indigo-600 transition-all hover:rotate-90"
+            >
+              ×
+            </button>
+          )}
+          <h2 className="text-center text-3xl font-extrabold text-indigo-900 mb-6">
+            Create Account
+          </h2>
+          {renderStep()}
+        </div>
       </div>
     </div>
   );

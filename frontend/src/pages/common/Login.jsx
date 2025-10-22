@@ -253,7 +253,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
           />
         </div>
 
-        <div className="flex items-center my-4">
+        <div className="flex items-center my-1">
           <div className="flex-grow h-px bg-gray-300" />
           <span className="px-3 text-sm text-gray-500">or</span>
           <div className="flex-grow h-px bg-gray-300" />
@@ -265,14 +265,19 @@ const Login = ({ onClose, onSwitchToRegister }) => {
           placeholder="+91 | Enter your phone number"
           value={formData.phoneNo}
           onChange={handleChange}
-          className="login-input w-full px-4 py-2 mb-3 border border-gray-300 rounded-md"
+          className="w-full rounded-lg border border-gray-300 bg-white/80 px-4 py-3 text-gray-800 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-300 transition-all duration-300 placeholder:text-gray-400 shadow-sm hover:shadow-md"
         />
         <button
-          className="otp-button w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md mb-4"
+          className="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-semibold shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:-translate-y-0.5"
           onClick={handleGetOTP}
         >
-          Get OTP
+          Send OTP
         </button>
+        <div className="flex items-center my-3">
+          <div className="flex-grow h-px bg-gray-300" />
+          <span className="px-3 text-sm text-gray-500">or</span>
+          <div className="flex-grow h-px bg-gray-300" />
+        </div>
 
         <input
           type="email"
@@ -280,7 +285,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
           placeholder="Enter email"
           value={formData.email}
           onChange={handleChange}
-          className="login-input w-full px-4 py-2 mb-3 border border-gray-300 rounded-md"
+          className="w-full rounded-lg border border-gray-300 bg-white/80 px-4 py-3 text-gray-800 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-300 transition-all duration-300 placeholder:text-gray-400 shadow-sm hover:shadow-md"
         />
         <div className="relative w-full mb-4">
           <input
@@ -290,7 +295,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
             value={formData.password}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
+            className="w-full rounded-lg border border-gray-300 bg-white/80 px-4 py-3 pr-10 text-gray-800 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-300 transition-all duration-300 placeholder:text-gray-400 shadow-sm hover:shadow-md"
           />
           <span
             onClick={() => setShowPassword(!showPassword)}
@@ -309,7 +314,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
         {errorMsg && <p className="text-sm text-red-600 mb-3">{errorMsg}</p>}
         <button
-          className="otp-button w-full bg-blue-700 hover:bg-blue-900 text-white py-2 rounded-md mb-4"
+          className="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-semibold shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:-translate-y-0.5"
           onClick={handleLogin}
         >
           Login
@@ -338,7 +343,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
     >
       {isLoading && <Spinner />}
       <div
-        className="p-0 login-modal h-[95vh] max-w-3xl  flex flex-col md:flex-row rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-all duration-300 hover:shadow-purple-500/20"
+        className="p-0 login-modal lg:h-[90vh] sm:h-0 max-w-3xl  flex flex-col md:flex-row rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-all duration-300 hover:shadow-purple-500/20"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Left Side - Image + Welcome Message */}
@@ -354,11 +359,11 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
             {/* Welcome Text Block */}
             <div className="bg-white/10 backdrop-blur-lg p-3 rounded-xl shadow-lg border border-white/20 max-w-xs">
-              <h2 className="text-yellow-300 text-xl font-bold mb-1 drop-shadow-md">
-                Welcome Back!
+              <h2 className="text-yellow-300 text-2xl font-bold mb-1 drop-shadow-md">
+                Welcome Back !
               </h2>
-              <p className="text-indigo-100 text-[10px] leading-relaxed">
-                Sign in to your account and continue exploring endless
+              <p className="text-indigo-100 text-[14px] leading-relaxed">
+                Log In to your account and continue exploring endless
                 opportunities with us.
               </p>
             </div>
@@ -378,13 +383,10 @@ const Login = ({ onClose, onSwitchToRegister }) => {
             </button>
           )}
 
-          <div className="text-center mb-4">
-            <h2 className="text-3xl font-extrabold bg-gradient-to-r from-purple-600 via-indigo-700 to-blue-600 bg-clip-text text-transparent tracking-wide drop-shadow-md mb-2">
+          <div className="text-center mb-2">
+            <h2 className="text-center text-3xl font-extrabold text-indigo-900 mb-2">
               Log In
             </h2>
-            <p className="text-gray-500 text-sm">
-              Securely access your account to manage and explore.
-            </p>
           </div>
 
           <div className="space-y-3">{renderStep()}</div>
