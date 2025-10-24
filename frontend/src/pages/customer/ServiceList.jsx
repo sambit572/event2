@@ -442,7 +442,8 @@ const ServiceList = ({ onSwitchToLogin }) => {
           {/* Banner Header */}
           <div className="categoryHero">
             <img
-              src={bannerMap[categoryData.title] || carBanner}
+              // src={bannerMap[categoryData.title] || carBanner}
+              src={bannerMap[categoryData.title] || djBanner}
               alt={categoryData.title}
               loading="lazy"
             />
@@ -467,7 +468,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
         </>
       )}
 
-      {/* {currentCategory && subcategoryMap[currentCategory] && (
+      {currentCategory && subcategoryMap[currentCategory] && (
         <div className="subcategory-wrapper">
           <button
             className="scroll-btn prev"
@@ -497,7 +498,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
             <FaChevronRight />
           </button>
         </div>
-      )} */}
+      )}
       <div className="serviceList">
         <Filter onApply={handleApplyFilters} onCancel={handleCancelFilters} />
 

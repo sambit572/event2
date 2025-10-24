@@ -11,6 +11,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { incrementCartCount } from "../../../redux/UserSlice.js";
 import { useDispatch } from "react-redux";
+import { getServicePriceDisplay } from "../../../utils/pricingHelpers";
 
 const ServiceDescription = ({ service, onSwitchToLogin }) => {
   const dispatch = useDispatch();
@@ -66,12 +67,13 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
 
   const rating = service.rating || "★";
   const reviews = service.reviews || 0;
-
-  const price = service.minPrice
-    ? service.maxPrice
-      ? `₹${service.minPrice} - ₹${service.maxPrice}`
-      : `₹${service.minPrice}`
-    : "N/A";
+  // ✅ UPDATED: Use the helper function for consistent pricing
+  const price = getServicePriceDisplay(service);
+  // const price = service.minPrice
+  //   ? service.maxPrice
+  //     ? `₹${service.minPrice} - ₹${service.maxPrice}`
+  //     : `₹${service.minPrice}`
+  //   : "N/A";
 
   const originalPrice = service.originalPrice;
   const discountPercent = service.discountPercent;
@@ -280,6 +282,15 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
       if (onSwitchToLogin) onSwitchToLogin(true);
       return;
     }
+    // === NEW: Prevent direct cart addition for catering services ===
+    const isCateringService = service.pricingType === "perPlate";
+
+    if (isCateringService) {
+      toast.error("Please select a package from the service details page.");
+      const categoryId = service.categoryId || service.serviceCategory;
+      navigate(`/service/${categoryId}/${serviceId}`);
+      return;
+    }
     try {
       await axios.post(
         `${BACKEND_URL}/cart/add`,
@@ -309,6 +320,20 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
       });
     } else {
       if (onSwitchToLogin) onSwitchToLogin(true);
+    }
+    // === NEW: Conditional routing for catering services ===
+    const isCateringService = service.pricingType === "perPlate";
+
+    if (isCateringService) {
+      // For catering: Navigate to service details page to select package
+      const categoryId = service.categoryId || service.serviceCategory;
+      navigate(`/service/${categoryId}/${serviceId}`);
+      toast.success("Please select a package and plate count to proceed.");
+    } else {
+      // For regular services: Navigate directly to user details
+      navigate(`/userdetails/${serviceId}`, {
+        state: { from: locationPath.pathname },
+      });
     }
   };
 
@@ -581,7 +606,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
           {isVendorAvailable ? (
             <>
               <button
-                className="flex w-full cursor-pointer items-center justify-center rounded-full bg-[#001f3f] lg:px-18 lg:py-3 px-1 py-1 text-xs lg:text-sm font-bold text-white transition-colors duration-300 ease-in-out hover:bg-[#002366] hover:border-[#FFD700] active:bg-[#000d1a] active:border-[#F3C12D]   shadow-md hover:shadow-lg"
+                className="flex w-full cursor-pointer items-center justify-center rounded-full bg-[#001f3f] lg:px-12 lg:py-3 px-1 py-1 text-xs lg:text-sm font-bold text-white transition-colors duration-300 ease-in-out hover:bg-[#002366] hover:border-[#FFD700] active:bg-[#000d1a] active:border-[#F3C12D] lg:w-auto lg:min-w-[120px] shadow-md hover:shadow-lg"
                 onClick={handleBookNow}
               >
                 BOOK NOW
@@ -593,7 +618,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
              bg-gradient-to-r from-[#fb923c] to-[#ef4444] 
              text-white font-bold transition-all duration-300 shadow-md 
              hover:shadow-lg hover:from-[#fca5a5] hover:to-[#dc2626] 
-             lg:px-18 lg:py-3  px-1 py-2 lg:text-sm text-xs 
+             lg:px-18 lg:py-3  px-1 py-2 lg:text-sm text-xs lg:w-auto lg:min-w-[120px] 
              "
                 onClick={handleAddToCart}
               >

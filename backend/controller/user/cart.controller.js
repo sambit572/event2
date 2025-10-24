@@ -11,20 +11,20 @@ import { getIO } from "../../socket/index.js";
 export const addToCart = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { serviceId } = req.body;
+    const { serviceId, cateringDetails } = req.body;
+
+    console.log("📦 Add to cart request:", {
+      userId: userId.toString(),
+      serviceId,
+      hasCateringDetails: !!cateringDetails,
+      packageName: cateringDetails?.packageName,
+    });
 
     if (!serviceId) {
       return res.status(400).json(new ApiError(400, "Service ID is required."));
     }
 
-    const exists = await Cart.findOne({ userId, serviceId });
-    if (exists) {
-      return res.status(409).json({
-        success: false,
-        message: "This service is already in your cart.",
-      });
-    }
-
+    // Fetch the service to check availability and type
     const service = await Service.findById(serviceId);
     if (!service || !service.available) {
       return res
@@ -32,31 +32,193 @@ export const addToCart = async (req, res) => {
         .json(new ApiError(404, "Service not available or doesn't exist."));
     }
 
-    await Cart.create({ userId, serviceId });
+    const isCateringService = service.pricingType === "perPlate";
+
+    // === VALIDATION FOR CATERING SERVICES ===
+    if (isCateringService) {
+      if (!cateringDetails) {
+        return res
+          .status(400)
+          .json(
+            new ApiError(
+              400,
+              "Catering details (package, plates) are required for catering services."
+            )
+          );
+      }
+
+      const {
+        packageName,
+        plateCount,
+        pricePerPlate,
+        totalPrice,
+        minPlates,
+        maxPlates,
+      } = cateringDetails;
+
+      // Validate required fields
+      if (!packageName || !plateCount || !pricePerPlate || !totalPrice) {
+        return res
+          .status(400)
+          .json(
+            new ApiError(
+              400,
+              "Package name, plate count, price per plate, and total price are required."
+            )
+          );
+      }
+
+      // Validate plate count is within allowed range
+      if (minPlates && maxPlates) {
+        if (plateCount < minPlates || plateCount > maxPlates) {
+          return res
+            .status(400)
+            .json(
+              new ApiError(
+                400,
+                `Plate count must be between ${minPlates} and ${maxPlates}.`
+              )
+            );
+        }
+      }
+
+      // Validate price calculation
+      const expectedTotal = plateCount * pricePerPlate;
+      if (Math.abs(totalPrice - expectedTotal) > 1) {
+        return res
+          .status(400)
+          .json(
+            new ApiError(
+              400,
+              "Total price calculation mismatch. Please refresh and try again."
+            )
+          );
+      }
+
+      // ✅ FIXED: Check for duplicate with explicit query
+      console.log("🔍 Checking for existing catering package:", {
+        userId: userId.toString(),
+        serviceId: serviceId.toString(),
+        packageName,
+      });
+
+      const existingCateringItem = await Cart.findOne({
+        userId,
+        serviceId,
+        isCateringService: true,
+        "cateringDetails.packageName": packageName,
+      }).lean();
+
+      console.log(
+        "🔍 Existing item found:",
+        existingCateringItem ? "YES" : "NO"
+      );
+
+      if (existingCateringItem) {
+        return res.status(409).json({
+          success: false,
+          message: `"${packageName}" is already in your cart. Remove it first to add with different quantity.`,
+        });
+      }
+
+      // Create cart item with catering details
+      console.log("✅ Creating new catering cart item:", {
+        userId: userId.toString(),
+        serviceId: serviceId.toString(),
+        packageName,
+        plateCount,
+        totalPrice,
+      });
+
+      try {
+        const newCartItem = await Cart.create({
+          userId,
+          serviceId,
+          isCateringService: true,
+          cateringDetails: {
+            packageName,
+            plateCount,
+            pricePerPlate,
+            totalPrice,
+            minPlates,
+            maxPlates,
+          },
+        });
+
+        console.log("✅ Cart item created successfully:", newCartItem._id);
+      } catch (createError) {
+        console.error("❌ Error creating cart item:", createError);
+
+        // Handle MongoDB duplicate key error
+        if (createError.code === 11000) {
+          return res.status(409).json({
+            success: false,
+            message: `"${packageName}" is already in your cart.`,
+          });
+        }
+        throw createError;
+      }
+    } else {
+      // === REGULAR (NON-CATERING) SERVICE ===
+
+      console.log("🔍 Checking for existing regular service");
+
+      const existingRegularItem = await Cart.findOne({
+        userId,
+        serviceId,
+        isCateringService: false,
+      }).lean();
+
+      if (existingRegularItem) {
+        return res.status(409).json({
+          success: false,
+          message: "This service is already in your cart.",
+        });
+      }
+
+      // Create regular cart item
+      console.log("✅ Creating new regular cart item");
+
+      await Cart.create({
+        userId,
+        serviceId,
+        isCateringService: false,
+      });
+    }
 
     // Invalidate Redis cache for this user's cart
     await client.del(`cart:${userId}`);
 
-    // In addToCart method
+    // Emit Socket.IO notification
     try {
       const io = getIO();
       io.to(userId.toString()).emit("cart-updated", {
         count: await Cart.countDocuments({ userId }),
       });
     } catch (socketError) {
-      // Log but don't fail the request if Socket.IO has issues
       console.warn("Socket.IO notification failed:", socketError.message);
     }
 
     return res.status(201).json({
       success: true,
-      message: "Service added to cart.",
+      message: isCateringService
+        ? `${cateringDetails.packageName} added to cart successfully!`
+        : "Service added to cart.",
     });
   } catch (error) {
-    console.error("Add to cart error:", error);
+    console.error("❌ Add to cart error:", error);
+
+    // Handle duplicate key error (MongoDB E11000)
+    if (error.code === 11000) {
+      return res.status(409).json({
+        success: false,
+        message: "This item is already in your cart.",
+      });
+    }
+
     return res
       .status(500)
-      .json(new ApiError(500, "Internal Server Error in case of add to cart"));
+      .json(new ApiError(500, "Internal Server Error while adding to cart"));
   }
 };
 
@@ -104,36 +266,59 @@ export const getCart = async (req, res) => {
 export const removeFromCart = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { serviceId } = req.params;
+    const { itemId } = req.params; // ✅ Changed from serviceId to itemId
 
-    const deleted = await Cart.findOneAndDelete({ userId, serviceId });
+    console.log("🗑️ Remove from cart request:", {
+      userId: userId.toString(),
+      itemId,
+    });
+
+    // ✅ FIXED: Delete by cart item's _id, not serviceId
+    const deleted = await Cart.findOneAndDelete({
+      _id: itemId, // ✅ This is the cart document's _id
+      userId, // ✅ Security: ensure user owns this cart item
+    });
 
     if (!deleted) {
+      console.log("❌ Cart item not found");
       return res.status(404).json({
         success: false,
-        message: "Service not found in cart.",
+        message: "Item not found in cart.",
       });
     }
 
-    // Invalidate Redis cache for this user's cart
-    await client.del(`cart:${userId}`);
+    console.log("✅ Cart item deleted successfully:", deleted._id);
 
+    // Invalidate Redis cache for this user's cart
+    try {
+      await client.del(`cart:${userId}`);
+      console.log("🔄 Redis cache invalidated");
+    } catch (cacheError) {
+      console.warn("⚠️ Redis cache clear failed:", cacheError.message);
+    }
+
+    // Emit Socket.IO notification
     try {
       const io = getIO();
+      const remainingCount = await Cart.countDocuments({ userId });
       io.to(userId.toString()).emit("cart-updated", {
-        count: await Cart.countDocuments({ userId }),
+        count: remainingCount,
       });
+      console.log("📢 Socket.IO notification sent");
     } catch (socketError) {
-      // Log but don't fail the request if Socket.IO has issues
-      console.warn("Socket.IO notification failed:", socketError.message);
+      console.warn("⚠️ Socket.IO notification failed:", socketError.message);
     }
 
     return res.status(200).json({
       success: true,
-      message: "Service removed from cart.",
+      message: "Item removed from cart successfully.",
+      data: {
+        removedItemId: deleted._id,
+        remainingCount: await Cart.countDocuments({ userId }),
+      },
     });
   } catch (error) {
-    console.error("Remove from cart error:", error);
+    console.error("❌ Remove from cart error:", error);
     return res.status(500).json(new ApiError(500, "Internal Server Error"));
   }
 };

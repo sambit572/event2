@@ -11,8 +11,9 @@ const router = express.Router();
 
 router.post("/add", verifyJwt, addToCart);
 router.get("/", verifyJwt, getCart);
-router.get("/:userDetailsId", verifyJwt, getCartWithUserDetails); 
+router.get("/:userDetailsId", verifyJwt, getCartWithUserDetails);
 router.delete("/:serviceId", verifyJwt, removeFromCart);
-
+// ✅ FIXED: Changed from serviceId to itemId (cart document _id)
+router.delete("/:itemId", verifyJwt, removeFromCart);
 
 export default router;
