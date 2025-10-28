@@ -75,7 +75,10 @@ function VendorService({ currentStep }) {
   const [completedCrop, setCompletedCrop] = useState(null);
   const imgRef = useRef(null);
 
+  // ✅ FIXED: Added missing state variables
   const [imageError, setImageError] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
   // ✅ FIXED: Category-aware pricing state
   const [isCatering, setIsCatering] = useState(false);
   const [perPlateData, setPerPlateData] = useState({
@@ -260,35 +263,7 @@ function VendorService({ currentStep }) {
       // Size limits
       const IMAGE_SIZE_LIMIT = 5 * 1024 * 1024; // 5MB
       const VIDEO_SIZE_LIMIT = 200 * 1024 * 1024; // 200MB
-      const MAX_FILE_COUNT = 10;
 
-      // Check total file count
-      const currentFileCount = selectedFiles.length;
-      const newFileCount = newFiles.length;
-      const totalFileCount = currentFileCount + newFileCount;
-
-      if (totalFileCount > MAX_FILE_COUNT) {
-        setImageError(
-          `Cannot upload more than ${MAX_FILE_COUNT} files in total. You currently have ${currentFileCount} file(s) and are trying to add ${newFileCount} more.`
-        );
-        if (fileInputRef.current) {
-          fileInputRef.current.value = "";
-        }
-        return;
-      }
-      const valid = [
-        "image/jpeg",
-        "image/jpg",
-        "image/png",
-        "image/gif",
-        "video/mp4",
-        "video/avi",
-        "video/mov",
-        "video/wmv",
-        "video/flv",
-        "video/webm",
-      ];
-      const max = 50 * 1024 * 1024;
       const validatedFiles = [];
       const errors = [];
 
@@ -298,23 +273,6 @@ function VendorService({ currentStep }) {
           errors.push(
             `"${f.name}" - Invalid file type. Only images (JPEG, PNG, GIF) and videos (MP4, AVI, MOV, WMV, FLV, WEBM) are allowed.`
           );
-          if (!valid.includes(f.type)) {
-            alert("Invalid file type. Only images and videos are allowed.");
-            continue;
-          }
-          if (f.size > max) {
-            alert(`File ${f.name} is too large (> 50 MB).`);
-
-            continue;
-          }
-        }
-        if (f.type.startsWith("image/") && f.size > IMAGE_SIZE_LIMIT) {
-          toast.error(`${f.name} is too large. Max 5 MB allowed.`);
-          continue;
-        }
-
-        if (f.type.startsWith("video/") && f.size > VIDEO_SIZE_LIMIT) {
-          toast.error(`${f.name} is too large. Max 200 MB allowed.`);
           continue;
         }
 
@@ -448,18 +406,12 @@ function VendorService({ currentStep }) {
       const formData = new FormData();
       formData.append("serviceName", serviceName);
       formData.append("serviceDes", serviceDescription);
-
-      formData.append("minPrice", minPrice);
-      formData.append("maxPrice", maxPrice);
       formData.append("serviceCategory", categorySearchTerm);
       formData.append("stateLocationOffered", selectedState);
+      
       selectedLocations.forEach((loc) => {
         formData.append("locationOffered[]", loc);
       });
-
-      // selectedLocations.forEach((loc) => {
-      //   formData.append("locationOffered[]", loc);
-      // });
 
       selectedFiles.forEach((file) => {
         formData.append("images", file);
@@ -468,6 +420,7 @@ function VendorService({ currentStep }) {
       formData.append("days", days);
       formData.append("hrs", hours);
       formData.append("mins", minutes);
+
       // ✅ FIXED: Send both base price AND packages
       if (isCatering) {
         formData.append("pricingType", "perPlate");
@@ -490,6 +443,7 @@ function VendorService({ currentStep }) {
         formData.append("minPrice", minPrice);
         formData.append("maxPrice", maxPrice);
       }
+
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/vendors/create-service`,
         formData,

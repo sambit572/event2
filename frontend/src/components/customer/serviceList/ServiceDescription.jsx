@@ -311,32 +311,43 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
     }
   };
 
-  const handleBookNow = (e) => {
-    e.stopPropagation();
-    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
-    if (isLoggedIn) {
-      navigate(`/userdetails/${serviceId}`, {
-        state: { from: locationPath.pathname },
-      });
-    } else {
-      if (onSwitchToLogin) onSwitchToLogin(true);
-    }
-    // === NEW: Conditional routing for catering services ===
-    const isCateringService = service.pricingType === "perPlate";
+  // --- THIS IS THE CORRECTED FUNCTION ---
 
-    if (isCateringService) {
-      // For catering: Navigate to service details page to select package
-      const categoryId = service.categoryId || service.serviceCategory;
-      navigate(`/service/${categoryId}/${serviceId}`);
-      toast.success("Please select a package and plate count to proceed.");
-    } else {
-      // For regular services: Navigate directly to user details
-      navigate(`/userdetails/${serviceId}`, {
-        state: { from: locationPath.pathname },
-      });
-    }
-  };
+ const handleBookNow = (e) => {
+ e.stopPropagation();
 
+// Step 1: Check for login status first.
+ const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
+ if (!isLoggedIn) {
+ toast.error("Please log in to book a service.", { duration: 2000 });
+ if (onSwitchToLogin) onSwitchToLogin(true);
+ return; // Stop execution if not logged in
+ }
+
+// Step 2: User is logged in, NOW check the service type.
+ const isCateringService = service.pricingType === "perPlate";
+
+if (isCateringService) {
+
+ // Navigate to the service details page to select a package.
+ const categoryId = service.categoryId || service.serviceCategory;
+ 
+ if (!categoryId) {
+ console.error("Cannot navigate: Missing categoryId on service object.");
+ toast.error("Could not open service, category ID is missing.");
+ return;
+ }
+
+ navigate(`/service/${categoryId}/${serviceId}`);
+ toast.success("Please select a package and plate count to proceed.");
+
+} else {
+ // Navigate directly to user details as before.
+navigate(`/userdetails/${serviceId}`, {
+state: { from: locationPath.pathname },
+});
+}
+ };
   const handleNotifyMe = async (e) => {
     e.stopPropagation();
     const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
