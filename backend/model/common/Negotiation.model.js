@@ -28,6 +28,10 @@ const negotiationSchema = new mongoose.Schema(
       default: false,
     },
 
+    serviceType: {
+      type: String,
+      required: true,
+    },
     serviceName: {
       type: String,
       required: true,
