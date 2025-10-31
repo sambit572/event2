@@ -172,6 +172,9 @@ const CustomerNegotiationModal = () => {
           group.items.forEach((item) => {
             if (item.cartItemId) {
               initialPrices[item.cartItemId] = "";
+            } else {
+              // ✅ MODIFIED: Use service ID as key for non-cart items (regular services)
+              initialPrices[group.service._id] = "";
             }
           });
         });
@@ -302,7 +305,27 @@ const CustomerNegotiationModal = () => {
         }, index * 100);
       } else {
         // Regular service
-        const proposedPrice = proposedPrices[item.cartItemId] || 0;
+        // ✅ MODIFIED: Get price using service._id, not item.cartItemId
+        const proposedPrice = proposedPrices[service._id] || 0;
+
+        // ✅ NEW: Add validation for regular service price
+        if (!proposedPrice || Number(proposedPrice) <= 0) {
+          setErrorMsg("❗ Please enter a valid price for this service.");
+          setIsLoading(false);
+          return; // Stop this iteration
+        }
+
+        // ✅ NEW: Add min price validation
+        const minValidation = (service.minPrice || 0) * 0.5;
+        if (Number(proposedPrice) < minValidation) {
+          setErrorMsg(
+            `❗ Price for ${service.serviceName} too low. Minimum: ₹${Math.floor(
+              minValidation
+            )}`
+          );
+          setIsLoading(false);
+          return; // Stop this iteration
+        }
 
         const negotiationData = {
           vendorId: vendor._id,
@@ -318,7 +341,7 @@ const CustomerNegotiationModal = () => {
           bookedByUserPhoneNumber: bookingDetails.phone,
           bookedByUserAltPhoneNumber: bookingDetails.altPhone,
           venueLocation: venueInput,
-          proposedPrice: proposedPrice || 0,
+          proposedPrice: proposedPrice || 0, // ✅ MODIFIED: Use correct variable
           date: {
             startDate: new Date(bookingDetails.startDate),
             endDate: new Date(bookingDetails.endDate),
@@ -595,7 +618,7 @@ const CustomerNegotiationModal = () => {
                       }
                       className="w-full p-3 bg-white border-2 border-green-300 rounded-lg text-lg focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200"
                     />
-                    {/*  <p className="text-xs text-gray-500 mt-1">
+                    {/* <p className="text-xs text-gray-500 mt-1">
                       Minimum acceptable: ₹{Math.floor(totalPrice * 0.5)}
                     </p> */}
                   </div>
@@ -607,15 +630,42 @@ const CustomerNegotiationModal = () => {
 
         {/* ✅ Regular Service Display */}
         {!currentItems.some((item) => item.cateringDetails) && (
-          <div className="mb-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
-            <div className="flex justify-between items-center">
-              <span className="text-slate-600 font-medium">Listed Price:</span>
-              <span className="text-2xl font-bold text-blue-600">
-                ₹{currentService?.minPrice || 0}-₹
-                {currentService?.maxPrice || 0}
-              </span>
+          <>
+            {/* ✅ MODIFIED: Wrap in fragment and handle undefined */}
+            <div className="mb-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
+              <div className="flex justify-between items-center">
+                <span className="text-slate-600 font-medium">
+                  Listed Price:
+                </span>
+                <span className="text-2xl font-bold text-blue-600">
+                  ₹{currentService?.minPrice || 0}-₹
+                  {currentService?.maxPrice || 0}
+                </span>
+              </div>
             </div>
-          </div>
+
+            {/* ✅ NEW: Input for Regular Service (as requested) */}
+            <div className="mb-6">
+              <label
+                htmlFor="proposed-price-regular"
+                className="block text-sm font-semibold text-gray-700 mb-2"
+              >
+                Enter Your Price for This Service (INR):
+              </label>
+              <input
+                id="proposed-price-regular"
+                type="number"
+                placeholder={`e.g., ${Math.floor(
+                  (currentService?.minPrice || 0) * 0.9
+                )}`}
+                value={proposedPrices[currentService._id] || ""}
+                onChange={(e) =>
+                  handlePriceChange(currentService._id, e.target.value)
+                }
+                className="w-full p-3 bg-white border-2 border-slate-300 rounded-lg text-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              />
+            </div>
+          </>
         )}
 
         {/* Venue Location */}
