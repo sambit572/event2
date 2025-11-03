@@ -43,6 +43,42 @@ export const getServicesByCategory = async (req, res) => {
           as: "reviews",
         },
       },
+      // === 🚀 FIXED: Properly prioritize 'perPlatePrice' for startingPrice 🚀 ===
+      {
+        $addFields: {
+          // First, find the minimum price from packages, if they exist
+          minPackagePrice: {
+            $cond: {
+              if: {
+                $and: [
+                  { $isArray: "$packages" },
+                  { $gt: [{ $size: "$packages" }, 0] },
+                ],
+              },
+              then: { $min: "$packages.perPlatePrice" },
+              else: null,
+            },
+          },
+        },
+      },
+      {
+        $addFields: {
+          startingPrice: {
+            $cond: {
+              if: {
+                $and: [
+                  { $ne: ["$perPlatePrice", null] }, // Field is not null
+                  { $ne: ["$perPlatePrice", undefined] }, // Field is not undefined
+                  { $gt: ["$perPlatePrice", 0] }, // Value is greater than 0
+                ],
+              },
+              then: "$perPlatePrice",
+              else: "$minPackagePrice",
+            },
+          },
+        },
+      },
+      // === END OF FIX ===
       {
         $addFields: {
           avgRating: {
@@ -75,6 +111,10 @@ export const getServicesByCategory = async (req, res) => {
           avgRating: 1, // Ensure avgRating is included
           totalReviews: 1,
           available: 1,
+          pricingType: 1,
+          perPlatePrice: 1,
+          packages: 1,
+          startingPrice: 1,
         },
       },
     ]);
@@ -163,8 +203,32 @@ export const getServiceById = async (req, res) => {
 
     console.log("Final Why Choose Us Points:", whyChooseUsPoints);
     // Transform the response to include vendorName
+    // === 🚀 FIXED: Properly prioritize 'perPlatePrice' for the details page 🚀 ===
+    let startingPrice = null;
+    if (service.pricingType === "perPlate") {
+      // ✅ FIX: Check if base price exists AND is greater than 0
+      if (
+        service.perPlatePrice != null &&
+        service.perPlatePrice !== undefined &&
+        service.perPlatePrice > 0
+      ) {
+        startingPrice = service.perPlatePrice;
+      }
+      // Only if base price is missing or invalid, find the minimum from packages
+      else if (service.packages && service.packages.length > 0) {
+        const packagePrices = service.packages
+          .map((p) => p.perPlatePrice)
+          .filter(Boolean);
+        if (packagePrices.length > 0) {
+          startingPrice = Math.min(...packagePrices);
+        }
+      }
+    }
+    // === END OF FIX ===
+
     const transformed = {
       ...service._doc,
+      startingPrice,
       vendorName: service.vendorId?.fullName,
       vendorEmail: service.vendorId?.email,
       vendor: service.vendorId?._id,

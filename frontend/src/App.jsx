@@ -69,8 +69,8 @@ import ComingSoon from "./utils/ComingSoon.jsx";
 import MyReports from "./pages/common/myreports/MyReports.jsx";
 import SearchPage from "./pages/search/SearchPage.jsx";
 import VendorForgotPass from "./pages/vendor/VendorForgetPass.jsx";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
 const App = () => {
@@ -129,12 +129,14 @@ const App = () => {
     "/category/:categoryId",
   ];
 
-  useEffect(() => {
-    const storedVendor = localStorage.getItem("vendor");
-    if (storedVendor) {
-      dispatch(setVendor(JSON.parse(storedVendor)));
-    }
-  }, []);
+  function clearVendorSession() {
+    [
+      "VendorCurrentlyLoggedIn",
+      "VendorFirstName",
+      "VendorFullName",
+      "VendorInitial",
+    ].forEach((key) => localStorage.removeItem(key));
+  }
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -164,6 +166,7 @@ const App = () => {
         console.log("Vendor data received:", res.data.data);
         dispatch(setVendor(res.data.data));
       } catch (err) {
+        clearVendorSession();
         console.error("Vendor auth check failed:", err.message);
       }
     };
@@ -282,7 +285,10 @@ const App = () => {
               </DashboardEnforcement>
             }
           />
-          <Route path="/vendor/forgot-password" element={<VendorForgotPass />} />
+          <Route
+            path="/vendor/forgot-password"
+            element={<VendorForgotPass />}
+          />
           <Route
             path="/reset-password/:resetToken"
             element={<ResetPassword />}
@@ -323,7 +329,7 @@ const App = () => {
         </Routes>
       </main>
       <BackToTop />
-         <ToastContainer
+      <ToastContainer
         position="top-center" // still required
         autoClose={3000}
         toastClassName="custom-toast"

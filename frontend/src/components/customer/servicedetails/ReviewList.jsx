@@ -14,13 +14,21 @@ const ReviewList = ({ serviceId, newReview }) => {
           `${BACKEND_URL}/reviews/getReview/${serviceId}`
         );
         const backendData = res.data.reviews;
-        // ✅ map with pipeline response (userDetails contains fullName & _id)
-        const formatted = backendData.map((rev, idx) => ({
+
+        // ✅ Only include reviews that have both a rating and a non-empty message
+        const filtered = backendData.filter(
+          (rev) =>
+            rev.rating &&
+            rev.reviewMessage &&
+            rev.reviewMessage.trim().length > 0
+        );
+
+        // ✅ Map for consistent frontend structure
+        const formatted = filtered.map((rev) => ({
           ...rev,
           userName: rev.userDetails?.fullName || "Anonymous",
           date: new Date(rev.createdAt).toISOString().split("T")[0],
-          reviewMessage: rev.reviewMessage || "No review message provided",
-          // images: [dummyImages[idx % dummyImages.length]],
+          reviewMessage: rev.reviewMessage,
           helpful: Math.floor(Math.random() * 10),
         }));
 
@@ -33,18 +41,21 @@ const ReviewList = ({ serviceId, newReview }) => {
     fetchReviews();
   }, [serviceId]);
 
-  // ✅ handle new review append
+  // ✅ handle new review append (only if both rating + message)
   useEffect(() => {
     if (newReview) {
-      console.log("New review received:", newReview);
-      const updated = {
-        ...newReview,
-    
-        date: new Date().toISOString().split("T")[0],
-        // images: [dummyImages[Math.floor(Math.random() * dummyImages.length)]],
-        helpful: 0,
-      };
-      setAllReviews((prev) => [...prev, updated]);
+      if (
+        newReview.rating &&
+        newReview.reviewMessage &&
+        newReview.reviewMessage.trim().length > 0
+      ) {
+        const updated = {
+          ...newReview,
+          date: new Date().toISOString().split("T")[0],
+          helpful: 0,
+        };
+        setAllReviews((prev) => [...prev, updated]);
+      }
     }
   }, [newReview]);
 

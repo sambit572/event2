@@ -14,6 +14,7 @@ import image13 from "../assets/home/categoriesImages/ceremonial_ride.png";
 import image14 from "../assets/home/categoriesImages/fireworks.png";
 import image15 from "../assets/home/categoriesImages/marriage-card.png";
 import image16 from "../assets/home/categoriesImages/banquithall.png";
+import image17 from "../assets/home/categoriesImages/stage_decor.png";
 import image18 from "../assets/home/categoriesImages/event_company.png";
 
 export const CategoryData = [
@@ -119,7 +120,7 @@ export const CategoryData = [
   {
     id: "event-management",
     title: "Event Company",
-    image: image18, 
+    image: image18,
     tagline: "Crafting Moments, Managing Memories",
   },
 ];

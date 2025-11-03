@@ -3,7 +3,7 @@ import { FaTrash, FaEdit, FaPlus, FaYoutube } from "react-icons/fa";
 import axios from "axios";
 import { BACKEND_URL } from "../../utils/constant.js";
 import { MdReportGmailerrorred } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./DashboardServices.css";
 import ReactCrop, { centerCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
@@ -320,68 +320,68 @@ const DashboardServices = () => {
     }));
   };
 
-const handleMediaUpload = (e) => {
-  const files = Array.from(e.target.files);
-  if (files.length === 0) return;
+  const handleMediaUpload = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
 
-  const MAX_IMAGE_SIZE_BYTES = 9 * 1024 * 1024; // 9MB
+    const MAX_IMAGE_SIZE_BYTES = 9 * 1024 * 1024; // 9MB
 
-  // Step 1: Separate files and validate them first
-  let imageFiles = [];
-  let videoFiles = [];
+    // Step 1: Separate files and validate them first
+    let imageFiles = [];
+    let videoFiles = [];
 
-  for (const file of files) {
-    if (file.type.startsWith("image/")) {
-      if (file.size > MAX_IMAGE_SIZE_BYTES) {
-        alert(`Image "${file.name}" is too large. The limit is 9MB.`);
-        continue; 
+    for (const file of files) {
+      if (file.type.startsWith("image/")) {
+        if (file.size > MAX_IMAGE_SIZE_BYTES) {
+          alert(`Image "${file.name}" is too large. The limit is 9MB.`);
+          continue;
+        }
+        imageFiles.push(file);
+      } else if (file.type.startsWith("video/")) {
+        videoFiles.push(file);
       }
-      imageFiles.push(file);
-    } else if (file.type.startsWith("video/")) {
-      videoFiles.push(file);
     }
-  }
 
-  // Step 2: Check if adding the new media exceeds the total limit
-  const currentMediaCount =
-    (editedData.serviceImage || []).length +
-    newImages.length +
-    newVideos.length;
-  if (currentMediaCount + imageFiles.length + videoFiles.length > 10) {
-    alert(`You can only upload up to 10 media items in total.`);
-    return;
-  }
+    // Step 2: Check if adding the new media exceeds the total limit
+    const currentMediaCount =
+      (editedData.serviceImage || []).length +
+      newImages.length +
+      newVideos.length;
+    if (currentMediaCount + imageFiles.length + videoFiles.length > 10) {
+      alert(`You can only upload up to 10 media items in total.`);
+      return;
+    }
 
-  // Step 3: Trigger cropper ONLY for the first image
-  if (imageFiles.length > 0) {
-    // Take the first image out of the array. It will be handled by the cropper.
-    const imageToCrop = imageFiles.shift();
+    // Step 3: Trigger cropper ONLY for the first image
+    if (imageFiles.length > 0) {
+      // Take the first image out of the array. It will be handled by the cropper.
+      const imageToCrop = imageFiles.shift();
 
-    const reader = new FileReader();
-    reader.onload = () => setCropSrc(reader.result);
-    reader.readAsDataURL(imageToCrop);
-  }
+      const reader = new FileReader();
+      reader.onload = () => setCropSrc(reader.result);
+      reader.readAsDataURL(imageToCrop);
+    }
 
-  // Step 4: Add all videos and any remaining (uncropped) images to the preview
-  const newImagePreviews = imageFiles.map((file) => ({
-    type: "image",
-    url: URL.createObjectURL(file),
-    file,
-  }));
-  const newVideoPreviews = videoFiles.map((file) => ({
-    type: "video",
-    url: URL.createObjectURL(file),
-    file,
-  }));
+    // Step 4: Add all videos and any remaining (uncropped) images to the preview
+    const newImagePreviews = imageFiles.map((file) => ({
+      type: "image",
+      url: URL.createObjectURL(file),
+      file,
+    }));
+    const newVideoPreviews = videoFiles.map((file) => ({
+      type: "video",
+      url: URL.createObjectURL(file),
+      file,
+    }));
 
-  setNewImages((prev) => [...prev, ...imageFiles]);
-  setNewVideos((prev) => [...prev, ...videoFiles]);
-  setNewMediaPreviews((prev) => [
-    ...prev,
-    ...newImagePreviews,
-    ...newVideoPreviews,
-  ]);
-};
+    setNewImages((prev) => [...prev, ...imageFiles]);
+    setNewVideos((prev) => [...prev, ...videoFiles]);
+    setNewMediaPreviews((prev) => [
+      ...prev,
+      ...newImagePreviews,
+      ...newVideoPreviews,
+    ]);
+  };
 
   const handleToggleAvailability = async (index) => {
     const updatedList = [...services];
@@ -427,10 +427,10 @@ const handleMediaUpload = (e) => {
           return (
             <section
               key={index}
-              className="relative flex flex-col xl:flex-row gap-6 shadow-lg w-[90%] mx-auto mb-6 p-4 bg-white rounded-md border-l-4 border-[#00897b]"
+              className="relative flex flex-col xl:flex-row gap-6 shadow-lg w-[90%] mx-auto mb-6 p-4 bg-white rounded-md border-l-4 border-[#00897b] cursor-pointer hover:shadow-xl transition"
             >
               {/* Availability toggle */}
-              <div className="absolute top-3 right-3 flex items-center gap-2">
+              <div className="absolute top-[0.5rem] right-3 flex items-center gap-2">
                 <label
                   className={`relative w-12 h-6 sm:w-14 sm:h-7 rounded-full cursor-pointer p-[2px] transition-colors duration-300 ${
                     service.available ? "bg-blue-500" : "bg-gray-300"
@@ -456,32 +456,48 @@ const handleMediaUpload = (e) => {
               </div>
               {/* Image Slider Section */}
               <div className="relative w-full sm:w-[400px] sm:h-[200px] mt-5 mx-auto group">
-                {getYouTubeID(selectedMediaUrl) ? (
-                  <iframe
-                    className="w-full h-full object-cover rounded-md"
-                    src={`https://www.youtube.com/embed/${getYouTubeID(
-                      selectedMediaUrl
-                    )}?autoplay=1&mute=1&loop=1&playlist=${getYouTubeID(
-                      selectedMediaUrl
-                    )}&rel=0`}
-                    title="Service Video"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
-                ) : (
-                  <img
-                    src={selectedMediaUrl}
-                    alt="Service"
-                    className="w-full h-full object-cover rounded-md"
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src =
-                        "https://placehold.co/400x200/cccccc/ffffff?text=Image+Not+Found";
-                    }}
-                  />
+                <Link
+                  to={`/service/${service.serviceCategory}/${service._id}`}
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  {getYouTubeID(selectedMediaUrl) ? (
+                    <iframe
+                      className={`w-full h-full object-cover rounded-md transition-all duration-300 ${
+                        !service.available ? "grayscale brightness-75" : ""
+                      }`}
+                      src={`https://www.youtube.com/embed/${getYouTubeID(
+                        selectedMediaUrl
+                      )}?autoplay=1&mute=1&loop=1&playlist=${getYouTubeID(
+                        selectedMediaUrl
+                      )}&rel=0`}
+                      title="Service Video"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
+                  ) : (
+                    <img
+                      src={selectedMediaUrl}
+                      alt="Service"
+                      className={`w-full h-full object-cover rounded-md transition-all duration-300 ${
+                        !service.available ? "grayscale brightness-75" : ""
+                      }`}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src =
+                          "https://placehold.co/400x200/cccccc/ffffff?text=Image+Not+Found";
+                      }}
+                    />
+                  )}
+                </Link>
+                {/* Overlay when unavailable */}
+                {!service.available && (
+                  <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px] flex items-center justify-center rounded-md">
+                    <span className="text-white font-bold text-sm sm:text-sm px-4 py-2 bg-red-600/80 rounded-lg shadow-lg">
+                      Service Unavailable
+                    </span>
+                  </div>
                 )}
-
                 {currentServiceImages.length > 1 && (
                   <button
                     onClick={() => {
@@ -518,7 +534,7 @@ const handleMediaUpload = (e) => {
                     <button
                       key={i}
                       onClick={() => handleMediaSelect(index, mediaUrl)}
-                      className={`w-3 h-3 flex items-center justify-center rounded-full ${
+                      className={`w-2 h-2 p-0 flex items-center justify-center rounded-full ${
                         selectedMediaUrl === mediaUrl
                           ? "bg-white"
                           : "bg-gray-400"
@@ -721,8 +737,9 @@ const handleMediaUpload = (e) => {
                     {/* Image upload info and file size error */}
                     <div className="mt-2">
                       <p className="text-xs text-gray-600 mb-1">
-                        Maximum file size: 9MB per photo i.e image size must be below 9MB. You can upload up to
-                        10 photos or videos combined in total.
+                        Maximum file size: 9MB per photo i.e image size must be
+                        below 9MB. You can upload up to 10 photos or videos
+                        combined in total.
                       </p>
                       {fileSizeError && (
                         <div className="p-2 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded text-sm mb-2">
@@ -861,15 +878,27 @@ const handleMediaUpload = (e) => {
                 /* View Mode */
                 <div className="right-section xl:w-[600px] items-start xl:ml-3">
                   <div className="details">
-                    <h2 className="details-h2 mt-6">{service.serviceName}</h2>
+                    <Link
+                      to={`/service/${service.serviceCategory}/${service._id}`}
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      <h2 className="details-h2 mt-6">{service.serviceName}</h2>
+                    </Link>
                     <div className="l">
                       <strong>Locations: </strong>
                       {Array.isArray(service.locationOffered) ? (
                         <>
-                          {expandedLocations[index]
-                            ? service.locationOffered.join(", ")
-                            : service.locationOffered.slice(0, 3).join(", ") +
-                              (service.locationOffered.length > 3 ? "..." : "")}
+                          <Link
+                            to={`/service/${service.serviceCategory}/${service._id}`}
+                            style={{ textDecoration: "none", color: "inherit" }}
+                          >
+                            {expandedLocations[index]
+                              ? service.locationOffered.join(", ")
+                              : service.locationOffered.slice(0, 3).join(", ") +
+                                (service.locationOffered.length > 3
+                                  ? "..."
+                                  : "")}
+                          </Link>
                           {service.locationOffered.length > 3 && (
                             <button
                               onClick={() => toggleExpandLocation(index)}
@@ -885,29 +914,37 @@ const handleMediaUpload = (e) => {
                         service.locationOffered
                       )}
                     </div>
-
-                    <div className="pr">
-                      <strong>Price: </strong>₹ {service.minPrice} - ₹{" "}
-                      {service.maxPrice}
-                    </div>
-                    <div className="c">
-                      <strong>Category: </strong> {service.serviceCategory}
-                    </div>
-                    <div className="d">
-                      <strong>Duration: </strong>{" "}
-                      {formatDuration(service.duration)}
-                    </div>
-
+                    <Link
+                      to={`/service/${service.serviceCategory}/${service._id}`}
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      <div className="pr">
+                        <strong>Price: </strong>₹ {service.minPrice} - ₹{" "}
+                        {service.maxPrice}
+                      </div>
+                      <div className="c">
+                        <strong>Category: </strong> {service.serviceCategory}
+                      </div>
+                      <div className="d">
+                        <strong>Duration: </strong>{" "}
+                        {formatDuration(service.duration)}
+                      </div>
+                    </Link>
                     {/* Description with Read More */}
                     <div className="mt-2">
                       <div className="des font-semibold text-gray-800">
                         Description:
                       </div>
                       <div className="text-gray-700">
-                        {expanded
-                          ? service.serviceDes
-                          : service.serviceDes.slice(0, 80) +
-                            (service.serviceDes.length > 80 ? "..." : "")}
+                        <Link
+                          to={`/service/${service.serviceCategory}/${service._id}`}
+                          style={{ textDecoration: "none", color: "inherit" }}
+                        >
+                          {expanded
+                            ? service.serviceDes
+                            : service.serviceDes.slice(0, 80) +
+                              (service.serviceDes.length > 80 ? "..." : "")}
+                        </Link>
                         {service.serviceDes.length > 80 && (
                           <button
                             onClick={toggleExpand}
@@ -918,10 +955,14 @@ const handleMediaUpload = (e) => {
                         )}
                       </div>
                     </div>
-
-                    <div className="u flex justify-between">
-                      <strong>User Reviews: </strong> {service.userReviews}
-                    </div>
+                    <Link
+                      to={`/service/${service.serviceCategory}/${service._id}`}
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      <div className="u flex justify-between">
+                        <strong>User Reviews: </strong> {service.userReviews}
+                      </div>
+                    </Link>
                   </div>
                 </div>
               )}

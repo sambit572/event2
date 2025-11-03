@@ -1,6 +1,5 @@
 // Login.jsx
 import { GoogleLogin } from "@react-oauth/google";
-
 import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
@@ -9,11 +8,11 @@ import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import OTPVerification from "./OTPVerification.jsx";
 import SuccessBlock from "./SuccessBlock.jsx";
 import axios from "axios";
-import "./LoginRegister.css";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/UserSlice.js";
 import ForgotPass from "./../customer/ForgotPass";
 import { FiEyeOff, FiEye } from "react-icons/fi";
+import Spinner from "./../../components/common/Spinner";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -22,7 +21,6 @@ const Login = ({ onClose, onSwitchToRegister }) => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState("form");
-  const [showSuccessIcon, setShowSuccessIcon] = useState(false);
   const [showForgotModal, setShowForgotModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [googleCredential, setGoogleCredential] = useState(null);
@@ -32,10 +30,9 @@ const Login = ({ onClose, onSwitchToRegister }) => {
     password: "",
   });
   const [errorMsg, setErrorMsg] = useState("");
-  // console.log("Current user in login:", user);
   const recaptchaVerifierRef = useRef(null);
 
-  // ✅ Initialize reCAPTCHA only once
+  // Initialize reCAPTCHA
   useEffect(() => {
     if (!recaptchaVerifierRef.current) {
       try {
@@ -53,37 +50,20 @@ const Login = ({ onClose, onSwitchToRegister }) => {
               recaptchaVerifierRef.current = null;
             },
           },
-          { type: "recaptcha-enterprise" } // 👈 This tells Firebase to use Enterprise mode
+          { type: "recaptcha-enterprise" }
         );
 
-        verifier.render().then((widgetId) => {
-          console.log("Enterprise Recaptcha rendered with ID:", widgetId);
+        verifier.render().then(() => {
           recaptchaVerifierRef.current = verifier;
         });
       } catch (err) {
-        console.error("Failed to render Enterprise reCAPTCHA:", err);
-        setErrorMsg(
-          "Enterprise reCAPTCHA failed to load. Please refresh the page."
-        );
+        setErrorMsg("Enterprise reCAPTCHA failed to load.");
       }
     }
   }, []);
 
-  useEffect(() => {
-    if (step === "success") {
-      setShowSuccessIcon(false);
-      const iconTimer = setTimeout(() => setShowSuccessIcon(true), 500);
-      const closeTimer = setTimeout(() => onClose?.(), 5000);
-      return () => {
-        clearTimeout(iconTimer);
-        clearTimeout(closeTimer);
-      };
-    }
-  }, [step, onClose]);
-
-  const handleChange = (e) => {
+  const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   async function handleGetOTP(e) {
     e.preventDefault();
@@ -114,14 +94,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
       console.error("OTP error:", err);
       recaptchaVerifierRef.current?.clear();
       recaptchaVerifierRef.current = null;
-
-      if (err.code === "auth/invalid-phone-number") {
-        setErrorMsg("Invalid phone number format.");
-      } else if (err.code === "auth/too-many-requests") {
-        setErrorMsg("Too many attempts. Try again later.");
-      } else {
-        setErrorMsg("OTP send failed. Check number or reCAPTCHA.");
-      }
+      setErrorMsg("OTP send failed. Check number or reCAPTCHA.");
     }
     setIsLoading(false);
   }
@@ -129,10 +102,6 @@ const Login = ({ onClose, onSwitchToRegister }) => {
   async function handleLogin(e) {
     e.preventDefault();
     setErrorMsg("");
-
-    // continue vendor login...
-
-    // continue vendor login...
 
     if (!formData.email && !formData.phoneNo) {
       return setErrorMsg("Enter email or phone to log in.");
@@ -151,21 +120,18 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
       const { user } = res.data.data;
       dispatch(setUser(user));
-
       localStorage.setItem("currentlyLoggedIn", "true");
       localStorage.setItem("userFirstName", user.fullName.split(" ")[0]);
       localStorage.setItem("userLastName", user.fullName.split(" ")[1]);
-
       window.dispatchEvent(new Event("userLoggedIn"));
-
       setStep("success");
     } catch (err) {
       const msg = err.response?.data?.message || err.message;
-      if (msg === "User does not exist") {
-        setErrorMsg("Please register before login.");
-      } else {
-        setErrorMsg(`Login failed: ${msg}`);
-      }
+      setErrorMsg(
+        msg === "User does not exist"
+          ? "Please register before login."
+          : `Login failed: ${msg}`
+      );
     }
   }
 
@@ -179,11 +145,9 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
       const { user } = data.data;
       dispatch(setUser(user));
-
       localStorage.setItem("currentlyLoggedIn", "true");
       localStorage.setItem("userFirstName", user.fullName.split(" ")[0]);
       window.dispatchEvent(new Event("userLoggedIn"));
-
       setStep("success");
     } catch (err) {
       if (
@@ -192,7 +156,6 @@ const Login = ({ onClose, onSwitchToRegister }) => {
         setGoogleCredential(credentialResponse.credential);
         setStep("google-phone");
       } else {
-        console.error("Google login failed:", err);
         setErrorMsg("Google login failed. Try again.");
       }
     }
@@ -202,45 +165,36 @@ const Login = ({ onClose, onSwitchToRegister }) => {
     e.preventDefault();
     setErrorMsg("");
 
-    if (!formData.phoneNo) {
-      return setErrorMsg("Phone number is required.");
-    }
-
     const phone = formData.phoneNo.replace(/\D/g, "");
     const phoneNumber = "+91" + phone;
 
-    if (!/^\+91\d{10}$/.test(phoneNumber)) {
+    if (!formData.phoneNo || !/^\+91\d{10}$/.test(phoneNumber)) {
       return setErrorMsg("Invalid Indian phone number.");
     }
 
     try {
       const { data } = await axios.post(
         `${BACKEND_URL}/user/auth/google`,
-        {
-          token: googleCredential,
-          phoneNo: phoneNumber,
-        },
+        { token: googleCredential, phoneNo: phoneNumber },
         { withCredentials: true }
       );
-
       const { user } = data.data;
       dispatch(setUser(user));
-
       localStorage.setItem("currentlyLoggedIn", "true");
       localStorage.setItem("userFirstName", user.fullName.split(" ")[0]);
       window.dispatchEvent(new Event("userLoggedIn"));
-
       setStep("success");
     } catch (err) {
-      console.error("Google signup with phone failed:", err);
-      const msg =
-        err.response?.data?.message || "Google signup failed. Try again.";
-      setErrorMsg(msg);
+      setErrorMsg(
+        err.response?.data?.message || "Google signup failed. Try again."
+      );
     }
   };
 
   const renderStep = () => {
-    if (step === "success") return <SuccessBlock onClose={onClose} />;
+    if (step === "success")
+      return <SuccessBlock autoCloseTime={3000} onClose={onClose} />;
+
     if (step === "otp")
       return (
         <OTPVerification
@@ -261,29 +215,17 @@ const Login = ({ onClose, onSwitchToRegister }) => {
             Please enter your phone number to complete your Google registration.
           </p>
           <form onSubmit={handleGooglePhoneSubmit} className="space-y-4">
-            <div className="text-left">
-              <label
-                htmlFor="phoneNo"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Phone Number <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="phoneNo"
-                id="phoneNo"
-                placeholder="+91 | Enter your phone number"
-                value={formData.phoneNo}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-            </div>
+            <input
+              type="text"
+              name="phoneNo"
+              placeholder="+91 | Enter your phone number"
+              value={formData.phoneNo}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
             {errorMsg && <p className="text-sm text-red-600">{errorMsg}</p>}
-            <button
-              type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md transition duration-200"
-            >
+            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md">
               Complete Registration
             </button>
             <button
@@ -311,7 +253,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
           />
         </div>
 
-        <div className="flex items-center my-4">
+        <div className="flex items-center my-1">
           <div className="flex-grow h-px bg-gray-300" />
           <span className="px-3 text-sm text-gray-500">or</span>
           <div className="flex-grow h-px bg-gray-300" />
@@ -319,23 +261,31 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
         <input
           type="number"
-          className="login-input"
           name="phoneNo"
           placeholder="+91 | Enter your phone number"
           value={formData.phoneNo}
           onChange={handleChange}
+          className="w-full rounded-lg border border-gray-300 bg-white/80 px-4 py-3 text-gray-800 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-300 transition-all duration-300 placeholder:text-gray-400 shadow-sm hover:shadow-md"
         />
-        <button className="otp-button" onClick={handleGetOTP}>
-          Get OTP
+        <button
+          className="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-semibold shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:-translate-y-0.5"
+          onClick={handleGetOTP}
+        >
+          Send OTP
         </button>
+        <div className="flex items-center my-3">
+          <div className="flex-grow h-px bg-gray-300" />
+          <span className="px-3 text-sm text-gray-500">or</span>
+          <div className="flex-grow h-px bg-gray-300" />
+        </div>
 
         <input
           type="email"
           name="email"
-          className="login-input"
           placeholder="Enter email"
           value={formData.email}
           onChange={handleChange}
+          className="w-full rounded-lg border border-gray-300 bg-white/80 px-4 py-3 text-gray-800 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-300 transition-all duration-300 placeholder:text-gray-400 shadow-sm hover:shadow-md"
         />
         <div className="relative w-full mb-4">
           <input
@@ -344,9 +294,8 @@ const Login = ({ onClose, onSwitchToRegister }) => {
             placeholder="Enter password"
             value={formData.password}
             onChange={handleChange}
-            minLength={8}
             required
-            className="w-full px-2 pr-10 py-2 border border-[#001f3f] rounded-md focus:outline-none"
+            className="w-full rounded-lg border border-gray-300 bg-white/80 px-4 py-3 pr-10 text-gray-800 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-300 transition-all duration-300 placeholder:text-gray-400 shadow-sm hover:shadow-md"
           />
           <span
             onClick={() => setShowPassword(!showPassword)}
@@ -357,22 +306,28 @@ const Login = ({ onClose, onSwitchToRegister }) => {
         </div>
 
         <div
-          className="Login-forget-password-link mb-5 cursor-pointer mt-5"
+          className="text-right mb-3 text-sm text-blue-600 cursor-pointer hover:underline"
           onClick={() => setShowForgotModal(true)}
         >
           Forgot your password?
         </div>
 
-        {errorMsg && <p className="error">{errorMsg}</p>}
-        <button className="otp-button" onClick={handleLogin}>
+        {errorMsg && <p className="text-sm text-red-600 mb-3">{errorMsg}</p>}
+        <button
+          className="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-semibold shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:-translate-y-0.5"
+          onClick={handleLogin}
+        >
           Login
         </button>
 
-        <p className="signup-text pt-3">
+        <p className="text-sm text-center">
           Don't have an account?{" "}
           <span
-            className="login-link cursor-pointer font-semibold text-blue-600 hover:underline"
-            onClick={onSwitchToRegister}
+            className="text-blue-600 font-semibold cursor-pointer hover:underline"
+            onClick={() => {
+              onClose();
+              onSwitchToRegister();
+            }}
           >
             Sign Up
           </span>
@@ -382,25 +337,62 @@ const Login = ({ onClose, onSwitchToRegister }) => {
   };
 
   return (
-    <div className="login-wrapper" onClick={onClose}>
-      {isLoading && (
-        <div className="absolute inset-0 bg-white bg-opacity-90 z-10 flex flex-col items-center justify-center rounded-md">
-          <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-          <p className="mt-4 text-gray-700 font-semibold">
-            Please Wait a moment..
-          </p>
+    <div
+      className="login-wrapper  h-[90vh] flex items-center justify-center z-[9999] backdrop-blur-md"
+      onClick={onClose}
+    >
+      {isLoading && <Spinner />}
+      <div
+        className="p-0 login-modal lg:h-[90vh] sm:h-0 max-w-3xl  flex flex-col md:flex-row rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-all duration-300 hover:shadow-purple-500/20"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Left Side - Image + Welcome Message */}
+        <div className="hidden md:flex md:w-1/2 relative items-center justify-center bg-gradient-to-b from-purple-800 via-indigo-900 to-black p-3 overflow-hidden">
+          {/* Container to center image and text together */}
+          <div className="flex flex-col items-center justify-center text-center space-y-1 z-10">
+            {/* Image */}
+            <img
+              src="../new-illustrator.png"
+              alt="Welcome"
+              className="h-[60%] w-auto object-contain opacity-95 drop-shadow-2xl hover:scale-105 transition-transform duration-500"
+            />
+
+            {/* Welcome Text Block */}
+            <div className="bg-white/10 backdrop-blur-lg p-3 rounded-xl shadow-lg border border-white/20 max-w-xs">
+              <h2 className="text-yellow-300 text-2xl font-bold mb-1 drop-shadow-md">
+                Welcome Back !
+              </h2>
+              <p className="text-indigo-100 text-[14px] leading-relaxed">
+                Log In to your account and continue exploring endless
+                opportunities with us.
+              </p>
+            </div>
+          </div>
         </div>
-      )}
-      <div className="login-modal" onClick={(e) => e.stopPropagation()}>
-        {onClose && (
-          <button className="modal-close" onClick={onClose}>
-            ×
-          </button>
-        )}
-        <div id="recaptcha-container"></div>
-        <h2 className="login-title">Log In</h2>
-        {renderStep()}
+
+        {/* Right Side - Login Form */}
+        <div className="w-full md:w-1/2 bg-gradient-to-br from-white to-indigo-50 p-4 md:p-6 relative">
+          <div id="recaptcha-container"></div>
+
+          {onClose && (
+            <button
+              className="absolute top-3 right-4 text-gray-400 text-2xl hover:text-red-500 transition-colors"
+              onClick={onClose}
+            >
+              ×
+            </button>
+          )}
+
+          <div className="text-center mb-2">
+            <h2 className="text-center text-3xl font-extrabold text-indigo-900 mb-2">
+              Log In
+            </h2>
+          </div>
+
+          <div className="space-y-3">{renderStep()}</div>
+        </div>
       </div>
+
       {showForgotModal && (
         <ForgotPass onClose={() => setShowForgotModal(false)} />
       )}

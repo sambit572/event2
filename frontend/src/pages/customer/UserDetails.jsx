@@ -409,10 +409,20 @@ const UserDetails = () => {
   }, [serviceId, userId, getCombinedAvailability]);
 
   const handleDateSelect = ({ startDate, endDate }) => {
+    const formatDateToNoonUTC = (date) => {
+      if (!date) return "";
+
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+
+      return `${year}-${month}-${day}T12:00:00.000Z`;
+    };
+
     setFormData((prev) => ({
       ...prev,
-      startDate: startDate ? startDate.toISOString().slice(0, 10) : "",
-      endDate: endDate ? endDate.toISOString().slice(0, 10) : "",
+      startDate: startDate ? formatDateToNoonUTC(startDate) : "",
+      endDate: endDate ? formatDateToNoonUTC(endDate) : "",
     }));
   };
 

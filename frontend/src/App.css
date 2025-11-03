@@ -1,4 +1,8 @@
-
+/* .app {
+  display: flex;
+  background-color: blueviolet;
+} */
+/* Centers the toast container */
 .Toastify__toast-container {
   top: 50% !important;
   left: 50% !important;
