@@ -200,12 +200,56 @@ const CustomerNegotiationModal = () => {
   };
 
   const emitNegotiation = (negotiationData) => {
-    if (!socket.connected) {
-      console.log("Socket not connected");
-      return;
-    }
-    socket.emit("new-negotiation-request", negotiationData);
-    console.log("Negotiation data sent:", negotiationData);
+    return new Promise((resolve, reject) => {
+      if (!socket.connected) {
+        console.log("Socket not connected");
+        reject("Socket not connected");
+      }
+
+      const requiredFields = [
+        "vendorId",
+        "vendorName",
+        "vendorEmail",
+        "vendorPhoneNumber",
+        "vendorLocation",
+        "serviceName",
+        "serviceId",
+        "bookedByUserId",
+        "bookedByUser",
+        "bookedByUserEmail",
+        "bookedByUserPhoneNumber",
+        "bookedByUserAltPhoneNumber",
+        "venueLocation",
+        "date.startDate",
+        "date.endDate",
+        "originalPriceRange.min",
+        "originalPriceRange.max",
+      ];
+
+      const getValue = (obj, path) =>
+        path.split(".").reduce((acc, key) => acc?.[key], obj);
+
+      const missingFields = requiredFields.filter((field) => {
+        const value = getValue(negotiationData, field);
+        return (
+          value === undefined ||
+          value === null ||
+          value === "" ||
+          (Array.isArray(value) && value.length === 0)
+        );
+      });
+
+      if (missingFields.length > 0) {
+        console.error("❌ Missing required negotiation data:", missingFields);
+        reject("Missing required negotiation data");
+        return;
+      }
+
+      // ✅ Emit only if all required fields are valid
+      socket.emit("new-negotiation-request", negotiationData);
+      console.log("✅ Negotiation data sent:", negotiationData);
+      resolve("Negotiation data sent successfully");
+    });
   };
 
   // ✅ NEW: Handle service group selection
@@ -224,7 +268,7 @@ const CustomerNegotiationModal = () => {
   };
 
   // ✅ NEW: Negotiate all items in current service group
-  const handleNegotiateServiceGroup = () => {
+  const handleNegotiateServiceGroup = async () => {
     const currentGroup = getCurrentServiceGroup();
     if (!currentGroup) {
       setErrorMsg("❗ Service information not found.");
@@ -232,7 +276,6 @@ const CustomerNegotiationModal = () => {
     }
 
     const { service, vendor, items } = currentGroup;
-
     if (!service || !vendor) {
       setErrorMsg("❗ Service or vendor information not found.");
       return;
@@ -251,193 +294,198 @@ const CustomerNegotiationModal = () => {
     }
 
     setIsLoading(true);
+    setErrorMsg("");
 
-    // Send negotiation for each item
-    items.forEach((item, index) => {
-      if (item.cateringDetails) {
-        const proposedPrice = proposedPrices[item.cartItemId];
-        const { packageName, plateCount, pricePerPlate, totalPrice } =
-          item.cateringDetails;
+    try {
+      // Collect promises for all emits
+      const negotiationPromises = items.map((item) => {
+        let negotiationData = null;
+        let proposedPrice = 0;
 
-        // Validate minimum price
-        const minValidation = totalPrice * 0.5;
-        if (proposedPrice < minValidation) {
-          setErrorMsg(
-            `❗ Price for ${packageName} too low. Minimum: ₹${Math.floor(
-              minValidation
-            )}`
-          );
-          setIsLoading(false);
-          return;
+        if (item.cateringDetails) {
+          const { packageName, plateCount, pricePerPlate, totalPrice } =
+            item.cateringDetails;
+          proposedPrice = proposedPrices[item.cartItemId];
+
+          const minValidation = totalPrice * 0.5;
+          if (proposedPrice < minValidation) {
+            throw new Error(
+              `❗ Price for ${packageName} too low. Minimum: ₹${Math.floor(
+                minValidation
+              )}`
+            );
+          }
+
+          negotiationData = {
+            vendorId: vendor._id,
+            vendorName: vendor.fullName,
+            vendorEmail: vendor.email,
+            vendorPhoneNumber: vendor.phone,
+            vendorLocation: service?.stateLocationOffered,
+            serviceId: service._id,
+            serviceName: service.serviceName,
+            bookedByUserId: bookingDetails.bookedById,
+            bookedByUser: bookingDetails.bookedBy,
+            bookedByUserEmail: bookingDetails.userEmail,
+            bookedByUserPhoneNumber: bookingDetails.phone,
+            bookedByUserAltPhoneNumber: bookingDetails.altPhone,
+            venueLocation: venueInput,
+            proposedPrice,
+            date: {
+              startDate: new Date(bookingDetails.startDate),
+              endDate: new Date(bookingDetails.endDate),
+            },
+            originalPriceRange: { min: totalPrice, max: totalPrice },
+            packageName,
+            plateCount,
+            pricePerPlate,
+            totalPrice,
+          };
+        } else {
+          proposedPrice = proposedPrices[service._id] || 0;
+
+          if (!proposedPrice || Number(proposedPrice) <= 0)
+            throw new Error("❗ Please enter a valid price for this service.");
+
+          const minValidation = (service.minPrice || 0) * 0.5;
+          if (Number(proposedPrice) < minValidation)
+            throw new Error(
+              `❗ Price for ${
+                service.serviceName
+              } too low. Minimum: ₹${Math.floor(minValidation)}`
+            );
+
+          negotiationData = {
+            vendorId: vendor._id,
+            vendorName: vendor.fullName,
+            vendorEmail: vendor.email,
+            vendorPhoneNumber: vendor.phone,
+            vendorLocation: service?.stateLocationOffered,
+            serviceId: service._id,
+            serviceName: service.serviceName,
+            bookedByUserId: bookingDetails.bookedById,
+            bookedByUser: bookingDetails.bookedBy,
+            bookedByUserEmail: bookingDetails.userEmail,
+            bookedByUserPhoneNumber: bookingDetails.phone,
+            bookedByUserAltPhoneNumber: bookingDetails.altPhone,
+            venueLocation: venueInput,
+            proposedPrice,
+            date: {
+              startDate: new Date(bookingDetails.startDate),
+              endDate: new Date(bookingDetails.endDate),
+            },
+            originalPriceRange: {
+              min: service.minPrice || 0,
+              max: service.maxPrice || 0,
+            },
+          };
         }
 
-        const negotiationData = {
-          vendorId: vendor._id,
-          vendorName: vendor.fullName,
-          vendorEmail: vendor.email,
-          vendorPhoneNumber: vendor.phone,
-          vendorLocation: service?.stateLocationOffered,
-          serviceId: service._id,
-          serviceName: service.serviceName,
-          bookedByUserId: bookingDetails.bookedById,
-          bookedByUser: bookingDetails.bookedBy,
-          bookedByUserEmail: bookingDetails.userEmail,
-          bookedByUserPhoneNumber: bookingDetails.phone,
-          bookedByUserAltPhoneNumber: bookingDetails.altPhone,
-          venueLocation: venueInput,
-          proposedPrice: proposedPrice,
-          date: {
-            startDate: new Date(bookingDetails.startDate),
-            endDate: new Date(bookingDetails.endDate),
-          },
-          originalPriceRange: {
-            min: totalPrice,
-            max: totalPrice,
-          },
-          packageName,
-          plateCount,
-          pricePerPlate,
-          totalPrice,
-        };
+        return emitNegotiation(negotiationData);
+      });
 
-        setTimeout(() => {
-          emitNegotiation(negotiationData);
-        }, index * 100);
-      } else {
-        // Regular service
-        // ✅ MODIFIED: Get price using service._id, not item.cartItemId
-        const proposedPrice = proposedPrices[service._id] || 0;
+      // Wait for all negotiations to complete
+      await Promise.all(negotiationPromises);
 
-        // ✅ NEW: Add validation for regular service price
-        if (!proposedPrice || Number(proposedPrice) <= 0) {
-          setErrorMsg("❗ Please enter a valid price for this service.");
-          setIsLoading(false);
-          return; // Stop this iteration
-        }
-
-        // ✅ NEW: Add min price validation
-        const minValidation = (service.minPrice || 0) * 0.5;
-        if (Number(proposedPrice) < minValidation) {
-          setErrorMsg(
-            `❗ Price for ${service.serviceName} too low. Minimum: ₹${Math.floor(
-              minValidation
-            )}`
-          );
-          setIsLoading(false);
-          return; // Stop this iteration
-        }
-
-        const negotiationData = {
-          vendorId: vendor._id,
-          vendorName: vendor.fullName,
-          vendorEmail: vendor.email,
-          vendorPhoneNumber: vendor.phone,
-          vendorLocation: service?.stateLocationOffered,
-          serviceId: service._id,
-          serviceName: service.serviceName,
-          bookedByUserId: bookingDetails.bookedById,
-          bookedByUser: bookingDetails.bookedBy,
-          bookedByUserEmail: bookingDetails.userEmail,
-          bookedByUserPhoneNumber: bookingDetails.phone,
-          bookedByUserAltPhoneNumber: bookingDetails.altPhone,
-          venueLocation: venueInput,
-          proposedPrice: proposedPrice || 0, // ✅ MODIFIED: Use correct variable
-          date: {
-            startDate: new Date(bookingDetails.startDate),
-            endDate: new Date(bookingDetails.endDate),
-          },
-          originalPriceRange: {
-            min: service.minPrice || 0,
-            max: service.maxPrice || 0,
-          },
-        };
-
-        emitNegotiation(negotiationData);
-      }
-    });
-
-    setTimeout(() => {
-      const packageCount = items.filter((i) => i.cateringDetails).length;
+      const packageCount = itemsToNegotiate.length;
       const message =
         packageCount > 1
           ? `✅ Your prices for ${packageCount} packages have been sent to ${vendor.fullName}!`
           : `✅ Your price has been sent to ${vendor.fullName}!`;
 
       alert(message);
-      setErrorMsg("");
-      setIsLoading(false);
       navigate(`/order-summary/${userDetailsId}`);
-    }, items.length * 100 + 500);
+    } catch (error) {
+      console.error("Negotiation error:", error);
+      setErrorMsg(
+        error.message || "❗ Something went wrong, please try again."
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // ✅ NEW: Proceed without negotiation for all services
-  const handleProceedWithoutNegotiation = () => {
-    setIsLoading(true);
+  const handleProceedWithoutNegotiation = async () => {
+    try {
+      setIsLoading(true);
+      setErrorMsg("");
 
-    let delayCounter = 0;
-    groupedServices.forEach((group) => {
-      const { service, vendor, items } = group;
+      const negotiationPromises = [];
 
-      if (!service || !vendor) {
-        console.warn(`Missing service or vendor data`);
-        return;
-      }
+      for (const group of groupedServices) {
+        const { service, vendor, items } = group;
 
-      items.forEach((item) => {
-        let minPrice = 0;
-        let maxPrice = 0;
-        let cateringInfo = {};
-
-        if (item.cateringDetails) {
-          const { totalPrice, packageName, plateCount, pricePerPlate } =
-            item.cateringDetails;
-          minPrice = totalPrice;
-          maxPrice = totalPrice;
-          cateringInfo = { packageName, plateCount, pricePerPlate, totalPrice };
-        } else {
-          minPrice = service.minPrice || 0;
-          maxPrice = service.maxPrice || 0;
+        if (!service || !vendor) {
+          console.warn("❗ Missing service or vendor data, skipping group.");
+          continue;
         }
 
-        const negotiationData = {
-          vendorName: vendor.fullName || vendor.name,
-          serviceName: service.serviceName || service.name,
-          serviceId: service._id?.$oid || service._id,
-          vendorId: vendor._id?.$oid || vendor._id,
-          bookedBy: bookingDetails.bookedBy,
-          bookedById:
-            bookingDetails.bookedById?.$oid || bookingDetails.bookedById,
-          venueLocation: venueInput,
-          vendorLocation: service?.stateLocationOffered,
-          proposedPrice: 0,
-          date: {
-            startDate:
-              bookingDetails.startDate?.$date || bookingDetails.startDate,
-            endDate: bookingDetails.endDate?.$date || bookingDetails.endDate,
-          },
-          originalPriceRange: {
-            min: minPrice,
-            max: maxPrice,
-          },
-          type: "No Negotiation Requested",
-          ...cateringInfo,
-        };
+        for (const item of items) {
+          let minPrice = 0;
+          let maxPrice = 0;
+          let cateringInfo = {};
 
-        setTimeout(() => {
-          emitNegotiation(negotiationData);
-        }, delayCounter * 100);
+          if (item.cateringDetails) {
+            const { totalPrice, packageName, plateCount, pricePerPlate } =
+              item.cateringDetails;
+            minPrice = totalPrice;
+            maxPrice = totalPrice;
+            cateringInfo = {
+              packageName,
+              plateCount,
+              pricePerPlate,
+              totalPrice,
+            };
+          } else {
+            minPrice = service.minPrice || 0;
+            maxPrice = service.maxPrice || 0;
+          }
 
-        delayCounter++;
-      });
-    });
+          const negotiationData = {
+            vendorId: vendor._id,
+            vendorName: vendor.fullName,
+            vendorEmail: vendor.email,
+            vendorPhoneNumber: vendor.phone,
+            vendorLocation: service?.stateLocationOffered,
+            serviceId: service._id,
+            serviceName: service.serviceName,
+            bookedByUserId: bookingDetails.bookedById,
+            bookedByUser: bookingDetails.bookedBy,
+            bookedByUserEmail: bookingDetails.userEmail,
+            bookedByUserPhoneNumber: bookingDetails.phone,
+            bookedByUserAltPhoneNumber: bookingDetails.altPhone,
+            venueLocation: venueInput,
+            proposedPrice: 0,
+            date: {
+              startDate: new Date(bookingDetails.startDate),
+              endDate: new Date(bookingDetails.endDate),
+            },
+            originalPriceRange: {
+              min: minPrice,
+              max: maxPrice,
+            },
+            type: "No Negotiation Requested",
+            ...cateringInfo,
+          };
 
-    setTimeout(() => {
+          // push each emit promise
+          negotiationPromises.push(emitNegotiation(negotiationData));
+        }
+      }
+
+      // Wait for all emits to finish
+      await Promise.all(negotiationPromises);
+
       alert("🚀 Proceeding with the listed prices for all items...");
       setProceededWithoutNegotiation(true);
-      setErrorMsg("");
-      setIsLoading(false);
       navigate(`/order-summary/${userDetailsId}`);
-    }, delayCounter * 100 + 500);
+    } catch (error) {
+      console.error("❌ Proceed without negotiation failed:", error);
+      setErrorMsg(error.message || "Something went wrong while sending data.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const onClose = () => navigate("/userdetails");
