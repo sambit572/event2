@@ -60,6 +60,7 @@ import {
   updateWhyChooseUs,
   resetWhyChooseUs,
 } from "../../controller/vendor/whychooseus.controller.js";
+import { getVendorBookings } from "../../controller/vendor/vendorBookingHistory.controller.js";
 
 const vendor_router = express.Router();
 
@@ -188,5 +189,7 @@ vendor_router.get(
   verifyVendorJwt, // existing auth check
   getVendorDashboard
 );
+// --- VENDOR BOOKING HISTORY ROUTE --- //
+vendor_router.get("/vendor-booking/:vendorId", getVendorBookings);
 
 export { vendor_router };
