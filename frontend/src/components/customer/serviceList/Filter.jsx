@@ -98,14 +98,14 @@ const Filter = ({ onApply, onCancel }) => {
 
           <h3 className="filter-heading">Filters</h3>
           <div className="mb-2">
-            <h3 className="text-lg font-semibold text-black-700 mb-0 tracking-wide">
+            <h3 className="text-[1rem] font-semibold text-black-700 mb-0 tracking-wide">
               Sort By
             </h3>
 
             <select
               value={sortBy} // Update the Sort By dropdown to use state
               onChange={(e) => setSortBy(e.target.value)}
-              className="w-full px-3 py-[0.2rem] border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              className="w-full px-3 py-[0.3rem] border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
             >
               <option value="price">Price</option>
               <option value="name">Name</option>
@@ -160,7 +160,7 @@ const Filter = ({ onApply, onCancel }) => {
                 placeholder="Enter Min Price"
                 value={filters.minPrice}
                 onChange={handleMinChange}
-                className="w-full px-3 py-[0.2rem] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                className="w-full px-3 py-[0.3rem] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
               />
             </div>
             <div>
@@ -172,7 +172,7 @@ const Filter = ({ onApply, onCancel }) => {
                 placeholder="Enter Max Price"
                 value={filters.maxPrice}
                 onChange={handleMaxChange}
-                className="w-full px-3 py-[0.2rem] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                className="w-full px-3 py-[0.3rem] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
               />
             </div>
           </div>
