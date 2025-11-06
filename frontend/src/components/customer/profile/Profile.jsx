@@ -138,6 +138,7 @@ function Profile() {
   /* -------------------- HANDLE BOOKING CLICK -------------------- */
   const handleBookingClick = (booking) => {
     const { reDirectTo, userDetailsId } = booking;
+    console.log("Booking clicked:", booking);
 
     switch (reDirectTo) {
       case 1:
@@ -146,7 +147,7 @@ function Profile() {
         break;
       case 2:
         // Navigate to order summary page
-        navigate(`/order-summary/${userDetailsId?._id || userDetailsId}`);
+        navigate(`/order-summary/${userDetailsId?._id}`);
         break;
       default:
         console.error("Invalid reDirectTo value:", reDirectTo);
@@ -246,78 +247,86 @@ function Profile() {
         </div>
 
         {/* ✅ Booking Cards */}
-        {loadingBookings ? (
-          <p className="text-center text-lg font-semibold">
-            Loading bookings...
-          </p>
-        ) : filteredBookings.length === 0 ? (
-          <p className="text-center text-lg font-semibold">No bookings found</p>
-        ) : (
-          filteredBookings.map((b, i) => (
-            <div
-              key={i}
-              onClick={() => handleBookingClick(b)}
-              className="w-[90%] md:w-[80%] mx-auto flex flex-col md:flex-row gap-6 p-6 mb-6 bg-[#F8FAFD] rounded-2xl shadow-md border border-gray-100 hover:shadow-xl transition-all hover:scale-[1.02] cursor-pointer"
-            >
-              {/* Booking Icon/Visual */}
-              <div className="w-full md:w-40 h-40 md:h-36 rounded-xl overflow-hidden shrink-0 mx-auto md:mx-0 bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
-                <div className="text-center text-white">
-                  <p className="text-4xl font-bold">{b?.totalServices || 0}</p>
-                  <p className="text-sm mt-1">
-                    Service{b?.totalServices !== 1 ? "s" : ""}
-                  </p>
-                </div>
-              </div>
-
-              {/* Info */}
-              <div className="flex-1 flex flex-col justify-between">
-                <h3 className="text-lg md:text-xl font-bold text-[#001F3F] mb-2">
-                  Booking Session
-                </h3>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 text-[15px]">
-                  {/* Left info */}
-                  <div className="space-y-1">
-                    <p>
-                      <span className="font-semibold">Location:</span>{" "}
-                      {b?.userDetailsId?.address || b?.location}
+        <div className="h-[90vh] overflow-y-auto">
+          {loadingBookings ? (
+            <p className="text-center text-lg font-semibold">
+              Loading bookings...
+            </p>
+          ) : filteredBookings.length === 0 ? (
+            <p className="text-center text-lg font-semibold">
+              No bookings found
+            </p>
+          ) : (
+            filteredBookings.map((b, i) => (
+              <div
+                key={i}
+                onClick={() => handleBookingClick(b)}
+                className="w-[90%] md:w-[80%] mx-auto flex flex-col md:flex-row gap-6 p-6 mb-6 bg-[#F8FAFD] rounded-2xl shadow-md border border-gray-100 hover:shadow-xl transition-all hover:scale-[1.02] cursor-pointer"
+              >
+                {/* Booking Icon/Visual */}
+                <div className="w-full md:w-40 h-40 md:h-36 rounded-xl overflow-hidden shrink-0 mx-auto md:mx-0 bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
+                  <div className="text-center text-white">
+                    <p className="text-4xl font-bold">
+                      {b?.totalServices || 0}
                     </p>
-                    <p className="font-semibold">Event Period:</p>
-                    <p>
-                      Start:{" "}
-                      {formatDate(b?.userDetailsId?.startDate || b?.startDate)}
-                    </p>
-                    <p>
-                      End: {formatDate(b?.userDetailsId?.endDate || b?.endDate)}
-                    </p>
-                    <p>
-                      <span className="font-semibold">Total Services:</span>{" "}
-                      <span className="text-blue-700 font-bold">
-                        {b?.totalServices || 0}
-                      </span>
-                    </p>
-                    <p>
-                      <span className="font-semibold">Status:</span>{" "}
-                      <span className="text-blue-700 font-bold">
-                        {b?.bookingStatus}
-                      </span>
+                    <p className="text-sm mt-1">
+                      Service{b?.totalServices !== 1 ? "s" : ""}
                     </p>
                   </div>
+                </div>
 
-                  {/* Right info */}
-                  <div className="space-y-1">
-                    <p>
-                      <span className="font-semibold">Total Amount:</span> ₹
-                      {b?.amount?.toLocaleString("en-IN") || 0}
-                    </p>
-                    <p>
-                      <span className="font-semibold">Payment Mode:</span>{" "}
-                      {b?.paymentMode}
-                    </p>
-                    <p className="font-semibold">
-                      Payment:
-                      <span
-                        className={`ml-2 px-2 py-1 text-xs font-bold rounded-lg 
+                {/* Info */}
+                <div className="flex-1 flex flex-col justify-between">
+                  <h3 className="text-lg md:text-xl font-bold text-[#001F3F] mb-2">
+                    Booking Session
+                  </h3>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 text-[15px]">
+                    {/* Left info */}
+                    <div className="space-y-1">
+                      <p>
+                        <span className="font-semibold">Location:</span>{" "}
+                        {b?.userDetailsId?.address || b?.location}
+                      </p>
+                      <p className="font-semibold">Event Period:</p>
+                      <p>
+                        Start:{" "}
+                        {formatDate(
+                          b?.userDetailsId?.startDate || b?.startDate
+                        )}
+                      </p>
+                      <p>
+                        End:{" "}
+                        {formatDate(b?.userDetailsId?.endDate || b?.endDate)}
+                      </p>
+                      <p>
+                        <span className="font-semibold">Total Services:</span>{" "}
+                        <span className="text-blue-700 font-bold">
+                          {b?.totalServices || 0}
+                        </span>
+                      </p>
+                      <p>
+                        <span className="font-semibold">Status:</span>{" "}
+                        <span className="text-blue-700 font-bold">
+                          {b?.bookingStatus}
+                        </span>
+                      </p>
+                    </div>
+
+                    {/* Right info */}
+                    <div className="space-y-1">
+                      <p>
+                        <span className="font-semibold">Total Amount:</span> ₹
+                        {b?.amount?.toLocaleString("en-IN") || 0}
+                      </p>
+                      <p>
+                        <span className="font-semibold">Payment Mode:</span>{" "}
+                        {b?.paymentMode}
+                      </p>
+                      <p className="font-semibold">
+                        Payment:
+                        <span
+                          className={`ml-2 px-2 py-1 text-xs font-bold rounded-lg 
                 ${
                   b?.paymentStatus === "PAID"
                     ? "bg-green-100 text-green-700"
@@ -325,34 +334,39 @@ function Profile() {
                     ? "bg-red-100 text-red-700"
                     : "bg-yellow-100 text-yellow-700"
                 }`}
-                      >
-                        {b?.paymentStatus}
-                      </span>
-                    </p>
-                    {b?.transactionId && (
-                      <p className="text-xs text-gray-600">
-                        Txn: {b.transactionId.substring(0, 12)}...
+                        >
+                          {b?.paymentStatus}
+                        </span>
                       </p>
-                    )}
+                      {b?.transactionId && (
+                        <p className="text-xs text-gray-600">
+                          Txn: {b.transactionId.substring(0, 12)}...
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between items-center mt-4">
+                    <p className="text-xs text-gray-500">
+                      Click to view details
+                    </p>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent card click
+                        navigate("/report", {
+                          state: { selectedType: "user" },
+                        });
+                      }}
+                      className="bg-[#001F3F] hover:bg-[#003165] text-white px-4 py-2 rounded-md flex items-center gap-2"
+                    >
+                      <MdReportGmailerrorred size={20} /> Report
+                    </button>
                   </div>
                 </div>
-
-                <div className="flex justify-between items-center mt-4">
-                  <p className="text-xs text-gray-500">Click to view details</p>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevent card click
-                      navigate("/report", { state: { selectedType: "user" } });
-                    }}
-                    className="bg-[#001F3F] hover:bg-[#003165] text-white px-4 py-2 rounded-md flex items-center gap-2"
-                  >
-                    <MdReportGmailerrorred size={20} /> Report
-                  </button>
-                </div>
               </div>
-            </div>
-          ))
-        )}
+            ))
+          )}
+        </div>
       </div>
 
       {/* ✅ Password Change Modal */}
