@@ -8,18 +8,15 @@ const userBookingHistorySchema = new mongoose.Schema(
       required: true,
       index: true,
     },
+    userDetailsId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "UserDetails",
+      required: true,
+    },
     booking: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Booking",
-      required: true,
-    },
-    vendorId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Vendor",
-    },
-    serviceId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Service",
+      default: null,
     },
 
     // Booking Details
@@ -28,7 +25,7 @@ const userBookingHistorySchema = new mongoose.Schema(
     endDate: { type: Date, required: true },
 
     // Payment Info
-    amount: { type: Number, required: true },
+    amount: { type: Number, default: 0 },
     paymentStatus: {
       type: String,
       enum: ["PENDING", "PAID", "FAILED", "REFUNDED"],
@@ -39,8 +36,8 @@ const userBookingHistorySchema = new mongoose.Schema(
       enum: ["ONLINE", "COD", "WALLET", "UPI", "BANK_TRANSFER"],
       default: "ONLINE",
     },
-    transactionId: { type: String },
-    paymentDate: { type: Date },
+    transactionId: { type: String, default: "" },
+    paymentDate: { type: Date, default: "" },
 
     // Booking Status
     bookingStatus: {
@@ -49,16 +46,25 @@ const userBookingHistorySchema = new mongoose.Schema(
       default: "PENDING",
     },
 
-    // Optional info
-    notes: { type: String },
-    isReviewed: { type: Boolean, default: false },
+    reDirectTo: {
+      type: Number,
+      enum: [1, 2, 3],
+      default: 1,
+    },
+
+    /*
+    reDirectTo variable is used for redirection purpose and written for user, currently this has nothing to do with vendor.
+    
+    1: Is for redirecting user to it's negotiation modal using userDetailsId
+    2: Is for redirecting user to its order-summary page using userDetailsId
+    3: is for future like when the whole process completed a page designed may be same as order-summary but with feedback option will be added.
+    
+    */
   },
   { timestamps: true }
 );
 
 // ✅ Fix: Prevent OverwriteModelError
-const UserBookingHistory =
+export const UserBookingHistory =
   mongoose.models.UserBookingHistory ||
   mongoose.model("UserBookingHistory", userBookingHistorySchema);
-
-export default UserBookingHistory;

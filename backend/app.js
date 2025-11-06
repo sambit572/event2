@@ -96,7 +96,7 @@ app.use("/api/common", serviceRoutes);
 app.use("/api/wishlist", wishlistRoutes); // Use wishlist routes
 app.use("/api/cart", cartRouter);
 app.use("/api/calendar", calendarRoutes);
-app.use("/api/users", userBookingHistoryRoutes);
+app.use("/api/user-bookings", userBookingHistoryRoutes);
 
 // ✅ Health Check Route
 app.get("/", (req, res) => {
