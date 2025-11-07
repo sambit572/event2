@@ -629,7 +629,7 @@ state: { from: locationPath.pathname },
              bg-gradient-to-r from-[#fb923c] to-[#ef4444] 
              text-white font-bold transition-all duration-300 shadow-md 
              hover:shadow-lg hover:from-[#fca5a5] hover:to-[#dc2626] 
-             lg:px-18 lg:py-3  px-1 py-2 lg:text-sm text-xs lg:w-auto lg:min-w-[120px] 
+             lg:px-10 lg:py-3 px-1 py-2 lg:text-sm text-xs lg:w-auto
              "
                 onClick={handleAddToCart}
               >

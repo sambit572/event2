@@ -166,7 +166,7 @@ function Profile() {
       {/* ✅ Sidebar */}
       <div className="profile-sidebar-fixed">
         <button
-          className="profile-hamburger md:hidden"
+          className="profile-hamburger lg:hidden fixed top-4 left-4 z-50 bg-blue-600 text-white p-2 rounded-md shadow-md"
           onClick={() => setIsSidebarOpen((p) => !p)}
         >
           {isSidebarOpen ? "✕" : "☰"}
@@ -178,11 +178,11 @@ function Profile() {
       </div>
 
       {/* ✅ Main Content */}
-      <div className="profile-scrollable-content md:ml-8 w-full p-4">
+      <div className="profile-scrollable-content md:ml-[-200px] ml-[-220px] lg:ml-8 sm:ml-0 w-full p-4">
         <h2 className="text-3xl font-bold text-center mb-6">My Bookings</h2>
 
         {/* ================= Filter + Sort UI ================= */}
-        <div className="flex flex-wrap items-center justify-between mb-6 gap-3">
+        <div className="flex flex-wrap items-center justify-between mb-6 gap-4 ">
           <div className="flex flex-wrap gap-3">
             {[
               {
@@ -212,17 +212,21 @@ function Profile() {
             ].map((item, idx) => (
               <div
                 key={idx}
-                className="filter-sort-box flex items-center gap-2 border rounded-md px-3 py-2 bg-gray-50 cursor-pointer"
+                className="filter-sort-box flex items-center gap-2 bg-gradient-to-r from-amber-100 to-orange-50 border border-amber-300 rounded-lg px-3 py-2 shadow-sm hover:shadow-md transition-all duration-300"
               >
-                <span className="text-sm font-medium">{item.label}:</span>
+                <span className="text-sm font-semibold text-amber-700">
+                  {item.label}:
+                </span>
                 <select
-                  className="text-sm bg-white outline-none cursor-pointer pr-4"
+                  className="text-sm bg-transparent text-gray-800 font-medium outline-none cursor-pointer pr-4 border-none focus:ring-0"
                   style={{ appearance: "none" }}
                   value={item.value}
                   onChange={(e) => item.setter(e.target.value)}
                 >
                   {item.options.map((o) => (
-                    <option key={o}>{o}</option>
+                    <option key={o} className="text-gray-800 bg-white">
+                      {o}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -230,24 +234,24 @@ function Profile() {
           </div>
 
           {/* ✅ Sort Dropdown */}
-          <div className="filter-sort-box flex items-center gap-2 border rounded-md px-3 py-2 bg-gray-50 cursor-pointer">
-            <span className="text-sm font-medium">Sort:</span>
+          <div className="filter-sort-box flex items-center gap-2 bg-gradient-to-r from-blue-100 to-indigo-50 border border-blue-300 rounded-lg px-3 py-2 shadow-sm hover:shadow-md transition-all duration-300">
+            <span className="text-sm font-semibold text-blue-700">Sort:</span>
             <select
-              className="text-sm bg-white outline-none cursor-pointer pr-4"
+              className="text-sm bg-transparent text-gray-800 font-medium outline-none cursor-pointer pr-4 border-none focus:ring-0"
               style={{ appearance: "none" }}
               value={sortOption}
               onChange={(e) => setSortOption(e.target.value)}
             >
-              <option>Newest First</option>
-              <option>Oldest First</option>
-              <option>Highest Amount</option>
-              <option>Lowest Amount</option>
+              <option className="text-gray-800 bg-white">Newest First</option>
+              <option className="text-gray-800 bg-white">Oldest First</option>
+              <option className="text-gray-800 bg-white">Highest Amount</option>
+              <option className="text-gray-800 bg-white">Lowest Amount</option>
             </select>
           </div>
         </div>
 
         {/* ✅ Booking Cards */}
-        <div className="h-[90vh] overflow-y-auto">
+        <div className="h-[90vh] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           {loadingBookings ? (
             <p className="text-center text-lg font-semibold">
               Loading bookings...
@@ -261,7 +265,7 @@ function Profile() {
               <div
                 key={i}
                 onClick={() => handleBookingClick(b)}
-                className="w-[90%] md:w-[80%] mx-auto flex flex-col md:flex-row gap-6 p-6 mb-6 bg-[#F8FAFD] rounded-2xl shadow-md border border-gray-100 hover:shadow-xl transition-all hover:scale-[1.02] cursor-pointer"
+                className="w-[90%] md:w-[80%] mx-auto flex flex-col md:flex-row gap-6 p-6 mb-6 bg-[#F8FAFD] rounded-2xl shadow-md border border-gray-400 hover:shadow-xl transition-all hover:scale-[0.98] cursor-pointer"
               >
                 {/* Booking Icon/Visual */}
                 <div className="w-full md:w-40 h-40 md:h-36 rounded-xl overflow-hidden shrink-0 mx-auto md:mx-0 bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
