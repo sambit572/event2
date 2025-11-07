@@ -11,6 +11,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { incrementCartCount } from "../../../redux/UserSlice.js";
 import { useDispatch } from "react-redux";
+import { getServicePriceDisplay } from "../../../utils/pricingHelpers";
 
 const ServiceDescription = ({ service, onSwitchToLogin }) => {
   const dispatch = useDispatch();
@@ -66,12 +67,13 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
 
   const rating = service.rating || "★";
   const reviews = service.reviews || 0;
-
-  const price = service.minPrice
-    ? service.maxPrice
-      ? `₹${service.minPrice} - ₹${service.maxPrice}`
-      : `₹${service.minPrice}`
-    : "N/A";
+  // ✅ UPDATED: Use the helper function for consistent pricing
+  const price = getServicePriceDisplay(service);
+  // const price = service.minPrice
+  //   ? service.maxPrice
+  //     ? `₹${service.minPrice} - ₹${service.maxPrice}`
+  //     : `₹${service.minPrice}`
+  //   : "N/A";
 
   const originalPrice = service.originalPrice;
   const discountPercent = service.discountPercent;
@@ -280,6 +282,15 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
       if (onSwitchToLogin) onSwitchToLogin(true);
       return;
     }
+    // === NEW: Prevent direct cart addition for catering services ===
+    const isCateringService = service.pricingType === "perPlate";
+
+    if (isCateringService) {
+      toast.error("Please select a package from the service details page.");
+      const categoryId = service.categoryId || service.serviceCategory;
+      navigate(`/service/${categoryId}/${serviceId}`);
+      return;
+    }
     try {
       await axios.post(
         `${BACKEND_URL}/cart/add`,
@@ -300,23 +311,48 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
     }
   };
 
-  const handleBookNow = (e) => {
-    e.stopPropagation();
-    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
-    if (isLoggedIn) {
-      navigate(`/userdetails/${serviceId}`, {
-        state: { from: locationPath.pathname },
-      });
-    } else {
-      if (onSwitchToLogin) onSwitchToLogin(true);
-    }
-  };
+  // --- THIS IS THE CORRECTED FUNCTION ---
 
+ const handleBookNow = (e) => {
+ e.stopPropagation();
+
+// Step 1: Check for login status first.
+ const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
+ if (!isLoggedIn) {
+ toast.error("Please log in to book a service.", { duration: 2000 });
+ if (onSwitchToLogin) onSwitchToLogin(true);
+ return; // Stop execution if not logged in
+ }
+
+// Step 2: User is logged in, NOW check the service type.
+ const isCateringService = service.pricingType === "perPlate";
+
+if (isCateringService) {
+
+ // Navigate to the service details page to select a package.
+ const categoryId = service.categoryId || service.serviceCategory;
+ 
+ if (!categoryId) {
+ console.error("Cannot navigate: Missing categoryId on service object.");
+ toast.error("Could not open service, category ID is missing.");
+ return;
+ }
+
+ navigate(`/service/${categoryId}/${serviceId}`);
+ toast.success("Please select a package and plate count to proceed.");
+
+} else {
+ // Navigate directly to user details as before.
+navigate(`/userdetails/${serviceId}`, {
+state: { from: locationPath.pathname },
+});
+}
+ };
   const handleNotifyMe = async (e) => {
     e.stopPropagation();
     const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
     if (!isLoggedIn) {
-      toast.error("Please log in to get notifications.",{duration:2000});
+      toast.error("Please log in to get notifications.", { duration: 2000 });
       if (onSwitchToLogin) onSwitchToLogin(true);
       return;
     }
@@ -326,9 +362,11 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
         { serviceId },
         { withCredentials: true }
       );
-      toast.success("You'll be notified when this service becomes available!",{duration:3000});
+      toast.success("You'll be notified when this service becomes available!", {
+        duration: 3000,
+      });
     } catch (err) {
-      toast.error("Failed to set up notification.",{duration:2000});
+      toast.error("Failed to set up notification.", { duration: 2000 });
       console.error("Notify me error:", err);
     }
   };
@@ -362,7 +400,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
   }, [service]);
 
   return (
-    <section className="relative flex h-full flex-col bg-[#fff] p-4 sm:pr-[40px] text-gray-800 md:py-0 px-5">
+    <section className="relative flex h-full flex-col bg-[#ffffff] p-4 sm:pr-[40px] text-gray-800 md:py-0 px-5">
       <div className="absolute top-[0.5rem] right-4 z-20 flex flex-col items-end gap-3 md:right-5">
         <div
           className={`h-10 w-10 flex items-center justify-center rounded-full bg-gray-100 shadow-md cursor-pointer transition-all duration-300 ${
@@ -591,8 +629,8 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
              bg-gradient-to-r from-[#fb923c] to-[#ef4444] 
              text-white font-bold transition-all duration-300 shadow-md 
              hover:shadow-lg hover:from-[#fca5a5] hover:to-[#dc2626] 
-             lg:px-12 lg:py-3 px-1 py-2 lg:text-sm text-xs 
-             lg:w-auto lg:min-w-[120px]"
+             lg:px-18 lg:py-3  px-1 py-2 lg:text-sm text-xs lg:w-auto lg:min-w-[120px] 
+             "
                 onClick={handleAddToCart}
               >
                 ADD TO CART

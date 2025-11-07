@@ -343,7 +343,7 @@ function UserSideBar({ isOpen, setShowPasswordModal }) {
         </ul>
 
         <div
-          className="flex items-center mt-1 ml-1 cursor-pointer hover:text-[#f3c12d]"
+          className="flex items-center ml-1 cursor-pointer hover:text-[#f3c12d]"
           onClick={() => setShowPasswordModal(true)}
         >
           <span className="font-semibold mr-2 mt-0.5 text-[#fff] hover:text-[#f3c12d]">

@@ -5,6 +5,7 @@ import { FaRegCalendarCheck } from "react-icons/fa6";
 import { FaRegHeart, FaHeart } from "react-icons/fa6";
 import { BACKEND_URL } from "../../../utils/constant";
 import { useParams } from "react-router-dom"; // 1. IMPORT useParams
+import { getServicePriceDisplay } from "../../../utils/pricingHelpers";
 
 const ServiceDetailCard = ({ service }) => {
   const { categoryId } = useParams(); // 2. GET categoryId FROM URL
@@ -64,13 +65,14 @@ const ServiceDetailCard = ({ service }) => {
         ? `${address.area}, ${address.city}, ${address.state} - ${address.pincode}`
         : "Location not provided");
 
-  const price = minPrice
-    ? maxPrice
-      ? minPrice === maxPrice
-        ? `₹${minPrice}`
-        : `₹${minPrice} - ₹${maxPrice}`
-      : `₹${minPrice}`
-    : "N/A";
+  // const price = minPrice
+  //   ? maxPrice
+  //     ? minPrice === maxPrice
+  //       ? `₹${minPrice}`
+  //       : `₹${minPrice} - ₹${maxPrice}`
+  //     : `₹${minPrice}`
+  //   : "N/A";
+  const price = getServicePriceDisplay(service);
 
   useEffect(() => {
     const fetchWishlistStatus = async () => {
@@ -180,7 +182,7 @@ const ServiceDetailCard = ({ service }) => {
             setShowShareMenu(false);
           })
           .catch(() => {
-            toast.error("Failed to copy link", { duration: 1500});
+            toast.error("Failed to copy link", { duration: 1500 });
           });
         return;
       case "telegram":
@@ -209,7 +211,7 @@ const ServiceDetailCard = ({ service }) => {
   };
 
   return (
-    <div className="relative w-full rounded-lg border border-gray-200 bg-white p-4 mt-5">
+    <div className="relative w-full rounded-lg border border-gray-200 bg-red p-4 mt-5">
       <div className="absolute top-4 right-4 z-20 flex flex-col items-end gap-3">
         <div
           className={`h-10 w-10 flex items-center justify-center rounded-full bg-gray-200 shadow-md cursor-pointer transition-all duration-300 ${
@@ -363,6 +365,13 @@ const ServiceDetailCard = ({ service }) => {
           </>
         )}
       </div>
+      <p
+        className={`text-sm mb-1 ${
+          available ? "text-green-600" : "text-red-700"
+        }`}
+      >
+        {available ? null : "Out Of Service"}
+      </p>
       <p className="text-sm text-black mb-4">
         <span className="font-bold">Prep Time: </span>
         {formattedDuration}

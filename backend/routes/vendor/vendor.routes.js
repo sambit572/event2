@@ -7,6 +7,7 @@ import {
   updateAvailability,
   updateService,
   uploadServiceMedia,
+  updateServiceImageFirst,
 } from "../../controller/vendor/service.controller.js";
 
 import { verifyVendorJwt } from "../../middleware/VendorAuth.middleware.js";
@@ -135,7 +136,7 @@ vendor_router.post(
       next();
     });
   },
-  uploadServiceMedia
+  updateServiceImageFirst
 );
 
 // --- BANK DETAILS ROUTES --- //

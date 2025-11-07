@@ -5,7 +5,7 @@ import axios from "axios";
 
 import "./ServiceDetails.css";
 import RatingDetails from "../../components/customer/ServiceDetails/RatingDetails.jsx";
-import SimilarProductCard from "../../components/customer/servicedetails/PeopleAlsoBooked.jsx";
+import SimilarProductCard from "../../components/customer/ServiceDetails/PeopleAlsoBooked.jsx";
 import DJServiceCard from "../../components/customer/ServiceDetails/ServiceDetailCard.jsx";
 import ReviewList from "../../components/customer/servicedetails/ReviewList.jsx";
 import ReviewForm from "../../components/customer/servicedetails/ReviewForm.jsx";
@@ -25,6 +25,7 @@ const getYouTubeID = (url) => {
   const match = url.match(regExp);
   return match && match[2].length === 11 ? match[2] : null;
 };
+import CateringPackagesDisplay from "../../components/customer/ServiceDetails/CateringPackagesDisplay.jsx";
 
 const Service = ({ onSwitchToLogin }) => {
   const navigate = useNavigate();
@@ -146,6 +147,8 @@ const Service = ({ onSwitchToLogin }) => {
     fetchService();
   }, [serviceId]);
 
+  const isCateringService = service?.pricingType === "perPlate";
+
   // CHECK IF CURRENT VENDOR IS THE SERVICE OWNER
   const isServiceOwner = () => {
     // Check if vendor is logged in
@@ -213,6 +216,10 @@ const Service = ({ onSwitchToLogin }) => {
         navigate("/login");
       }
     }
+    // Navigate to user details (catering services won't show this button anyway)
+    navigate(`/userdetails/${serviceId}`, {
+      state: { from: location.pathname },
+    });
   };
 
   const handleAddToCart = async (e) => {
@@ -392,7 +399,7 @@ const Service = ({ onSwitchToLogin }) => {
                           e.stopPropagation();
                           setCurrentIndex(idx);
                         }}
-                        className={`h-2 w-2 rounded-full cursor-pointer flex items-center justify-center ${
+                        className={`h-2 w-2 p-0 rounded-full cursor-pointer flex items-center justify-center ${
                           idx === currentIndex ? "bg-white" : "bg-gray-400"
                         }`}
                       >
@@ -420,36 +427,62 @@ const Service = ({ onSwitchToLogin }) => {
             )}
           </div>
 
-          <div className="flex items-center justify-center gap-4 sm:flex-row sm:gap-4">
-            {isVendorAvailable ? (
-              <>
-                <button
-                  className="flex w-full cursor-pointer items-center justify-center rounded-full bg-[#001f3f] sm:px-[1rem] lg:px-12 py-3 text-sm font-bold text-white transition-colors duration-300 ease-in-out  hover:bg-[#002366] hover:border-[#FFD700] active:bg-[#000d1a] active:border-[#F3C12D] lg:w-auto lg:min-w-[220px]"
-                  onClick={handleBookNow}
-                >
-                  BOOK NOW
-                </button>
-                <button
-                  className="w-full lg:w-auto lg:min-w-[220px] px-4 py-3 rounded-full text-sm font-bold text-white bg-gradient-to-r from-[#fb923c] to-[#ef4444] hover:shadow-lg hover:from-[#fca5a5] hover:to-[#dc2626] focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-md transition-all duration-300"
-                  onClick={handleAddToCart}
-                >
-                  ADD TO CART
-                </button>
-              </>
+          <div className="flex flex-row items-center justify-center gap-4 sm:flex-row sm:gap-4">
+            {isCateringService ? (
+              // For catering: Show informational message, buttons handled by CateringPackagesDisplay
+              <div className="w-full text-center py-3 bg-blue-50 border border-blue-200 rounded-full">
+                <p className="text-sm text-blue-800 font-medium">
+                  📋 Select a package below to add to cart
+                </p>
+              </div>
             ) : (
-              <button
-                className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-full border-none bg-gradient-to-br from-[#6c757d] to-[#495057] px-12 py-3 text-sm font-semibold text-white normal-case shadow-[0_4px_15px_rgba(108,117,125,0.3)] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:from-[#5a6268] hover:to-[#343a40] hover:shadow-[0_6px_20px_rgba(108,117,125,0.4)] lg:w-auto lg:min-w-[140px]"
-                onClick={handleNotifyMe}
-              >
-                <FaBell className="text-sm" />
-                Notify Me
-              </button>
+              // For non-catering: Show regular Book Now and Add to Cart buttons
+              <>
+                {isVendorAvailable ? (
+                  <>
+                    <button
+                      className="flex w-full cursor-pointer items-center justify-center rounded-full bg-[#001f3f] sm:px-[1rem] lg:px-12 py-3 text-sm font-bold text-white transition-colors duration-300 ease-in-out  hover:bg-[#002366] hover:border-[#FFD700] active:bg-[#000d1a] active:border-[#F3C12D] lg:w-auto lg:min-w-[220px]"
+                      onClick={handleBookNow}
+                    >
+                      BOOK NOW
+                    </button>
+                    <button
+                      className="w-full lg:w-auto lg:min-w-[220px] px-4 py-3 rounded-full text-sm font-bold text-white bg-gradient-to-r from-[#fb923c] to-[#ef4444] hover:shadow-lg hover:from-[#fca5a5] hover:to-[#dc2626] focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-md transition-all duration-300"
+                      onClick={handleAddToCart}
+                    >
+                      ADD TO CART
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={handleNotifyClick}
+                    className={`w-full sm:w-44 flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-blue-900 bg-transparent border border-blue-900 hover:bg-blue-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-md transition-all duration-300`}
+                  >
+                    {!notified ? (
+                      "Notify"
+                    ) : (
+                      <FaBell
+                        className={`text-base ${
+                          isAnimating ? "animate-bounce" : ""
+                        }`}
+                      />
+                    )}
+                  </button>
+                )}
+              </>
             )}
           </div>
         </div>
 
         <div className="right-scrollable">
           <DJServiceCard service={service} />
+          {/* === 👇 UPDATED: Conditionally render the CateringPackagesDisplay component 👇 === */}
+          {isCateringService && (
+            <CateringPackagesDisplay
+              service={service}
+              onSwitchToLogin={onSwitchToLogin}
+            />
+          )}
           {/* Why choose us component */}
           <WhyChooseUs
             serviceId={serviceId}
@@ -479,7 +512,7 @@ const Service = ({ onSwitchToLogin }) => {
       </div>
       <div className="view-dj-section">
         <h2 className="people-also-book">People Also Booked</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mt-5 mb-5">
+        <div className="grid grid-cols-1  sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mt-5 mb-5">
           {categoryServices.map((product) => (
             <SimilarProductCard key={product.id} product={product} />
           ))}

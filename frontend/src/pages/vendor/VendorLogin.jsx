@@ -164,63 +164,92 @@ const VendorLogin = ({ onClose, onSwitchToLogin }) => {
       );
     if (step === "form") {
       return (
-        <form className="login-form" onSubmit={handleLogin}>
-          <input
-            type="number"
-            name="phoneNo"
-            placeholder="+91 | Phone Number"
-            value={formData.phoneNo}
-            onChange={handleChange}
-            className="login-input"
-          />
-          <button type="button" onClick={handleGetOTP} className="otp-button">
+        <form className="flex flex-col w-full space-y-5" onSubmit={handleLogin}>
+          {/* Phone Number Input */}
+          <div className="relative">
+            <input
+              type="number"
+              name="phoneNo"
+              placeholder=" Phone Number"
+              value={formData.phoneNo}
+              onChange={handleChange}
+              className="w-full rounded-lg border border-gray-300 bg-white/80 px-4 py-3 text-gray-800 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-300 transition-all duration-300 placeholder:text-gray-400 shadow-sm hover:shadow-md"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={handleGetOTP}
+            className="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-semibold shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:-translate-y-0.5"
+          >
             Send OTP
           </button>
+          <div className="flex items-center my-4">
+            <div className="flex-grow h-px bg-gray-300" />
+            <span className="px-3 text-sm text-gray-500">or</span>
+            <div className="flex-grow h-px bg-gray-300" />
+          </div>
 
+          {/* Email Input */}
           <input
             type="email"
             name="email"
-            placeholder="Enter email"
+            placeholder="Email Address"
             value={formData.email}
             onChange={handleChange}
-            className="login-input"
+            className="w-full rounded-lg border border-gray-300 bg-white/80 px-4 py-3 text-gray-800 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-300 transition-all duration-300 placeholder:text-gray-400 shadow-sm hover:shadow-md"
           />
 
-          <div className="relative w-full mb-4">
+          {/* Password Input */}
+          <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
               name="password"
-              placeholder="Enter password"
+              placeholder=" Password"
               value={formData.password}
               onChange={handleChange}
               minLength={8}
               required
-              className="w-full px-4 pr-10 py-2 border border-[#001f3f] rounded-md focus:outline-none"
+              className="w-full rounded-lg border border-gray-300 bg-white/80 px-4 py-3 pr-10 text-gray-800 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-300 transition-all duration-300 placeholder:text-gray-400 shadow-sm hover:shadow-md"
             />
             <span
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-indigo-600 cursor-pointer transition"
             >
               {showPassword ? <FiEyeOff /> : <FiEye />}
             </span>
           </div>
 
-          <div className="text-black mb-5">
-            <span onClick={() => setShowForgotModal(true)}>Forgot your password?</span>
+          {/* Forgot Password */}
+          <div className="text-right">
+            <span
+              onClick={() => setShowForgotModal(true)}
+              className="text-sm text-indigo-600 hover:text-indigo-800 cursor-pointer font-medium"
+            >
+              Forgot password?
+            </span>
           </div>
 
-          {errorMsg && <p className="error">{errorMsg}</p>}
+          {errorMsg && (
+            <p className="text-red-600 text-sm text-center font-medium">
+              {errorMsg}
+            </p>
+          )}
 
-          <button type="submit" className="otp-button" onClick={handleLogin}>
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-semibold shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:-translate-y-0.5"
+          >
             Login
           </button>
-          <p className="signup-text">
+
+          <p className="text-center text-gray-700 text-sm">
             Don’t have an account?{" "}
             <span
-              className="login-link"
+              className="text-indigo-600 font-semibold cursor-pointer hover:underline"
               onClick={() => {
-                onClose(); // ✅ Close modal properly
-                navigate("/vendor/register"); // ✅ Then navigate
+                onClose();
+                navigate("/vendor/register");
               }}
             >
               Sign Up
@@ -233,15 +262,50 @@ const VendorLogin = ({ onClose, onSwitchToLogin }) => {
   };
 
   const modalContent = (
-    <div className="login-wrapper" onClick={onClose}>
-      <div className="login-modal max-w-[420px] border border-blue-500 bg-white px-[30px] py-[20px]" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose}>
-          <RxCross2 />
-        </button>
-        <div id="recaptcha-container"></div>
-        <h2 className="login-title">Vendor Login</h2>
-        {renderStep()}
+    <div
+      className="login-wrapper h-[90vh] flex items-center justify-center z-[9999] backdrop-blur-md"
+      onClick={onClose}
+    >
+      <div
+        className="p-0 login-modal lg:h-[90vh] sm:h-0 max-w-3xl  flex flex-col md:flex-row rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-all duration-300 hover:shadow-purple-500/20"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Left Image Section */}
+        <div className="hidden md:flex md:w-1/2 relative items-center justify-center bg-gradient-to-b from-purple-800 via-indigo-900 to-black p-3 overflow-hidden">
+          <div className="flex flex-col items-center justify-center text-center space-y-3 z-10">
+            <img
+              src="../new-illustrator.png"
+              alt="Welcome"
+              className="h-[60%] w-auto object-contain opacity-95 drop-shadow-2xl hover:scale-105 transition-transform duration-700"
+            />
+            <div className="bg-white/10 backdrop-blur-lg p-3 rounded-xl shadow-lg border border-white/20 max-w-xs">
+              <h2 className="text-yellow-300 text-2xl font-bold mb-1">
+                Welcome Back, Vendor
+              </h2>
+              <p className="text-indigo-100 text-[14px] leading-relaxed">
+                Manage your services, bookings, and customers — all from one
+                place.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Form Section */}
+        <div className="w-full md:w-1/2 bg-gradient-to-br from-white to-indigo-50 p-6 relative">
+          <button
+            className="absolute top-3 right-4 text-gray-400 text-2xl hover:text-red-500 transition"
+            onClick={onClose}
+          >
+            <RxCross2 />
+          </button>
+          <div id="recaptcha-container"></div>
+          <h2 className="text-center text-3xl font-extrabold text-indigo-900 mb-6">
+            Vendor Login
+          </h2>
+          {renderStep()}
+        </div>
       </div>
+
       {showForgotModal && (
         <div onClick={(e) => e.stopPropagation()}>
           <VendorForgotPass onClose={() => setShowForgotModal(false)} />

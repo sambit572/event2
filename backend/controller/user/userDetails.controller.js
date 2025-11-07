@@ -57,24 +57,22 @@ export const saveDetails = async (req, res) => {
     }
 
     // Save details
-    const userDetails = await UserDetails.create(
-      {
-        bookedById,
-        bookedBy,
-        serviceId,
-        phone,
-        altPhone,
-        startDate,
-        endDate,
-        address,
-        landmark,
-        state,
-        district,
-        city,
-        pincode,
-        country,
-      } // default fallback
-    );
+    const userDetails = await UserDetails.create({
+      bookedById,
+      bookedBy,
+      serviceId,
+      phone,
+      altPhone,
+      startDate,
+      endDate,
+      address,
+      landmark,
+      state,
+      district,
+      city,
+      pincode,
+      country,
+    });
 
     return res
       .status(201)
@@ -164,6 +162,36 @@ export const getDetails = async (req, res) => {
           preserveNullAndEmptyArrays: true,
         },
       },
+      // ✅ NEW: Lookup cart items to get catering details
+      {
+        $lookup: {
+          from: "carts",
+          let: {
+            userId: "$bookedById",
+            serviceIds: "$serviceId",
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$userId", "$$userId"] },
+                    { $in: ["$serviceId", "$$serviceIds"] },
+                  ],
+                },
+              },
+            },
+            {
+              $project: {
+                serviceId: 1,
+                isCateringService: 1,
+                cateringDetails: 1,
+              },
+            },
+          ],
+          as: "cartItems",
+        },
+      },
       {
         $group: {
           _id: "$_id",
@@ -184,7 +212,7 @@ export const getDetails = async (req, res) => {
           country: { $first: "$country" },
           createdAt: { $first: "$createdAt" },
           updatedAt: { $first: "$updatedAt" },
-          // Collect all services with their vendor details
+          cartItems: { $first: "$cartItems" }, // ✅ Include cart items
           serviceDetails: {
             $push: {
               _id: "$serviceDetails._id",
@@ -196,6 +224,8 @@ export const getDetails = async (req, res) => {
               description: "$serviceDetails.description",
               images: "$serviceDetails.images",
               stateLocationOffered: "$serviceDetails.stateLocationOffered",
+              pricingType: "$serviceDetails.pricingType", // ✅ Include pricing type
+              packages: "$serviceDetails.packages", // ✅ Include packages
               vendorDetails: {
                 _id: "$serviceDetails.vendorDetails._id",
                 fullName: "$serviceDetails.vendorDetails.fullName",
@@ -208,7 +238,6 @@ export const getDetails = async (req, res) => {
         },
       },
       {
-        // Final projection to clean up the response
         $project: {
           _id: 1,
           bookedById: 1,
@@ -228,6 +257,7 @@ export const getDetails = async (req, res) => {
           country: 1,
           createdAt: 1,
           updatedAt: 1,
+          cartItems: 1, // ✅ Include in final projection
           serviceDetails: 1,
         },
       },
@@ -238,7 +268,51 @@ export const getDetails = async (req, res) => {
     }
 
     const data = userDetails[0];
-    // console.log("Fetched user details with services:", data);
+
+    // ✅ NEW: Enrich service details with cart information
+    if (data.cartItems && data.cartItems.length > 0) {
+      console.log(
+        `📦 Found ${data.cartItems.length} cart items for enrichment`
+      );
+
+      data.serviceDetails = data.serviceDetails.map((service) => {
+        const cartItem = data.cartItems.find(
+          (item) => item.serviceId.toString() === service._id.toString()
+        );
+
+        if (cartItem && cartItem.isCateringService) {
+          console.log(
+            `✅ Enriching service ${service.serviceName} with catering details:`,
+            cartItem.cateringDetails
+          );
+
+          return {
+            ...service,
+            cartCateringDetails: cartItem.cateringDetails,
+          };
+        }
+
+        return service;
+      });
+    } else {
+      console.log("⚠️ No cart items found for this booking");
+    }
+
+    console.log(
+      "Final enriched data:",
+      JSON.stringify(
+        {
+          serviceCount: data.serviceDetails.length,
+          services: data.serviceDetails.map((s) => ({
+            name: s.serviceName,
+            hasCartDetails: !!s.cartCateringDetails,
+            cartDetails: s.cartCateringDetails,
+          })),
+        },
+        null,
+        2
+      )
+    );
 
     return res
       .status(200)

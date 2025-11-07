@@ -62,7 +62,7 @@
 .custom-list-decor {
   list-style: none;
   position: relative;
-  top: -25px;
+  top: -35px;
   bottom: -5px;
 }
 
@@ -568,11 +568,6 @@
   .edit-button {
     top: -80px;
   }
-
-  .custom-list-decor {
-    top: -50px;
-  }
-
   .user-profile-pic,
   .profile-initials {
     margin-left: 26px;
@@ -610,7 +605,7 @@
     height: 100vh;
   }
   .profile-heading {
-    margin-top: 20px;
+    margin-bottom: 20px;
   }
 
   .user-sidebar.open {
@@ -629,10 +624,6 @@
 
   .edit-button {
     top: -80px;
-  }
-
-  .custom-list-decor {
-    top: -50px;
   }
 
   .user-profile-pic,
@@ -673,7 +664,6 @@
     padding: 10px 18px;
     font-size: 12px;
     margin-bottom: 5px;
-    margin-top: -10px;
   }
 }
 

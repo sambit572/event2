@@ -293,6 +293,7 @@ const FormField = ({
 
 const UserDetails = () => {
   const userId = useSelector((state) => state.user.user?._id);
+  const user = useSelector((state) => state.user.user);
   const navigate = useNavigate();
   const [userName, setUserName] = useState("");
   const [showPopup, setShowPopup] = useState(false);
@@ -303,11 +304,13 @@ const UserDetails = () => {
   const [disabledDays, setDisabledDays] = useState([]);
   const [isLoadingAvailability, setIsLoadingAvailability] = useState(true);
 
+  console.log("User from Redux:", user);
+
   const [formData, setFormData] = useState({
     serviceId: "",
     bookedBy: "",
     bookedById: userId,
-    phone: "",
+    phone: user?.phoneNo || "",
     altPhone: "",
     startDate: "",
     endDate: "",
@@ -319,6 +322,23 @@ const UserDetails = () => {
     pincode: "",
     country: "India",
   });
+
+  useEffect(() => {
+    setUserName((prevUserName) => {
+      return prevUserName === "" ? user?.fullName || "" : prevUserName;
+    });
+
+    setFormData((prevData) => {
+      const newPhone =
+        prevData.phone === "" ? user?.phoneNo || "" : prevData.phone;
+
+      return {
+        ...prevData,
+        bookedById: userId, 
+        phone: newPhone,
+      };
+    });
+  }, [user, userId]);
   const getCombinedAvailability = useCallback(async (services) => {
     setIsLoadingAvailability(true);
     try {
@@ -356,7 +376,7 @@ const UserDetails = () => {
   const locationPath = useLocation();
   const from = locationPath.state?.from || "/";
 
-  // console.log("pathname", from);
+  console.log("pathname", from);
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -365,11 +385,11 @@ const UserDetails = () => {
 
       try {
         if (serviceId) {
-          // console.log("Fetching single service:", serviceId);
+          console.log("Fetching single service:", serviceId);
           const { data } = await axios.get(
             `${BACKEND_URL}/common/service/${serviceId}`
           );
-          // console.log("Single service response:", data);
+          console.log("Single service response:", data);
           if (data.success && data.service) {
             servicesToBook.push(data.service);
             serviceIdsForForm = data.service._id;
@@ -389,7 +409,7 @@ const UserDetails = () => {
             serviceIdsForForm = servicesToBook.map((s) => s._id);
           }
         }
-        // console.log("Final servies to book:", servicesToBook);
+        console.log("Final servies to book:", servicesToBook);
 
         if (servicesToBook.length > 0) {
           setFormData((prev) => ({ ...prev, serviceId: serviceIdsForForm }));
@@ -409,10 +429,20 @@ const UserDetails = () => {
   }, [serviceId, userId, getCombinedAvailability]);
 
   const handleDateSelect = ({ startDate, endDate }) => {
+    const formatDateToNoonUTC = (date) => {
+      if (!date) return "";
+
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+
+      return `${year}-${month}-${day}T12:00:00.000Z`;
+    };
+
     setFormData((prev) => ({
       ...prev,
-      startDate: startDate ? startDate.toISOString().slice(0, 10) : "",
-      endDate: endDate ? endDate.toISOString().slice(0, 10) : "",
+      startDate: startDate ? formatDateToNoonUTC(startDate) : "",
+      endDate: endDate ? formatDateToNoonUTC(endDate) : "",
     }));
   };
 
