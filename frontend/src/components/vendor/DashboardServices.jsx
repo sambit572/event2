@@ -931,7 +931,7 @@ const DashboardServices = () => {
                       </div>
                     </Link>
                     {/* Description with Read More */}
-                    <div className="mt-2">
+                    <div className="mt-1">
                       <div className="des font-semibold text-gray-800">
                         Description:
                       </div>

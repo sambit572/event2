@@ -22,6 +22,27 @@ const CustomerNegotiationModal = () => {
 
   const BACKEND = import.meta.env.VITE_BACKEND_URL;
 
+  const updateUserBookingHistory = async (userDetailsId, venueInput) => {
+    const payload = {
+      userDetailsId,
+      reDirectTo: 2,
+      venueInput,
+    };
+
+    console.log("Updating user booking history with payload:", payload);
+
+    try {
+      await axios.put(`${BACKEND}/user-bookings/update-history`, payload, {
+        withCredentials: true,
+      });
+
+      return true;
+    } catch (error) {
+      console.error("Error updating user booking history:", error);
+      return false;
+    }
+  };
+
   // ✅ NEW: Get current service group
   const getCurrentServiceGroup = () =>
     groupedServices[selectedServiceIndex] || null;
@@ -206,6 +227,8 @@ const CustomerNegotiationModal = () => {
         reject("Socket not connected");
       }
 
+      console.log("Preparing to send negotiation data:", negotiationData);
+
       const requiredFields = [
         "vendorId",
         "vendorName",
@@ -316,6 +339,8 @@ const CustomerNegotiationModal = () => {
             );
           }
 
+          console.log("Service data for negotiation data:", service);
+
           negotiationData = {
             vendorId: vendor._id,
             vendorName: vendor.fullName,
@@ -355,6 +380,7 @@ const CustomerNegotiationModal = () => {
               } too low. Minimum: ₹${Math.floor(minValidation)}`
             );
 
+          console.log("Service data for negotiation data:", service);
           negotiationData = {
             vendorId: vendor._id,
             vendorName: vendor.fullName,
@@ -394,7 +420,11 @@ const CustomerNegotiationModal = () => {
           : `✅ Your price has been sent to ${vendor.fullName}!`;
 
       alert(message);
-      navigate(`/order-summary/${userDetailsId}`);
+      console.log("Venueinput:", venueInput);
+      const update = await updateUserBookingHistory(userDetailsId, venueInput);
+      if (update) {
+        navigate(`/order-summary/${userDetailsId}`);
+      }
     } catch (error) {
       console.error("Negotiation error:", error);
       setErrorMsg(
@@ -447,7 +477,7 @@ const CustomerNegotiationModal = () => {
             vendorName: vendor.fullName,
             vendorEmail: vendor.email,
             vendorPhoneNumber: vendor.phone,
-            vendorLocation: service?.stateLocationOffered,
+            vendorLocation: service?.stateLocationOffered || "Not Specified",
             serviceId: service._id,
             serviceName: service.serviceName,
             bookedByUserId: bookingDetails.bookedById,
@@ -479,7 +509,13 @@ const CustomerNegotiationModal = () => {
 
       alert("🚀 Proceeding with the listed prices for all items...");
       setProceededWithoutNegotiation(true);
-      navigate(`/order-summary/${userDetailsId}`);
+      const updateResult = await updateUserBookingHistory(
+        userDetailsId,
+        venueInput
+      );
+      if (updateResult) {
+        navigate(`/order-summary/${userDetailsId}`);
+      }
     } catch (error) {
       console.error("❌ Proceed without negotiation failed:", error);
       setErrorMsg(error.message || "Something went wrong while sending data.");
@@ -704,7 +740,7 @@ const CustomerNegotiationModal = () => {
                 id="proposed-price-regular"
                 type="number"
                 placeholder={`e.g., ${Math.floor(
-                  (currentService?.minPrice || 0) * 0.9
+                  (currentService?.maxPrice || 0) * 0.8
                 )}`}
                 value={proposedPrices[currentService._id] || ""}
                 onChange={(e) =>

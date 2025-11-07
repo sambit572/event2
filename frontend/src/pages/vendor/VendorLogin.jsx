@@ -137,6 +137,7 @@ const VendorLogin = ({ onClose, onSwitchToLogin }) => {
       localStorage.setItem("VendorFirstName", firstName);
       localStorage.setItem("VendorInitial", firstLetter);
       if (profilePic) localStorage.setItem("VendorProfilePic", profilePic);
+      localStorage.setItem("vendorId", vendor._id);
 
       window.dispatchEvent(new Event("userLoggedIn"));
       setStep("success");
