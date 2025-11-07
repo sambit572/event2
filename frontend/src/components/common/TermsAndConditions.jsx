@@ -38,6 +38,11 @@ const TermsAndConditions = ({
               platform fee = 5% of ₹2,000 = ₹100 → effective fee = 1.5% of
               ₹10,000.
             </li>
+            <br />
+            <li className="bg-yellow-200">
+              <strong>**Introductory Offer:</strong> To welcome our partners, the
+              platform fee is currently waived for all new vendors.
+            </li>
           </ol>
         </section>
         <h2 className="tc-heading">Roles and Responsibilities</h2>

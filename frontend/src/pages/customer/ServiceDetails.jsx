@@ -5,7 +5,7 @@ import axios from "axios";
 
 import "./ServiceDetails.css";
 import RatingDetails from "../../components/customer/ServiceDetails/RatingDetails.jsx";
-import SimilarProductCard from "../../components/customer/servicedetails/PeopleAlsoBooked.jsx";
+import SimilarProductCard from "../../components/customer/ServiceDetails/PeopleAlsoBooked.jsx";
 import DJServiceCard from "../../components/customer/ServiceDetails/ServiceDetailCard.jsx";
 import ReviewList from "../../components/customer/servicedetails/ReviewList.jsx";
 import ReviewForm from "../../components/customer/servicedetails/ReviewForm.jsx";
@@ -25,6 +25,7 @@ const getYouTubeID = (url) => {
   const match = url.match(regExp);
   return match && match[2].length === 11 ? match[2] : null;
 };
+import CateringPackagesDisplay from "../../components/customer/ServiceDetails/CateringPackagesDisplay.jsx";
 
 const Service = ({ onSwitchToLogin }) => {
   const navigate = useNavigate();
@@ -115,9 +116,12 @@ const Service = ({ onSwitchToLogin }) => {
     const fetchService = async () => {
       try {
         setLoading(true);
+
+        // This route do not exist in backend please check once
         const res = await axios.get(
           `${BACKEND_URL}/common/service/${serviceId}`
         );
+
         console.log("Service Fetching", res.data);
 
         const data = res.data.service;
@@ -145,6 +149,8 @@ const Service = ({ onSwitchToLogin }) => {
     };
     fetchService();
   }, [serviceId]);
+
+  const isCateringService = service?.pricingType === "perPlate";
 
   // CHECK IF CURRENT VENDOR IS THE SERVICE OWNER
   const isServiceOwner = () => {
@@ -209,17 +215,23 @@ const Service = ({ onSwitchToLogin }) => {
       if (onSwitchToLogin) {
         onSwitchToLogin(true);
       } else {
-        toast.error("Please log in to book this service.");
+        toast.error("Please log in to book this service.", { duration: 1500 });
         navigate("/login");
       }
     }
+    // Navigate to user details (catering services won't show this button anyway)
+    navigate(`/userdetails/${serviceId}`, {
+      state: { from: location.pathname },
+    });
   };
 
   const handleAddToCart = async (e) => {
     e.stopPropagation();
     const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
     if (!isLoggedIn) {
-      toast.error("Please log in to add items to your cart.");
+      toast.error("Please log in to add items to your cart.", {
+        duration: 1500,
+      });
       if (onSwitchToLogin) onSwitchToLogin(true);
       return;
     }
@@ -230,12 +242,14 @@ const Service = ({ onSwitchToLogin }) => {
         { withCredentials: true }
       );
       dispatch(incrementCartCount());
-      toast.success("Service added to your cart!");
+      toast.success("Service added to your cart!", { duration: 1500 });
     } catch (err) {
       if (err.response && err.response.status === 409) {
-        toast.error("This service is already in your cart.");
+        toast.error("This service is already in your cart.", {
+          duration: 1500,
+        });
       } else {
-        toast.error("Failed to add service.");
+        toast.error("Failed to add service.", { duration: 1500 });
       }
       console.error("Add to cart error:", err);
     }
@@ -245,7 +259,7 @@ const Service = ({ onSwitchToLogin }) => {
     e.stopPropagation();
     const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
     if (!isLoggedIn) {
-      toast.error("Please log in to get notifications.");
+      toast.error("Please log in to get notifications.", { duration: 1500 });
       if (onSwitchToLogin) onSwitchToLogin(true);
       return;
     }
@@ -253,9 +267,11 @@ const Service = ({ onSwitchToLogin }) => {
       await axios.post(`${BACKEND_URL}/notifications/notify-when-available`, {
         serviceId,
       });
-      toast.success("You'll be notified when this service becomes available!");
+      toast.success("You'll be notified when this service becomes available!", {
+        duration: 1500,
+      });
     } catch (err) {
-      toast.error("Failed to set up notification.");
+      toast.error("Failed to set up notification.", { duration: 1500 });
       console.error("Notify me error:", err);
     }
   };
@@ -297,11 +313,12 @@ const Service = ({ onSwitchToLogin }) => {
             onTouchEnd={onTouchEnd}
           >
             <span className="absolute top-[10px] left-[10px] z-[3] bg-white/30 backdrop-blur-[30px] text-white text-[11px] font-bold uppercase tracking-[0.8px] px-[7px] py-[3px] rounded-full shadow-[0_3px_10px_rgba(0,0,0,0.3)] border border-white/30 [text-shadow:1px_1px_2px_rgba(0,0,0,0.6),-1px_-1px_1px_rgba(255,255,255,0.4)]">
-              EventsBridge
+              {" "}
+              EventsBridge{" "}
             </span>
+
             {mediaList.length > 0 ? (
               <>
-                {/* ✅ MODIFIED: Loop through media and render iframe or img */}
                 {mediaList.map((media, idx) =>
                   media.type === "video" ? (
                     <iframe
@@ -326,7 +343,7 @@ const Service = ({ onSwitchToLogin }) => {
                   )
                 )}
 
-                {/* Left Arrow */}
+                {/* Arrows */}
                 {mediaList.length > 1 && (
                   <>
                     {/* Mobile: always visible */}
@@ -335,58 +352,49 @@ const Service = ({ onSwitchToLogin }) => {
                         e.stopPropagation();
                         prevSlide();
                       }}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white sm:hidden"
+                      className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white sm:hidden z-20"
                     >
                       <FaChevronLeft className="text-lg" />
                     </button>
-
-                    {/* Desktop: only on hover */}
-                    {hovered && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          prevSlide();
-                        }}
-                        className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 hidden sm:block"
-                      >
-                        <FaChevronLeft />
-                      </button>
-                    )}
-                  </>
-                )}
-
-                {/* Right Arrow */}
-                {mediaList.length > 1 && (
-                  <>
-                    {/* Mobile: always visible */}
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         nextSlide();
                       }}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white sm:hidden"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white sm:hidden z-20"
                     >
                       <FaChevronRight className="text-lg" />
                     </button>
 
                     {/* Desktop: only on hover */}
                     {hovered && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          nextSlide();
-                        }}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 hidden sm:block"
-                      >
-                        <FaChevronRight />
-                      </button>
+                      <>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            prevSlide();
+                          }}
+                          className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 hidden sm:block z-20"
+                        >
+                          <FaChevronLeft />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            nextSlide();
+                          }}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 hidden sm:block z-20"
+                        >
+                          <FaChevronRight />
+                        </button>
+                      </>
                     )}
                   </>
                 )}
 
-                {/* ✅ MODIFIED: Dots now show YouTube icon */}
+                {/* Dots */}
                 {mediaList.length > 1 && (
-                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-20">
                     {mediaList.map((media, idx) => (
                       <button
                         key={idx}
@@ -421,43 +429,63 @@ const Service = ({ onSwitchToLogin }) => {
               </div>
             )}
           </div>
-          <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-4">
-            {isVendorAvailable ? (
-              <>
-                <button
-                  className="flex w-full cursor-pointer items-center justify-center rounded-full bg-[#001f3f] sm:px-[1rem] lg:px-12 py-3 text-sm font-bold text-white transition-colors duration-300 ease-in-out  hover:bg-[#002366] hover:border-[#FFD700] active:bg-[#000d1a] active:border-[#F3C12D] lg:w-auto lg:min-w-[220px]"
-                  onClick={handleBookNow}
-                >
-                  BOOK NOW
-                </button>
-                <button
-                  className="w-full lg:w-auto lg:min-w-[220px] px-4 py-3 rounded-full text-sm font-bold text-white bg-gradient-to-r from-[#fb923c] to-[#ef4444] hover:shadow-lg hover:from-[#fca5a5] hover:to-[#dc2626] focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-md transition-all duration-300"
-                  onClick={handleAddToCart}
-                >
-                  ADD TO CART
-                </button>
-              </>
+
+          <div className="flex flex-row items-center justify-center gap-4 sm:flex-row sm:gap-4">
+            {isCateringService ? (
+              // For catering: Show informational message, buttons handled by CateringPackagesDisplay
+              <div className="w-full text-center py-3 bg-blue-50 border border-blue-200 rounded-full">
+                <p className="text-sm text-blue-800 font-medium">
+                  📋 Select a package below to add to cart
+                </p>
+              </div>
             ) : (
-              <button
-                onClick={handleNotifyClick}
-                className={`w-full sm:w-44 flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-blue-900 bg-transparent border border-blue-900 hover:bg-blue-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-md transition-all duration-300`}
-              >
-                {!notified ? (
-                  "Notify"
+              // For non-catering: Show regular Book Now and Add to Cart buttons
+              <>
+                {isVendorAvailable ? (
+                  <>
+                    <button
+                      className="flex w-full cursor-pointer items-center justify-center rounded-full bg-[#001f3f] sm:px-[1rem] lg:px-12 py-3 text-sm font-bold text-white transition-colors duration-300 ease-in-out  hover:bg-[#002366] hover:border-[#FFD700] active:bg-[#000d1a] active:border-[#F3C12D] lg:w-auto lg:min-w-[220px]"
+                      onClick={handleBookNow}
+                    >
+                      BOOK NOW
+                    </button>
+                    <button
+                      className="w-full lg:w-auto lg:min-w-[220px] px-4 py-3 rounded-full text-sm font-bold text-white bg-gradient-to-r from-[#fb923c] to-[#ef4444] hover:shadow-lg hover:from-[#fca5a5] hover:to-[#dc2626] focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-md transition-all duration-300"
+                      onClick={handleAddToCart}
+                    >
+                      ADD TO CART
+                    </button>
+                  </>
                 ) : (
-                  <FaBell
-                    className={`text-base ${
-                      isAnimating ? "animate-bounce" : ""
-                    }`}
-                  />
+                  <button
+                    onClick={handleNotifyClick}
+                    className={`w-full sm:w-44 flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-blue-900 bg-transparent border border-blue-900 hover:bg-blue-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-md transition-all duration-300`}
+                  >
+                    {!notified ? (
+                      "Notify"
+                    ) : (
+                      <FaBell
+                        className={`text-base ${
+                          isAnimating ? "animate-bounce" : ""
+                        }`}
+                      />
+                    )}
+                  </button>
                 )}
-              </button>
+              </>
             )}
           </div>
         </div>
 
         <div className="right-scrollable">
           <DJServiceCard service={service} />
+          {/* === 👇 UPDATED: Conditionally render the CateringPackagesDisplay component 👇 === */}
+          {isCateringService && (
+            <CateringPackagesDisplay
+              service={service}
+              onSwitchToLogin={onSwitchToLogin}
+            />
+          )}
           {/* Why choose us component */}
           <WhyChooseUs
             serviceId={serviceId}
@@ -467,7 +495,7 @@ const Service = ({ onSwitchToLogin }) => {
             onUpdate={handleWhyChooseUsUpdate}
           />
           <div className="reviews">
-            <h3>DJ Ratings & Reviews</h3>
+            <h3>Ratings & Reviews</h3>
             <RatingDetails serviceId={serviceId} />
             <hr />
 
@@ -487,7 +515,7 @@ const Service = ({ onSwitchToLogin }) => {
       </div>
       <div className="view-dj-section">
         <h2 className="people-also-book">People Also Booked</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-6 mt-5 mb-5">
+        <div className="grid grid-cols-1  sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mt-5 mb-5">
           {categoryServices.map((product) => (
             <SimilarProductCard key={product.id} product={product} />
           ))}

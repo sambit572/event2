@@ -8,10 +8,9 @@ const CustomerNegotiationModal = () => {
   const navigate = useNavigate();
 
   const [bookingDetails, setBookingDetails] = useState(null);
-  const [serviceDetails, setServiceDetails] = useState([]);
-  const [vendorDetails, setVendorDetails] = useState([]);
+  const [groupedServices, setGroupedServices] = useState([]); // ✅ NEW: Services grouped by serviceId
   const [venueInput, setVenueInput] = useState("");
-  const [proposedPrice, setProposedPrice] = useState("");
+  const [proposedPrices, setProposedPrices] = useState({}); // ✅ NEW: Map of itemId -> price
   const [selectedServiceIndex, setSelectedServiceIndex] = useState(0);
   const [showTimer, setShowTimer] = useState(false);
   const [timeLeft, setTimeLeft] = useState(15 * 60);
@@ -23,10 +22,57 @@ const CustomerNegotiationModal = () => {
 
   const BACKEND = import.meta.env.VITE_BACKEND_URL;
 
-  // Get current selected service and vendor
-  const getCurrentService = () => serviceDetails[selectedServiceIndex] || null;
-  const getCurrentVendor = () => vendorDetails[selectedServiceIndex] || null;
-  const isMultipleServices = () => serviceDetails.length > 1;
+  const updateUserBookingHistory = async (userDetailsId, venueInput) => {
+    const payload = {
+      userDetailsId,
+      reDirectTo: 2,
+      venueInput,
+    };
+
+    console.log("Updating user booking history with payload:", payload);
+
+    try {
+      await axios.put(`${BACKEND}/user-bookings/update-history`, payload, {
+        withCredentials: true,
+      });
+
+      return true;
+    } catch (error) {
+      console.error("Error updating user booking history:", error);
+      return false;
+    }
+  };
+
+  // ✅ NEW: Get current service group
+  const getCurrentServiceGroup = () =>
+    groupedServices[selectedServiceIndex] || null;
+  const isMultipleServiceGroups = () => groupedServices.length > 1;
+
+  //time Date display function
+  const formatDateForDisplay = (dateValue) => {
+    if (!dateValue) return "N/A";
+
+    // Handle MongoDB $date object
+    if (dateValue.$date) {
+      dateValue = dateValue.$date;
+    }
+
+    // ✅ CRITICAL FIX: Parse ISO string directly without Date object
+    let dateStr =
+      typeof dateValue === "string"
+        ? dateValue
+        : new Date(dateValue).toISOString();
+
+    // Extract YYYY-MM-DD from the ISO string
+    const match = dateStr.match(/(\d{4})-(\d{2})-(\d{2})/);
+
+    if (!match) return "N/A";
+
+    const [_, year, month, day] = match;
+
+    // Return in DD/MM/YYYY format
+    return `${day}/${month}/${year}`;
+  };
 
   // Socket listeners
   useEffect(() => {
@@ -39,40 +85,121 @@ const CustomerNegotiationModal = () => {
     };
   }, []);
 
-  // Fetch booking details with embedded service/vendor data
+  // ✅ NEW: Fetch and group services by serviceId
   useEffect(() => {
     const fetchAllData = async () => {
       try {
         setDataLoading(true);
 
-        // Single API call to get booking with all services and vendors
         const bookingRes = await axios.get(
           `${BACKEND}/user/bookings/${userDetailsId}`,
           { withCredentials: true }
         );
 
         const result = bookingRes?.data?.data ?? bookingRes?.data ?? null;
-        // console.log("Fetched  result1111:", result);
         const details = Array.isArray(result) ? result[0] : result;
-        // console.log("Fetched details:", details);
+
         if (!details) {
           throw new Error("No booking details found");
         }
 
+        console.log("📦 Fetched booking details:", details);
         setBookingDetails(details);
         setVenueInput(details.address || "");
 
-        // Extract services and vendors from the optimized response
-        const services = details.serviceDetails || [];
-        const vendors = services
-          .map((service) => service.vendorDetails)
-          .filter(Boolean);
+        // ✅ NEW: Group items by service
+        const serviceGroups = new Map();
 
-        // console.log("Extracted services:", services);
-        // console.log("Extracted vendors:", vendors);
+        if (details.cartItems && details.cartItems.length > 0) {
+          console.log(`✅ Found ${details.cartItems.length} cart items`);
 
-        setServiceDetails(services);
-        setVendorDetails(vendors);
+          details.serviceDetails.forEach((service) => {
+            const matchingCartItems = details.cartItems.filter(
+              (item) => item.serviceId.toString() === service._id.toString()
+            );
+
+            if (matchingCartItems.length > 0) {
+              const items = matchingCartItems.map((cartItem) => ({
+                cartItemId: cartItem._id,
+                isCateringService: cartItem.isCateringService,
+                cateringDetails: cartItem.cateringDetails,
+              }));
+
+              // ✅ CRITICAL FIX: Use service.vendorDetails directly
+              const vendorData = service.vendorDetails || {};
+
+              console.log(`📋 Service: ${service.serviceName}`, {
+                vendorId: vendorData._id,
+                vendorName: vendorData.fullName,
+                vendorBusinessName: vendorData.businessName,
+              });
+
+              serviceGroups.set(service._id.toString(), {
+                service: service,
+                vendor: vendorData, // ✅ FIXED: Use vendorDetails directly
+                items: items,
+              });
+            } else {
+              // Regular service without cart details
+              serviceGroups.set(service._id.toString(), {
+                service: service,
+                vendor: service.vendorDetails || {}, // ✅ FIXED
+                items: [
+                  {
+                    cartItemId: null,
+                    isCateringService: false,
+                    cateringDetails: null,
+                  },
+                ],
+              });
+            }
+          });
+        } else {
+          // Fallback: use service details only
+          console.log("⚠️ No cart items found, using service details");
+          details.serviceDetails.forEach((service) => {
+            serviceGroups.set(service._id.toString(), {
+              service: service,
+              vendor: service.vendorDetails || {}, // ✅ FIXED
+              items: [
+                {
+                  cartItemId: null,
+                  isCateringService: false,
+                  cateringDetails: null,
+                },
+              ],
+            });
+          });
+        }
+
+        const groupedArray = Array.from(serviceGroups.values());
+
+        // ✅ ADD DEBUGGING
+        console.log(`✅ Grouped into ${groupedArray.length} services`);
+        groupedArray.forEach((group, index) => {
+          console.log(`Service ${index}:`, {
+            serviceName: group.service.serviceName,
+            vendorName: group.vendor?.fullName,
+            vendorBusinessName: group.vendor?.businessName,
+            itemCount: group.items.length,
+          });
+        });
+
+        setGroupedServices(groupedArray);
+
+        // Initialize proposed prices
+        const initialPrices = {};
+        groupedArray.forEach((group) => {
+          group.items.forEach((item) => {
+            if (item.cartItemId) {
+              initialPrices[item.cartItemId] = "";
+            } else {
+              // ✅ MODIFIED: Use service ID as key for non-cart items (regular services)
+              initialPrices[group.service._id] = "";
+            }
+          });
+        });
+        setProposedPrices(initialPrices);
       } catch (error) {
         console.error("Error fetching data:", error);
         setErrorMsg("❗ Failed to load booking details. Please try again.");
@@ -83,7 +210,6 @@ const CustomerNegotiationModal = () => {
 
     if (userDetailsId) fetchAllData();
   }, [userDetailsId, BACKEND]);
-  // console.log("Fetched booking details:", bookingDetails);
 
   // Timer functions
   const formatTime = (seconds) => {
@@ -94,148 +220,300 @@ const CustomerNegotiationModal = () => {
     return `${m}:${s}`;
   };
 
-  const startTimer = () => setShowTimer(true);
-
   const emitNegotiation = (negotiationData) => {
-    if (!socket.connected) {
-      console.log("Connecting to server...");
-      console.log("Socket connection status:", socket.connected);
-      setTimeout(() => {
-        if (!socket.connected) {
-          console.log("Still connecting...");
-        }
-      }, 1000);
+    return new Promise((resolve, reject) => {
+      if (!socket.connected) {
+        console.log("Socket not connected");
+        reject("Socket not connected");
+      }
+
+      const requiredFields = [
+        "vendorId",
+        "vendorName",
+        "vendorEmail",
+        "vendorPhoneNumber",
+        "vendorLocation",
+        "serviceName",
+        "serviceId",
+        "bookedByUserId",
+        "bookedByUser",
+        "bookedByUserEmail",
+        "bookedByUserPhoneNumber",
+        "bookedByUserAltPhoneNumber",
+        "venueLocation",
+        "date.startDate",
+        "date.endDate",
+        "originalPriceRange.min",
+        "originalPriceRange.max",
+      ];
+
+      const getValue = (obj, path) =>
+        path.split(".").reduce((acc, key) => acc?.[key], obj);
+
+      const missingFields = requiredFields.filter((field) => {
+        const value = getValue(negotiationData, field);
+        return (
+          value === undefined ||
+          value === null ||
+          value === "" ||
+          (Array.isArray(value) && value.length === 0)
+        );
+      });
+
+      if (missingFields.length > 0) {
+        console.error("❌ Missing required negotiation data:", missingFields);
+        reject("Missing required negotiation data");
+        return;
+      }
+
+      // ✅ Emit only if all required fields are valid
+      socket.emit("new-negotiation-request", negotiationData);
+      console.log("✅ Negotiation data sent:", negotiationData);
+      resolve("Negotiation data sent successfully");
+    });
+  };
+
+  // ✅ NEW: Handle service group selection
+  const handleServiceGroupChange = (e) => {
+    const newIndex = parseInt(e.target.value);
+    setSelectedServiceIndex(newIndex);
+    setErrorMsg("");
+  };
+
+  // ✅ NEW: Handle price change for specific item
+  const handlePriceChange = (itemId, value) => {
+    setProposedPrices((prev) => ({
+      ...prev,
+      [itemId]: value,
+    }));
+  };
+
+  // ✅ NEW: Negotiate all items in current service group
+  const handleNegotiateServiceGroup = async () => {
+    const currentGroup = getCurrentServiceGroup();
+    if (!currentGroup) {
+      setErrorMsg("❗ Service information not found.");
       return;
     }
 
-    socket.emit("new-negotiation-request", negotiationData);
-    console.log("Negotiation data sent:", negotiationData);
-  };
-
-  // Handle service selection change
-  const handleServiceChange = (e) => {
-    const newIndex = parseInt(e.target.value);
-    setSelectedServiceIndex(newIndex);
-    setProposedPrice(""); // Clear proposed price when switching services
-    setErrorMsg(""); // Clear any error messages
-  };
-
-  // Send negotiation for current selected service
-  const handleNegotiate = () => {
-    const currentService = getCurrentService();
-    const currentVendor = getCurrentVendor();
-
-    if (!currentService || !currentVendor) {
+    const { service, vendor, items } = currentGroup;
+    if (!service || !vendor) {
       setErrorMsg("❗ Service or vendor information not found.");
       return;
     }
 
-    if (!proposedPrice || Number(proposedPrice) <= 0) {
-      setErrorMsg("❗ Please enter a valid price.");
-      return;
-    }
-
-    if (proposedPrice < currentService.minPrice) {
-      setErrorMsg("❗ Please enter a price higher than the minimum price.");
-      return;
-    }
-    // console.log("Current service:", currentService);
-    // console.log("Current vendor:", currentVendor);
-    // console.log("Booking details:", bookingDetails);
-    const negotiationData = {
-      vendorId: currentVendor._id,
-      vendorName: currentVendor.fullName,
-      vendorEmail: currentVendor.email,
-      vendorPhoneNumber: currentVendor.phone,
-      vendorLocation: currentService?.stateLocationOffered,
-
-      serviceId: currentService._id,
-      serviceName: currentService.serviceName,
-
-      bookedByUserId: bookingDetails.bookedById,
-      bookedByUser: bookingDetails.bookedBy,
-      bookedByUserEmail: bookingDetails.userEmail,
-      bookedByUserPhoneNumber: bookingDetails.phone,
-      bookedByUserAltPhoneNumber: bookingDetails.altPhone,
-
-      venueLocation: venueInput,
-      proposedPrice: proposedPrice,
-
-      date: {
-        startDate: new Date(bookingDetails.startDate),
-        endDate: new Date(bookingDetails.endDate),
-      },
-
-      originalPriceRange: {
-        min: currentService.minPrice,
-        max: currentService.maxPrice,
-      },
-    };
-
-    setIsLoading(true);
-    setTimeout(() => {
-      emitNegotiation(negotiationData);
-      alert(
-        `✅ Your price ₹${proposedPrice} has been sent to ${
-          currentVendor.fullName || currentVendor.name
-        } for ${currentService.serviceName || currentService.name}!`
-      );
-      setErrorMsg("");
-      setIsLoading(false);
-      navigate(`/order-summary/${userDetailsId}`);
-    }, 500);
-  };
-  // console.log("NegotiationData", negotiationData);
-  // Send all services without negotiation
-  const handleProceedWithoutNegotiation = () => {
-    setIsLoading(true);
-
-    // Send negotiation data for each service
-    serviceDetails.forEach((service, index) => {
-      const vendor = vendorDetails[index];
-
-      if (!service || !vendor) {
-        console.warn(`Missing service or vendor data at index ${index}`);
-        return;
-      }
-
-      const negotiationData = {
-        vendorName: vendor.fullName || vendor.name,
-        serviceName: service.serviceName || service.name,
-        serviceId: service._id?.$oid || service._id,
-        vendorId: vendor._id?.$oid || vendor._id,
-        bookedBy: bookingDetails.bookedBy,
-        bookedById:
-          bookingDetails.bookedById?.$oid || bookingDetails.bookedById,
-        venueLocation: venueInput,
-
-        vendorLocation: service?.stateLocationOffered,
-        proposedPrice: 0,
-        date: {
-          startDate:
-            bookingDetails.startDate?.$date || bookingDetails.startDate,
-          endDate: bookingDetails.endDate?.$date || bookingDetails.endDate,
-        },
-        originalPriceRange: {
-          min: service.minPrice,
-          max: service.maxPrice,
-        },
-        type: "No Negotiation Requested",
-      };
-
-      // Add small delay between emissions for multiple services
-      setTimeout(() => {
-        emitNegotiation(negotiationData);
-      }, index * 100);
+    // Validate all items have prices
+    const itemsToNegotiate = items.filter((item) => item.cateringDetails);
+    const allHavePrices = itemsToNegotiate.every((item) => {
+      const price = proposedPrices[item.cartItemId];
+      return price && Number(price) > 0;
     });
 
-    setTimeout(() => {
-      alert("🚀 Proceeding with the listed prices for all services...");
-      setProceededWithoutNegotiation(true);
-      setErrorMsg("");
+    if (itemsToNegotiate.length > 0 && !allHavePrices) {
+      setErrorMsg("❗ Please enter a valid price for all selected packages.");
+      return;
+    }
+
+    setIsLoading(true);
+    setErrorMsg("");
+
+    try {
+      // Collect promises for all emits
+      const negotiationPromises = items.map((item) => {
+        let negotiationData = null;
+        let proposedPrice = 0;
+
+        if (item.cateringDetails) {
+          const { packageName, plateCount, pricePerPlate, totalPrice } =
+            item.cateringDetails;
+          proposedPrice = proposedPrices[item.cartItemId];
+
+          const minValidation = totalPrice * 0.5;
+          if (proposedPrice < minValidation) {
+            throw new Error(
+              `❗ Price for ${packageName} too low. Minimum: ₹${Math.floor(
+                minValidation
+              )}`
+            );
+          }
+
+          negotiationData = {
+            vendorId: vendor._id,
+            vendorName: vendor.fullName,
+            vendorEmail: vendor.email,
+            vendorPhoneNumber: vendor.phone,
+            vendorLocation: service?.stateLocationOffered,
+            serviceId: service._id,
+            serviceName: service.serviceName,
+            bookedByUserId: bookingDetails.bookedById,
+            bookedByUser: bookingDetails.bookedBy,
+            bookedByUserEmail: bookingDetails.userEmail,
+            bookedByUserPhoneNumber: bookingDetails.phone,
+            bookedByUserAltPhoneNumber: bookingDetails.altPhone,
+            venueLocation: venueInput,
+            proposedPrice,
+            date: {
+              startDate: new Date(bookingDetails.startDate),
+              endDate: new Date(bookingDetails.endDate),
+            },
+            originalPriceRange: { min: totalPrice, max: totalPrice },
+            packageName,
+            plateCount,
+            pricePerPlate,
+            totalPrice,
+          };
+        } else {
+          proposedPrice = proposedPrices[service._id] || 0;
+
+          if (!proposedPrice || Number(proposedPrice) <= 0)
+            throw new Error("❗ Please enter a valid price for this service.");
+
+          const minValidation = (service.minPrice || 0) * 0.5;
+          if (Number(proposedPrice) < minValidation)
+            throw new Error(
+              `❗ Price for ${
+                service.serviceName
+              } too low. Minimum: ₹${Math.floor(minValidation)}`
+            );
+
+          negotiationData = {
+            vendorId: vendor._id,
+            vendorName: vendor.fullName,
+            vendorEmail: vendor.email,
+            vendorPhoneNumber: vendor.phone,
+            vendorLocation: service?.stateLocationOffered,
+            serviceId: service._id,
+            serviceName: service.serviceName,
+            bookedByUserId: bookingDetails.bookedById,
+            bookedByUser: bookingDetails.bookedBy,
+            bookedByUserEmail: bookingDetails.userEmail,
+            bookedByUserPhoneNumber: bookingDetails.phone,
+            bookedByUserAltPhoneNumber: bookingDetails.altPhone,
+            venueLocation: venueInput,
+            proposedPrice,
+            date: {
+              startDate: new Date(bookingDetails.startDate),
+              endDate: new Date(bookingDetails.endDate),
+            },
+            originalPriceRange: {
+              min: service.minPrice || 0,
+              max: service.maxPrice || 0,
+            },
+          };
+        }
+
+        return emitNegotiation(negotiationData);
+      });
+
+      // Wait for all negotiations to complete
+      await Promise.all(negotiationPromises);
+
+      const packageCount = itemsToNegotiate.length;
+      const message =
+        packageCount > 1
+          ? `✅ Your prices for ${packageCount} packages have been sent to ${vendor.fullName}!`
+          : `✅ Your price has been sent to ${vendor.fullName}!`;
+
+      alert(message);
+      console.log("Venueinput:", venueInput);
+      const update = await updateUserBookingHistory(userDetailsId, venueInput);
+      if (update) {
+        navigate(`/order-summary/${userDetailsId}`);
+      }
+    } catch (error) {
+      console.error("Negotiation error:", error);
+      setErrorMsg(
+        error.message || "❗ Something went wrong, please try again."
+      );
+    } finally {
       setIsLoading(false);
-      navigate(`/order-summary/${userDetailsId}`);
-    }, 500);
+    }
+  };
+
+  // ✅ NEW: Proceed without negotiation for all services
+  const handleProceedWithoutNegotiation = async () => {
+    try {
+      setIsLoading(true);
+      setErrorMsg("");
+
+      const negotiationPromises = [];
+
+      for (const group of groupedServices) {
+        const { service, vendor, items } = group;
+
+        if (!service || !vendor) {
+          console.warn("❗ Missing service or vendor data, skipping group.");
+          continue;
+        }
+
+        for (const item of items) {
+          let minPrice = 0;
+          let maxPrice = 0;
+          let cateringInfo = {};
+
+          if (item.cateringDetails) {
+            const { totalPrice, packageName, plateCount, pricePerPlate } =
+              item.cateringDetails;
+            minPrice = totalPrice;
+            maxPrice = totalPrice;
+            cateringInfo = {
+              packageName,
+              plateCount,
+              pricePerPlate,
+              totalPrice,
+            };
+          } else {
+            minPrice = service.minPrice || 0;
+            maxPrice = service.maxPrice || 0;
+          }
+
+          const negotiationData = {
+            vendorId: vendor._id,
+            vendorName: vendor.fullName,
+            vendorEmail: vendor.email,
+            vendorPhoneNumber: vendor.phone,
+            vendorLocation: service?.stateLocationOffered,
+            serviceId: service._id,
+            serviceName: service.serviceName,
+            bookedByUserId: bookingDetails.bookedById,
+            bookedByUser: bookingDetails.bookedBy,
+            bookedByUserEmail: bookingDetails.userEmail,
+            bookedByUserPhoneNumber: bookingDetails.phone,
+            bookedByUserAltPhoneNumber: bookingDetails.altPhone,
+            venueLocation: venueInput,
+            proposedPrice: 0,
+            date: {
+              startDate: new Date(bookingDetails.startDate),
+              endDate: new Date(bookingDetails.endDate),
+            },
+            originalPriceRange: {
+              min: minPrice,
+              max: maxPrice,
+            },
+            type: "No Negotiation Requested",
+            ...cateringInfo,
+          };
+
+          // push each emit promise
+          negotiationPromises.push(emitNegotiation(negotiationData));
+        }
+      }
+
+      // Wait for all emits to finish
+      await Promise.all(negotiationPromises);
+
+      alert("🚀 Proceeding with the listed prices for all items...");
+      setProceededWithoutNegotiation(true);
+      const updateResult = await updateUserBookingHistory(userDetailsId, venueInput);
+      if (updateResult) {
+        navigate(`/order-summary/${userDetailsId}`);
+      }
+    } catch (error) {
+      console.error("❌ Proceed without negotiation failed:", error);
+      setErrorMsg(error.message || "Something went wrong while sending data.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const onClose = () => navigate("/userdetails");
@@ -247,11 +525,11 @@ const CustomerNegotiationModal = () => {
       timer = setTimeout(() => setTimeLeft((prev) => prev - 1), 1000);
     }
     if (timeLeft === 0 && showTimer) {
-      console.log("⏳ Time expired! Closing the negotiation window.");
+      console.log("⏳ Time expired!");
       onClose();
     }
     return () => clearTimeout(timer);
-  }, [showTimer, timeLeft, onClose]);
+  }, [showTimer, timeLeft]);
 
   if (dataLoading) {
     return (
@@ -266,7 +544,7 @@ const CustomerNegotiationModal = () => {
     );
   }
 
-  if (!bookingDetails || serviceDetails.length === 0) {
+  if (!bookingDetails || groupedServices.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-100">
         <div className="text-center bg-white p-8 rounded-xl shadow-lg">
@@ -284,121 +562,218 @@ const CustomerNegotiationModal = () => {
     );
   }
 
-  const currentService = getCurrentService();
-  const currentVendor = getCurrentVendor();
+  const currentGroup = getCurrentServiceGroup();
+  const currentService = currentGroup?.service;
+  const currentVendor = currentGroup?.vendor;
+  const currentItems = currentGroup?.items || [];
+
+  // Calculate total for current service group
+  const groupTotal = currentItems.reduce((sum, item) => {
+    if (item.cateringDetails) {
+      return sum + item.cateringDetails.totalPrice;
+    }
+    return sum + (currentService?.minPrice || 0);
+  }, 0);
 
   return (
     <div className="min-h-screen p-4 sm:p-8 bg-slate-100 flex justify-center items-start font-sans">
-      <div className="w-full max-w-2xl bg-white rounded-2xl p-6 sm:p-10 shadow-xl border border-slate-200 border-t-8 border-t-blue-600">
+      <div className="w-full max-w-3xl bg-white rounded-2xl p-6 sm:p-10 shadow-xl border border-slate-200 border-t-8 border-t-blue-600">
         <h2 className="text-center text-3xl sm:text-4xl font-bold mb-8 text-slate-800">
           Propose Your Negotiated Price
         </h2>
 
-        {/* Service Selection Dropdown - Only show if multiple services */}
-        {isMultipleServices() && (
+        {/* ✅ NEW: Service Group Selection */}
+        {isMultipleServiceGroups() && (
           <div className="mb-6 p-4 bg-blue-50 rounded-xl border border-blue-200">
             <label
-              htmlFor="service-select"
+              htmlFor="service-group-select"
               className="block mb-2 font-semibold text-blue-800"
             >
               Select Service to Negotiate:
             </label>
             <select
-              id="service-select"
+              id="service-group-select"
               value={selectedServiceIndex}
-              onChange={handleServiceChange}
+              onChange={handleServiceGroupChange}
               className="w-full p-3 bg-white border-2 border-blue-300 rounded-xl text-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
             >
-              {serviceDetails.map((service, index) => (
-                <option
-                  key={service._id?.$oid || service._id || index}
-                  value={index}
-                >
-                  {service.serviceName || service.name} - ₹{service.minPrice}-₹
-                  {service.maxPrice}
-                </option>
-              ))}
+              {groupedServices.map((group, index) => {
+                const itemCount = group.items.filter(
+                  (i) => i.cateringDetails
+                ).length;
+                const label =
+                  itemCount > 1
+                    ? `${group.service.serviceName} (${itemCount} packages)`
+                    : group.service.serviceName;
+
+                return (
+                  <option key={index} value={index}>
+                    {label}
+                  </option>
+                );
+              })}
             </select>
           </div>
         )}
 
-        {/* Booking Details */}
-        <div className="space-y-4 border-b border-slate-200 pb-4">
-          <div className="flex flex-col sm:flex-row justify-between sm:items-center py-2">
-            <strong className="text-slate-500 mb-1 sm:mb-0">
-              {isMultipleServices() ? "Selected Service:" : "Service:"}
-            </strong>
-            <span className="font-semibold text-slate-800 text-right">
-              {(
-                currentService?.serviceName ||
-                currentService?.name ||
-                "N/A"
-              ).toUpperCase()}
-            </span>
-          </div>
-
-          <div className="flex flex-col sm:flex-row justify-between sm:items-center py-2">
-            <strong className="text-slate-500 mb-1 sm:mb-0">Vendor:</strong>
-            <span className="font-semibold text-slate-800 text-right">
-              {(
-                currentVendor?.fullName ||
-                currentVendor?.name ||
-                "N/A"
-              ).toUpperCase()}
-            </span>
-          </div>
-
-          <div className="flex flex-col sm:flex-row justify-between sm:items-center py-2">
-            <strong className="text-slate-500 mb-1 sm:mb-0">
-              Venue Location:
-            </strong>
-            <div className="relative flex items-center group w-full sm:w-auto flex-grow">
-              <input
-                type="text"
-                placeholder="Enter Your Venue Location"
-                value={venueInput}
-                onChange={(e) => setVenueInput(e.target.value)}
-                className="sm:ml-4 p-2 w-full bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-right"
-              />
-              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-slate-800 text-white text-center text-sm rounded-lg p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 invisible group-hover:visible pointer-events-none">
-                Please enter the location where you want to hold the event. The
-                default location is your home location.
-              </div>
+        {/* ✅ NEW: Service Details Header */}
+        <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
+          <h3 className="text-xl font-bold text-blue-900 mb-3">
+            {currentService?.serviceName || "Service"}
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+            <div>
+              <span className="text-slate-600 font-medium">Vendor:</span>
+              <span className="ml-2 font-semibold text-slate-800">
+                {/* ✅ FIXED: Try multiple vendor name fields */}
+                {currentVendor?.businessName ||
+                  currentVendor?.fullName ||
+                  currentVendor?.name ||
+                  "Unknown Vendor"}
+              </span>
+            </div>
+            <div>
+              <span className="text-slate-600 font-medium">Date:</span>
+              <span className="ml-2 font-semibold text-slate-800">
+                {formatDateForDisplay(bookingDetails.startDate)} -{" "}
+                {formatDateForDisplay(bookingDetails.endDate)}
+              </span>
             </div>
           </div>
+        </div>
+        {/* ✅ NEW: Show all packages for current service */}
+        {currentItems.some((item) => item.cateringDetails) && (
+          <div className="mb-6 space-y-4">
+            <h4 className="text-lg font-bold text-slate-800 mb-3">
+              🍽️ Selected Packages (
+              {currentItems.filter((i) => i.cateringDetails).length})
+            </h4>
 
-          <div className="flex flex-col sm:flex-row justify-between sm:items-center py-2">
-            <strong className="text-slate-500 mb-1 sm:mb-0">
-              Date Of Event:
-            </strong>
+            {currentItems.map((item, itemIndex) => {
+              if (!item.cateringDetails) return null;
+
+              const { packageName, plateCount, pricePerPlate, totalPrice } =
+                item.cateringDetails;
+              const itemId = item.cartItemId;
+
+              return (
+                <div
+                  key={itemIndex}
+                  className="bg-green-50 rounded-xl border-2 border-green-200 p-4"
+                >
+                  <div className="flex justify-between items-start mb-3">
+                    <div>
+                      <h5 className="font-bold text-green-800 text-lg">
+                        {packageName}
+                      </h5>
+                      <p className="text-sm text-gray-600 mt-1">
+                        {plateCount} plates @ ₹{pricePerPlate}/plate
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-xs text-gray-500 block">
+                        Listed Price
+                      </span>
+                      <span className="text-xl font-bold text-green-600">
+                        ₹{totalPrice}/-
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Price Input for this package */}
+                  <div className="mt-3">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Your Negotiated Price for this package:
+                    </label>
+                    <input
+                      type="number"
+                      placeholder={`e.g., ${Math.floor(totalPrice * 0.9)}`}
+                      value={proposedPrices[itemId] || ""}
+                      onChange={(e) =>
+                        handlePriceChange(itemId, e.target.value)
+                      }
+                      className="w-full p-3 bg-white border-2 border-green-300 rounded-lg text-lg focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200"
+                    />
+                    {/* <p className="text-xs text-gray-500 mt-1">
+                      Minimum acceptable: ₹{Math.floor(totalPrice * 0.5)}
+                    </p> */}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* ✅ Regular Service Display */}
+        {!currentItems.some((item) => item.cateringDetails) && (
+          <>
+            {/* ✅ MODIFIED: Wrap in fragment and handle undefined */}
+            <div className="mb-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
+              <div className="flex justify-between items-center">
+                <span className="text-slate-600 font-medium">
+                  Listed Price:
+                </span>
+                <span className="text-2xl font-bold text-blue-600">
+                  ₹{currentService?.minPrice || 0}-₹
+                  {currentService?.maxPrice || 0}
+                </span>
+              </div>
+            </div>
+
+            {/* ✅ NEW: Input for Regular Service (as requested) */}
+            <div className="mb-6">
+              <label
+                htmlFor="proposed-price-regular"
+                className="block text-sm font-semibold text-gray-700 mb-2"
+              >
+                Enter Your Price for This Service (INR):
+              </label>
+              <input
+                id="proposed-price-regular"
+                type="number"
+                placeholder={`e.g., ${Math.floor(
+                  (currentService?.minPrice || 0) * 0.9
+                )}`}
+                value={proposedPrices[currentService._id] || ""}
+                onChange={(e) =>
+                  handlePriceChange(currentService._id, e.target.value)
+                }
+                className="w-full p-3 bg-white border-2 border-slate-300 rounded-lg text-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              />
+            </div>
+          </>
+        )}
+
+        {/* Venue Location */}
+        <div className="mb-6">
+          <label className="block mb-2 font-semibold text-slate-700">
+            Venue Location:
+          </label>
+          <input
+            type="text"
+            placeholder="Enter Your Venue Location"
+            value={venueInput}
+            onChange={(e) => setVenueInput(e.target.value)}
+            className="w-full p-3 bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
+        {/* ✅ Summary Section */}
+        <div className="mb-6 p-4 bg-blue-50 rounded-xl border-2 border-blue-200">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-slate-600 font-medium">Total Items:</span>
             <span className="font-semibold text-slate-800">
-              {`${new Date(
-                bookingDetails.startDate?.$date || bookingDetails.startDate
-              ).toLocaleDateString()} - ${new Date(
-                bookingDetails.endDate?.$date || bookingDetails.endDate
-              ).toLocaleDateString()}`}
+              {currentItems.filter((i) => i.cateringDetails).length || 1}{" "}
+              item(s)
             </span>
           </div>
-
-          <div className="flex flex-col sm:flex-row justify-between sm:items-center py-2">
-            <strong className="text-slate-500 mb-1 sm:mb-0">
-              Listed Price:
-            </strong>
-            <span className="font-bold text-xl text-blue-600">
-              {currentService
-                ? `₹${currentService.minPrice}-₹${currentService.maxPrice}`
-                : "N/A"}
-            </span>
-          </div>
-
-          {/* Show total services count if multiple */}
-          {isMultipleServices() && (
-            <div className="flex flex-col sm:flex-row justify-between sm:items-center py-2">
-              <strong className="text-slate-500 mb-1 sm:mb-0">
-                Total Services:
-              </strong>
-              <span className="font-semibold text-slate-800">
-                {serviceDetails.length} services booked
+          {currentItems.some((item) => item.cateringDetails) && (
+            <div className="flex justify-between items-center">
+              <span className="text-slate-600 font-medium">
+                Group Total (Listed):
+              </span>
+              <span className="text-2xl font-bold text-blue-600">
+                ₹{groupTotal}/-
               </span>
             </div>
           )}
@@ -406,66 +781,36 @@ const CustomerNegotiationModal = () => {
 
         {!showTimer && (
           <>
-            <div className="mt-8">
-              <label
-                htmlFor="proposed-price"
-                className="block mb-2 font-semibold text-slate-700"
-              >
-                Enter Your Price for{" "}
-                {isMultipleServices() ? "Selected Service" : "This Service"}{" "}
-                (INR):
-              </label>
-              <input
-                id="proposed-price"
-                type="number"
-                placeholder={`e.g., ${Math.floor(
-                  (currentService?.maxPrice || 100000) * 0.75
-                )}`}
-                value={proposedPrice}
-                onChange={(e) => setProposedPrice(e.target.value)}
-                className="w-full p-3 bg-white border-2 border-slate-300 rounded-xl text-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
-              />
-              {isMultipleServices() && (
-                <p className="text-sm text-slate-500 mt-2">
-                  💡 You can negotiate each service individually. Use the
-                  dropdown above to switch between services.
-                </p>
-              )}
-            </div>
-
             <div className="mt-8 flex flex-col sm:flex-row gap-4">
               <button
-                className="flex-1 py-3 px-4 text-base rounded-xl border-none cursor-pointer font-semibold uppercase tracking-wider transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl bg-blue-600 text-white shadow-md hover:bg-blue-700 disabled:bg-slate-400 disabled:shadow-none disabled:transform-none"
-                onClick={handleNegotiate}
+                className="flex-1 py-4 px-6 text-base rounded-xl border-none cursor-pointer font-bold uppercase tracking-wider transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl bg-blue-600 text-white shadow-md hover:bg-blue-700 disabled:bg-slate-400 disabled:shadow-none disabled:transform-none"
+                onClick={handleNegotiateServiceGroup}
                 disabled={isLoading}
               >
                 {isLoading
                   ? "Sending..."
-                  : `Send to ${
-                      currentVendor?.fullName || currentVendor?.name || "Vendor"
-                    }`}
+                  : `Send to ${currentVendor?.fullName}`}
               </button>
 
               <button
-                className="flex-1 py-3 px-4 text-base rounded-xl border-none cursor-pointer font-semibold uppercase tracking-wider transition-colors duration-300 bg-slate-200 text-slate-700 hover:bg-slate-300 disabled:bg-slate-400"
+                className="flex-1 py-4 px-6 text-base rounded-xl border-none cursor-pointer font-bold uppercase tracking-wider transition-colors duration-300 bg-slate-200 text-slate-700 hover:bg-slate-300 disabled:bg-slate-400"
                 onClick={handleProceedWithoutNegotiation}
                 disabled={isLoading}
               >
                 {isLoading
                   ? "Processing..."
                   : `Proceed Without Negotiation${
-                      isMultipleServices() ? " (All Services)" : ""
+                      isMultipleServiceGroups() ? " (All)" : ""
                     }`}
               </button>
             </div>
 
-            {isMultipleServices() && (
+            {isMultipleServiceGroups() && (
               <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-xl">
                 <p className="text-sm text-yellow-800">
-                  📝 <strong>Note:</strong> "Send to Vendor" will negotiate only
-                  the selected service. "Proceed Without Negotiation" will
-                  confirm all {serviceDetails.length} services at their listed
-                  prices.
+                  📝 <strong>Note:</strong> "Send to Vendor" negotiates all
+                  packages in the selected service. "Proceed Without
+                  Negotiation" confirms all services at listed prices.
                 </p>
               </div>
             )}
@@ -478,8 +823,8 @@ const CustomerNegotiationModal = () => {
             <h3 className="text-xl font-bold mb-2 text-slate-800">
               ⏳{" "}
               {proceededWithoutNegotiation
-                ? "Proceeding with listed price..."
-                : "Waiting for vendor response..."}
+                ? "Proceeding..."
+                : "Waiting for response..."}
             </h3>
             <p className="text-lg text-slate-600">
               Auto-closing in{" "}

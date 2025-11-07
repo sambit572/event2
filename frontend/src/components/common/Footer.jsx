@@ -80,9 +80,6 @@ function Footer() {
           <div>
             <h4>Quick Links</h4>
             <p className="hover:text-[#ffc107] cursor-pointer">Our Approach</p>
-            <p className="hover:text-[#ffc107] cursor-pointer">
-              About HostGator
-            </p>
             <p
               className="hover:text-[#ffc107] cursor-pointer"
               onClick={() => navigate("/faqs")}
@@ -208,7 +205,6 @@ function Footer() {
                   }`}
                 >
                   <p>Our Approach</p>
-                  <p>About HostGator</p>
                   <p>FAQs</p>
                 </div>
               </div>

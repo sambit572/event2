@@ -7,6 +7,7 @@ import {
   updateAvailability,
   updateService,
   uploadServiceMedia,
+  updateServiceImageFirst,
 } from "../../controller/vendor/service.controller.js";
 
 import { verifyVendorJwt } from "../../middleware/VendorAuth.middleware.js";
@@ -59,6 +60,7 @@ import {
   updateWhyChooseUs,
   resetWhyChooseUs,
 } from "../../controller/vendor/whychooseus.controller.js";
+import { getVendorBookings } from "../../controller/vendor/vendorBookingHistory.controller.js";
 
 const vendor_router = express.Router();
 
@@ -113,6 +115,7 @@ vendor_router.post(
   },
   createService
 );
+
 vendor_router.route("/my-services").get(verifyVendorJwt, getMyServices);
 vendor_router.route("/update-service/:id").put(verifyVendorJwt, updateService);
 vendor_router
@@ -134,7 +137,7 @@ vendor_router.post(
       next();
     });
   },
-  uploadServiceMedia
+  updateServiceImageFirst
 );
 
 // --- BANK DETAILS ROUTES --- //
@@ -186,5 +189,7 @@ vendor_router.get(
   verifyVendorJwt, // existing auth check
   getVendorDashboard
 );
+// --- VENDOR BOOKING HISTORY ROUTE --- //
+vendor_router.get("/vendor-booking/:vendorId", getVendorBookings);
 
 export { vendor_router };

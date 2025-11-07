@@ -24,10 +24,9 @@ const negotiationSchema = new mongoose.Schema(
       required: true,
     },
     picked_call: {
-      type: Boolean, // optional if you're tracking vendor's picked call separately
+      type: Boolean,
       default: false,
     },
-
     serviceName: {
       type: String,
       required: true,
@@ -59,7 +58,7 @@ const negotiationSchema = new mongoose.Schema(
       required: true,
     },
     call_status: {
-      type: Boolean, // optional if you're tracking called status
+      type: Boolean,
       default: false,
     },
     venueLocation: {
@@ -90,6 +89,23 @@ const negotiationSchema = new mongoose.Schema(
         required: true,
       },
     },
+    // ✅ NEW: Catering-specific fields
+    packageName: {
+      type: String,
+      default: null,
+    },
+    plateCount: {
+      type: Number,
+      default: null,
+    },
+    pricePerPlate: {
+      type: Number,
+      default: null,
+    },
+    totalPrice: {
+      type: Number,
+      default: null,
+    },
     type: {
       type: String,
       default: "No Negotiation Requested",
@@ -103,15 +119,15 @@ const negotiationSchema = new mongoose.Schema(
       default: 0,
     },
     completed: {
-      type: Boolean, // changed from String to Boolean
+      type: Boolean,
       default: false,
     },
     progress: {
-      type: Boolean, // optional field based on your frontend
+      type: Boolean,
       default: false,
     },
     booked: {
-      type: Boolean, // optional if tracking booking status separately
+      type: Boolean,
       default: false,
     },
   },

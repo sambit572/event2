@@ -1,12 +1,14 @@
 .dash-sidebar {
-  height: 100vh;
-  width: 270px;
-background: linear-gradient(135deg, #b266ff, #7f00ff, #2a004d);
+  height: 100%;
+  width: 300px;
+  background: #001f3f;
   box-shadow: 0px 4px 4px rgba(0,0,0,0.25);
-  color: #f5f5f5;
+  color: #fff;
   transition: width 0.3s ease;
   position: relative;
   z-index: 20;
+padding-bottom: 50px;
+
 }
 
 
@@ -35,19 +37,19 @@ background: linear-gradient(135deg, #b266ff, #7f00ff, #2a004d);
   background-color: #34495e;
 }
 
-.dasgboardHeading {
+.dashboardHeading {
   background-color: #f3f0ed;
   color: #fff;
   background-clip: text;
   -webkit-background-clip: text;
   font-family: Sansation;
-  font-size: 30px;
+  font-size: 25px;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
-  margin-left: 18px;
-  margin-bottom: 20px;
-  margin-top: 10px;
+  margin-left: 40px;
+  margin-bottom: 10px;
+  margin-top: 20px;
   /* z-index: 10000; */
 }
 
@@ -64,6 +66,8 @@ background: linear-gradient(135deg, #b266ff, #7f00ff, #2a004d);
 .profile-photo-wrapper {
   position: relative;
   display: inline-block;
+  width: 170px;
+
 }
 
 .user-profile-pic {
@@ -108,8 +112,8 @@ background: linear-gradient(135deg, #b266ff, #7f00ff, #2a004d);
 /* Camera Icon Overlay */
 .camera-icon-overlay {
   position: absolute;
-  bottom: 8px;
-  right: 8px;
+  bottom: 15px;
+  right:15px;
   width: 40px;
   height: 40px;
   background: rgba(0, 0, 0, 0.7);
@@ -217,8 +221,6 @@ background: linear-gradient(135deg, #b266ff, #7f00ff, #2a004d);
 .custom-list-decor-dashboard {
   list-style: none;
   position: relative;
-  margin-top: 30px;
-  /* top: -20px; */
 }
 
 .typography {
@@ -313,11 +315,11 @@ color: #ffc107;
 .status-indicator {
   display: flex;
   align-items: center;
-  color: #ffc107;
+  text-align: center;
+  color: #ffffff;
   gap: 8px;
-  font-weight: 700;
-  margin-left: 70px;
-  margin-top: 10px;
+  font-weight: 500;
+  margin-left: 24px;
 }
 
 .status-dot {
@@ -327,7 +329,7 @@ color: #ffc107;
 }
 
 .active-dot {
-  background-color: #3e8841;
+  background-color: #00ff11;
   /* Green */
 }
 
@@ -398,7 +400,6 @@ color: #ffc107;
 
   .custom-list-decor-dashboard {
     position: relative;
-    top: -23px;
   }
 }
 
@@ -438,14 +439,15 @@ color: #ffc107;
     width: 33vw;
   }
 
-  .dasgboardHeading {
+  .dashboardHeading {
     text-align: center;
     margin-right: 20px;
-    margin-top: 45px;
+    margin-top: 27px;
   }
 
   .dash-sidebar.open {
     transform: translateX(0);
+    margin-top: -10px;
   }
 
   .profile-pic {

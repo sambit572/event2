@@ -13,14 +13,17 @@ const Feedback = () => {
 
   // Word counting function
   const countWords = (text) => {
-    return text.trim().split(/\s+/).filter(word => word.length > 0).length;
+    return text
+      .trim()
+      .split(/\s+/)
+      .filter((word) => word.length > 0).length;
   };
 
   // Handle feedback text change with word limit
   const handleFeedbackChange = (e) => {
     const text = e.target.value;
     const words = countWords(text);
-    
+
     if (words <= 30) {
       setFeedbackText(text);
       setWordCount(words);

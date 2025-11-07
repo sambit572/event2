@@ -17,10 +17,11 @@ import slider_11 from "../../assets/home/sliderImages/slider_11.jpeg";
 import CategoryCard from "../../components/customer/home/CategoryCard.jsx";
 import ImageSlider from "../../components/customer/home/ImageSlider.jsx";
 
-import Milestones from "../../components/common/aboutus/Milestones";
+// import Milestones from "../../components/common/aboutus/Milestones";
 import AddsBanner from "../../components/customer/home/AddsBanner.jsx";
 import categories from "../../utils/CatogoryData.jsx";
 import StepsSection from "../../components/customer/home/StepsSection.jsx";
+// import CulturalDanceSlider from "../common/CulturalDanceSlider.jsx";
 // ✅ Lazy load heavy components below
 const ReviewSlider = React.lazy(() =>
   import("../../components/customer/home/ReviewSlider.jsx")
@@ -56,7 +57,7 @@ const images = [
   {
     desktop: slider_8,
   },
- {
+  {
     // mobile: shaadiMobile,
     // tablet: shaadiTablet,
     desktop: slider_1,
@@ -125,6 +126,7 @@ const Home = () => {
     <div className="home">
       <ImageSlider images={images} />
       <AddsBanner />
+     {/* <CulturalDanceSlider /> */}
       {/* <img className="addbanner" src={banner} alt="" /> */}
       <div id="categories" className="categories-head1 mb-[-15px]">
         <h1 className="align_center categories-head">𝐂𝐀𝐓𝐄𝐆𝐎𝐑𝐈𝐄𝐒</h1>

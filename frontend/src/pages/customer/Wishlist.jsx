@@ -79,84 +79,90 @@ const Wishlist = () => {
         </p>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-3 gap-6">
-          {wishlist.map((item) => {
-            const service = item.service;
-            const ratingData = ratings[service._id];
+          {wishlist
+            .filter((item) => item && item.service) // ✅ filter out null or missing services
+            .map((item) => {
+              const service = item.service;
+              const ratingData = ratings[service._id];
 
-            // fetch rating only if not already loaded
-            if (!ratingData) {
-              fetchRatingSummary(service._id);
-            }
+              // Fetch rating only if not already loaded
+              if (!ratingData) {
+                fetchRatingSummary(service._id);
+              }
 
-            return (
-              <div
-                key={item._id}
-                className="bg-white rounded-xl shadow-md hover:shadow-lg hover:border-blue-600 transition-all duration-300 border border-gray-200 overflow-hidden"
-              >
-                {/* Image */}
-                <Link to={`/service/${service.serviceCategory}/${service._id}`}>
-                  <div className="relative">
-                    <img
-                      src={
-                        Array.isArray(service.serviceImage) &&
-                        service.serviceImage.length > 0
-                          ? service.serviceImage[0]
-                          : "/default.jpg"
-                      }
-                      alt={service.serviceName}
-                      className="w-full h-44 object-cover"
-                    />
-                    <span
-                      className={`absolute top-3 left-3 px-2 py-1 rounded-full text-xs font-semibold shadow-md ${
-                        service.available
-                          ? "bg-green-500 text-white"
-                          : "bg-red-500 text-white"
-                      }`}
-                    >
-                      {service.available ? "Available" : "Out of Service"}
-                    </span>
-                  </div>
-                </Link>
-
-                {/* Details */}
-                <div className="p-4 flex flex-col gap-2">
+              return (
+                <div
+                  key={item._id}
+                  className="bg-white rounded-xl shadow-md hover:shadow-lg hover:border-blue-600 transition-all duration-300 border border-gray-200 overflow-hidden"
+                >
+                  {/* Image */}
                   <Link
                     to={`/service/${service.serviceCategory}/${service._id}`}
                   >
-                    <h2 className="text-lg mb-1 font-semibold text-[#002147] line-clamp-1">
-                      {service.serviceName}
-                    </h2>
-
-                    {ratingData ? (
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="bg-green-600 text-white px-2 py-1 rounded-md text-sm font-semibold">
-                          {ratingData.averageRating.toFixed(1)} ★
-                        </span>
-                        <span className="text-gray-500 text-sm">
-                          ({ratingData.totalReviews} reviews)
-                        </span>
-                      </div>
-                    ) : (
-                      <p className="text-gray-400 text-sm">Loading rating...</p>
-                    )}
-                    <p className="text-lg font-bold text-[#002147]">
-                      ₹{service.minPrice} - ₹{service.maxPrice}
-                    </p>
-                    <p className="text-gray-600 text-sm line-clamp-2">
-                      {service.serviceDes}
-                    </p>
+                    <div className="relative">
+                      <img
+                        src={
+                          Array.isArray(service.serviceImage) &&
+                          service.serviceImage.length > 0
+                            ? service.serviceImage[0]
+                            : "/default.jpg"
+                        }
+                        alt={service.serviceName}
+                        className="w-full h-44 object-cover"
+                      />
+                      <span
+                        className={`absolute top-3 left-3 px-2 py-1 rounded-full text-xs font-semibold shadow-md ${
+                          service.available
+                            ? "bg-green-500 text-white"
+                            : "bg-red-500 text-white"
+                        }`}
+                      >
+                        {service.available ? "Available" : "Out of Service"}
+                      </span>
+                    </div>
                   </Link>
-                  {/* Remove Button */}
-                  <button
-                    onClick={() => handleDelete(item._id, service._id)}
-                    className="mt-2 border-2 border-[#001f3f] hover:bg-gray-200 text-[#001f3f] font-semibold px-4 py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
-                  >
-                    Remove
-                  </button>
+
+                  {/* Details */}
+                  <div className="p-4 flex flex-col gap-2">
+                    <Link
+                      to={`/service/${service.serviceCategory}/${service._id}`}
+                    >
+                      <h2 className="text-lg mb-1 font-semibold text-[#002147] line-clamp-1">
+                        {service.serviceName}
+                      </h2>
+
+                      {ratingData ? (
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="bg-green-600 text-white px-2 py-1 rounded-md text-sm font-semibold">
+                            {ratingData.averageRating.toFixed(1)} ★
+                          </span>
+                          <span className="text-gray-500 text-sm">
+                            ({ratingData.totalReviews} reviews)
+                          </span>
+                        </div>
+                      ) : (
+                        <p className="text-gray-400 text-sm">
+                          Loading rating...
+                        </p>
+                      )}
+                      <p className="text-lg font-bold text-[#002147]">
+                        ₹{service.minPrice} - ₹{service.maxPrice}
+                      </p>
+                      <p className="text-gray-600 text-sm line-clamp-2">
+                        {service.serviceDes}
+                      </p>
+                    </Link>
+                    {/* Remove Button */}
+                    <button
+                      onClick={() => handleDelete(item._id, service._id)}
+                      className="mt-2 border-2 border-[#001f3f] hover:bg-gray-200 text-[#001f3f] font-semibold px-4 py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
+                    >
+                      Remove
+                    </button>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
       )}
     </div>

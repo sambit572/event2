@@ -1,53 +1,69 @@
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import UserSideBar from "./UserSideBar.jsx";
 import PasswordInput from "../../../utils/PasswordInput.jsx";
 import axios from "axios";
 import { BACKEND_URL } from "../../../utils/constant.js";
-import "./Profile.css";
-import Button from "./../../vendor/register/VendorButton";
 import { MdReportGmailerrorred } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
-function Profile({ onProfileChange }) {
+function Profile() {
   const navigate = useNavigate();
+
+  /* -------------------- STATE HOOKS -------------------- */
+
+  // Sidebar state for mobile view
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // Password modal states
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
-
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
-
-  const [profileData, setProfileData] = useState({
-    fullName: "",
-    email: "",
-    phoneNo: "",
-    profilePhoto: "",
-  });
-
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
-  //  Sync profile image and other updates to navbar if needed
-  const handleProfileUpdate = (updatedProfile) => {
-    setProfileData(updatedProfile);
-    if (onProfileChange) {
-      onProfileChange(updatedProfile);
-    }
-  };
+  // Booking states
+  const [bookingHistory, setBookingHistory] = useState([]);
+  const [loadingBookings, setLoadingBookings] = useState(true);
 
-  const handleImageChange = (imageUrl) => {
-    setProfileData((prev) => ({ ...prev, profilePhoto: imageUrl }));
-    if (onProfileChange) {
-      onProfileChange({ ...profileData, profilePhoto: imageUrl });
-    }
-  };
+  // Filter & sorting states
+  const [filterStatus, setFilterStatus] = useState("All");
+  const [filterPayment, setFilterPayment] = useState("All");
+  const [filterDate, setFilterDate] = useState("All");
+  const [sortOption, setSortOption] = useState("Newest First");
 
+  /* -------------------- RESPONSIVE SIDEBAR -------------------- */
+  useEffect(() => {
+    const handleResize = () => setIsSidebarOpen(window.innerWidth > 768);
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  /* -------------------- FETCH BOOKINGS -------------------- */
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        const res = await axios.get(
+          `${BACKEND_URL}/user-bookings/my-bookings`,
+          {
+            withCredentials: true,
+          }
+        );
+        if (res.data.success) setBookingHistory(res.data.data);
+      } catch (err) {
+        console.error("Booking fetch failed", err);
+      } finally {
+        setLoadingBookings(false);
+      }
+    };
+    fetchBookings();
+  }, []);
+
+  /* -------------------- PASSWORD UPDATE -------------------- */
   const handlePasswordChangeSubmit = async () => {
-    setErrorMsg("");
-
-    if (newPassword !== confirmPassword) {
+    if (newPassword !== confirmPassword)
       return setErrorMsg("Passwords do not match");
-    }
 
     try {
       const response = await axios.post(
@@ -58,220 +74,344 @@ function Profile({ onProfileChange }) {
 
       if (response.status === 200) {
         setShowSuccessPopup(true);
-        setTimeout(() => {
-          setShowSuccessPopup(false);
-        }, 3000);
+        setTimeout(() => setShowSuccessPopup(false), 3000);
         setShowPasswordModal(false);
-        setOldPassword("");
-        setNewPassword("");
-        setConfirmPassword("");
       }
     } catch (error) {
-      console.error("Password change error:", error);
-      const backendMsg =
-        error.response?.data?.message ||
-        "Failed to change password. Try again.";
-      setErrorMsg(backendMsg);
+      setErrorMsg(
+        error.response?.data?.message || "Failed to change password."
+      );
     }
   };
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsSidebarOpen(window.innerWidth > 768);
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  /* -------------------- FORMAT DATE -------------------- */
+  /* -------------------- FORMAT DATE -------------------- */
+  const formatDate = (date) =>
+    new Date(date).toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        const sidebar = document.querySelector(".profile-sidebar-fixed");
-        if (sidebar) {
-          if (entry.isIntersecting) {
-            sidebar.style.position = "relative";
-          } else {
-            sidebar.style.position = "sticky";
-            sidebar.style.top = "0";
-          }
-        }
-      },
-      { threshold: 0.1 }
-    );
+  /* -------------------- DATE FILTER FUNCTION -------------------- */
+  const filterByDate = (date) => {
+    const d = new Date(date);
+    const today = new Date();
 
-    const footerEl = document.querySelector("footer");
-    if (footerEl) observer.observe(footerEl);
+    if (filterDate === "This Week") {
+      const weekAhead = new Date();
+      weekAhead.setDate(today.getDate() + 7);
+      return d >= today && d <= weekAhead;
+    }
+    if (filterDate === "This Month") {
+      return (
+        d.getMonth() === today.getMonth() &&
+        d.getFullYear() === today.getFullYear()
+      );
+    }
+    if (filterDate === "This Year") {
+      return d.getFullYear() === today.getFullYear();
+    }
+    return true;
+  };
 
-    return () => observer.disconnect();
-  }, []);
+  /* -------------------- APPLY FILTERS & SORT -------------------- */
+  const filteredBookings = bookingHistory
+    .filter((b) => filterStatus === "All" || b?.bookingStatus === filterStatus)
+    .filter(
+      (b) => filterPayment === "All" || b?.paymentStatus === filterPayment
+    )
+    .filter((b) => filterByDate(b?.userDetailsId?.startDate || b?.startDate))
+    .sort((a, b) => {
+      const aDate = a?.userDetailsId?.startDate || a?.startDate;
+      const bDate = b?.userDetailsId?.startDate || b?.startDate;
+
+      if (sortOption === "Newest First")
+        return new Date(bDate) - new Date(aDate);
+      if (sortOption === "Oldest First")
+        return new Date(aDate) - new Date(bDate);
+      if (sortOption === "Highest Amount") return b.amount - a.amount;
+      if (sortOption === "Lowest Amount") return a.amount - b.amount;
+      return 0;
+    });
+
+  /* -------------------- HANDLE BOOKING CLICK -------------------- */
+  const handleBookingClick = (booking) => {
+    const { reDirectTo, userDetailsId } = booking;
+    console.log("Booking clicked:", booking);
+
+    switch (reDirectTo) {
+      case 1:
+        // Navigate to negotiation modal
+        navigate(`/pop-up/${userDetailsId?._id}`);
+        break;
+      case 2:
+        // Navigate to order summary page
+        navigate(`/order-summary/${userDetailsId?._id}`);
+        break;
+      default:
+        console.error("Invalid reDirectTo value:", reDirectTo);
+    }
+  };
 
   return (
-    <div className="profile_section  relative w-full  flex bg-white ">
+    <div className="profile_section relative w-full flex bg-white">
+      {/* ✅ Password Success Notification */}
       {showSuccessPopup && (
-        <div
-          className="fixed top-[115px] left-1/2 -translate-x-1/2 -translate-y-1/2
-               py-5 px-8 rounded-lg bg-white/10 shadow-[0_8px_32px_rgba(31,38,135,0.37)]
-               backdrop-blur-[10px] border-2 border-black
-               font-bold text-black text-center z-[9999] animate-popIn"
-        >
-          You password updated successfully!
+        <div className="fixed top-[115px] left-1/2 -translate-x-1/2 py-3 px-6 rounded-lg bg-green-600 text-white font-semibold z-[9999]">
+          ✅ Password updated successfully!
         </div>
       )}
+
+      {/* ✅ Sidebar */}
       <div className="profile-sidebar-fixed">
         <button
-          className={`profile-hamburger ${isSidebarOpen ? "open" : ""}`}
-          onClick={() => setIsSidebarOpen((prev) => !prev)}
+          className="profile-hamburger md:hidden"
+          onClick={() => setIsSidebarOpen((p) => !p)}
         >
           {isSidebarOpen ? "✕" : "☰"}
         </button>
-
         <UserSideBar
           isOpen={isSidebarOpen}
           setShowPasswordModal={setShowPasswordModal}
-          onImageChange={handleImageChange}
-          onProfileUpdate={handleProfileUpdate}
         />
+      </div>
 
-        {showPasswordModal && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <h3 className="text-lg font-semibold mb-4">Change Password</h3>
-              <PasswordInput
-                name="oldPassword"
-                type="password"
-                placeholder="Current Password"
-                value={oldPassword}
-                onChange={(e) => setOldPassword(e.target.value)}
-              />
-              <PasswordInput
-                name="newPassword"
-                type="password"
-                placeholder="New Password"
-                value={newPassword}
-                onChange={(e) => {
-                  setErrorMsg("");
-                  setNewPassword(e.target.value);
-                }}
-              />
-              <PasswordInput
-                name="confirmPassword"
-                type="password"
-                placeholder="Confirm Password"
-                value={confirmPassword}
-                onChange={(e) => {
-                  setErrorMsg("");
-                  setConfirmPassword(e.target.value);
-                }}
-              />
-              {errorMsg && (
-                <p className="text-red-500 mt-2 text-sm">{errorMsg}</p>
-              )}
-              <div className="mt-4 flex justify-center gap-4">
-                <button
-                  onClick={handlePasswordChangeSubmit}
-                  className="bg-purple-700 text-white px-4 py-2 rounded"
-                >
-                  Submit
-                </button>
+      {/* ✅ Main Content */}
+      <div className="profile-scrollable-content md:ml-8 w-full p-4">
+        <h2 className="text-3xl font-bold text-center mb-6">My Bookings</h2>
 
-                <button
-                  onClick={() => {
-                    setShowPasswordModal(false);
-                    setOldPassword("");
-                    setNewPassword("");
-                    setConfirmPassword("");
-                    setErrorMsg("");
-                  }}
-                  className="bg-gray-300 px-4 py-2 rounded"
+        {/* ================= Filter + Sort UI ================= */}
+        <div className="flex flex-wrap items-center justify-between mb-6 gap-3">
+          <div className="flex flex-wrap gap-3">
+            {[
+              {
+                label: "Booking",
+                value: filterStatus,
+                setter: setFilterStatus,
+                options: [
+                  "All",
+                  "CONFIRMED",
+                  "COMPLETED",
+                  "CANCELLED",
+                  "PENDING",
+                ],
+              },
+              {
+                label: "Payment",
+                value: filterPayment,
+                setter: setFilterPayment,
+                options: ["All", "PAID", "PENDING", "FAILED"],
+              },
+              {
+                label: "Event",
+                value: filterDate,
+                setter: setFilterDate,
+                options: ["All", "This Week", "This Month", "This Year"],
+              },
+            ].map((item, idx) => (
+              <div
+                key={idx}
+                className="filter-sort-box flex items-center gap-2 border rounded-md px-3 py-2 bg-gray-50 cursor-pointer"
+              >
+                <span className="text-sm font-medium">{item.label}:</span>
+                <select
+                  className="text-sm bg-white outline-none cursor-pointer pr-4"
+                  style={{ appearance: "none" }}
+                  value={item.value}
+                  onChange={(e) => item.setter(e.target.value)}
                 >
-                  Cancel
-                </button>
+                  {item.options.map((o) => (
+                    <option key={o}>{o}</option>
+                  ))}
+                </select>
               </div>
+            ))}
+          </div>
+
+          {/* ✅ Sort Dropdown */}
+          <div className="filter-sort-box flex items-center gap-2 border rounded-md px-3 py-2 bg-gray-50 cursor-pointer">
+            <span className="text-sm font-medium">Sort:</span>
+            <select
+              className="text-sm bg-white outline-none cursor-pointer pr-4"
+              style={{ appearance: "none" }}
+              value={sortOption}
+              onChange={(e) => setSortOption(e.target.value)}
+            >
+              <option>Newest First</option>
+              <option>Oldest First</option>
+              <option>Highest Amount</option>
+              <option>Lowest Amount</option>
+            </select>
+          </div>
+        </div>
+
+        {/* ✅ Booking Cards */}
+        <div className="h-[90vh] overflow-y-auto">
+          {loadingBookings ? (
+            <p className="text-center text-lg font-semibold">
+              Loading bookings...
+            </p>
+          ) : filteredBookings.length === 0 ? (
+            <p className="text-center text-lg font-semibold">
+              No bookings found
+            </p>
+          ) : (
+            filteredBookings.map((b, i) => (
+              <div
+                key={i}
+                onClick={() => handleBookingClick(b)}
+                className="w-[90%] md:w-[80%] mx-auto flex flex-col md:flex-row gap-6 p-6 mb-6 bg-[#F8FAFD] rounded-2xl shadow-md border border-gray-100 hover:shadow-xl transition-all hover:scale-[1.02] cursor-pointer"
+              >
+                {/* Booking Icon/Visual */}
+                <div className="w-full md:w-40 h-40 md:h-36 rounded-xl overflow-hidden shrink-0 mx-auto md:mx-0 bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
+                  <div className="text-center text-white">
+                    <p className="text-4xl font-bold">
+                      {b?.totalServices || 0}
+                    </p>
+                    <p className="text-sm mt-1">
+                      Service{b?.totalServices !== 1 ? "s" : ""}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Info */}
+                <div className="flex-1 flex flex-col justify-between">
+                  <h3 className="text-lg md:text-xl font-bold text-[#001F3F] mb-2">
+                    Booking Session
+                  </h3>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 text-[15px]">
+                    {/* Left info */}
+                    <div className="space-y-1">
+                      <p>
+                        <span className="font-semibold">Location:</span>{" "}
+                        {b?.userDetailsId?.address || b?.location}
+                      </p>
+                      <p className="font-semibold">Event Period:</p>
+                      <p>
+                        Start:{" "}
+                        {formatDate(
+                          b?.userDetailsId?.startDate || b?.startDate
+                        )}
+                      </p>
+                      <p>
+                        End:{" "}
+                        {formatDate(b?.userDetailsId?.endDate || b?.endDate)}
+                      </p>
+                      <p>
+                        <span className="font-semibold">Total Services:</span>{" "}
+                        <span className="text-blue-700 font-bold">
+                          {b?.totalServices || 0}
+                        </span>
+                      </p>
+                      <p>
+                        <span className="font-semibold">Status:</span>{" "}
+                        <span className="text-blue-700 font-bold">
+                          {b?.bookingStatus}
+                        </span>
+                      </p>
+                    </div>
+
+                    {/* Right info */}
+                    <div className="space-y-1">
+                      <p>
+                        <span className="font-semibold">Total Amount:</span> ₹
+                        {b?.amount?.toLocaleString("en-IN") || 0}
+                      </p>
+                      <p>
+                        <span className="font-semibold">Payment Mode:</span>{" "}
+                        {b?.paymentMode}
+                      </p>
+                      <p className="font-semibold">
+                        Payment:
+                        <span
+                          className={`ml-2 px-2 py-1 text-xs font-bold rounded-lg 
+                ${
+                  b?.paymentStatus === "PAID"
+                    ? "bg-green-100 text-green-700"
+                    : b?.paymentStatus === "FAILED"
+                    ? "bg-red-100 text-red-700"
+                    : "bg-yellow-100 text-yellow-700"
+                }`}
+                        >
+                          {b?.paymentStatus}
+                        </span>
+                      </p>
+                      {b?.transactionId && (
+                        <p className="text-xs text-gray-600">
+                          Txn: {b.transactionId.substring(0, 12)}...
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between items-center mt-4">
+                    <p className="text-xs text-gray-500">
+                      Click to view details
+                    </p>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent card click
+                        navigate("/report", {
+                          state: { selectedType: "user" },
+                        });
+                      }}
+                      className="bg-[#001F3F] hover:bg-[#003165] text-white px-4 py-2 rounded-md flex items-center gap-2"
+                    >
+                      <MdReportGmailerrorred size={20} /> Report
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
+      {/* ✅ Password Change Modal */}
+      {showPasswordModal && (
+        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg w-80 shadow-xl">
+            <h3 className="text-lg font-bold mb-4">Change Password</h3>
+
+            <PasswordInput
+              placeholder="Current Password"
+              value={oldPassword}
+              onChange={(e) => setOldPassword(e.target.value)}
+            />
+            <PasswordInput
+              placeholder="New Password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+            <PasswordInput
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+
+            {errorMsg && (
+              <p className="text-red-500 text-sm mt-1">{errorMsg}</p>
+            )}
+
+            <div className="mt-4 flex justify-center gap-4">
+              <button
+                onClick={handlePasswordChangeSubmit}
+                className="bg-blue-600 text-white px-4 py-2 rounded"
+              >
+                Submit
+              </button>
+              <button
+                onClick={() => setShowPasswordModal(false)}
+                className="bg-gray-300 px-4 py-2 rounded"
+              >
+                Cancel
+              </button>
             </div>
           </div>
-        )}
-      </div>
-
-      <div className="profile-scrollable-content md:ml-8 max-[430px]:flex-row">
-        <h2 className="boking-text  text-2xl md:text-3xl font-bold text-center mb-4">
-          My Bookings
-        </h2>
-
-        <div className="w-1/2 ml-auto mr-[40px] flex justify-end items-center p-4 mt-[-20px]">
-          <select className="sortby-dropdown max-w-xs bg-[#001F3F] text-white p-2 font-semibold rounded-lg shadow">
-            <option value="">Sort by</option>
-            <option className="bg-white text-black" value="completed">
-              Completed
-            </option>
-            <option className="bg-white text-black" value="pending">
-              Pending
-            </option>
-            <option className="bg-white text-black" value="cancelled">
-              Cancelled
-            </option>
-            <option className="bg-white text-black" value="last1">
-              Last 3 months
-            </option>
-            <option className="bg-white text-black" value="last2">
-              Last 6 months
-            </option>
-          </select>
         </div>
-
-        <div className="booking-card-container" id="bookingCards">
-          {[1, 2, 3, 4, 5, 6].map((_, index) => (
-            <div key={index} className="modern-booking-card">
-              <div className="image-section">
-                <img
-                  src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600"
-                  alt="DJ Service"
-                  className="rounded-lg"
-                />
-              </div>
-              <div className="info-section">
-                <div className="user-booking-info-section">
-                  <h3 className="text-xl font-bold text-[#001F3F]">
-                    DJ Wedding Service
-                  </h3>
-                  <p className="text-black">
-                    Patia, Bhubaneswar, Odisha, India
-                  </p>
-                  <p className="text-sm text-black  ">
-                    Booking Date: 10/06/2025
-                  </p>
-                  <p className="text-sm text-black">Event Date: 10/06/2025</p>
-                  <a
-                    href="#payment-details"
-                    className="text-[#001F3F] underline font-medium hover:text-blue-600"
-                  >
-                    Payment Details
-                  </a>
-                </div>
-                <div className="payment mt-3 ml-[80px]">
-                  <p className="text-black mb-[8px]">
-                    Actual:<span className="text-black"> ₹50,000</span>
-                  </p>
-                  <p className="text-black mb-[8px]">Paid: ₹3,000</p>
-                  <p className="text-black">Remaining: ₹47,000</p>
-                  <p className="text-yellow-600 font-semibold mt-2">
-                    Payment Pending
-                  </p>
-                  <button
-                    onClick={() =>
-                      navigate("/report", { state: { selectedType: "user" } })
-                    }
-                    className="align_center w-24 justify-evenly bg-[#001F3F] text-white p-2 font-semibold rounded-lg shadow mt-2"
-                  >
-                    <MdReportGmailerrorred />
-                    Report
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      )}
     </div>
   );
 }

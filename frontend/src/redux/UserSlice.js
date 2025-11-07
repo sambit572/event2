@@ -8,14 +8,12 @@ const initialState = {
 };
 
 export const fetchCart = createAsyncThunk("user/fetchCart", async () => {
-  // No need to get token manually, the api handler does it automatically
   try {
     const res = await axios.get(`${BACKEND_URL}/cart`, {
       withCredentials: true,
     });
     return { count: res.data.count };
   } catch (error) {
-    // Don't log expected 401/403 errors when user is not logged in
     if (error.response?.status !== 401 && error.response?.status !== 403) {
       console.error("Error fetching cart:", error);
     }
@@ -41,6 +39,12 @@ const userSlice = createSlice({
     incrementCartCount: (state) => {
       state.cartCount += 1;
     },
+    // ✅ NEW: Add decrementCartCount reducer
+    decrementCartCount: (state) => {
+      if (state.cartCount > 0) {
+        state.cartCount -= 1;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -54,6 +58,12 @@ const userSlice = createSlice({
   },
 });
 
-export const { setUser, clearUser, setCartCount, incrementCartCount } =
-  userSlice.actions;
+// ✅ UPDATED: Export the new action
+export const {
+  setUser,
+  clearUser,
+  setCartCount,
+  incrementCartCount,
+  decrementCartCount,
+} = userSlice.actions;
 export default userSlice.reducer;

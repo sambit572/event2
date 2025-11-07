@@ -39,6 +39,8 @@ const getCroppedImg = (image, crop) => {
     }, "image/jpeg");
   });
 };
+const generateUniqueId = () => `pkg_${Math.random().toString(36).substr(2, 9)}`;
+
 function VendorService({ currentStep }) {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -72,7 +74,56 @@ function VendorService({ currentStep }) {
   const [crop, setCrop] = useState();
   const [completedCrop, setCompletedCrop] = useState(null);
   const imgRef = useRef(null);
+
+  // ✅ FIXED: Added missing state variables
   const [imageError, setImageError] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  // ✅ FIXED: Category-aware pricing state
+  const [isCatering, setIsCatering] = useState(false);
+  const [perPlateData, setPerPlateData] = useState({
+    price: "",
+    minPlates: "",
+    maxPlates: "",
+  });
+  const [packages, setPackages] = useState([
+    {
+      id: generateUniqueId(),
+      packageName: "",
+      perPlatePrice: "",
+      minPlates: "",
+      maxPlates: "",
+      description: "",
+    },
+  ]);
+
+  useEffect(() => {
+    setIsCatering(categorySearchTerm === "Food & Catering");
+  }, [categorySearchTerm]);
+
+  const handleAddPackage = () => {
+    setPackages([
+      ...packages,
+      {
+        id: generateUniqueId(),
+        packageName: "",
+        perPlatePrice: "",
+        minPlates: "",
+        maxPlates: "",
+        description: "",
+      },
+    ]);
+  };
+
+  const handleRemovePackage = (id) => {
+    setPackages(packages.filter((pkg) => pkg.id !== id));
+  };
+
+  const handlePackageChange = (id, field, value) => {
+    setPackages(
+      packages.map((pkg) => (pkg.id === id ? { ...pkg, [field]: value } : pkg))
+    );
+  };
 
   const categories = [
     "DJ Services & Brash Band",
@@ -174,7 +225,7 @@ function VendorService({ currentStep }) {
       }
     }
   }, [cropQueue]);
-  
+
   const handleImageUpload = (e) => {
     try {
       if (showCropperModal) return;
@@ -212,22 +263,6 @@ function VendorService({ currentStep }) {
       // Size limits
       const IMAGE_SIZE_LIMIT = 5 * 1024 * 1024; // 5MB
       const VIDEO_SIZE_LIMIT = 200 * 1024 * 1024; // 200MB
-      const MAX_FILE_COUNT = 10;
-
-      // Check total file count
-      const currentFileCount = selectedFiles.length;
-      const newFileCount = newFiles.length;
-      const totalFileCount = currentFileCount + newFileCount;
-
-      if (totalFileCount > MAX_FILE_COUNT) {
-        setImageError(
-          `Cannot upload more than ${MAX_FILE_COUNT} files in total. You currently have ${currentFileCount} file(s) and are trying to add ${newFileCount} more.`
-        );
-        if (fileInputRef.current) {
-          fileInputRef.current.value = "";
-        }
-        return;
-      }
 
       const validatedFiles = [];
       const errors = [];
@@ -238,15 +273,6 @@ function VendorService({ currentStep }) {
           errors.push(
             `"${f.name}" - Invalid file type. Only images (JPEG, PNG, GIF) and videos (MP4, AVI, MOV, WMV, FLV, WEBM) are allowed.`
           );
-          continue;
-        }
-        if (f.type.startsWith("image/") && f.size > IMAGE_SIZE_LIMIT) {
-          toast.error(`${f.name} is too large. Max 5 MB allowed.`);
-          continue;
-        }
-
-        if (f.type.startsWith("video/") && f.size > VIDEO_SIZE_LIMIT) {
-          toast.error(`${f.name} is too large. Max 200 MB allowed.`);
           continue;
         }
 
@@ -367,6 +393,7 @@ function VendorService({ currentStep }) {
 
   const handleNext = async () => {
     setIsLoading(true);
+    setErrorMessage("");
     console.log("next button clicked");
 
     if (!validateForm()) {
@@ -379,18 +406,12 @@ function VendorService({ currentStep }) {
       const formData = new FormData();
       formData.append("serviceName", serviceName);
       formData.append("serviceDes", serviceDescription);
-
-      formData.append("minPrice", minPrice);
-      formData.append("maxPrice", maxPrice);
       formData.append("serviceCategory", categorySearchTerm);
       formData.append("stateLocationOffered", selectedState);
+      
       selectedLocations.forEach((loc) => {
         formData.append("locationOffered[]", loc);
       });
-
-      // selectedLocations.forEach((loc) => {
-      //   formData.append("locationOffered[]", loc);
-      // });
 
       selectedFiles.forEach((file) => {
         formData.append("images", file);
@@ -399,6 +420,29 @@ function VendorService({ currentStep }) {
       formData.append("days", days);
       formData.append("hrs", hours);
       formData.append("mins", minutes);
+
+      // ✅ FIXED: Send both base price AND packages
+      if (isCatering) {
+        formData.append("pricingType", "perPlate");
+
+        if (perPlateData.price) {
+          formData.append("perPlatePrice", perPlateData.price);
+          formData.append("minPlates", perPlateData.minPlates);
+          formData.append("maxPlates", perPlateData.maxPlates);
+        }
+
+        const validPackages = packages.filter(
+          (p) => p.packageName && p.perPlatePrice
+        );
+        if (validPackages.length > 0) {
+          const packagesToSend = validPackages.map(({ id, ...rest }) => rest);
+          formData.append("packages", JSON.stringify(packagesToSend));
+        }
+      } else {
+        formData.append("pricingType", "flat");
+        formData.append("minPrice", minPrice);
+        formData.append("maxPrice", maxPrice);
+      }
 
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/vendors/create-service`,
@@ -416,6 +460,14 @@ function VendorService({ currentStep }) {
       navigate("/vendor/payment-info");
     } catch (error) {
       console.error("Error submitting service:", error);
+
+      // Get backend message if available
+      const backendMsg =
+        error.response?.data?.message || // common backend format
+        error.response?.data?.error || // another common field
+        "Failed to submit service. Please try again.";
+
+      setErrorMessage(backendMsg);
       alert("Failed to submit service. Please try again.");
     }
     setIsLoading(false);
@@ -434,15 +486,80 @@ function VendorService({ currentStep }) {
       alert("Please upload at least one service image");
       return false;
     }
+    if (isCatering) {
+      const hasBasePrice =
+        perPlateData.price && perPlateData.minPlates && perPlateData.maxPlates;
+      const hasPartialBasePrice =
+        perPlateData.price || perPlateData.minPlates || perPlateData.maxPlates;
+      const validPackages = packages.filter(
+        (p) => p.packageName && p.perPlatePrice && p.minPlates && p.maxPlates
+      );
+      const hasPackages = validPackages.length > 0;
 
-    // 3. Check price range - either dropdown OR min/max prices
-    if (!minPrice || !maxPrice) {
-      alert("Please enter both minimum and maximum prices");
-      return false;
-    }
+      if (!hasBasePrice && !hasPackages) {
+        alert(
+          "For catering, you must provide at least a complete base per-plate price or one complete package."
+        );
+        return false;
+      }
 
-    // 4. If min/max prices are entered, validate them
-    if (minPrice && maxPrice) {
+      if (hasPartialBasePrice && !hasBasePrice) {
+        alert(
+          "Please fill all fields for the base per-plate price, or clear them if not used."
+        );
+        return false;
+      }
+
+      if (hasBasePrice) {
+        if (+perPlateData.price <= 0) {
+          alert("Base price per plate must be positive.");
+          return false;
+        }
+        if (+perPlateData.minPlates >= +perPlateData.maxPlates) {
+          alert(
+            "For the base price, minimum plates must be less than maximum plates."
+          );
+          return false;
+        }
+      }
+
+      for (const pkg of packages) {
+        if (
+          pkg.packageName ||
+          pkg.perPlatePrice ||
+          pkg.minPlates ||
+          pkg.maxPlates
+        ) {
+          if (
+            !pkg.packageName ||
+            !pkg.perPlatePrice ||
+            !pkg.minPlates ||
+            !pkg.maxPlates
+          ) {
+            alert(
+              `Please fill all fields for the package "${
+                pkg.packageName || "Unnamed"
+              }".`
+            );
+            return false;
+          }
+          if (+pkg.perPlatePrice <= 0) {
+            alert(`Price for package "${pkg.packageName}" must be positive.`);
+            return false;
+          }
+          if (+pkg.minPlates >= +pkg.maxPlates) {
+            alert(
+              `In package "${pkg.packageName}", minimum plates must be less than maximum.`
+            );
+            return false;
+          }
+        }
+      }
+    } else {
+      if (!minPrice || !maxPrice) {
+        alert("Please enter both minimum and maximum prices");
+        return false;
+      }
       if (parseInt(minPrice) <= 0 || parseInt(maxPrice) <= 0) {
         alert("Price values must be greater than 0");
         return false;
@@ -546,11 +663,12 @@ function VendorService({ currentStep }) {
   const handleDeselectAllLocations = () => {
     setSelectedLocations([]);
   };
+
   return (
     <>
       <StepProgress currentStep={1} />
       {isLoading && <Spinner />}
-      {/* Cropper Modal */}
+
       {showCropperModal && (
         <div className="crop-modal-backdrop">
           <div className="crop-modal-content">
@@ -568,7 +686,7 @@ function VendorService({ currentStep }) {
                 <img
                   ref={imgRef}
                   src={imageToCrop}
-                  className="ReactCrop__image" // Add class for styling
+                  className="ReactCrop__image"
                   onLoad={(e) => {
                     const { width, height } = e.currentTarget;
                     const newCrop = centerCrop(
@@ -599,15 +717,12 @@ function VendorService({ currentStep }) {
               </button>
             </div>
           </div>
-           
         </div>
       )}
 
       <div className="form-container">
         <div className="form-wrapper">
-          {/* Left Side: Form Column */}
           <div className="form-column">
-            {/* Service Category */}
             <div className="ServiceCategory">
               <label htmlFor="category-search">Service Category *</label>
               <div className="category-wrapper">
@@ -648,7 +763,6 @@ function VendorService({ currentStep }) {
               </div>
             </div>
 
-            {/* Service Image Upload */}
             <div className="ServiceImageUploadPreview">
               <label htmlFor="service-images">
                 Upload Service Images/Videos *
@@ -723,34 +837,181 @@ function VendorService({ currentStep }) {
               )}
             </div>
 
-            {/* Price Range */}
-            <div className="price-range-container">
-              <label className="section-label">Price Range *</label>
-
-              <div className="flex items-center gap-2 mt-2">
-                {/* Min Price */}
-                <input
-                  type="number"
-                  placeholder="Min Price"
-                  value={minPrice}
-                  min="1"
-                  onChange={(e) => setMinPrice(e.target.value)}
-                  className="w-1/2 rounded-md px-3 py-2 bg-[#f7f3ff] text-[#4b2bb3] border-2 border-[#c5b9f5] focus:outline-none focus:border-[2px] focus:border-[#4b2bb3] cursor-text caret-black"
-                />
-                <span className="text-gray-600 font-semibold">-</span>
-                {/* Max Price */}
-                <input
-                  type="number"
-                  placeholder="Max Price"
-                  value={maxPrice}
-                  min="1"
-                  onChange={(e) => setMaxPrice(e.target.value)}
-                  className="w-1/2 rounded-md px-3 py-2 bg-[#f7f3ff] text-[#4b2bb3] border-2 border-[#c5b9f5] focus:outline-none focus:border-[2px] focus:border-[#4b2bb3] cursor-text caret-black"
-                />
+            {/* ✅ FIXED: Updated Pricing Section */}
+            {!isCatering ? (
+              <div className="price-range-container">
+                <label className="section-label">Price Range *</label>
+                <div className="flex items-center gap-2 mt-2">
+                  <input
+                    type="number"
+                    placeholder="Min Price"
+                    value={minPrice}
+                    min="1"
+                    onChange={(e) => setMinPrice(e.target.value)}
+                    className="w-1/2 rounded-md px-3 py-2 bg-[#f7f3ff] text-[#4b2bb3] border-2 border-[#c5b9f5] focus:outline-none focus:border-[2px] focus:border-[#4b2bb3] cursor-text caret-black"
+                  />
+                  <span className="text-gray-600 font-semibold">-</span>
+                  <input
+                    type="number"
+                    placeholder="Max Price"
+                    value={maxPrice}
+                    min="1"
+                    onChange={(e) => setMaxPrice(e.target.value)}
+                    className="w-1/2 rounded-md px-3 py-2 bg-[#f7f3ff] text-[#4b2bb3] border-2 border-[#c5b9f5] focus:outline-none focus:border-[2px] focus:border-[#4b2bb3] cursor-text caret-black"
+                  />
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="catering-pricing-container">
+                <div className="base-price-section">
+                  <label className="section-label">
+                    Base Per-Plate Price *
+                  </label>
+                  <p className="section-subtitle">
+                    This will be shown as your "Starting from" price.
+                  </p>
+                  <div className="simple-pricing-form">
+                    <input
+                      type="number"
+                      placeholder="Price per plate (₹)"
+                      value={perPlateData.price}
+                      onChange={(e) =>
+                        setPerPlateData({
+                          ...perPlateData,
+                          price: e.target.value,
+                        })
+                      }
+                      min="1"
+                    />
+                    <div className="plate-range">
+                      <input
+                        type="number"
+                        placeholder="Min plates"
+                        value={perPlateData.minPlates}
+                        onChange={(e) =>
+                          setPerPlateData({
+                            ...perPlateData,
+                            minPlates: e.target.value,
+                          })
+                        }
+                        min="1"
+                      />
+                      <span>-</span>
+                      <input
+                        type="number"
+                        placeholder="Max plates"
+                        value={perPlateData.maxPlates}
+                        onChange={(e) =>
+                          setPerPlateData({
+                            ...perPlateData,
+                            maxPlates: e.target.value,
+                          })
+                        }
+                        min="1"
+                      />
+                    </div>
+                  </div>
+                </div>
 
-            {/* Service Name Field */}
+                <hr className="pricing-divider" />
+
+                <div className="package-pricing-form">
+                  <label className="section-label">
+                    Add-on Packages (Optional)
+                  </label>
+                  <p className="section-subtitle">
+                    Add different tiers like Veg, Non-Veg, or Premium.
+                  </p>
+                  {packages.map((pkg, index) => (
+                    <div key={pkg.id} className="package-entry">
+                      <div className="package-header">
+                        <h4>Package {index + 1}</h4>
+                        <button
+                          type="button"
+                          className="remove-package-btn"
+                          onClick={() => handleRemovePackage(pkg.id)}
+                        >
+                          Remove
+                        </button>
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="Package Name (e.g., Veg Buffet)"
+                        value={pkg.packageName}
+                        onChange={(e) =>
+                          handlePackageChange(
+                            pkg.id,
+                            "packageName",
+                            e.target.value
+                          )
+                        }
+                      />
+                      <input
+                        type="number"
+                        placeholder="Price per plate (₹)"
+                        value={pkg.perPlatePrice}
+                        onChange={(e) =>
+                          handlePackageChange(
+                            pkg.id,
+                            "perPlatePrice",
+                            e.target.value
+                          )
+                        }
+                        min="1"
+                      />
+                      <div className="plate-range">
+                        <input
+                          type="number"
+                          placeholder="Min plates"
+                          value={pkg.minPlates}
+                          onChange={(e) =>
+                            handlePackageChange(
+                              pkg.id,
+                              "minPlates",
+                              e.target.value
+                            )
+                          }
+                          min="1"
+                        />
+                        <span>-</span>
+                        <input
+                          type="number"
+                          placeholder="Max plates"
+                          value={pkg.maxPlates}
+                          onChange={(e) =>
+                            handlePackageChange(
+                              pkg.id,
+                              "maxPlates",
+                              e.target.value
+                            )
+                          }
+                          min="1"
+                        />
+                      </div>
+                      <textarea
+                        placeholder="Short description (menu highlights)"
+                        value={pkg.description}
+                        onChange={(e) =>
+                          handlePackageChange(
+                            pkg.id,
+                            "description",
+                            e.target.value
+                          )
+                        }
+                      />
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    className="add-package-btn"
+                    onClick={handleAddPackage}
+                  >
+                    + Add Another Package
+                  </button>
+                </div>
+              </div>
+            )}
+
             <label htmlFor="serviceName" className="ServiceName">
               Service Name *
             </label>
@@ -767,10 +1028,8 @@ function VendorService({ currentStep }) {
             />
           </div>
 
-          {/* Vertical Line */}
           <div className="form-divider"></div>
 
-          {/* Right Side */}
           <div className="form-right">
             <h3 style={{ color: "#4b2bb3", fontWeight: "600" }}>
               Estimated Duration *
@@ -806,7 +1065,6 @@ function VendorService({ currentStep }) {
               />
             </div>
 
-            {/* Selected State */}
             <label htmlFor="state-location" className="state-location-label">
               State Locations Offered *
             </label>
@@ -830,7 +1088,6 @@ function VendorService({ currentStep }) {
               >
                 <span className="icon-left">🔍</span>
 
-                {/* Selected State inline */}
                 {selectedState && (
                   <span
                     style={{
@@ -862,7 +1119,6 @@ function VendorService({ currentStep }) {
                   </span>
                 )}
 
-                {/* Input field */}
                 <input
                   id="state-location-input"
                   type="text"
@@ -888,19 +1144,6 @@ function VendorService({ currentStep }) {
                 )}
               </div>
 
-              {/* Dropdown */}
-              {selectedState && (
-                <span className="selected-chip">
-                  {selectedState}
-                  <button
-                    type="button"
-                    className="ml-2 mr-2"
-                    onClick={() => setSelectedState("")}
-                  >
-                    ✕
-                  </button>
-                </span>
-              )}
               {showStateLocationDropdown && (
                 <ul className="state-location-dropdown-list">
                   {filteredStates.map((state, index) => (
@@ -908,7 +1151,7 @@ function VendorService({ currentStep }) {
                       key={index}
                       onClick={() => {
                         setSelectedState(state);
-                        setStateLocationSearchTerm(""); // reset search field
+                        setStateLocationSearchTerm("");
                         setShowStateLocationDropdown(false);
                         setSelectedLocations([]);
                       }}
@@ -942,7 +1185,6 @@ function VendorService({ currentStep }) {
               >
                 <span className="icon-left">🔍</span>
 
-                {/* Selected Locations (inside input area) */}
                 {selectedLocations.map((loc, index) => (
                   <span
                     key={index}
@@ -979,7 +1221,6 @@ function VendorService({ currentStep }) {
                   </span>
                 ))}
 
-                {/* Input field */}
                 <input
                   id="location-input"
                   type="text"
@@ -1004,7 +1245,7 @@ function VendorService({ currentStep }) {
                   />
                 )}
               </div>
-              {/* Select/Deselect All Buttons */}
+
               {selectedState && (
                 <div
                   style={{
@@ -1067,9 +1308,9 @@ function VendorService({ currentStep }) {
                   )}
                 </div>
               )}
+
               {showLocationDropdown && (
                 <ul className="location-dropdown-list">
-                  {/* Select All option in dropdown */}
                   {selectedState && filteredLocations.length > 0 && (
                     <li
                       onClick={handleSelectAllLocations}
@@ -1092,7 +1333,7 @@ function VendorService({ currentStep }) {
                           setSelectedLocations([...selectedLocations, loc]);
                         }
                         setLocationSearchTerm("");
-                        setShowLocationDropdown(false); // ✅ Close dropdown on selection
+                        setShowLocationDropdown(false);
                       }}
                     >
                       {loc}
@@ -1118,6 +1359,22 @@ function VendorService({ currentStep }) {
             />
           </div>
         </div>
+        {imageError && (
+          <div
+            style={{
+              background: "#ffe6e6",
+              color: "#d9534f",
+              padding: "10px 15px",
+              borderRadius: "6px",
+              marginTop: "20px",
+              textAlign: "center",
+              fontWeight: "500",
+            }}
+          >
+            {imageError}
+          </div>
+        )}
+
         <div
           style={{
             display: "flex",
