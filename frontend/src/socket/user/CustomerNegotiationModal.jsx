@@ -227,6 +227,8 @@ const CustomerNegotiationModal = () => {
         reject("Socket not connected");
       }
 
+      console.log("Preparing to send negotiation data:", negotiationData);
+
       const requiredFields = [
         "vendorId",
         "vendorName",
@@ -337,6 +339,8 @@ const CustomerNegotiationModal = () => {
             );
           }
 
+          console.log("Service data for negotiation data:", service);
+
           negotiationData = {
             vendorId: vendor._id,
             vendorName: vendor.fullName,
@@ -376,6 +380,7 @@ const CustomerNegotiationModal = () => {
               } too low. Minimum: ₹${Math.floor(minValidation)}`
             );
 
+          console.log("Service data for negotiation data:", service);
           negotiationData = {
             vendorId: vendor._id,
             vendorName: vendor.fullName,
@@ -472,7 +477,7 @@ const CustomerNegotiationModal = () => {
             vendorName: vendor.fullName,
             vendorEmail: vendor.email,
             vendorPhoneNumber: vendor.phone,
-            vendorLocation: service?.stateLocationOffered,
+            vendorLocation: service?.stateLocationOffered || "Not Specified",
             serviceId: service._id,
             serviceName: service.serviceName,
             bookedByUserId: bookingDetails.bookedById,
@@ -504,7 +509,10 @@ const CustomerNegotiationModal = () => {
 
       alert("🚀 Proceeding with the listed prices for all items...");
       setProceededWithoutNegotiation(true);
-      const updateResult = await updateUserBookingHistory(userDetailsId, venueInput);
+      const updateResult = await updateUserBookingHistory(
+        userDetailsId,
+        venueInput
+      );
       if (updateResult) {
         navigate(`/order-summary/${userDetailsId}`);
       }
@@ -732,7 +740,7 @@ const CustomerNegotiationModal = () => {
                 id="proposed-price-regular"
                 type="number"
                 placeholder={`e.g., ${Math.floor(
-                  (currentService?.minPrice || 0) * 0.9
+                  (currentService?.maxPrice || 0) * 0.8
                 )}`}
                 value={proposedPrices[currentService._id] || ""}
                 onChange={(e) =>
