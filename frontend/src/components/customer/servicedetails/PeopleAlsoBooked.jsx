@@ -11,6 +11,7 @@ const SimilarProductCard = ({ product }) => {
   const handleClick = () => {
     navigate(`/service/${categoryId}/${product._id}`);
   };
+  
 
   const serviceId = product._id;
 

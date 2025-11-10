@@ -10,6 +10,7 @@ import {
   calculateCateringTotal,
 } from "../../../utils/pricingHelpers";
 
+
 const CateringPackagesDisplay = ({ service, onSwitchToLogin }) => {
   const dispatch = useDispatch();
 

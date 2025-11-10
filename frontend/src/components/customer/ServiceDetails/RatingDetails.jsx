@@ -6,6 +6,7 @@ import { BACKEND_URL } from "../../../utils/constant"; // your base URL
 const RatingDetails = ({ serviceId }) => {
   const [ratingsData, setRatingsData] = useState(null);
 
+  
   useEffect(() => {
     const fetchRatingSummary = async () => {
       try {

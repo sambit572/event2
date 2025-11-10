@@ -7,6 +7,7 @@ const ReviewCard = ({ review }) => {
 
   const [isExpanded, setIsExpanded] = useState(false);
 
+  
   // Limit message to ~120 chars (≈ 2 lines), adjust as needed
   const charLimit = 120;
   const isLong = review.reviewMessage?.length > charLimit;
