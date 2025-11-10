@@ -295,7 +295,6 @@ input:-webkit-autofill {
 
 @media (max-width: 1280px) and (min-height: 800px) {
   .login-modal {
-    min-height: 70vh;
     margin-top: -1vh;
   }
   .modal-close {
@@ -310,7 +309,6 @@ input:-webkit-autofill {
 
 @media (max-width: 1024px) and (min-height: 1366px) {
   .login-modal {
-    min-height: 60vh;
     margin-top: -4vh;
   }
   .modal-close {
@@ -320,7 +318,6 @@ input:-webkit-autofill {
 
 @media (max-width: 1024px) and (min-height: 600px) {
   .login-modal {
-    min-height: 40vh;
     margin-top: -1vh;
   }
   .modal-close {
@@ -335,7 +332,6 @@ input:-webkit-autofill {
 
 @media (max-width: 912px) {
   .login-modal {
-    min-height: 38vh;
     margin-top: -1vh;
   }
   .modal-close {
@@ -345,7 +341,6 @@ input:-webkit-autofill {
 
 @media (max-width: 820px) {
   .login-modal {
-    min-height: 41vh;
     margin-top: -1vh;
   }
   .modal-close {
@@ -355,7 +350,6 @@ input:-webkit-autofill {
 
 @media (max-width: 768px) {
   .login-modal {
-    min-height: 47vh;
     margin-top: -1vh;
   }
   .modal-close {
@@ -376,7 +370,6 @@ input:-webkit-autofill {
 
 @media (min-width: 541px) and (max-width: 630px) {
   .login-modal {
-    min-height: 80vh;
     margin-top: -7vh;
   }
   .modal-close {
