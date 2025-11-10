@@ -1,35 +1,83 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import comingSoon from "../../../assets/home/bannerImages/coming_soon.png";
 import mediumbanner from "../../../assets/home/bannerImages/mediumbanner.png";
 import xxmedium from "../../../assets/home/bannerImages/xxmedium.png";
 import smallbanner from "../../../assets/home/bannerImages/smallbanner.png";
 import newComingSoon from "../../../../public/coomingSoon/newComingSoon.webp";
+import emiBanner from "../../../assets/home/bannerImages/emi banner.png";
 
 const AddsBanner = () => {
+  const [showEmi, setShowEmi] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setShowEmi((prev) => !prev);
+    }, 6000); // every 6 seconds
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="w-full mt-[40px] h-60 sm:h-70 md:h-80 lg:h-90 xl:h-full">
-      <picture>
-        {/* Large screens (1024px and up) */}
-        <source srcSet={comingSoon} media="(min-width: 1111px)" />
+    <div className="relative w-full mt-[40px] h-60 sm:h-64 md:h-72 lg:h-80 xl:h-94 overflow-hidden rounded-lg bg-black">
+      <style>
+        {`
+          /* Both animations overlap slightly to remove white gap */
+          @keyframes zoomFadeOut {
+            0% { transform: scale(1); opacity: 1; }
+            40% { transform: scale(1.08); opacity: 1; }
+            60% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 0; }
+          }
 
-        {/* Medium screens (768px to 1023px) */}
-        <source srcSet={mediumbanner} media="(min-width: 768px)" />
+          @keyframes zoomFadeIn {
+            0% { transform: scale(1.05); opacity: 0; }
+            20% { transform: scale(1.06); opacity: 0.7; }
+            40% { transform: scale(1.08); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+          }
 
-        {/* Small screens (640px to 767px) */}
-        <source srcSet={xxmedium} media="(min-width: 640px)" />
+          .animate-comingSoon {
+            animation: zoomFadeOut 6s ease-in-out infinite;
+          }
 
-        {/* Small screens (640px to 767px) */}
-        <source srcSet={smallbanner} media="(min-width: 500px)" />
+          .animate-emi {
+            animation: zoomFadeIn 6s ease-in-out infinite;
+          }
+        `}
+      </style>
 
-        {/* Mobile (less than 640px) */}
+      {/* ===================== Coming Soon Banner ===================== */}
+      <div
+        className={`absolute inset-0 ${
+          showEmi ? "opacity-0" : "opacity-100 animate-comingSoon"
+        } transition-opacity duration-700`}
+      >
+        <picture>
+          <source srcSet={comingSoon} media="(min-width: 1111px)" />
+          <source srcSet={mediumbanner} media="(min-width: 768px)" />
+          <source srcSet={xxmedium} media="(min-width: 640px)" />
+          <source srcSet={smallbanner} media="(min-width: 500px)" />
+          <img
+            src={newComingSoon}
+            alt="Coming Soon"
+            loading="lazy"
+            decoding="async"
+            className="w-full h-full object-fill rounded-lg"
+          />
+        </picture>
+      </div>
+
+      {/* ===================== EMI Banner ===================== */}
+      <div
+        className={`absolute inset-0 ${
+          showEmi ? "opacity-100 animate-emi" : "opacity-0"
+        } transition-opacity duration-700`}
+      >
         <img
-          src={newComingSoon}
-          alt="Responsive"
-          loading="lazy"          // ✅ Lazy load
-          decoding="async"       // ✅ Asynchronous decoding
+          src={emiBanner}
+          alt="EMI Banner"
           className="w-full h-full object-fill rounded-lg"
         />
-      </picture>
+      </div>
     </div>
   );
 };
