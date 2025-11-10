@@ -129,12 +129,14 @@ const App = () => {
     "/category/:categoryId",
   ];
 
-  useEffect(() => {
-    const storedVendor = localStorage.getItem("vendor");
-    if (storedVendor) {
-      dispatch(setVendor(JSON.parse(storedVendor)));
-    }
-  }, []);
+  function clearVendorSession() {
+    [
+      "VendorCurrentlyLoggedIn",
+      "VendorFirstName",
+      "VendorFullName",
+      "VendorInitial",
+    ].forEach((key) => localStorage.removeItem(key));
+  }
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -164,6 +166,7 @@ const App = () => {
         console.log("Vendor data received:", res.data.data);
         dispatch(setVendor(res.data.data));
       } catch (err) {
+        clearVendorSession();
         console.error("Vendor auth check failed:", err.message);
       }
     };

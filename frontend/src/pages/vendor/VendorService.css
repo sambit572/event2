@@ -532,3 +532,128 @@
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(75, 43, 179, 0.3);
 }
+
+/* Styling for the new Catering Pricing Section */
+.catering-pricing-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #faf9ff;
+}
+
+.pricing-mode-selector {
+  display: flex;
+  gap: 0.5rem;
+  border: 1px solid #c5b9f5;
+  border-radius: 6px;
+  padding: 4px;
+  background-color: #fff;
+}
+
+.pricing-mode-selector button {
+  flex: 1;
+  padding: 0.5rem;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.pricing-mode-selector button.active {
+  background-color: #4b2bb3;
+  color: white;
+}
+
+.simple-pricing-form,
+.package-pricing-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.simple-pricing-form input,
+.package-entry input,
+.package-entry textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 2px solid #c5b9f5;
+  font-size: 14px;
+  background-color: #f7f3ff;
+  color: #4b2bb3;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.simple-pricing-form input:focus,
+.package-entry input:focus,
+.package-entry textarea:focus {
+  border-color: #4b2bb3;
+}
+
+.plate-range {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.calculated-range {
+  font-size: 0.9rem;
+  color: #555;
+  font-style: italic;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background-color: #eef2ff;
+  border-radius: 4px;
+}
+
+/* Package specific styles */
+.package-entry {
+  padding: 1rem;
+  border: 1px dashed #c5b9f5;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.package-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.package-header h4 {
+  margin: 0;
+  color: #4b2bb3;
+}
+
+.remove-package-btn {
+  background: none;
+  border: none;
+  color: #e53e3e;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.add-package-btn {
+  padding: 0.75rem;
+  border: 1px dashed #4b2bb3;
+  background-color: #f7f3ff;
+  color: #4b2bb3;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.add-package-btn:hover {
+  background-color: #eef2ff;
+}

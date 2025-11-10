@@ -7,7 +7,6 @@ import ReactCrop, { centerCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import { toast } from "react-toastify";
 
-
 const getCroppedImg = (image, crop) => {
   const canvas = document.createElement("canvas");
   const scaleX = image.naturalWidth / image.width;
@@ -38,6 +37,9 @@ const getCroppedImg = (image, crop) => {
     }, "image/jpeg");
   });
 };
+// A unique ID generator for package keys
+const generateUniqueId = () => `pkg_${Math.random().toString(36).substr(2, 9)}`;
+
 function VendorService({ currentStep }) {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -72,6 +74,55 @@ function VendorService({ currentStep }) {
   const [completedCrop, setCompletedCrop] = useState(null);
   const imgRef = useRef(null);
   const [imageError, setImageError] = useState("");
+
+  // == NEW STATE FOR CATEGORY-AWARE PRICING ==
+  const [isCatering, setIsCatering] = useState(false);
+  const [pricingMode, setPricingMode] = useState("simple"); // 'simple' or 'package'
+  const [perPlateData, setPerPlateData] = useState({
+    price: "",
+    minPlates: "",
+    maxPlates: "",
+  });
+  const [packages, setPackages] = useState([
+    {
+      id: generateUniqueId(),
+      packageName: "",
+      perPlatePrice: "",
+      minPlates: "",
+      maxPlates: "",
+      description: "",
+    },
+  ]);
+
+  // == Effect to check if the selected category is 'Food & Catering' ==
+  useEffect(() => {
+    setIsCatering(categorySearchTerm === "Food & Catering");
+  }, [categorySearchTerm]);
+
+  // == DYNAMIC PACKAGE MANAGEMENT FUNCTIONS ==
+  const handleAddPackage = () => {
+    setPackages([
+      ...packages,
+      {
+        id: generateUniqueId(),
+        packageName: "",
+        perPlatePrice: "",
+        minPlates: "",
+        maxPlates: "",
+        description: "",
+      },
+    ]);
+  };
+  const handleRemovePackage = (id) => {
+    if (packages.length > 1) {
+      setPackages(packages.filter((pkg) => pkg.id !== id));
+    }
+  };
+  const handlePackageChange = (id, field, value) => {
+    setPackages(
+      packages.map((pkg) => (pkg.id === id ? { ...pkg, [field]: value } : pkg))
+    );
+  };
 
   const categories = [
     "DJ Services & Brash Band",
@@ -398,6 +449,32 @@ function VendorService({ currentStep }) {
       formData.append("days", days);
       formData.append("hrs", hours);
       formData.append("mins", minutes);
+      // == 👇 NEW: Combined pricing logic for form submission 👇 ==
+      if (isCatering) {
+        formData.append("pricingType", "perPlate");
+
+        // 1. ALWAYS send the base per-plate price if it has a value.
+        if (perPlateData.price) {
+          formData.append("perPlatePrice", perPlateData.price);
+          formData.append("minPlates", perPlateData.minPlates);
+          formData.append("maxPlates", perPlateData.maxPlates);
+        }
+
+        // 2. ALSO send the packages if any have been added.
+        // Filter out any empty/incomplete packages before sending
+        const validPackages = packages.filter(
+          (p) => p.packageName && p.perPlatePrice
+        );
+        if (validPackages.length > 0) {
+          const packagesToSend = validPackages.map(({ id, ...rest }) => rest);
+          formData.append("packages", JSON.stringify(packagesToSend));
+        }
+      } else {
+        // Keep non-catering logic as is
+        formData.append("pricingType", "flat");
+        formData.append("minPrice", minPrice);
+        formData.append("maxPrice", maxPrice);
+      }
 
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/vendors/create-service`,
@@ -451,7 +528,85 @@ function VendorService({ currentStep }) {
         return false;
       }
     }
+    // == 👇 NEW: Combined validation logic for pricing 👇 ==
+    if (isCatering) {
+      const hasBasePrice =
+        perPlateData.price && perPlateData.minPlates && perPlateData.maxPlates;
+      const hasPartialBasePrice =
+        perPlateData.price || perPlateData.minPlates || perPlateData.maxPlates;
+      const validPackages = packages.filter(
+        (p) => p.packageName && p.perPlatePrice && p.minPlates && p.maxPlates
+      );
+      const hasPackages = validPackages.length > 0;
 
+      if (!hasBasePrice && !hasPackages) {
+        alert(
+          "For catering, you must provide at least a complete base per-plate price or one complete package."
+        );
+        return false;
+      }
+
+      if (hasPartialBasePrice) {
+        if (!hasBasePrice) {
+          alert(
+            "Please fill all fields for the base per-plate price, or clear them if not used."
+          );
+          return false;
+        }
+        if (+perPlateData.price <= 0) {
+          alert("Base price per plate must be positive.");
+          return false;
+        }
+        if (+perPlateData.minPlates >= +perPlateData.maxPlates) {
+          alert(
+            "For the base price, minimum plates must be less than maximum plates."
+          );
+          return false;
+        }
+      }
+
+      for (const pkg of packages) {
+        if (
+          pkg.packageName ||
+          pkg.perPlatePrice ||
+          pkg.minPlates ||
+          pkg.maxPlates
+        ) {
+          if (
+            !pkg.packageName ||
+            !pkg.perPlatePrice ||
+            !pkg.minPlates ||
+            !pkg.maxPlates
+          ) {
+            alert(
+              `Please fill all fields for the package "${
+                pkg.packageName || "Unnamed"
+              }".`
+            );
+            return false;
+          }
+          if (+pkg.perPlatePrice <= 0) {
+            alert(`Price for package "${pkg.packageName}" must be positive.`);
+            return false;
+          }
+          if (+pkg.minPlates >= +pkg.maxPlates) {
+            alert(
+              `In package "${pkg.packageName}", minimum plates must be less than maximum.`
+            );
+            return false;
+          }
+        }
+      }
+    } else {
+      if (!minPrice || !maxPrice) {
+        alert("Please enter both minimum and maximum prices");
+        return false;
+      }
+      if (+minPrice >= +maxPrice) {
+        alert("Minimum price should be less than maximum price");
+        return false;
+      }
+    }
     // 5. Check service name
     if (!serviceName.trim()) {
       alert("Please enter a service name");
@@ -463,9 +618,13 @@ function VendorService({ currentStep }) {
       return false;
     }
 
-    // 6. Check duration - at least one field should have value
-    if (!days && !hours && !minutes) {
-      alert("Please set estimated duration (days, hours, or minutes)");
+    // ✅ --- FIX 2: Improved duration validation --- ✅
+    const totalDuration =
+      parseInt(days || "0") * 1440 +
+      parseInt(hours || "0") * 60 +
+      parseInt(minutes || "0");
+    if (totalDuration <= 0) {
+      alert("Please set an estimated duration greater than zero.");
       return false;
     }
 
@@ -621,7 +780,7 @@ function VendorService({ currentStep }) {
                   />
                   {categorySearchTerm && (
                     <img
-                      src="../../../public/close.png"
+                      src="/public/close.png"
                       alt="Clear"
                       className="clear-icon-img"
                       onClick={() => setCategorySearchTerm("")}
@@ -722,31 +881,179 @@ function VendorService({ currentStep }) {
             </div>
 
             {/* Price Range */}
-            <div className="price-range-container">
-              <label className="section-label">Price Range *</label>
-
-              <div className="flex items-center gap-2 mt-2">
-                {/* Min Price */}
-                <input
-                  type="number"
-                  placeholder="Min Price"
-                  value={minPrice}
-                  min="1"
-                  onChange={(e) => setMinPrice(e.target.value)}
-                  className="w-1/2 rounded-md px-3 py-2 bg-[#f7f3ff] text-[#4b2bb3] border-2 border-[#c5b9f5] focus:outline-none focus:border-[2px] focus:border-[#4b2bb3] cursor-text caret-black"
-                />
-                <span className="text-gray-600 font-semibold">-</span>
-                {/* Max Price */}
-                <input
-                  type="number"
-                  placeholder="Max Price"
-                  value={maxPrice}
-                  min="1"
-                  onChange={(e) => setMaxPrice(e.target.value)}
-                  className="w-1/2 rounded-md px-3 py-2 bg-[#f7f3ff] text-[#4b2bb3] border-2 border-[#c5b9f5] focus:outline-none focus:border-[2px] focus:border-[#4b2bb3] cursor-text caret-black"
-                />
+            {!isCatering ? (
+              <div className="price-range-container">
+                <label className="section-label">Price Range *</label>
+                <div className="flex items-center gap-2 mt-2">
+                  <input
+                    type="number"
+                    placeholder="Min Price"
+                    value={minPrice}
+                    min="1"
+                    onChange={(e) => setMinPrice(e.target.value)}
+                    className="w-1/2 rounded-md px-3 py-2 bg-[#f7f3ff] text-[#4b2bb3] border-2 border-[#c5b9f5] focus:outline-none focus:border-[2px] focus:border-[#4b2bb3] cursor-text caret-black"
+                  />
+                  <span className="text-gray-600 font-semibold">-</span>
+                  <input
+                    type="number"
+                    placeholder="Max Price"
+                    value={maxPrice}
+                    min="1"
+                    onChange={(e) => setMaxPrice(e.target.value)}
+                    className="w-1/2 rounded-md px-3 py-2 bg-[#f7f3ff] text-[#4b2bb3] border-2 border-[#c5b9f5] focus:outline-none focus:border-[2px] focus:border-[#4b2bb3] cursor-text caret-black"
+                  />
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="catering-pricing-container">
+                <div className="base-price-section">
+                  <label className="section-label">
+                    Base Per-Plate Price *
+                  </label>
+                  <p className="section-subtitle">
+                    This will be shown as your "Starting from" price.
+                  </p>
+                  <div className="simple-pricing-form">
+                    <input
+                      type="number"
+                      placeholder="Price per plate (₹)"
+                      value={perPlateData.price}
+                      onChange={(e) =>
+                        setPerPlateData({
+                          ...perPlateData,
+                          price: e.target.value,
+                        })
+                      }
+                      min="1"
+                    />
+                    <div className="plate-range">
+                      <input
+                        type="number"
+                        placeholder="Min plates"
+                        value={perPlateData.minPlates}
+                        onChange={(e) =>
+                          setPerPlateData({
+                            ...perPlateData,
+                            minPlates: e.target.value,
+                          })
+                        }
+                        min="1"
+                      />
+                      <span>-</span>
+                      <input
+                        type="number"
+                        placeholder="Max plates"
+                        value={perPlateData.maxPlates}
+                        onChange={(e) =>
+                          setPerPlateData({
+                            ...perPlateData,
+                            maxPlates: e.target.value,
+                          })
+                        }
+                        min="1"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <hr className="pricing-divider" />
+
+                <div className="package-pricing-form">
+                  <label className="section-label">
+                    Add-on Packages (Optional)
+                  </label>
+                  <p className="section-subtitle">
+                    Add different tiers like Veg, Non-Veg, or Premium.
+                  </p>
+                  {packages.map((pkg, index) => (
+                    <div key={pkg.id} className="package-entry">
+                      <div className="package-header">
+                        <h4>Package {index + 1}</h4>
+                        <button
+                          type="button"
+                          className="remove-package-btn"
+                          onClick={() => handleRemovePackage(pkg.id)}
+                        >
+                          Remove
+                        </button>
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="Package Name (e.g., Veg Buffet)"
+                        value={pkg.packageName}
+                        onChange={(e) =>
+                          handlePackageChange(
+                            pkg.id,
+                            "packageName",
+                            e.target.value
+                          )
+                        }
+                      />
+                      <input
+                        type="number"
+                        placeholder="Price per plate (₹)"
+                        value={pkg.perPlatePrice}
+                        onChange={(e) =>
+                          handlePackageChange(
+                            pkg.id,
+                            "perPlatePrice",
+                            e.target.value
+                          )
+                        }
+                        min="1"
+                      />
+                      <div className="plate-range">
+                        <input
+                          type="number"
+                          placeholder="Min plates"
+                          value={pkg.minPlates}
+                          onChange={(e) =>
+                            handlePackageChange(
+                              pkg.id,
+                              "minPlates",
+                              e.target.value
+                            )
+                          }
+                          min="1"
+                        />
+                        <span>-</span>
+                        <input
+                          type="number"
+                          placeholder="Max plates"
+                          value={pkg.maxPlates}
+                          onChange={(e) =>
+                            handlePackageChange(
+                              pkg.id,
+                              "maxPlates",
+                              e.target.value
+                            )
+                          }
+                          min="1"
+                        />
+                      </div>
+                      <textarea
+                        placeholder="Short description (menu highlights)"
+                        value={pkg.description}
+                        onChange={(e) =>
+                          handlePackageChange(
+                            pkg.id,
+                            "description",
+                            e.target.value
+                          )
+                        }
+                      />
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    className="add-package-btn"
+                    onClick={handleAddPackage}
+                  >
+                    + Add Another Package
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* Service Name Field */}
             <label htmlFor="serviceName" className="ServiceName">

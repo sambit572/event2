@@ -356,7 +356,7 @@ const UserDetails = () => {
   const locationPath = useLocation();
   const from = locationPath.state?.from || "/";
 
-  // console.log("pathname", from);
+  console.log("pathname", from);
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -365,11 +365,14 @@ const UserDetails = () => {
 
       try {
         if (serviceId) {
-          // console.log("Fetching single service:", serviceId);
+          console.log("Fetching single service:", serviceId);
+
+          // check this below
           const { data } = await axios.get(
             `${BACKEND_URL}/common/service/${serviceId}`
           );
-          // console.log("Single service response:", data);
+
+          console.log("Single service response:", data);
           if (data.success && data.service) {
             servicesToBook.push(data.service);
             serviceIdsForForm = data.service._id;
@@ -389,7 +392,7 @@ const UserDetails = () => {
             serviceIdsForForm = servicesToBook.map((s) => s._id);
           }
         }
-        // console.log("Final servies to book:", servicesToBook);
+        console.log("Final servies to book:", servicesToBook);
 
         if (servicesToBook.length > 0) {
           setFormData((prev) => ({ ...prev, serviceId: serviceIdsForForm }));
@@ -409,10 +412,20 @@ const UserDetails = () => {
   }, [serviceId, userId, getCombinedAvailability]);
 
   const handleDateSelect = ({ startDate, endDate }) => {
+    const formatDateToNoonUTC = (date) => {
+      if (!date) return "";
+
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+
+      return `${year}-${month}-${day}T12:00:00.000Z`;
+    };
+
     setFormData((prev) => ({
       ...prev,
-      startDate: startDate ? startDate.toISOString().slice(0, 10) : "",
-      endDate: endDate ? endDate.toISOString().slice(0, 10) : "",
+      startDate: startDate ? formatDateToNoonUTC(startDate) : "",
+      endDate: endDate ? formatDateToNoonUTC(endDate) : "",
     }));
   };
 
@@ -504,6 +517,39 @@ const UserDetails = () => {
     }
   };
 
+  const createBookingHistory = async (userDetailsId, preparedFormData) => {
+    const payload = {
+      userId: userId,
+      userDetailsId: userDetailsId,
+      location: preparedFormData.address,
+      startDate: new Date(preparedFormData.startDate),
+      endDate: new Date(preparedFormData.endDate),
+      amount: 0,
+      reDirectTo: 1,
+    };
+
+    console.log("Creating booking history with payload:", payload);
+
+    try {
+      const res = await axios.post(
+        `${BACKEND_URL}/user-bookings/create`,
+        payload,
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (res?.data?.success) {
+        console.log("✅ Booking history created successfully:", res.data);
+        return true;
+      } else {
+        throw new Error("Failed to create booking history");
+      }
+    } catch (error) {
+      console.error("❌ Error creating booking history:", error);
+    }
+  };
+
   const handleSave = async (e) => {
     e.preventDefault();
     if (!formData.startDate || !formData.endDate) {
@@ -575,7 +621,17 @@ const UserDetails = () => {
 
       setShowPopup(true);
       setTimeout(() => setShowPopup(false), 3000);
-      navigate(`/pop-up/${userDetailsId}`);
+
+      const bookingHistory = await createBookingHistory(
+        userDetailsId,
+        preparedFormData
+      );
+
+      console.log("Booking history response:", bookingHistory);
+
+      if (bookingHistory) {
+        navigate(`/pop-up/${userDetailsId}`);
+      }
     } catch (err) {
       console.error("Error saving details:", err);
       if (err.response?.data?.message) {

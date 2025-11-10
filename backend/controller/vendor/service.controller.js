@@ -9,7 +9,10 @@ import { ApiResponse } from "../../utilities/ApiResponse.js";
 import { ApiError } from "../../utilities/ApiError.js";
 import Vendor from "../../model/vendor/vendor.model.js";
 import client from "../../db/redisClient.js";
-import { uploadVideoToYouTube, deleteVideoFromYouTube } from "../../utilities/youtubeUploader.js";
+import {
+  uploadVideoToYouTube,
+  deleteVideoFromYouTube,
+} from "../../utilities/youtubeUploader.js";
 
 const vendorServicesCacheKey = (vendorId) => `vendor:${vendorId}:services`;
 
@@ -28,138 +31,168 @@ export const createService = async (req, res) => {
       days = 0,
       hrs = 0,
       mins = 0,
+      pricingType,
+      perPlatePrice,
+      minPlates,
+      maxPlates,
+      packages,
     } = req.body;
 
-    // ✅ Validate required fields
     if (!serviceCategory || !serviceName || !locationOffered || !serviceDes) {
-      console.error("❌ Validation failed: required fields missing", {
-        serviceCategory,
-        serviceName,
-        stateLocationOffered,
-        locationOffered,
-        serviceDes,
-      });
       return res
         .status(400)
         .json({ message: "All required fields must be filled" });
     }
 
-    // ✅ Ensure stateLocationOffered is always an array
     const stateLocationsArray = Array.isArray(stateLocationOffered)
       ? stateLocationOffered
       : [stateLocationOffered];
-
     if (stateLocationsArray.length === 0) {
       return res
         .status(400)
-        .json({ message: "Please select at least one location" });
+        .json({ message: "Please select at least one state location" });
     }
 
-    // ✅ Ensure locationOffered is always an array
     const locationsArray = Array.isArray(locationOffered)
       ? locationOffered
       : [locationOffered];
-
     if (locationsArray.length === 0) {
       return res
         .status(400)
         .json({ message: "Please select at least one location" });
     }
 
-    // ✅ Validate prices
-    if (
-      !minPrice ||
-      !maxPrice ||
-      parseInt(minPrice) <= 0 ||
-      parseInt(maxPrice) <= 0
-    ) {
-      return res
-        .status(400)
-        .json({ message: "Min and max prices must be valid positive numbers" });
-    }
-    if (parseInt(minPrice) >= parseInt(maxPrice)) {
-      return res
-        .status(400)
-        .json({ message: "Min price must be less than max price" });
+    const serviceData = {
+      vendorId: req.vendor._id,
+      serviceCategory,
+      serviceName,
+      stateLocationOffered: stateLocationsArray,
+      locationOffered: locationsArray,
+      serviceDes,
+    };
+
+    const finalPricingType = pricingType || "flat";
+    serviceData.pricingType = finalPricingType;
+
+    // ==========================================
+    // ✅ FIXED CATERING PRICING LOGIC
+    // ==========================================
+    if (finalPricingType === "perPlate") {
+      let hasBasePrice = false;
+      let hasPackages = false;
+
+      // Check and save base per-plate pricing
+      if (perPlatePrice && minPlates && maxPlates) {
+        if (+perPlatePrice <= 0 || +minPlates <= 0 || +maxPlates <= 0) {
+          return res
+            .status(400)
+            .json({ message: "Per-plate values must be positive numbers." });
+        }
+        if (+minPlates >= +maxPlates) {
+          return res
+            .status(400)
+            .json({ message: "Min plates must be less than max plates." });
+        }
+        // ✅ ALWAYS save base price if provided
+        serviceData.perPlatePrice = perPlatePrice;
+        serviceData.minPlates = minPlates;
+        serviceData.maxPlates = maxPlates;
+        hasBasePrice = true;
+      }
+
+      // Check and save packages
+      if (packages) {
+        const parsedPackages = JSON.parse(packages);
+        if (Array.isArray(parsedPackages) && parsedPackages.length > 0) {
+          // Validate each package
+          for (const pkg of parsedPackages) {
+            if (
+              !pkg.packageName ||
+              !pkg.perPlatePrice ||
+              !pkg.minPlates ||
+              !pkg.maxPlates
+            ) {
+              return res.status(400).json({
+                message: `Package "${
+                  pkg.packageName || "Unnamed"
+                }" has missing fields`,
+              });
+            }
+            if (
+              +pkg.perPlatePrice <= 0 ||
+              +pkg.minPlates <= 0 ||
+              +pkg.maxPlates <= 0
+            ) {
+              return res.status(400).json({
+                message: `Package "${pkg.packageName}" must have positive values`,
+              });
+            }
+            if (+pkg.minPlates >= +pkg.maxPlates) {
+              return res.status(400).json({
+                message: `Package "${pkg.packageName}": min plates must be less than max plates`,
+              });
+            }
+          }
+          serviceData.packages = parsedPackages;
+          hasPackages = true;
+        }
+      }
+
+      // At least one form of pricing must be provided
+      if (!hasBasePrice && !hasPackages) {
+        return res.status(400).json({
+          message:
+            "For catering services, provide either base per-plate pricing or at least one package.",
+        });
+      }
+    } else {
+      // Non-catering services
+      if (!minPrice || !maxPrice) {
+        return res.status(400).json({
+          message: "Min and max prices are required for this service category",
+        });
+      }
+      if (+minPrice <= 0 || +maxPrice <= 0) {
+        return res
+          .status(400)
+          .json({ message: "Price values must be greater than 0" });
+      }
+      if (+minPrice >= +maxPrice) {
+        return res
+          .status(400)
+          .json({ message: "Min price must be less than max price" });
+      }
+      serviceData.minPrice = minPrice;
+      serviceData.maxPrice = maxPrice;
     }
 
-    // ✅ Calculate duration in minutes
     const duration =
       parseInt(days) * 24 * 60 + parseInt(hrs) * 60 + parseInt(mins);
     if (isNaN(duration) || duration <= 0) {
       return res.status(400).json({ message: "Invalid estimated duration" });
     }
+    serviceData.duration = duration;
 
     const imageUrls = [];
-    const videoUrls = [];
-
     if (req.files && req.files.length > 0) {
       for (const file of req.files) {
-        // Check the MIME type to differentiate
-        if (file.mimetype.startsWith("image/")) {
-          // This is an image, upload to Cloudinary
-          const cloudRes = await uploadOnCloudinary(file.path);
-          if (cloudRes?.secure_url) {
-            imageUrls.push(cloudRes.secure_url);
-          } else {
-            console.error(
-              "❌ Failed to upload image to Cloudinary:",
-              file.originalname
-            );
-          }
-        } else if (file.mimetype.startsWith("video/")) {
-          // This is a video, upload to YouTube
-          try {
-            const videoTitle = `Service Video: ${serviceName}`;
-            const videoDescription = `A video for our service: ${serviceName}. Provided by EventsBridge.`;
-            const youtubeUrl = await uploadVideoToYouTube(
-              file.path,
-              videoTitle,
-              videoDescription
-            );
-            videoUrls.push(youtubeUrl);
-          } catch (youtubeError) {
-            console.error(
-              "❌ Failed to upload video to YouTube:",
-              file.originalname,
-              youtubeError
-            );
-          }
+        const cloudRes = await uploadOnCloudinary(file.path);
+        if (cloudRes?.secure_url) {
+          imageUrls.push(cloudRes.secure_url);
+        } else {
+          console.error("❌ Failed to upload image:", file.originalname);
         }
       }
     } else {
       return res
         .status(400)
-        .json(new ApiError(400, "Please upload at least one image or video"));
+        .json({ message: "Please upload at least one image" });
     }
-
-    // Combine both arrays into a single media array
-    const mediaUrls = [...imageUrls, ...videoUrls];
-
-    if (mediaUrls.length === 0) {
-      return res
-        .status(500)
-        .json(new ApiError(500, "Media upload failed, please try again."));
-    }
-
-    // ✅ Prepare service data
-    const serviceData = {
-      vendorId: req.vendor._id,
-      serviceCategory,
-      serviceImage: mediaUrls,
-      minPrice,
-      maxPrice,
-      serviceName,
-      stateLocationOffered: stateLocationsArray,
-      locationOffered: locationsArray,
-      serviceDes,
-      duration,
-    };
+    serviceData.serviceImage = imageUrls;
 
     let newService;
     let responseMessage;
 
-    // ✅ If vendor registration is not complete → upsert (only one service)
     if (req.vendor.isRegistrationComplete === false) {
       newService = await Service.findOneAndUpdate(
         { vendorId: req.vendor._id },
@@ -177,10 +210,10 @@ export const createService = async (req, res) => {
       responseMessage = "New service created successfully";
     }
 
-    // 🔥 Invalidate Redis cache for this category + all services list
     await client.del(`services:category:${serviceCategory.toLowerCase()}`);
     await client.del(`services:id:${newService._id}`);
-    await client.del(`services:all`); // optional, if you have a "getAllServices"
+    await client.del(`services:all`);
+    await client.del(`vendor:${req.vendor._id}:services`);
 
     return res
       .status(200)
@@ -218,9 +251,8 @@ export const checkServiceExists = async (req, res) => {
 export const getMyServices = async (req, res) => {
   try {
     const vendorId = req.vendor._id.toString();
-    const cacheKey = vendorServicesCacheKey(vendorId);
+    const cacheKey = `vendor:${vendorId}:services`;
 
-    // 1️⃣ Check Redis cache
     const cachedData = await client.get(cacheKey);
     if (cachedData) {
       console.log("⚡ Returning services from Redis cache");
@@ -235,10 +267,12 @@ export const getMyServices = async (req, res) => {
         );
     }
 
-    // 2️⃣ If not cached → fetch from MongoDB
-    const services = await Service.find({ vendorId }).sort({ createdAt: -1 });
+    const services = await Service.find({ vendorId })
+      .select(
+        "+pricingType +perPlatePrice +minPlates +maxPlates +packages +minPrice +maxPrice"
+      )
+      .sort({ createdAt: -1 });
 
-    // 3️⃣ Save result in Redis (expire in 5 min for freshness)
     await client.setEx(cacheKey, 300, JSON.stringify(services));
 
     console.log("✅ Fetched services from DB and cached in Redis");
@@ -277,60 +311,119 @@ export const updateService = async (req, res) => {
     }
 
     const {
-      serviceName = existingService.serviceName,
-      serviceDes = existingService.serviceDes,
-      serviceCategory = existingService.serviceCategory,
-      minPrice = existingService.minPrice,
-      maxPrice = existingService.maxPrice,
-      stateLocationOffered = existingService.stateLocationOffered,
-      locationOffered = existingService.locationOffered,
-      duration = existingService.duration,
-      serviceImage = existingService.serviceImage,
-      customWhyChooseUs = existingService.customWhyChooseUs,
+      serviceName,
+      serviceDes,
+      serviceCategory,
+      stateLocationOffered,
+      locationOffered,
+      duration,
+      serviceImage,
+      customWhyChooseUs,
+      pricingType,
+      minPrice,
+      maxPrice,
+      perPlatePrice,
+      minPlates,
+      maxPlates,
+      packages,
     } = req.body;
 
-    const stateLocationsArray = Array.isArray(stateLocationOffered)
-      ? stateLocationOffered
-      : [stateLocationOffered];
+    const updateData = {
+      serviceName: serviceName || existingService.serviceName,
+      serviceDes: serviceDes || existingService.serviceDes,
+      serviceCategory: serviceCategory || existingService.serviceCategory,
+      stateLocationOffered: stateLocationOffered
+        ? Array.isArray(stateLocationOffered)
+          ? stateLocationOffered
+          : [stateLocationOffered]
+        : existingService.stateLocationOffered,
+      locationOffered: locationOffered
+        ? Array.isArray(locationOffered)
+          ? locationOffered
+          : [locationOffered]
+        : existingService.locationOffered,
+      duration: duration || existingService.duration,
+      serviceImage: serviceImage || existingService.serviceImage,
+      customWhyChooseUs: customWhyChooseUs || existingService.customWhyChooseUs,
+    };
 
-    const locationsArray = Array.isArray(locationOffered)
-      ? locationOffered
-      : [locationOffered];
+    const finalPricingType =
+      pricingType || existingService.pricingType || "flat";
+    updateData.pricingType = finalPricingType;
 
-    if (minPrice && maxPrice) {
-      if (parseInt(minPrice) <= 0 || parseInt(maxPrice) <= 0) {
-        return res
-          .status(400)
-          .json(new ApiError(400, "Price values must be positive"));
+    // ==========================================
+    // ✅ FIXED UPDATE PRICING LOGIC
+    // ==========================================
+    if (finalPricingType === "perPlate") {
+      // Update base per-plate pricing if provided
+      if (
+        perPlatePrice !== undefined &&
+        minPlates !== undefined &&
+        maxPlates !== undefined
+      ) {
+        if (+perPlatePrice > 0 && +minPlates > 0 && +maxPlates > 0) {
+          if (+minPlates >= +maxPlates) {
+            return res
+              .status(400)
+              .json(
+                new ApiError(400, "Min plates must be less than max plates")
+              );
+          }
+          updateData.perPlatePrice = perPlatePrice;
+          updateData.minPlates = minPlates;
+          updateData.maxPlates = maxPlates;
+        }
       }
-      if (parseInt(minPrice) >= parseInt(maxPrice)) {
-        return res
-          .status(400)
-          .json(new ApiError(400, "Min price must be less than max price"));
+
+      // Update packages if provided
+      if (packages !== undefined) {
+        updateData.packages = packages
+          ? typeof packages === "string"
+            ? JSON.parse(packages)
+            : packages
+          : [];
       }
+
+      // Clear flat pricing fields
+      updateData.minPrice = undefined;
+      updateData.maxPrice = undefined;
+    } else {
+      // Flat pricing logic
+      if (minPrice !== undefined && maxPrice !== undefined) {
+        if (parseInt(minPrice) <= 0 || parseInt(maxPrice) <= 0) {
+          return res
+            .status(400)
+            .json(new ApiError(400, "Price values must be positive"));
+        }
+        if (parseInt(minPrice) >= parseInt(maxPrice)) {
+          return res
+            .status(400)
+            .json(new ApiError(400, "Min price must be less than max price"));
+        }
+        updateData.minPrice = minPrice;
+        updateData.maxPrice = maxPrice;
+      }
+
+      // Clear per-plate pricing fields
+      updateData.perPlatePrice = undefined;
+      updateData.minPlates = undefined;
+      updateData.maxPlates = undefined;
+      updateData.packages = [];
     }
 
     const updatedService = await Service.findByIdAndUpdate(
       serviceId,
-      {
-        serviceName,
-        serviceDes,
-        serviceCategory,
-        minPrice,
-        maxPrice,
-        stateLocationOffered: stateLocationsArray,
-        locationOffered: locationsArray,
-        duration,
-        serviceImage,
-        customWhyChooseUs,
-      },
-      { new: true }
+      { $set: updateData },
+      { new: true, omitUndefined: true }
     );
 
-    // ✅ Invalidate Redis cache
     try {
-      await client.del(vendorServicesCacheKey(vendorId));
+      await client.del(`vendor:${vendorId}:services`);
       await client.del("all_services");
+      await client.del(`services:id:${serviceId}`);
+      await client.del(
+        `services:category:${updatedService.serviceCategory.toLowerCase()}`
+      );
     } catch (cacheErr) {
       console.error("Redis cache clear failed:", cacheErr);
     }
@@ -389,11 +482,25 @@ export const deleteService = async (req, res) => {
     console.log("Media deletion results:", mediaDeletionResults);
 
     // Finally, delete the service from the database
+    let deletionResults = [];
+    if (
+      Array.isArray(existingService.serviceImage) &&
+      existingService.serviceImage.length > 0
+    ) {
+      deletionResults = await Promise.allSettled(
+        existingService.serviceImage.map((imageUrl) =>
+          deleteFromCloudinary(imageUrl)
+        )
+      );
+    }
     await existingService.deleteOne();
 
     // Invalidate any relevant Redis caches
-    await client.del(vendorServicesCacheKey(vendorId.toString()));
+    await client.del(`vendor:${vendorId}:services`);
     await client.del(`services:id:${serviceId}`);
+    await client.del(
+      `services:category:${existingService.serviceCategory.toLowerCase()}`
+    );
 
     return res.status(200).json(
       new ApiResponse(
@@ -401,6 +508,8 @@ export const deleteService = async (req, res) => {
         {
           deletedServiceId: existingService._id,
           mediaDeletions: mediaDeletionResults,
+          deletedService: existingService,
+          imageDeletions: deletionResults,
         },
         "Service and associated media deleted successfully"
       )
@@ -512,5 +621,49 @@ export const uploadServiceMedia = async (req, res) => {
   } catch (error) {
     console.error("❌ Error uploading service media:", error);
     return res.status(500).json(new ApiError(500, "Internal server error"));
+  }
+};
+
+export const updateServiceImageFirst = async (req, res) => {
+  console.log("Incoming update data:", req.body);
+  try {
+    const vendorId = req.vendor._id;
+    const serviceId = req.params.id;
+
+    const service = await Service.findOne({ _id: serviceId, vendorId });
+    if (!service) {
+      return res
+        .status(404)
+        .json({ message: "Service not found or not authorized" });
+    }
+
+    const imageUrls = [];
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        const cloudRes = await uploadOnCloudinary(file.path);
+        if (cloudRes?.secure_url) {
+          imageUrls.push(cloudRes.secure_url);
+        }
+      }
+
+      service.serviceImage = [...service.serviceImage, ...imageUrls];
+      await service.save();
+
+      await client.del(`service:${serviceId}`);
+      await client.del(`vendor:${vendorId}:services`);
+
+      return res.status(200).json({
+        success: true,
+        data: service,
+        message: "Images uploaded & service updated successfully",
+      });
+    } else {
+      return res
+        .status(400)
+        .json({ message: "Please upload at least one image" });
+    }
+  } catch (error) {
+    console.error("❌ Error updating service images:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
