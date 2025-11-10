@@ -386,9 +386,12 @@ const UserDetails = () => {
       try {
         if (serviceId) {
           console.log("Fetching single service:", serviceId);
+
+          // check this below
           const { data } = await axios.get(
             `${BACKEND_URL}/common/service/${serviceId}`
           );
+
           console.log("Single service response:", data);
           if (data.success && data.service) {
             servicesToBook.push(data.service);
@@ -534,6 +537,39 @@ const UserDetails = () => {
     }
   };
 
+  const createBookingHistory = async (userDetailsId, preparedFormData) => {
+    const payload = {
+      userId: userId,
+      userDetailsId: userDetailsId,
+      location: preparedFormData.address,
+      startDate: new Date(preparedFormData.startDate),
+      endDate: new Date(preparedFormData.endDate),
+      amount: 0,
+      reDirectTo: 1,
+    };
+
+    console.log("Creating booking history with payload:", payload);
+
+    try {
+      const res = await axios.post(
+        `${BACKEND_URL}/user-bookings/create`,
+        payload,
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (res?.data?.success) {
+        console.log("✅ Booking history created successfully:", res.data);
+        return true;
+      } else {
+        throw new Error("Failed to create booking history");
+      }
+    } catch (error) {
+      console.error("❌ Error creating booking history:", error);
+    }
+  };
+
   const handleSave = async (e) => {
     e.preventDefault();
     if (!formData.startDate || !formData.endDate) {
@@ -605,7 +641,17 @@ const UserDetails = () => {
 
       setShowPopup(true);
       setTimeout(() => setShowPopup(false), 3000);
-      navigate(`/pop-up/${userDetailsId}`);
+
+      const bookingHistory = await createBookingHistory(
+        userDetailsId,
+        preparedFormData
+      );
+
+      console.log("Booking history response:", bookingHistory);
+
+      if (bookingHistory) {
+        navigate(`/pop-up/${userDetailsId}`);
+      }
     } catch (err) {
       console.error("Error saving details:", err);
       if (err.response?.data?.message) {

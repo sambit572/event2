@@ -116,9 +116,12 @@ const Service = ({ onSwitchToLogin }) => {
     const fetchService = async () => {
       try {
         setLoading(true);
+
+        // This route do not exist in backend please check once
         const res = await axios.get(
           `${BACKEND_URL}/common/service/${serviceId}`
         );
+
         console.log("Service Fetching", res.data);
 
         const data = res.data.service;
