@@ -21,7 +21,7 @@ import ImageSlider from "../../components/customer/home/ImageSlider.jsx";
 import AddsBanner from "../../components/customer/home/AddsBanner.jsx";
 import categories from "../../utils/CatogoryData.jsx";
 import StepsSection from "../../components/customer/home/StepsSection.jsx";
-// import CulturalDanceSlider from "../common/CulturalDanceSlider.jsx";
+import CulturalDanceSlider from "../common/CulturalDanceSlider.jsx";
 // ✅ Lazy load heavy components below
 const ReviewSlider = React.lazy(() =>
   import("../../components/customer/home/ReviewSlider.jsx")
@@ -126,7 +126,7 @@ const Home = () => {
     <div className="home">
       <ImageSlider images={images} />
       <AddsBanner />
-     {/* <CulturalDanceSlider /> */}
+     <CulturalDanceSlider />
       {/* <img className="addbanner" src={banner} alt="" /> */}
       <div id="categories" className="categories-head1 mb-[-15px]">
         <h1 className="align_center categories-head">𝐂𝐀𝐓𝐄𝐆𝐎𝐑𝐈𝐄𝐒</h1>

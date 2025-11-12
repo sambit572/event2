@@ -4,6 +4,7 @@ import similarimg3 from "../../../assets/service/sub-img3.jpg";
 import similarimg4 from "../../../assets/service/sub-img2.webp";
 import similarimg5 from "../../../assets/service/sub-img1.avif";
 
+
 export const similarServiceData = [
   {
     id: 1,

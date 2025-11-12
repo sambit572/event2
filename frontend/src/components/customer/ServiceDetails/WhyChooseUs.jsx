@@ -1,6 +1,6 @@
 // Eventsbridge-Web/frontend/src/components/customer/ServiceDetails/WhyChooseUs.jsx
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { FaEdit, FaSave, FaTimes, FaPlus, FaTrash, FaUndo } from "react-icons/fa";
 import axios from "axios";
 import toast from "react-hot-toast";

@@ -137,14 +137,14 @@ const OTPVerification = ({
 
   return (
     <div
-      className="login-wrapper"
+      className="h-[85vh] backdrop-blur-sm z-50 login-wrapper flex justify-center items-center fixed top-0 left-0 w-full"
       onClick={() => {
         if (onClose) onClose(false); // Close modal on background click
       }}
     >
       {isLoading && <Spinner />}
       <div
-        className="login-modal"
+        className="bg-white lg:w-[450px] md:w-[450px] px-6 py-4 rounded-md relative h-[85vh]"
         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside modal
       >
         {/* Close button */}

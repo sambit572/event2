@@ -7,6 +7,7 @@ const RatingBar = ({ label, count, max, color }) => {
 
   const widthPercent = ((count / max) * 100).toFixed(1);
 
+  
   return (
     <div style={{ marginBottom: "10px" }}>
       {/* Label and Count */}

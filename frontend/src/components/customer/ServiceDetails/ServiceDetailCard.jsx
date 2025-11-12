@@ -16,6 +16,7 @@ const ServiceDetailCard = ({ service }) => {
 
   if (!service) return null;
 
+  
   const {
     _id,
     serviceName,
