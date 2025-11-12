@@ -334,7 +334,7 @@ const UserDetails = () => {
 
       return {
         ...prevData,
-        bookedById: userId, 
+        bookedById: userId,
         phone: newPhone,
       };
     });
@@ -609,10 +609,15 @@ const UserDetails = () => {
       }
 
       // Phone validation
-      if (!/^\d{10}$/.test(preparedFormData.phone)) {
+      let phone = preparedFormData.phone || "";
+      phone = phone.trim().replace(/\s+/g, "").replace(/^\+91/, "");
+
+      if (!/^\d{10}$/.test(phone)) {
         alert("Phone must be exactly 10 digits.");
         return;
       }
+
+      preparedFormData.phone = phone;
       if (
         preparedFormData.altPhone &&
         !/^\d{10}$/.test(preparedFormData.altPhone)

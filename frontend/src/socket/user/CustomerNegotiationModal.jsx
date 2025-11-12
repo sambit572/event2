@@ -339,7 +339,7 @@ const CustomerNegotiationModal = () => {
             );
           }
 
-          console.log("Service data for negotiation data:", service);
+          console.log("Service data for negotiation data11111:", service);
 
           negotiationData = {
             vendorId: vendor._id,
@@ -348,6 +348,8 @@ const CustomerNegotiationModal = () => {
             vendorPhoneNumber: vendor.phone,
             vendorLocation: service?.stateLocationOffered,
             serviceId: service._id,
+            serviceType: service.serviceCategory,
+
             serviceName: service.serviceName,
             bookedByUserId: bookingDetails.bookedById,
             bookedByUser: bookingDetails.bookedBy,
@@ -388,6 +390,8 @@ const CustomerNegotiationModal = () => {
             vendorPhoneNumber: vendor.phone,
             vendorLocation: service?.stateLocationOffered,
             serviceId: service._id,
+            serviceType: service.serviceCategory,
+
             serviceName: service.serviceName,
             bookedByUserId: bookingDetails.bookedById,
             bookedByUser: bookingDetails.bookedBy,
@@ -479,6 +483,8 @@ const CustomerNegotiationModal = () => {
             vendorPhoneNumber: vendor.phone,
             vendorLocation: service?.stateLocationOffered || "Not Specified",
             serviceId: service._id,
+            serviceType: service.serviceCategory,
+
             serviceName: service.serviceName,
             bookedByUserId: bookingDetails.bookedById,
             bookedByUser: bookingDetails.bookedBy,
