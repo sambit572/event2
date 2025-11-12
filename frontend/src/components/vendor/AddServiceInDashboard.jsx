@@ -512,20 +512,22 @@ function VendorService({ currentStep }) {
     }
 
     // 3. Check price range - either dropdown OR min/max prices
-    if (!minPrice || !maxPrice) {
-      alert("Please enter both minimum and maximum prices");
-      return false;
-    }
-
-    // 4. If min/max prices are entered, validate them
-    if (minPrice && maxPrice) {
-      if (parseInt(minPrice) <= 0 || parseInt(maxPrice) <= 0) {
-        alert("Price values must be greater than 0");
+    if (!isCatering) {
+      if (!minPrice || !maxPrice) {
+        alert("Please enter both minimum and maximum prices");
         return false;
       }
-      if (parseInt(minPrice) >= parseInt(maxPrice)) {
-        alert("Minimum price should be less than maximum price");
-        return false;
+
+      // 4. If min/max prices are entered, validate them
+      if (minPrice && maxPrice) {
+        if (parseInt(minPrice) <= 0 || parseInt(maxPrice) <= 0) {
+          alert("Price values must be greater than 0");
+          return false;
+        }
+        if (parseInt(minPrice) >= parseInt(maxPrice)) {
+          alert("Minimum price should be less than maximum price");
+          return false;
+        }
       }
     }
     // == 👇 NEW: Combined validation logic for pricing 👇 ==

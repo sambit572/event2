@@ -293,6 +293,7 @@ const FormField = ({
 
 const UserDetails = () => {
   const userId = useSelector((state) => state.user.user?._id);
+  const user = useSelector((state) => state.user.user);
   const navigate = useNavigate();
   const [userName, setUserName] = useState("");
   const [showPopup, setShowPopup] = useState(false);
@@ -303,11 +304,13 @@ const UserDetails = () => {
   const [disabledDays, setDisabledDays] = useState([]);
   const [isLoadingAvailability, setIsLoadingAvailability] = useState(true);
 
+  console.log("User from Redux:", user);
+
   const [formData, setFormData] = useState({
     serviceId: "",
     bookedBy: "",
     bookedById: userId,
-    phone: "",
+    phone: user?.phoneNo || "",
     altPhone: "",
     startDate: "",
     endDate: "",
@@ -319,6 +322,23 @@ const UserDetails = () => {
     pincode: "",
     country: "India",
   });
+
+  useEffect(() => {
+    setUserName((prevUserName) => {
+      return prevUserName === "" ? user?.fullName || "" : prevUserName;
+    });
+
+    setFormData((prevData) => {
+      const newPhone =
+        prevData.phone === "" ? user?.phoneNo || "" : prevData.phone;
+
+      return {
+        ...prevData,
+        bookedById: userId, 
+        phone: newPhone,
+      };
+    });
+  }, [user, userId]);
   const getCombinedAvailability = useCallback(async (services) => {
     setIsLoadingAvailability(true);
     try {
