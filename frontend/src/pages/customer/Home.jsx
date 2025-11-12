@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, Suspense } from "react";
 import axios from "axios";
 import "./Home.css";
+import { motion } from "motion/react";
 
 import slider_1 from "../../assets/home/sliderImages/slider_1.jpg";
 import slider_2 from "../../assets/home/sliderImages/slider_2.jpeg";
@@ -126,10 +127,18 @@ const Home = () => {
     <div className="home">
       <ImageSlider images={images} />
       <AddsBanner />
-     <CulturalDanceSlider />
+      <CulturalDanceSlider />
       {/* <img className="addbanner" src={banner} alt="" /> */}
       <div id="categories" className="categories-head1 mb-[-15px]">
-        <h1 className="align_center categories-head">𝐂𝐀𝐓𝐄𝐆𝐎𝐑𝐈𝐄𝐒</h1>
+        <motion.h1
+          initial={{ opacity: 0, y: -30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+          className="align_center categories-head"
+        >
+          𝐂𝐀𝐓𝐄𝐆𝐎𝐑𝐈𝐄𝐒
+        </motion.h1>
       </div>
       <p className="category-subheads text-center">
         Explore trusted professionals across categories and simplify your event
@@ -139,9 +148,16 @@ const Home = () => {
       {/* Category Grid */}
       <div className="align_center category_section">
         {visibleCategories.map((category, index) => (
-          <div key={index}>
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            // viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: index * 0.5, ease: "easeInOut" }}
+          >
+            {" "}
             <CategoryCard category={category} />
-          </div>
+          </motion.div>
         ))}
       </div>
       {/* View All Button */}

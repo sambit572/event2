@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./ImageSlider.css";
+import { motion } from "motion/react";
 
 export default function ImageSlider({ images }) {
   const [selectedImage, setSelectedImage] = React.useState(images[0]?.desktop);
@@ -34,7 +35,12 @@ export default function ImageSlider({ images }) {
       <div className="backdrop-blur-sm  bg-black/30  h-full  flex items-center justify-center">
         <div className="pl-10 pr-0 py-10  max-w-7xl w-full">
           <main className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-center">
-            <div>
+            <motion.div
+              initial={{ opacity: 0, x: -100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              // viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 2, ease: "easeInOut" }}
+            >
               <h1 className="text-3xl sm:text-6xl md:text-7xl lg:text-6xl font-extrabold mb-6 text-white drop-shadow-lg tracking-wide">
                 EventsBridge
               </h1>
@@ -49,9 +55,13 @@ export default function ImageSlider({ images }) {
               >
                 Explore Now
               </a>
-            </div>
+            </motion.div>
 
-            <div
+            <motion.div
+              initial={{ opacity: 0, x: 100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              // viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 2, ease: "easeInOut" }}
               ref={containerRef}
               className="scroll-container flex items-center space-x-5 overflow-x-auto no-scrollbar"
             >
@@ -70,7 +80,7 @@ export default function ImageSlider({ images }) {
                   />
                 </div>
               ))}
-            </div>
+            </motion.div>
           </main>
         </div>
       </div>

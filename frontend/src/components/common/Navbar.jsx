@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
+import { motion } from "motion/react";
 
 import "./Navbar.css";
 
@@ -369,7 +370,12 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
   };
 
   return (
-    <div>
+    <motion.div
+      className="align_center navbar"
+      initial={{ opacity: 0, y: -30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1, ease: "easeInOut" }}
+    >
       <div className="navbar">
         {/* ✅ User Logout Popup */}
         {showLogoutPopup && (
@@ -538,7 +544,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
           />
         </div>
       )}
-    </div>
+    </motion.div>
   );
 };
 

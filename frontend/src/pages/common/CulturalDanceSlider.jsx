@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./CulturalDanceSlider.css"; // ✅ Import the CSS
+import { motion } from "motion/react";
 
 // 🖼️ Example placeholder images
 import puri from "../../assets/famousCultural/konark-and-puri-jagannath-temple.jpg";
@@ -141,18 +142,18 @@ const states = [
       },
     ],
   },
-{
-  state: "Goa",
-  items: [
-    {
-      image: bagaBeach,
-    },
-    {
-      name: "Fugdi Dance",
-      image: fugdiDance, 
-    },
-  ],
-},
+  {
+    state: "Goa",
+    items: [
+      {
+        image: bagaBeach,
+      },
+      {
+        name: "Fugdi Dance",
+        image: fugdiDance,
+      },
+    ],
+  },
   {
     state: "Gujarat",
     items: [
@@ -166,17 +167,17 @@ const states = [
     ],
   },
   {
-  state: "Haryana",
-  items: [
-    {
-      image: kurukshetraImage,
-    },
-    {
-      name: "Phag Dance",
-      image: phagDanceImage,
-    },
-  ],
-},
+    state: "Haryana",
+    items: [
+      {
+        image: kurukshetraImage,
+      },
+      {
+        name: "Phag Dance",
+        image: phagDanceImage,
+      },
+    ],
+  },
   {
     state: "Himachal Pradesh",
     items: [
@@ -487,10 +488,20 @@ const FamousIndiaSlider = () => {
   const displayGroups = isMobile ? [states] : groupedStates;
 
   return (
-    <div className="w-full py-12">
-      <h2 className="text-center text-[#001f3f] text-4xl sm:text-4xl font-extrabold mb-2 tracking-wide">
+    <div className="w-full pt-8">
+      {/* className="align_center navbar"
+        initial={{ opacity: 0, y: -30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, ease: "easeInOut" }} */}
+      <motion.h2
+        initial={{ opacity: 0, y: -30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        // viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 1, ease: "easeInOut" }}
+        className="text-center text-[#001f3f] text-4xl sm:text-4xl font-extrabold mb-2 tracking-wide"
+      >
         India’s Timeless Traditions, Eternal Beauty
-      </h2>
+      </motion.h2>
       <p className="text-center text-gray-600 mb-10 max-w-2xl mx-auto">
         Celebrate India’s vibrant soul, where temples and dances reveal each
         state’s legacy.
@@ -512,7 +523,14 @@ const FamousIndiaSlider = () => {
         {/* Only one StateColumn on mobile */}
         {displayGroups.map((group, index) =>
           isMobile && index > 0 ? null : (
-            <StateColumn key={index} statesGroup={group} />
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              // viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: index * 0.75, ease: "easeInOut" }}
+            >
+              <StateColumn key={index} statesGroup={group} />
+            </motion.div>
           )
         )}
       </div>

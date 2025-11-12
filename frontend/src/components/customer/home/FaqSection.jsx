@@ -1,4 +1,5 @@
 import "./FaqSection.css";
+import { motion } from "motion/react";
 
 import React, { useState } from "react";
 
@@ -63,19 +64,38 @@ const FaqSection = () => {
   );
   return (
     <div className="faq-container">
-      <h2 className="faq-title">𝐄𝐱𝐩𝐥𝐨𝐫𝐞 𝐎𝐮𝐫 𝐅𝐀𝐐𝐬</h2>
+      <motion.h2
+        initial={{ opacity: 0, y: -30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 1, ease: "easeInOut" }}
+        className="faq-title"
+      >
+        𝐄𝐱𝐩𝐥𝐨𝐫𝐞 𝐎𝐮𝐫 𝐅𝐀𝐐𝐬
+      </motion.h2>
       <h3 className="faq-subtitle">
         Bridging the Gap Between You and Clarity{" "}
       </h3>
 
       <div className="faq-columns">
         {columns.map((column, colIdxs) => (
-          <div key={colIdxs} className="faq-column">
+          <motion.div
+            key={colIdxs}
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            // viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: colIdxs * 0.75, ease: "easeInOut" }}
+            className="faq-column"
+          >
             {column.map((item, index) => {
               const itemIndex = colIdxs + index * columnCount;
               return (
-                <div
+                <motion.div
                   key={itemIndex}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  // viewport={{ once: true, amount: 0.3 }}
+                  transition={{ duration: itemIndex * 0.5, ease: "easeInOut" }}
                   className={`faq-item ${
                     activeIndex === itemIndex ? "active" : ""
                   }`}
@@ -92,10 +112,10 @@ const FaqSection = () => {
                   {activeIndex === itemIndex && (
                     <div className="faq-answer">{item.answer}</div>
                   )}
-                </div>
+                </motion.div>
               );
             })}
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>
