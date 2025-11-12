@@ -16,4 +16,5 @@ const RatingSection = ({ ratingValue, totalRatings, totalReviews }) => {
   );
 };
 
+
 export default RatingSection;

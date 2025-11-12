@@ -7,6 +7,7 @@ const ReviewList = ({ serviceId, newReview }) => {
   const [showAll, setShowAll] = useState(false);
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
+  
   useEffect(() => {
     const fetchReviews = async () => {
       try {

@@ -19,4 +19,5 @@ const PriceSection = ({ price, originalPrice, discountPercent }) => {
   );
 };
 
+
 export default PriceSection;
