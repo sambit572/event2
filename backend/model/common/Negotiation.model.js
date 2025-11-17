@@ -23,6 +23,11 @@ const negotiationSchema = new mongoose.Schema(
       type: [String],
       required: true,
     },
+    vendorDecision: {
+      type: String,
+      enum: ["pending", "accepted", "rejected"],
+      default: "pending",
+    },
     picked_call: {
       type: Boolean,
       default: false,
@@ -133,6 +138,10 @@ const negotiationSchema = new mongoose.Schema(
     booked: {
       type: Boolean,
       default: false,
+    },
+    finalPrice: {
+      type: Number,
+      default: null, // vendor sets this when responding
     },
   },
   { timestamps: true }

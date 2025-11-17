@@ -61,9 +61,10 @@ const OrderSummary = () => {
     // The structure of 'item' is now consistent for both single and multiple order types.
     // We can directly reduce the array without the unnecessary if/else check.
     const finalTotal = items.reduce(
-      (acc, item) => acc + (item.proposedPrice || 0),
+      (acc, item) => acc + (item.finalPrice ?? item.proposedPrice ?? 0),
       0
     );
+    
 
     const platformDiscountAmount = Math.round(finalTotal * 0.1);
     const totalAfterDiscount = finalTotal - platformDiscountAmount;
@@ -212,9 +213,6 @@ const OrderSummary = () => {
               <div className="p-6">
                 <div className="space-y-6">
                   {items.map((item, index) => {
-                    const serviceDetails = getServiceDetails(item);
-                    const proposedPrice = serviceDetails.proposedPrice;
-
                     return (
                       <div
                         key={item._id || `item-${index}`}
@@ -396,7 +394,7 @@ const OrderSummary = () => {
                 <div className="p-6">
                   <div className="space-y-4 mb-6">
                     <div className="flex justify-between items-center py-2">
-                      <span className="text-gray-600">Negotiated Price</span>
+                      <span className="text-gray-600">Final Price</span>
                       <span className="font-semibold text-gray-800">
                         ₹{orderSummary.finalTotal.toLocaleString()}
                       </span>

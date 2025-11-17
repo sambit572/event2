@@ -16,6 +16,51 @@ import {
 
 const vendorServicesCacheKey = (vendorId) => `vendor:${vendorId}:services`;
 
+const processServiceMedia = async (files, serviceName = "Service Media") => {
+  if (!files || files.length === 0) {
+    throw new ApiError(400, "No media files received");
+  }
+
+  const imageUrls = [];
+  const videoUrls = [];
+
+  for (const file of files) {
+    // 🌟 IMAGE → Cloudinary
+    if (file.mimetype.startsWith("image/")) {
+      const cloudRes = await uploadOnCloudinary(file.path);
+      if (cloudRes?.secure_url) {
+        imageUrls.push(cloudRes.secure_url);
+      } else {
+        console.error(
+          "❌ Cloudinary image upload failed for:",
+          file.originalname
+        );
+      }
+    }
+
+    // 🌟 VIDEO → YouTube
+    else if (file.mimetype.startsWith("video/")) {
+      try {
+        const title = `Service Video - ${serviceName}`;
+        const desc = `Video for service: ${serviceName}`;
+
+        const youtubeUrl = await uploadVideoToYouTube(file.path, title, desc);
+        videoUrls.push(youtubeUrl);
+      } catch (err) {
+        console.error("❌ YouTube upload failed:", file.originalname, err);
+      }
+    }
+  }
+
+  const mediaUrls = [...imageUrls, ...videoUrls];
+
+  if (mediaUrls.length === 0) {
+    throw new ApiError(500, "Media upload failed");
+  }
+
+  return mediaUrls;
+};
+
 export const createService = async (req, res) => {
   try {
     console.log("🔵 createService called");
@@ -173,22 +218,9 @@ export const createService = async (req, res) => {
     }
     serviceData.duration = duration;
 
-    const imageUrls = [];
-    if (req.files && req.files.length > 0) {
-      for (const file of req.files) {
-        const cloudRes = await uploadOnCloudinary(file.path);
-        if (cloudRes?.secure_url) {
-          imageUrls.push(cloudRes.secure_url);
-        } else {
-          console.error("❌ Failed to upload image:", file.originalname);
-        }
-      }
-    } else {
-      return res
-        .status(400)
-        .json({ message: "Please upload at least one image" });
-    }
-    serviceData.serviceImage = imageUrls;
+    const mediaUrls = await processServiceMedia(req.files, serviceName);
+    serviceData.serviceImage = mediaUrls;
+
 
     let newService;
     let responseMessage;
@@ -621,49 +653,5 @@ export const uploadServiceMedia = async (req, res) => {
   } catch (error) {
     console.error("❌ Error uploading service media:", error);
     return res.status(500).json(new ApiError(500, "Internal server error"));
-  }
-};
-
-export const updateServiceImageFirst = async (req, res) => {
-  console.log("Incoming update data:", req.body);
-  try {
-    const vendorId = req.vendor._id;
-    const serviceId = req.params.id;
-
-    const service = await Service.findOne({ _id: serviceId, vendorId });
-    if (!service) {
-      return res
-        .status(404)
-        .json({ message: "Service not found or not authorized" });
-    }
-
-    const imageUrls = [];
-    if (req.files && req.files.length > 0) {
-      for (const file of req.files) {
-        const cloudRes = await uploadOnCloudinary(file.path);
-        if (cloudRes?.secure_url) {
-          imageUrls.push(cloudRes.secure_url);
-        }
-      }
-
-      service.serviceImage = [...service.serviceImage, ...imageUrls];
-      await service.save();
-
-      await client.del(`service:${serviceId}`);
-      await client.del(`vendor:${vendorId}:services`);
-
-      return res.status(200).json({
-        success: true,
-        data: service,
-        message: "Images uploaded & service updated successfully",
-      });
-    } else {
-      return res
-        .status(400)
-        .json({ message: "Please upload at least one image" });
-    }
-  } catch (error) {
-    console.error("❌ Error updating service images:", error);
-    return res.status(500).json({ message: "Internal server error" });
   }
 };

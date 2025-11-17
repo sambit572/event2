@@ -32,6 +32,8 @@ function DashBoardMain() {
   const [isVerified, setIsVerified] = useState(false);
   const [password, setPassword] = useState("");
 
+  const [finalPrice, setFinalPrice] = useState(""); // ✅ Final price state
+
   const [showSuccessPopup, setShowSuccessPopup] = useState(false); // ✅ Success popup state
 
   const handleConfirmPassword = async () => {
@@ -90,13 +92,15 @@ function DashBoardMain() {
   };
 
   useEffect(() => {
+    console.log("Negortiation circuit working");
     socket.emit("vendor-online", vendor?._id);
 
     socket.on("pending-negotiations", (requests) => {
       if (requests?.length) {
+        console.log(`Pending negotiation of the vendor ${requests[0]}`);
         setPopupData(requests[0]);
       } else {
-        setPopupData(null);
+        f(null);
       }
     });
 
@@ -121,13 +125,19 @@ function DashBoardMain() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  console.log("Popup Data:", popupData);
+
   const handleResponse = (action) => {
     if (!popupData?._id) return;
 
     socket.emit("vendor_response", {
-      bookingId: popupData._id,
+      vendorId: vendor._id,
+      bookedByUserId: popupData.bookedByUserId,
+      serviceId: popupData.serviceId,
       action,
-      vendorName: popupData.vendorName,
+      finalPrice: parseFloat(
+        finalPrice.trim() === "" ? popupData.proposedPrice : finalPrice
+      ),
     });
 
     setPopupData(null);
@@ -321,6 +331,8 @@ function DashBoardMain() {
                       type="text"
                       placeholder="Enter Your Final Price"
                       className="VenueInput"
+                      value={finalPrice}
+                      onChange={(e) => setFinalPrice(e.target.value)}
                       required
                     />
                   </p>

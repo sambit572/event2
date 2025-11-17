@@ -7,7 +7,6 @@ import {
   updateAvailability,
   updateService,
   uploadServiceMedia,
-  updateServiceImageFirst,
 } from "../../controller/vendor/service.controller.js";
 
 import { verifyVendorJwt } from "../../middleware/VendorAuth.middleware.js";
@@ -126,19 +125,20 @@ vendor_router
   .route("/update-availability/:id")
   .patch(verifyVendorJwt, updateAvailability);
 
-vendor_router.post(
-  "/upload-new-service-image/:id",
-  verifyVendorJwt,
-  (req, res, next) => {
-    upload.array("images", 10)(req, res, function (err) {
-      if (err) {
-        return res.status(400).json({ success: false, message: err.message });
-      }
-      next();
-    });
-  },
-  updateServiceImageFirst
-);
+  vendor_router.post(
+    "/upload-service-media",
+    verifyVendorJwt,
+    (req, res, next) => {
+      upload.array("media", 10)(req, res, function (err) {
+        if (err) {
+          return res.status(400).json({ success: false, message: err.message });
+        }
+        next();
+      });
+    },
+    uploadServiceMedia
+  );
+  
 
 // --- BANK DETAILS ROUTES --- //
 vendor_router.post("/bank-details", verifyVendorJwt, createBankDetails);

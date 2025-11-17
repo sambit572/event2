@@ -12,17 +12,21 @@ export default async function registerNegotiationHandler(
     console.log("📩 Negotiation request received:", data);
 
     try {
-      // Save to DB first
-      const res = await Negotiation.create({ ...data, status: "pending" });
+      // Save to DB with vendorDecision as pending
+      const res = await Negotiation.create({
+        ...data,
+        vendorDecision: "pending",
+      });
+
       console.log("✅ Negotiation request saved to DB:", res);
 
       // If vendor is online, send directly
       const vendorSocketId = vendorSocketMap.get(data.vendorId);
       if (vendorSocketId) {
         console.log(`📤 Sending negotiation to vendor: ${data.vendorId}`);
-        apiNameSpace.to(vendorSocketId).emit("negotiation_to_vendor", data);
+        apiNameSpace.to(vendorSocketId).emit("negotiation_to_vendor", res);
       } else {
-        console.log(`⚠ Vendor ${data.vendorId} is offline, stored for later.`);
+        console.log(`⚠ Vendor ${data.vendorId} offline, stored for later.`);
       }
     } catch (err) {
       console.error("❌ Error handling negotiation:", err);
@@ -37,12 +41,15 @@ export default async function registerNegotiationHandler(
     try {
       const pendingRequests = await Negotiation.find({
         vendorId,
-        status: "pending",
+        vendorDecision: "pending",
       });
+
+      console.log("✅ Fetched pending requests:", pendingRequests);
 
       console.log(
         `📦 Sending ${pendingRequests.length} pending requests to vendor: ${vendorId}`
       );
+
       if (pendingRequests.length > 0) {
         socket.emit("pending-negotiations", pendingRequests);
       }
@@ -52,25 +59,50 @@ export default async function registerNegotiationHandler(
   });
 
   // 🎯 Handle vendor response (accept/decline)
-  socket.on("vendor_response", async ({ bookingId, action, vendorId }) => {
-    try {
-      await Negotiation.findByIdAndUpdate(bookingId, {
-        status: action === "accept" ? "accepted" : "declined",
-      });
+  socket.on(
+    "vendor_response",
+    async ({ vendorId, bookedByUserId, serviceId, action, finalPrice }) => {
+      try {
+        // Find the current negotiation using composite identity
+        const negotiation = await Negotiation.findOneAndUpdate(
+          {
+            vendorId,
+            bookedByUserId,
+            serviceId,
+            vendorDecision: "pending", // prevent updating old records
+          },
+          {
+            vendorDecision: action === "accept" ? "accepted" : "rejected",
+            ...(finalPrice !== undefined && { finalPrice }),
+          },
+          { new: true }
+        );
 
-      const nextPending = await Negotiation.findOne({
-        vendorId,
-        status: "pending",
-      }).sort({ createdAt: 1 });
+        if (!negotiation) {
+          console.log("❌ No matching negotiation found for vendor_response");
+          return;
+        }
 
-      if (nextPending) {
-        console.log("📦 Sending next pending request to vendor:", vendorId);
-        socket.emit("pending-negotiations", [nextPending]);
+        console.log("✅ Vendor response saved:", negotiation);
+
+        // Send next pending negotiation for this vendor
+        const nextPending = await Negotiation.findOne({
+          vendorId,
+          vendorDecision: "pending",
+        }).sort({ createdAt: 1 });
+
+        if (nextPending) {
+          console.log(
+            "📦 Sending next pending negotiation to vendor:",
+            vendorId
+          );
+          socket.emit("pending-negotiations", [nextPending]);
+        }
+      } catch (err) {
+        console.error("❌ Error handling vendor response:", err);
       }
-    } catch (err) {
-      console.error("❌ Error handling vendor response:", err);
     }
-  });
+  );
 
   // 🎯 Clean up mapping when vendor disconnects
   socket.on("disconnect", () => {

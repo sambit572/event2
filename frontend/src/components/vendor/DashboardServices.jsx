@@ -10,11 +10,11 @@ import "react-image-crop/dist/ReactCrop.css";
 import { useRef } from "react";
 
 const getYouTubeID = (url) => {
-  console.log("Extracting YouTube ID from URL:", url);
+  // console.log("Extracting YouTube ID from URL:", url);
   if (typeof url !== "string") return null;
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
   const match = url.match(regExp);
-  console.log("YouTube ID match result:", match);
+  // console.log("YouTube ID match result:", match);
   return match && match[2].length === 11 ? match[2] : null;
 };
 
@@ -141,6 +141,11 @@ const DashboardServices = () => {
     }));
   };
 
+  const ensureArray = (value) => {
+    if (!value) return [];
+    return Array.isArray(value) ? value : [value];
+  };
+
   useEffect(() => {
     const fetchServices = async () => {
       try {
@@ -161,7 +166,7 @@ const DashboardServices = () => {
       }
     };
     fetchServices();
-  }, []);
+  }, [setNewMediaPreviews, setNewVideos]);
 
   const handleEdit = (index) => {
     setEditingIndex(index);
@@ -192,70 +197,57 @@ const DashboardServices = () => {
     try {
       const serviceId = services[index]._id;
       const existingMedia = editedData.serviceImage || [];
-      // ✅ NEW: Calculate total media including new videos
+
+      // Total images (existing + new ones)
       const totalMedia =
         existingMedia.length + newImages.length + newVideos.length;
 
-      // ✅ NEW: Your validation logic, now for all media types
       if (totalMedia > 10) {
         setErrorMessage(
           `You can upload a maximum of 10 media items. ` +
-            `You already have ${existingMedia.length} items. ` +
-            `Please remove ${totalMedia - 10} item(s) before saving.`
-        );
-        // Re-instating your alert for immediate feedback
-        alert(
-          `You can upload a maximum of 10 media items.\n` +
-            `You already have ${existingMedia.length} items.\n` +
-            `Please remove ${totalMedia - 10} item(s) before saving.`
+            `You already have ${existingMedia.length}. ` +
+            `Remove ${totalMedia - 10} item(s).`
         );
         setIsSaving(false);
         return;
       }
 
-      let newUploadedImageUrls = [];
-      let newUploadedVideoUrls = [];
+      let uploadedUrls = [];
 
-      // Step 1: Upload new videos to YouTube
-      if (newVideos.length > 0) {
+      // -------------------------------------------
+      // 1️⃣ Upload new media: image + video together
+      // -------------------------------------------
+      if (newImages.length > 0 || newVideos.length > 0) {
         const formData = new FormData();
-        newVideos.forEach((file) => formData.append("images", file));
 
-        const res = await axios.post(
-          `${BACKEND_URL}/vendors/upload-new-service-image/${serviceId}`,
+        [...newImages, ...newVideos].forEach((file) =>
+          formData.append("media", file)
+        );
+
+        formData.append("serviceName", editedData.serviceName);
+
+        const uploadRes = await axios.post(
+          `${BACKEND_URL}/vendors/upload-service-media`,
           formData,
           { withCredentials: true }
         );
-        // Assuming your backend returns all URLs in res.data.data
-        newUploadedVideoUrls = res.data.data;
+
+        uploadedUrls = ensureArray(uploadRes.data.data);
       }
 
-      // Step 2: Upload new images to Cloudinary
-      if (newImages.length > 0) {
-        const formData = new FormData();
-        newImages.forEach((file) => formData.append("images", file));
-
-        const res = await axios.post(
-          `${BACKEND_URL}/vendors/upload-new-service-image/${serviceId}`,
-          formData,
-          { withCredentials: true }
-        );
-        // Assuming your backend returns all URLs in res.data.data
-        newUploadedImageUrls = res.data.data;
-      }
-
-      // Combine all URLs
-      const allMedia = [
-        ...existingMedia,
-        ...newUploadedImageUrls,
-        ...newUploadedVideoUrls,
-      ];
+      // -------------------------------------------
+      // 2️⃣ Merge old + new
+      // -------------------------------------------
+      const finalMedia = [...existingMedia, ...uploadedUrls];
 
       const payload = {
         ...editedData,
-        serviceImage: allMedia, // Using your `serviceImage` field
+        serviceImage: finalMedia,
       };
 
+      // -------------------------------------------
+      // 3️⃣ Save full updated service
+      // -------------------------------------------
       const updateRes = await axios.put(
         `${BACKEND_URL}/vendors/update-service/${serviceId}`,
         payload,
@@ -263,6 +255,7 @@ const DashboardServices = () => {
       );
 
       const updatedService = updateRes.data.data;
+
       const updatedList = [...services];
       updatedList[index] = updatedService;
 
@@ -281,6 +274,7 @@ const DashboardServices = () => {
       setIsSaving(false);
     }
   };
+  
 
   const handleDelete = async (index) => {
     const confirmDelete = window.confirm(

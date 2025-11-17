@@ -430,8 +430,6 @@ function VendorService({ currentStep }) {
       formData.append("serviceName", serviceName);
       formData.append("serviceDes", serviceDescription);
 
-      formData.append("minPrice", minPrice);
-      formData.append("maxPrice", maxPrice);
       formData.append("serviceCategory", categorySearchTerm);
       formData.append("stateLocationOffered", selectedState);
       selectedLocations.forEach((loc) => {
