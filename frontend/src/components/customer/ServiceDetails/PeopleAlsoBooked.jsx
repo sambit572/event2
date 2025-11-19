@@ -42,7 +42,7 @@ const SimilarProductCard = ({ product }) => {
         <img
           src={product.serviceImage[0]}
           alt="DJ Service"
-          className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+          className="w-full h-full transition-transform duration-500 hover:scale-110"
         />
       </div>
 

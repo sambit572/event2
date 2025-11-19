@@ -313,41 +313,39 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
 
   // --- THIS IS THE CORRECTED FUNCTION ---
 
- const handleBookNow = (e) => {
- e.stopPropagation();
+  const handleBookNow = (e) => {
+    e.stopPropagation();
 
-// Step 1: Check for login status first.
- const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
- if (!isLoggedIn) {
- toast.error("Please log in to book a service.", { duration: 2000 });
- if (onSwitchToLogin) onSwitchToLogin(true);
- return; // Stop execution if not logged in
- }
+    // Step 1: Check for login status first.
+    const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
+    if (!isLoggedIn) {
+      toast.error("Please log in to book a service.", { duration: 2000 });
+      if (onSwitchToLogin) onSwitchToLogin(true);
+      return; // Stop execution if not logged in
+    }
 
-// Step 2: User is logged in, NOW check the service type.
- const isCateringService = service.pricingType === "perPlate";
+    // Step 2: User is logged in, NOW check the service type.
+    const isCateringService = service.pricingType === "perPlate";
 
-if (isCateringService) {
+    if (isCateringService) {
+      // Navigate to the service details page to select a package.
+      const categoryId = service.categoryId || service.serviceCategory;
 
- // Navigate to the service details page to select a package.
- const categoryId = service.categoryId || service.serviceCategory;
- 
- if (!categoryId) {
- console.error("Cannot navigate: Missing categoryId on service object.");
- toast.error("Could not open service, category ID is missing.");
- return;
- }
+      if (!categoryId) {
+        console.error("Cannot navigate: Missing categoryId on service object.");
+        toast.error("Could not open service, category ID is missing.");
+        return;
+      }
 
- navigate(`/service/${categoryId}/${serviceId}`);
- toast.success("Please select a package and plate count to proceed.");
-
-} else {
- // Navigate directly to user details as before.
-navigate(`/userdetails/${serviceId}`, {
-state: { from: locationPath.pathname },
-});
-}
- };
+      navigate(`/service/${categoryId}/${serviceId}`);
+      toast.success("Please select a package and plate count to proceed.");
+    } else {
+      // Navigate directly to user details as before.
+      navigate(`/userdetails/${serviceId}`, {
+        state: { from: locationPath.pathname },
+      });
+    }
+  };
   const handleNotifyMe = async (e) => {
     e.stopPropagation();
     const isLoggedIn = localStorage.getItem("currentlyLoggedIn") === "true";
@@ -617,7 +615,7 @@ state: { from: locationPath.pathname },
           {isVendorAvailable ? (
             <>
               <button
-                className="flex w-full cursor-pointer items-center justify-center rounded-full bg-[#001f3f] lg:px-12 lg:py-3 px-1 py-1 text-xs lg:text-sm font-bold text-white transition-colors duration-300 ease-in-out hover:bg-[#002366] hover:border-[#FFD700] active:bg-[#000d1a] active:border-[#F3C12D] lg:w-auto lg:min-w-[120px] shadow-md hover:shadow-lg"
+                className="flex w-full cursor-pointer items-center justify-center rounded-full bg-gradient-to-r from-[#001f3f] to-[#004f9f] lg:px-12 lg:py-3 px-1 py-1 text-xs lg:text-sm font-bold text-white transition-colors duration-300 ease-in-out hover:from-[#002366] hover:to-[#004c99] active:from-[#000d1a] active:to-[#002244] lg:w-auto lg:min-w-[120px] shadow-md hover:shadow-lg"
                 onClick={handleBookNow}
               >
                 BOOK NOW

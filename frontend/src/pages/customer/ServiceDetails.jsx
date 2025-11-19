@@ -312,9 +312,8 @@ const Service = ({ onSwitchToLogin }) => {
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
           >
-            <span className="absolute top-[10px] left-[10px] z-[3] bg-white/30 backdrop-blur-[30px] text-white text-[11px] font-bold uppercase tracking-[0.8px] px-[7px] py-[3px] rounded-full shadow-[0_3px_10px_rgba(0,0,0,0.3)] border border-white/30 [text-shadow:1px_1px_2px_rgba(0,0,0,0.6),-1px_-1px_1px_rgba(255,255,255,0.4)]">
-              {" "}
-              EventsBridge{" "}
+            <span className="absolute top-[10px] left-[10px] z-[20] bg-black/50 px-2 py-1 rounded-md text-[11px] text-white font-bold">
+              EventsBridge
             </span>
 
             {mediaList.length > 0 ? (
@@ -324,7 +323,7 @@ const Service = ({ onSwitchToLogin }) => {
                     <iframe
                       key={idx}
                       src={`https://www.youtube.com/embed/${media.videoId}?autoplay=1&mute=1&loop=1&playlist=${media.videoId}&rel=0`}
-                      className={`absolute top-0 left-0 w-full h-full rounded-lg object-cover transition-opacity duration-700 ${
+                      className={`absolute top-0 left-0 w-full h-full rounded-lg object-contain transition-opacity duration-700 ${
                         idx === currentIndex ? "opacity-100 z-10" : "opacity-0"
                       } ${!isVendorAvailable ? "grayscale brightness-50" : ""}`}
                       frameBorder="0"
@@ -332,14 +331,27 @@ const Service = ({ onSwitchToLogin }) => {
                       allowFullScreen
                     ></iframe>
                   ) : (
-                    <img
+                    <div
                       key={idx}
-                      src={media.src}
-                      alt={`slide-${idx}`}
-                      className={`absolute top-0 left-0 w-full h-full rounded-lg object-cover transition-opacity duration-700 ${
-                        idx === currentIndex ? "opacity-100" : "opacity-0"
-                      } ${!isVendorAvailable ? "grayscale brightness-50" : ""}`}
-                    />
+                      className={`absolute inset-0 transition-opacity duration-700 ${
+                        idx === currentIndex ? "opacity-100 z-10" : "opacity-0"
+                      }`}
+                    >
+                      {/* Blurred background */}
+                      <img
+                        src={media.src}
+                        className="absolute inset-0 w-full h-full object-cover blur-xl scale-110 opacity-40"
+                      />
+
+                      {/* Main clean portrait image */}
+                      <img
+                        src={media.src}
+                        alt={`slide-${idx}`}
+                        className={`absolute inset-0 m-auto max-h-full max-w-full object-contain z-10 ${
+                          !isVendorAvailable ? "grayscale brightness-50" : ""
+                        }`}
+                      />
+                    </div>
                   )
                 )}
 
@@ -352,7 +364,7 @@ const Service = ({ onSwitchToLogin }) => {
                         e.stopPropagation();
                         prevSlide();
                       }}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white sm:hidden z-20"
+                      className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white sm:hidden z-30"
                     >
                       <FaChevronLeft className="text-lg" />
                     </button>
@@ -361,7 +373,7 @@ const Service = ({ onSwitchToLogin }) => {
                         e.stopPropagation();
                         nextSlide();
                       }}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white sm:hidden z-20"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white sm:hidden z-30"
                     >
                       <FaChevronRight className="text-lg" />
                     </button>
@@ -374,7 +386,7 @@ const Service = ({ onSwitchToLogin }) => {
                             e.stopPropagation();
                             prevSlide();
                           }}
-                          className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 hidden sm:block z-20"
+                          className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 hidden sm:block z-30"
                         >
                           <FaChevronLeft />
                         </button>
@@ -383,7 +395,7 @@ const Service = ({ onSwitchToLogin }) => {
                             e.stopPropagation();
                             nextSlide();
                           }}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 hidden sm:block z-20"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 hidden sm:block z-30"
                         >
                           <FaChevronRight />
                         </button>
@@ -394,7 +406,7 @@ const Service = ({ onSwitchToLogin }) => {
 
                 {/* Dots */}
                 {mediaList.length > 1 && (
-                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-30">
                     {mediaList.map((media, idx) => (
                       <button
                         key={idx}
@@ -444,11 +456,12 @@ const Service = ({ onSwitchToLogin }) => {
                 {isVendorAvailable ? (
                   <>
                     <button
-                      className="flex w-full cursor-pointer items-center justify-center rounded-full bg-[#001f3f] sm:px-[1rem] lg:px-12 py-3 text-sm font-bold text-white transition-colors duration-300 ease-in-out  hover:bg-[#002366] hover:border-[#FFD700] active:bg-[#000d1a] active:border-[#F3C12D] lg:w-auto lg:min-w-[220px]"
+                      className="flex w-full cursor-pointer items-center justify-center rounded-full bg-gradient-to-r from-[#001f3f] to-[#004f9f] sm:px-[1rem] lg:px-12 py-3 text-sm font-bold text-white transition-colors duration-300 ease-in-out hover:from-[#002366] hover:to-[#0066cc] active:from-[#000d1a] active:to-[#003366] lg:w-auto lg:min-w-[220px]"
                       onClick={handleBookNow}
                     >
                       BOOK NOW
                     </button>
+
                     <button
                       className="w-full lg:w-auto lg:min-w-[220px] px-4 py-3 rounded-full text-sm font-bold text-white bg-gradient-to-r from-[#fb923c] to-[#ef4444] hover:shadow-lg hover:from-[#fca5a5] hover:to-[#dc2626] focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-md transition-all duration-300"
                       onClick={handleAddToCart}

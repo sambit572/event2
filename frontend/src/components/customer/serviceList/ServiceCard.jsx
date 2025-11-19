@@ -79,7 +79,7 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
       >
-        <span className="absolute top-[10px] left-[10px] z-[3] bg-white/30 backdrop-blur-[30px] text-white text-[11px] font-bold uppercase tracking-[0.8px] px-[7px] py-[3px] rounded-full shadow-[0_3px_10px_rgba(0,0,0,0.3)] border border-white/30 [text-shadow:1px_1px_2px_rgba(0,0,0,0.6),-1px_-1px_1px_rgba(255,255,255,0.4)]">
+        <span className="absolute top-[10px] left-[10px] z-[20] bg-black/50 px-2 py-1 rounded-md text-[11px] text-white font-bold">
           EventsBridge
         </span>
 
@@ -91,7 +91,7 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
                 <iframe
                   key={currentIndex} // Add key to force re-render on change
                   src={`https://www.youtube.com/embed/${isVideo}?autoplay=1&mute=1&loop=1&playlist=${isVideo}&rel=0`}
-                  className={`absolute top-0 left-0 w-full h-full object-cover object-center ${
+                  className={`absolute top-0 left-0 w-full h-full object-contain object-center ${
                     !isVendorAvailable ? "grayscale brightness-50" : ""
                   }`}
                   frameBorder="0"
@@ -99,14 +99,23 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
                   allowFullScreen
                 ></iframe>
               ) : (
-                <img
-                  key={currentIndex}
-                  src={currentMediaUrl}
-                  alt={`slide-${currentIndex}`}
-                  className={`absolute top-0 left-0 w-full h-full object-cover object-center transition-opacity duration-500 ${
-                    !isVendorAvailable ? "grayscale brightness-50" : ""
-                  }`}
-                />
+                <div className="absolute inset-0">
+                  {/* 🔥 Blurred background */}
+                  <img
+                    src={currentMediaUrl}
+                    className="absolute inset-0 w-full h-full object-cover blur-xl scale-110 opacity-40"
+                  />
+
+                  {/* ⭐ Main non-blur, non-cropped image */}
+                  <img
+                    key={currentIndex}
+                    src={currentMediaUrl}
+                    alt={`slide-${currentIndex}`}
+                    className={`absolute inset-0 m-auto max-h-full max-w-full object-contain z-10 transition-opacity duration-500 ${
+                      !isVendorAvailable ? "grayscale brightness-50" : ""
+                    }`}
+                  />
+                </div>
               )}
               {/* ✅ Left Arrow */}
               {media.length > 1 && (
@@ -117,7 +126,7 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
                       e.stopPropagation();
                       prevSlide();
                     }}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white sm:hidden"
+                    className="absolute z-30 left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white sm:hidden"
                   >
                     <FaChevronLeft className="text-lg" />
                   </button>
@@ -129,7 +138,7 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
                         e.stopPropagation();
                         prevSlide();
                       }}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 hidden sm:flex"
+                      className="absolute z-30 left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 hidden sm:flex"
                     >
                       <FaChevronLeft />
                     </button>
@@ -146,7 +155,7 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
                       e.stopPropagation();
                       nextSlide();
                     }}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white sm:hidden"
+                    className="absolute z-30 right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white sm:hidden"
                   >
                     <FaChevronRight className="text-lg" />
                   </button>
@@ -158,7 +167,7 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
                         e.stopPropagation();
                         nextSlide();
                       }}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 hidden sm:flex"
+                      className="absolute z-30 right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 hidden sm:flex"
                     >
                       <FaChevronRight />
                     </button>
@@ -167,7 +176,7 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
               )}
               {/* ✅ MODIFIED: Dots now show YouTube icon for videos */}
               {media.length > 1 && (
-                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2">
+                <div className="absolute z-30 bottom-2 left-1/2 -translate-x-1/2 flex gap-2">
                   {media.map((mediaUrl, idx) => (
                     <button
                       key={idx}

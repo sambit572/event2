@@ -456,7 +456,7 @@ const DashboardServices = () => {
                 >
                   {getYouTubeID(selectedMediaUrl) ? (
                     <iframe
-                      className={`w-full h-full object-cover rounded-md transition-all duration-300 ${
+                      className={`w-full h-full object-contain rounded-md transition-all duration-300 ${
                         !service.available ? "grayscale brightness-75" : ""
                       }`}
                       src={`https://www.youtube.com/embed/${getYouTubeID(
@@ -473,7 +473,7 @@ const DashboardServices = () => {
                     <img
                       src={selectedMediaUrl}
                       alt="Service"
-                      className={`w-full h-full object-cover rounded-md transition-all duration-300 ${
+                      className={`w-full h-full object-contain rounded-md transition-all duration-300 ${
                         !service.available ? "grayscale brightness-75" : ""
                       }`}
                       onError={(e) => {
