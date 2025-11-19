@@ -102,9 +102,10 @@ const ReviewSlider = () => {
     fetchReviews();
   }, []);
 
-  // Only duplicate if we have reviews to avoid empty duplicates
   const duplicatedReviews = reviews.length > 0 ? [...reviews] : [];
-
+  if (!loading && (!reviews || reviews.length === 0)) {
+  return null; 
+}
   return (
     <div className="review_section">
       <motion.h1
