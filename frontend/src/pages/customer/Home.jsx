@@ -23,6 +23,9 @@ import AddsBanner from "../../components/customer/home/AddsBanner.jsx";
 import categories from "../../utils/CatogoryData.jsx";
 import StepsSection from "../../components/customer/home/StepsSection.jsx";
 import CulturalDanceSlider from "../common/CulturalDanceSlider.jsx";
+import HeroSection from "../../components/customer/home/HeroSection.jsx";
+import Features from "./../../components/customer/home/Features";
+
 // ✅ Lazy load heavy components below
 const ReviewSlider = React.lazy(() =>
   import("../../components/customer/home/ReviewSlider.jsx")
@@ -125,8 +128,10 @@ const Home = () => {
 
   return (
     <div className="home">
-      <ImageSlider images={images} />
-      <AddsBanner />
+      {/* <ImageSlider images={images} /> */}
+      <HeroSection />
+      <Features />
+      {/* <AddsBanner /> */}
       <CulturalDanceSlider />
       {/* <img className="addbanner" src={banner} alt="" /> */}
       <div id="categories" className="categories-head1 mb-[-15px]">
@@ -144,7 +149,6 @@ const Home = () => {
         Explore trusted professionals across categories and simplify your event
         planning.
       </p>
-
       {/* Category Grid */}
       <div className="align_center category_section">
         {visibleCategories.map((category, index) => (
@@ -152,7 +156,7 @@ const Home = () => {
             key={index}
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
-            // viewport={{ once: true, amount: 0.3 }}
+            viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: index * 0.5, ease: "easeInOut" }}
           >
             {" "}
@@ -178,7 +182,6 @@ const Home = () => {
       <Suspense fallback={<div>Loading reviews...</div>}>
         <ReviewSlider />
       </Suspense>
-
       <Suspense fallback={<div>Loading FAQs...</div>}>
         <FaqSection />
       </Suspense>
