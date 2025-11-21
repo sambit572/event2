@@ -102,7 +102,7 @@ export default function HeroSection() {
             <div
               className="
       absolute right-[-4px] top-[40%]
-      w-1 h-14                      /* mobile */
+      w-1 h-12                      /* mobile */
       sm:w-2 sm:h-20                  /* small */
       md:w-2 md:h-24                  /* medium */
       lg:w-2 lg:h-28                  /* desktop */
@@ -114,7 +114,7 @@ export default function HeroSection() {
             <div
               className="
       relative z-20 border-[4px] 
-      w-44 h-70 rounded-t-[20px]
+      w-44 h-65 rounded-t-[20px]
       sm:w-64 sm:h-[500px] sm:rounded-t-[30px] sm:border-[5px] sm:border-b-0
       md:w-80 md:h-[600px] md:rounded-t-[35px] md:border-[6px] md:border-b-0
       lg:w-[320px] lg:h-[600px] lg:rounded-t-[40px] lg:border-[8px] lg:border-b-0
@@ -144,7 +144,13 @@ export default function HeroSection() {
 
           {/* Top Left Card */}
           <motion.div
-            initial={{ opacity: 0, x: -100 }}
+            initial={{
+              opacity: 0,
+              x:
+                typeof window !== "undefined" && window.innerWidth < 640
+                  ? -20
+                  : -100,
+            }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 2, ease: "easeInOut" }}
@@ -171,7 +177,13 @@ sm-mid:left-4 sm-mid:w-24
 
           {/* Middle Left Card */}
           <motion.div
-            initial={{ opacity: 0, x: -100 }}
+            initial={{
+              opacity: 0,
+              x:
+                typeof window !== "undefined" && window.innerWidth < 640
+                  ? -20
+                  : -100,
+            }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 2, ease: "easeInOut" }}
@@ -200,7 +212,13 @@ sm-mid:left-8
 
           {/*bottom Left Card */}
           <motion.div
-            initial={{ opacity: 0, x: -100 }}
+            initial={{
+              opacity: 0,
+              x:
+                typeof window !== "undefined" && window.innerWidth < 640
+                  ? -20
+                  : -100,
+            }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 2, ease: "easeInOut" }}
@@ -223,7 +241,13 @@ sm-mid:w-28
 
           {/* Top Right Card */}
           <motion.div
-            initial={{ opacity: 0, x: 100 }}
+            initial={{
+              opacity: 0,
+              x:
+                typeof window !== "undefined" && window.innerWidth < 640
+                  ? 20
+                  : 100,
+            }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 2, ease: "easeInOut" }}
@@ -260,7 +284,13 @@ sm-mid:right-2 sm-mid:w-24
 
           {/* Bottom Right Card */}
           <motion.div
-            initial={{ opacity: 0, x: 100 }}
+            initial={{
+              opacity: 0,
+              x:
+                typeof window !== "undefined" && window.innerWidth < 640
+                  ? 20
+                  : 100,
+            }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 2, ease: "easeInOut" }}

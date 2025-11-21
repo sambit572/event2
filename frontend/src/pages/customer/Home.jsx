@@ -157,7 +157,7 @@ const Home = () => {
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: index * 0.5, ease: "easeInOut" }}
+            transition={{ duration: index * 0.2, ease: "easeInOut" }}
           >
             {" "}
             <CategoryCard category={category} />

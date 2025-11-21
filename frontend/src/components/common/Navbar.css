@@ -369,7 +369,9 @@
     padding: 0px 15px;
     height: 50px;
   }
-
+  .logo {
+    font-size: 25px;
+  }
   .nav-icons {
     /* width: 100%; */
 
@@ -395,9 +397,6 @@
   }
 }
 @media (max-width: 580px) {
-  .logo {
-    font-size: 25px;
-  }
   /* .searchbarIcon {
     margin-right: 10px;
   } */

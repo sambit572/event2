@@ -38,7 +38,7 @@ const VendorMenu = ({
         onClick={toggleVendorDropdown}
       >
         <FaStore className="text-[#001f3f] text-[18px] transition-all duration-300 group-hover:text-white group-hover:scale-110" />
-        <span className="text-[#001F3F] font-semibold max-[900px]:hidden max-[580px]:hidden group-hover:text-white transition-colors duration-300">
+        <span className="text-[#001F3F] font-semibold hidden sm:inline md:hidden group-hover:text-white transition-colors duration-300">
           {!VendorFirstName ? "Be a Vendor" : `Hi, ${VendorFirstName}`}
         </span>
       </div>

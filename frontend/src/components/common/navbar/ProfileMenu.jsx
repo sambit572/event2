@@ -45,14 +45,14 @@ const ProfileMenu = ({
           {!userFirstName ? (
             <>
               <CgProfile className="text-2xl text-[#001f3f] group-hover:text-white group-hover:scale-110 transition-all duration-300" />
-              <span className="font-semibold vendorNameText max-[900px]:hidden max-[580px]:hidden group-hover:text-white transition-colors duration-300">
+              <span className="font-semibold  max-[900px]:hidden max-[580px]:hidden group-hover:text-white transition-colors duration-300">
                 Login
               </span>
             </>
           ) : (
             <>
               <UserProfileIcon currentUser={currentUser} />
-              <span className="font-semibold vendorNameText max-[900px]:hidden max-[580px]:hidden group-hover:text-white transition-colors duration-300">
+              <span className="font-semibold hidden sm:inline md:hidden group-hover:text-white transition-colors duration-300">
                 {`Hi, ${userFirstName}`}
               </span>
             </>
@@ -70,7 +70,7 @@ const ProfileMenu = ({
           {!userFirstName ? (
             <>
               <h4 className="text-[17px] text-[#001f3f] font-semibold mb-[0.05rem]">
-                Welcome 
+                Welcome
               </h4>
               <p className="text-[13px] text-gray-600 mb-1">
                 To access your account and manage services
