@@ -26,7 +26,7 @@ const Features = () => {
             key={i}
             className="flex items-center gap-2 text-gray-700 text-[16px] font-medium"
           >
-            <span className="text-3xl  text-blue-600">{f.icon}</span>
+            <span className="text-5xl  text-blue-600">{f.icon}</span>
             <span className="font-extrabold">{f.text}</span>
           </div>
         ))}
