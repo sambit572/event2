@@ -98,10 +98,10 @@ const StepsSection = () => {
         {steps.map((step, index) => (
           <motion.div
             // initial={{ opacity: 0, y: 50 }}
-            whileInView={{ x: [0, 50, 0] }}
+            // whileInView={{ x: [0, 50, 0] }}
             // whileInView={{ opacity: 1, y: 0 }}
             // viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: index * 0.75, ease: "easeInOut" }}
+            // transition={{ duration: index * 0.75, ease: "easeInOut" }}
             key={index}
             className="
         flex flex-col items-center justify-start text-center border border-gray-400

@@ -34,10 +34,10 @@ export default function HeroSection() {
     <div className="perspective-1000">
       <motion.div
         style={{ scale, rotateX, rotateY, y }}
-        className="w-full flex flex-col items-center px-2 pt-4 bg-white overflow-hidden"
+        className="w-full flex flex-col items-center px-2 pt-2 bg-white overflow-hidden"
       >
         {/* Heading */}
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-center leading-snug sm:leading-tight max-w-md sm:max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto px-4">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-center leading-snug sm:leading-tight max-w-md sm:max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto pt-4">
           Celebrate Without Limits
         </h1>
 
@@ -49,10 +49,10 @@ export default function HeroSection() {
 
         {/* Buttons */}
         <div className="flex gap-3 sm:gap-4 mt-2 sm:mt-4 flex-wrap justify-center px-4">
-          <button className="bg-black font-semibold text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-3xl text-sm sm:text-base md:text-lg">
+          <button className="bg-black font-semibold text-white px-5 sm:px-6 py-1.5 sm:py-3 rounded-3xl text-xs sm:text-base md:text-lg">
             Book Now
           </button>
-          <button className="border-2 border-black px-5 font-semibold sm:px-6 py-2.5 sm:py-3 rounded-3xl text-sm sm:text-base md:text-lg">
+          <button className="border-2 border-black px-5 font-semibold sm:px-6 py-1.5 sm:py-3 rounded-3xl text-xs sm:text-base md:text-lg">
             Pay With EMI
           </button>
         </div>
@@ -74,53 +74,64 @@ export default function HeroSection() {
           {/* ===== Phone Frame ===== */}
           <div className="relative inline-block">
             {/* LEFT SIDE BUTTONS (RESPONSIVE) */}
+            {/* Extra button */}
+            <div
+              className="
+      absolute left-[-2px] top-[20%]
+      w-1 h-4                      /* mobile */
+      sm:w-2 sm:h-6                 /* tablet */
+      md:w-2 md:h-8                 /* medium */
+      lg:w-2 lg:h-10                 /* desktop */
+      bg-[#5D465B]  shadow-md
+    "
+            ></div>
             {/* Volume Up */}
             <div
               className="
-      absolute left-[-4px] top-[35%]
-      w-1 h-8                      /* mobile */
-      sm:w-2 sm:h-10                 /* tablet */
-      md:w-2 md:h-12                 /* medium */
-      lg:w-2 lg:h-14                 /* desktop */
-      bg-black rounded-l-lg shadow-md
+      absolute left-[-2px] top-[30%]
+      w-1 h-6                      /* mobile */
+      sm:w-2 sm:h-8                 /* tablet */
+      md:w-2 md:h-10                 /* medium */
+      lg:w-2 lg:h-12                 /* desktop */
+      bg-[#5D465B]  shadow-md
     "
             ></div>
 
             {/* Volume Down */}
             <div
               className="
-      absolute left-[-4px] top-[48%]
-      w-1 h-8
-      sm:w-2 sm:h-10
-      md:w-2 md:h-12
-      lg:w-2 lg:h-14
-      bg-black rounded-l-lg shadow-md
+      absolute left-[-2px] top-[40%]
+      w-1 h-6
+      sm:w-2 sm:h-8
+      md:w-2 md:h-10
+      lg:w-2 lg:h-12
+      bg-[#5D465B]  shadow-md
     "
             ></div>
 
             {/* RIGHT SIDE POWER BUTTON (RESPONSIVE) */}
             <div
               className="
-      absolute right-[-4px] top-[40%]
-      w-1 h-12                      /* mobile */
-      sm:w-2 sm:h-20                  /* small */
-      md:w-2 md:h-24                  /* medium */
-      lg:w-2 lg:h-28                  /* desktop */
-      bg-black rounded-r-lg shadow-md
+      absolute right-[-2px] top-[30%]
+      w-1 h-10                      /* mobile */
+      sm:w-2 sm:h-16                  /* small */
+      md:w-2 md:h-20                  /* medium */
+      lg:w-2 lg:h-24                /* desktop */
+      bg-[#5D465B]   shadow-md
     "
             ></div>
 
             {/* PHONE FRAME (UNCHANGED, RESPONSIVE ALREADY) */}
             <div
               className="
-      relative z-20 border-[4px] 
-      w-44 h-65 rounded-t-[20px]
+      relative z-20 border-[3.5px] 
+      w-36 h-65 rounded-t-[20px]
       sm:w-64 sm:h-[500px] sm:rounded-t-[30px] sm:border-[5px] sm:border-b-0
       md:w-80 md:h-[600px] md:rounded-t-[35px] md:border-[6px] md:border-b-0
       lg:w-[320px] lg:h-[600px] lg:rounded-t-[40px] lg:border-[8px] lg:border-b-0
       overflow-hidden
-       border-b-0 border-black
-      shadow-xl bg-black
+       border-b-0 border-[#5D465B] 
+      shadow-xl bg-gray-[#5D465B] 
     "
             >
               {/* NOTCH */}
@@ -129,14 +140,23 @@ export default function HeroSection() {
               {/* <div className="absolute top-1 left-[60%] w-2 h-2 bg-gray-700 rounded-full z-30"></div> */}
 
               {/* IMAGE */}
-              <motion.img
-                src={heroimage2}
-                alt="Preview"
-                className="w-full h-full object-fill"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 4 }}
-              />
+              <div
+                className="border-[6px] 
+    rounded-t-[15px] border-b-0 border-black
+      shadow-xl bg-black
+        sm:rounded-t-[25px] sm:border-[10px] sm:border-b-0
+      md:rounded-t-[29px] md:border-[12px] md:border-b-0
+      lg:rounded-t-[30px] lg:border-[14px] lg:border-b-0"
+              >
+                <motion.img
+                  src={heroimage2}
+                  alt="Preview"
+                  className="w-full h-full object-fill rounded-t-[15px]"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 4 }}
+                />
+              </div>
             </div>
           </div>
 
@@ -156,7 +176,7 @@ export default function HeroSection() {
             transition={{ duration: 2, ease: "easeInOut" }}
             className="
     absolute z-30 bg-blue-400 shadow-2xl rounded-2xl p-1
-    w-20 top-10 left-0              /* MOBILE DEFAULT */
+    w-20 top-8 left-0              /* MOBILE DEFAULT */
 sm-mid:left-4 sm-mid:w-24
     sm:w-36 sm:top-12 sm:left-2      /* SMALL SCREENS (480px–640px) */
     md:w-40 md:top-16 md:left-8     /* MID SCREENS (768px–1024px) */
@@ -191,9 +211,9 @@ sm-mid:left-4 sm-mid:w-24
     absolute z-50 flex space-x-1 bg-stone-800 text-green92 shadow-xl
     rounded-2xl py-0 px-2
 
-    text-sm bottom-30 left-2           /* MOBILE: 360px–480px */
+    text-sm bottom-32 left-2           /* MOBILE: 360px–480px */
 sm-mid:left-8 
-    sm:text-2xl sm:left-6 sm:bottom-50 /* SMALL SCREENS: 480–640px */
+    sm:text-2xl sm:left-6 sm:bottom-52 /* SMALL SCREENS: 480–640px */
 
     md:text-3xl md:left-12 md:bottom-64 /* MEDIUM: 768–1024px */
 
@@ -223,8 +243,8 @@ sm-mid:left-8
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 2, ease: "easeInOut" }}
             className="
-    absolute z-30 bg-purple32 shadow-xl rounded-2xl py-3 px-4
-    w-20 left-0 bottom-6            /* MOBILE (360px–480px) */
+    absolute z-30 bg-purple32 shadow-xl rounded-2xl py-1 px-4
+    w-24 left-0 bottom-4            /* MOBILE (360px–480px) */
 sm-mid:w-28
     sm:w-36 sm:bottom-16   /* SMALL SCREENS */
 
@@ -252,12 +272,12 @@ sm-mid:w-28
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 2, ease: "easeInOut" }}
             className="
-    absolute z-10 bg-aceeff shadow-xl rounded-2xl pl-2 pr-2
-    w-20  h-24 top-12 right-0                        /* MOBILE (360px–480px) */
-sm-mid:right-2 sm-mid:w-24
-    sm:w-36 sm:h-36 sm:top-16  sm:py-2 sm:right-6               /* SMALL SCREENS (480–640px) */
+    absolute z-10 bg-aceeff shadow-xl rounded-2xl px-2 py-1
+    w-24  h-204 top-8 right-0                        /* MOBILE (360px–480px) */
+sm-mid:right-6 sm-mid:w-24
+    sm:w-36 sm:h-36 sm:top-16  sm:py-2 sm:right-10               /* SMALL SCREENS (480–640px) */
 
-    md:w-36 md:top-16 md:right-10             /* MEDIUM (768–1024px) */
+    md:w-48 md:top-16 md:right-10             /* MEDIUM (768–1024px) */
 
     lg:w-[320px] lg:p-4 lg:top-12 lg:right-2 lg:h-40 lg:pr-0  /* DESKTOP (your original position & size) */
   "
@@ -296,8 +316,8 @@ sm-mid:right-2 sm-mid:w-24
             transition={{ duration: 2, ease: "easeInOut" }}
             className="
     absolute z-10 bg-white shadow-xl rounded-2xl p-0
-    w-20  bottom-10 right-0              /* MOBILE (360–480px) */
-sm-mid:right-2 sm-mid:w-24
+    w-28  bottom-4 right-0              /* MOBILE (360–480px) */
+sm-mid:right-2 sm-mid:w-28
     sm:w-40 sm:bottom-16 sm:right-0      /* SMALL SCREENS (480–640px) */
 
     md:w-44 md:bottom-16 md:right-4    /* MEDIUM/TABLET (768–1024px) */

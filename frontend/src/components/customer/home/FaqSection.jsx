@@ -80,22 +80,22 @@ const FaqSection = () => {
       <div className="faq-columns">
         {columns.map((column, colIdxs) => (
           <motion.div
-            key={colIdxs}
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            // key={colIdxs}
+            // initial={{ opacity: 0, y: 50 }}
+            // whileInView={{ opacity: 1, y: 0 }}
             // viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: colIdxs * 0.75, ease: "easeInOut" }}
+            // transition={{ duration: colIdxs * 0.75, ease: "easeInOut" }}
             className="faq-column"
           >
             {column.map((item, index) => {
               const itemIndex = colIdxs + index * columnCount;
               return (
                 <motion.div
-                  key={itemIndex}
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.3 }}
-                  transition={{ duration: itemIndex * 0.5, ease: "easeInOut" }}
+                  // key={itemIndex}
+                  // initial={{ opacity: 0, y: 50 }}
+                  // whileInView={{ opacity: 1, y: 0 }}
+                  // viewport={{ once: true, amount: 0.3 }}
+                  // transition={{ duration: itemIndex * 0.5, ease: "easeInOut" }}
                   className={`faq-item ${
                     activeIndex === itemIndex ? "active" : ""
                   }`}
