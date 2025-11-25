@@ -49,9 +49,12 @@ export default function HeroSection() {
 
         {/* Buttons */}
         <div className="flex gap-3 sm:gap-4 mt-2 sm:mt-4 flex-wrap justify-center px-4">
-          <button className="bg-black font-semibold text-white px-5 sm:px-6 py-1.5 sm:py-3 rounded-3xl text-xs sm:text-base md:text-lg">
+          <a
+            href="#categories"
+            className="bg-black font-semibold text-white px-5 sm:px-6 py-1.5 sm:py-3 rounded-3xl text-xs sm:text-base md:text-lg"
+          >
             Book Now
-          </button>
+          </a>
           <button className="border-2 border-black px-5 font-semibold sm:px-6 py-1.5 sm:py-3 rounded-3xl text-xs sm:text-base md:text-lg">
             Pay With EMI
           </button>
