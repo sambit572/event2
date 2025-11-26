@@ -37,7 +37,7 @@ export default function HeroSection() {
         className="w-full flex flex-col items-center px-2 pt-2 bg-white overflow-hidden"
       >
         {/* Heading */}
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-center leading-snug sm:leading-tight max-w-md sm:max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto pt-4">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-center leading-snug sm:leading-tight max-w-md sm:max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto pt-10">
           Celebrate Without Limits
         </h1>
 
