@@ -129,9 +129,9 @@ export default function HeroSection() {
               className="
       relative z-20 border-[3.5px] 
       w-36 h-65 rounded-t-[20px]
-      sm:w-64 sm:h-[500px] sm:rounded-t-[30px] sm:border-[5px] sm:border-b-0
-      md:w-80 md:h-[600px] md:rounded-t-[35px] md:border-[6px] md:border-b-0
-      lg:w-[320px] lg:h-[600px] lg:rounded-t-[40px] lg:border-[8px] lg:border-b-0
+      sm:w-64 sm:h-[500px] sm:rounded-t-[20px] sm:border-[5px] sm:border-b-0
+      md:w-80 md:h-[600px] md:rounded-t-[30px] md:border-[6px] md:border-b-0
+      lg:w-[320px] lg:h-[600px] lg:rounded-t-[30px] lg:border-[8px] lg:border-b-0
       overflow-hidden
        border-b-0 border-[#5D465B] 
       shadow-xl bg-gray-[#5D465B] 
@@ -144,12 +144,12 @@ export default function HeroSection() {
 
               {/* IMAGE */}
               <div
-                className="border-[6px] 
+                className="border-[2px] 
     rounded-t-[15px] border-b-0 border-black
       shadow-xl bg-black
-        sm:rounded-t-[25px] sm:border-[10px] sm:border-b-0
-      md:rounded-t-[29px] md:border-[12px] md:border-b-0
-      lg:rounded-t-[30px] lg:border-[14px] lg:border-b-0"
+        sm:rounded-t-[15px] sm:border-[4px] sm:border-b-0
+      md:rounded-t-[20spx] md:border-[6px] md:border-b-0
+      lg:rounded-t-[20px] lg:border-[8px] lg:border-b-0"
               >
                 <motion.img
                   src={heroimage2}

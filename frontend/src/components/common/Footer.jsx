@@ -228,13 +228,7 @@ function Footer() {
                     }}
                     className="flex justify-between items-center cursor-pointer text-white text-base py-2 border-b border-gray-700 hover:text-yellow-400 transition"
                   >
-                    <span
-                      onClick={navigate(`/category/${categoryName}`, {
-                        state: { categoryName }, // ✅ pass full category object
-                      })}
-                    >
-                      {categoryName}
-                    </span>
+                    {categoryName}
 
                     <img
                       src={
