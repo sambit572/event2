@@ -27,6 +27,7 @@ import cardBanner from "../../assets/home/categoriesImages/marriage-card.png";
 import magicBanner from "../../assets/home/categoriesImages/magician.png";
 import stageBanner from "../../assets/home/categoriesImages/stage_decor.png";
 import eventBanner from "../../assets/home/categoriesImages/event_company.png";
+import balloonBanner from "../../assets/serviceListBanner/balloon banner.webp";
 
 const ServiceCardSkeleton = () => (
   <div className="serviceCardSkeleton">
@@ -57,6 +58,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
   const [showSticky, setShowSticky] = useState(false);
   const [categorySearchTerm, setCategorySearchTerm] = useState("");
   const [selectedSubcategory, setSelectedSubcategory] = useState("All");
+  const [showArrows, setShowArrows] = useState(false);
 
   const bannerMap = {
     "DJ Services & Brash Band": djBanner,
@@ -77,6 +79,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
     "Magic Shows": magicBanner,
     "Stage Decor": stageBanner,
     "Event Company": eventBanner,
+    "Balloon Decor": balloonBanner,
   };
 
   // ✅ Define subcategories for each main category
@@ -86,169 +89,118 @@ const ServiceList = ({ onSwitchToLogin }) => {
       "Wedding DJ",
       "Corporate Event DJ",
       "Private Party DJ",
-      "Festival DJ",
-      "Brass Band",
-      "DJ + Band Combo",
     ],
     "Music Concert & Orchestra": [
       "All",
       "Live Band Performance",
-      "Classical Orchestra",
-      "Instrumental Ensemble",
-      "Sufi / Qawwali Night",
-      "Celebrity / Artist Concert",
+      "Qawwali Night",
+      "Celebrity Concert",
     ],
     "Decor & Tenthouse": [
       "All",
       "Wedding Decor & Tent",
-      "Reception / Engagement Decor",
-      "Corporate Event Decor",
-      "Birthday / Private Party Decor",
-      "Stage & Backdrop Decoration",
-      "Festival Decoration",
-      "Theme-based Decoration",
+      "Birthday Party Decor",
+      "Reception Decor",
+      "Engagement Decor "
     ],
     "Photo & Videography": [
       "All",
       "Wedding Photography & Videography",
       "Pre-Wedding Shoot",
-      "Engagement / Reception Shoot",
-      "Birthday / Event Coverage",
-      "Corporate / Brand Shoot",
-      "Cinematic Highlight Video",
+      "Birthday",
+      "Event Coverage",
     ],
     "Food & Catering": [
       "All",
       "Wedding Catering",
-      "Birthday / Private Party Catering",
-      "Corporate / Office Catering",
-      "Buffet Catering",
-      "Live Counters & Food Stalls", // 🥙 Panipuri, Chaat, Street food, etc.
-      "Dessert & Beverage Stations", // 🍨 Ice cream, Mocktail bar, Juice stall
-      "Private Chef & Cooking Services", // 👨‍🍳 Hire a chef only
-      "Regional / Traditional Cuisine",
-      "Multi-Cuisine / Continental Catering",
-      "Vegetarian / Vegan Catering",
+      "Birthday Party Catering",
+      "Corporate Catering",
     ],
     "Banquet Hall & Mandap": [
       "All",
       "Wedding Banquet Hall",
-      "Engagement / Ring Ceremony Hall",
-      "Birthday / Anniversary Hall",
-      "Corporate Event Hall",
-      "Mandap / Traditional Setup",
-      "Outdoor Lawn / Garden Venue",
-      "Mini Hall / Community Hall",
-      "Luxury Banquet / 5-Star Venue",
+      "Ring Ceremony ",
+      "Birthday",
+      "Anniversary",
     ],
     "Classical Music & Dance": [
       "All",
       "Classical Vocal Performance",
       "Instrumental Performance",
       "Bharatanatyam Dance",
-      "Kathak Dance",
-      "Odissi / Kuchipudi / Mohiniyattam",
-      "Fusion Classical Performance",
-      "Group / Ensemble Performance",
-      "Melody Party Dance Program",
     ],
     "Islamic Maulbi": [
       "All",
-      "Religious Sermon / Bayan",
-      "Quran Recitation / Tilawat",
-      "Nikah / Marriage Ceremonies",
-      "Funeral / Memorial Services",
-      "Special Event / Program",
+      "Religious Sermon",
+      "Tilawat",
+      "Marriage Ceremonies",
+      "Funeral Services",
+      "Special Event",
     ],
     "Christian Priest": [
       "All",
-      "Baptism / Christening",
+      "Christening",
       "Wedding Ceremony",
-      "Funeral / Memorial Service",
-      "Blessings / Special Prayers",
-      "Church / Community Program",
+      "Funeral Service",
+      "Blessings Prayers",
+      "Church Program",
     ],
     "Hindu Pandit": [
       "All",
-      "Wedding / Vivah Ceremony",
-      "Puja / Religious Ceremony",
-      "Housewarming / Griha Pravesh",
-      "Naming Ceremony / Annaprashan",
-      "Funeral / Shraddh Ceremony",
-      "Special Event / Festival Puja",
+      "Wedding Ceremony",
+      "Puja Ceremony",
+      "Housewarming",
+      "Naming Ceremony",
+      "Shraddh Ceremony",
+      "Special Event",
     ],
     "Beauty Makeover": [
       "All",
       "Bridal Makeup",
-      "Groom / Male Makeup",
-      "Unisex / Party Makeup",
-      "Mehendi / Henna Artist",
-      "Hair Styling & Spa",
-      "Special Event / Photo Shoot",
+      "Unisex",
+      "Mehendi Artist",
     ],
     "Floral Decor": [
       "All",
-      "Wedding / Bridal Decor",
-      "Birthday / Private Party Decor",
-      "Corporate Event / Conference Decor",
-      "Themed / Custom Floral Arrangements",
+      "Wedding Decor",
       "Stage & Backdrop Floral Decor",
-      "Table / Centerpiece Decor",
-      "Outdoor / Garden Event Decor",
+      "Birthday Party Decor",
     ],
     "Ceremonial Ride": [
       "All",
-      "Wedding Car / Bridal Car",
-      "Luxury / Premium Car Rental",
-      "Vintage / Classic Car",
-      "Decorated Bus / Van",
-      "Horse / Animal Ride",
-      "Motorbike / Bike Decor",
+      "Bridal Car",
+      "Luxury Car",
+      "Classic Car",
     ],
     Fireworks: [
       "All",
-      "Wedding / Celebration Fireworks",
-      "Corporate Event Fireworks",
-      "Indoor Fireworks / Spark Show",
-      "Outdoor / Large Scale Fireworks",
-      "Customized / Themed Fireworks",
-      "Diwali / Festival Fireworks",
+      "Wedding Fireworks",
+      "Indoor Fireworks",
+      "Outdoor Fireworks",
     ],
     "Card Design & Printing": [
       "All",
       "Wedding Invitations",
-      "Birthday / Party Invitations",
-      "Corporate / Business Cards",
-      "Custom / Themed Invitations",
-      "Greeting Cards",
-      "Event Flyers / Posters",
+      "Birthday Party Invitations",
+      "Corporate Cards",
     ],
     "Magic Shows": [
       "All",
-      "Stage Magic / Illusion Shows",
-      "Close-Up / Table Magic",
       "Children’s Magic Shows",
-      "Street / Walk-Around Magic",
-      "Themed / Custom Magic Shows",
+      "Stage Magic Shows",
+      "Close-Up Magic",
     ],
-    "Stage Decor": [
+    "Event Management Company": [
       "All",
-      "Wedding Stage / Mandap Decor",
-      "Corporate Event Stage",
-      "Birthday / Private Party Stage",
-      "Themed / Conceptual Stage Decor",
-      "Outdoor / Lawn Stage Decor",
-      "Stage Lighting & Backdrop",
-    ],
-    "Event Company": [
-      "All",
-      "Wedding Planner / Full-Service",
+      "Wedding Full-Service Planner",
       "Corporate Event Management",
-      "Birthday / Private Party Planner",
-      "Themed / Conceptual Event Planner",
-      "Festival / Religious Event Organizer",
-      "Exhibition / Trade Show Planner",
-      "Destination / Outdoor Event Planner",
+      "Birthday Party Planner",
+    ],
+    "Balloon Decor": [
+      "All",
+      "Birthday Balloon Decoration",
+      "Theme-Based Balloon Decoration",
+      "Baby Shower Balloon Decoration",
     ],
   };
 
@@ -273,7 +225,13 @@ const ServiceList = ({ onSwitchToLogin }) => {
         setLoading(true);
 
         const response = await axios.get(
-          `${BACKEND_URL}/common/category/${categoryId}`
+          `${BACKEND_URL}/common/category/${categoryId}`,
+          {
+            params: {
+              subCategory:
+                selectedSubcategory !== "All" ? selectedSubcategory : undefined,
+            },
+          }
         );
 
         let servicesData = response.data.data;
@@ -314,7 +272,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
     };
 
     fetchServices();
-  }, [categoryId, dispatch]);
+  }, [categoryId, selectedSubcategory, dispatch]);
 
   const handleApplyFilters = (filters) => {
     console.log("Applying filters:", filters);
@@ -407,7 +365,6 @@ const ServiceList = ({ onSwitchToLogin }) => {
         }
       });
     }
-
     setFilteredServices(results);
     console.log("Filtered and sorted count:", results.length);
   };
@@ -434,6 +391,22 @@ const ServiceList = ({ onSwitchToLogin }) => {
     }
   };
   const currentCategory = categoryData?.title?.trim().replace(/\u00A0/g, " ");
+    useEffect(() => {
+    const checkOverflow = () => {
+      if (scrollRef.current) {
+        const hasOverflow =
+          scrollRef.current.scrollWidth > scrollRef.current.clientWidth;
+
+        setShowArrows(hasOverflow);
+      }
+    };
+
+    checkOverflow();
+    window.addEventListener("resize", checkOverflow);
+
+    return () => window.removeEventListener("resize", checkOverflow);
+  }, [currentCategory, subcategoryMap]);
+
 
   return (
     <>
@@ -470,12 +443,14 @@ const ServiceList = ({ onSwitchToLogin }) => {
 
       {currentCategory && subcategoryMap[currentCategory] && (
         <div className="subcategory-wrapper">
-          <button
-            className="scroll-btn prev"
-            onClick={() => scrollSubcategories("prev")}
-          >
-            <FaChevronLeft />
-          </button>
+          {showArrows && (
+            <button
+              className="scroll-btn prev"
+              onClick={() => scrollSubcategories("prev")}
+            >
+              <FaChevronLeft />
+            </button>
+          )}
 
           <div className="subcategory-tabs" ref={scrollRef}>
             {subcategoryMap[currentCategory].map((sub) => (
@@ -491,12 +466,14 @@ const ServiceList = ({ onSwitchToLogin }) => {
             ))}
           </div>
 
-          <button
-            className="scroll-btn next"
-            onClick={() => scrollSubcategories("next")}
-          >
-            <FaChevronRight />
-          </button>
+          {showArrows && (
+            <button
+              className="scroll-btn next"
+              onClick={() => scrollSubcategories("next")}
+            >
+              <FaChevronRight />
+            </button>
+          )}
         </div>
       )}
       <div className="serviceList">

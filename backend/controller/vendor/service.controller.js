@@ -1,5 +1,6 @@
 import { Service } from "../../model/vendor/service.model.js";
 import { Category } from "../../model/common/category.model.js";
+import { SUBCATEGORY_MAP } from "../../utilities/subCategoryData.js";
 
 import {
   deleteFromCloudinary,
@@ -22,6 +23,7 @@ export const createService = async (req, res) => {
 
     const {
       serviceCategory,
+      subCategory,
       minPrice,
       maxPrice,
       serviceName,
@@ -65,6 +67,7 @@ export const createService = async (req, res) => {
     const serviceData = {
       vendorId: req.vendor._id,
       serviceCategory,
+      subCategory: Array.isArray(subCategory) ? subCategory : [subCategory],
       serviceName,
       stateLocationOffered: stateLocationsArray,
       locationOffered: locationsArray,
@@ -314,6 +317,7 @@ export const updateService = async (req, res) => {
       serviceName,
       serviceDes,
       serviceCategory,
+      subCategory,
       stateLocationOffered,
       locationOffered,
       duration,
@@ -332,6 +336,11 @@ export const updateService = async (req, res) => {
       serviceName: serviceName || existingService.serviceName,
       serviceDes: serviceDes || existingService.serviceDes,
       serviceCategory: serviceCategory || existingService.serviceCategory,
+      subCategory: subCategory
+        ? Array.isArray(subCategory)
+          ? subCategory
+          : [subCategory]
+        : existingService.subCategory,
       stateLocationOffered: stateLocationOffered
         ? Array.isArray(stateLocationOffered)
           ? stateLocationOffered
@@ -665,5 +674,19 @@ export const updateServiceImageFirst = async (req, res) => {
   } catch (error) {
     console.error("❌ Error updating service images:", error);
     return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getSubcategoryList = async (req, res) => {
+  try {
+    const category = req.params.category;
+    const list = SUBCATEGORY_MAP[category] || [];
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, list, "Subcategories fetched"));
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };

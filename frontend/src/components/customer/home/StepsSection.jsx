@@ -61,7 +61,7 @@ const StepsSection = () => {
   }, []);
 
   return (
-    <div className="mt-3 py-10 px-4 rounded-md ml-5 mr-5 sm:px-6 lg:px-2 mb-5 sm:mb-12 md:mb-10 lg:mb-16">
+    <div className="mt-3 py-5 px-4 rounded-md ml-5 mr-5 sm:px-6 lg:px-2 mb-5 sm:mb-12 md:mb-10 lg:mb-1">
       {/* Heading */}
       <div className="text-center mb-12">
         <h2

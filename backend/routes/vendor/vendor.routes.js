@@ -8,6 +8,7 @@ import {
   updateService,
   uploadServiceMedia,
   updateServiceImageFirst,
+  getSubcategoryList,
 } from "../../controller/vendor/service.controller.js";
 
 import { verifyVendorJwt } from "../../middleware/VendorAuth.middleware.js";
@@ -191,5 +192,7 @@ vendor_router.get(
 );
 // --- VENDOR BOOKING HISTORY ROUTE --- //
 vendor_router.get("/vendor-booking/:vendorId", getVendorBookings);
+// --- GET SUBCATEGORY LIST ROUTE --- //
+vendor_router.get("/subcategory-list/:category", getSubcategoryList);
 
 export { vendor_router };
