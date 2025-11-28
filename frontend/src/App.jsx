@@ -72,6 +72,7 @@ import VendorForgotPass from "./pages/vendor/VendorForgetPass.jsx";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
+import MyApproach from "./pages/common/MyApproach.jsx";
 
 const App = () => {
   const location = useLocation();
@@ -305,6 +306,7 @@ const App = () => {
           <Route path="/feedback" element={<Feedback />} /> {/* Feedback */}
           <Route path="/Wishlist" element={<Wishlist />}></Route>
           <Route path="/profile" element={<Profile />}></Route>
+          <Route path="/approach" element={<MyApproach />}></Route>
           <Route
             path="/userdetails/:serviceId"
             element={<UserDetails />}

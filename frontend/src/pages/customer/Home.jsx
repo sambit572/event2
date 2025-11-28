@@ -125,7 +125,14 @@ const Home = () => {
 
     checkUser();
   }, []);
-
+  useEffect(() => {
+    if (location.hash === "#categories") {
+      const el = document.getElementById("categories");
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, [location]);
   return (
     <div className="home">
       {/* <ImageSlider images={images} /> */}
@@ -140,7 +147,7 @@ const Home = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
-          className="align_center categories-head"
+          className="align_center categories-head mt-6"
         >
           𝐂𝐀𝐓𝐄𝐆𝐎𝐑𝐈𝐄𝐒
         </motion.h1>

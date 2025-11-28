@@ -183,7 +183,12 @@ function Footer() {
           </div>
           <div>
             <h4>Quick Links</h4>
-            <p className="hover:text-[#ffc107] cursor-pointer">Our Approach</p>
+            <p
+              onClick={() => navigate("/approach")}
+              className="hover:text-[#ffc107] cursor-pointer"
+            >
+              Our Approach
+            </p>
             <p
               className="hover:text-[#ffc107] cursor-pointer"
               onClick={() => navigate("/faqs")}
@@ -426,7 +431,7 @@ function Footer() {
                     openSections.quick ? "show" : ""
                   }`}
                 >
-                  <p>Our Approach</p>
+                  <p onClick={() => navigate("/approach")}>Our Approach</p>
                   <p>FAQs</p>
                 </div>
               </div>
