@@ -7,6 +7,8 @@ import {
   updateAvailability,
   updateService,
   uploadServiceMedia,
+  updateServiceImageFirst,
+  getSubcategoryList,
 } from "../../controller/vendor/service.controller.js";
 
 import { verifyVendorJwt } from "../../middleware/VendorAuth.middleware.js";
@@ -125,20 +127,19 @@ vendor_router
   .route("/update-availability/:id")
   .patch(verifyVendorJwt, updateAvailability);
 
-  vendor_router.post(
-    "/upload-service-media",
-    verifyVendorJwt,
-    (req, res, next) => {
-      upload.array("media", 10)(req, res, function (err) {
-        if (err) {
-          return res.status(400).json({ success: false, message: err.message });
-        }
-        next();
-      });
-    },
-    uploadServiceMedia
-  );
-  
+vendor_router.post(
+  "/upload-service-media",
+  verifyVendorJwt,
+  (req, res, next) => {
+    upload.array("media", 10)(req, res, function (err) {
+      if (err) {
+        return res.status(400).json({ success: false, message: err.message });
+      }
+      next();
+    });
+  },
+  uploadServiceMedia
+);
 
 // --- BANK DETAILS ROUTES --- //
 vendor_router.post("/bank-details", verifyVendorJwt, createBankDetails);
@@ -191,5 +192,7 @@ vendor_router.get(
 );
 // --- VENDOR BOOKING HISTORY ROUTE --- //
 vendor_router.get("/vendor-booking/:vendorId", getVendorBookings);
+// --- GET SUBCATEGORY LIST ROUTE --- //
+vendor_router.get("/subcategory-list/:category", getSubcategoryList);
 
 export { vendor_router };

@@ -38,12 +38,15 @@ const DashboardServices = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [fileSizeError, setFileSizeError] = useState("");
+  const [expandedServiceType, setExpandedServiceType] = useState({});
+  const [availableSubcategories, setAvailableSubcategories] = useState([]);
 
   const [crop, setCrop] = useState({
-    unit: "%",
-    width: 80,
-    height: 45, // 👈 Add height too (16:9 = 80x45)
-    aspect: 16 / 9,
+      unit: '%',
+    x: 10,
+    y: 10,
+    width: 80,   // default crop width
+    height: 80,
   });
   const [cropSrc, setCropSrc] = useState(null);
   const imgRef = useRef(null);
@@ -54,12 +57,12 @@ const DashboardServices = () => {
       throw new Error("Image or crop data is not available yet.");
     }
 
-    const canvas = document.createElement("canvas");
-    const scaleX = image.naturalWidth / image.width;
-    const scaleY = image.naturalHeight / image.height;
-    canvas.width = crop.width * scaleX;
-    canvas.height = crop.height * scaleY;
-    const ctx = canvas.getContext("2d");
+  const canvas = document.createElement("canvas");
+  const scaleX = image.naturalWidth / image.width;
+  const scaleY = image.naturalHeight / image.height;
+  canvas.width = crop.width;
+  canvas.height = crop.height;
+  const ctx = canvas.getContext("2d");
 
     ctx.drawImage(
       image,
@@ -69,8 +72,8 @@ const DashboardServices = () => {
       crop.height * scaleY,
       0,
       0,
-      canvas.width,
-      canvas.height
+      crop.width,
+      crop.height
     );
 
     return new Promise((resolve) => {
@@ -408,15 +411,39 @@ const DashboardServices = () => {
       newMediaPreviews.forEach((preview) => URL.revokeObjectURL(preview.url));
     };
   }, [newMediaPreviews]);
+  const toggleExpandServiceType = (index) => {
+    setExpandedServiceType((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
+  };
+
+  useEffect(() => {
+    if (!editedData.serviceCategory) return;
+
+    axios
+      .get(
+        `${BACKEND_URL}/vendors/subcategory-list/${editedData.serviceCategory}`
+      )
+      .then((res) => {
+        setAvailableSubcategories(res.data.data); // array of subcategories
+      })
+      .catch(() => setAvailableSubcategories([]));
+  }, [editedData.serviceCategory]);
 
   return (
     <div className="flex flex-col overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden h-[480px]">
       {services.length > 0 ? (
         services.map((service, index) => {
+          const serviceTypeText = Array.isArray(service.subCategory)
+            ? service.subCategory.join(", ")
+            : service.subCategory;
           const isEditing = editingIndex === index;
           const currentServiceImages = service.serviceImage || [];
           const selectedMediaUrl =
             selectedMedia[index] || currentServiceImages[0];
+
+          const isCatering = service.pricingType === "perPlate";
 
           return (
             <section
@@ -449,7 +476,7 @@ const DashboardServices = () => {
                 </span>
               </div>
               {/* Image Slider Section */}
-              <div className="relative w-full sm:w-[400px] sm:h-[200px] mt-5 mx-auto group">
+              <div className="relative w-full sm:w-[400px] sm:h-[190px] mt-5 mx-auto group">
                 <Link
                   to={`/service/${service.serviceCategory}/${service._id}`}
                   style={{ textDecoration: "none", color: "inherit" }}
@@ -600,7 +627,7 @@ const DashboardServices = () => {
                         value={editedData.serviceName}
                         onChange={handleChange}
                         placeholder="Service Name"
-                        className="w-full p-1 bg-[#f1f1f1] border border-[#001f3f] rounded-md"
+                        className="w-full p-1 bg-[#fff] border border-[#001f3f] rounded-md"
                         disabled={isSaving}
                       />
 
@@ -622,59 +649,269 @@ const DashboardServices = () => {
                           }))
                         }
                         placeholder="Locations (comma separated)"
-                        className="w-full p-1 bg-[#f1f1f1] border border-[#001f3f] rounded-md"
+                        className="w-full p-1 bg-[#fff] border border-[#001f3f] rounded-md"
                         disabled={isSaving}
                       />
 
                       {/* Price Inputs */}
-                      <div className="flex gap-3 w-full">
-                        <input
-                          type="number"
-                          name="minPrice"
-                          value={editedData.minPrice || ""}
-                          onChange={(e) =>
-                            setEditedData((prev) => ({
-                              ...prev,
-                              minPrice: e.target.value,
-                            }))
-                          }
-                          placeholder="Min Price"
-                          className="w-1/2 p-1 bg-[#f1f1f1] border border-[#001f3f] rounded-md"
-                          disabled={isSaving}
-                        />
-                        <input
-                          type="number"
-                          name="maxPrice"
-                          value={editedData.maxPrice || ""}
-                          onChange={(e) =>
-                            setEditedData((prev) => ({
-                              ...prev,
-                              maxPrice: e.target.value,
-                            }))
-                          }
-                          placeholder="Max Price"
-                          className="w-1/2 p-1 bg-[#f1f1f1] border border-[#001f3f] rounded-md"
-                          disabled={isSaving}
-                        />
-                      </div>
+                      {editedData.pricingType === "perPlate" ? (
+                        /* Catering Pricing Section */
+                        <div className="w-full flex flex-col gap-3">
+                          {/* Base per-plate price */}
+                          <input
+                            type="number"
+                            name="perPlatePrice"
+                            value={editedData.perPlatePrice || ""}
+                            onChange={(e) =>
+                              setEditedData((prev) => ({
+                                ...prev,
+                                perPlatePrice: e.target.value,
+                              }))
+                            }
+                            placeholder="Per Plate Price"
+                            className="w-full p-1 bg-white border border-[#001f3f] rounded-md"
+                            disabled={isSaving}
+                          />
 
-                      {/* Category */}
-                      <input
-                        type="text"
-                        name="serviceCategory"
-                        value={editedData.serviceCategory}
-                        onChange={handleChange}
-                        placeholder="Service Category"
-                        className="w-full p-1 bg-[#f1f1f1] border border-[#001f3f] rounded-md"
-                        disabled={isSaving}
-                      />
+                          {/* Min & Max Plates */}
+                          <div className="flex gap-3">
+                            <input
+                              type="number"
+                              name="minPlates"
+                              value={editedData.minPlates || ""}
+                              onChange={(e) =>
+                                setEditedData((prev) => ({
+                                  ...prev,
+                                  minPlates: e.target.value,
+                                }))
+                              }
+                              placeholder="Min Plates"
+                              className="w-1/2 p-1 bg-white border border-[#001f3f] rounded-md"
+                              disabled={isSaving}
+                            />
+
+                            <input
+                              type="number"
+                              name="maxPlates"
+                              value={editedData.maxPlates || ""}
+                              onChange={(e) =>
+                                setEditedData((prev) => ({
+                                  ...prev,
+                                  maxPlates: e.target.value,
+                                }))
+                              }
+                              placeholder="Max Plates"
+                              className="w-1/2 p-1 bg-white border border-[#001f3f] rounded-md"
+                              disabled={isSaving}
+                            />
+                          </div>
+
+                          {/* Catering Packages */}
+                          <div className="flex flex-col gap-2">
+                            <label className="font-semibold text-gray-700">
+                              Packages
+                            </label>
+
+                            {editedData.packages?.map((pkg, index) => (
+                              <div
+                                key={index}
+                                className="flex gap-2 items-center"
+                              >
+                                <input
+                                  type="text"
+                                  placeholder="Package Name"
+                                  value={pkg.packageName}
+                                  onChange={(e) => {
+                                    const updated = [...editedData.packages];
+                                    updated[index].packageName = e.target.value;
+                                    setEditedData({
+                                      ...editedData,
+                                      packages: updated,
+                                    });
+                                  }}
+                                  className="w-1/3 p-1 bg-white border border-[#001f3f] rounded-md"
+                                />
+
+                                <input
+                                  type="number"
+                                  placeholder="Price"
+                                  value={pkg.perPlatePrice}
+                                  onChange={(e) => {
+                                    const updated = [...editedData.packages];
+                                    updated[index].perPlatePrice =
+                                      e.target.value;
+                                    setEditedData({
+                                      ...editedData,
+                                      packages: updated,
+                                    });
+                                  }}
+                                  className="w-1/3 p-1 bg-white border border-[#001f3f] rounded-md"
+                                />
+
+                                <input
+                                  type="number"
+                                  placeholder="Min Plates"
+                                  value={pkg.minPlates}
+                                  onChange={(e) => {
+                                    const updated = [...editedData.packages];
+                                    updated[index].minPlates = e.target.value;
+                                    setEditedData({
+                                      ...editedData,
+                                      packages: updated,
+                                    });
+                                  }}
+                                  className="w-1/6 p-1 bg-white border border-[#001f3f] rounded-md"
+                                />
+
+                                <input
+                                  type="number"
+                                  placeholder="Max Plates"
+                                  value={pkg.maxPlates}
+                                  onChange={(e) => {
+                                    const updated = [...editedData.packages];
+                                    updated[index].maxPlates = e.target.value;
+                                    setEditedData({
+                                      ...editedData,
+                                      packages: updated,
+                                    });
+                                  }}
+                                  className="w-1/6 p-1 bg-white border border-[#001f3f] rounded-md"
+                                />
+
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const updated = editedData.packages.filter(
+                                      (_, i) => i !== index
+                                    );
+                                    setEditedData({
+                                      ...editedData,
+                                      packages: updated,
+                                    });
+                                  }}
+                                  className="text-red-500 font-bold"
+                                >
+                                  ✕
+                                </button>
+                              </div>
+                            ))}
+
+                            {/* Add Package Button */}
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setEditedData((prev) => ({
+                                  ...prev,
+                                  packages: [
+                                    ...prev.packages,
+                                    {
+                                      packageName: "",
+                                      perPlatePrice: "",
+                                      minPlates: "",
+                                      maxPlates: "",
+                                    },
+                                  ],
+                                }))
+                              }
+                              className="px-3 py-1 bg-[#001f3f] text-white rounded-md w-fit"
+                            >
+                              + Add Package
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        /* Normal Services Price Section */
+                        <div className="flex gap-3 w-full">
+                          <input
+                            type="number"
+                            name="minPrice"
+                            value={editedData.minPrice || ""}
+                            onChange={(e) =>
+                              setEditedData((prev) => ({
+                                ...prev,
+                                minPrice: e.target.value,
+                              }))
+                            }
+                            placeholder="Min Price"
+                            className="w-1/2 p-1 bg-[#fff] border border-[#001f3f] rounded-md"
+                            disabled={isSaving}
+                          />
+                          <input
+                            type="number"
+                            name="maxPrice"
+                            value={editedData.maxPrice || ""}
+                            onChange={(e) =>
+                              setEditedData((prev) => ({
+                                ...prev,
+                                maxPrice: e.target.value,
+                              }))
+                            }
+                            placeholder="Max Price"
+                            className="w-1/2 p-1 bg-[#fff] border border-[#001f3f] rounded-md"
+                            disabled={isSaving}
+                          />
+                        </div>
+                      )}
+
+                      {/* Subcategory Multi-Select Checkboxes */}
+                      <div className="flex flex-col">
+                        <label className="font-semibold">Service Type</label>
+
+                        {availableSubcategories.length === 0 ? (
+                          <p className="text-sm text-red-600">
+                            No subcategories found
+                          </p>
+                        ) : (
+                          <div className="grid grid-cols-2 gap-2 mt-2 p-2 border border-[#001f3f] rounded-md bg-[#fff]">
+                            {availableSubcategories.map((sub, i) => (
+                              <label
+                                key={i}
+                                className="flex items-center gap-2"
+                              >
+                                <input
+                                  type="checkbox"
+                                  value={sub}
+                                  checked={editedData.subCategory?.includes(
+                                    sub
+                                  )}
+                                  onChange={(e) => {
+                                    const value = e.target.value;
+
+                                    setEditedData((prev) => {
+                                      const selected = prev.subCategory || [];
+
+                                      if (selected.includes(value)) {
+                                        // remove
+                                        return {
+                                          ...prev,
+                                          subCategory: selected.filter(
+                                            (item) => item !== value
+                                          ),
+                                        };
+                                      } else {
+                                        // add
+                                        return {
+                                          ...prev,
+                                          subCategory: [...selected, value],
+                                        };
+                                      }
+                                    });
+                                  }}
+                                  disabled={isSaving}
+                                />
+                                <span>{sub}</span>
+                              </label>
+                            ))}
+                          </div>
+                        )}
+                      </div>
 
                       {/* Duration */}
                       <div className="flex items-center justify-center gap-3">
                         <div className="flex items-center gap-1">
                           <input
                             type="number"
-                            className="w-16 text-center p-1 bg-[#f1f1f1] border border-[#001f3f] rounded-md"
+                            className="w-16 text-center p-1 bg-[#fff] border border-[#001f3f] rounded-md"
                             value={Math.floor(editedData.duration / (24 * 60))}
                             onChange={(e) =>
                               updateDuration(e.target.value, "days")
@@ -688,7 +925,7 @@ const DashboardServices = () => {
                         <div className="flex items-center gap-1">
                           <input
                             type="number"
-                            className="w-16 text-center p-1 bg-[#f1f1f1] border border-[#001f3f] rounded-md"
+                            className="w-16 text-center p-1 bg-[#fff] border border-[#001f3f] rounded-md"
                             value={Math.floor(
                               (editedData.duration % (24 * 60)) / 60
                             )}
@@ -704,7 +941,7 @@ const DashboardServices = () => {
                         <div className="flex items-center gap-1">
                           <input
                             type="number"
-                            className="w-16 text-center p-1 bg-[#f1f1f1] border border-[#001f3f] rounded-md"
+                            className="w-16 text-center p-1 bg-[#fff] border border-[#001f3f] rounded-md"
                             value={editedData.duration % 60}
                             onChange={(e) =>
                               updateDuration(e.target.value, "minutes")
@@ -723,7 +960,7 @@ const DashboardServices = () => {
                         onChange={handleChange}
                         placeholder="Description"
                         maxLength={500}
-                        className="w-full min-h-[90px] p-1 bg-[#f1f1f1] border border-[#001f3f] rounded-md"
+                        className="w-full min-h-[90px] p-1 bg-[#fff] border border-[#001f3f] rounded-md"
                         disabled={isSaving}
                       />
                     </div>
@@ -743,7 +980,7 @@ const DashboardServices = () => {
                     </div>
 
                     {/* Image Preview */}
-                    <div className="flex flex-nowrap overflow-x-auto items-center gap-1 pt-2">
+                    <div className="flex flex-nowrap items-center gap-1 pt-2">
                       {(editedData.serviceImage || []).map((mediaUrl, i) => (
                         <div
                           key={`existing-${i}`}
@@ -878,6 +1115,29 @@ const DashboardServices = () => {
                     >
                       <h2 className="details-h2 mt-6">{service.serviceName}</h2>
                     </Link>
+                    <div className="flex gap-2 flex-wrap">
+                      <strong>Service Type: </strong>
+
+                      <span className="text-sm">
+                        {expandedServiceType[index]
+                          ? serviceTypeText
+                          : serviceTypeText.length > 22
+                          ? serviceTypeText.substring(0, 22) + "..."
+                          : serviceTypeText}
+                      </span>
+
+                      {serviceTypeText.length > 22 && (
+                        <span
+                          onClick={() => toggleExpandServiceType(index)}
+                          className="text-sm font-semibold text-blue-600 hover:text-blue-800"
+                        >
+                          {expandedServiceType[index]
+                            ? "Read Less"
+                            : "Read More"}
+                        </span>
+                      )}
+                    </div>
+
                     <div className="l">
                       <strong>Locations: </strong>
                       {Array.isArray(service.locationOffered) ? (
@@ -912,10 +1172,46 @@ const DashboardServices = () => {
                       to={`/service/${service.serviceCategory}/${service._id}`}
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
+                      {/* PRICE SECTION */}
                       <div className="pr">
-                        <strong>Price: </strong>₹ {service.minPrice} - ₹{" "}
-                        {service.maxPrice}
+                        <strong>Price: </strong>
+
+                        {/* Catering Service Price */}
+                        {isCatering ? (
+                          <div className="flex flex-col text-sm">
+                            {/* Base per plate */}
+                            <span className="font-semibold text-gray-800">
+                              ₹ {service.perPlatePrice} / plate
+                              <span className="text-gray-600 ml-1">
+                                ({service.minPlates} - {service.maxPlates}{" "}
+                                plates)
+                              </span>
+                            </span>
+
+                            {/* Packages (if any) */}
+                            {service.packages?.length > 0 && (
+                              <div className="mt-1">
+                                <strong>Packages:</strong>
+                                <ul className="list-disc ml-5 text-gray-700">
+                                  {service.packages.map((pkg, idx) => (
+                                    <li key={idx}>
+                                      {pkg.packageName}: ₹{pkg.perPlatePrice} /
+                                      plate ({pkg.minPlates}-{pkg.maxPlates}{" "}
+                                      plates)
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          /* Regular Services Price */
+                          <span>
+                            ₹ {service.minPrice} - ₹ {service.maxPrice}
+                          </span>
+                        )}
                       </div>
+
                       <div className="c">
                         <strong>Category: </strong> {service.serviceCategory}
                       </div>
@@ -925,7 +1221,7 @@ const DashboardServices = () => {
                       </div>
                     </Link>
                     {/* Description with Read More */}
-                    <div className="mt-1">
+                    <div>
                       <div className="des font-semibold text-gray-800">
                         Description:
                       </div>
@@ -964,7 +1260,11 @@ const DashboardServices = () => {
                 <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
                   <div className="bg-white p-4 rounded-lg shadow-lg max-w-lg w-full">
                     <h2 className="text-lg font-semibold mb-3">Crop Image</h2>
-                    <ReactCrop crop={crop} onChange={setCrop} aspect={16 / 9}>
+                    <ReactCrop
+                      crop={crop}
+                      onChange={setCrop}
+                      ruleOfThirds={true}
+                    >
                       <img
                         ref={imgRef}
                         src={cropSrc}

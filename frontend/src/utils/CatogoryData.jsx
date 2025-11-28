@@ -16,6 +16,7 @@ import image15 from "../assets/home/categoriesImages/marriage-card.png";
 import image16 from "../assets/home/categoriesImages/banquithall.png";
 import image17 from "../assets/home/categoriesImages/stage_decor.png";
 import image18 from "../assets/home/categoriesImages/event_company.png";
+import image19 from "../assets/home/categoriesImages/ballon decor.jpg";
 
 export const CategoryData = [
   {
@@ -62,6 +63,18 @@ export const CategoryData = [
     tagline: "Echoes of Celebration",
   },
   {
+    id: "Beauty Makeover",
+    title: "Beauty Makeover",
+    image: image11,
+    tagline: "Beauty in Every Brush",
+  },
+  {
+    id: "balloon-decor",
+    title: "Balloon Decor",
+    image: image19,
+    tagline: "Colorful Creations for Every Celebration",
+  },
+  {
     id: "islamic",
     title: "Islamic Maulbi",
     image: image8,
@@ -78,13 +91,6 @@ export const CategoryData = [
     title: "Hindu Pandit",
     image: image5,
     tagline: "Mantras Meet Moments",
-  },
-
-  {
-    id: "Beauty Makeover",
-    title: "Beauty Makeover",
-    image: image11,
-    tagline: "Beauty in Every Brush",
   },
   {
     id: "floral",
@@ -119,7 +125,7 @@ export const CategoryData = [
   },
   {
     id: "event-management",
-    title: "Event Company",
+    title: "Event Management Company",
     image: image18,
     tagline: "Crafting Moments, Managing Memories",
   },

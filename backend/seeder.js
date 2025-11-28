@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 
 import { Category } from "./model/common/category.model.js";
 import "./loadEnv.js";
+import { name } from "agenda/dist/agenda/name.js";
 
 // EXACT category names matching your CategoryData.jsx
 const categories = [
@@ -184,6 +185,16 @@ const categories = [
       "Customized packages for all budgets",
       "One-stop solution for all event needs",
       "Hassle-free, professional execution",
+    ],
+  },
+  {
+    name: "Balloon Decor",
+    defaultWhyChooseUs: [
+      "Beautiful & customizable balloon themes",
+      "Affordable decoration packages",
+      "Unique designs for any celebration",
+      "Professional installation team",
+      "High-quality balloons & safe materials"
     ],
   },
 ];

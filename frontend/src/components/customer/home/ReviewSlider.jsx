@@ -104,8 +104,8 @@ const ReviewSlider = () => {
 
   const duplicatedReviews = reviews.length > 0 ? [...reviews] : [];
   if (!loading && (!reviews || reviews.length === 0)) {
-  return null; 
-}
+    return null;
+  }
   return (
     <div className="review_section">
       <motion.h1

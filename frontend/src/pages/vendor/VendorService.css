@@ -116,6 +116,16 @@
   color: #4b2bb3;
   font-size: 14px;
 }
+.ServiceSubCategory {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ServiceSubCategory label {
+  font-weight: 600;
+  color: #4b2bb3;
+  font-size: 14px;
+}
 .category-wrapper {
   position: relative;
   width: 100%;
@@ -233,7 +243,7 @@
   border: 2px solid #9d7bf9;
   border-radius: 12px;
   overflow: hidden;
-  background-color: #f7f3ff;
+  background-color: #fff;
 }
 .main-preview img,
 .main-preview video {
@@ -328,7 +338,7 @@
   border-radius: 8px;
   border: 2px solid #c5b9f5;
   font-size: 14px;
-  background-color: #f7f3ff;
+  background-color: #fff;
   color: #4b2bb3;
   outline: none;
   transition: border-color 0.3s ease;
@@ -378,7 +388,7 @@
 .dropdown-input {
   border: 2px solid #7a4fff;
   border-radius: 8px;
-  background-color: #f7f3ff;
+  background-color: #fff;
   padding: 10px 12px;
   color: #4b2bb3;
   transition: border-color 0.3s ease;
@@ -445,7 +455,7 @@
   font-size: 14px;
   border: 2px solid #c5b9f5;
   border-radius: 8px;
-  background-color: #f7f3ff;
+  background-color: #fff;
   color: #4b2bb3;
   resize: vertical;
   outline: none;
@@ -585,7 +595,7 @@
   border-radius: 8px;
   border: 2px solid #c5b9f5;
   font-size: 14px;
-  background-color: #f7f3ff;
+  background-color: #fff;
   color: #4b2bb3;
   outline: none;
   transition: border-color 0.3s ease;
@@ -646,7 +656,7 @@
 .add-package-btn {
   padding: 0.75rem;
   border: 1px dashed #4b2bb3;
-  background-color: #f7f3ff;
+  background-color: #fff;
   color: #4b2bb3;
   font-weight: bold;
   cursor: pointer;

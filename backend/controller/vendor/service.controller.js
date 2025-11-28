@@ -1,5 +1,6 @@
 import { Service } from "../../model/vendor/service.model.js";
 import { Category } from "../../model/common/category.model.js";
+import { SUBCATEGORY_MAP } from "../../utilities/subCategoryData.js";
 
 import {
   deleteFromCloudinary,
@@ -67,6 +68,7 @@ export const createService = async (req, res) => {
 
     const {
       serviceCategory,
+      subCategory,
       minPrice,
       maxPrice,
       serviceName,
@@ -110,6 +112,7 @@ export const createService = async (req, res) => {
     const serviceData = {
       vendorId: req.vendor._id,
       serviceCategory,
+      subCategory: Array.isArray(subCategory) ? subCategory : [subCategory],
       serviceName,
       stateLocationOffered: stateLocationsArray,
       locationOffered: locationsArray,
@@ -220,7 +223,6 @@ export const createService = async (req, res) => {
 
     const mediaUrls = await processServiceMedia(req.files, serviceName);
     serviceData.serviceImage = mediaUrls;
-
 
     let newService;
     let responseMessage;
@@ -346,6 +348,7 @@ export const updateService = async (req, res) => {
       serviceName,
       serviceDes,
       serviceCategory,
+      subCategory,
       stateLocationOffered,
       locationOffered,
       duration,
@@ -364,6 +367,11 @@ export const updateService = async (req, res) => {
       serviceName: serviceName || existingService.serviceName,
       serviceDes: serviceDes || existingService.serviceDes,
       serviceCategory: serviceCategory || existingService.serviceCategory,
+      subCategory: subCategory
+        ? Array.isArray(subCategory)
+          ? subCategory
+          : [subCategory]
+        : existingService.subCategory,
       stateLocationOffered: stateLocationOffered
         ? Array.isArray(stateLocationOffered)
           ? stateLocationOffered
@@ -653,5 +661,63 @@ export const uploadServiceMedia = async (req, res) => {
   } catch (error) {
     console.error("❌ Error uploading service media:", error);
     return res.status(500).json(new ApiError(500, "Internal server error"));
+  }
+};
+
+export const updateServiceImageFirst = async (req, res) => {
+  console.log("Incoming update data:", req.body);
+  try {
+    const vendorId = req.vendor._id;
+    const serviceId = req.params.id;
+
+    const service = await Service.findOne({ _id: serviceId, vendorId });
+    if (!service) {
+      return res
+        .status(404)
+        .json({ message: "Service not found or not authorized" });
+    }
+
+    const imageUrls = [];
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        const cloudRes = await uploadOnCloudinary(file.path);
+        if (cloudRes?.secure_url) {
+          imageUrls.push(cloudRes.secure_url);
+        }
+      }
+
+      service.serviceImage = [...service.serviceImage, ...imageUrls];
+      await service.save();
+
+      await client.del(`service:${serviceId}`);
+      await client.del(`vendor:${vendorId}:services`);
+
+      return res.status(200).json({
+        success: true,
+        data: service,
+        message: "Images uploaded & service updated successfully",
+      });
+    } else {
+      return res
+        .status(400)
+        .json({ message: "Please upload at least one image" });
+    }
+  } catch (error) {
+    console.error("❌ Error updating service images:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getSubcategoryList = async (req, res) => {
+  try {
+    const category = req.params.category;
+    const list = SUBCATEGORY_MAP[category] || [];
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, list, "Subcategories fetched"));
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };

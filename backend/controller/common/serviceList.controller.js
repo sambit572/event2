@@ -8,15 +8,28 @@ export const getServicesByCategory = async (req, res) => {
     console.log("Inside getServicesByCategory .............");
 
     const { category } = req.params;
+    const { subCategory } = req.query;
+    let subCatArray = [];
+
+    if (subCategory) {
+      subCatArray = Array.isArray(subCategory)
+        ? subCategory
+        : subCategory.split(",");
+    }
 
     console.log(`$$$$$$$$$$$$$$$$$$$$$$$$$category: ${category}`);
-
+    console.log(`Selected SubCategory: ${subCategory}`);
     const services = await Service.aggregate([
       {
         $match: {
           serviceCategory: { $regex: category, $options: "i" },
+
+          ...(subCatArray.length > 0 && {
+            subCategory: { $in: subCatArray },
+          }),
         },
       },
+
       {
         $sort: { createdAt: 1 },
       },

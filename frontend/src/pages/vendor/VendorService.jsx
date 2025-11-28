@@ -74,6 +74,10 @@ function VendorService({ currentStep }) {
   const [crop, setCrop] = useState();
   const [completedCrop, setCompletedCrop] = useState(null);
   const imgRef = useRef(null);
+  const [selectedSubcategories, setSelectedSubcategories] = useState([]);
+  const [subcategorySearchTerm, setSubcategorySearchTerm] = useState("");
+  const [showSubcategoryDropdown, setShowSubcategoryDropdown] = useState(false);
+  const subCategoryDropdownRef = useRef(null);
 
   // ✅ FIXED: Added missing state variables
   const [imageError, setImageError] = useState("");
@@ -137,13 +141,13 @@ function VendorService({ currentStep }) {
     "Christian Priest",
     "Hindu Pandit",
     "Beauty Makeover",
+    "Balloon Decor",
     "Floral Decor",
     "Ceremonial Ride",
     "Fireworks",
     "Card Design & Printing",
     "Magic Shows",
-    "Stage Decor",
-    "Event Company",
+    "Event Management Company",
   ];
 
   const allLocations = {
@@ -196,7 +200,112 @@ function VendorService({ currentStep }) {
       "Kolhapur",
     ],
   };
+  // ✅ Define subcategories for each main category
+  const subcategories = {
+   "DJ Services & Brash Band": [
+      "Wedding DJ",
+      "Corporate Event DJ",
+      "Private Party DJ",
+    ],
+    "Music Concert & Orchestra": [
+      "Live Band Performance",
+      "Qawwali Night",
+      "Celebrity Concert",
+    ],
+    "Decor & Tenthouse": [
+      "Wedding Decor & Tent",
+      "Birthday Party Decor",
+      "Reception Decor",
+      "Engagement Decor "
+    ],
+    "Photo & Videography": [
+      "Wedding Photography & Videography",
+      "Pre-Wedding Shoot",
+      "Birthday",
+      "Event Coverage",
+    ],
+    "Food & Catering": [
+      "Wedding Catering",
+      "Birthday Party Catering",
+      "Corporate Catering",
+    ],
+    "Banquet Hall & Mandap": [
+      "Wedding Banquet Hall",
+      "Ring Ceremony ",
+      "Birthday",
+      "Anniversary",
+    ],
+    "Classical Music & Dance": [
+      "Classical Vocal Performance",
+      "Instrumental Performance",
+      "Bharatanatyam Dance",
+    ],
+    "Islamic Maulbi": [
+      "Religious Sermon",
+      "Tilawat",
+      "Marriage Ceremonies",
+      "Funeral Services",
+      "Special Event",
+    ],
+    "Christian Priest": [
+      "All",
+      "Christening",
+      "Wedding Ceremony",
+      "Funeral Service",
+      "Blessings Prayers",
+      "Church Program",
+    ],
+    "Hindu Pandit": [
+      "Wedding Ceremony",
+      "Puja Ceremony",
+      "Housewarming",
+      "Naming Ceremony",
+      "Shraddh Ceremony",
+      "Special Event",
+    ],
+    "Beauty Makeover": [
+      "Bridal Makeup",
+      "Unisex",
+      "Mehendi Artist",
+    ],
+    "Floral Decor": [
+      "Wedding Decor",
+      "Stage & Backdrop Floral Decor",
+      "Birthday Party Decor",
+    ],
+    "Ceremonial Ride": [
+      "Bridal Car",
+      "Luxury Car",
+      "Classic Car",
+    ],
+    Fireworks: [
+      "Wedding Fireworks",
+      "Indoor Fireworks",
+      "Outdoor Fireworks",
+    ],
+    "Card Design & Printing": [
+      "Wedding Invitations",
+      "Birthday Party Invitations",
+      "Corporate Cards",
+    ],
+    "Magic Shows": [
+      "Children’s Magic Shows",
+      "Stage Magic Shows",
+      "Close-Up Magic",
+    ],
+    "Event Management Company": [
+      "Wedding Full-Service Planner",
+      "Corporate Event Management",
+      "Birthday Party Planner",
+    ],
+    "Balloon Decor": [
+      "Birthday Balloon Decoration",
+      "Theme-Based Balloon Decoration",
+      "Baby Shower Balloon Decoration",
+    ],
+  };
 
+  const availableSubcategories = subcategories[categorySearchTerm] || [];
   const filteredCategories = categories.filter((cat) =>
     cat.toLowerCase().includes(categorySearchTerm.toLowerCase())
   );
@@ -408,7 +517,10 @@ function VendorService({ currentStep }) {
       formData.append("serviceDes", serviceDescription);
       formData.append("serviceCategory", categorySearchTerm);
       formData.append("stateLocationOffered", selectedState);
-      
+      selectedSubcategories.forEach((sub) => {
+        formData.append("subCategory", sub);
+      });
+
       selectedLocations.forEach((loc) => {
         formData.append("locationOffered[]", loc);
       });
@@ -486,6 +598,11 @@ function VendorService({ currentStep }) {
       alert("Please upload at least one service image");
       return false;
     }
+    // 3. Check subcategory
+    if (selectedSubcategories.length === 0) {
+      errors.subcategory = "Please select at least one service type";
+    }
+
     if (isCatering) {
       const hasBasePrice =
         perPlateData.price && perPlateData.minPlates && perPlateData.maxPlates;
@@ -664,6 +781,14 @@ function VendorService({ currentStep }) {
     setSelectedLocations([]);
   };
 
+  const handleSelectAllSubcategories = () => {
+    setSelectedSubcategories(availableSubcategories);
+  };
+
+  const handleDeselectAllSubcategories = () => {
+    setSelectedSubcategories([]);
+  };
+
   return (
     <>
       <StepProgress currentStep={1} />
@@ -763,6 +888,209 @@ function VendorService({ currentStep }) {
               </div>
             </div>
 
+            <div className="ServiceSubCategory">
+              <label htmlFor="subcategory-search" className="location-label">
+                Service Type *
+              </label>
+
+              <div
+                className="location-dropdown-wrapper"
+                ref={subCategoryDropdownRef}
+              >
+                <div
+                  className="dropdown-input"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                    gap: "6px",
+                    cursor: "text",
+                  }}
+                  onClick={() =>
+                    document.getElementById("subcategory-input").focus()
+                  }
+                >
+                  {/* Selected Subcategories as Chips */}
+                  {selectedSubcategories.map((item, index) => (
+                    <span
+                      key={index}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        background: "#f7f3ff",
+                        color: "#4b2bb3",
+                        border: "1px solid #4b2bb3",
+                        borderRadius: "6px",
+                        padding: "2px 6px",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {item}
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setSelectedSubcategories(
+                            selectedSubcategories.filter((i) => i !== item)
+                          )
+                        }
+                        style={{
+                          marginLeft: "4px",
+                          color: "#4b2bb3",
+                          cursor: "pointer",
+                          border: "none",
+                          background: "transparent",
+                          fontSize: "14px",
+                        }}
+                      >
+                        ✕
+                      </button>
+                    </span>
+                  ))}
+
+                  {/* Search Input */}
+                  <input
+                    id="subcategory-input"
+                    type="text"
+                    placeholder={
+                      categorySearchTerm
+                        ? "Search service type"
+                        : "Please select category first"
+                    }
+                    value={subcategorySearchTerm}
+                    onChange={(e) => setSubcategorySearchTerm(e.target.value)}
+                    onFocus={() => {
+                      if (categorySearchTerm) setShowSubcategoryDropdown(true);
+                    }}
+                    disabled={!categorySearchTerm}
+                    style={{
+                      flex: "1",
+                      minWidth: "120px",
+                      border: "none",
+                      outline: "none",
+                      background: "transparent",
+                    }}
+                  />
+
+                  {subcategorySearchTerm && (
+                    <img
+                      src="/public/close.png"
+                      alt="Clear"
+                      className="cross-icon"
+                      onClick={() => setSubcategorySearchTerm("")}
+                    />
+                  )}
+                  {availableSubcategories.length > 0 && (
+                    <div
+                      style={{
+                        marginTop: "8px",
+                        display: "flex",
+                        gap: "8px",
+                        justifyContent: "flex-start",
+                      }}
+                    >
+                      {/* SELECT ALL BUTTON */}
+                      <button
+                        type="button"
+                        onClick={handleSelectAllSubcategories}
+                        disabled={
+                          selectedSubcategories.length ===
+                          availableSubcategories.length
+                        }
+                        style={{
+                          padding: "4px 12px",
+                          fontSize: "12px",
+                          background:
+                            selectedSubcategories.length ===
+                            availableSubcategories.length
+                              ? "#e0e0e0"
+                              : "#4b2bb3",
+                          color:
+                            selectedSubcategories.length ===
+                            availableSubcategories.length
+                              ? "#999"
+                              : "white",
+                          border: "none",
+                          borderRadius: "4px",
+                          cursor:
+                            selectedSubcategories.length ===
+                            availableSubcategories.length
+                              ? "not-allowed"
+                              : "pointer",
+                          fontWeight: "500",
+                        }}
+                      >
+                        Select All ({availableSubcategories.length})
+                      </button>
+
+                      {/* DESELECT BUTTON */}
+                      {selectedSubcategories.length > 0 && (
+                        <button
+                          type="button"
+                          onClick={handleDeselectAllSubcategories}
+                          style={{
+                            padding: "4px 12px",
+                            fontSize: "12px",
+                            background: "transparent",
+                            color: "#4b2bb3",
+                            border: "1px solid #4b2bb3",
+                            borderRadius: "4px",
+                            cursor: "pointer",
+                            fontWeight: "500",
+                          }}
+                        >
+                          Deselect All
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* DROPDOWN LIST */}
+                {showSubcategoryDropdown && categorySearchTerm && (
+                  <ul className="dropdown-list">
+                    {/* SHOW SELECT ALL OPTION */}
+                    {availableSubcategories.length > 0 && (
+                      <li
+                        onClick={handleSelectAllSubcategories}
+                        style={{
+                          fontWeight: "600",
+                          color: "#4b2bb3",
+                          borderBottom: "1px solid #e0e0e0",
+                          background: "#f7f3ff",
+                        }}
+                      >
+                        ✓ Select All ({availableSubcategories.length})
+                      </li>
+                    )}
+
+                    {availableSubcategories
+                      .filter((sub) =>
+                        sub
+                          .toLowerCase()
+                          .includes(subcategorySearchTerm.toLowerCase())
+                      )
+                      .map((sub, index) => (
+                        <li
+                          key={index}
+                          onClick={() => {
+                            if (!selectedSubcategories.includes(sub)) {
+                              setSelectedSubcategories([
+                                ...selectedSubcategories,
+                                sub,
+                              ]);
+                            }
+                            setSubcategorySearchTerm("");
+                            setShowSubcategoryDropdown(false);
+                          }}
+                        >
+                          {sub}
+                        </li>
+                      ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+
             <div className="ServiceImageUploadPreview">
               <label htmlFor="service-images">
                 Upload Service Images/Videos *
@@ -848,7 +1176,7 @@ function VendorService({ currentStep }) {
                     value={minPrice}
                     min="1"
                     onChange={(e) => setMinPrice(e.target.value)}
-                    className="w-1/2 rounded-md px-3 py-2 bg-[#f7f3ff] text-[#4b2bb3] border-2 border-[#c5b9f5] focus:outline-none focus:border-[2px] focus:border-[#4b2bb3] cursor-text caret-black"
+                    className="w-1/2 rounded-md px-3 py-2 bg-[#fff] text-[#4b2bb3] border-2 border-[#c5b9f5] focus:outline-none focus:border-[2px] focus:border-[#4b2bb3] cursor-text caret-black"
                   />
                   <span className="text-gray-600 font-semibold">-</span>
                   <input

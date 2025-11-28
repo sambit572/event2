@@ -20,9 +20,20 @@ const serviceSchema = new Schema(
       type: String,
       required: true,
     },
+    subCategory: {
+      type: [String],
+      default: [],
+    },
     serviceImage: {
       type: [String],
       required: true,
+    },
+     minPrice: {
+      type: Number,
+      required: function () {
+        // Required only if NOT catering (or if pricingType is 'flat')
+        return !this.pricingType || this.pricingType === "flat";
+      },
     },
 
     // === EXISTING FIELDS - Made conditionally required ===
@@ -33,14 +44,6 @@ const serviceSchema = new Schema(
         return !this.pricingType || this.pricingType === "flat";
       },
     },
-    minPrice: {
-      type: Number,
-      required: function () {
-        // Required only if NOT catering (or if pricingType is 'flat')
-        return !this.pricingType || this.pricingType === "flat";
-      },
-    },
-
     serviceName: {
       type: String,
       required: true,
