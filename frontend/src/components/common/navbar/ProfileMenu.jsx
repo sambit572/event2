@@ -52,7 +52,7 @@ const ProfileMenu = ({
           ) : (
             <>
               <UserProfileIcon currentUser={currentUser} />
-              <span className="font-semibold hidden sm:inline md:hidden group-hover:text-white transition-colors duration-300">
+              <span className="font-semibold hidden sm:inline md:hidden lg:inline group-hover:text-white transition-colors duration-300">
                 {`Hi, ${userFirstName}`}
               </span>
             </>
