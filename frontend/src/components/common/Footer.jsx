@@ -93,6 +93,28 @@ export const categoriesData = {
   ],
 };
 
+export const locationData = {
+  Bhubaneswar: ["Saheed Nagar"],
+  Cuttack: ["Badambadi"],
+  Rourkela: ["Chhend Colony"],
+  "Berhampur (Brahmapur)": ["Gandhinagar"],
+  Sambalpur: ["Bareipali"],
+  Puri: ["Swargadwar"],
+  Balasore: ["Chandipur"],
+  Bhadrak: ["Charampa"],
+  "Balangir (Bolangir)": ["Titilagarh"],
+  Angul: ["Nalco Nagar"],
+  Bargarh: ["Attabira"],
+  Jeypore: ["Vivekananda Marg"],
+  Baripada: ["Bhanjpur"],
+  Dhenkanal: ["Kunjakanta"],
+  "Keonjhar (Kendujhar)": ["Naranpur"],
+  Jharsuguda: ["Laikera"],
+  "Jajpur / Jajpur-Town": ["Chandikhole"],
+  "Jagatsinghpur / Jagatsinghpur-Town": ["Paradip"],
+  Kendrapara: ["Aul"],
+};
+
 function Footer() {
   const [openSections, setOpenSections] = useState({
     contact: false,
@@ -101,7 +123,11 @@ function Footer() {
     privacy: false,
   });
   const [openCategory, setOpenCategory] = useState(null);
+  const [openLocation, setOpenLocation] = useState(null);
 
+  const toggleLocation = (location) => {
+    setOpenLocation(openLocation === location ? null : location);
+  };
   const toggleCategory = (category) => {
     setOpenCategory(openCategory === category ? null : category);
   };
@@ -291,6 +317,58 @@ function Footer() {
               Help Desk
             </p>
           </div>
+          <div className="w-full">
+            <h4 className="text-xl font-semibold mb-4 text-white">
+              Available Locations
+            </h4>
+
+            {/* SCROLLABLE WRAPPER FOR ALL CATEGORIES */}
+            <div className="max-h-64 overflow-y-auto [scrollbar-width:none] pr-2">
+              {Object.keys(locationData).map((locationName) => (
+                <div key={locationName} className="mb-3">
+                  {/* Category Title */}
+                  <h5
+                    onClick={() => {
+                      toggleLocation(locationName);
+                    }}
+                    className="flex justify-between items-center cursor-pointer text-white text-base py-2 border-b border-gray-700 hover:text-yellow-400 transition"
+                  >
+                    {locationName}
+
+                    <img
+                      src={
+                        openLocation === locationName
+                          ? "/up-arrow.png"
+                          : "/down.png"
+                      }
+                      className={`w-4 h-4 bg-blue-500 rounded-lg transition-transform duration-300 ${
+                        openLocation === locationName ? "rotate-180" : ""
+                      }`}
+                      alt="toggle"
+                    />
+                  </h5>
+
+                  {/* Sub Categories */}
+                  <div
+                    className={`overflow-hidden transition-all duration-300 ${
+                      openLocation === locationName
+                        ? "max-h-96 mt-2"
+                        : "max-h-0 mt-0"
+                    }`}
+                  >
+                    {locationData[locationName].map((sub, index) => (
+                      <p
+                        key={index}
+                        className="text-gray-300 text-sm py-1 pl-4 hover:text-yellow-400 cursor-pointer"
+                      >
+                        {sub}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Mobile View */}
@@ -325,7 +403,7 @@ function Footer() {
                       {/* CATEGORY NAME */}
                       <h5
                         onClick={() => toggleCategory(categoryName)}
-                        className="flex justify-between items-center  text-white text-base py-2 cursor-pointer border-b border-gray-800"
+                        className="flex justify-between  items-center  text-white text-base py-2 cursor-pointer border-b border-gray-800"
                       >
                         {categoryName}
 
@@ -354,6 +432,73 @@ function Footer() {
                           <p
                             key={index}
                             className="text-white text-sm py-1 hover:text-yellow-400"
+                          >
+                            {sub}
+                          </p>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="">
+                {/* MAIN TOGGLE FOR MOBILE */}
+                <h4
+                  onClick={() => toggleSection("location")}
+                  className="flex pl-2 pr-[20px] box-border justify-between items-center text-[15px] font-bold text-white py-2 cursor-pointer "
+                >
+                  Available Locations
+                  <img
+                    src={openSections.location ? "/up-arrow.png" : "/down.png"}
+                    className={`w-4 h-4 bg-blue-500 rounded-lg transition-transform duration-300 ${
+                      openSections.location ? "rotate-180" : ""
+                    }`}
+                    alt="toggle"
+                  />
+                </h4>
+
+                {/* OUTER DROPDOWN CATEGORY LIST */}
+                <div
+                  className={`overflow-hidden transition-all duration-300 ${
+                    openSections.location ? "max-h-[1000px]" : "max-h-0"
+                  }`}
+                >
+                  {Object.keys(locationData).map((locationName) => (
+                    <div key={locationName} className="mb-3">
+                      {/* Category Title */}
+                      <h5
+                        onClick={() => {
+                          toggleLocation(locationName);
+                        }}
+                        className="flex justify-between  items-center cursor-pointer text-white text-base py-2 border-b border-gray-700 hover:text-yellow-400 transition"
+                      >
+                        {locationName}
+
+                        <img
+                          src={
+                            openLocation === locationName
+                              ? "/up-arrow.png"
+                              : "/down.png"
+                          }
+                          className={`w-4 h-4 bg-green-500 rounded-lg transition-transform duration-300 ${
+                            openLocation === locationName ? "rotate-180" : ""
+                          }`}
+                          alt="toggle"
+                        />
+                      </h5>
+
+                      {/* Sub Categories */}
+                      <div
+                        className={`overflow-hidden transition-all duration-300 ${
+                          openLocation === locationName
+                            ? "max-h-96 mt-2"
+                            : "max-h-0 mt-0"
+                        }`}
+                      >
+                        {locationData[locationName].map((sub, index) => (
+                          <p
+                            key={index}
+                            className="text-gray-300 pl-12 py-1 hover:text-yellow-400 cursor-pointer"
                           >
                             {sub}
                           </p>

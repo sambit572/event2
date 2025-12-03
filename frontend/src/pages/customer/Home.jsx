@@ -147,7 +147,7 @@ const Home = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
-          className="align_center categories-head mt-6"
+          className="align_center categories-head mt-8"
         >
           𝐂𝐀𝐓𝐄𝐆𝐎𝐑𝐈𝐄𝐒
         </motion.h1>
