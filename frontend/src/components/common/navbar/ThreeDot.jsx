@@ -17,7 +17,7 @@ const ThreeDot = ({
   return (
     <div
       ref={ellipsisRef}
-      className="flex items-center cursor-pointer text-[15px] font-medium ml-2"
+      className="flex items-center cursor-pointer text-[15px] font-medium ml-2 mr-2"
     >
       {/* 3 Dot Icon */}
       <FaEllipsisV

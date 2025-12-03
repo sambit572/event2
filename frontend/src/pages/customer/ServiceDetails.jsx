@@ -26,6 +26,7 @@ const getYouTubeID = (url) => {
   return match && match[2].length === 11 ? match[2] : null;
 };
 import CateringPackagesDisplay from "../../components/customer/ServiceDetails/CateringPackagesDisplay.jsx";
+import { motion } from "framer-motion";
 
 const Service = ({ onSwitchToLogin }) => {
   const navigate = useNavigate();
@@ -67,6 +68,7 @@ const Service = ({ onSwitchToLogin }) => {
   const [touchEndX, setTouchEndX] = useState(0);
   const minSwipeDistance = 50;
   const [whyChooseUsPoints, setWhyChooseUsPoints] = useState([]);
+  const [mouseY, setMouseY] = useState(0);
 
   const prevSlide = () =>
     setCurrentIndex((i) =>
@@ -304,10 +306,25 @@ const Service = ({ onSwitchToLogin }) => {
     <div className="dj">
       <div className="section_one">
         <div className="left-fixed">
-          <div
+          <motion.div
+            initial={{ opacity: 0, x: -80 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            onMouseMove={(e) => {
+              const rect = e.currentTarget.getBoundingClientRect();
+              const yPos = e.clientY - rect.top;
+              setMouseY(yPos);
+            }}
+            onMouseLeave={() => {
+              setMouseY(0);
+              setHovered(false);
+            }}
+            animate={{
+              y: mouseY === 0 ? 0 : (mouseY - 200) * 0.05, // smooth 3D shift
+            }}
             className="relative w-full h-[260px] mb-5 sm:h-[400px] lg:h-[430px] overflow-hidden rounded-lg mt-3 sm:mt-0"
             onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
@@ -344,7 +361,12 @@ const Service = ({ onSwitchToLogin }) => {
                       />
 
                       {/* Main clean portrait image */}
-                      <img
+                      <motion.img
+                        animate={{
+                          y: mouseY === 0 ? 0 : (mouseY - 200) * 0.03,
+                          scale: hovered ? 1.03 : 1,
+                        }}
+                        transition={{ duration: 0.3 }}
                         src={media.src}
                         alt={`slide-${idx}`}
                         className={`absolute inset-0 m-auto max-h-full max-w-full object-contain z-10 ${
@@ -440,7 +462,7 @@ const Service = ({ onSwitchToLogin }) => {
                 )}
               </div>
             )}
-          </div>
+          </motion.div>
 
           <div className="flex flex-row items-center justify-center gap-4 sm:flex-row sm:gap-4">
             {isCateringService ? (
@@ -455,22 +477,37 @@ const Service = ({ onSwitchToLogin }) => {
               <>
                 {isVendorAvailable ? (
                   <>
-                    <button
+                    <motion.button
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5 }}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
                       className="flex w-full cursor-pointer items-center justify-center rounded-full bg-gradient-to-r from-[#001f3f] to-[#004f9f] sm:px-[1rem] lg:px-12 py-3 text-sm font-bold text-white transition-colors duration-300 ease-in-out hover:from-[#002366] hover:to-[#0066cc] active:from-[#000d1a] active:to-[#003366] lg:w-auto lg:min-w-[220px]"
                       onClick={handleBookNow}
                     >
                       BOOK NOW
-                    </button>
+                    </motion.button>
 
-                    <button
+                    <motion.button
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5 }}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
                       className="w-full lg:w-auto lg:min-w-[220px] px-4 py-3 rounded-full text-sm font-bold text-white bg-gradient-to-r from-[#fb923c] to-[#ef4444] hover:shadow-lg hover:from-[#fca5a5] hover:to-[#dc2626] focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-md transition-all duration-300"
                       onClick={handleAddToCart}
                     >
                       ADD TO CART
-                    </button>
+                    </motion.button>
                   </>
                 ) : (
-                  <button
+                  <motion.button
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                     onClick={handleNotifyClick}
                     className={`w-full sm:w-44 flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-blue-900 bg-transparent border border-blue-900 hover:bg-blue-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-md transition-all duration-300`}
                   >
@@ -483,7 +520,7 @@ const Service = ({ onSwitchToLogin }) => {
                         }`}
                       />
                     )}
-                  </button>
+                  </motion.button>
                 )}
               </>
             )}
@@ -499,14 +536,19 @@ const Service = ({ onSwitchToLogin }) => {
               onSwitchToLogin={onSwitchToLogin}
             />
           )}
-          {/* Why choose us component */}
-          <WhyChooseUs
-            serviceId={serviceId}
-            vendorId={service?.vendor || service?.vendorId?._id}
-            whyChooseUsPoints={whyChooseUsPoints}
-            isOwner={isServiceOwner()}
-            onUpdate={handleWhyChooseUsUpdate}
-          />
+          <motion.div
+            initial={{ opacity: 0, y: 40 }} // starts hidden + slightly down
+            animate={{ opacity: 1, y: 0 }} // slides up + becomes visible
+            transition={{ duration: 0.6, ease: "easeOut" }} // smooth animation
+          >
+            <WhyChooseUs
+              serviceId={serviceId}
+              vendorId={service?.vendor || service?.vendorId?._id}
+              whyChooseUsPoints={whyChooseUsPoints}
+              isOwner={isServiceOwner()}
+              onUpdate={handleWhyChooseUsUpdate}
+            />
+          </motion.div>
           <div className="reviews">
             <h3>Ratings & Reviews</h3>
             <RatingDetails serviceId={serviceId} />

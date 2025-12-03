@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import { incrementCartCount } from "../../../redux/UserSlice.js";
 import { useDispatch } from "react-redux";
 import { getServicePriceDisplay } from "../../../utils/pricingHelpers";
+import { motion } from "framer-motion";
 
 const ServiceDescription = ({ service, onSwitchToLogin }) => {
   const dispatch = useDispatch();
@@ -398,7 +399,13 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
   }, [service]);
 
   return (
-    <section className="relative flex h-full flex-col bg-[#ffffff] p-4 sm:pr-[40px] text-gray-800 md:py-0 px-5">
+    <motion.section
+      initial={{ opacity: 0, x: 80 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="relative flex h-full flex-col bg-[#ffffff] p-4 sm:pr-[40px] text-gray-800 md:py-0 px-5"
+    >
       <div className="absolute top-[0.5rem] right-4 z-20 flex flex-col items-end gap-3 md:right-5">
         <div
           className={`h-10 w-10 flex items-center justify-center rounded-full bg-gray-100 shadow-md cursor-pointer transition-all duration-300 ${
@@ -526,9 +533,15 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
             to={`/service/${service.categoryId}/${serviceId}`}
             className="text-inherit no-underline "
           >
-            <h3 className="text-lg font-bold leading-tight text-[#2c3e50] sm:text-xl md:text-2xl">
+            <motion.h3
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.6 }}
+              className="text-lg font-bold leading-tight text-[#2c3e50] sm:text-xl md:text-2xl"
+            >
               {title.toUpperCase()}
-            </h3>
+            </motion.h3>
           </Link>
           <div className="flex flex-wrap items-center gap-2 md:flex-row md:gap-2">
             <span className="text-sm font-semibold text-[#3498db] sm:text-base">
@@ -596,7 +609,13 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
           </p>
         </div>
         <div className="mb-[0.5rem] flex-grow">
-          <p className="inline text-sm leading-relaxed text-[#34495e]">
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-sm text-gray-500"
+          >
             {displayDescription}
             {shouldTruncate && (
               <button
@@ -609,7 +628,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
                 {isReadMore ? " Read Less" : " Read More"}
               </button>
             )}
-          </p>
+          </motion.p>
         </div>
         <div className="flex flex-row gap-2.5 lg:flex-row lg:justify-center lg:gap-3">
           {isVendorAvailable ? (
@@ -645,7 +664,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
           )}
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 
