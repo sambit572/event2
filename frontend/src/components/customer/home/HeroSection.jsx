@@ -285,12 +285,12 @@ sm-mid:right-6 sm-mid:w-24
     lg:w-[320px] lg:p-4 lg:top-12 lg:right-2 lg:h-40 lg:pr-0  /* DESKTOP (your original position & size) */
   "
           >
-            <h2 className="font-bold text-2xl sm:text-6xl">50+</h2>
-            <p className="text-gray-800 text-sm font-bold sm:text-xl">
-              Vendors
+            <h2 className="font-bold text-xl sm:text-6xl">Join</h2>
+            <p className="text-gray-800 text-md font-bold sm:text-xl">
+              As A Vendor
             </p>
             <p className="text-gray-800 font-semibold text-xs sm:text-sm">
-              Onboarded this week
+              With zero cost
             </p>
 
             <FaArrowTrendUp

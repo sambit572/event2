@@ -523,14 +523,17 @@ const FamousIndiaSlider = () => {
         {/* Only one StateColumn on mobile */}
         {displayGroups.map((group, index) =>
           isMobile && index > 0 ? null : (
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: index * 0.75, ease: "easeInOut" }}
-            >
+            <div>
               <StateColumn key={index} statesGroup={group} />
-            </motion.div>
+            </div>
+            // <motion.div
+            //   initial={{ opacity: 0, y: 50 }}
+            //   whileInView={{ opacity: 1, y: 0 }}
+            //   viewport={{ once: true, amount: 0.3 }}
+            //   transition={{ duration: index * 0.75, ease: "easeInOut" }}
+            // >
+            //   <StateColumn key={index} statesGroup={group} />
+            // </motion.div>
           )
         )}
       </div>
