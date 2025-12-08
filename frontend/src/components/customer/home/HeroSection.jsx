@@ -127,11 +127,11 @@ export default function HeroSection() {
             {/* PHONE FRAME (UNCHANGED, RESPONSIVE ALREADY) */}
             <div
               className="
-      relative z-20 border-[3.5px] 
+      relative z-20 border-[2px] 
       w-36 h-65 rounded-t-[20px]
-      sm:w-64 sm:h-[500px] sm:rounded-t-[20px] sm:border-[5px] sm:border-b-0
-      md:w-80 md:h-[600px] md:rounded-t-[30px] md:border-[6px] md:border-b-0
-      lg:w-[320px] lg:h-[600px] lg:rounded-t-[30px] lg:border-[8px] lg:border-b-0
+      sm:w-64 sm:h-[500px] sm:rounded-t-[20px] sm:border-[2.5px] sm:border-b-0
+      md:w-80 md:h-[600px] md:rounded-t-[20px] md:border-[3px] md:border-b-0
+      lg:w-[320px] lg:h-[600px] lg:rounded-t-[25px] lg:border-[4px] lg:border-b-0
       overflow-hidden
        border-b-0 border-[#5D465B] 
       shadow-xl bg-gray-[#5D465B] 
@@ -147,9 +147,9 @@ export default function HeroSection() {
                 className="border-[2px] 
     rounded-t-[15px] border-b-0 border-black
       shadow-xl bg-black
-        sm:rounded-t-[15px] sm:border-[4px] sm:border-b-0
-      md:rounded-t-[20spx] md:border-[6px] md:border-b-0
-      lg:rounded-t-[20px] lg:border-[8px] lg:border-b-0"
+        sm:rounded-t-[15px] sm:border-[2px] sm:border-b-0
+      md:rounded-t-[20spx] md:border-[3px] md:border-b-0
+      lg:rounded-t-[20px] lg:border-[4px] lg:border-b-0"
               >
                 <motion.img
                   src={heroimage2}
@@ -246,7 +246,7 @@ sm-mid:left-8
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 2, ease: "easeInOut" }}
             className="
-    absolute z-30 bg-purple32 shadow-xl rounded-2xl py-1 px-4
+    absolute z-30 bg-purple32 shadow-xl rounded-2xl py-1 px-2
     w-24 left-0 bottom-4            /* MOBILE (360px–480px) */
 sm-mid:w-28
     sm:w-36 sm:bottom-16   /* SMALL SCREENS */
@@ -256,7 +256,12 @@ sm-mid:w-28
     lg:w-[250px] lg:left-8 lg:bottom-16 /* DESKTOP (your original) */
   "
           >
-            <p className="font-bold text-xl sm:text-3xl">80%</p>
+            <p className="font-bold text-xl sm:text-3xl">
+              <p className="text-gray-700 text-sm font-semibold sm:text-xl">
+                Up to
+              </p>
+              80%
+            </p>
             <p className="text-gray-700 text-sm font-semibold sm:text-xl">
               Pay With EMI
             </p>
