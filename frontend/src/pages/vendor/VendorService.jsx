@@ -202,7 +202,7 @@ function VendorService({ currentStep }) {
   };
   // ✅ Define subcategories for each main category
   const subcategories = {
-   "DJ Services & Brash Band": [
+    "DJ Services & Brash Band": [
       "Wedding DJ",
       "Corporate Event DJ",
       "Private Party DJ",
@@ -216,7 +216,7 @@ function VendorService({ currentStep }) {
       "Wedding Decor & Tent",
       "Birthday Party Decor",
       "Reception Decor",
-      "Engagement Decor "
+      "Engagement Decor ",
     ],
     "Photo & Videography": [
       "Wedding Photography & Videography",
@@ -263,26 +263,14 @@ function VendorService({ currentStep }) {
       "Shraddh Ceremony",
       "Special Event",
     ],
-    "Beauty Makeover": [
-      "Bridal Makeup",
-      "Unisex",
-      "Mehendi Artist",
-    ],
+    "Beauty Makeover": ["Bridal Makeup", "Unisex", "Mehendi Artist"],
     "Floral Decor": [
       "Wedding Decor",
       "Stage & Backdrop Floral Decor",
       "Birthday Party Decor",
     ],
-    "Ceremonial Ride": [
-      "Bridal Car",
-      "Luxury Car",
-      "Classic Car",
-    ],
-    Fireworks: [
-      "Wedding Fireworks",
-      "Indoor Fireworks",
-      "Outdoor Fireworks",
-    ],
+    "Ceremonial Ride": ["Bridal Car", "Luxury Car", "Classic Car"],
+    Fireworks: ["Wedding Fireworks", "Indoor Fireworks", "Outdoor Fireworks"],
     "Card Design & Printing": [
       "Wedding Invitations",
       "Birthday Party Invitations",
@@ -592,15 +580,15 @@ function VendorService({ currentStep }) {
       alert("Please select a service category");
       return false;
     }
+    if (selectedSubcategories.length === 0) {
+      alert("Please select at least one service type");
+      return false;
+    }
 
     // 2. Check if at least one image is uploaded
     if (previewImages.length === 0) {
       alert("Please upload at least one service image");
       return false;
-    }
-    // 3. Check subcategory
-    if (selectedSubcategories.length === 0) {
-      errors.subcategory = "Please select at least one service type";
     }
 
     if (isCatering) {
@@ -698,25 +686,53 @@ function VendorService({ currentStep }) {
       return false;
     }
 
-    // 6. Check duration - at least one field should have value
-    if (!days && !hours && !minutes) {
-      alert("Please set estimated duration (days, hours, or minutes)");
+    // // 6. Check duration - at least one field should have value
+    // if (!days && !hours && !minutes) {
+    //   alert("Please set estimated duration (days, hours, or minutes)");
+    //   return false;
+    // }
+
+    // // 7. Validate duration values
+    // if (hours && (parseInt(hours) < 0 || parseInt(hours) > 23)) {
+    //   alert("Hours should be between 0 and 23");
+    //   return false;
+    // }
+
+    // if (minutes && (parseInt(minutes) < 0 || parseInt(minutes) > 59)) {
+    //   alert("Minutes should be between 0 and 59");
+    //   return false;
+    // }
+
+    // if (days && parseInt(days) < 0) {
+    //   alert("Days cannot be negative");
+    //   return false;
+    // }
+    // Duration Validation
+    const d = parseInt(days);
+    const h = parseInt(hours);
+    const m = parseInt(minutes);
+
+    // 1. If all are empty or zero -> invalid
+    if ((!days && !hours && !minutes) || (d === 0 && h === 0 && m === 0)) {
+      toast.error("Please set estimated duration (days, hours, or minutes)");
       return false;
     }
 
-    // 7. Validate duration values
-    if (hours && (parseInt(hours) < 0 || parseInt(hours) > 23)) {
-      alert("Hours should be between 0 and 23");
+    // 2. Days validation
+    if (days !== "" && (isNaN(d) || d < 0)) {
+      toast.error("Days cannot be negative");
       return false;
     }
 
-    if (minutes && (parseInt(minutes) < 0 || parseInt(minutes) > 59)) {
-      alert("Minutes should be between 0 and 59");
+    // 3. Hours validation
+    if (hours !== "" && (isNaN(h) || h < 0 || h > 23)) {
+      toast.error("Hours should be between 0 and 23");
       return false;
     }
 
-    if (days && parseInt(days) < 0) {
-      alert("Days cannot be negative");
+    // 4. Minutes validation
+    if (minutes !== "" && (isNaN(m) || m < 0 || m > 59)) {
+      toast.error("Minutes should be between 0 and 59");
       return false;
     }
 
@@ -1371,7 +1387,7 @@ function VendorService({ currentStep }) {
                 value={days}
                 onChange={(e) => setDays(e.target.value)}
               />
-              <span>:</span>
+              <span>d :</span>
               <input
                 type="number"
                 min="0"
@@ -1381,7 +1397,7 @@ function VendorService({ currentStep }) {
                 value={hours}
                 onChange={(e) => setHours(e.target.value)}
               />
-              <span>:</span>
+              <span>h :</span>
               <input
                 type="number"
                 min="0"
@@ -1391,6 +1407,7 @@ function VendorService({ currentStep }) {
                 value={minutes}
                 onChange={(e) => setMinutes(e.target.value)}
               />
+               <span>m</span>
             </div>
 
             <label htmlFor="state-location" className="state-location-label">

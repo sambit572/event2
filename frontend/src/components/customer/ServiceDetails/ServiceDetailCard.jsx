@@ -6,7 +6,6 @@ import { FaRegHeart, FaHeart } from "react-icons/fa6";
 import { BACKEND_URL } from "../../../utils/constant";
 import { useParams } from "react-router-dom"; // 1. IMPORT useParams
 import { getServicePriceDisplay } from "../../../utils/pricingHelpers";
-import { motion } from "framer-motion";
 
 const ServiceDetailCard = ({ service }) => {
   const { categoryId } = useParams(); // 2. GET categoryId FROM URL
@@ -212,13 +211,7 @@ const ServiceDetailCard = ({ service }) => {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, x: 80 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, amount: 0.3 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className="relative w-full rounded-lg border border-gray-200 bg-red p-4 mt-5"
-    >
+    <div className="relative w-full rounded-lg border border-gray-200 bg-red p-4 mt-5">
       <div className="absolute top-4 right-4 z-20 flex flex-col items-end gap-3">
         <div
           className={`h-10 w-10 flex items-center justify-center rounded-full bg-gray-200 shadow-md cursor-pointer transition-all duration-300 ${
@@ -387,7 +380,7 @@ const ServiceDetailCard = ({ service }) => {
       <div className="service-description">
         <p className="text-black text-sm">{serviceDes}</p>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

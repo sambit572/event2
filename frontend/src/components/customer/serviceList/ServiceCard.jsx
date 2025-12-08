@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 // ✅ NEW: Import FaYoutube for the UI
 import { FaChevronLeft, FaChevronRight, FaYoutube } from "react-icons/fa";
 import ServiceDescription from "./ServiceDescription";
-import { motion } from "framer-motion";
 
 // ✅ NEW: Helper function to identify YouTube links and get the video ID
 const getYouTubeID = (url) => {
@@ -65,11 +64,7 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, x: -80 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+    <div
       className="flex cursor-pointer flex-col overflow-hidden rounded-lg bg-white transition-shadow duration-300 ease-in-out md:flex-row"
       onClick={handleCardClick}
     >
@@ -350,7 +345,7 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
           onSwitchToLogin={onSwitchToLogin}
         />
       </div>
-    </motion.div>
+    </div>
   );
 };
 

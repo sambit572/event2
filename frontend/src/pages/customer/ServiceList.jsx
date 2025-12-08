@@ -28,7 +28,6 @@ import magicBanner from "../../assets/home/categoriesImages/magician.png";
 import stageBanner from "../../assets/home/categoriesImages/stage_decor.png";
 import eventBanner from "../../assets/home/categoriesImages/event_company.png";
 import balloonBanner from "../../assets/serviceListBanner/balloon banner.webp";
-import { motion } from "framer-motion";
 
 const ServiceCardSkeleton = () => (
   <div className="serviceCardSkeleton">
@@ -420,19 +419,15 @@ const ServiceList = ({ onSwitchToLogin }) => {
 
           {/* Sticky Header → only shows after scroll */}
           {showSticky && (
-            <motion.div
+            <div
               className={`stickyHeader ${showSticky ? "show" : ""}`}
-              initial={{ y: -60, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -60, opacity: 0 }}
-              transition={{ duration: 0.3 }}
             >
               <FaArrowLeft
                 className="backArrowSticky"
                 onClick={() => window.history.back()}
               />
               <h2>{categoryData.title}</h2>
-            </motion.div>
+            </div>
           )}
         </>
       )}
@@ -450,19 +445,15 @@ const ServiceList = ({ onSwitchToLogin }) => {
 
           <div className="subcategory-tabs" ref={scrollRef}>
             {subcategoryMap[currentCategory].map((sub) => (
-              <motion.button
+              <button
                 key={sub}
                 className={`subcategory-tab ${
                   selectedSubcategory === sub ? "active" : ""
                 }`}
                 onClick={() => setSelectedSubcategory(sub)}
-                whileTap={{ scale: 0.95 }}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3 }}
               >
                 {sub}
-              </motion.button>
+              </button>
             ))}
           </div>
 
@@ -478,18 +469,8 @@ const ServiceList = ({ onSwitchToLogin }) => {
       )}
       <div className="serviceList">
         <Filter onApply={handleApplyFilters} onCancel={handleCancelFilters} />
-        <motion.div
+        <div
           className={`serviceCardDetails ${showSticky ? "scrollable" : ""}`}
-          variants={{
-            show: {
-              transition: {
-                staggerChildren: 0.15, // time gap between child animations
-              },
-            },
-          }}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.2 }}
         >
           {loading ? (
             // Show skeletons while loading
@@ -498,15 +479,9 @@ const ServiceList = ({ onSwitchToLogin }) => {
             ))
           ) : filteredServices?.length > 0 ? (
             filteredServices.map((service) => (
-              <motion.div
+              <div
                 className="singleServiceCard"
                 key={service._id}
-                transition={{ duration: 0.45, ease: "easeOut" }}
-                whileHover={{ scale: 0.98 }}
-                whileTap={{ scale: 0.98 }}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                // viewport={{ once: true, amount: 0.3 }}
               >
                 <Link
                   to={`/service/${categoryId}/${service._id}`}
@@ -519,12 +494,12 @@ const ServiceList = ({ onSwitchToLogin }) => {
                     onSwitchToLogin={onSwitchToLogin}
                   />
                 </Suspense>
-              </motion.div>
+              </div>
             ))
           ) : (
             <p>No services found matching filters.</p>
           )}
-        </motion.div>
+        </div>
       </div>
     </>
   );
