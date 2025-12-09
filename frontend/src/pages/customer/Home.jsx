@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, Suspense } from "react";
 import axios from "axios";
 import "./Home.css";
 import { motion } from "motion/react";
+import { Seo } from "../../seo/seo.js";
 
 import slider_1 from "../../assets/home/sliderImages/slider_1.jpg";
 import slider_2 from "../../assets/home/sliderImages/slider_2.jpeg";
@@ -134,68 +135,74 @@ const Home = () => {
     }
   }, [location]);
   return (
-    <div className="home">
-      {/* <ImageSlider images={images} /> */}
-      <HeroSection />
-      <Features />
-      {/* <AddsBanner /> */}
-      <CulturalDanceSlider />
-      {/* <img className="addbanner" src={banner} alt="" /> */}
-      <div id="categories" className="categories-head1 mb-[-15px]">
-        <motion.h1
-          initial={{ opacity: 0, y: -30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
-          className="align_center categories-head mt-8"
-        >
-          𝐂𝐀𝐓𝐄𝐆𝐎𝐑𝐈𝐄𝐒
-        </motion.h1>
-      </div>
-      <p className="category-subheads text-center">
-        Explore trusted professionals across categories and simplify your event
-        planning.
-      </p>
-      {/* Category Grid */}
-      <div className="align_center category_section">
-        {visibleCategories.map((category, index) => (
-          // <motion.div
-          //   key={index}
-          //   initial={{ opacity: 0, y: 50 }}
-          //   whileInView={{ opacity: 1, y: 0 }}
-          //   viewport={{ once: true, amount: 0.3 }}
-          //   transition={{ duration: index * 0.2, ease: "easeInOut" }}
-          // >
-          //   {" "}
-          //   <CategoryCard category={category} />
-          // </motion.div>
-          <div>
-            <CategoryCard category={category} />
-          </div>
-        ))}
-      </div>
-      {/* View All Button */}
-      <div className="flex justify-center w-full items-center mb-4">
-        {!showAll && categories.length > 6 && (
-          <button
-            className="browse-all-btn "
-            onClick={handleShowAll}
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
+    <>
+      <Seo
+        title="EventsBridge"
+        description="Book and manage events effortlessly with Eventsbridge. Discover venues, plan online events and simplify bookings all in one place."
+      />
+      <div className="home">
+        {/* <ImageSlider images={images} /> */}
+        <HeroSection />
+        <Features />
+        {/* <AddsBanner /> */}
+        <CulturalDanceSlider />
+        {/* <img className="addbanner" src={banner} alt="" /> */}
+        <div id="categories" className="categories-head1 mb-[-15px]">
+          <motion.h1
+            initial={{ opacity: 0, y: -30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+            className="align_center categories-head mt-8"
           >
-            View All <span className="arrow">{hovered ? "⇓" : "↓"}</span>
-          </button>
-        )}
+            𝐂𝐀𝐓𝐄𝐆𝐎𝐑𝐈𝐄𝐒
+          </motion.h1>
+        </div>
+        <p className="category-subheads text-center">
+          Explore trusted professionals across categories and simplify your
+          event planning.
+        </p>
+        {/* Category Grid */}
+        <div className="align_center category_section">
+          {visibleCategories.map((category, index) => (
+            // <motion.div
+            //   key={index}
+            //   initial={{ opacity: 0, y: 50 }}
+            //   whileInView={{ opacity: 1, y: 0 }}
+            //   viewport={{ once: true, amount: 0.3 }}
+            //   transition={{ duration: index * 0.2, ease: "easeInOut" }}
+            // >
+            //   {" "}
+            //   <CategoryCard category={category} />
+            // </motion.div>
+            <div>
+              <CategoryCard category={category} />
+            </div>
+          ))}
+        </div>
+        {/* View All Button */}
+        <div className="flex justify-center w-full items-center mb-4">
+          {!showAll && categories.length > 6 && (
+            <button
+              className="browse-all-btn "
+              onClick={handleShowAll}
+              onMouseEnter={() => setHovered(true)}
+              onMouseLeave={() => setHovered(false)}
+            >
+              View All <span className="arrow">{hovered ? "⇓" : "↓"}</span>
+            </button>
+          )}
+        </div>
+        <StepsSection />
+        {/* <Milestones /> */}
+        <Suspense fallback={<div>Loading reviews...</div>}>
+          <ReviewSlider />
+        </Suspense>
+        <Suspense fallback={<div>Loading FAQs...</div>}>
+          <FaqSection />
+        </Suspense>
       </div>
-      <StepsSection />
-      {/* <Milestones /> */}
-      <Suspense fallback={<div>Loading reviews...</div>}>
-        <ReviewSlider />
-      </Suspense>
-      <Suspense fallback={<div>Loading FAQs...</div>}>
-        <FaqSection />
-      </Suspense>
-    </div>
+    </>
   );
 };
 

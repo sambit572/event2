@@ -7,6 +7,7 @@ import VendorAutoFillConfirmModal from "../../components/vendor/VendorAutoFillCo
 import Spinner from "./../../components/common/Spinner";
 import axios from "axios";
 import laptopBackground from "../../../public/vendorRegistration/laptop_background.webp";
+import { Seo } from "../../seo/seo";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const VendorRegister = () => {
@@ -267,192 +268,200 @@ const VendorRegister = () => {
   );
 
   return (
-    <div>
-      {showAutofillModal && (
-        <VendorAutoFillConfirmModal
-          onAccept={handleAutofill}
-          onDecline={handleDecline}
-        />
-      )}
+    <>
+      <Seo
+        title={"Register as a Vendor"}
+        description={
+          "Register as a vendor on Eventsbridge and connect with our platform. Sign up to offer your services and grow your business via our event platform."
+        }
+      />
+      <div>
+        {showAutofillModal && (
+          <VendorAutoFillConfirmModal
+            onAccept={handleAutofill}
+            onDecline={handleDecline}
+          />
+        )}
 
-      <StepProgress currentStep={0} />
-      {isLoading && <Spinner />}
+        <StepProgress currentStep={0} />
+        {isLoading && <Spinner />}
 
-      <div className="min-h-screen w-full bg-gray-100 flex items-center justify-center p-4 sm:p-6 lg:p-8">
-        <div className="w-full max-w-6xl flex flex-col lg:flex-row shadow-2xl rounded-2xl overflow-hidden">
-          {/* LEFT SIDE: Form area - Full width on mobile */}
-          <div
-            className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8 lg:p-12 bg-cover bg-center relative"
-            style={{
-              backgroundImage: `url(${laptopBackground})`,
-            }}
-          >
-            <div className="absolute inset-0 bg-black/30 "></div>
-            <div className="relative z-10 w-full max-w-md">
-              {/* Changed from bg-stone-100/95 to bg-stone-100/75 for more transparency */}
-              <div className="bg-stone-100/65 backdrop-blur-md rounded-xl shadow-lg p-8">
-                <div className="flex flex-col gap-4">
-                  <div className="text-left">
-                    <h2 className="text-3xl font-bold text-gray-800">
-                      Create Vendor Account
-                    </h2>
-                    <p className="text-gray-600 mt-1">
-                      Welcome! Please fill in the details to register.
-                    </p>
-                  </div>
+        <div className="min-h-screen w-full bg-gray-100 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+          <div className="w-full max-w-6xl flex flex-col lg:flex-row shadow-2xl rounded-2xl overflow-hidden">
+            {/* LEFT SIDE: Form area - Full width on mobile */}
+            <div
+              className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8 lg:p-12 bg-cover bg-center relative"
+              style={{
+                backgroundImage: `url(${laptopBackground})`,
+              }}
+            >
+              <div className="absolute inset-0 bg-black/30 "></div>
+              <div className="relative z-10 w-full max-w-md">
+                {/* Changed from bg-stone-100/95 to bg-stone-100/75 for more transparency */}
+                <div className="bg-stone-100/65 backdrop-blur-md rounded-xl shadow-lg p-8">
+                  <div className="flex flex-col gap-4">
+                    <div className="text-left">
+                      <h2 className="text-3xl font-bold text-gray-800">
+                        Create Vendor Account
+                      </h2>
+                      <p className="text-gray-600 mt-1">
+                        Welcome! Please fill in the details to register.
+                      </p>
+                    </div>
 
-                  {/* Error message */}
-                  {error && (
-                    <div
-                      className="bg-red-100/90 border-l-4 border-red-500 text-red-700 p-4 rounded-md backdrop-blur-sm"
-                      role="alert"
+                    {/* Error message */}
+                    {error && (
+                      <div
+                        className="bg-red-100/90 border-l-4 border-red-500 text-red-700 p-4 rounded-md backdrop-blur-sm"
+                        role="alert"
+                      >
+                        <p>{error}</p>
+                      </div>
+                    )}
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Full Name <span className="text-red-600">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        name="fullName"
+                        placeholder="Enter your full name"
+                        value={form.fullName}
+                        onChange={handleChange}
+                        className="w-full p-3 bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Email Address <span className="text-red-600">*</span>
+                      </label>
+                      <input
+                        type="email"
+                        name="email"
+                        placeholder="Enter your email address"
+                        value={form.email}
+                        onChange={handleChange}
+                        className="w-full p-3 bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Phone Number <span className="text-red-600">*</span>
+                      </label>
+                      <input
+                        type="tel"
+                        name="phone"
+                        placeholder="Enter your phone number"
+                        value={form.phone}
+                        onChange={handleChange}
+                        className="w-full p-3 bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition"
+                        required
+                      />
+                    </div>
+
+                    <div className="relative">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Password <span className="text-red-600">*</span>
+                      </label>
+                      <div className="relative">
+                        <input
+                          type={showPassword ? "text" : "password"}
+                          name="password"
+                          placeholder="Enter password"
+                          value={form.password}
+                          onChange={handleChange}
+                          className="w-full p-3 pr-12 bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition"
+                          required
+                        />
+                        <button
+                          type="button"
+                          onClick={togglePasswordVisibility}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 w-6 h-6 flex items-center justify-center"
+                        >
+                          {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="relative">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Confirm Password <span className="text-red-600">*</span>
+                      </label>
+                      <div className="relative">
+                        <input
+                          type={showPassword ? "text" : "password"}
+                          name="confirmPassword"
+                          placeholder="Confirm password"
+                          value={form.confirmPassword}
+                          onChange={handleChange}
+                          className="w-full p-3 pr-12 bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition"
+                          required
+                        />
+                        <button
+                          type="button"
+                          onClick={togglePasswordVisibility}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 w-6 h-6 flex items-center justify-center"
+                        >
+                          {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Profile Picture (Optional)
+                      </label>
+                      <input
+                        type="file"
+                        name="profilePic"
+                        accept="image/*"
+                        onChange={handleChange}
+                        className="w-full p-3 bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+                      />
+                    </div>
+
+                    <button
+                      onClick={handleSubmit}
+                      disabled={loading}
+                      className="w-full mt-4 bg-green-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-700 transition-all duration-300 shadow-md hover:shadow-lg disabled:bg-gray-400 disabled:cursor-not-allowed"
                     >
-                      <p>{error}</p>
-                    </div>
-                  )}
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Full Name <span className="text-red-600">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      name="fullName"
-                      placeholder="Enter your full name"
-                      value={form.fullName}
-                      onChange={handleChange}
-                      className="w-full p-3 bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition"
-                      required
-                    />
+                      {loading ? "Registering..." : "Next"}
+                    </button>
                   </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Email Address <span className="text-red-600">*</span>
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder="Enter your email address"
-                      value={form.email}
-                      onChange={handleChange}
-                      className="w-full p-3 bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Phone Number <span className="text-red-600">*</span>
-                    </label>
-                    <input
-                      type="tel"
-                      name="phone"
-                      placeholder="Enter your phone number"
-                      value={form.phone}
-                      onChange={handleChange}
-                      className="w-full p-3 bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition"
-                      required
-                    />
-                  </div>
-
-                  <div className="relative">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Password <span className="text-red-600">*</span>
-                    </label>
-                    <div className="relative">
-                      <input
-                        type={showPassword ? "text" : "password"}
-                        name="password"
-                        placeholder="Enter password"
-                        value={form.password}
-                        onChange={handleChange}
-                        className="w-full p-3 pr-12 bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition"
-                        required
-                      />
-                      <button
-                        type="button"
-                        onClick={togglePasswordVisibility}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 w-6 h-6 flex items-center justify-center"
-                      >
-                        {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="relative">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Confirm Password <span className="text-red-600">*</span>
-                    </label>
-                    <div className="relative">
-                      <input
-                        type={showPassword ? "text" : "password"}
-                        name="confirmPassword"
-                        placeholder="Confirm password"
-                        value={form.confirmPassword}
-                        onChange={handleChange}
-                        className="w-full p-3 pr-12 bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition"
-                        required
-                      />
-                      <button
-                        type="button"
-                        onClick={togglePasswordVisibility}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 w-6 h-6 flex items-center justify-center"
-                      >
-                        {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Profile Picture (Optional)
-                    </label>
-                    <input
-                      type="file"
-                      name="profilePic"
-                      accept="image/*"
-                      onChange={handleChange}
-                      className="w-full p-3 bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
-                    />
-                  </div>
-
-                  <button
-                    onClick={handleSubmit}
-                    disabled={loading}
-                    className="w-full mt-4 bg-green-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-700 transition-all duration-300 shadow-md hover:shadow-lg disabled:bg-gray-400 disabled:cursor-not-allowed"
-                  >
-                    {loading ? "Registering..." : "Next"}
-                  </button>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* RIGHT SIDE: Branding area - Hidden on mobile */}
-          <div className="hidden lg:flex w-full lg:w-1/2 bg-white flex-col items-center justify-center text-center p-8 relative">
-            {/* Placeholder for the illustrated image */}
-            <div className="w-full max-w-sm mt-[-80px] ml-10">
-              <img
-                src="../new-illustrator.png"
-                alt="Registration Illustration"
-                className="w-full h-auto object-contain"
-              />
+            {/* RIGHT SIDE: Branding area - Hidden on mobile */}
+            <div className="hidden lg:flex w-full lg:w-1/2 bg-white flex-col items-center justify-center text-center p-8 relative">
+              {/* Placeholder for the illustrated image */}
+              <div className="w-full max-w-sm mt-[-80px] ml-10">
+                <img
+                  src="../new-illustrator.png"
+                  alt="Registration Illustration"
+                  className="w-full h-auto object-contain"
+                />
+              </div>
+              <h1 className="text-4xl font-bold text-gray-800 mb-4 mt-[-10px] ">
+                Register Here
+              </h1>
+              <p className="text-lg text-gray-600 max-w-md mx-auto leading-relaxed">
+                Join EventsBridge, your one-stop platform for discovering and
+                booking trusted vendors, planning events, and creating
+                unforgettable experiences. We make event planning simple, fast,
+                and hassle-freeregister today and take the first step toward
+                smarter celebrations.
+              </p>
             </div>
-            <h1 className="text-4xl font-bold text-gray-800 mb-4 mt-[-10px] ">
-              Register Here
-            </h1>
-            <p className="text-lg text-gray-600 max-w-md mx-auto leading-relaxed">
-              Join EventsBridge, your one-stop platform for discovering and
-              booking trusted vendors, planning events, and creating
-              unforgettable experiences. We make event planning simple, fast,
-              and hassle-freeregister today and take the first step toward
-              smarter celebrations.
-            </p>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

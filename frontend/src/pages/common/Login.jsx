@@ -13,6 +13,7 @@ import { setUser } from "../../redux/UserSlice.js";
 import ForgotPass from "./../customer/ForgotPass";
 import { FiEyeOff, FiEye } from "react-icons/fi";
 import Spinner from "./../../components/common/Spinner";
+import { Seo } from "../../seo/seo.js";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -337,66 +338,74 @@ const Login = ({ onClose, onSwitchToRegister }) => {
   };
 
   return (
-    <div
-      className="login-wrapper  h-[90vh] flex items-center justify-center z-[9999] backdrop-blur-md"
-      onClick={onClose}
-    >
-      {isLoading && <Spinner />}
+    <>
+      <Seo
+        title={"Login to EventsBridge"}
+        description={
+          "Log in to your Eventsbridge account to manage bookings, vendor services or event plans. Secure access for seamless event coordination."
+        }
+      />
       <div
-        className="p-0 login-modal lg:h-[90vh] sm:h-0 max-w-3xl  flex flex-col md:flex-row rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-all duration-300 hover:shadow-purple-500/20"
-        onClick={(e) => e.stopPropagation()}
+        className="login-wrapper  h-[90vh] flex items-center justify-center z-[9999] backdrop-blur-md"
+        onClick={onClose}
       >
-        {/* Left Side - Image + Welcome Message */}
-        <div className="hidden md:flex md:w-1/2 relative items-center justify-center bg-gradient-to-b from-purple-800 via-indigo-900 to-black p-3 overflow-hidden">
-          {/* Container to center image and text together */}
-          <div className="flex flex-col items-center justify-center text-center space-y-1 z-10">
-            {/* Image */}
-            <img
-              src="../new-illustrator.png"
-              alt="Welcome"
-              className="h-[60%] w-auto object-contain opacity-95 drop-shadow-2xl hover:scale-105 transition-transform duration-500"
-            />
+        {isLoading && <Spinner />}
+        <div
+          className="p-0 login-modal lg:h-[90vh] sm:h-0 max-w-3xl  flex flex-col md:flex-row rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-all duration-300 hover:shadow-purple-500/20"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Left Side - Image + Welcome Message */}
+          <div className="hidden md:flex md:w-1/2 relative items-center justify-center bg-gradient-to-b from-purple-800 via-indigo-900 to-black p-3 overflow-hidden">
+            {/* Container to center image and text together */}
+            <div className="flex flex-col items-center justify-center text-center space-y-1 z-10">
+              {/* Image */}
+              <img
+                src="../new-illustrator.png"
+                alt="Welcome"
+                className="h-[60%] w-auto object-contain opacity-95 drop-shadow-2xl hover:scale-105 transition-transform duration-500"
+              />
 
-            {/* Welcome Text Block */}
-            <div className="bg-white/10 backdrop-blur-lg p-3 rounded-xl shadow-lg border border-white/20 max-w-xs">
-              <h2 className="text-yellow-300 text-2xl font-bold mb-1 drop-shadow-md">
-                Welcome Back !
-              </h2>
-              <p className="text-indigo-100 text-[14px] leading-relaxed">
-                Log In to your account and continue exploring endless
-                opportunities with us.
-              </p>
+              {/* Welcome Text Block */}
+              <div className="bg-white/10 backdrop-blur-lg p-3 rounded-xl shadow-lg border border-white/20 max-w-xs">
+                <h2 className="text-yellow-300 text-2xl font-bold mb-1 drop-shadow-md">
+                  Welcome Back !
+                </h2>
+                <p className="text-indigo-100 text-[14px] leading-relaxed">
+                  Log In to your account and continue exploring endless
+                  opportunities with us.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Right Side - Login Form */}
-        <div className="w-full md:w-1/2 bg-gradient-to-br from-white to-indigo-50 p-4 md:p-6 relative">
-          <div id="recaptcha-container"></div>
+          {/* Right Side - Login Form */}
+          <div className="w-full md:w-1/2 bg-gradient-to-br from-white to-indigo-50 p-4 md:p-6 relative">
+            <div id="recaptcha-container"></div>
 
-          {onClose && (
-            <button
-              className="absolute top-3 right-4 text-gray-400 text-2xl hover:text-red-500 transition-colors"
-              onClick={onClose}
-            >
-              ×
-            </button>
-          )}
+            {onClose && (
+              <button
+                className="absolute top-3 right-4 text-gray-400 text-2xl hover:text-red-500 transition-colors"
+                onClick={onClose}
+              >
+                ×
+              </button>
+            )}
 
-          <div className="text-center mb-2">
-            <h2 className="text-center text-3xl font-extrabold text-indigo-900 mb-2">
-              Log In
-            </h2>
+            <div className="text-center mb-2">
+              <h2 className="text-center text-3xl font-extrabold text-indigo-900 mb-2">
+                Log In
+              </h2>
+            </div>
+
+            <div className="space-y-3">{renderStep()}</div>
           </div>
-
-          <div className="space-y-3">{renderStep()}</div>
         </div>
-      </div>
 
-      {showForgotModal && (
-        <ForgotPass onClose={() => setShowForgotModal(false)} />
-      )}
-    </div>
+        {showForgotModal && (
+          <ForgotPass onClose={() => setShowForgotModal(false)} />
+        )}
+      </div>
+    </>
   );
 };
 

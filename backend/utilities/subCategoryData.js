@@ -77,7 +77,7 @@
       "Luxury Car",
       "Classic Car",
     ],
-    Fireworks: [
+    "Fireworks": [
       "Wedding Fireworks",
       "Indoor Fireworks",
       "Outdoor Fireworks",
