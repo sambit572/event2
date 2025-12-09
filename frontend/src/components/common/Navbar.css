@@ -9,6 +9,8 @@
   height: 60px;
   padding: 0px 10px;
   background: rgba(243, 193, 45, 1);
+  /* background-color: #ff930f; */
+  background: linear-gradient(90deg, #ff930f, #f9c823, #ff930f);
 
   position: fixed;
   top: 0;
