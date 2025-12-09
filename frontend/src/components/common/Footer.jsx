@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Footer.css";
 import { Navigate, useNavigate } from "react-router-dom";
+import startupLogo from "../../assets/home/startup-india.png";
 export const categoriesData = {
   "DJ Services & Brash Band": [
     "Wedding DJ",
@@ -674,13 +675,29 @@ function Footer() {
           </a>
         </div>
       </div>
-
-      <div className="footer-bottom">
-        <div>
-          <span>🌐 India | English</span>
+      <div className="border-t border-white mt-4 mb-2 pt-4 lg:relative flex flex-row sm:flex-row  md:flex-row items-start md:items-center">
+        {/* Startup Logo */}
+        <div className="flex flex-col text-white items-center md:items-start mb-4 md:mb-0  md:mr-6">
+          <img
+            className="w-10 scale-[4] md:w-14 md:scale-[3] lg:scale-[4] m-auto"
+            src={startupLogo}
+            alt="Startup Logo"
+          />
+          <p className="mt-0 text-[10px] text-center md:text-left">
+            EventsBridge a startup india recognized Company
+          </p>
         </div>
-        <div>
-          <p>© Copyright 2025 EventsBridge. All Rights Reserved.</p>
+
+        {/* Copyright */}
+        <div className="flex flex-col m-auto mt-2 sm:mt-4 md:mt-8 lg:mt-2 text-center text-[12px] md:gap-2.5 lg:absolute md:left-1/2 md:top-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2">
+          <div>
+            <span className="text-white m-auto ">🌐 India | English</span>
+          </div>
+          <div>
+            <p className="text-white m-0 text-[10px]">
+              © Copyright 2025 EventsBridge. All Rights Reserved.
+            </p>
+          </div>
         </div>
       </div>
     </footer>

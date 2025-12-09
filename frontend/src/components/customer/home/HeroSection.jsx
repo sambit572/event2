@@ -129,27 +129,27 @@ export default function HeroSection() {
               className="
       relative z-20 border-[2px] 
       w-36 h-65 rounded-t-[20px]
-      sm:w-64 sm:h-[500px] sm:rounded-t-[20px] sm:border-[2.5px] sm:border-b-0
-      md:w-80 md:h-[600px] md:rounded-t-[20px] md:border-[3px] md:border-b-0
-      lg:w-[320px] lg:h-[600px] lg:rounded-t-[25px] lg:border-[4px] lg:border-b-0
+      sm:w-64 sm:h-[500px] sm:rounded-t-[20px] sm:border-[3px] sm:border-b-0
+      md:w-80 md:h-[600px] md:rounded-t-[20px] md:border-[4px] md:border-b-0
+      lg:w-[320px] lg:h-[600px] lg:rounded-t-[25px] lg:border-[5px] lg:border-b-0
       overflow-hidden
        border-b-0 border-[#5D465B] 
       shadow-xl bg-gray-[#5D465B] 
     "
             >
               {/* NOTCH */}
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-3 bg-black rounded-b-2xl z-30"></div>
-              <div className="absolute top-0.5 left-1/2 -translate-x-1/2 w-12 h-1 bg-gray-700 rounded-full z-30"></div>
+              {/* <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-3 bg-black rounded-b-2xl z-30"></div>
+              <div className="absolute top-0.5 left-1/2 -translate-x-1/2 w-12 h-1 bg-gray-700 rounded-full z-30"></div> */}
               {/* <div className="absolute top-1 left-[60%] w-2 h-2 bg-gray-700 rounded-full z-30"></div> */}
 
               {/* IMAGE */}
               <div
-                className="border-[2px] 
+                className="border-[4px] 
     rounded-t-[15px] border-b-0 border-black
       shadow-xl bg-black
-        sm:rounded-t-[15px] sm:border-[2px] sm:border-b-0
-      md:rounded-t-[20spx] md:border-[3px] md:border-b-0
-      lg:rounded-t-[20px] lg:border-[4px] lg:border-b-0"
+        sm:rounded-t-[15px] sm:border-[5px] sm:border-b-0
+      md:rounded-t-[20spx] md:border-[6px] md:border-b-0
+      lg:rounded-t-[20px] lg:border-[8px] lg:border-b-0"
               >
                 <motion.img
                   src={heroimage2}
