@@ -1,13 +1,13 @@
-import bastar from "../../../assets/famousCultural/tajmahal2.jpg";
+import bastar from "../../../assets/famousCultural/tajmahal2.webp";
 import React, { useEffect, useState } from "react";
 // import { PiChartLineUpBold } from "react-icons/pi";
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { IoStarHalfOutline } from "react-icons/io5";
 import { VscStarFull } from "react-icons/vsc";
 import { motion, useMotionValue, useTransform } from "framer-motion";
-import heroimage from "../../../assets/home/herosection/heroimage1.jpeg";
-import heroimage2 from "../../../assets/home/herosection/heroimage2.jpeg";
-import heroimage3 from "../../../assets/home/herosection/heroimage3.png";
+import heroimage from "../../../assets/home/herosection/heroimage1.webp";
+import heroimage2 from "../../../assets/home/herosection/heroimage2.webp";
+import heroimage3 from "../../../assets/home/herosection/heroimage3.webp";
 
 export default function HeroSection() {
   const scrollY = useMotionValue(0);

@@ -417,7 +417,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
             onClick={handleShare}
           >
             <img
-              src="/send.png"
+              src="/send.webp"
               alt="Share"
               className="h-full w-full rounded-full object-cover"
             />
@@ -439,7 +439,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
                 }}
               >
                 <img
-                  src="/facebook.png"
+                  src="/facebook.webp"
                   alt="Facebook"
                   className="h-5 w-5 object-contain"
                 />{" "}
@@ -453,7 +453,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
                 }}
               >
                 <img
-                  src="/twitter 1.png"
+                  src="/twitter 1.webp"
                   alt="X"
                   className="h-5 w-5 object-contain"
                 />{" "}
@@ -467,7 +467,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
                 }}
               >
                 <img
-                  src="/whatsapp.png"
+                  src="/whatsapp.webp"
                   alt="WhatsApp"
                   className="h-5 w-5 object-contain"
                 />{" "}
@@ -481,7 +481,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
                 }}
               >
                 <img
-                  src="/instagram.png"
+                  src="/instagram.webp"
                   alt="Instagram"
                   className="h-5 w-5 object-contain"
                 />{" "}
@@ -495,7 +495,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
                 }}
               >
                 <img
-                  src="/telegram.png"
+                  src="/telegram.webp"
                   alt="Telegram"
                   className="h-5 w-5 object-contain"
                 />{" "}
@@ -509,7 +509,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
                 }}
               >
                 <img
-                  src="/connection.png"
+                  src="/connection.webp"
                   alt="Copy Link"
                   className="h-5 w-5 object-contain"
                 />{" "}

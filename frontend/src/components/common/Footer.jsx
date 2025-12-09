@@ -156,12 +156,12 @@ function Footer() {
         <p>EXPERIENCE EVENTSBIDGE APP ON MOBILE</p>
         <div className="app-buttons">
           <img
-            src="/App Store.png"
+            src="/App Store.webp"
             alt="App Store"
             className="cursor-pointer"
           />
           <img
-            src="/Google_Play.png"
+            src="/Google_Play.webp"
             alt="Google Play"
             className="cursor-pointer"
           />
@@ -179,7 +179,7 @@ function Footer() {
               rel="noopener noreferrer"
             >
               <p className="hover:text-[#ffc107]">
-                <img src="/gmail.png" alt="Email" className="icon" />{" "}
+                <img src="/gmail.webp" alt="Email" className="icon" />{" "}
                 techsupport@eventsbridge.com
               </p>
             </a>
@@ -188,7 +188,7 @@ function Footer() {
               onClick={() => navigate("/help-Center")}
             >
               {/* amrit */}
-              <img src="/phone-call.png" alt="Phone" className="icon" />{" "}
+              <img src="/phone-call.webp" alt="Phone" className="icon" />{" "}
               <a href="tel:phone_number">+91 9348605002</a>
             </p>
             <p
@@ -196,14 +196,14 @@ function Footer() {
               onClick={() => navigate("/help-Center")}
             >
               {/* abhijit */}
-              <img src="/phone-call.png" alt="Phone" className="icon" />{" "}
+              <img src="/phone-call.webp" alt="Phone" className="icon" />{" "}
               <a href="tel:phone_number">+91 70089 12849</a>
             </p>
             <p
               className="hover:text-[#ffc107] cursor-pointer"
               onClick={() => navigate("/help-Center")}
             >
-              <img src="/placeholder.png" alt="Location" className="icon" />{" "}
+              <img src="/placeholder.webp" alt="Location" className="icon" />{" "}
               Bhubaneswar, Odisha
             </p>
           </div>
@@ -264,8 +264,8 @@ function Footer() {
                     <img
                       src={
                         openCategory === categoryName
-                          ? "/up-arrow.png"
-                          : "/down.png"
+                          ? "/up-arrow.webp"
+                          : "/down.webp"
                       }
                       className={`w-4 h-4 bg-blue-500 rounded-lg transition-transform duration-300 ${
                         openCategory === categoryName ? "rotate-180" : ""
@@ -338,8 +338,8 @@ function Footer() {
                     <img
                       src={
                         openLocation === locationName
-                          ? "/up-arrow.png"
-                          : "/down.png"
+                          ? "/up-arrow.webp"
+                          : "/down.webp"
                       }
                       className={`w-4 h-4 bg-blue-500 rounded-lg transition-transform duration-300 ${
                         openLocation === locationName ? "rotate-180" : ""
@@ -384,7 +384,7 @@ function Footer() {
                 >
                   Categories
                   <img
-                    src={openSections.category ? "/up-arrow.png" : "/down.png"}
+                    src={openSections.category ? "/up-arrow.webp" : "/down.webp"}
                     className={`w-4 h-4 bg-blue-500 rounded-lg transition-transform duration-300 ${
                       openSections.category ? "rotate-180" : ""
                     }`}
@@ -410,8 +410,8 @@ function Footer() {
                         <img
                           src={
                             openCategory === categoryName
-                              ? "/up-arrow.png"
-                              : "/down.png"
+                              ? "/up-arrow.webp"
+                              : "/down.webp"
                           }
                           className={`w-4 h-4 bg-green-500 rounded-lg transition-transform duration-300 ${
                             openCategory === categoryName ? "rotate-180" : ""
@@ -449,7 +449,7 @@ function Footer() {
                 >
                   Available Locations
                   <img
-                    src={openSections.location ? "/up-arrow.png" : "/down.png"}
+                    src={openSections.location ? "/up-arrow.webp" : "/down.webp"}
                     className={`w-4 h-4 bg-blue-500 rounded-lg transition-transform duration-300 ${
                       openSections.location ? "rotate-180" : ""
                     }`}
@@ -477,8 +477,8 @@ function Footer() {
                         <img
                           src={
                             openLocation === locationName
-                              ? "/up-arrow.png"
-                              : "/down.png"
+                              ? "/up-arrow.webp"
+                              : "/down.webp"
                           }
                           className={`w-4 h-4 bg-green-500 rounded-lg transition-transform duration-300 ${
                             openLocation === locationName ? "rotate-180" : ""
@@ -513,7 +513,7 @@ function Footer() {
                 <h4 onClick={() => toggleSection("contact")}>
                   Contact Us
                   <img
-                    src={openSections.contact ? "/up-arrow.png" : "/down.png"}
+                    src={openSections.contact ? "/up-arrow.webp" : "/down.webp"}
                     className="dropdown-icon"
                     alt="toggle"
                   />
@@ -524,15 +524,15 @@ function Footer() {
                   }`}
                 >
                   <p>
-                    <img src="/gmail.png" className="icon" alt="" />{" "}
+                    <img src="/gmail.webp" className="icon" alt="" />{" "}
                     techsupport@eventsbridge.com{" "}
                   </p>
                   <p>
-                    <img src="/phone-call.png" className="icon" alt="" /> +91
+                    <img src="/phone-call.webp" className="icon" alt="" /> +91
                     1169320147
                   </p>
                   <p>
-                    <img src="/placeholder.png" className="icon" alt="" />{" "}
+                    <img src="/placeholder.webp" className="icon" alt="" />{" "}
                     Bhubaneswar, Odisha
                   </p>
                 </div>
@@ -542,7 +542,7 @@ function Footer() {
                 <h4 onClick={() => toggleSection("company")}>
                   Company
                   <img
-                    src={openSections.company ? "/up-arrow.png" : "/down.png"}
+                    src={openSections.company ? "/up-arrow.webp" : "/down.webp"}
                     className="dropdown-icon"
                     alt="toggle"
                   />
@@ -566,7 +566,7 @@ function Footer() {
                 <h4 onClick={() => toggleSection("quick")}>
                   Quick Links
                   <img
-                    src={openSections.quick ? "/up-arrow.png" : "/down.png"}
+                    src={openSections.quick ? "/up-arrow.webp" : "/down.webp"}
                     className="dropdown-icon"
                     alt="toggle"
                   />
@@ -585,7 +585,7 @@ function Footer() {
                 <h4 onClick={() => toggleSection("privacy")}>
                   Legal Information
                   <img
-                    src={openSections.privacy ? "/up-arrow.png" : "/down.png"}
+                    src={openSections.privacy ? "/up-arrow.webp" : "/down.webp"}
                     className="dropdown-icon"
                     alt="toggle"
                   />
@@ -628,49 +628,49 @@ function Footer() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src="/facebook.png" alt="Facebook" className="social-icon" />
+            <img src="/facebook.webp" alt="Facebook" className="social-icon" />
           </a>
           <a
             href="https://x.com/EVENTSBRID78581"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src="/twitter 1.png" alt="X" className="social-icon" />
+            <img src="/twitter 1.webp" alt="X" className="social-icon" />
           </a>
           <a
             href="https://www.instagram.com/eventsbridge__?igsh=MWVmNXNscWlodGVxNA%3D%3D&utm_source=qr"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src="/instagram.png" alt="Instagram" className="social-icon" />
+            <img src="/instagram.webp" alt="Instagram" className="social-icon" />
           </a>
           <a
             href="https://www.linkedin.com/company/eventsbridge-com/"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src="/linkedin.png" alt="LinkedIn" className="social-icon" />
+            <img src="/linkedin.webp" alt="LinkedIn" className="social-icon" />
           </a>
           <a
             href="mailto:Support@eventsbridge.com"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src="/gmail.png" alt="Gmail" className="social-icon" />
+            <img src="/gmail.webp" alt="Gmail" className="social-icon" />
           </a>
           <a
             href="https://wa.me/1234567890"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src="/whatsapp.png" alt="Whatsapp" className="social-icon" />
+            <img src="/whatsapp.webp" alt="Whatsapp" className="social-icon" />
           </a>
           <a
             href="https://youtube.com/@eventsbridge-k5y?si=UIIpVriO9ySmNW0R"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src="/youtube.png" alt="Youtube" className="social-icon" />
+            <img src="/youtube.webp" alt="Youtube" className="social-icon" />
           </a>
         </div>
       </div>

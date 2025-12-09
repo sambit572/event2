@@ -12,7 +12,7 @@ export default function LegalButton() {
         className="back-btn"
         onClick={() => navigate('/vendor/payment-info')}
       >
-        <img src="/back.png" alt="Back" className="back-arrow-icon" />
+        <img src="/back.webp" alt="Back" className="back-arrow-icon" />
         Back
       </button>
       <button type="submit" className="submits-btn">Submit</button>

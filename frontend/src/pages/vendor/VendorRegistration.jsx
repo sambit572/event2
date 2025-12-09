@@ -434,7 +434,7 @@ const VendorRegister = () => {
             {/* Placeholder for the illustrated image */}
             <div className="w-full max-w-sm mt-[-80px] ml-10">
               <img
-                src="../new-illustrator.png"
+                src="../new-illustrator.webp"
                 alt="Registration Illustration"
                 className="w-full h-auto object-contain"
               />

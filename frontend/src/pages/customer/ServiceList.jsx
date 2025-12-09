@@ -9,24 +9,24 @@ import { setCategoryServices } from "../../redux/categorySlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { FaArrowLeft, FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import djBanner from "../../assets/serviceListBanner/dj (1).png";
-import musicBanner from "../../assets/serviceListBanner/music-ban.jpg";
-import decorBanner from "../../assets/serviceListBanner/tent-ban.jpeg";
-import photoBanner from "../../assets/serviceListBanner/photo-ban.png";
-import foodBanner from "../../assets/serviceListBanner/catering-banner.jpeg";
-import banquetBanner from "../../assets/serviceListBanner/banquet-banner.jpeg";
-import danceBanner from "../../assets/serviceListBanner/classical-ban.png";
-import islamicBanner from "../../assets/serviceListBanner/moulib-ban (2).png";
-import christianBanner from "../../assets/serviceListBanner/christian-ban.png";
-import panditBanner from "../../assets/home/categoriesImages/pandit.png";
-import makeupBanner from "../../assets/serviceListBanner/beauty-ban.png";
-import floralBanner from "../../assets/serviceListBanner/flower-ban.jpeg";
-import carBanner from "../../assets/serviceListBanner/car-ban.png";
-import fireworksBanner from "../../assets/home/categoriesImages/fireworks.png";
-import cardBanner from "../../assets/home/categoriesImages/marriage-card.png";
-import magicBanner from "../../assets/home/categoriesImages/magician.png";
-import stageBanner from "../../assets/home/categoriesImages/stage_decor.png";
-import eventBanner from "../../assets/home/categoriesImages/event_company.png";
+import djBanner from "../../assets/serviceListBanner/dj (1).webp";
+import musicBanner from "../../assets/serviceListBanner/music-ban.webp";
+import decorBanner from "../../assets/serviceListBanner/tent-ban.webp";
+import photoBanner from "../../assets/serviceListBanner/photo-ban.webp";
+import foodBanner from "../../assets/serviceListBanner/catering-banner.webp";
+import banquetBanner from "../../assets/serviceListBanner/banquet-banner.webp";
+import danceBanner from "../../assets/serviceListBanner/classical-ban.webp";
+import islamicBanner from "../../assets/serviceListBanner/moulib-ban (2).webp";
+import christianBanner from "../../assets/serviceListBanner/christian-ban.webp";
+import panditBanner from "../../assets/home/categoriesImages/pandit.webp";
+import makeupBanner from "../../assets/serviceListBanner/beauty-ban.webp";
+import floralBanner from "../../assets/serviceListBanner/flower-ban.webp";
+import carBanner from "../../assets/serviceListBanner/car-ban.webp";
+import fireworksBanner from "../../assets/home/categoriesImages/fireworks.webp";
+import cardBanner from "../../assets/home/categoriesImages/marriage-card.webp";
+import magicBanner from "../../assets/home/categoriesImages/magician.webp";
+import stageBanner from "../../assets/home/categoriesImages/stage_decor.webp";
+import eventBanner from "../../assets/home/categoriesImages/event_company.webp";
 import balloonBanner from "../../assets/serviceListBanner/balloon banner.webp";
 
 const ServiceCardSkeleton = () => (
@@ -78,7 +78,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
     "Card Design & Printing": cardBanner,
     "Magic Shows": magicBanner,
     "Stage Decor": stageBanner,
-    "Event Company": eventBanner,
+    "Event Management Company": eventBanner,
     "Balloon Decor": balloonBanner,
   };
 

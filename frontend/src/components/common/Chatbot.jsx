@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Chatbot.css";
-import chatIcon from "../../assets/serverLogo.png";
+import chatIcon from "../../assets/serverLogo.webp";
 
 const chatbotFAQs = [
   "What is EventsBridge?",

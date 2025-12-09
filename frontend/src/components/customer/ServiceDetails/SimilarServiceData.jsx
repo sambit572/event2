@@ -1,6 +1,6 @@
-import similarimg1 from "../../../assets/service/sub-img5.jpg";
-import similarimg2 from "../../../assets/service/sub-img4.jpg";
-import similarimg3 from "../../../assets/service/sub-img3.jpg";
+import similarimg1 from "../../../assets/service/sub-img5.webp";
+import similarimg2 from "../../../assets/service/sub-img4.webp";
+import similarimg3 from "../../../assets/service/sub-img3.webp";
 import similarimg4 from "../../../assets/service/sub-img2.webp";
 import similarimg5 from "../../../assets/service/sub-img1.avif";
 

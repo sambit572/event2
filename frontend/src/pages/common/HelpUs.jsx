@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaLock, FaShieldAlt, FaHeadset, FaMobileAlt } from "react-icons/fa";
-import bgBanner from "../../assets/helpUs/bgbanner.jpeg"; // Adjust path as needed
+import bgBanner from "../../assets/helpUs/bgbanner.webp"; // Adjust path as needed
 
 const HelpUs = () => {
   const navigate = useNavigate();

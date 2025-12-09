@@ -879,7 +879,7 @@ function VendorService({ currentStep }) {
                   />
                   {categorySearchTerm && (
                     <img
-                      src="../../../public/close.png"
+                      src="../../../public/close.webp"
                       alt="Clear"
                       className="clear-icon-img"
                       onClick={() => setCategorySearchTerm("")}
@@ -989,7 +989,7 @@ function VendorService({ currentStep }) {
 
                   {subcategorySearchTerm && (
                     <img
-                      src="/public/close.png"
+                      src="/public/close.webp"
                       alt="Clear"
                       className="cross-icon"
                       onClick={() => setSubcategorySearchTerm("")}
@@ -1481,7 +1481,7 @@ function VendorService({ currentStep }) {
                 />
                 {stateLocationSearchTerm && (
                   <img
-                    src="/public/close.png"
+                    src="/public/close.webp"
                     alt="Clear"
                     className="cross-icon"
                     onClick={() => setStateLocationSearchTerm("")}
@@ -1583,7 +1583,7 @@ function VendorService({ currentStep }) {
                 />
                 {locationSearchTerm && (
                   <img
-                    src="/public/close.png"
+                    src="/public/close.webp"
                     alt="Clear"
                     className="cross-icon"
                     onClick={() => setLocationSearchTerm("")}

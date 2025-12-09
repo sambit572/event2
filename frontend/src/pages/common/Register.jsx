@@ -224,7 +224,7 @@ const Register = ({ onClose, onSwitchToLogin }) => {
           <div className="flex flex-col items-center justify-center text-center space-y-1 z-10">
             {/* Image */}
             <img
-              src="../new-illustrator.png"
+              src="../new-illustrator.webp"
               alt="Welcome"
               className="h-[60%] w-auto object-contain opacity-95 drop-shadow-2xl hover:scale-105 transition-transform duration-500"
             />

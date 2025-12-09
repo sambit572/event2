@@ -407,7 +407,7 @@ export default function VendorPayment() {
               placeholder="Enter IFSC code"
             />
             <img
-              src="/question.png"
+              src="/question.webp"
               alt="info"
               title="You can find this on your cheque or bank passbook."
             />
@@ -449,7 +449,7 @@ export default function VendorPayment() {
           </label>
           <div className="upi-input-with-icon">
             <img
-              src="/question.png"
+              src="/question.webp"
               alt="info"
               title="You can find your UPI ID using your banking app or UPI-enabled apps like PhonePe, Google Pay, Paytm, etc."
             />
