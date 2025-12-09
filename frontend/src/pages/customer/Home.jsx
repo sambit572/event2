@@ -159,16 +159,19 @@ const Home = () => {
       {/* Category Grid */}
       <div className="align_center category_section">
         {visibleCategories.map((category, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: index * 0.2, ease: "easeInOut" }}
-          >
-            {" "}
+          // <motion.div
+          //   key={index}
+          //   initial={{ opacity: 0, y: 50 }}
+          //   whileInView={{ opacity: 1, y: 0 }}
+          //   viewport={{ once: true, amount: 0.3 }}
+          //   transition={{ duration: index * 0.2, ease: "easeInOut" }}
+          // >
+          //   {" "}
+          //   <CategoryCard category={category} />
+          // </motion.div>
+          <div>
             <CategoryCard category={category} />
-          </motion.div>
+          </div>
         ))}
       </div>
       {/* View All Button */}

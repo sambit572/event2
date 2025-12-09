@@ -48,6 +48,63 @@ const VendorRegister = () => {
       setError("Passwords don't match!");
       return false;
     }
+    const emailRegex = /^[a-z][a-z0-9._%+-]*@[a-z0-9.-]+\.[a-z]{2,}$/;
+
+    if (!emailRegex.test(form.email)) {
+      setError("Invalid email! First letter must be lowercase.");
+      return false;
+    }
+
+    const domain = form.email.split("@")[1];
+
+    // 2. common typo detection
+    const typoDomains = [
+      "mail.com",
+      "gmal.co",
+      "gmal.con",
+      "gmal.cm",
+
+      "gmal.com",
+      "gmial.com",
+      "gmai.com",
+      "gamil.com",
+      "gmil.com",
+      "gmaill.com",
+      "gmailc.om",
+      "gmail.con",
+      "gmail.cm",
+      "gmail.coom",
+      "gmail.comm",
+      "gmail.cmo",
+      "gmail.om",
+      "gmail.ocm",
+      "gmsil.com",
+      "gmaul.com",
+      "gmqil.com",
+      "gmakl.com",
+      "gmail.co",
+    ];
+
+    if (typoDomains.includes(domain)) {
+      setError("Email domain looks misspelled.");
+      return false;
+    }
+
+    // 4. disposable email block
+    const bannedDomains = [
+      "mailinator.com",
+      "tempmail.com",
+      "10minutemail.com",
+      "guerrillamail.com",
+      "throwawaymail.com",
+    ];
+
+    if (bannedDomains.includes(domain)) {
+      setError("Disposable email addresses are not allowed.");
+
+      return false;
+    }
+
     if (form.password.length < 6) {
       setError("Password must be at least 6 characters!");
       return false;
@@ -227,8 +284,7 @@ const VendorRegister = () => {
           <div
             className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8 lg:p-12 bg-cover bg-center relative"
             style={{
-              backgroundImage:
-                `url(${laptopBackground})`,
+              backgroundImage: `url(${laptopBackground})`,
             }}
           >
             <div className="absolute inset-0 bg-black/30 "></div>
