@@ -375,7 +375,7 @@ export default function VendorLegalConsent() {
                 <>
                   <span>Upload Signature</span>
                   <img
-                    src="/Upload.png"
+                    src="/Upload.webp"
                     alt="Upload Icon"
                     className="h-6 w-6 max-lg:h-[22px] max-lg:w-[22px] max-md:h-5 max-md:w-5 max-[480px]:h-[18px] max-[480px]:w-[18px]"
                   />

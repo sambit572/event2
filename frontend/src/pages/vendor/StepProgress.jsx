@@ -3,10 +3,10 @@ import React from "react";
 
 function StepProgress({ currentStep }) {
   const steps = [
-    { label: "Registration", icon: "/verify.png" },
-    { label: "Service Detail", icon: "/service.png" },
-    { label: "Bank Detail", icon: "/payment.png" },
-    { label: "Legal Consents", icon: "/legal.png" },
+    { label: "Registration", icon: "/verify.webp" },
+    { label: "Service Detail", icon: "/service.webp" },
+    { label: "Bank Detail", icon: "/payment.webp" },
+    { label: "Legal Consents", icon: "/legal.webp" },
   ];
 
   // SVG Checkmark component

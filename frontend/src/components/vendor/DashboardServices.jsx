@@ -87,7 +87,7 @@ const DashboardServices = () => {
     if (!imgRef.current || !crop?.width || !crop?.height) return;
 
     const croppedBlob = await getCroppedImg(imgRef.current, crop);
-    const croppedFile = new File([croppedBlob], "cropped.jpg", {
+    const croppedFile = new File([croppedBlob], "cropped.webp", {
       type: "image/jpeg",
     });
 

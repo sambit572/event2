@@ -6,7 +6,6 @@ import { FaRegHeart, FaHeart } from "react-icons/fa6";
 import { BACKEND_URL } from "../../../utils/constant";
 import { useParams } from "react-router-dom"; // 1. IMPORT useParams
 import { getServicePriceDisplay } from "../../../utils/pricingHelpers";
-import { motion } from "framer-motion";
 
 const ServiceDetailCard = ({ service }) => {
   const { categoryId } = useParams(); // 2. GET categoryId FROM URL
@@ -212,13 +211,7 @@ const ServiceDetailCard = ({ service }) => {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, x: 80 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, amount: 0.3 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className="relative w-full rounded-lg border border-gray-200 bg-red p-4 mt-5"
-    >
+    <div className="relative w-full rounded-lg border border-gray-200 bg-red p-4 mt-5">
       <div className="absolute top-4 right-4 z-20 flex flex-col items-end gap-3">
         <div
           className={`h-10 w-10 flex items-center justify-center rounded-full bg-gray-200 shadow-md cursor-pointer transition-all duration-300 ${
@@ -237,7 +230,7 @@ const ServiceDetailCard = ({ service }) => {
             onClick={handleShare}
           >
             <img
-              src="/send.png"
+              src="/send.webp"
               alt="Share"
               className="h-full w-full rounded-full object-cover"
             />
@@ -256,7 +249,7 @@ const ServiceDetailCard = ({ service }) => {
                 onClick={() => shareService("facebook")}
               >
                 <img
-                  src="/facebook.png"
+                  src="/facebook.webp"
                   alt="Facebook"
                   className="h-5 w-5 object-contain"
                 />{" "}
@@ -267,7 +260,7 @@ const ServiceDetailCard = ({ service }) => {
                 onClick={() => shareService("twitter")}
               >
                 <img
-                  src="/twitter 1.png"
+                  src="/twitter 1.webp"
                   alt="X"
                   className="h-5 w-5 object-contain"
                 />{" "}
@@ -278,7 +271,7 @@ const ServiceDetailCard = ({ service }) => {
                 onClick={() => shareService("whatsapp")}
               >
                 <img
-                  src="/whatsapp.png"
+                  src="/whatsapp.webp"
                   alt="WhatsApp"
                   className="h-5 w-5 object-contain"
                 />{" "}
@@ -289,7 +282,7 @@ const ServiceDetailCard = ({ service }) => {
                 onClick={() => shareService("instagram")}
               >
                 <img
-                  src="/instagram.png"
+                  src="/instagram.webp"
                   alt="Instagram"
                   className="h-5 w-5 object-contain"
                 />{" "}
@@ -300,7 +293,7 @@ const ServiceDetailCard = ({ service }) => {
                 onClick={() => shareService("telegram")}
               >
                 <img
-                  src="/telegram.png"
+                  src="/telegram.webp"
                   alt="Telegram"
                   className="h-5 w-5 object-contain"
                 />{" "}
@@ -311,7 +304,7 @@ const ServiceDetailCard = ({ service }) => {
                 onClick={() => shareService("copy")}
               >
                 <img
-                  src="/connection.png"
+                  src="/connection.webp"
                   alt="Copy Link"
                   className="h-5 w-5 object-contain"
                 />{" "}
@@ -387,7 +380,7 @@ const ServiceDetailCard = ({ service }) => {
       <div className="service-description">
         <p className="text-black text-sm">{serviceDes}</p>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

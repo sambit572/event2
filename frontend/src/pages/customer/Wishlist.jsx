@@ -105,7 +105,7 @@ const Wishlist = () => {
                           Array.isArray(service.serviceImage) &&
                           service.serviceImage.length > 0
                             ? service.serviceImage[0]
-                            : "/default.jpg"
+                            : "/default.webp"
                         }
                         alt={service.serviceName}
                         className="w-full h-44 object-cover"

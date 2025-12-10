@@ -7,6 +7,7 @@ import Button from "./../../components/vendor/register/VendorButton";
 import Spinner from "./../../components/common/Spinner";
 
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function VendorPayment() {
   const navigate = useNavigate();
@@ -31,6 +32,8 @@ export default function VendorPayment() {
   });
 
   const [showPopup, setShowPopup] = useState(false);
+  const [isIFSCVerified, setIsIFSCVerified] = useState(false);
+  const [bankData, setBankData] = useState(null);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -120,10 +123,41 @@ export default function VendorPayment() {
   // if (panValue.length === 10 && /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(panValue)) {
   //   verifyPAN(panValue);
 
+  const handleIFSCChange = async (e) => {
+    const value = e.target.value.toUpperCase();
+
+    setFormData((prev) => ({ ...prev, ifscCode: value }));
+    setIsIFSCVerified(null);
+
+    // Auto verify when IFSC length is 11
+    if (value.length === 11) {
+      try {
+        setIsIFSCVerified("loading");
+
+        const res = await axios.get(`https://ifsc.razorpay.com/${value}`);
+
+        if (res.data) {
+          setBankData(res.data);
+
+          setFormData((prev) => ({
+            ...prev,
+            // branchName: res.data.BRANCH || prev.branchName,
+            bankName: res.data.BANK,
+          }));
+
+          setIsIFSCVerified(true);
+          toast.success("IFSC Verified Automatically");
+        }
+      } catch {
+        setIsIFSCVerified(false);
+        toast.error("Invalid IFSC Code");
+      }
+    }
+  };
+
   const handleBack = () => {
     navigate("/category/VendorService");
   };
-
   const handleNext = async () => {
     setIsLoading(true);
     const {
@@ -136,26 +170,38 @@ export default function VendorPayment() {
       panNumber,
     } = formData;
 
-    // Check required fields
-    if (
-      !accountHolderName ||
-      !accountNumber ||
-      !branchName ||
-      !ifscCode ||
-      !panNumber
-    ) {
+    // ❗ Field validations with toast message at each error place
+    if (!accountHolderName) {
+      toast.error("Please enter Account Holder Name");
       setIsLoading(false);
-      setShowPopup(true);
-      setTimeout(() => setShowPopup(false), 3000);
       return;
     }
-
-    // Check PAN verification
-    // if (!panVerification.isVerified) {
-    //   setIsLoading(false);
-    //   alert("Please verify your PAN number before proceeding.");
-    //   return;
-    // }
+    if (!accountNumber) {
+      toast.error("Please enter Bank Account Number");
+      setIsLoading(false);
+      return;
+    }
+    if (!ifscCode) {
+      toast.error("Please enter IFSC Code");
+      setIsLoading(false);
+      return;
+    }
+    // ❗ Block next if IFSC is not verified
+    if (!isIFSCVerified) {
+      toast.error("Please verify IFSC Code before continuing");
+      setIsLoading(false);
+      return;
+    }
+    if (!branchName) {
+      toast.error("Please enter Bank Branch Name");
+      setIsLoading(false);
+      return;
+    }
+    if (!panNumber) {
+      toast.error("Please enter PAN Number");
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const vendorId = localStorage.getItem("vendorId");
@@ -180,16 +226,79 @@ export default function VendorPayment() {
 
       navigate("/vendor/legal-consent", { state: { currentStep: 3 } });
     } catch (err) {
-      console.error(
-        "Error submitting bank details:",
-        err.response?.data || err.message
-      );
-      setShowPopup(true);
-      setTimeout(() => setShowPopup(false), 3000);
+      console.error("Error submitting bank details:", err);
+      toast.error("Something went wrong, please try again");
     }
 
     setIsLoading(false);
   };
+
+  // const handleNext = async () => {
+  //   setIsLoading(true);
+  //   const {
+  //     accountHolderName,
+  //     accountNumber,
+  //     branchName,
+  //     ifscCode,
+  //     gst,
+  //     upiId,
+  //     panNumber,
+  //   } = formData;
+
+  //   // Check required fields
+  //   if (
+  //     !accountHolderName ||
+  //     !accountNumber ||
+  //     !branchName ||
+  //     !ifscCode ||
+  //     !panNumber
+  //   ) {
+  //     setIsLoading(false);
+  //     setShowPopup(true);
+  //     setTimeout(() => setShowPopup(false), 3000);
+  //     return;
+  //   }
+
+  //   // Check PAN verification
+  //   // if (!panVerification.isVerified) {
+  //   //   setIsLoading(false);
+  //   //   alert("Please verify your PAN number before proceeding.");
+  //   //   return;
+  //   // }
+
+  //   try {
+  //     const vendorId = localStorage.getItem("vendorId");
+
+  //     await axios.post(
+  //       `${import.meta.env.VITE_BACKEND_URL}/vendors/bank-details`,
+  //       {
+  //         vendorId,
+  //         accountHolderName,
+  //         accountNumber,
+  //         branchName,
+  //         ifscCode,
+  //         gst,
+  //         upiId,
+  //         panNumber,
+  //       },
+  //       {
+  //         headers: { "Content-Type": "application/json" },
+  //         withCredentials: true,
+  //       }
+  //     );
+
+  //     navigate("/vendor/legal-consent", { state: { currentStep: 3 } });
+  //   } catch (err) {
+  //     console.error(
+  //       "Error submitting bank details:",
+  //       err.response?.data || err.message
+  //     );
+  //     setShowPopup(true);
+  //     setTimeout(() => setShowPopup(false), 3000);
+  //   }
+
+  //   setIsLoading(false);
+  // };
 
   return (
     <div className="vendor-payment-page">
@@ -228,18 +337,64 @@ export default function VendorPayment() {
           />
         </label>
 
-        <label>
-          Bank Branch Name <span className="required-icon">*</span>
-          <input
-            type="text"
-            name="branchName"
-            value={formData.branchName}
-            onChange={handleChange}
-            placeholder="Enter bank branch name"
-          />
-        </label>
-
         <div className="input-wrapper">
+          <label>
+            IFSC Code <span className="required-icon">*</span>
+          </label>
+
+          <div className="ifsc-flex">
+            <input
+              type="text"
+              name="ifscCode"
+              value={formData.ifscCode}
+              onChange={handleIFSCChange}
+              placeholder="Enter IFSC code"
+              maxLength="11"
+              style={{
+                borderColor:
+                  isIFSCVerified === false
+                    ? "red"
+                    : isIFSCVerified === true
+                    ? "green"
+                    : "",
+              }}
+            />
+          </div>
+          {isIFSCVerified === true && (
+            <div className="mt-2 flex items-center gap-2 animate-fade">
+              <span className="text-xs bg-green-600 text-white px-2 py-1 rounded-full font-semibold">
+                Verified
+              </span>
+              <p className="text-sm text-green-700 font-medium">
+                IFSC Successfully Validated
+              </p>
+            </div>
+          )}
+
+          {isIFSCVerified === false && (
+            <div className="mt-2 flex items-center gap-2 animate-fade">
+              <span className="text-xs bg-red-600 text-white px-2 py-1 rounded-full font-semibold">
+                Error
+              </span>
+              <p className="text-sm text-red-700 font-medium">
+                Invalid IFSC — Check Again
+              </p>
+            </div>
+          )}
+
+          {isIFSCVerified === "loading" && (
+            <div className="mt-2 flex items-center gap-2 animate-pulse">
+              <span className="text-xs bg-blue-600 text-white px-2 py-1 rounded-full font-semibold">
+                Checking
+              </span>
+              <p className="text-sm text-blue-700 font-medium">
+                Validating IFSC...
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* <div className="input-wrapper">
           <label>
             IFSC Code <span className="required-icon">*</span>
           </label>
@@ -252,12 +407,23 @@ export default function VendorPayment() {
               placeholder="Enter IFSC code"
             />
             <img
-              src="/question.png"
+              src="/question.webp"
               alt="info"
               title="You can find this on your cheque or bank passbook."
             />
           </div>
-        </div>
+        </div> */}
+
+        <label>
+          Bank Branch Name <span className="required-icon">*</span>
+          <input
+            type="text"
+            name="branchName"
+            value={formData.branchName}
+            onChange={handleChange}
+            placeholder="Enter bank branch name"
+          />
+        </label>
 
         <label>
           GSTIN (Optional)
@@ -283,7 +449,7 @@ export default function VendorPayment() {
           </label>
           <div className="upi-input-with-icon">
             <img
-              src="/question.png"
+              src="/question.webp"
               alt="info"
               title="You can find your UPI ID using your banking app or UPI-enabled apps like PhonePe, Google Pay, Paytm, etc."
             />

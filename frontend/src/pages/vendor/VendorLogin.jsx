@@ -275,7 +275,7 @@ const VendorLogin = ({ onClose, onSwitchToLogin }) => {
         <div className="hidden md:flex md:w-1/2 relative items-center justify-center bg-gradient-to-b from-purple-800 via-indigo-900 to-black p-3 overflow-hidden">
           <div className="flex flex-col items-center justify-center text-center space-y-3 z-10">
             <img
-              src="../new-illustrator.png"
+              src="../new-illustrator.webp"
               alt="Welcome"
               className="h-[60%] w-auto object-contain opacity-95 drop-shadow-2xl hover:scale-105 transition-transform duration-700"
             />

@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import searchImg from "/category/search.png";
-import compareImg from "/category/price-comparison.png";
-import negotiateImg from "/category/negotiation.png";
-import bookingImg from "/category/booking.png";
-import payImg from "../../../../public/category/pay_now-removebg-preview.png";
-import enjoyImg from "/category/family.png";
+import searchImg from "/category/search.webp";
+import compareImg from "/category/price-comparison.webp";
+import negotiateImg from "/category/negotiation.webp";
+import bookingImg from "/category/booking.webp";
+import payImg from "../../../../public/category/pay_now-removebg-preview.webp";
+import enjoyImg from "/category/family.webp";
 import { motion } from "motion/react";
 
 const steps = [

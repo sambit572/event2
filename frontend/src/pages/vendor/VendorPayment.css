@@ -1,3 +1,35 @@
+.ifsc-flex {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.verify-btn {
+  padding: 6px 10px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: -10px;
+}
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(4px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade {
+  animation: fadeIn 0.35s ease-in-out;
+}
+
+.verify-btn:hover {
+  background-color: #005fcc;
+}
+
+.ifsc-success { color: green; font-size: 13px; margin-top: 4px; }
+.ifsc-error { color: red; font-size: 13px; margin-top: 4px; }
+
 .vendor-payment-page {
   background-color: #ffffff;
   font-family: 'Segoe UI', sans-serif;
@@ -72,7 +104,7 @@
   border: 1px solid #ccc;
   border-radius: 6px;
   background-color: #f9f9f9;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   font-size: 14px;
 }
 

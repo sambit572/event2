@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import comingSoon from "../../../assets/home/bannerImages/coming_soon.png";
-import mediumbanner from "../../../assets/home/bannerImages/mediumbanner.png";
-import xxmedium from "../../../assets/home/bannerImages/xxmedium.png";
-import smallbanner from "../../../assets/home/bannerImages/smallbanner.png";
+import comingSoon from "../../../assets/home/bannerImages/coming_soon.webp";
+import mediumbanner from "../../../assets/home/bannerImages/mediumbanner.webp";
+import xxmedium from "../../../assets/home/bannerImages/xxmedium.webp";
+import smallbanner from "../../../assets/home/bannerImages/smallbanner.webp";
 import newComingSoon from "../../../../public/coomingSoon/newComingSoon.webp";
-import emiBanner from "../../../assets/home/bannerImages/emi banner.png";
+import emiBanner from "../../../assets/home/bannerImages/emi banner.webp";
 
 const AddsBanner = () => {
   const [showEmi, setShowEmi] = useState(false);

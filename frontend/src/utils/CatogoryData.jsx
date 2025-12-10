@@ -1,22 +1,22 @@
-import image1 from "../assets/home/categoriesImages/dj_image.png";
-import image2 from "../assets/home/categoriesImages/bass-brand.png";
-import image3 from "../assets/home/categoriesImages/tent_house.png";
-import image4 from "../assets/home/categoriesImages/photographer.png";
-import image5 from "../assets/home/categoriesImages/pandit.png";
-import image6 from "../assets/home/categoriesImages/magician.png";
-import image7 from "../assets/home/categoriesImages/classical_music_and_dance.jpg";
-import image8 from "../assets/home/categoriesImages/moulbi.png";
-import image9 from "../assets/home/categoriesImages/father.png";
-import image10 from "../assets/aboutus/catering_img.png";
-import image11 from "../assets/home/categoriesImages/bride-mehendi-&-makeup.png";
-import image12 from "../assets/home/categoriesImages/flower-decor.png";
-import image13 from "../assets/home/categoriesImages/ceremonial_ride.png";
-import image14 from "../assets/home/categoriesImages/fireworks.png";
-import image15 from "../assets/home/categoriesImages/marriage-card.png";
-import image16 from "../assets/home/categoriesImages/banquithall.png";
-import image17 from "../assets/home/categoriesImages/stage_decor.png";
-import image18 from "../assets/home/categoriesImages/event_company.png";
-import image19 from "../assets/home/categoriesImages/ballon decor.jpg";
+import image1 from "../assets/home/categoriesImages/dj_image.webp";
+import image2 from "../assets/home/categoriesImages/bass-brand.webp";
+import image3 from "../assets/home/categoriesImages/tent_house.webp";
+import image4 from "../assets/home/categoriesImages/photographer.webp";
+import image5 from "../assets/home/categoriesImages/pandit.webp";
+import image6 from "../assets/home/categoriesImages/magician.webp";
+import image7 from "../assets/home/categoriesImages/classical_music_and_dance.webp";
+import image8 from "../assets/home/categoriesImages/moulbi.webp";
+import image9 from "../assets/home/categoriesImages/father.webp";
+import image10 from "../assets/aboutus/catering_img.webp";
+import image11 from "../assets/home/categoriesImages/bride-mehendi-&-makeup.webp";
+import image12 from "../assets/home/categoriesImages/flower-decor.webp";
+import image13 from "../assets/home/categoriesImages/ceremonial_ride.webp";
+import image14 from "../assets/home/categoriesImages/fireworks.webp";
+import image15 from "../assets/home/categoriesImages/marriage-card.webp";
+import image16 from "../assets/home/categoriesImages/banquithall.webp";
+import image17 from "../assets/home/categoriesImages/stage_decor.webp";
+import image18 from "../assets/home/categoriesImages/event_company.webp";
+import image19 from "../assets/home/categoriesImages/ballon decor.webp";
 
 export const CategoryData = [
   {
@@ -100,7 +100,7 @@ export const CategoryData = [
   },
   {
     id: "transport",
-    title: "Ceremonial Ride",
+    title: "Ceremonial Ride",
     image: image13,
     tagline: "Royal Rides Await You",
   },

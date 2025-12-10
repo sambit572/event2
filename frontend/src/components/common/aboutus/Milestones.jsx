@@ -58,7 +58,7 @@ const Milestones = () => {
     <section
       ref={sectionRef}
       className="relative min-h-[400px] py-20 px-6 mt-10 flex flex-wrap justify-center items-center gap-8 rounded-xl overflow-hidden bg-fixed bg-cover bg-center"
-      style={{ backgroundImage: "url('/milestome.jpg')" }}
+      style={{ backgroundImage: "url('/milestome.webp')" }}
     >
       {/* Overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-amber-50/70 to-yellow-100/70 -z-10"></div>

@@ -3,86 +3,86 @@ import "./CulturalDanceSlider.css"; // ✅ Import the CSS
 import { motion } from "motion/react";
 
 // 🖼️ Example placeholder images
-import puri from "../../assets/famousCultural/konark-and-puri-jagannath-temple.jpg";
-import odissi from "../../assets/famousCultural/odishi dance1.jpeg";
+import puri from "../../assets/famousCultural/konark-and-puri-jagannath-temple.webp";
+import odissi from "../../assets/famousCultural/odishi dance1.webp";
 
-import tirupati from "../../assets/famousCultural/Tirupati-Balaji-temple.jpg";
-import kuchipudi from "../../assets/famousCultural/kuchipudi.jpg";
+import tirupati from "../../assets/famousCultural/Tirupati-Balaji-temple.webp";
+import kuchipudi from "../../assets/famousCultural/kuchipudi.webp";
 
-import ponungDance from "../../assets/famousCultural/ponung.jpg";
-import tawang from "../../assets/famousCultural/tawang-monastery.jpg";
+import ponungDance from "../../assets/famousCultural/ponung.webp";
+import tawang from "../../assets/famousCultural/tawang-monastery.webp";
 
-import bihu from "../../assets/famousCultural/bihu dance.jpg";
-import kaziranga from "../../assets/famousCultural/Kaziranga-National-Park.jpg";
+import bihu from "../../assets/famousCultural/bihu dance.webp";
+import kaziranga from "../../assets/famousCultural/Kaziranga-National-Park.webp";
 
-import bodhGaya from "../../assets/famousCultural/Bodh-Gaya.jpg";
-import jatJatin from "../../assets/famousCultural/jat-jatin.png";
+import bodhGaya from "../../assets/famousCultural/Bodh-Gaya.webp";
+import jatJatin from "../../assets/famousCultural/jat-jatin.webp";
 
-import panthi from "../../assets/famousCultural/panthi-dance.jpg";
-import chitrakote from "../../assets/famousCultural/CHITRAKOTE.jpg";
+import panthi from "../../assets/famousCultural/panthi-dance.webp";
+import chitrakote from "../../assets/famousCultural/CHITRAKOTE.webp";
 
-import bagaBeach from "../../assets/famousCultural/baga-sea-beach.jpg";
-import fugdiDance from "../../assets/famousCultural/Fugdi_Dancer.jpg";
+import bagaBeach from "../../assets/famousCultural/baga-sea-beach.webp";
+import fugdiDance from "../../assets/famousCultural/Fugdi_Dancer.webp";
 
-import garba from "../../assets/famousCultural/garba-dance-festival.jpg";
-import somnath from "../../assets/famousCultural/Somnath_Temple.jpg";
+import garba from "../../assets/famousCultural/garba-dance-festival.webp";
+import somnath from "../../assets/famousCultural/Somnath_Temple.webp";
 
 import phagDanceImage from "../../assets/famousCultural/hariyana dance.webp";
-import kurukshetraImage from "../../assets/famousCultural/kurukshetra-haryana.jpg";
+import kurukshetraImage from "../../assets/famousCultural/kurukshetra-haryana.webp";
 
 import nati from "../../assets/famousCultural/Nati-Himachal-Pradesh.webp";
-import spiti from "../../assets/famousCultural/spiti.jpg";
+import spiti from "../../assets/famousCultural/spiti.webp";
 
-import chhau from "../../assets/famousCultural/chhau.jpg";
-import pareshnath from "../../assets/famousCultural/pareshnath.png";
+import chhau from "../../assets/famousCultural/chhau.webp";
+import pareshnath from "../../assets/famousCultural/pareshnath.webp";
 
-import yakshagana from "../../assets/famousCultural/Yaksha-Gana.jpg";
-import mysorePalace from "../../assets/famousCultural/Mysore-Palace.jpg";
+import yakshagana from "../../assets/famousCultural/Yaksha-Gana.webp";
+import mysorePalace from "../../assets/famousCultural/Mysore-Palace.webp";
 
-import kathakali from "../../assets/famousCultural/Kathakali-1.jpg";
-import alleppeyImage from "../../assets/famousCultural/alleppey-kerala.jpg";
+import kathakali from "../../assets/famousCultural/Kathakali-1.webp";
+import alleppeyImage from "../../assets/famousCultural/alleppey-kerala.webp";
 
-import matkiDance from "../../assets/famousCultural/Matki_dance_(Madhya_Pradesh.jpg";
-import khajuraho from "../../assets/famousCultural/khajuraho.jpg";
+import matkiDance from "../../assets/famousCultural/Matki_dance_(Madhya_Pradesh.webp";
+import khajuraho from "../../assets/famousCultural/khajuraho.webp";
 
-import lavani from "../../assets/famousCultural/Lavani-dancer-5.png";
-import gatewayIndia from "../../assets/famousCultural/gateway.jpg";
+import lavani from "../../assets/famousCultural/Lavani-dancer-5.webp";
+import gatewayIndia from "../../assets/famousCultural/gateway.webp";
 
 import loktakLake from "../../assets/famousCultural/manipur.webp";
-import rasLila from "../../assets/famousCultural/manipur rasleela.png";
+import rasLila from "../../assets/famousCultural/manipur rasleela.webp";
 
 import livingRootBridge from "../../assets/famousCultural/meghalaya.webp";
-import wangala from "../../assets/famousCultural/wangala.png";
+import wangala from "../../assets/famousCultural/wangala.webp";
 
-import cheraw from "../../assets/famousCultural/bamboo.jpg";
+import cheraw from "../../assets/famousCultural/bamboo.webp";
 import solomon from "../../assets/famousCultural/solomon misoram.webp";
 
-import bharatanatyam from "../../assets/famousCultural/Bharatnatyam.jpg";
-import meenakshi from "../../assets/famousCultural/meenakshi.jpeg";
+import bharatanatyam from "../../assets/famousCultural/Bharatnatyam.webp";
+import meenakshi from "../../assets/famousCultural/meenakshi.webp";
 
-import nagaWarDance from "../../assets/famousCultural/nagaland dance.jpg";
+import nagaWarDance from "../../assets/famousCultural/nagaland dance.webp";
 import dzukouValley from "../../assets/famousCultural/nagaland.webp";
 
-import bhangra from "../../assets/famousCultural/bhangra.jpg";
-import goldenTemple from "../../assets/famousCultural/Punjab Golden Temple (1).jpg";
+import bhangra from "../../assets/famousCultural/bhangra.webp";
+import goldenTemple from "../../assets/famousCultural/Punjab Golden Temple (1).webp";
 
-import ghoomar from "../../assets/famousCultural/Ghoomar_dancers.jpg";
+import ghoomar from "../../assets/famousCultural/Ghoomar_dancers.webp";
 import hawaMahal from "../../assets/famousCultural/Hawa-Mahal.webp";
 
-import pulak from "../../assets/famousCultural/pulak-bhagawati-sikim.jpg";
-import chamDance from "../../assets/famousCultural/sikkim cham dance.png";
+import pulak from "../../assets/famousCultural/pulak-bhagawati-sikim.webp";
+import chamDance from "../../assets/famousCultural/sikkim cham dance.webp";
 
-import tajMahal from "../../assets/famousCultural/tajmahal2.jpg";
-import kathak from "../../assets/famousCultural/kathak dance1.png";
-import kedarnath from "../../assets/famousCultural/kedarnath.jpg";
-import pandavNritya from "../../assets/famousCultural/uk Pandav nritya .png";
-import victoriaMemorial from "../../assets/famousCultural/westbengal victoria palace.jpg";
-import puruliaChhau from "../../assets/famousCultural/chhau.jpeg";
+import tajMahal from "../../assets/famousCultural/tajmahal2.webp";
+import kathak from "../../assets/famousCultural/kathak dance1.webp";
+import kedarnath from "../../assets/famousCultural/kedarnath.webp";
+import pandavNritya from "../../assets/famousCultural/uk Pandav nritya .webp";
+import victoriaMemorial from "../../assets/famousCultural/westbengal victoria palace.webp";
+import puruliaChhau from "../../assets/famousCultural/chhau.webp";
 
-import perini from "../../assets/famousCultural/telengana dance .jpg";
-import charminar from "../../assets/famousCultural/charminar.jpg";
-import hojagiri from "../../assets/famousCultural/hojagiri_dance.png";
-import tripuraTemple from "../../assets/famousCultural/tripura.jpg";
+import perini from "../../assets/famousCultural/telengana dance .webp";
+import charminar from "../../assets/famousCultural/charminar.webp";
+import hojagiri from "../../assets/famousCultural/hojagiri_dance.webp";
+import tripuraTemple from "../../assets/famousCultural/tripura.webp";
 
 // // 🌏 Full Indian States & UTs Data
 const states = [
