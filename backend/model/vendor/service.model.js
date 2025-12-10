@@ -28,7 +28,7 @@ const serviceSchema = new Schema(
       type: [String],
       required: true,
     },
-     minPrice: {
+    minPrice: {
       type: Number,
       required: function () {
         // Required only if NOT catering (or if pricingType is 'flat')
