@@ -1,6 +1,4 @@
-import bastar from "../../../assets/famousCultural/tajmahal2.jpg";
-import React, { useEffect, useState } from "react";
-// import { PiChartLineUpBold } from "react-icons/pi";
+import { useEffect } from "react";
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { IoStarHalfOutline } from "react-icons/io5";
 import { VscStarFull } from "react-icons/vsc";
@@ -153,6 +151,7 @@ export default function HeroSection() {
               >
                 <motion.img
                   src={heroimage2}
+                  loading="eager"
                   alt="Preview"
                   className="w-full h-full object-fill rounded-t-[15px]"
                   initial={{ opacity: 0 }}
@@ -189,7 +188,8 @@ sm-mid:left-4 sm-mid:w-24
           >
             <img
               src={heroimage3}
-              alt=""
+              loading="eager"
+              alt="Preview"
               className="w-full h-20 sm:h-36 md:h-40 lg:h-44 object-fill rounded-xl"
             />
 
@@ -335,7 +335,8 @@ sm-mid:right-2 sm-mid:w-28
           >
             <img
               src={heroimage}
-              alt=""
+              loading="eager"
+              alt="Preview"
               className="w-full h-20 sm:h-32 md:h-44 object-cover rounded-t-xl"
             />
 
