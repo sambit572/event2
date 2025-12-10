@@ -104,6 +104,7 @@ const Team = () => {
           {duplicatedReviews.map((review, index) => (
             <div key={index} className="review_card_2">
               <img
+                decoding="async"
                 src={review.image}
                 alt={review.name}
                 className="review_avatar_2"

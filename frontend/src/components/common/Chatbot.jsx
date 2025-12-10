@@ -93,6 +93,7 @@ const Chatbot = () => {
       {!isOpen && <div className="chat-tooltip">Ask me!</div>}
 
       <img
+        decoding="async"
         src={chatIcon}
         alt="Chat Icon"
         className="chat-icon"

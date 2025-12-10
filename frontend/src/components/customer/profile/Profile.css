@@ -132,7 +132,7 @@
   align-items: center;
 }
 
-.image-section img {
+.image-section <img decoding="async" {
   width: 100%;
   height: 100%;
   border-radius: 10px;

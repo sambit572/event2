@@ -18,6 +18,7 @@ const CategoryCard = ({ category }) => {
 
       <div className="imageWrapper">
         <img
+          decoding="async"
           src={category.image}
           alt={category.title}
           loading="lazy" // ✅ defer loading

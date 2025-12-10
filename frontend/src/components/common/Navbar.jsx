@@ -369,9 +369,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
   };
 
   return (
-    <div
-      className="align_center navbar"
-    >
+    <div className="align_center navbar">
       <div className="navbar">
         {/* ✅ User Logout Popup */}
         {showLogoutPopup && (
@@ -389,7 +387,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
 
         {/* Logo */}
         <div className="logo">
-          {/* <img src={logo} alt="logo" /> */}
+          {/* <img decoding="async" src={logo} alt="logo" /> */}
           <span onClick={handleHomeClick}>EventsBridge</span>
         </div>
 

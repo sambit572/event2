@@ -147,6 +147,7 @@ function DashBoardSideBar({
           <div className="profile-photo-wrapper">
             {vendor?.profilePicture ? (
               <img
+                decoding="async"
                 src={vendor.profilePicture}
                 alt="Profile"
                 className="user-profile-pic"
@@ -288,7 +289,9 @@ function DashBoardSideBar({
           </p>
           <li className="text-[15px] ml-5 not-italic font-medium leading-normal mt-[1px] tracking-[0.5px]">
             <span className=" text-[#d4d4d4]">Event Hosted</span>{" "}
-            <span className="text-[#fff] ml-14">{vendor?.eventsHosted ?? 0}</span>
+            <span className="text-[#fff] ml-14">
+              {vendor?.eventsHosted ?? 0}
+            </span>
           </li>
 
           <div

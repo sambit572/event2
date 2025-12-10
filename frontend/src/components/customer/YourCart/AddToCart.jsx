@@ -142,6 +142,7 @@ const AddToCart = () => {
                 >
                   <div className="relative w-full sm:w-36 h-[15rem] sm:h-36 md:w-40 md:h-40 rounded-xl overflow-hidden shadow-lg border border-gray-200 bg-white flex-shrink-0 mx-auto sm:mx-0">
                     <img
+                      decoding="async"
                       src={
                         item.serviceId?.serviceImage?.[0] ||
                         "https://via.placeholder.com/150"
@@ -229,6 +230,7 @@ const AddToCart = () => {
                 <div className="flex flex-col sm:flex-row items-start gap-4 mb-4 pb-4 border-b-2 border-blue-100">
                   <div className="relative w-full sm:w-36 h-[15rem] sm:h-36 md:w-40 md:h-40 rounded-xl overflow-hidden shadow-lg border border-gray-200 bg-white flex-shrink-0 mx-auto sm:mx-0">
                     <img
+                      decoding="async"
                       src={
                         service?.serviceImage?.[0] ||
                         "https://via.placeholder.com/150"

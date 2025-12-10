@@ -32,7 +32,7 @@ const SuccessBlock = ({ onClose, autoCloseTime = 3000 }) => {
 
         {/* Title */}
         <h2 className="text-2xl sm:text-3xl font-bold text-[#001f3f] mt-2 mb-3">
-           Congratulations!
+          Congratulations!
         </h2>
 
         {/* Subtitle */}
@@ -42,6 +42,7 @@ const SuccessBlock = ({ onClose, autoCloseTime = 3000 }) => {
 
         {/* Image */}
         <img
+          decoding="async"
           src={namaste}
           alt="Success"
           className="w-[60%] max-w-[200px] mb-4 animate-fadeIn"

@@ -150,8 +150,10 @@ export default function HeroSection() {
       lg:rounded-t-[20px] lg:border-[8px] lg:border-b-0"
               >
                 <motion.img
+                  decoding="async"
                   src={heroimage2}
                   loading="eager"
+                  fetchpriority="high"
                   alt="Preview"
                   className="w-full h-full object-fill rounded-t-[15px]"
                   initial={{ opacity: 0 }}
@@ -187,6 +189,7 @@ sm-mid:left-4 sm-mid:w-24
   "
           >
             <img
+              decoding="async"
               src={heroimage3}
               loading="eager"
               alt="Preview"
@@ -334,6 +337,7 @@ sm-mid:right-2 sm-mid:w-28
   "
           >
             <img
+              decoding="async"
               src={heroimage}
               loading="eager"
               alt="Preview"

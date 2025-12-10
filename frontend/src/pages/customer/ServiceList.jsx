@@ -404,6 +404,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
           {/* Banner Header */}
           <div className="categoryHero">
             <img
+              decoding="async"
               // src={bannerMap[categoryData.title] || carBanner}
               src={bannerMap[categoryData.title] || djBanner}
               alt={categoryData.title}
@@ -419,9 +420,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
 
           {/* Sticky Header → only shows after scroll */}
           {showSticky && (
-            <div
-              className={`stickyHeader ${showSticky ? "show" : ""}`}
-            >
+            <div className={`stickyHeader ${showSticky ? "show" : ""}`}>
               <FaArrowLeft
                 className="backArrowSticky"
                 onClick={() => window.history.back()}
@@ -469,9 +468,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
       )}
       <div className="serviceList">
         <Filter onApply={handleApplyFilters} onCancel={handleCancelFilters} />
-        <div
-          className={`serviceCardDetails ${showSticky ? "scrollable" : ""}`}
-        >
+        <div className={`serviceCardDetails ${showSticky ? "scrollable" : ""}`}>
           {loading ? (
             // Show skeletons while loading
             Array.from({ length: 6 }).map((_, idx) => (
@@ -479,10 +476,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
             ))
           ) : filteredServices?.length > 0 ? (
             filteredServices.map((service) => (
-              <div
-                className="singleServiceCard"
-                key={service._id}
-              >
+              <div className="singleServiceCard" key={service._id}>
                 <Link
                   to={`/service/${categoryId}/${service._id}`}
                   style={{ textDecoration: "none", color: "inherit" }}

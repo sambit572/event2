@@ -5,7 +5,12 @@ const Button = ({ onBack, onNext }) => {
     <div className="navigation-buttons">
       <button type="button" onClick={onBack} className="back-button">
         <span className="btn-content">
-          <img src="/back.webp" alt="Back" className="button-icon left-icon" />
+          <img
+            decoding="async"
+            src="/back.webp"
+            alt="Back"
+            className="button-icon left-icon"
+          />
           Back
         </span>
       </button>
@@ -13,7 +18,12 @@ const Button = ({ onBack, onNext }) => {
       <button type="button" onClick={onNext} className="submit-button">
         <span className="btn-content">
           Next
-          <img src="/next.webp" alt="Next" className="button-icon right-icon" />
+          <img
+            decoding="async"
+            src="/next.webp"
+            alt="Next"
+            className="button-icon right-icon"
+          />
         </span>
       </button>
     </div>

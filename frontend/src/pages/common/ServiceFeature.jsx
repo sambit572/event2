@@ -1,10 +1,15 @@
-import React from 'react';
+import React from "react";
 
 const ServiceFeature = ({ title, features, icon, image, reverse = false }) => {
   return (
-    <div className={`bg-transparent shadow-lg rounded-xl overflow-hidden flex flex-col md:flex-row ${reverse ? 'md:flex-row-reverse' : ''} mb-10`}>
+    <div
+      className={`bg-transparent shadow-lg rounded-xl overflow-hidden flex flex-col md:flex-row ${
+        reverse ? "md:flex-row-reverse" : ""
+      } mb-10`}
+    >
       <div className="md:w-1/2 w-full">
         <img
+          decoding="async"
           src={image}
           alt={title}
           className="w-full h-[250px] object-cover"

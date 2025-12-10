@@ -232,6 +232,7 @@ function UserSideBar({ isOpen, setShowPasswordModal }) {
           <div className="profile-photo-wrapper">
             {profilePhoto ? (
               <img
+                decoding="async"
                 src={profilePhoto}
                 alt="Profile"
                 className="user-profile-pic"
@@ -357,10 +358,12 @@ function UserSideBar({ isOpen, setShowPasswordModal }) {
           onClick={handleToggleEdit}
         >
           {editMode ? (
-            <span    className="mt-2 px-5 py-2.5 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 
+            <span
+              className="mt-2 px-5 py-2.5 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 
                 shadow-md hover:from-blue-600 hover:to-blue-700 hover:shadow-lg 
                 active:scale-95 ml-12 active:shadow-inner 
-                transition-all duration-200 ease-in-out">
+                transition-all duration-200 ease-in-out"
+            >
               Save
             </span>
           ) : (

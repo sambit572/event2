@@ -1,6 +1,6 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';  
-import './LegalButton.css';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import "./LegalButton.css";
 
 export default function LegalButton() {
   const navigate = useNavigate();
@@ -10,12 +10,19 @@ export default function LegalButton() {
       <button
         type="button"
         className="back-btn"
-        onClick={() => navigate('/vendor/payment-info')}
+        onClick={() => navigate("/vendor/payment-info")}
       >
-        <img src="/back.webp" alt="Back" className="back-arrow-icon" />
+        <img
+          decoding="async"
+          src="/back.webp"
+          alt="Back"
+          className="back-arrow-icon"
+        />
         Back
       </button>
-      <button type="submit" className="submits-btn">Submit</button>
+      <button type="submit" className="submits-btn">
+        Submit
+      </button>
     </div>
   );
 }

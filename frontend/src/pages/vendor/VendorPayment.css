@@ -15,8 +15,14 @@
   margin-top: -10px;
 }
 @keyframes fadeIn {
-  0% { opacity: 0; transform: translateY(4px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fade {
@@ -27,18 +33,26 @@
   background-color: #005fcc;
 }
 
-.ifsc-success { color: green; font-size: 13px; margin-top: 4px; }
-.ifsc-error { color: red; font-size: 13px; margin-top: 4px; }
+.ifsc-success {
+  color: green;
+  font-size: 13px;
+  margin-top: 4px;
+}
+.ifsc-error {
+  color: red;
+  font-size: 13px;
+  margin-top: 4px;
+}
 
 .vendor-payment-page {
   background-color: #ffffff;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
   color: #333;
   padding-bottom: 40px;
 }
 
 .input-error {
-  border: 1px solid #e11d48 ;
+  border: 1px solid #e11d48;
 }
 .error-message {
   color: #e11d48;
@@ -63,12 +77,19 @@
 }
 
 @keyframes fadeInOut {
-  0% { opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { opacity: 0; }
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
-
 
 /* ============  Payment Box Section ============ */
 .payment-box {
@@ -78,7 +99,7 @@
   margin: 80px auto;
   padding: 30px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
 }
 
 .payment-box-title {
@@ -109,7 +130,7 @@
 }
 
 .required-icon {
-  color: #e11d48; 
+  color: #e11d48;
   margin-left: 4px;
   font-weight: bold;
   font-size: 16px;
@@ -119,13 +140,12 @@
 /* question mark icon design */
 .input-wrapper {
   margin-bottom: 15px;
-  width: 100%; 
+  width: 100%;
   max-width: 800px;
 }
 
 .input-with-icon {
   position: relative;
-  
 }
 
 .input-with-icon input {
@@ -137,13 +157,12 @@
   height: 40px;
   background-color: #f8f8f8;
   box-sizing: border-box;
-  
 }
 
 .input-with-icon img {
   position: absolute;
   right: 10px;
-  top:35%;
+  top: 35%;
   transform: translateY(-50%);
   width: 18px;
   height: 18px;
@@ -261,7 +280,6 @@
     height: 36px;
   }
 }
-
 
 /* =================== Mobile (540px and below) =================== */
 @media screen and (max-width: 540px) {

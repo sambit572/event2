@@ -446,6 +446,7 @@ const StateColumn = ({ statesGroup }) => {
       style={{ aspectRatio: "5/3" }}
     >
       <img
+        decoding="async"
         src={currentItem.image}
         alt={currentItem.name || state.state}
         className={`w-full h-52 object-cover transition-all duration-700 ease-in-out ${animation}`}

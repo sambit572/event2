@@ -363,6 +363,7 @@ export default function VendorLegalConsent() {
               ) : signatureFile ? (
                 <div className="flex flex-col items-center gap-1 w-full">
                   <img
+                    decoding="async"
                     src={URL.createObjectURL(signatureFile)}
                     alt="Uploaded Signature"
                     className="max-h-[60px] max-w-[220px] object-contain"
@@ -375,6 +376,7 @@ export default function VendorLegalConsent() {
                 <>
                   <span>Upload Signature</span>
                   <img
+                    decoding="async"
                     src="/Upload.webp"
                     alt="Upload Icon"
                     className="h-6 w-6 max-lg:h-[22px] max-lg:w-[22px] max-md:h-5 max-md:w-5 max-[480px]:h-[18px] max-[480px]:w-[18px]"

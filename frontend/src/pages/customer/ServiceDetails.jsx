@@ -342,12 +342,14 @@ const Service = ({ onSwitchToLogin }) => {
                     >
                       {/* Blurred background */}
                       <img
+                        decoding="async"
                         src={media.src}
                         className="absolute inset-0 w-full h-full object-cover blur-xl scale-110 opacity-40"
                       />
 
                       {/* Main clean portrait image */}
                       <img
+                        decoding="async"
                         src={media.src}
                         alt={`slide-${idx}`}
                         className={`absolute inset-0 m-auto max-h-full max-w-full object-contain z-10 ${

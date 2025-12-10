@@ -230,6 +230,7 @@ const ServiceDetailCard = ({ service }) => {
             onClick={handleShare}
           >
             <img
+              decoding="async"
               src="/send.webp"
               alt="Share"
               className="h-full w-full rounded-full object-cover"
@@ -249,6 +250,7 @@ const ServiceDetailCard = ({ service }) => {
                 onClick={() => shareService("facebook")}
               >
                 <img
+                  decoding="async"
                   src="/facebook.webp"
                   alt="Facebook"
                   className="h-5 w-5 object-contain"
@@ -260,6 +262,7 @@ const ServiceDetailCard = ({ service }) => {
                 onClick={() => shareService("twitter")}
               >
                 <img
+                  decoding="async"
                   src="/twitter 1.webp"
                   alt="X"
                   className="h-5 w-5 object-contain"
@@ -271,6 +274,7 @@ const ServiceDetailCard = ({ service }) => {
                 onClick={() => shareService("whatsapp")}
               >
                 <img
+                  decoding="async"
                   src="/whatsapp.webp"
                   alt="WhatsApp"
                   className="h-5 w-5 object-contain"
@@ -282,6 +286,7 @@ const ServiceDetailCard = ({ service }) => {
                 onClick={() => shareService("instagram")}
               >
                 <img
+                  decoding="async"
                   src="/instagram.webp"
                   alt="Instagram"
                   className="h-5 w-5 object-contain"
@@ -293,6 +298,7 @@ const ServiceDetailCard = ({ service }) => {
                 onClick={() => shareService("telegram")}
               >
                 <img
+                  decoding="async"
                   src="/telegram.webp"
                   alt="Telegram"
                   className="h-5 w-5 object-contain"
@@ -304,6 +310,7 @@ const ServiceDetailCard = ({ service }) => {
                 onClick={() => shareService("copy")}
               >
                 <img
+                  decoding="async"
                   src="/connection.webp"
                   alt="Copy Link"
                   className="h-5 w-5 object-contain"

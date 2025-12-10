@@ -18,10 +18,22 @@ const Design = () => {
       <div className="features-diagonal-layout">
         {/* Left Diagonal Features */}
         <div className="features-diagonal features-left">
-          <img src={flowers} className="feature feature-1"></img>
-          <img src={magician} className="feature feature-2"></img>
-          <img src={party} className="feature feature-3"></img>
-          <img src={wedding} className="feature feature-4"></img>
+          <img
+            decoding="async"
+            src={flowers}
+            className="feature feature-1"
+          ></img>
+          <img
+            decoding="async"
+            src={magician}
+            className="feature feature-2"
+          ></img>
+          <img decoding="async" src={party} className="feature feature-3"></img>
+          <img
+            decoding="async"
+            src={wedding}
+            className="feature feature-4"
+          ></img>
         </div>
 
         {/* Phone in Center */}
@@ -30,6 +42,7 @@ const Design = () => {
           <div className="phone-screen">
             <div className="phone-content phone-content-p">
               <img
+                decoding="async"
                 className="chat-icon-about-us"
                 src={chatIcon}
                 alt="chat-icon"
@@ -41,10 +54,22 @@ const Design = () => {
 
         {/* Right Diagonal Features */}
         <div className="features-diagonal features-right">
-          <img src={horseCart} className="feature feature-1"></img>
-          <img className="feature feature-2" src={offers} />
-          <img src={tenthouse} className="feature feature-3"></img>
-          <img src={catering} className="feature feature-4"></img>
+          <img
+            decoding="async"
+            src={horseCart}
+            className="feature feature-1"
+          ></img>
+          <img decoding="async" className="feature feature-2" src={offers} />
+          <img
+            decoding="async"
+            src={tenthouse}
+            className="feature feature-3"
+          ></img>
+          <img
+            decoding="async"
+            src={catering}
+            className="feature feature-4"
+          ></img>
         </div>
       </div>
     </div>

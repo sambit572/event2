@@ -48,6 +48,7 @@ export const SearchResult = ({
               >
                 <div className="relative h-48">
                   <img
+                    decoding="async"
                     src={
                       service.serviceImage[0] ||
                       "/placeholder.svg?height=200&width=300&query=service"
@@ -73,9 +74,9 @@ export const SearchResult = ({
                       {service.serviceName}
                     </h3>
                   </div>
-                   <div className="flex justify-center text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full ml-10 whitespace-nowrap">
-                      {service.serviceCategory}
-                    </div>
+                  <div className="flex justify-center text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full ml-10 whitespace-nowrap">
+                    {service.serviceCategory}
+                  </div>
                   <p className="text-gray-600 text-sm mb-3 line-clamp-2">
                     {service.serviceDes}
                   </p>
@@ -130,6 +131,7 @@ export const SearchResult = ({
                   <div className="mt-3 pt-3 border-t border-black-100">
                     <div className="flex items-center space-x-2">
                       <img
+                        decoding="async"
                         src={
                           service.vendor?.profilePicture ||
                           "/placeholder.svg?height=32&width=32&query=vendor"
@@ -148,9 +150,7 @@ export const SearchResult = ({
                         </span>
                         <span className="text-xs text-black-600">
                           {Array.isArray(service.locationOffered)
-                            ? service.locationOffered
-                                .slice(0, 2)
-                                .join(", ") +
+                            ? service.locationOffered.slice(0, 2).join(", ") +
                               (service.locationOffered.length > 2
                                 ? ` +${service.locationOffered.length - 2} more`
                                 : "")
@@ -180,6 +180,7 @@ export const SearchResult = ({
               >
                 <div className="flex flex-col items-center text-center">
                   <img
+                    decoding="async"
                     src={
                       vendor.profilePicture ||
                       "/placeholder.svg?height=80&width=80&query=vendor"

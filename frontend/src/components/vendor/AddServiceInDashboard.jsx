@@ -214,7 +214,7 @@ function VendorService({ currentStep }) {
       "Wedding Decor & Tent",
       "Birthday Party Decor",
       "Reception Decor",
-      "Engagement Decor "
+      "Engagement Decor ",
     ],
     "Photo & Videography": [
       "Wedding Photography & Videography",
@@ -261,26 +261,14 @@ function VendorService({ currentStep }) {
       "Shraddh Ceremony",
       "Special Event",
     ],
-    "Beauty Makeover": [
-      "Bridal Makeup",
-      "Unisex",
-      "Mehendi Artist",
-    ],
+    "Beauty Makeover": ["Bridal Makeup", "Unisex", "Mehendi Artist"],
     "Floral Decor": [
       "Wedding Decor",
       "Stage & Backdrop Floral Decor",
       "Birthday Party Decor",
     ],
-    "Ceremonial Ride": [
-      "Bridal Car",
-      "Luxury Car",
-      "Classic Car",
-    ],
-    Fireworks: [
-      "Wedding Fireworks",
-      "Indoor Fireworks",
-      "Outdoor Fireworks",
-    ],
+    "Ceremonial Ride": ["Bridal Car", "Luxury Car", "Classic Car"],
+    Fireworks: ["Wedding Fireworks", "Indoor Fireworks", "Outdoor Fireworks"],
     "Card Design & Printing": [
       "Wedding Invitations",
       "Birthday Party Invitations",

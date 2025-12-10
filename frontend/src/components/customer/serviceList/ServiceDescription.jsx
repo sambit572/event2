@@ -417,6 +417,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
             onClick={handleShare}
           >
             <img
+              decoding="async"
               src="/send.webp"
               alt="Share"
               className="h-full w-full rounded-full object-cover"
@@ -439,6 +440,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
                 }}
               >
                 <img
+                  decoding="async"
                   src="/facebook.webp"
                   alt="Facebook"
                   className="h-5 w-5 object-contain"
@@ -453,6 +455,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
                 }}
               >
                 <img
+                  decoding="async"
                   src="/twitter 1.webp"
                   alt="X"
                   className="h-5 w-5 object-contain"
@@ -467,6 +470,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
                 }}
               >
                 <img
+                  decoding="async"
                   src="/whatsapp.webp"
                   alt="WhatsApp"
                   className="h-5 w-5 object-contain"
@@ -481,6 +485,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
                 }}
               >
                 <img
+                  decoding="async"
                   src="/instagram.webp"
                   alt="Instagram"
                   className="h-5 w-5 object-contain"
@@ -495,6 +500,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
                 }}
               >
                 <img
+                  decoding="async"
                   src="/telegram.webp"
                   alt="Telegram"
                   className="h-5 w-5 object-contain"
@@ -509,6 +515,7 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
                 }}
               >
                 <img
+                  decoding="async"
                   src="/connection.webp"
                   alt="Copy Link"
                   className="h-5 w-5 object-contain"

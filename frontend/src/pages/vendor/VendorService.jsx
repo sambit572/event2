@@ -1407,7 +1407,7 @@ function VendorService({ currentStep }) {
                 value={minutes}
                 onChange={(e) => setMinutes(e.target.value)}
               />
-               <span>m</span>
+              <span>m</span>
             </div>
 
             <label htmlFor="state-location" className="state-location-label">

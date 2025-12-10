@@ -1,6 +1,5 @@
 import React from "react";
 
-
 function StepProgress({ currentStep }) {
   const steps = [
     { label: "Registration", icon: "/verify.webp" },
@@ -72,6 +71,7 @@ function StepProgress({ currentStep }) {
                   <Checkmark />
                 ) : (
                   <img
+                    decoding="async"
                     src={step.icon}
                     alt={statusText}
                     className="

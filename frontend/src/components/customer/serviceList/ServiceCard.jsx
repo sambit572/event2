@@ -102,12 +102,14 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
                 <div className="absolute inset-0">
                   {/* 🔥 Blurred background */}
                   <img
+                    decoding="async"
                     src={currentMediaUrl}
                     className="absolute inset-0 w-full h-full object-cover blur-xl scale-110 opacity-40"
                   />
 
                   {/* ⭐ Main non-blur, non-cropped image */}
                   <img
+                    decoding="async"
                     key={currentIndex}
                     src={currentMediaUrl}
                     alt={`slide-${currentIndex}`}
@@ -328,6 +330,7 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
                   </div>
                 ) : (
                   <img
+                    decoding="async"
                     src={thumbUrl}
                     alt={`thumb-${idx}`}
                     className="w-full h-full object-cover rounded"

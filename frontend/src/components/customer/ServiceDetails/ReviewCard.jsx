@@ -7,7 +7,6 @@ const ReviewCard = ({ review }) => {
 
   const [isExpanded, setIsExpanded] = useState(false);
 
-  
   // Limit message to ~120 chars (≈ 2 lines), adjust as needed
   const charLimit = 120;
   const isLong = review.reviewMessage?.length > charLimit;
@@ -103,6 +102,7 @@ const ReviewCard = ({ review }) => {
               }}
             >
               <img
+                decoding="async"
                 src={img}
                 alt={`review-${idx}`}
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}

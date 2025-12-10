@@ -64,7 +64,6 @@ const OrderSummary = () => {
       (acc, item) => acc + (item.finalPrice ?? item.proposedPrice ?? 0),
       0
     );
-    
 
     const platformDiscountAmount = Math.round(finalTotal * 0.1);
     const totalAfterDiscount = finalTotal - platformDiscountAmount;
@@ -223,6 +222,7 @@ const OrderSummary = () => {
                           <div className="relative">
                             <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-lg border-2 border-white">
                               <img
+                                decoding="async"
                                 src={
                                   item.serviceId?.serviceImage?.[0] ||
                                   "https://via.placeholder.com/150"

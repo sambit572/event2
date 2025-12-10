@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Footer.css";
 import { Navigate, useNavigate } from "react-router-dom";
-import startupLogo from "../../assets/home/startup-india.png";
+import startupLogo from "../../assets/home/startup-india.webp";
 export const categoriesData = {
   "DJ Services & Brash Band": [
     "Wedding DJ",
@@ -157,11 +157,13 @@ function Footer() {
         <p>EXPERIENCE EVENTSBIDGE APP ON MOBILE</p>
         <div className="app-buttons">
           <img
+            decoding="async"
             src="/App Store.webp"
             alt="App Store"
             className="cursor-pointer"
           />
           <img
+            decoding="async"
             src="/Google_Play.webp"
             alt="Google Play"
             className="cursor-pointer"
@@ -180,7 +182,12 @@ function Footer() {
               rel="noopener noreferrer"
             >
               <p className="hover:text-[#ffc107]">
-                <img src="/gmail.webp" alt="Email" className="icon" />{" "}
+                <img
+                  decoding="async"
+                  src="/gmail.webp"
+                  alt="Email"
+                  className="icon"
+                />{" "}
                 techsupport@eventsbridge.com
               </p>
             </a>
@@ -189,7 +196,12 @@ function Footer() {
               onClick={() => navigate("/help-Center")}
             >
               {/* amrit */}
-              <img src="/phone-call.webp" alt="Phone" className="icon" />{" "}
+              <img
+                decoding="async"
+                src="/phone-call.webp"
+                alt="Phone"
+                className="icon"
+              />{" "}
               <a href="tel:phone_number">+91 9348605002</a>
             </p>
             <p
@@ -197,14 +209,24 @@ function Footer() {
               onClick={() => navigate("/help-Center")}
             >
               {/* abhijit */}
-              <img src="/phone-call.webp" alt="Phone" className="icon" />{" "}
+              <img
+                decoding="async"
+                src="/phone-call.webp"
+                alt="Phone"
+                className="icon"
+              />{" "}
               <a href="tel:phone_number">+91 70089 12849</a>
             </p>
             <p
               className="hover:text-[#ffc107] cursor-pointer"
               onClick={() => navigate("/help-Center")}
             >
-              <img src="/placeholder.webp" alt="Location" className="icon" />{" "}
+              <img
+                decoding="async"
+                src="/placeholder.webp"
+                alt="Location"
+                className="icon"
+              />{" "}
               Bhubaneswar, Odisha
             </p>
           </div>
@@ -263,6 +285,7 @@ function Footer() {
                     {categoryName}
 
                     <img
+                      decoding="async"
                       src={
                         openCategory === categoryName
                           ? "/up-arrow.webp"
@@ -337,6 +360,7 @@ function Footer() {
                     {locationName}
 
                     <img
+                      decoding="async"
                       src={
                         openLocation === locationName
                           ? "/up-arrow.webp"
@@ -385,7 +409,10 @@ function Footer() {
                 >
                   Categories
                   <img
-                    src={openSections.category ? "/up-arrow.webp" : "/down.webp"}
+                    decoding="async"
+                    src={
+                      openSections.category ? "/up-arrow.webp" : "/down.webp"
+                    }
                     className={`w-4 h-4 bg-blue-500 rounded-lg transition-transform duration-300 ${
                       openSections.category ? "rotate-180" : ""
                     }`}
@@ -409,6 +436,7 @@ function Footer() {
                         {categoryName}
 
                         <img
+                          decoding="async"
                           src={
                             openCategory === categoryName
                               ? "/up-arrow.webp"
@@ -450,7 +478,10 @@ function Footer() {
                 >
                   Available Locations
                   <img
-                    src={openSections.location ? "/up-arrow.webp" : "/down.webp"}
+                    decoding="async"
+                    src={
+                      openSections.location ? "/up-arrow.webp" : "/down.webp"
+                    }
                     className={`w-4 h-4 bg-blue-500 rounded-lg transition-transform duration-300 ${
                       openSections.location ? "rotate-180" : ""
                     }`}
@@ -476,6 +507,7 @@ function Footer() {
                         {locationName}
 
                         <img
+                          decoding="async"
                           src={
                             openLocation === locationName
                               ? "/up-arrow.webp"
@@ -514,6 +546,7 @@ function Footer() {
                 <h4 onClick={() => toggleSection("contact")}>
                   Contact Us
                   <img
+                    decoding="async"
                     src={openSections.contact ? "/up-arrow.webp" : "/down.webp"}
                     className="dropdown-icon"
                     alt="toggle"
@@ -525,15 +558,30 @@ function Footer() {
                   }`}
                 >
                   <p>
-                    <img src="/gmail.webp" className="icon" alt="" />{" "}
+                    <img
+                      decoding="async"
+                      src="/gmail.webp"
+                      className="icon"
+                      alt=""
+                    />{" "}
                     techsupport@eventsbridge.com{" "}
                   </p>
                   <p>
-                    <img src="/phone-call.webp" className="icon" alt="" /> +91
-                    1169320147
+                    <img
+                      decoding="async"
+                      src="/phone-call.webp"
+                      className="icon"
+                      alt=""
+                    />{" "}
+                    +91 1169320147
                   </p>
                   <p>
-                    <img src="/placeholder.webp" className="icon" alt="" />{" "}
+                    <img
+                      decoding="async"
+                      src="/placeholder.webp"
+                      className="icon"
+                      alt=""
+                    />{" "}
                     Bhubaneswar, Odisha
                   </p>
                 </div>
@@ -543,6 +591,7 @@ function Footer() {
                 <h4 onClick={() => toggleSection("company")}>
                   Company
                   <img
+                    decoding="async"
                     src={openSections.company ? "/up-arrow.webp" : "/down.webp"}
                     className="dropdown-icon"
                     alt="toggle"
@@ -567,6 +616,7 @@ function Footer() {
                 <h4 onClick={() => toggleSection("quick")}>
                   Quick Links
                   <img
+                    decoding="async"
                     src={openSections.quick ? "/up-arrow.webp" : "/down.webp"}
                     className="dropdown-icon"
                     alt="toggle"
@@ -586,6 +636,7 @@ function Footer() {
                 <h4 onClick={() => toggleSection("privacy")}>
                   Legal Information
                   <img
+                    decoding="async"
                     src={openSections.privacy ? "/up-arrow.webp" : "/down.webp"}
                     className="dropdown-icon"
                     alt="toggle"
@@ -629,49 +680,84 @@ function Footer() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src="/facebook.webp" alt="Facebook" className="social-icon" />
+            <img
+              decoding="async"
+              src="/facebook.webp"
+              alt="Facebook"
+              className="social-icon"
+            />
           </a>
           <a
             href="https://x.com/EVENTSBRID78581"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src="/twitter 1.webp" alt="X" className="social-icon" />
+            <img
+              decoding="async"
+              src="/twitter 1.webp"
+              alt="X"
+              className="social-icon"
+            />
           </a>
           <a
             href="https://www.instagram.com/eventsbridge__?igsh=MWVmNXNscWlodGVxNA%3D%3D&utm_source=qr"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src="/instagram.webp" alt="Instagram" className="social-icon" />
+            <img
+              decoding="async"
+              src="/instagram.webp"
+              alt="Instagram"
+              className="social-icon"
+            />
           </a>
           <a
             href="https://www.linkedin.com/company/eventsbridge-com/"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src="/linkedin.webp" alt="LinkedIn" className="social-icon" />
+            <img
+              decoding="async"
+              src="/linkedin.webp"
+              alt="LinkedIn"
+              className="social-icon"
+            />
           </a>
           <a
             href="mailto:Support@eventsbridge.com"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src="/gmail.webp" alt="Gmail" className="social-icon" />
+            <img
+              decoding="async"
+              src="/gmail.webp"
+              alt="Gmail"
+              className="social-icon"
+            />
           </a>
           <a
             href="https://wa.me/1234567890"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src="/whatsapp.webp" alt="Whatsapp" className="social-icon" />
+            <img
+              decoding="async"
+              src="/whatsapp.webp"
+              alt="Whatsapp"
+              className="social-icon"
+            />
           </a>
           <a
             href="https://youtube.com/@eventsbridge-k5y?si=UIIpVriO9ySmNW0R"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src="/youtube.webp" alt="Youtube" className="social-icon" />
+            <img
+              decoding="async"
+              src="/youtube.webp"
+              alt="Youtube"
+              className="social-icon"
+            />
           </a>
         </div>
       </div>
@@ -679,6 +765,7 @@ function Footer() {
         {/* Startup Logo */}
         <div className="flex flex-col text-white items-center md:items-start mb-4 md:mb-0  md:mr-6">
           <img
+            decoding="async"
             className="w-10 scale-[4] md:w-14 md:scale-[3] lg:scale-[4] m-auto"
             src={startupLogo}
             alt="Startup Logo"

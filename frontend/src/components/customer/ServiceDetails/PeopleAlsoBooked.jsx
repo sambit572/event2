@@ -11,7 +11,6 @@ const SimilarProductCard = ({ product }) => {
   const handleClick = () => {
     navigate(`/service/${categoryId}/${product._id}`);
   };
-  
 
   const serviceId = product._id;
 
@@ -40,6 +39,7 @@ const SimilarProductCard = ({ product }) => {
       {/* Image */}
       <div className="relative w-full max-w-full aspect-[4/3] overflow-hidden flex items-center justify-center bg-gray-100">
         <img
+          decoding="async"
           src={product.serviceImage[0]}
           alt="DJ Service"
           className="w-full h-full transition-transform duration-500 hover:scale-110"

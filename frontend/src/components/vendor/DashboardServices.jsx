@@ -42,10 +42,10 @@ const DashboardServices = () => {
   const [availableSubcategories, setAvailableSubcategories] = useState([]);
 
   const [crop, setCrop] = useState({
-      unit: '%',
+    unit: "%",
     x: 10,
     y: 10,
-    width: 80,   // default crop width
+    width: 80, // default crop width
     height: 80,
   });
   const [cropSrc, setCropSrc] = useState(null);
@@ -57,12 +57,12 @@ const DashboardServices = () => {
       throw new Error("Image or crop data is not available yet.");
     }
 
-  const canvas = document.createElement("canvas");
-  const scaleX = image.naturalWidth / image.width;
-  const scaleY = image.naturalHeight / image.height;
-  canvas.width = crop.width;
-  canvas.height = crop.height;
-  const ctx = canvas.getContext("2d");
+    const canvas = document.createElement("canvas");
+    const scaleX = image.naturalWidth / image.width;
+    const scaleY = image.naturalHeight / image.height;
+    canvas.width = crop.width;
+    canvas.height = crop.height;
+    const ctx = canvas.getContext("2d");
 
     ctx.drawImage(
       image,
@@ -277,7 +277,6 @@ const DashboardServices = () => {
       setIsSaving(false);
     }
   };
-  
 
   const handleDelete = async (index) => {
     const confirmDelete = window.confirm(
@@ -992,6 +991,7 @@ const DashboardServices = () => {
                             </div>
                           ) : (
                             <img
+                              decoding="async"
                               src={mediaUrl}
                               alt={`thumb-${i}`}
                               className="w-full h-full object-cover rounded"
@@ -1022,6 +1022,7 @@ const DashboardServices = () => {
                         >
                           {preview.type === "image" ? (
                             <img
+                              decoding="async"
                               src={preview.url}
                               alt={`new-preview-${i}`}
                               className="w-full h-full object-cover rounded"
@@ -1266,6 +1267,7 @@ const DashboardServices = () => {
                       ruleOfThirds={true}
                     >
                       <img
+                        decoding="async"
                         ref={imgRef}
                         src={cropSrc}
                         alt="Crop preview"

@@ -57,6 +57,7 @@ const AddsBanner = () => {
           <source srcSet={xxmedium} media="(min-width: 640px)" />
           <source srcSet={smallbanner} media="(min-width: 500px)" />
           <img
+            decoding="async"
             src={newComingSoon}
             alt="Coming Soon"
             loading="lazy"
@@ -73,6 +74,7 @@ const AddsBanner = () => {
         } transition-opacity duration-700`}
       >
         <img
+          decoding="async"
           src={emiBanner}
           alt="EMI Banner"
           className="w-full h-full object-fill rounded-lg"
