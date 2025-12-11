@@ -14,6 +14,8 @@ export default function LegalButton() {
       >
         <img
           decoding="async"
+          fetchpriority="low"
+          loading="lazy"
           src="/back.webp"
           alt="Back"
           className="back-arrow-icon"

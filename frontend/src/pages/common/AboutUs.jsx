@@ -18,6 +18,8 @@ const Card = ({ title, description, image }) => {
       >
         <img
           decoding="async"
+          fetchpriority="low"
+          loading="lazy"
           src={image}
           alt={title}
           className="w-16 h-16 object-cover rounded-md"
@@ -62,6 +64,8 @@ const AboutUs = () => {
           <div className="w-full -mt-11">
             <img
               decoding="async"
+              fetchpriority="low"
+              loading="lazy"
               src={AboutUs_1}
               alt="About Eventsbridge Platform"
               className="w-full h-auto  max-h-[550px] object-fill mt-5 rounded-xl border border-gray-200 shadow-lg"

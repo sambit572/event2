@@ -153,6 +153,8 @@ const ReviewSlider = () => {
                 {review.profileImage ? (
                   <img
                     decoding="async"
+                    fetchpriority="low"
+                    loading="lazy"
                     src={review.profileImage}
                     alt={review.userName}
                     className="review_avatar"

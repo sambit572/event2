@@ -443,6 +443,8 @@ const VendorRegister = () => {
               <div className="w-full max-w-sm mt-[-80px] ml-10">
                 <img
                   decoding="async"
+                  fetchpriority="low"
+                  loading="lazy"
                   src="../new-illustrator.png"
                   alt="Registration Illustration"
                   className="w-full h-auto object-contain"

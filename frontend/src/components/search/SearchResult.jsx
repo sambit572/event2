@@ -49,6 +49,8 @@ export const SearchResult = ({
                 <div className="relative h-48">
                   <img
                     decoding="async"
+                    fetchpriority="low"
+                    loading="lazy"
                     src={
                       service.serviceImage[0] ||
                       "/placeholder.svg?height=200&width=300&query=service"
@@ -132,6 +134,8 @@ export const SearchResult = ({
                     <div className="flex items-center space-x-2">
                       <img
                         decoding="async"
+                        fetchpriority="low"
+                        loading="lazy"
                         src={
                           service.vendor?.profilePicture ||
                           "/placeholder.svg?height=32&width=32&query=vendor"
@@ -181,6 +185,8 @@ export const SearchResult = ({
                 <div className="flex flex-col items-center text-center">
                   <img
                     decoding="async"
+                    fetchpriority="low"
+                    loading="lazy"
                     src={
                       vendor.profilePicture ||
                       "/placeholder.svg?height=80&width=80&query=vendor"

@@ -223,6 +223,8 @@ const OrderSummary = () => {
                             <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-lg border-2 border-white">
                               <img
                                 decoding="async"
+                                fetchpriority="low"
+                                loading="lazy"
                                 src={
                                   item.serviceId?.serviceImage?.[0] ||
                                   "https://via.placeholder.com/150"

@@ -276,6 +276,8 @@ const VendorLogin = ({ onClose, onSwitchToLogin }) => {
           <div className="flex flex-col items-center justify-center text-center space-y-3 z-10">
             <img
               decoding="async"
+              fetchpriority="low"
+              loading="lazy"
               src="../new-illustrator.webp"
               alt="Welcome"
               className="h-[60%] w-auto object-contain opacity-95 drop-shadow-2xl hover:scale-105 transition-transform duration-700"

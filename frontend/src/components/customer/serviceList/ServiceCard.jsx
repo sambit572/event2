@@ -103,6 +103,8 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
                   {/* 🔥 Blurred background */}
                   <img
                     decoding="async"
+                    fetchpriority="low"
+                    loading="lazy"
                     src={currentMediaUrl}
                     className="absolute inset-0 w-full h-full object-cover blur-xl scale-110 opacity-40"
                   />
@@ -110,6 +112,8 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
                   {/* ⭐ Main non-blur, non-cropped image */}
                   <img
                     decoding="async"
+                    fetchpriority="low"
+                    loading="lazy"
                     key={currentIndex}
                     src={currentMediaUrl}
                     alt={`slide-${currentIndex}`}
@@ -331,6 +335,8 @@ const ServiceCard = ({ service, onSwitchToLogin }) => {
                 ) : (
                   <img
                     decoding="async"
+                    fetchpriority="low"
+                    loading="lazy"
                     src={thumbUrl}
                     alt={`thumb-${idx}`}
                     className="w-full h-full object-cover rounded"

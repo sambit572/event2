@@ -361,6 +361,8 @@ const Login = ({ onClose, onSwitchToRegister }) => {
               {/* Image */}
               <img
                 decoding="async"
+                fetchpriority="low"
+                loading="lazy"
                 src="../new-illustrator.png"
                 alt="Welcome"
                 className="h-[60%] w-auto object-contain opacity-95 drop-shadow-2xl hover:scale-105 transition-transform duration-500"

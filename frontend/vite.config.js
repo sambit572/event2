@@ -14,5 +14,20 @@ export default defineConfig(({ mode }) => {
       environment: "jsdom", // needed for DOM testing
       setupFiles: "./src/setupTests.js",
     },
+
+    build: {
+      sourcemap: false,
+      minify: "esbuild",
+      cssCodeSplit: true, // Split CSS into smaller chunks
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes("node_modules/react")) return "react-vendor";
+            if (id.includes("node_modules/@mui")) return "mui-vendor"; // example
+            if (id.includes("node_modules")) return "vendor";
+          },
+        },
+      },
+    },
   };
 });
