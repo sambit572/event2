@@ -66,7 +66,6 @@ const FaqSection = () => {
   return (
     <>
       <Seo
-        title={"EventsBridge FAQs"}
         description={
           "Find answers to common questions about booking events, vendor services, payments and more at Eventsbridge. Your go‑to guide for event planning help."
         }
