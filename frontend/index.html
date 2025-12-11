@@ -14,6 +14,16 @@
     content="EventsBridge – Book makeup artists, decorators, photographers, venues and event services instantly across Odisha. Fast, easy and secure booking platform.">
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-RKCNV8QE9V"></script>
+  <!-- Preconnect improves DNS + TLS handshake speed -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  
+  <!-- Preload font stylesheet (non-blocking) -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" />
+  
+  <!-- Load stylesheet normally (not render-blocking because display=swap) -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" />
+
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
