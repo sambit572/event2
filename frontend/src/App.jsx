@@ -73,6 +73,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import MyApproach from "./pages/common/MyApproach.jsx";
+import QRPayment from "./pages/common/payment/QrPayment.jsx";
+import { PaymentSuccess } from "./pages/common/payment/PaymentSuccess.jsx";
 
 const App = () => {
   const location = useLocation();
@@ -328,6 +330,8 @@ const App = () => {
             element={<OrderSummary />}
           />
           <Route path="/coming-soon" element={<ComingSoon />} />
+          <Route path="/qr-payment" element={<QRPayment />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
         </Routes>
       </main>
       <BackToTop />

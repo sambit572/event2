@@ -16,9 +16,31 @@
   font-size: 16px;
   border-radius: 8px;
   text-align: center;
-  font-weight:600 ;
+  font-weight: 600;
 }
 
 .custom-toast-body {
   text-align: center;
+}
+
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+
+  #receipt-print-area,
+  #receipt-print-area * {
+    visibility: visible !important;
+  }
+
+  #receipt-print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+
+  @page {
+    margin: 0;
+  }
 }

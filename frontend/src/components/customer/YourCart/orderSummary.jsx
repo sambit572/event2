@@ -82,7 +82,34 @@ const OrderSummary = () => {
     };
   }, [items]);
 
-  const handlePlaceOrder = () => navigate("/coming-soon"); // need to change
+  const handlePlaceOrder = () => {
+    // Generate order ID and merchant reference
+    const orderId = `ORD-${Date.now()}-${Math.random()
+      .toString(36)
+      .substr(2, 9)
+      .toUpperCase()}`;
+    const merchantRef = `MER-${Date.now()}-${Math.random()
+      .toString(36)
+      .substr(2, 9)
+      .toUpperCase()}`;
+
+    // Generate UPI URI
+    const upiUri = `upi://pay?pa=merchant@paytm&pn=EventVendor&am=${orderSummary.grandTotal}&cu=INR&tn=Order-${orderId}`;
+
+    // Set expiration to 15 minutes from now
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000).toISOString();
+
+    // Navigate to QR Payment page with order details
+    navigate("/qr-payment", {
+      state: {
+        amount: Math.round(orderSummary.grandTotal * 0.2),// 20% advance payment
+        upiUri: upiUri,
+        merchantRef: merchantRef,
+        orderId: orderId,
+        expiresAt: expiresAt,
+      },
+    });
+  };
   const handleBackToCart = () => navigate("/cart");
 
   // Helper function to get service details based on order type
