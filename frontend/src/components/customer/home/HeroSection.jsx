@@ -4,7 +4,7 @@ import { IoStarHalfOutline } from "react-icons/io5";
 import { VscStarFull } from "react-icons/vsc";
 import { motion, useMotionValue, useTransform } from "framer-motion";
 import heroimage from "../../../assets/home/herosection/heroimage1.webp";
-import heroimage2 from "../../../assets/home/herosection/heroimage2.webp";
+import heroimage2 from "../../../assets/home/herosection/heroimage4.webp";
 import heroimage3 from "../../../assets/home/herosection/heroimage3.webp";
 
 export default function HeroSection() {
@@ -152,6 +152,8 @@ export default function HeroSection() {
                 <motion.img
                   decoding="async"
                   src={heroimage2}
+                  height="1600"
+                  width="763"
                   loading="eager"
                   fetchpriority="high"
                   alt="Preview"
@@ -190,7 +192,10 @@ sm-mid:left-4 sm-mid:w-24
           >
             <img
               decoding="async"
+              fetchpriority="high"
               src={heroimage3}
+              height="579"
+              width="540"
               loading="eager"
               alt="Preview"
               className="w-full h-20 sm:h-36 md:h-40 lg:h-44 object-fill rounded-xl"
@@ -338,7 +343,10 @@ sm-mid:right-2 sm-mid:w-28
           >
             <img
               decoding="async"
+              fetchpriority="high"
               src={heroimage}
+              height="1024"
+              width="1600"
               loading="eager"
               alt="Preview"
               className="w-full h-20 sm:h-32 md:h-44 object-cover rounded-t-xl"

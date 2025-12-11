@@ -58,10 +58,10 @@ const AddsBanner = () => {
           <source srcSet={smallbanner} media="(min-width: 500px)" />
           <img
             decoding="async"
+            fetchpriority="low"
+            loading="lazy"
             src={newComingSoon}
             alt="Coming Soon"
-            loading="lazy"
-            decoding="async"
             className="w-full h-full object-fill rounded-lg"
           />
         </picture>
@@ -75,6 +75,8 @@ const AddsBanner = () => {
       >
         <img
           decoding="async"
+          fetchpriority="low"
+          loading="lazy"
           src={emiBanner}
           alt="EMI Banner"
           className="w-full h-full object-fill rounded-lg"

@@ -231,6 +231,8 @@ const ServiceDetailCard = ({ service }) => {
           >
             <img
               decoding="async"
+              fetchpriority="low"
+              loading="lazy"
               src="/send.webp"
               alt="Share"
               className="h-full w-full rounded-full object-cover"
@@ -251,6 +253,8 @@ const ServiceDetailCard = ({ service }) => {
               >
                 <img
                   decoding="async"
+                  fetchpriority="low"
+                  loading="lazy"
                   src="/facebook.webp"
                   alt="Facebook"
                   className="h-5 w-5 object-contain"
@@ -263,6 +267,8 @@ const ServiceDetailCard = ({ service }) => {
               >
                 <img
                   decoding="async"
+                  fetchpriority="low"
+                  loading="lazy"
                   src="/twitter 1.webp"
                   alt="X"
                   className="h-5 w-5 object-contain"
@@ -275,6 +281,8 @@ const ServiceDetailCard = ({ service }) => {
               >
                 <img
                   decoding="async"
+                  fetchpriority="low"
+                  loading="lazy"
                   src="/whatsapp.webp"
                   alt="WhatsApp"
                   className="h-5 w-5 object-contain"
@@ -287,6 +295,8 @@ const ServiceDetailCard = ({ service }) => {
               >
                 <img
                   decoding="async"
+                  fetchpriority="low"
+                  loading="lazy"
                   src="/instagram.webp"
                   alt="Instagram"
                   className="h-5 w-5 object-contain"
@@ -299,6 +309,8 @@ const ServiceDetailCard = ({ service }) => {
               >
                 <img
                   decoding="async"
+                  fetchpriority="low"
+                  loading="lazy"
                   src="/telegram.webp"
                   alt="Telegram"
                   className="h-5 w-5 object-contain"
@@ -311,6 +323,8 @@ const ServiceDetailCard = ({ service }) => {
               >
                 <img
                   decoding="async"
+                  fetchpriority="low"
+                  loading="lazy"
                   src="/connection.webp"
                   alt="Copy Link"
                   className="h-5 w-5 object-contain"

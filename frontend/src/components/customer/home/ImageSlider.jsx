@@ -75,6 +75,7 @@ export default function ImageSlider({ images }) {
                     alt={img.alt}
                     loading="lazy"
                     decoding="async"
+                    fetchpriority="low"
                     className="w-full h-full object-cover cursor-pointer"
                     onClick={() => setSelectedImage(img.desktop)}
                   />

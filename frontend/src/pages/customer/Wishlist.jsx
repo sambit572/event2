@@ -102,6 +102,8 @@ const Wishlist = () => {
                     <div className="relative">
                       <img
                         decoding="async"
+                        fetchpriority="low"
+                        loading="lazy"
                         src={
                           Array.isArray(service.serviceImage) &&
                           service.serviceImage.length > 0

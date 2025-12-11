@@ -447,6 +447,8 @@ const StateColumn = ({ statesGroup }) => {
     >
       <img
         decoding="async"
+        fetchpriority="low"
+        loading="lazy"
         src={currentItem.image}
         alt={currentItem.name || state.state}
         className={`w-full h-52 object-cover transition-all duration-700 ease-in-out ${animation}`}

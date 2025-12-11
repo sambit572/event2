@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import axios from "axios";
@@ -58,9 +58,14 @@ import RefundPolicy from "./components/common/RefundPolicy.jsx";
 import TermsAndConditions from "./components/common/TermsAndConditions.jsx";
 //Feedback
 import Feedback from "./pages/common/Feedback.jsx";
-import FaqSection from "./components/customer/home/FaqSection.jsx";
 import ErrorPage from "./pages/common/ErrorPage.jsx";
-import ReviewSlider from "./components/customer/home/ReviewSlider.jsx";
+const ReviewSlider = React.lazy(() =>
+  import("./components/customer/home/ReviewSlider")
+);
+const FaqSection = React.lazy(() =>
+  import("./components/customer/home/FaqSection")
+);
+
 import VendorSocketManager from "./socket/vendor/VendorSocketManager.jsx";
 import OrderSummary from "./components/customer/YourCart/orderSummary.jsx";
 import { BACKEND_URL } from "./utils/constant.js";
@@ -228,6 +233,8 @@ const App = () => {
           <Route path="/search" element={<SearchPage />} />
           {/* <Route path="/categories" element={<CategoryCard />}></Route> */}
           <Route path="/reviews" element={<ReviewSlider />} />
+          <Route path="/faqs" element={<FaqSection />} />
+          {/* Other routes */}
           <Route
             path="/service/:categoryId/:serviceId"
             element={<ServiceDetails onSwitchToLogin={handleOpenLogin} />}
@@ -304,7 +311,6 @@ const App = () => {
           <Route path="/about_us" element={<AboutUs />} />
           <Route path="/help_us" element={<HelpUs />} />
           <Route path="/help-Center" element={<HelpCenter />} />
-          <Route path="/faqs" element={<FaqSection />} />
           <Route path="/feedback" element={<Feedback />} /> {/* Feedback */}
           <Route path="/Wishlist" element={<Wishlist />}></Route>
           <Route path="/profile" element={<Profile />}></Route>
@@ -368,3 +374,6 @@ const App = () => {
   );
 };
 export default App;
+//  <Suspense fallback={<div>Loading...</div>}>
+//       <VendorProfile />
+//     </Suspense>
