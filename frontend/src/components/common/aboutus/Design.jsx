@@ -1,14 +1,14 @@
 import React from "react";
 import "./Design.css";
 import chatIcon from "../../../assets/serverLogo.webp";
-import offers from "../../../assets/aboutus/offer_img.webp";
-import wedding from "../../../assets/aboutus/WEDDING.webp";
-import party from "../../../assets/aboutus/PARTY.webp";
-import tenthouse from "../../../assets/aboutus/TENTHOUSE.webp";
-import catering from "../../../assets/aboutus/catering_service_img.webp";
-import horseCart from "../../../assets/aboutus/HORSECART.webp";
-import magician from "../../../assets/aboutus/MAGICIAN.webp";
-import flowers from "../../../assets/aboutus/FLOWERS.webp";
+import offers from "../../../assets/aboutUs/offer_img.webp";
+import wedding from "../../../assets/aboutUs/WEDDING.webp";
+import party from "../../../assets/aboutUs/PARTY.webp";
+import tenthouse from "../../../assets/aboutUs/TENTHOUSE.webp";
+import catering from "../../../assets/aboutUs/catering_service_img.webp";
+import horseCart from "../../../assets/aboutUs/HORSECART.webp";
+import magician from "../../../assets/aboutUs/MAGICIAN.webp";
+import flowers from "../../../assets/aboutUs/FLOWERS.webp";
 
 const Design = () => {
   return (

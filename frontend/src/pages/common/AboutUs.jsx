@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { FiChevronDown } from "react-icons/fi";
-import AboutUs_1 from "../../assets/aboutus/about-image.webp";
-import Design from "../../components/common/aboutus/Design";
+import AboutUs_1 from "../../assets/aboutUs/about-image.webp";
+import Design from "../../components/common/aboutUs/Design";
 import ServiceFeature from "./ServiceFeature";
 import { Seo } from "../../seo/seo.js";
 import frame from "../../assets/home/categoriesImages/pandit.webp";

@@ -7,14 +7,14 @@ import image6 from "../assets/home/categoriesImages/magician.webp";
 import image7 from "../assets/home/categoriesImages/classical_music_and_dance.webp";
 import image8 from "../assets/home/categoriesImages/moulbi.webp";
 import image9 from "../assets/home/categoriesImages/father.webp";
-import image10 from "../assets/aboutus/catering_img.webp";
+import image10 from "../assets/aboutUs/catering_img.webp";
 import image11 from "../assets/home/categoriesImages/bride-mehendi-&-makeup.webp";
 import image12 from "../assets/home/categoriesImages/flower-decor.webp";
 import image13 from "../assets/home/categoriesImages/ceremonial_ride.webp";
 import image14 from "../assets/home/categoriesImages/fireworks.webp";
 import image15 from "../assets/home/categoriesImages/marriage-card.webp";
 import image16 from "../assets/home/categoriesImages/banquithall.webp";
-import image17 from "../assets/home/categoriesImages/stage_decor.webp";
+import image17 from "../assets/home/categoriesImages/stage_decor.webp";             
 import image18 from "../assets/home/categoriesImages/event_company.webp";
 import image19 from "../assets/home/categoriesImages/ballon decor.webp";
 
