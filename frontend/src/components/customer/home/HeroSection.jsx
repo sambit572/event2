@@ -3,9 +3,7 @@ import { FaArrowTrendUp } from "react-icons/fa6";
 import { IoStarHalfOutline } from "react-icons/io5";
 import { VscStarFull } from "react-icons/vsc";
 import { motion, useMotionValue, useTransform } from "framer-motion";
-import heroimage from "../../../assets/home/herosection/heroimage1.webp";
-import heroimage2 from "../../../assets/home/herosection/heroimage4.webp";
-import heroimage3 from "../../../assets/home/herosection/heroimage3.webp";
+
 
 export default function HeroSection() {
   const scrollY = useMotionValue(0);
@@ -151,7 +149,7 @@ export default function HeroSection() {
               >
                 <motion.img
                   decoding="async"
-                  src={heroimage2}
+                  src="/assets/home/herosection/heroimage2.webp"
                   height="1600"
                   width="763"
                   loading="eager"
@@ -193,7 +191,7 @@ sm-mid:left-4 sm-mid:w-24
             <img
               decoding="async"
               fetchpriority="high"
-              src={heroimage3}
+              src="/assets/home/herosection/heroimage3.webp"
               height="579"
               width="540"
               loading="eager"
@@ -344,7 +342,7 @@ sm-mid:right-2 sm-mid:w-28
             <img
               decoding="async"
               fetchpriority="high"
-              src={heroimage}
+              src="/assets/home/herosection/heroimage1.webp"
               height="1024"
               width="1600"
               loading="eager"
