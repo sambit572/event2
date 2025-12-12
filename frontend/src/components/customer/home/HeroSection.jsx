@@ -149,7 +149,7 @@ export default function HeroSection() {
               >
                 <motion.img
                   decoding="async"
-                  src="/assets/home/herosection/heroimage2.webp"
+                  src="/assets/home/herosection/heroimage4.webp"
                   height="1600"
                   width="763"
                   loading="eager"
