@@ -144,6 +144,7 @@ function VendorService({ currentStep }) {
     "Balloon Decor",
     "Floral Decor",
     "Ceremonial Ride",
+    "Luxury Ride",
     "Fireworks",
     "Card Design & Printing",
     "Magic Shows",
@@ -270,6 +271,7 @@ function VendorService({ currentStep }) {
       "Birthday Party Decor",
     ],
     "Ceremonial Ride": ["Bridal Car", "Luxury Car", "Classic Car"],
+    "Luxury Ride": ["Bridal Car", "Luxury Car", "Classic Car"],
     Fireworks: ["Wedding Fireworks", "Indoor Fireworks", "Outdoor Fireworks"],
     "Card Design & Printing": [
       "Wedding Invitations",

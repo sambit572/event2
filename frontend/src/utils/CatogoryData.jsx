@@ -11,10 +11,11 @@ import image10 from "../assets/aboutUs/catering_img.webp";
 import image11 from "../assets/home/categoriesImages/bride-mehendi-&-makeup.webp";
 import image12 from "../assets/home/categoriesImages/flower-decor.webp";
 import image13 from "../assets/home/categoriesImages/ceremonial_ride.webp";
+import image20 from "../assets/home/categoriesImages/luxury_ride.webp";
 import image14 from "../assets/home/categoriesImages/fireworks.webp";
 import image15 from "../assets/home/categoriesImages/marriage-card.webp";
 import image16 from "../assets/home/categoriesImages/banquithall.webp";
-import image17 from "../assets/home/categoriesImages/stage_decor.webp";             
+import image17 from "../assets/home/categoriesImages/stage_decor.webp";
 import image18 from "../assets/home/categoriesImages/event_company.webp";
 import image19 from "../assets/home/categoriesImages/ballon decor.webp";
 
@@ -103,6 +104,12 @@ export const CategoryData = [
     title: "Ceremonial Ride",
     image: image13,
     tagline: "Royal Rides Await You",
+  },
+  {
+    id: "luxury-transport",
+    title: "Luxury Ride",
+    image: image20,
+    tagline: "Luxury Rides Await You",
   },
   {
     id: "fireworks",

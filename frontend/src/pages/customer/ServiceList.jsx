@@ -74,6 +74,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
     "Beauty Makeover": makeupBanner,
     "Floral Decor": floralBanner,
     "Ceremonial Ride": carBanner,
+    "Luxury Ride": carBanner,
     Fireworks: fireworksBanner,
     "Card Design & Printing": cardBanner,
     "Magic Shows": magicBanner,
@@ -162,6 +163,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
       "Birthday Party Decor",
     ],
     "Ceremonial Ride": ["All", "Bridal Car", "Luxury Car", "Classic Car"],
+    "Luxury Ride": ["All", "Bridal Car", "Luxury Car", "Classic Car"],
     Fireworks: [
       "All",
       "Wedding Fireworks",

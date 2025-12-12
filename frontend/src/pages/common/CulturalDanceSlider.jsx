@@ -496,7 +496,7 @@ const FamousIndiaSlider = () => {
         initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: "easeInOut" }} */}
-      <motion.h2
+      {/* <motion.h2
         initial={{ opacity: 0, y: -30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.3 }}
@@ -504,7 +504,11 @@ const FamousIndiaSlider = () => {
         className="text-center text-[#001f3f] text-4xl sm:text-4xl font-extrabold mb-2 tracking-wide"
       >
         India’s Timeless Traditions, Eternal Beauty
-      </motion.h2>
+      </motion.h2> */}
+      <h2 className="text-center text-[#001f3f] text-4xl sm:text-4xl font-extrabold mb-2 tracking-wide">
+        India’s Timeless Traditions, Eternal Beauty
+      </h2>
+
       <p className="text-center text-gray-600 mb-10 max-w-2xl mx-auto">
         Celebrate India’s vibrant soul, where temples and dances reveal each
         state’s legacy.
