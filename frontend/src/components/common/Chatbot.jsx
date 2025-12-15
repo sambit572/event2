@@ -94,7 +94,7 @@ const Chatbot = () => {
 
       <img
         decoding="async"
-        fetchpriority="low"
+        fetchPriority="low"
         loading="lazy"
         src={chatIcon}
         alt="Chat Icon"

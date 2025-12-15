@@ -72,7 +72,7 @@ function StepProgress({ currentStep }) {
                 ) : (
                   <img
                     decoding="async"
-                    fetchpriority="low"
+                    fetchPriority="low"
                     loading="lazy"
                     src={step.icon}
                     alt={statusText}

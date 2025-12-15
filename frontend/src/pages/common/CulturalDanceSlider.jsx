@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./CulturalDanceSlider.css"; // ✅ Import the CSS
-import { motion } from "motion/react";
 
 // 🖼️ Example placeholder images
 import puri from "../../assets/famousCultural/konark-and-puri-jagannath-temple.webp";
@@ -447,7 +446,7 @@ const StateColumn = ({ statesGroup }) => {
     >
       <img
         decoding="async"
-        fetchpriority="low"
+        fetchPriority="low"
         loading="lazy"
         src={currentItem.image}
         alt={currentItem.name || state.state}

@@ -102,7 +102,7 @@ const OrderSummary = () => {
     // Navigate to QR Payment page with order details
     navigate("/qr-payment", {
       state: {
-        amount: Math.round(orderSummary.grandTotal * 0.2),// 20% advance payment
+        amount: Math.round(orderSummary.grandTotal * 0.2), // 20% advance payment
         upiUri: upiUri,
         merchantRef: merchantRef,
         orderId: orderId,
@@ -250,7 +250,7 @@ const OrderSummary = () => {
                             <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-lg border-2 border-white">
                               <img
                                 decoding="async"
-                                fetchpriority="low"
+                                fetchPriority="low"
                                 loading="lazy"
                                 src={
                                   item.serviceId?.serviceImage?.[0] ||

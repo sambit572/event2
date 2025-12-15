@@ -233,7 +233,7 @@ function UserSideBar({ isOpen, setShowPasswordModal }) {
             {profilePhoto ? (
               <img
                 decoding="async"
-                fetchpriority="low"
+                fetchPriority="low"
                 loading="lazy"
                 src={profilePhoto}
                 alt="Profile"

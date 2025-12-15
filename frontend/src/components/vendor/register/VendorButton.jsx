@@ -7,7 +7,7 @@ const Button = ({ onBack, onNext }) => {
         <span className="btn-content">
           <img
             decoding="async"
-            fetchpriority="low"
+            fetchPriority="low"
             loading="lazy"
             src="/back.webp"
             alt="Back"
@@ -22,7 +22,7 @@ const Button = ({ onBack, onNext }) => {
           Next
           <img
             decoding="async"
-            fetchpriority="low"
+            fetchPriority="low"
             loading="lazy"
             src="/next.webp"
             alt="Next"

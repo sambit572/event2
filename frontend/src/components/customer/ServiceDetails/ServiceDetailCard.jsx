@@ -231,7 +231,7 @@ const ServiceDetailCard = ({ service }) => {
           >
             <img
               decoding="async"
-              fetchpriority="low"
+              fetchPriority="low"
               loading="lazy"
               src="/send.webp"
               alt="Share"
@@ -253,7 +253,7 @@ const ServiceDetailCard = ({ service }) => {
               >
                 <img
                   decoding="async"
-                  fetchpriority="low"
+                  fetchPriority="low"
                   loading="lazy"
                   src="/facebook.webp"
                   alt="Facebook"
@@ -267,7 +267,7 @@ const ServiceDetailCard = ({ service }) => {
               >
                 <img
                   decoding="async"
-                  fetchpriority="low"
+                  fetchPriority="low"
                   loading="lazy"
                   src="/twitter 1.webp"
                   alt="X"
@@ -281,7 +281,7 @@ const ServiceDetailCard = ({ service }) => {
               >
                 <img
                   decoding="async"
-                  fetchpriority="low"
+                  fetchPriority="low"
                   loading="lazy"
                   src="/whatsapp.webp"
                   alt="WhatsApp"
@@ -295,7 +295,7 @@ const ServiceDetailCard = ({ service }) => {
               >
                 <img
                   decoding="async"
-                  fetchpriority="low"
+                  fetchPriority="low"
                   loading="lazy"
                   src="/instagram.webp"
                   alt="Instagram"
@@ -309,7 +309,7 @@ const ServiceDetailCard = ({ service }) => {
               >
                 <img
                   decoding="async"
-                  fetchpriority="low"
+                  fetchPriority="low"
                   loading="lazy"
                   src="/telegram.webp"
                   alt="Telegram"
@@ -323,7 +323,7 @@ const ServiceDetailCard = ({ service }) => {
               >
                 <img
                   decoding="async"
-                  fetchpriority="low"
+                  fetchPriority="low"
                   loading="lazy"
                   src="/connection.webp"
                   alt="Copy Link"

@@ -225,7 +225,7 @@ const Register = ({ onClose, onSwitchToLogin }) => {
             {/* Image */}
             <img
               decoding="async"
-              fetchpriority="low"
+              fetchPriority="low"
               loading="lazy"
               src="../new-illustrator.webp"
               alt="Welcome"

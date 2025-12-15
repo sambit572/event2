@@ -49,7 +49,7 @@ export const SearchResult = ({
                 <div className="relative h-48">
                   <img
                     decoding="async"
-                    fetchpriority="low"
+                    fetchPriority="low"
                     loading="lazy"
                     src={
                       service.serviceImage[0] ||
@@ -134,7 +134,7 @@ export const SearchResult = ({
                     <div className="flex items-center space-x-2">
                       <img
                         decoding="async"
-                        fetchpriority="low"
+                        fetchPriority="low"
                         loading="lazy"
                         src={
                           service.vendor?.profilePicture ||
@@ -185,7 +185,7 @@ export const SearchResult = ({
                 <div className="flex flex-col items-center text-center">
                   <img
                     decoding="async"
-                    fetchpriority="low"
+                    fetchPriority="low"
                     loading="lazy"
                     src={
                       vendor.profilePicture ||

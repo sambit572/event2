@@ -1,7 +1,6 @@
 import "./FaqSection.css";
-import { motion } from "motion/react";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { Seo } from "../../../seo/seo";
 
 const faqData = [
@@ -71,7 +70,8 @@ const FaqSection = () => {
         }
       />
       <div className="faq-container">
-        <motion.h2
+        <h2 className="faq-title">𝐄𝐱𝐩𝐥𝐨𝐫𝐞 𝐎𝐮𝐫 𝐅𝐀𝐐𝐬</h2>
+        {/* <motion.h2
           initial={{ opacity: 0, y: -30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
@@ -79,14 +79,14 @@ const FaqSection = () => {
           className="faq-title"
         >
           𝐄𝐱𝐩𝐥𝐨𝐫𝐞 𝐎𝐮𝐫 𝐅𝐀𝐐𝐬
-        </motion.h2>
+        </motion.h2> */}
         <h3 className="faq-subtitle">
           Bridging the Gap Between You and Clarity{" "}
         </h3>
 
         <div className="faq-columns">
           {columns.map((column, colIdxs) => (
-            <motion.div
+            <div
               // key={colIdxs}
               // initial={{ opacity: 0, y: 50 }}
               // whileInView={{ opacity: 1, y: 0 }}
@@ -97,7 +97,7 @@ const FaqSection = () => {
               {column.map((item, index) => {
                 const itemIndex = colIdxs + index * columnCount;
                 return (
-                  <motion.div
+                  <div
                     // key={itemIndex}
                     // initial={{ opacity: 0, y: 50 }}
                     // whileInView={{ opacity: 1, y: 0 }}
@@ -119,10 +119,10 @@ const FaqSection = () => {
                     {activeIndex === itemIndex && (
                       <div className="faq-answer">{item.answer}</div>
                     )}
-                  </motion.div>
+                  </div>
                 );
               })}
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

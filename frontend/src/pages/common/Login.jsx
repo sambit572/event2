@@ -361,7 +361,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
               {/* Image */}
               <img
                 decoding="async"
-                fetchpriority="low"
+                fetchPriority="low"
                 loading="lazy"
                 src="../new-illustrator.png"
                 alt="Welcome"

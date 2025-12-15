@@ -451,7 +451,7 @@ loading="lazy"              src="/question.webp"
           <div className="upi-input-with-icon">
             <img
               decoding="async"
-              fetchpriority="low"
+              fetchPriority="low"
               loading="lazy"
               src="/question.webp"
               alt="info"

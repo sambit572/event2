@@ -40,7 +40,7 @@ const SimilarProductCard = ({ product }) => {
       <div className="relative w-full max-w-full aspect-[4/3] overflow-hidden flex items-center justify-center bg-gray-100">
         <img
           decoding="async"
-          fetchpriority="low"
+          fetchPriority="low"
           loading="lazy"
           src={product.serviceImage[0]}
           alt="DJ Service"

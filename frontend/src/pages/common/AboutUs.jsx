@@ -18,7 +18,7 @@ const Card = ({ title, description, image }) => {
       >
         <img
           decoding="async"
-          fetchpriority="low"
+          fetchPriority="low"
           loading="lazy"
           src={image}
           alt={title}
@@ -64,7 +64,7 @@ const AboutUs = () => {
           <div className="w-full -mt-11">
             <img
               decoding="async"
-              fetchpriority="low"
+              fetchPriority="low"
               loading="lazy"
               src={AboutUs_1}
               alt="About Eventsbridge Platform"

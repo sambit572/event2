@@ -43,7 +43,7 @@ const SuccessBlock = ({ onClose, autoCloseTime = 3000 }) => {
         {/* Image */}
         <img
           decoding="async"
-          fetchpriority="low"
+          fetchPriority="low"
           loading="lazy"
           src={namaste}
           alt="Success"

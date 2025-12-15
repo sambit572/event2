@@ -1,19 +1,29 @@
 import React, { useState, useEffect, useRef, Suspense } from "react";
 import axios from "axios";
 import "./Home.css";
-import { motion } from "motion/react";
 import { Seo } from "../../seo/seo.js";
+const Features = React.lazy(() =>
+  import("../../components/customer/home/Features")
+);
+
+const CulturalDanceSlider = React.lazy(() =>
+  import("../common/CulturalDanceSlider.jsx")
+);
+
+const StepsSection = React.lazy(() =>
+  import("../../components/customer/home/StepsSection.jsx")
+);
 
 import CategoryCard from "../../components/customer/home/CategoryCard.jsx";
-import ImageSlider from "../../components/customer/home/ImageSlider.jsx";
+// import ImageSlider from "../../components/customer/home/ImageSlider.jsx";
 
 // import Milestones from "../../components/common/aboutus/Milestones";
-import AddsBanner from "../../components/customer/home/AddsBanner.jsx";
+// import AddsBanner from "../../components/customer/home/AddsBanner.jsx";
 import categories from "../../utils/CatogoryData.jsx";
-import StepsSection from "../../components/customer/home/StepsSection.jsx";
-import CulturalDanceSlider from "../common/CulturalDanceSlider.jsx";
+// import StepsSection from "../../components/customer/home/StepsSection.jsx";
+// import CulturalDanceSlider from "../common/CulturalDanceSlider.jsx";
 import HeroSection from "../../components/customer/home/HeroSection.jsx";
-import Features from "./../../components/customer/home/Features";
+// import Features from "./../../components/customer/home/Features";
 
 // ✅ Lazy load heavy components below
 const ReviewSlider = React.lazy(() =>
@@ -72,8 +82,9 @@ const Home = () => {
         }
       }
     };
-
-    checkUser();
+    requestIdleCallback(() => {
+      checkUser();
+    });
   }, []);
   useEffect(() => {
     if (location.hash === "#categories") {
@@ -92,12 +103,14 @@ const Home = () => {
       <div className="home">
         {/* <ImageSlider images={images} /> */}
         <HeroSection />
-        <Features />
-        {/* <AddsBanner /> */}
-        <CulturalDanceSlider />
+        <Suspense fallback={null}>
+          <Features />
+          <CulturalDanceSlider />
+        </Suspense>
+
         {/* <img className="addbanner" src={banner} alt="" /> */}
         <div id="categories" className="categories-head1 mb-[-15px]">
-          <motion.h1
+          {/* <motion.h1
             initial={{ opacity: 0, y: -30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
@@ -105,7 +118,8 @@ const Home = () => {
             className="align_center categories-head mt-8"
           >
             𝐂𝐀𝐓𝐄𝐆𝐎𝐑𝐈𝐄𝐒
-          </motion.h1>
+          </motion.h1> */}
+          <h1 className="align_center categories-head mt-8">𝐂𝐀𝐓𝐄𝐆𝐎𝐑𝐈𝐄𝐒</h1>
         </div>
         <p className="category-subheads text-center">
           Explore trusted professionals across categories and simplify your
@@ -142,12 +156,10 @@ const Home = () => {
             </button>
           )}
         </div>
-        <StepsSection />
         {/* <Milestones /> */}
         <Suspense fallback={<div>Loading reviews...</div>}>
+          <StepsSection />
           <ReviewSlider />
-        </Suspense>
-        <Suspense fallback={<div>Loading FAQs...</div>}>
           <FaqSection />
         </Suspense>
       </div>

@@ -1,4 +1,3 @@
-import React from "react";
 import "./CategoryCard.css";
 import { useNavigate } from "react-router-dom";
 
@@ -19,7 +18,7 @@ const CategoryCard = ({ category }) => {
       <div className="imageWrapper">
         <img
           decoding="async"
-          fetchpriority="low"
+          fetchPriority="low"
           loading="lazy"
           src={category.image}
           alt={category.title}

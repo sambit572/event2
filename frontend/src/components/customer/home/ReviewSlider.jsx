@@ -1,7 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import "./ReviewSlider.css";
 import axios from "axios";
-import { easeInOut, motion } from "motion/react";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -108,7 +107,7 @@ const ReviewSlider = () => {
   }
   return (
     <div className="review_section">
-      <motion.h1
+      {/* <motion.h1
         initial={{ opacity: 0, y: -30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.3 }}
@@ -116,7 +115,8 @@ const ReviewSlider = () => {
         className="heading_review"
       >
         𝐎𝐔𝐑 𝐑𝐄𝐕𝐈𝐄𝐖𝐒
-      </motion.h1>
+      </motion.h1> */}
+      <h1 className="heading_review">𝐎𝐔𝐑 𝐑𝐄𝐕𝐈𝐄𝐖𝐒</h1>
       <h3 className="subheadings">Celebrated by Many, Loved by All.</h3>
 
       {/* Debug info */}
@@ -153,7 +153,7 @@ const ReviewSlider = () => {
                 {review.profileImage ? (
                   <img
                     decoding="async"
-                    fetchpriority="low"
+                    fetchPriority="low"
                     loading="lazy"
                     src={review.profileImage}
                     alt={review.userName}

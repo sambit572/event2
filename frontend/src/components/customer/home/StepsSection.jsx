@@ -5,7 +5,6 @@ import negotiateImg from "/category/negotiation.webp";
 import bookingImg from "/category/booking.webp";
 import payImg from "../../../../public/category/pay_now-removebg-preview.webp";
 import enjoyImg from "/category/family.webp";
-import { motion } from "motion/react";
 
 const steps = [
   {
@@ -65,7 +64,18 @@ const StepsSection = () => {
     <div className="mt-3 py-5 px-4 rounded-md ml-5 mr-5 sm:px-6 lg:px-2 mb-5 sm:mb-12 md:mb-10 lg:mb-1">
       {/* Heading */}
       <div className="text-center mb-12">
-        <motion.h2
+        <h2
+          ref={headingRef}
+          className={`relative inline-block text-xl mb-4 sm:text-2xl md:text-5xl font-semibold text-[#001f3f]
+            after:content-[''] after:block after:w-0 after:h-[4px]
+            after:bg-gradient-to-r after:from-[#001f3f] after:via-yellow-500 after:to-[#001f3f] 
+            after:rounded-full
+            after:transition-all after:duration-[1000ms] after:ease-in-out after:mt-2 after:mx-auto
+            ${isVisible ? "after:w-3/4" : "after:w-0"}`}
+        >
+          𝐇𝐨𝐰 𝐄𝐯𝐞𝐧𝐭𝐬𝐁𝐫𝐢𝐝𝐠𝐞 𝐖𝐨𝐫𝐤𝐬
+        </h2>
+        {/* <motion.h2
           initial={{ opacity: 0, y: -30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
@@ -79,7 +89,7 @@ const StepsSection = () => {
             ${isVisible ? "after:w-3/4" : "after:w-0"}`}
         >
           𝐇𝐨𝐰 𝐄𝐯𝐞𝐧𝐭𝐬𝐁𝐫𝐢𝐝𝐠𝐞 𝐖𝐨𝐫𝐤𝐬
-        </motion.h2>
+        </motion.h2> */}
         <p className="sm:text-base md:text-md font-normal text-[#001f3f] max-w-4xl lg:max-w-6xl mx-auto px-2">
           From Search to Celebration – We’ve Got You Covered. Discover trusted
           vendors, compare options, negotiate directly, and book securely all in
@@ -96,7 +106,7 @@ const StepsSection = () => {
   "
       >
         {steps.map((step, index) => (
-          <motion.div
+          <div
             // initial={{ opacity: 0, y: 50 }}
             // whileInView={{ x: [0, 50, 0] }}
             // whileInView={{ opacity: 1, y: 0 }}
@@ -132,7 +142,7 @@ const StepsSection = () => {
             <p className="text-[#001f3f] text-xs sm:text-sm md:text-base leading-relaxed px-2">
               {step.text}
             </p>
-          </motion.div>
+          </div>
         ))}
       </div>
     </div>
