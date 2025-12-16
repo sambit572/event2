@@ -407,7 +407,8 @@ export default function VendorPayment() {
               placeholder="Enter IFSC code"
             />
             <img decoding="async"
-fetchpriority="low"
+ fetchPriority
+="low"
 loading="lazy"              src="/question.webp"
               alt="info"
               title="You can find this on your cheque or bank passbook."

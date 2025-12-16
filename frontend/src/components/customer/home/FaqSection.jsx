@@ -87,7 +87,7 @@ const FaqSection = () => {
         <div className="faq-columns">
           {columns.map((column, colIdxs) => (
             <div
-              // key={colIdxs}
+              key={colIdxs}
               // initial={{ opacity: 0, y: 50 }}
               // whileInView={{ opacity: 1, y: 0 }}
               // viewport={{ once: true, amount: 0.3 }}

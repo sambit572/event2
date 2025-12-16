@@ -168,12 +168,16 @@ function Footer() {
           <img
             decoding="async"
             loading="lazy"
+            width={300} // actual width
+            height={200} // actual height
             src="/App Store.webp"
             alt="App Store"
             className="cursor-pointer"
           />
           <img
             decoding="async"
+            width={300} // actual width
+            height={200} // actual height
             loading="lazy"
             src="/Google_Play.webp"
             alt="Google Play"
@@ -731,13 +735,13 @@ function Footer() {
           >
             <img
               src="facebook-40.webp"
-              srcset="facebook-40.webp 1x, facebook-80.webp 2x"
+              srcSet="facebook-40.webp 1x, facebook-80.webp 2x"
               width="40"
               height="40"
               alt="Facebook"
               loading="lazy"
               decoding="async"
-              class="social-icon"
+              className="social-icon"
             />
           </a>
           <a
@@ -843,7 +847,7 @@ function Footer() {
           <img
             decoding="async"
             loading="lazy"
-            fetchpriority="low"
+            fetchPriority="low"
             alt="Startup Logo"
             src={startup256}
             srcSet={`

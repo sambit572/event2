@@ -109,7 +109,7 @@ const Home = () => {
         </Suspense>
 
         {/* <img className="addbanner" src={banner} alt="" /> */}
-        <div id="categories" className="categories-head1 mb-[-15px]">
+        <div id="categories" className="categories-head1">
           {/* <motion.h1
             initial={{ opacity: 0, y: -30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -138,7 +138,7 @@ const Home = () => {
             //   {" "}
             //   <CategoryCard category={category} />
             // </motion.div>
-            <div>
+            <div key={index}>
               <CategoryCard category={category} />
             </div>
           ))}

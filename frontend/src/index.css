@@ -1,33 +1,41 @@
+/* Import Google Fonts */
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 
+/* Custom font JTUSjIg1 */
+@font-face {
+  font-family: "JTUSjIg1";
+  src: url("/fonts/JTUSjIg1.woff2") format("woff2");
+  font-display: swap; /* renders fallback font immediately */
+}
+
+/* Tailwind base */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ✅ Inject custom base styles using @layer base */
+/* ✅ Custom base styles */
 @layer base {
+  /* Reset default spacing and box-sizing */
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Montserrat", sans-serif;
   }
 
   html,
   body {
+    font-family: "JTUSjIg1", "Montserrat", sans-serif;
     scroll-behavior: smooth;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
   }
 }
 
-/* ✅ Inject custom utility class using @layer utilities */
+/* ✅ Custom utilities */
 @layer utilities {
   .align_center {
     @apply flex items-center;
   }
 
+  /* Custom responsive margin */
   @media (min-width: 640px) and (max-width: 680px) {
     .custom-mt {
       margin-top: 50px !important;
@@ -36,17 +44,18 @@
 
   @media (width: 1024px) and (height: 600px) {
     .only-1024x600-vendor-forgot-pass {
-      @apply mb-9 !important; /* replace with your overrides */
+      @apply mb-9 !important;
     }
   }
 
   @media (width: 912px) and (height: 1368px) {
     .only-912x1368-vendor-forgot-pass {
-      @apply mb-[50rem] !important; /* replace with your overrides */
+      @apply mb-[50rem] !important;
     }
   }
 }
 
+/* ✅ Animations */
 @keyframes toast-wiggle {
   0% {
     transform: translateY(0);
@@ -68,6 +77,7 @@
 .animate-toast-wiggle {
   animation: toast-wiggle 0.4s ease-in-out;
 }
+
 .checkmark-circle {
   stroke: #2ecc71;
   stroke-width: 3;
@@ -92,7 +102,10 @@
   }
 }
 
+/* ✅ Make all images CLS-safe by keeping aspect ratio */
 img {
-  height: auto;
   width: 100%;
+  height: auto;
+  display: block; /* prevents inline spacing issues */
+  max-width: 100%;
 }

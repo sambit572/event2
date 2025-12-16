@@ -564,19 +564,6 @@ const FamousIndiaSlider = () => {
 
   return (
     <div className="w-full pt-8">
-      {/* className="align_center navbar"
-        initial={{ opacity: 0, y: -30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, ease: "easeInOut" }} */}
-      {/* <motion.h2
-        initial={{ opacity: 0, y: -30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 1, ease: "easeInOut" }}
-        className="text-center text-[#001f3f] text-4xl sm:text-4xl font-extrabold mb-2 tracking-wide"
-      >
-        India’s Timeless Traditions, Eternal Beauty
-      </motion.h2> */}
       <h2 className="text-center text-[#001f3f] text-4xl sm:text-4xl font-extrabold mb-2 tracking-wide">
         India’s Timeless Traditions, Eternal Beauty
       </h2>
@@ -605,14 +592,6 @@ const FamousIndiaSlider = () => {
             <div>
               <StateColumn key={index} statesGroup={group} />
             </div>
-            // <motion.div
-            //   initial={{ opacity: 0, y: 50 }}
-            //   whileInView={{ opacity: 1, y: 0 }}
-            //   viewport={{ once: true, amount: 0.3 }}
-            //   transition={{ duration: index * 0.75, ease: "easeInOut" }}
-            // >
-            //   <StateColumn key={index} statesGroup={group} />
-            // </motion.div>
           )
         )}
       </div>

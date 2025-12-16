@@ -5,7 +5,6 @@ import logo256 from "../../assets/serverLogo-256.webp";
 import logo384 from "../../assets/serverLogo-384.webp";
 import logo512 from "../../assets/serverLogo-512.webp";
 
-
 const chatbotFAQs = [
   "What is EventsBridge?",
   "How can I register for an event?",
@@ -99,7 +98,7 @@ const Chatbot = () => {
       <img
         decoding="async"
         loading="lazy"
-        fetchpriority="low"
+        fetchPriority="low"
         alt="Chat Icon"
         className="chat-icon"
         src={logo256}
