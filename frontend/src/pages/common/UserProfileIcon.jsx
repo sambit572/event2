@@ -26,7 +26,6 @@ const UserProfileIcon = () => {
       {isImageValid ? (
         <img
           decoding="async"
-          fetchPriority="low"
           loading="lazy"
           src={profilePhoto}
           alt="Profile"

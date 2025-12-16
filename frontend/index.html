@@ -5,8 +5,6 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/webp" href="/serverLogo.webp" />
   <link rel="preload" href="/assets/home/herosection/heroimage4.webp" as="image">
-  <link rel="preload" href="/assets/home/herosection/heroimage1.webp" as="image">
-  <link rel="preload" href="/assets/home/herosection/heroimage3.webp" as="image">
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="google-site-verification" content="TUgsk4uId6GrSsbHkeQirdg6iOki3Tp-3PuwesSiaKo" />
@@ -17,13 +15,16 @@
   <!-- Preconnect improves DNS + TLS handshake speed -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  
-  <!-- Preload font stylesheet (non-blocking) -->
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" />
-  
-  <!-- Load stylesheet normally (not render-blocking because display=swap) -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" />
 
+  <!-- Non-blocking Google Fonts -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'">
+
+
+  <!-- Fallback for no-JS -->
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap">
+  </noscript>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }

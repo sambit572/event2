@@ -343,7 +343,6 @@ const Service = ({ onSwitchToLogin }) => {
                       {/* Blurred background */}
                       <img
                         decoding="async"
-                        fetchPriority="low"
                         loading="lazy"
                         src={media.src}
                         className="absolute inset-0 w-full h-full object-cover blur-xl scale-110 opacity-40"
@@ -352,7 +351,6 @@ const Service = ({ onSwitchToLogin }) => {
                       {/* Main clean portrait image */}
                       <img
                         decoding="async"
-                        fetchPriority="low"
                         loading="lazy"
                         src={media.src}
                         alt={`slide-${idx}`}

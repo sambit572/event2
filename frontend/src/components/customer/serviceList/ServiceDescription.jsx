@@ -418,7 +418,6 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
           >
             <img
               decoding="async"
-              fetchPriority="low"
               loading="lazy"
               src="/send.webp"
               alt="Share"
@@ -443,7 +442,6 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
               >
                 <img
                   decoding="async"
-                  fetchPriority="low"
                   loading="lazy"
                   src="/facebook.webp"
                   alt="Facebook"
@@ -460,7 +458,6 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
               >
                 <img
                   decoding="async"
-                  fetchPriority="low"
                   loading="lazy"
                   src="/twitter 1.webp"
                   alt="X"
@@ -477,7 +474,6 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
               >
                 <img
                   decoding="async"
-                  fetchPriority="low"
                   loading="lazy"
                   src="/whatsapp.webp"
                   alt="WhatsApp"
@@ -494,7 +490,6 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
               >
                 <img
                   decoding="async"
-                  fetchPriority="low"
                   loading="lazy"
                   src="/instagram.webp"
                   alt="Instagram"
@@ -511,7 +506,6 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
               >
                 <img
                   decoding="async"
-                  fetchPriority="low"
                   loading="lazy"
                   src="/telegram.webp"
                   alt="Telegram"
@@ -528,7 +522,6 @@ const ServiceDescription = ({ service, onSwitchToLogin }) => {
               >
                 <img
                   decoding="async"
-                  fetchPriority="low"
                   loading="lazy"
                   src="/connection.webp"
                   alt="Copy Link"

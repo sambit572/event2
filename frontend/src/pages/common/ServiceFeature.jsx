@@ -10,7 +10,6 @@ const ServiceFeature = ({ title, features, icon, image, reverse = false }) => {
       <div className="md:w-1/2 w-full">
         <img
           decoding="async"
-          fetchPriority="low"
           loading="lazy"
           src={image}
           alt={title}

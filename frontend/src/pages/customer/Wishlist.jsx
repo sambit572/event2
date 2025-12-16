@@ -102,7 +102,6 @@ const Wishlist = () => {
                     <div className="relative">
                       <img
                         decoding="async"
-                        fetchPriority="low"
                         loading="lazy"
                         src={
                           Array.isArray(service.serviceImage) &&

@@ -188,11 +188,10 @@ sm-mid:left-4 sm-mid:w-24
         >
           <img
             decoding="async"
-            fetchPriority="high"
             src="/assets/home/herosection/heroimage3.webp"
             height="579"
             width="540"
-            loading="eager"
+            loading="lazy"
             alt="Preview"
             className="w-full h-20 sm:h-36 md:h-40 lg:h-44 object-fill rounded-xl"
           />
@@ -339,11 +338,10 @@ sm-mid:right-2 sm-mid:w-28
         >
           <img
             decoding="async"
-            fetchPriority="high"
             src="/assets/home/herosection/heroimage1.webp"
             height="1024"
             width="1600"
-            loading="eager"
+            loading="lazy"
             alt="Preview"
             className="w-full h-20 sm:h-32 md:h-44 object-cover rounded-t-xl"
           />

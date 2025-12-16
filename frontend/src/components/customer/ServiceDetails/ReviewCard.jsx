@@ -103,7 +103,6 @@ const ReviewCard = ({ review }) => {
             >
               <img
                 decoding="async"
-                fetchPriority="low"
                 loading="lazy"
                 src={img}
                 alt={`review-${idx}`}

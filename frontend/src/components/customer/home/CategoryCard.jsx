@@ -18,7 +18,6 @@ const CategoryCard = ({ category }) => {
       <div className="imageWrapper">
         <img
           decoding="async"
-          fetchPriority="low"
           loading="lazy"
           src={category.image}
           alt={category.title}

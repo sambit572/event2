@@ -446,7 +446,6 @@ const StateColumn = ({ statesGroup }) => {
     >
       <img
         decoding="async"
-        fetchPriority="low"
         loading="lazy"
         src={currentItem.image}
         alt={currentItem.name || state.state}

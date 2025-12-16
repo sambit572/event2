@@ -148,7 +148,6 @@ function DashBoardSideBar({
             {vendor?.profilePicture ? (
               <img
                 decoding="async"
-                fetchPriority="low"
                 loading="lazy"
                 src={vendor.profilePicture}
                 alt="Profile"

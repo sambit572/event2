@@ -14,7 +14,6 @@ export default function LegalButton() {
       >
         <img
           decoding="async"
-          fetchPriority="low"
           loading="lazy"
           src="/back.webp"
           alt="Back"

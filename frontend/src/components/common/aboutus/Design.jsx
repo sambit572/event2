@@ -20,14 +20,12 @@ const Design = () => {
         <div className="features-diagonal features-left">
           <img
             decoding="async"
-            fetchPriority="low"
             loading="lazy"
             src={flowers}
             className="feature feature-1"
           ></img>
           <img
             decoding="async"
-            fetchPriority="low"
             loading="lazy"
             src={magician}
             className="feature feature-2"
@@ -35,7 +33,6 @@ const Design = () => {
           <img decoding="async" src={party} className="feature feature-3"></img>
           <img
             decoding="async"
-            fetchPriority="low"
             loading="lazy"
             src={wedding}
             className="feature feature-4"
@@ -49,7 +46,6 @@ const Design = () => {
             <div className="phone-content phone-content-p">
               <img
                 decoding="async"
-                fetchPriority="low"
                 loading="lazy"
                 className="chat-icon-about-us"
                 src={chatIcon}
@@ -64,7 +60,6 @@ const Design = () => {
         <div className="features-diagonal features-right">
           <img
             decoding="async"
-            fetchPriority="low"
             loading="lazy"
             src={horseCart}
             className="feature feature-1"
@@ -72,14 +67,12 @@ const Design = () => {
           <img decoding="async" className="feature feature-2" src={offers} />
           <img
             decoding="async"
-            fetchPriority="low"
             loading="lazy"
             src={tenthouse}
             className="feature feature-3"
           ></img>
           <img
             decoding="async"
-            fetchPriority="low"
             loading="lazy"
             src={catering}
             className="feature feature-4"

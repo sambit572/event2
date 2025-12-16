@@ -158,7 +158,6 @@ function Footer() {
         <div className="app-buttons">
           <img
             decoding="async"
-            fetchPriority="low"
             loading="lazy"
             src="/App Store.webp"
             alt="App Store"
@@ -166,7 +165,6 @@ function Footer() {
           />
           <img
             decoding="async"
-            fetchPriority="low"
             loading="lazy"
             src="/Google_Play.webp"
             alt="Google Play"
@@ -188,7 +186,6 @@ function Footer() {
               <p className="hover:text-[#ffc107]">
                 <img
                   decoding="async"
-                  fetchPriority="low"
                   loading="lazy"
                   src="/gmail.webp"
                   alt="Email"
@@ -204,7 +201,6 @@ function Footer() {
               {/* amrit */}
               <img
                 decoding="async"
-                fetchPriority="low"
                 loading="lazy"
                 src="/phone-call.webp"
                 alt="Phone"
@@ -219,7 +215,6 @@ function Footer() {
               {/* abhijit */}
               <img
                 decoding="async"
-                fetchPriority="low"
                 loading="lazy"
                 src="/phone-call.webp"
                 alt="Phone"
@@ -233,7 +228,6 @@ function Footer() {
             >
               <img
                 decoding="async"
-                fetchPriority="low"
                 loading="lazy"
                 src="/placeholder.webp"
                 alt="Location"
@@ -298,7 +292,6 @@ function Footer() {
 
                     <img
                       decoding="async"
-                      fetchPriority="low"
                       loading="lazy"
                       src={
                         openCategory === categoryName
@@ -375,7 +368,6 @@ function Footer() {
 
                     <img
                       decoding="async"
-                      fetchPriority="low"
                       loading="lazy"
                       src={
                         openLocation === locationName
@@ -426,7 +418,6 @@ function Footer() {
                   Categories
                   <img
                     decoding="async"
-                    fetchPriority="low"
                     loading="lazy"
                     src={
                       openSections.category ? "/up-arrow.webp" : "/down.webp"
@@ -455,7 +446,6 @@ function Footer() {
 
                         <img
                           decoding="async"
-                          fetchPriority="low"
                           loading="lazy"
                           src={
                             openCategory === categoryName
@@ -499,7 +489,6 @@ function Footer() {
                   Available Locations
                   <img
                     decoding="async"
-                    fetchPriority="low"
                     loading="lazy"
                     src={
                       openSections.location ? "/up-arrow.webp" : "/down.webp"
@@ -530,7 +519,6 @@ function Footer() {
 
                         <img
                           decoding="async"
-                          fetchPriority="low"
                           loading="lazy"
                           src={
                             openLocation === locationName
@@ -571,7 +559,6 @@ function Footer() {
                   Contact Us
                   <img
                     decoding="async"
-                    fetchPriority="low"
                     loading="lazy"
                     src={openSections.contact ? "/up-arrow.webp" : "/down.webp"}
                     className="dropdown-icon"
@@ -586,7 +573,6 @@ function Footer() {
                   <p>
                     <img
                       decoding="async"
-                      fetchPriority="low"
                       loading="lazy"
                       src="/gmail.webp"
                       className="icon"
@@ -597,7 +583,6 @@ function Footer() {
                   <p>
                     <img
                       decoding="async"
-                      fetchPriority="low"
                       loading="lazy"
                       src="/phone-call.webp"
                       className="icon"
@@ -608,7 +593,6 @@ function Footer() {
                   <p>
                     <img
                       decoding="async"
-                      fetchPriority="low"
                       loading="lazy"
                       src="/placeholder.webp"
                       className="icon"
@@ -624,7 +608,6 @@ function Footer() {
                   Company
                   <img
                     decoding="async"
-                    fetchPriority="low"
                     loading="lazy"
                     src={openSections.company ? "/up-arrow.webp" : "/down.webp"}
                     className="dropdown-icon"
@@ -651,7 +634,6 @@ function Footer() {
                   Quick Links
                   <img
                     decoding="async"
-                    fetchPriority="low"
                     loading="lazy"
                     src={openSections.quick ? "/up-arrow.webp" : "/down.webp"}
                     className="dropdown-icon"
@@ -673,7 +655,6 @@ function Footer() {
                   Legal Information
                   <img
                     decoding="async"
-                    fetchPriority="low"
                     loading="lazy"
                     src={openSections.privacy ? "/up-arrow.webp" : "/down.webp"}
                     className="dropdown-icon"
@@ -720,7 +701,6 @@ function Footer() {
           >
             <img
               decoding="async"
-              fetchPriority="low"
               loading="lazy"
               src="/facebook.webp"
               alt="Facebook"
@@ -734,7 +714,6 @@ function Footer() {
           >
             <img
               decoding="async"
-              fetchPriority="low"
               loading="lazy"
               src="/twitter 1.webp"
               alt="X"
@@ -748,7 +727,6 @@ function Footer() {
           >
             <img
               decoding="async"
-              fetchPriority="low"
               loading="lazy"
               src="/instagram.webp"
               alt="Instagram"
@@ -762,7 +740,6 @@ function Footer() {
           >
             <img
               decoding="async"
-              fetchPriority="low"
               loading="lazy"
               src="/linkedin.webp"
               alt="LinkedIn"
@@ -776,7 +753,6 @@ function Footer() {
           >
             <img
               decoding="async"
-              fetchPriority="low"
               loading="lazy"
               src="/gmail.webp"
               alt="Gmail"
@@ -790,7 +766,6 @@ function Footer() {
           >
             <img
               decoding="async"
-              fetchPriority="low"
               loading="lazy"
               src="/whatsapp.webp"
               alt="Whatsapp"
@@ -804,7 +779,6 @@ function Footer() {
           >
             <img
               decoding="async"
-              fetchPriority="low"
               loading="lazy"
               src="/youtube.webp"
               alt="Youtube"
@@ -818,7 +792,6 @@ function Footer() {
         <div className="flex flex-col text-white items-center md:items-start mb-4 md:mb-0  md:mr-6">
           <img
             decoding="async"
-            fetchPriority="low"
             loading="lazy"
             className="w-10 scale-[4] md:w-14 md:scale-[3] lg:scale-[4] m-auto"
             src={startupLogo}

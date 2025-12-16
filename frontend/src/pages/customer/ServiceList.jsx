@@ -407,7 +407,6 @@ const ServiceList = ({ onSwitchToLogin }) => {
           <div className="categoryHero">
             <img
               decoding="async"
-              fetchPriority="low"
               loading="lazy" // src={bannerMap[categoryData.title] || carBanner}
               src={bannerMap[categoryData.title] || djBanner}
               alt={categoryData.title}

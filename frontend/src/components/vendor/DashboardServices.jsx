@@ -992,7 +992,6 @@ const DashboardServices = () => {
                           ) : (
                             <img
                               decoding="async"
-                              fetchPriority="low"
                               loading="lazy"
                               src={mediaUrl}
                               alt={`thumb-${i}`}
@@ -1025,7 +1024,6 @@ const DashboardServices = () => {
                           {preview.type === "image" ? (
                             <img
                               decoding="async"
-                              fetchPriority="low"
                               loading="lazy"
                               src={preview.url}
                               alt={`new-preview-${i}`}
@@ -1272,7 +1270,6 @@ const DashboardServices = () => {
                     >
                       <img
                         decoding="async"
-                        fetchPriority="low"
                         loading="lazy"
                         ref={imgRef}
                         src={cropSrc}

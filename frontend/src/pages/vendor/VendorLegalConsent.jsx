@@ -364,7 +364,6 @@ export default function VendorLegalConsent() {
                 <div className="flex flex-col items-center gap-1 w-full">
                   <img
                     decoding="async"
-                    fetchPriority="low"
                     loading="lazy"
                     src={URL.createObjectURL(signatureFile)}
                     alt="Uploaded Signature"
@@ -379,7 +378,6 @@ export default function VendorLegalConsent() {
                   <span>Upload Signature</span>
                   <img
                     decoding="async"
-                    fetchPriority="low"
                     loading="lazy"
                     src="/Upload.webp"
                     alt="Upload Icon"

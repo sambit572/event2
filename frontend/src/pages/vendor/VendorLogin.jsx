@@ -276,7 +276,6 @@ const VendorLogin = ({ onClose, onSwitchToLogin }) => {
           <div className="flex flex-col items-center justify-center text-center space-y-3 z-10">
             <img
               decoding="async"
-              fetchPriority="low"
               loading="lazy"
               src="../new-illustrator.webp"
               alt="Welcome"

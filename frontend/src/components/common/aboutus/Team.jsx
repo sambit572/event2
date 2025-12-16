@@ -105,7 +105,6 @@ const Team = () => {
             <div key={index} className="review_card_2">
               <img
                 decoding="async"
-                fetchPriority="low"
                 loading="lazy"
                 src={review.image}
                 alt={review.name}
