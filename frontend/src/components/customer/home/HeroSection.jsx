@@ -147,36 +147,39 @@ export default function HeroSection() {
             >
               <motion.img
                 decoding="async"
-                src="/assets/home/herosection/heroimage4.webp"
-                height="1600"
-                width="763"
+                fetchpriority="high"
                 loading="eager"
-                fetchPriority="high"
                 alt="Preview"
-                className="w-full h-full object-fill rounded-t-[15px]"
+                src="/assets/home/herosection/heroimage4-768.webp"
+                srcSet=" /assets/home/herosection/heroimage4-480.webp 480w, /assets/home/herosection/heroimage4-768.webp 768w, /assets/home/herosection/heroimage4-1024.webp 1024w,/assets/home/herosection/heroimage4-1440.webp 1440w"
+                sizes="(max-width: 640px) 90vw, (max-width: 1024px) 60vw, 480px"
+                width="480"
+                height="800"
+                className="w-full h-full object-cover rounded-t-[15px]"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 4 }}
+                transition={{ duration: 1.2 }}
               />
             </div>
           </div>
         </div>
+      </div>
 
-        {/* ===== Floating Cards (Outside Circle) ===== */}
+      {/* ===== Floating Cards (Outside Circle) ===== */}
 
-        {/* Top Left Card */}
-        <motion.div
-          initial={{
-            opacity: 0,
-            x:
-              typeof window !== "undefined" && window.innerWidth < 640
-                ? -20
-                : -100,
-          }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 2, ease: "easeInOut" }}
-          className="
+      {/* Top Left Card */}
+      <motion.div
+        initial={{
+          opacity: 0,
+          x:
+            typeof window !== "undefined" && window.innerWidth < 640
+              ? -20
+              : -100,
+        }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 2, ease: "easeInOut" }}
+        className="
     absolute z-30 bg-blue-400 shadow-2xl rounded-2xl p-1
     w-20 top-8 left-0              /* MOBILE DEFAULT */
 sm-mid:left-4 sm-mid:w-24
@@ -185,35 +188,46 @@ sm-mid:left-4 sm-mid:w-24
 
     lg:w-44 lg:top-20 lg:left-28  /* DESKTOP (YOUR ORIGINAL VALUES) */
   "
-        >
-          <img
-            decoding="async"
-            src="/assets/home/herosection/heroimage3.webp"
-            height="579"
-            width="540"
-            loading="lazy"
-            alt="Preview"
-            className="w-full h-20 sm:h-36 md:h-40 lg:h-44 object-fill rounded-xl"
-          />
+      >
+        <img
+          decoding="async"
+          loading="lazy" // ✅ critical for FCP
+          src="/assets/home/herosection/heroimage3-160.webp"
+          srcSet="
+    /assets/home/herosection/heroimage3-40.webp 40w,
+    /assets/home/herosection/heroimage3-80.webp 80w,
+    /assets/home/herosection/heroimage3-160.webp 160w,
+    /assets/home/herosection/heroimage3-320.webp 320w
+  "
+          sizes="
+    (max-width: 640px) 40px,
+    (max-width: 1024px) 144px,
+    176px
+  "
+          width="176"
+          height="176"
+          alt="Preview"
+          className="w-full h-20 sm:h-36 md:h-40 lg:h-44 object-cover rounded-xl"
+        />
 
-          {/* <span className="absolute top-3 right-3 bg-black text-white text-xs px-2 py-[2px] rounded-full">
+        {/* <span className="absolute top-3 right-3 bg-black text-white text-xs px-2 py-[2px] rounded-full">
               2:01
             </span> */}
-        </motion.div>
+      </motion.div>
 
-        {/* Middle Left Card */}
-        <motion.div
-          initial={{
-            opacity: 0,
-            x:
-              typeof window !== "undefined" && window.innerWidth < 640
-                ? -20
-                : -100,
-          }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 2, ease: "easeInOut" }}
-          className="
+      {/* Middle Left Card */}
+      <motion.div
+        initial={{
+          opacity: 0,
+          x:
+            typeof window !== "undefined" && window.innerWidth < 640
+              ? -20
+              : -100,
+        }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 2, ease: "easeInOut" }}
+        className="
     absolute z-50 flex space-x-1 bg-stone-800 text-green92 shadow-xl
     rounded-2xl py-0 px-2
 
@@ -227,28 +241,28 @@ sm-mid:left-8
 
     w-20 sm:w-36 md:w-40 lg:w-40
   "
-        >
-          <VscStarFull />
-          <VscStarFull />
-          <VscStarFull />
-          <VscStarFull />
+      >
+        <VscStarFull />
+        <VscStarFull />
+        <VscStarFull />
+        <VscStarFull />
 
-          <IoStarHalfOutline />
-        </motion.div>
+        <IoStarHalfOutline />
+      </motion.div>
 
-        {/*bottom Left Card */}
-        <motion.div
-          initial={{
-            opacity: 0,
-            x:
-              typeof window !== "undefined" && window.innerWidth < 640
-                ? -20
-                : -100,
-          }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 2, ease: "easeInOut" }}
-          className="
+      {/*bottom Left Card */}
+      <motion.div
+        initial={{
+          opacity: 0,
+          x:
+            typeof window !== "undefined" && window.innerWidth < 640
+              ? -20
+              : -100,
+        }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 2, ease: "easeInOut" }}
+        className="
     absolute z-30 bg-purple32 shadow-xl rounded-2xl py-1 px-2
     w-24 left-0 bottom-4            /* MOBILE (360px–480px) */
 sm-mid:w-28
@@ -258,31 +272,29 @@ sm-mid:w-28
 
     lg:w-[250px] lg:left-8 lg:bottom-16 /* DESKTOP (your original) */
   "
-        >
-          <p className="font-bold text-xl sm:text-3xl">
-            <p className="text-gray-700 text-sm font-semibold sm:text-xl">
-              Up to
-            </p>
-            80%
-          </p>
+      >
+        <p className="font-bold text-xl sm:text-3xl">
           <p className="text-gray-700 text-sm font-semibold sm:text-xl">
-            Pay With EMI
+            Up to
           </p>
-        </motion.div>
+          80%
+        </p>
+        <p className="text-gray-700 text-sm font-semibold sm:text-xl">
+          Pay With EMI
+        </p>
+      </motion.div>
 
-        {/* Top Right Card */}
-        <motion.div
-          initial={{
-            opacity: 0,
-            x:
-              typeof window !== "undefined" && window.innerWidth < 640
-                ? 20
-                : 100,
-          }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 2, ease: "easeInOut" }}
-          className="
+      {/* Top Right Card */}
+      <motion.div
+        initial={{
+          opacity: 0,
+          x:
+            typeof window !== "undefined" && window.innerWidth < 640 ? 20 : 100,
+        }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 2, ease: "easeInOut" }}
+        className="
     absolute z-10 bg-aceeff shadow-xl rounded-2xl px-2 py-1
     w-24  h-204 top-8 right-0                        /* MOBILE (360px–480px) */
 sm-mid:right-6 sm-mid:w-24
@@ -292,17 +304,17 @@ sm-mid:right-6 sm-mid:w-24
 
     lg:w-[320px] lg:p-4 lg:top-12 lg:right-2 lg:h-40 lg:pr-0  /* DESKTOP (your original position & size) */
   "
-        >
-          <h2 className="font-bold text-xl sm:text-6xl">Join</h2>
-          <p className="text-gray-800 text-md font-bold sm:text-xl">
-            As A Vendor
-          </p>
-          <p className="text-gray-800 font-semibold text-xs sm:text-sm">
-            With zero cost
-          </p>
+      >
+        <h2 className="font-bold text-xl sm:text-6xl">Join</h2>
+        <p className="text-gray-800 text-md font-bold sm:text-xl">
+          As A Vendor
+        </p>
+        <p className="text-gray-800 font-semibold text-xs sm:text-sm">
+          With zero cost
+        </p>
 
-          <FaArrowTrendUp
-            className="
+        <FaArrowTrendUp
+          className="
     absolute text-stone-800 opacity-20
     w-8 h-10 scale-[2]
     lg:w-32 lg:h-20
@@ -310,22 +322,20 @@ sm-mid:right-6 sm-mid:w-24
     right-8 bottom-6
     z-20 pointer-events-none
   "
-          />
-        </motion.div>
+        />
+      </motion.div>
 
-        {/* Bottom Right Card */}
-        <motion.div
-          initial={{
-            opacity: 0,
-            x:
-              typeof window !== "undefined" && window.innerWidth < 640
-                ? 20
-                : 100,
-          }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 2, ease: "easeInOut" }}
-          className="
+      {/* Bottom Right Card */}
+      <motion.div
+        initial={{
+          opacity: 0,
+          x:
+            typeof window !== "undefined" && window.innerWidth < 640 ? 20 : 100,
+        }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 2, ease: "easeInOut" }}
+        className="
     absolute z-10 bg-white shadow-xl rounded-2xl p-0
     w-28  bottom-4 right-0              /* MOBILE (360–480px) */
 sm-mid:right-2 sm-mid:w-28
@@ -335,27 +345,37 @@ sm-mid:right-2 sm-mid:w-28
 
     lg:w-[240px] lg:bottom-20 lg:right-6    /* DESKTOP — YOUR ORIGINAL VALUES */
   "
-        >
-          <img
-            decoding="async"
-            src="/assets/home/herosection/heroimage1.webp"
-            height="1024"
-            width="1600"
-            loading="lazy"
-            alt="Preview"
-            className="w-full h-20 sm:h-32 md:h-44 object-cover rounded-t-xl"
-          />
+      >
+        <img
+          decoding="async"
+          loading="lazy" // ✅ very important
+          src="/assets/home/herosection/heroimage1-480.webp"
+          srcSet="
+    /assets/home/herosection/heroimage1-360.webp 360w,
+    /assets/home/herosection/heroimage1-480.webp 480w,
+    /assets/home/herosection/heroimage1-720.webp 720w,
+    /assets/home/herosection/heroimage1-960.webp 960w
+  "
+          sizes="
+    (max-width: 640px) 90vw,
+    (max-width: 1024px) 60vw,
+    662px
+  "
+          width="662"
+          height="364"
+          alt="Preview"
+          className="w-full h-20 sm:h-32 md:h-44 object-cover rounded-t-xl"
+        />
 
-          <div className="flex items-center justify-center flex-wrap sm:gap-2 mt-0 sm:mt-2">
-            <span className="bg-red-600 text-white text-xs sm:text-sm px-2 py-[2px] rounded-lg">
-              1.5k
-            </span>
-            <span>❤️</span>
+        <div className="flex items-center justify-center flex-wrap sm:gap-2 mt-0 sm:mt-2">
+          <span className="bg-red-600 text-white text-xs sm:text-sm px-2 py-[2px] rounded-lg">
+            1.5k
+          </span>
+          <span>❤️</span>
 
-            <span className=" text-xs">Book Now</span>
-          </div>
-        </motion.div>
-      </div>
+          <span className=" text-xs">Book Now</span>
+        </div>
+      </motion.div>
     </div>
   );
 }

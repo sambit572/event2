@@ -17,9 +17,15 @@ const CategoryCard = ({ category }) => {
 
       <div className="imageWrapper">
         <img
-          decoding="async"
           loading="lazy"
-          src={category.image}
+          decoding="async"
+          src={category.image.src}
+          srcSet={category.image.srcSet}
+          sizes="
+    (max-width: 640px) 100vw,
+    (max-width: 1024px) 50vw,
+    400px
+  "
           alt={category.title}
           className="courseImage"
         />

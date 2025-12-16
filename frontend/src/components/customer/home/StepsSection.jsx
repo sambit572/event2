@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import searchImg from "/category/search.webp";
-import compareImg from "/category/price-comparison.webp";
-import negotiateImg from "/category/negotiation.webp";
-import bookingImg from "/category/booking.webp";
-import payImg from "../../../../public/category/pay_now-removebg-preview.webp";
-import enjoyImg from "/category/family.webp";
+import searchImg from "../../../../public/category/search-320.webp";
+import compareImg from "../../../../public/category/price-comparison-320.webp";
+import negotiateImg from "../../../../public/category/negotiation-320.webp";
+import bookingImg from "../../../../public/category/booking-320.webp";
+import payImg from "../../../../public/category/pay_now-removebg-preview-320.webp";
+import enjoyImg from "../../../../public/category/family-320.webp";
 
 const steps = [
   {

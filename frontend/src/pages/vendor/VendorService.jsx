@@ -270,8 +270,8 @@ function VendorService({ currentStep }) {
       "Stage & Backdrop Floral Decor",
       "Birthday Party Decor",
     ],
-    "Ceremonial Ride": ["Bridal Car", "Luxury Car", "Classic Car"],
-    "Luxury Ride": ["Bridal Car", "Luxury Car", "Classic Car"],
+    "Ceremonial Ride": ["Bridal Ride", "Luxury Ride", "Classic Ride"],
+    "Luxury Ride": ["Bridal Ride", "Luxury Ride", "Classic Ride"],
     Fireworks: ["Wedding Fireworks", "Indoor Fireworks", "Outdoor Fireworks"],
     "Card Design & Printing": [
       "Wedding Invitations",

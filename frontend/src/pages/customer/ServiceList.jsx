@@ -18,15 +18,15 @@ import banquetBanner from "../../assets/serviceListBanner/banquet-banner.webp";
 import danceBanner from "../../assets/serviceListBanner/classical-ban.webp";
 import islamicBanner from "../../assets/serviceListBanner/moulib-ban (2).webp";
 import christianBanner from "../../assets/serviceListBanner/christian-ban.webp";
-import panditBanner from "../../assets/home/categoriesImages/pandit.webp";
+import panditBanner from "../../../public/categories/pandit.webp";
 import makeupBanner from "../../assets/serviceListBanner/beauty-ban.webp";
 import floralBanner from "../../assets/serviceListBanner/flower-ban.webp";
 import carBanner from "../../assets/serviceListBanner/car-ban.webp";
-import fireworksBanner from "../../assets/home/categoriesImages/fireworks.webp";
-import cardBanner from "../../assets/home/categoriesImages/marriage-card.webp";
-import magicBanner from "../../assets/home/categoriesImages/magician.webp";
-import stageBanner from "../../assets/home/categoriesImages/stage_decor.webp";
-import eventBanner from "../../assets/home/categoriesImages/event_company.webp";
+import fireworksBanner from "../../../public/categories/fireworks.webp";
+import cardBanner from "../../../public/categories/marriage-card.webp";
+import magicBanner from "../../../public/categories/magician.webp";
+// import stageBanner from "../../assets/home/categoriesImages/stage_decor.webp";
+import eventBanner from "../../../public/categories/event_company.webp";
 import balloonBanner from "../../assets/serviceListBanner/balloon banner.webp";
 
 const ServiceCardSkeleton = () => (
@@ -78,7 +78,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
     Fireworks: fireworksBanner,
     "Card Design & Printing": cardBanner,
     "Magic Shows": magicBanner,
-    "Stage Decor": stageBanner,
+    // "Stage Decor": stageBanner,
     "Event Management Company": eventBanner,
     "Balloon Decor": balloonBanner,
   };
@@ -162,8 +162,8 @@ const ServiceList = ({ onSwitchToLogin }) => {
       "Stage & Backdrop Floral Decor",
       "Birthday Party Decor",
     ],
-    "Ceremonial Ride": ["All", "Bridal Car", "Luxury Car", "Classic Car"],
-    "Luxury Ride": ["All", "Bridal Car", "Luxury Car", "Classic Car"],
+    "Ceremonial Ride": ["All", "Bridal Ride", "Luxury Ride", "Classic Ride"],
+    "Luxury Ride": ["All", "Bridal Ride", "Luxury Ride", "Classic Ride"],
     Fireworks: [
       "All",
       "Wedding Fireworks",
