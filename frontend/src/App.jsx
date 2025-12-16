@@ -20,9 +20,11 @@ import ServiceDetails from "./pages/customer/ServiceDetails";
 import VendorLegalConsent from "./pages/vendor/VendorLegalConsent";
 import VendorPayment from "./pages/vendor/VendorPayment";
 import VendorThankYou from "./pages/vendor/VendorThankYou";
-import VendorRegistration from "./pages/vendor/VendorRegistration";
+const VendorRegistration = React.lazy(() =>
+  import("./pages/vendor/VendorRegistration")
+);
 import VendorService from "./pages/vendor/VendorService";
-import VendorLogin from "./pages/vendor/VendorLogin.jsx";
+const VendorLogin = React.lazy(() => import("./pages/vendor/VendorLogin.jsx"));
 
 import AboutUs from "./pages/common/AboutUs";
 import HelpUs from "./pages/common/HelpUs";
@@ -38,11 +40,17 @@ import PopUp from "./socket/user/CustomerNegotiationModal.jsx";
 import VendorResetPassword from "./pages/vendor/VendorResetPass.jsx";
 
 // Vendor Pages
-import DashBoardMain from "./components/vendor/DashBoardMain.jsx";
-import AddServiceInDashboard from "./components/vendor/AddServiceInDashboard.jsx";
+const DashBoardMain = React.lazy(() =>
+  import("./components/vendor/DashBoardMain.jsx")
+);
+const AddServiceInDashboard = React.lazy(() =>
+  import("./components/vendor/AddServiceInDashboard.jsx")
+);
 
 import ProtectedRoute from "./utils/ProtectedRoutes.jsx";
-import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
+const AdminDashboard = React.lazy(() =>
+  import("./pages/admin/AdminDashboard.jsx")
+);
 
 import BackToTop from "./pages/common/BackToTop";
 
@@ -52,7 +60,9 @@ import { setVendor } from "./redux/VendorSlice.js";
 import ScrollToTop from "./components/common/ScrollToTop.jsx";
 import AddToCart from "./components/customer/YourCart/AddToCart.jsx";
 import DashboardEnforcement from "./utils/DashboardEnforcement.jsx";
-import BookingSuccess from "./pages/common/BookingSuccess.jsx";
+const BookingSuccess = React.lazy(() =>
+  import("./pages/common/BookingSuccess.jsx")
+);
 import PrivacyPolicy from "./components/common/PrivacyPolicy.jsx";
 import RefundPolicy from "./components/common/RefundPolicy.jsx";
 import TermsAndConditions from "./components/common/TermsAndConditions.jsx";
@@ -232,7 +242,14 @@ const App = () => {
           />
           <Route path="/search" element={<SearchPage />} />
           {/* <Route path="/categories" element={<CategoryCard />}></Route> */}
-          <Route path="/reviews" element={<ReviewSlider />} />
+          <Route
+            path="/reviews"
+            element={
+              <Suspense>
+                <ReviewSlider />{" "}
+              </Suspense>
+            }
+          />
           <Route path="/faqs" element={<FaqSection />} />
           {/* Other routes */}
           <Route
@@ -267,7 +284,9 @@ const App = () => {
             path="/vendor/register"
             element={
               <ProtectedRoute>
-                <VendorRegistration />
+                <Suspense>
+                  <VendorRegistration />
+                </Suspense>
               </ProtectedRoute>
             }
           />
@@ -283,7 +302,9 @@ const App = () => {
             path="/dashboard"
             element={
               <DashboardEnforcement onOpenVendorLogin={handleOpenVendorLogin}>
-                <DashBoardMain />
+                <Suspense>
+                  <DashBoardMain />
+                </Suspense>
               </DashboardEnforcement>
             }
           />
@@ -291,7 +312,9 @@ const App = () => {
             path="/vendor/services/addServices"
             element={
               <DashboardEnforcement onOpenVendorLogin={handleOpenVendorLogin}>
-                <AddServiceInDashboard />
+                <Suspense>
+                  <AddServiceInDashboard />
+                </Suspense>
               </DashboardEnforcement>
             }
           />
@@ -321,10 +344,24 @@ const App = () => {
           ></Route>
           <Route path="/pop-up/:userDetailsId" element={<PopUp />}></Route>
           <Route path="/feedback" element={<Feedback />} />
-          <Route path="/admin" element={<AdminDashboard />} />
+          <Route
+            path="/admin"
+            element={
+              <Suspense>
+                <AdminDashboard />
+              </Suspense>
+            }
+          />
           <Route path="*" element={<ErrorPage />} />
           <Route path="/report" element={<MyReports />} />
-          <Route path="/booking-success" element={<BookingSuccess />} />
+          <Route
+            path="/booking-success"
+            element={
+              <Suspense>
+                <BookingSuccess />{" "}
+              </Suspense>
+            }
+          />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/refund-policy" element={<RefundPolicy />} />
           <Route

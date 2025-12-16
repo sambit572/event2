@@ -1,139 +1,120 @@
-import image1 from "../assets/home/categoriesImages/dj_image.webp";
-import image2 from "../assets/home/categoriesImages/bass-brand.webp";
-import image3 from "../assets/home/categoriesImages/tent_house.webp";
-import image4 from "../assets/home/categoriesImages/photographer.webp";
-import image5 from "../assets/home/categoriesImages/pandit.webp";
-import image6 from "../assets/home/categoriesImages/magician.webp";
-import image7 from "../assets/home/categoriesImages/classical_music_and_dance.webp";
-import image8 from "../assets/home/categoriesImages/moulbi.webp";
-import image9 from "../assets/home/categoriesImages/father.webp";
-import image10 from "../assets/aboutUs/catering_img.webp";
-import image11 from "../assets/home/categoriesImages/bride-mehendi-&-makeup.webp";
-import image12 from "../assets/home/categoriesImages/flower-decor.webp";
-import image13 from "../assets/home/categoriesImages/ceremonial_ride.webp";
-import image20 from "../assets/home/categoriesImages/luxury_ride.webp";
-import image14 from "../assets/home/categoriesImages/fireworks.webp";
-import image15 from "../assets/home/categoriesImages/marriage-card.webp";
-import image16 from "../assets/home/categoriesImages/banquithall.webp";
-import image17 from "../assets/home/categoriesImages/stage_decor.webp";
-import image18 from "../assets/home/categoriesImages/event_company.webp";
-import image19 from "../assets/home/categoriesImages/ballon decor.webp";
+import { getCategoryImage } from "./getCategoryImage";
 
 export const CategoryData = [
   {
     id: "dj",
     title: "DJ Services & Brash Band",
-    image: image1,
+    image: getCategoryImage("dj_image"),
     tagline: "Beats That Breathe Fun",
   },
   {
     id: "band",
     title: "Music Concert & Orchestra",
-    image: image2,
+    image: getCategoryImage("bass-brand"),
     tagline: "Brass Beats the Best",
   },
   {
     id: "tenthouse",
     title: "Decor & Tenthouse",
-    image: image3,
+    image: getCategoryImage("tent_house"),
     tagline: "Dream Drapes, Divine Vibes",
   },
   {
     id: "photographer",
     title: "Photo & Videography",
-    image: image4,
+    image: getCategoryImage("photographer"),
     tagline: "Freeze Time with Frames",
   },
   {
     id: "catering",
     title: "Food & Catering",
-    image: image10,
+    image: getCategoryImage("catering_img"),
     tagline: "Flavours that Speak Love",
   },
   {
     id: "banquet-hall",
     title: "Banquet Hall & Mandap",
-    image: image16,
+    image: getCategoryImage("banquithall"),
     tagline: "Where Celebrations Begin",
   },
 
   {
     id: "cultural-troupe",
     title: "Classical Music & Dance",
-    image: image7,
+    image: getCategoryImage("classical_music_and_dance"),
     tagline: "Echoes of Celebration",
   },
   {
     id: "Beauty Makeover",
     title: "Beauty Makeover",
-    image: image11,
+    image: getCategoryImage("bride-mehendi-&-makeup"),
     tagline: "Beauty in Every Brush",
   },
   {
     id: "balloon-decor",
     title: "Balloon Decor",
-    image: image19,
+    image: getCategoryImage("ballon decor"),
     tagline: "Colorful Creations for Every Celebration",
   },
   {
     id: "islamic",
     title: "Islamic Maulbi",
-    image: image8,
+    image: getCategoryImage("moulbi"),
     tagline: "Prayers that Guide Hearts",
   },
   {
     id: "christian",
     title: "Christian Priest",
-    image: image9,
+    image: getCategoryImage("father"),
     tagline: "Grace in Every Verse",
   },
   {
     id: "pandit",
     title: "Hindu Pandit",
-    image: image5,
+    image: getCategoryImage("pandit"),
     tagline: "Mantras Meet Moments",
   },
   {
     id: "floral",
     title: "Floral Decor",
-    image: image12,
+    image: getCategoryImage("flower-decor"),
     tagline: "Blooms that Whisper Joy",
   },
   {
     id: "transport",
     title: "Ceremonial Ride",
-    image: image13,
+    image: getCategoryImage("ceremonial_ride"),
     tagline: "Royal Rides Await You",
   },
   {
     id: "luxury-transport",
     title: "Luxury Ride",
-    image: image20,
+    image: getCategoryImage("luxury_ride"),
     tagline: "Luxury Rides Await You",
   },
   {
     id: "fireworks",
     title: "Fireworks",
-    image: image14,
+    image: getCategoryImage("fireworks"),
     tagline: "Skies that Spark Magic",
   },
 
   {
     id: "card-design",
     title: "Card Design & Printing",
-    image: image15,
+    image: getCategoryImage("marriage-card"),
     tagline: "Words That Welcome",
   },
   {
     id: "magic",
     title: "Magic Shows",
-    image: image6,
+    image: getCategoryImage("magician"),
     tagline: "Illusions that Amaze All",
   },
   {
     id: "event-management",
     title: "Event Management Company",
-    image: image18,
+    image: getCategoryImage("event_company"),
     tagline: "Crafting Moments, Managing Memories",
   },
 ];

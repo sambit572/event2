@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from "react";
 import "./Footer.css";
 import { Navigate, useNavigate } from "react-router-dom";
-import startupLogo from "../../assets/home/startup-india.webp";
+import startup48 from "../../assets/home/startup-india-48.webp";
+import startup64 from "../../assets/home/startup-india-64.webp";
+import startup96 from "../../assets/home/startup-india-96.webp";
+import startup128 from "../../assets/home/startup-india-128.webp";
+import startup256 from "../../assets/home/startup-india-256.webp";
+import wa40 from "../../../public/whatsapp-40.webp";
+import wa80 from "../../../public/whatsapp-80.webp";
+import insta40 from "../../../public/instagram-40.webp";
+import insta80 from "../../../public/instagram-80.webp";
+
 export const categoriesData = {
   "DJ Services & Brash Band": [
     "Wedding DJ",
@@ -190,7 +199,10 @@ function Footer() {
                   decoding="async"
                   fetchpriority="low"
                   loading="lazy"
-                  src="/gmail.webp"
+                  src="/gmail-40.webp"
+                  srcSet="/gmail-40.webp 1x, /gmail-80.webp 2x"
+                  height={16}
+                  width={16}
                   alt="Email"
                   className="icon"
                 />{" "}
@@ -206,7 +218,10 @@ function Footer() {
                 decoding="async"
                 fetchpriority="low"
                 loading="lazy"
-                src="/phone-call.webp"
+                src="/phone-call-32.webp"
+                srcSet="/phone-call-32.webp 1x, /phone-call-64.webp 2x"
+                height={16}
+                width={16}
                 alt="Phone"
                 className="icon"
               />{" "}
@@ -221,7 +236,10 @@ function Footer() {
                 decoding="async"
                 fetchpriority="low"
                 loading="lazy"
-                src="/phone-call.webp"
+                src="/phone-call-32.webp"
+                srcSet="/phone-call-32.webp 1x, /phone-call-64.webp 2x"
+                height={16}
+                width={16}
                 alt="Phone"
                 className="icon"
               />{" "}
@@ -235,7 +253,10 @@ function Footer() {
                 decoding="async"
                 fetchpriority="low"
                 loading="lazy"
-                src="/placeholder.webp"
+                src="/placeholder-32.webp"
+                srcSet="/placeholder-32.webp 1x, /placeholder-64.webp 2x"
+                height={16}
+                width={16}
                 alt="Location"
                 className="icon"
               />{" "}
@@ -588,7 +609,10 @@ function Footer() {
                       decoding="async"
                       fetchpriority="low"
                       loading="lazy"
-                      src="/gmail.webp"
+                      src="/gmail-40.webp"
+                      srcSet="/gmail-40.webp 1x, /gmail-80.webp 2x"
+                      height={16}
+                      width={16}
                       className="icon"
                       alt=""
                     />{" "}
@@ -599,7 +623,10 @@ function Footer() {
                       decoding="async"
                       fetchpriority="low"
                       loading="lazy"
-                      src="/phone-call.webp"
+                      src="/phone-call-32.webp"
+                      srcSet="/phone-call-32.webp 1x, /phone-call-64.webp 2x"
+                      height={16}
+                      width={16}
                       className="icon"
                       alt=""
                     />{" "}
@@ -610,7 +637,10 @@ function Footer() {
                       decoding="async"
                       fetchpriority="low"
                       loading="lazy"
-                      src="/placeholder.webp"
+                      src="/placeholder-32.webp"
+                      srcSet="/placeholder-32.webp 1x, /placeholder-64.webp 2x"
+                      height={16}
+                      width={16}
                       className="icon"
                       alt=""
                     />{" "}
@@ -719,12 +749,14 @@ function Footer() {
             rel="noopener noreferrer"
           >
             <img
-              decoding="async"
-              fetchpriority="low"
-              loading="lazy"
-              src="/facebook.webp"
+              src="facebook-40.webp"
+              srcset="facebook-40.webp 1x, facebook-80.webp 2x"
+              width="40"
+              height="40"
               alt="Facebook"
-              className="social-icon"
+              loading="lazy"
+              decoding="async"
+              class="social-icon"
             />
           </a>
           <a
@@ -747,11 +779,15 @@ function Footer() {
             rel="noopener noreferrer"
           >
             <img
+              src={insta40}
+              srcSet={`${insta40} 40w, ${insta80} 80w`}
+              sizes="35px"
+              width="40"
+              height="40"
+              alt="Instagram"
+              loading="lazy"
               decoding="async"
               fetchpriority="low"
-              loading="lazy"
-              src="/instagram.webp"
-              alt="Instagram"
               className="social-icon"
             />
           </a>
@@ -764,7 +800,10 @@ function Footer() {
               decoding="async"
               fetchpriority="low"
               loading="lazy"
-              src="/linkedin.webp"
+              src="/linkedin-40.webp"
+              srcSet="linkedin-40.webp 1x, linkedin-80.webp 2x"
+              height={40}
+              width={40}
               alt="LinkedIn"
               className="social-icon"
             />
@@ -778,7 +817,10 @@ function Footer() {
               decoding="async"
               fetchpriority="low"
               loading="lazy"
-              src="/gmail.webp"
+              src="/gmail-40.webp"
+              srcSet="/gmail-40.webp 1x, /gmail-80.webp 2x"
+              height={40}
+              width={40}
               alt="Gmail"
               className="social-icon"
             />
@@ -789,11 +831,15 @@ function Footer() {
             rel="noopener noreferrer"
           >
             <img
+              src={wa40}
+              srcSet={`${wa40} 40w, ${wa80} 80w`}
+              sizes="35px"
+              width="40"
+              height="40"
+              alt="Whatsapp"
+              loading="lazy"
               decoding="async"
               fetchpriority="low"
-              loading="lazy"
-              src="/whatsapp.webp"
-              alt="Whatsapp"
               className="social-icon"
             />
           </a>
@@ -806,8 +852,11 @@ function Footer() {
               decoding="async"
               fetchpriority="low"
               loading="lazy"
-              src="/youtube.webp"
+              src="/youtube-40.webp"
+              srcSet="/youtube-40.webp 1x, /youtube-80.webp 2x"
               alt="Youtube"
+              height={40}
+              width={40}
               className="social-icon"
             />
           </a>
@@ -815,16 +864,31 @@ function Footer() {
       </div>
       <div className="border-t border-white mt-4 mb-2 pt-4 lg:relative flex flex-row sm:flex-row  md:flex-row items-start md:items-center">
         {/* Startup Logo */}
-        <div className="flex flex-col text-white items-center md:items-start mb-4 md:mb-0  md:mr-6">
+        <div className="flex flex-col text-white items-center md:items-start lg:mt-[-20px] md:mb-0  md:mr-6">
           <img
             decoding="async"
-            fetchpriority="low"
             loading="lazy"
-            className="w-10 scale-[4] md:w-14 md:scale-[3] lg:scale-[4] m-auto"
-            src={startupLogo}
+            fetchpriority="low"
             alt="Startup Logo"
+            src={startup256}
+            srcSet={`
+    ${startup48} 48w,
+    ${startup64} 64w,
+    ${startup96} 96w,
+    ${startup128} 128w,
+    ${startup256} 256w
+  `}
+            sizes="
+    (max-width: 640px) 64px,
+    (max-width: 1024px) 96px,
+    160px
+  "
+            width="256"
+            height="256"
+            className="m-auto w-16 lg:mt-[-20px] md:w-24 lg:w-40"
           />
-          <p className="mt-0 text-[10px] text-center md:text-left">
+
+          <p className="mt-0 lg:mt-[-60px] text-[10px] text-center md:text-left">
             EventsBridge a startup india recognized Company
           </p>
         </div>

@@ -7,7 +7,10 @@ import puri from "../../assets/famousCultural/konark-and-puri-jagannath-temple.w
 import odissi from "../../assets/famousCultural/odishi dance1.webp";
 
 import tirupati from "../../assets/famousCultural/Tirupati-Balaji-temple.webp";
-import kuchipudi from "../../assets/famousCultural/kuchipudi.webp";
+import kuchipudi320 from "../../assets/famousCultural/kuchipudi-320.webp";
+import kuchipudi480 from "../../assets/famousCultural/kuchipudi-480.webp";
+import kuchipudi768 from "../../assets/famousCultural/kuchipudi-768.webp";
+import kuchipudi1024 from "../../assets/famousCultural/kuchipudi-1024.webp";
 
 import ponungDance from "../../assets/famousCultural/ponung.webp";
 import tawang from "../../assets/famousCultural/tawang-monastery.webp";
@@ -27,7 +30,11 @@ import fugdiDance from "../../assets/famousCultural/Fugdi_Dancer.webp";
 import garba from "../../assets/famousCultural/garba-dance-festival.webp";
 import somnath from "../../assets/famousCultural/Somnath_Temple.webp";
 
-import phagDanceImage from "../../assets/famousCultural/hariyana dance.webp";
+import phagDance320 from "../../assets/famousCultural/hariyana dance-320.webp";
+import phagDance480 from "../../assets/famousCultural/hariyana dance-480.webp";
+import phagDance768 from "../../assets/famousCultural/hariyana dance-768.webp";
+import phagDance1024 from "../../assets/famousCultural/hariyana dance-1024.webp";
+
 import kurukshetraImage from "../../assets/famousCultural/kurukshetra-haryana.webp";
 
 import nati from "../../assets/famousCultural/Nati-Himachal-Pradesh.webp";
@@ -49,7 +56,10 @@ import lavani from "../../assets/famousCultural/Lavani-dancer-5.webp";
 import gatewayIndia from "../../assets/famousCultural/gateway.webp";
 
 import loktakLake from "../../assets/famousCultural/manipur.webp";
-import rasLila from "../../assets/famousCultural/manipur rasleela.webp";
+import rasleela320 from "../../assets/famousCultural/manipur rasleela-320.webp";
+import rasleela480 from "../../assets/famousCultural/manipur rasleela-480.webp";
+import rasleela768 from "../../assets/famousCultural/manipur rasleela-768.webp";
+import rasleela1024 from "../../assets/famousCultural/manipur rasleela-1024.webp";
 
 import livingRootBridge from "../../assets/famousCultural/meghalaya.webp";
 import wangala from "../../assets/famousCultural/wangala.webp";
@@ -57,7 +67,11 @@ import wangala from "../../assets/famousCultural/wangala.webp";
 import cheraw from "../../assets/famousCultural/bamboo.webp";
 import solomon from "../../assets/famousCultural/solomon misoram.webp";
 
-import bharatanatyam from "../../assets/famousCultural/Bharatnatyam.webp";
+import bharatanatyam320 from "../../assets/famousCultural/Bharatnatyam-320.webp";
+import bharatanatyam480 from "../../assets/famousCultural/Bharatnatyam-480.webp";
+import bharatanatyam768 from "../../assets/famousCultural/Bharatnatyam-768.webp";
+import bharatanatyam1024 from "../../assets/famousCultural/Bharatnatyam-1024.webp";
+
 import meenakshi from "../../assets/famousCultural/meenakshi.webp";
 
 import nagaWarDance from "../../assets/famousCultural/nagaland dance.webp";
@@ -83,6 +97,45 @@ import perini from "../../assets/famousCultural/telengana dance .webp";
 import charminar from "../../assets/famousCultural/charminar.webp";
 import hojagiri from "../../assets/famousCultural/hojagiri_dance.webp";
 import tripuraTemple from "../../assets/famousCultural/tripura.webp";
+const phagDanceImage = {
+  src: phagDance480,
+  srcSet: `
+    ${phagDance320} 320w,
+    ${phagDance480} 480w,
+    ${phagDance768} 768w,
+    ${phagDance1024} 1024w
+  `,
+};
+
+const rasLila = {
+  src: rasleela480,
+  srcSet: `
+    ${rasleela320} 320w,
+    ${rasleela480} 480w,
+    ${rasleela768} 768w,
+    ${rasleela1024} 1024w
+  `,
+};
+
+const bharatanatyam = {
+  src: bharatanatyam480,
+  srcSet: `
+    ${bharatanatyam320} 320w,
+    ${bharatanatyam480} 480w,
+    ${bharatanatyam768} 768w,
+    ${bharatanatyam1024} 1024w
+  `,
+};
+
+const kuchipudi = {
+  src: kuchipudi480,
+  srcSet: `
+    ${kuchipudi320} 320w,
+    ${kuchipudi480} 480w,
+    ${kuchipudi768} 768w,
+    ${kuchipudi1024} 1024w
+  `,
+};
 
 // // 🌏 Full Indian States & UTs Data
 const states = [
@@ -445,14 +498,41 @@ const StateColumn = ({ statesGroup }) => {
       className="relative overflow-hidden rounded-2xl border-2 border-amber-300 bg-gradient-to-br from-white via-amber-50 to-amber-100 shadow-[0_8px_25px_rgba(0,0,0,0.2)] transform transition-all duration-500 hover:scale-105 hover:shadow-[0_12px_35px_rgba(255,165,0,0.4)]"
       style={{ aspectRatio: "5/3" }}
     >
-      <img
-        decoding="async"
-        fetchpriority="low"
-        loading="lazy"
-        src={currentItem.image}
-        alt={currentItem.name || state.state}
-        className={`w-full h-52 object-cover transition-all duration-700 ease-in-out ${animation}`}
-      />
+<img
+  decoding="async"
+  loading="lazy"
+  fetchpriority="low"
+  alt={currentItem.name || state.state}
+
+  src={
+    typeof currentItem.image === "string"
+      ? currentItem.image
+      : currentItem.image.src
+  }
+
+  srcSet={
+    typeof currentItem.image === "object"
+      ? currentItem.image.srcSet
+      : undefined
+  }
+
+  sizes={
+    typeof currentItem.image === "object"
+      ? `
+        (max-width: 640px) 90vw,
+        (max-width: 1024px) 45vw,
+        370px
+      `
+      : undefined
+  }
+
+  width="370"
+  height="208"
+
+  className={`w-full h-52 object-cover transition-all duration-700 ease-in-out ${animation}`}
+/>
+
+
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
       <div className="absolute bottom-0 left-0 right-0 p-4 text-center text-white">
         {itemIndex === 0 && (

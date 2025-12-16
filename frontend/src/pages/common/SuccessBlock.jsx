@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import PropTypes from "prop-types";
-import namaste from "../../assets/home/categoriesImages/namaste1.webp";
+import namaste from "../../../public/categories/namaste1.webp";
 
 const SuccessBlock = ({ onClose, autoCloseTime = 3000 }) => {
   useEffect(() => {

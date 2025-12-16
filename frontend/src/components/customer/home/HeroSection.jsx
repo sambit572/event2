@@ -4,7 +4,6 @@ import { IoStarHalfOutline } from "react-icons/io5";
 import { VscStarFull } from "react-icons/vsc";
 import { motion, useMotionValue, useTransform } from "framer-motion";
 
-
 export default function HeroSection() {
   const scrollY = useMotionValue(0);
 
@@ -149,16 +148,18 @@ export default function HeroSection() {
               >
                 <motion.img
                   decoding="async"
-                  src="/assets/home/herosection/heroimage4.webp"
-                  height="1600"
-                  width="763"
-                  loading="eager"
                   fetchpriority="high"
+                  loading="eager"
                   alt="Preview"
-                  className="w-full h-full object-fill rounded-t-[15px]"
+                  src="/assets/home/herosection/heroimage4-768.webp"
+                  srcSet=" /assets/home/herosection/heroimage4-480.webp 480w, /assets/home/herosection/heroimage4-768.webp 768w, /assets/home/herosection/heroimage4-1024.webp 1024w,/assets/home/herosection/heroimage4-1440.webp 1440w"
+                  sizes="(max-width: 640px) 90vw, (max-width: 1024px) 60vw, 480px"
+                  width="480"
+                  height="800"
+                  className="w-full h-full object-cover rounded-t-[15px]"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ duration: 4 }}
+                  transition={{ duration: 1.2 }}
                 />
               </div>
             </div>
@@ -190,13 +191,24 @@ sm-mid:left-4 sm-mid:w-24
           >
             <img
               decoding="async"
-              fetchpriority="high"
-              src="/assets/home/herosection/heroimage3.webp"
-              height="579"
-              width="540"
-              loading="eager"
+              loading="lazy" // ✅ critical for FCP
+              fetchpriority="low" // ✅ DO NOT steal bandwidth
+              src="/assets/home/herosection/heroimage3-160.webp"
+              srcSet="
+    /assets/home/herosection/heroimage3-40.webp 40w,
+    /assets/home/herosection/heroimage3-80.webp 80w,
+    /assets/home/herosection/heroimage3-160.webp 160w,
+    /assets/home/herosection/heroimage3-320.webp 320w
+  "
+              sizes="
+    (max-width: 640px) 40px,
+    (max-width: 1024px) 144px,
+    176px
+  "
+              width="176"
+              height="176"
               alt="Preview"
-              className="w-full h-20 sm:h-36 md:h-40 lg:h-44 object-fill rounded-xl"
+              className="w-full h-20 sm:h-36 md:h-40 lg:h-44 object-cover rounded-xl"
             />
 
             {/* <span className="absolute top-3 right-3 bg-black text-white text-xs px-2 py-[2px] rounded-full">
@@ -341,11 +353,22 @@ sm-mid:right-2 sm-mid:w-28
           >
             <img
               decoding="async"
-              fetchpriority="high"
-              src="/assets/home/herosection/heroimage1.webp"
-              height="1024"
-              width="1600"
-              loading="eager"
+              loading="lazy" // ✅ very important
+              fetchpriority="low" // ✅ NOT critical
+              src="/assets/home/herosection/heroimage1-480.webp"
+              srcSet="
+    /assets/home/herosection/heroimage1-360.webp 360w,
+    /assets/home/herosection/heroimage1-480.webp 480w,
+    /assets/home/herosection/heroimage1-720.webp 720w,
+    /assets/home/herosection/heroimage1-960.webp 960w
+  "
+              sizes="
+    (max-width: 640px) 90vw,
+    (max-width: 1024px) 60vw,
+    662px
+  "
+              width="662"
+              height="364"
               alt="Preview"
               className="w-full h-20 sm:h-32 md:h-44 object-cover rounded-t-xl"
             />

@@ -138,6 +138,16 @@ const categories = [
     ],
   },
   {
+    name: "Luxury Ride",
+    defaultWhyChooseUs: [
+      "Premium luxury car collection",
+      "Experienced & professional chauffeurs",
+      "Immaculately maintained vehicles",
+      "Comfortable & stylish travel experience",
+      "Flexible hourly & full-day packages",
+    ],
+  },
+  {
     name: "Fireworks",
     defaultWhyChooseUs: [
       "Licensed & safe fireworks display",
@@ -194,7 +204,7 @@ const categories = [
       "Affordable decoration packages",
       "Unique designs for any celebration",
       "Professional installation team",
-      "High-quality balloons & safe materials"
+      "High-quality balloons & safe materials",
     ],
   },
 ];
