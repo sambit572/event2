@@ -442,10 +442,10 @@
     gap: 0;
   }
   .searchbarIcon {
-    margin-right: 10px;
+    margin-right: -25px;
   }
   .search-bar.active .searchbarIcon {
-    margin-left: -39px;
+    margin-left: -8px;
     width: 69px;
   }
 }
@@ -468,10 +468,10 @@
     margin-left: 0px;
   }
   .searchbarIcon {
-    margin-right: -10px;
+    margin-right: -30px;
   }
   .search-bar.active .searchbarIcon {
-    margin-left: -17px;
+    margin-left: -4px;
     width: 69px;
   }
   .search-and-nav-icons-container {
@@ -492,7 +492,7 @@
     margin-left: 6px;
   }
   .search-bar.active .searchbarIcon {
-    margin-left: -19px;
+    margin-left: -4px;
   }
   .mobile-search-bar-container {
     top: 39px;
@@ -508,10 +508,10 @@
     margin-left: -20px;
   }
   .searchbarIcon {
-    margin-right: -14px;
+    margin-right: -35px;
   }
   .search-bar.active .searchbarIcon {
-    margin-left: -16px;
+    margin-left: 0px;
     width: 69px;
   }
 }
@@ -527,10 +527,10 @@
     width: 120px;
   }
   .searchbarIcon {
-    margin-right: -1px;
+    margin-right: -15px;
   }
   .search-bar.active .searchbarIcon {
-    margin-left: -35px;
+    margin-left: -19px;
     width: 69px;
   }
 }

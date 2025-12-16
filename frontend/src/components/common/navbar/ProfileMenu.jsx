@@ -45,7 +45,7 @@ const ProfileMenu = ({
           {!userFirstName ? (
             <>
               <CgProfile className="text-2xl text-[#001f3f] group-hover:text-white group-hover:scale-110 transition-all duration-300" />
-              <span className="font-semibold  max-[900px]:hidden max-[580px]:hidden group-hover:text-white transition-colors duration-300">
+              <span className="font-semibold hidden sm:inline md:hidden lg:inline group-hover:text-white transition-colors duration-300">
                 Login
               </span>
             </>
