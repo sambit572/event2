@@ -94,6 +94,22 @@ const Home = () => {
       }
     }
   }, [location]);
+  const [showSlider, setShowSlider] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShowSlider(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px" }
+    );
+
+    const target = document.getElementById("slider-trigger");
+    if (target) observer.observe(target);
+  }, []);
   return (
     <>
       <Seo
@@ -103,9 +119,10 @@ const Home = () => {
       <div className="home">
         {/* <ImageSlider images={images} /> */}
         <HeroSection />
-        <Suspense fallback={null}>
+        <Suspense fallback={<div>Loading ...</div>}>
           <Features />
-          <CulturalDanceSlider />
+
+          <div id="slider-trigger">{showSlider && <CulturalDanceSlider />}</div>
         </Suspense>
 
         {/* <img className="addbanner" src={banner} alt="" /> */}
@@ -157,7 +174,7 @@ const Home = () => {
           )}
         </div>
         {/* <Milestones /> */}
-        <Suspense fallback={<div>Loading reviews...</div>}>
+        <Suspense fallback={<div>Loading ...</div>}>
           <StepsSection />
           <ReviewSlider />
           <FaqSection />
