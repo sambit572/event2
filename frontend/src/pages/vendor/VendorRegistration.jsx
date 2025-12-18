@@ -6,7 +6,7 @@ import StepProgress from "./StepProgress";
 import VendorAutoFillConfirmModal from "../../components/vendor/VendorAutoFillConfirmModal";
 import Spinner from "./../../components/common/Spinner";
 import axios from "axios";
-import laptopBackground from "../../../public/vendorRegistration/laptop_background.webp";
+import laptopBackground from "/vendorRegistration/laptop_background.webp";
 import { Seo } from "../../seo/seo";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 

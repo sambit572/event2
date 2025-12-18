@@ -5,7 +5,7 @@ import AboutUs_1 from "../../assets/aboutUs/about-image.webp";
 import Design from "../../components/common/aboutus/Design";
 import ServiceFeature from "./ServiceFeature";
 import { Seo } from "../../seo/seo.js";
-import frame from "../../../public/categories/frame_image.webp";
+import frame from "/categories/frame_image.webp";
 
 const Card = ({ title, description, image }) => {
   const [open, setOpen] = useState(false);

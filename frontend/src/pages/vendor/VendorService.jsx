@@ -881,7 +881,7 @@ function VendorService({ currentStep }) {
                   />
                   {categorySearchTerm && (
                     <img
-                      src="../../../public/close.webp"
+                      src="/close.webp"
                       alt="Clear"
                       className="clear-icon-img"
                       onClick={() => setCategorySearchTerm("")}

@@ -3,7 +3,7 @@ import comingSoon from "../../../assets/home/bannerImages/coming_soon.webp";
 import mediumbanner from "../../../assets/home/bannerImages/mediumbanner.webp";
 import xxmedium from "../../../assets/home/bannerImages/xxmedium.webp";
 import smallbanner from "../../../assets/home/bannerImages/smallbanner.webp";
-import newComingSoon from "../../../../public/coomingSoon/newComingSoon.webp";
+import newComingSoon from "..//coomingSoon/newComingSoon.webp";
 import emiBanner from "../../../assets/home/bannerImages/emi banner.webp";
 
 const AddsBanner = () => {

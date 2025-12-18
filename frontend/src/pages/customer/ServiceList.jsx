@@ -18,15 +18,15 @@ import banquetBanner from "../../assets/serviceListBanner/banquet-banner.webp";
 import danceBanner from "../../assets/serviceListBanner/classical-ban.webp";
 import islamicBanner from "../../assets/serviceListBanner/moulib-ban (2).webp";
 import christianBanner from "../../assets/serviceListBanner/christian-ban.webp";
-import panditBanner from "../../../public/categories/pandit.webp";
+import panditBanner from "/categories/pandit.webp";
 import makeupBanner from "../../assets/serviceListBanner/beauty-ban.webp";
 import floralBanner from "../../assets/serviceListBanner/flower-ban.webp";
 import carBanner from "../../assets/serviceListBanner/car-ban.webp";
-import fireworksBanner from "../../../public/categories/fireworks.webp";
-import cardBanner from "../../../public/categories/marriage-card.webp";
-import magicBanner from "../../../public/categories/magician.webp";
+import fireworksBanner from "/categories/fireworks.webp";
+import cardBanner from "/categories/marriage-card.webp";
+import magicBanner from "/categories/magician.webp";
 // import stageBanner from "../../assets/home/categoriesImages/stage_decor.webp";
-import eventBanner from "../../../public/categories/event_company.webp";
+import eventBanner from "/categories/event_company.webp";
 import balloonBanner from "../../assets/serviceListBanner/balloon banner.webp";
 
 const ServiceCardSkeleton = () => (

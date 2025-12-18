@@ -1,21 +1,21 @@
 import React, { useEffect, useRef, useState } from "react";
-import search40 from "../../../../public/category/search-40.webp";
-import search70 from "../../../../public/category/search-64.webp";
+import search40 from "/category/search-40.webp";
+import search70 from "/category/search-64.webp";
 
-import compare40 from "../../../../public/category/price-comparison-40.webp";
-import compare70 from "../../../../public/category/price-comparison-64.webp";
+import compare40 from "/category/price-comparison-40.webp";
+import compare70 from "/category/price-comparison-64.webp";
 
-import negotiate40 from "../../../../public/category/negotiation-40.webp";
-import negotiate70 from "../../../../public/category/negotiation-64.webp";
+import negotiate40 from "/category/negotiation-40.webp";
+import negotiate70 from "/category/negotiation-64.webp";
 
-import booking40 from "../../../../public/category/booking-40.webp";
-import booking70 from "../../../../public/category/booking-64.webp";
+import booking40 from "/category/booking-40.webp";
+import booking70 from "/category/booking-64.webp";
 
-import pay40 from "../../../../public/category/pay_now-removebg-preview-40.webp";
-import pay70 from "../../../../public/category/pay_now-removebg-preview-64.webp";
+import pay40 from "/category/pay_now-removebg-preview-40.webp";
+import pay70 from "/category/pay_now-removebg-preview-64.webp";
 
-import enjoy40 from "../../../../public/category/family-40.webp";
-import enjoy70 from "../../../../public/category/family-64.webp";
+import enjoy40 from "/category/family-40.webp";
+import enjoy70 from "/category/family-64.webp";
 
 const steps = [
   {
@@ -111,7 +111,8 @@ const StepsSection = () => {
         p-4"
           >
             {/* Image */}
-            <div className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center rounded-full 
+            <div
+              className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center rounded-full 
                     bg-[#e8eff7] shadow-md mb-4 overflow-hidden"
             >
               <img

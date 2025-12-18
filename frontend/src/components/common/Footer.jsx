@@ -6,10 +6,10 @@ import startup64 from "../../assets/home/startup-india-64.webp";
 import startup96 from "../../assets/home/startup-india-96.webp";
 import startup128 from "../../assets/home/startup-india-128.webp";
 import startup256 from "../../assets/home/startup-india-256.webp";
-import wa40 from "../../../public/whatsapp-40.webp";
-import wa80 from "../../../public/whatsapp-80.webp";
-import insta40 from "../../../public/instagram-40.webp";
-import insta80 from "../../../public/instagram-80.webp";
+import wa40 from "/whatsapp-40.webp";
+import wa80 from "/whatsapp-80.webp";
+import insta40 from "/instagram-40.webp";
+import insta80 from "/instagram-80.webp";
 
 export const categoriesData = {
   "DJ Services & Brash Band": [
