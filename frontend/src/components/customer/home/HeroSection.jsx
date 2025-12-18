@@ -146,39 +146,59 @@ export default function HeroSection() {
       md:rounded-t-[20spx] md:border-[6px] md:border-b-0
       lg:rounded-t-[20px] lg:border-[8px] lg:border-b-0"
               >
-                <picture>
+                <style>
+                  {`
+          .lcp-wrapper {
+            width: 100%;
+            aspect-ratio: 9 / 20;
+          }
+
+          .lcp-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            animation: fadeIn 0.6s ease-out forwards;
+          }
+
+          @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+          }
+        `}
+                </style>
+
+                <picture className="lcp-wrapper">
                   {/* 📱 Mobile */}
                   <source
                     media="(max-width: 640px)"
                     srcSet="
-      /assets/home/herosection/heroimage4-480-240.webp 240w,
-      /assets/home/herosection/heroimage4-480-320.webp 320w
-    "
-                    sizes="320px"
+            /assets/home/herosection/heroimage4-480-240.webp 240w,
+            /assets/home/herosection/heroimage4-480-320.webp 320w
+          "
+                    sizes="100vw"
                   />
 
-                  {/* 💻 Desktop / Tablet */}
+                  {/* 💻 Tablet / Desktop */}
                   <source
                     media="(min-width: 641px)"
                     srcSet="
-      /assets/home/herosection/heroimage4-480-360.webp 360w,
-      /assets/home/herosection/heroimage4-480.webp 480w
-    "
-                    sizes="360px"
+            /assets/home/herosection/heroimage4-480-360.webp 360w,
+            /assets/home/herosection/heroimage4-480.webp 480w
+          "
+                    sizes="100vw"
                   />
 
-                  <motion.img
+                  <img
                     src="/assets/home/herosection/heroimage4-360.webp"
                     alt="Preview"
                     width="360"
                     height="800"
-                    decoding="async"
-                    fetchPriority="high"
+                    fetchpriority="high"
                     loading="eager"
-                    className="w-full h-full object-cover rounded-t-[15px]"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 1.2 }}
+                    decoding="async"
+                    className="lcp-img"
                   />
                 </picture>
               </div>

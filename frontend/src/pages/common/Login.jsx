@@ -3,8 +3,7 @@ import { GoogleLogin } from "@react-oauth/google";
 import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../../utils/firebase.js";
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+
 import OTPVerification from "./OTPVerification.jsx";
 import SuccessBlock from "./SuccessBlock.jsx";
 import axios from "axios";
@@ -14,6 +13,26 @@ import ForgotPass from "./../customer/ForgotPass";
 import { FiEyeOff, FiEye } from "react-icons/fi";
 import Spinner from "./../../components/common/Spinner";
 import { Seo } from "../../seo/seo.js";
+let firebaseAuthCache = null;
+
+async function loadFirebaseAuth() {
+  if (!firebaseAuthCache) {
+    const [{ getFirebaseAuth }, authModule] = await Promise.all([
+      import("../../utils/firebase.js"), // your new firebaseAuth file
+      import("firebase/auth"),
+    ]);
+
+    const auth = await getFirebaseAuth();
+
+    firebaseAuthCache = {
+      auth,
+      RecaptchaVerifier: authModule.RecaptchaVerifier,
+      signInWithPhoneNumber: authModule.signInWithPhoneNumber,
+    };
+  }
+
+  return firebaseAuthCache;
+}
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -35,8 +54,14 @@ const Login = ({ onClose, onSwitchToRegister }) => {
 
   // Initialize reCAPTCHA
   useEffect(() => {
-    if (!recaptchaVerifierRef.current) {
+    let cancelled = false;
+
+    (async () => {
       try {
+        const { auth, RecaptchaVerifier } = await loadFirebaseAuth();
+
+        if (cancelled || recaptchaVerifierRef.current) return;
+
         const verifier = new RecaptchaVerifier(
           auth,
           "recaptcha-container",
@@ -46,7 +71,6 @@ const Login = ({ onClose, onSwitchToRegister }) => {
               console.log("Enterprise reCAPTCHA passed", response);
             },
             "expired-callback": () => {
-              console.warn("Recaptcha expired. Resetting...");
               verifier.clear();
               recaptchaVerifierRef.current = null;
             },
@@ -54,13 +78,16 @@ const Login = ({ onClose, onSwitchToRegister }) => {
           { type: "recaptcha-enterprise" }
         );
 
-        verifier.render().then(() => {
-          recaptchaVerifierRef.current = verifier;
-        });
+        await verifier.render();
+        recaptchaVerifierRef.current = verifier;
       } catch (err) {
         setErrorMsg("Enterprise reCAPTCHA failed to load.");
       }
-    }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const handleChange = (e) =>
@@ -70,6 +97,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
     e.preventDefault();
     setIsLoading(true);
     setErrorMsg("");
+
     const phone = formData.phoneNo.replace(/\D/g, "");
     const phoneNumber = "+91" + phone;
 
@@ -84,11 +112,14 @@ const Login = ({ onClose, onSwitchToRegister }) => {
     }
 
     try {
+      const { auth, signInWithPhoneNumber } = await loadFirebaseAuth();
+
       const confirmationResult = await signInWithPhoneNumber(
         auth,
         phoneNumber,
         recaptchaVerifierRef.current
       );
+
       window.confirmationResult = confirmationResult;
       setStep("otp");
     } catch (err) {
@@ -97,6 +128,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
       recaptchaVerifierRef.current = null;
       setErrorMsg("OTP send failed. Check number or reCAPTCHA.");
     }
+
     setIsLoading(false);
   }
 
