@@ -357,7 +357,7 @@ const App = () => {
           <Route
             path="/booking-success"
             element={
-              <Suspense>
+              <Suspense fallback={<div>Loading ...</div>}>
                 <BookingSuccess />{" "}
               </Suspense>
             }
