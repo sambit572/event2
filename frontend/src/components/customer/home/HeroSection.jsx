@@ -146,21 +146,41 @@ export default function HeroSection() {
       md:rounded-t-[20spx] md:border-[6px] md:border-b-0
       lg:rounded-t-[20px] lg:border-[8px] lg:border-b-0"
               >
-                <motion.img
-                  decoding="async"
-                  fetchPriority="high"
-                  loading="eager"
-                  alt="Preview"
-                  src="/assets/home/herosection/heroimage4-768.webp"
-                  srcSet=" /assets/home/herosection/heroimage4-480.webp 480w, /assets/home/herosection/heroimage4-768.webp 768w, /assets/home/herosection/heroimage4-1024.webp 1024w,/assets/home/herosection/heroimage4-1440.webp 1440w"
-                  sizes="(max-width: 640px) 90vw, (max-width: 1024px) 60vw, 480px"
-                  width="480"
-                  height="800"
-                  className="w-full h-full object-cover rounded-t-[15px]"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 1.2 }}
-                />
+                <picture>
+                  {/* 📱 Mobile */}
+                  <source
+                    media="(max-width: 640px)"
+                    srcSet="
+      /assets/home/herosection/heroimage4-480-240.webp 240w,
+      /assets/home/herosection/heroimage4-480-320.webp 320w
+    "
+                    sizes="320px"
+                  />
+
+                  {/* 💻 Desktop / Tablet */}
+                  <source
+                    media="(min-width: 641px)"
+                    srcSet="
+      /assets/home/herosection/heroimage4-480-360.webp 360w,
+      /assets/home/herosection/heroimage4-480.webp 480w
+    "
+                    sizes="360px"
+                  />
+
+                  <motion.img
+                    src="/assets/home/herosection/heroimage4-360.webp"
+                    alt="Preview"
+                    width="360"
+                    height="800"
+                    decoding="async"
+                    fetchPriority="high"
+                    loading="eager"
+                    className="w-full h-full object-cover rounded-t-[15px]"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 1.2 }}
+                  />
+                </picture>
               </div>
             </div>
           </div>
@@ -358,8 +378,7 @@ sm-mid:right-2 sm-mid:w-28
               srcSet="
     /assets/home/herosection/heroimage1-360.webp 360w,
     /assets/home/herosection/heroimage1-480.webp 480w,
-    /assets/home/herosection/heroimage1-720.webp 720w,
-    /assets/home/herosection/heroimage1-960.webp 960w
+    /assets/home/herosection/heroimage1-180.webp 180w,
   "
               sizes="
     (max-width: 640px) 90vw,

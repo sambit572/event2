@@ -21,7 +21,7 @@ const CategoryCard = ({ category }) => {
           decoding="async"
           src={category.image.src}
           srcSet={category.image.srcSet}
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
+          sizes=" (max-width: 640px) 90vw, (max-width: 1024px) 45vw, 360px"
           width={400} // known width
           height={300} // known height
           alt={category.title}

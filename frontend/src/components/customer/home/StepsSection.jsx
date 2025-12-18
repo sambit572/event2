@@ -1,41 +1,58 @@
 import React, { useEffect, useRef, useState } from "react";
-import searchImg from "../../../../public/category/search-320.webp";
-import compareImg from "../../../../public/category/price-comparison-320.webp";
-import negotiateImg from "../../../../public/category/negotiation-320.webp";
-import bookingImg from "../../../../public/category/booking-320.webp";
-import payImg from "../../../../public/category/pay_now-removebg-preview-320.webp";
-import enjoyImg from "../../../../public/category/family-320.webp";
+import search40 from "../../../../public/category/search-40.webp";
+import search70 from "../../../../public/category/search-64.webp";
+
+import compare40 from "../../../../public/category/price-comparison-40.webp";
+import compare70 from "../../../../public/category/price-comparison-64.webp";
+
+import negotiate40 from "../../../../public/category/negotiation-40.webp";
+import negotiate70 from "../../../../public/category/negotiation-64.webp";
+
+import booking40 from "../../../../public/category/booking-40.webp";
+import booking70 from "../../../../public/category/booking-64.webp";
+
+import pay40 from "../../../../public/category/pay_now-removebg-preview-40.webp";
+import pay70 from "../../../../public/category/pay_now-removebg-preview-64.webp";
+
+import enjoy40 from "../../../../public/category/family-40.webp";
+import enjoy70 from "../../../../public/category/family-64.webp";
 
 const steps = [
   {
     title: "Search Services",
     text: "Find event services easily by category and budget.",
-    image: searchImg,
+    src: search40,
+    srcSet: `${search70} 70w, ${search40} 40w`,
   },
   {
     title: "Compare Options",
     text: "Check vendor profiles, pricing details, and reviews.",
-    image: compareImg,
+    src: compare40,
+    srcSet: `${compare70} 70w, ${compare40} 40w`,
   },
   {
     title: "Live Negotiation",
     text: "Connect directly with vendors to finalize all details.",
-    image: negotiateImg,
+    src: negotiate40,
+    srcSet: `${negotiate70} 70w, ${negotiate40} 40w`,
   },
   {
     title: "Pay Now / Pay with EMI",
     text: "Choose flexible payment options and pay instantly or with easy EMIs.",
-    image: payImg,
+    src: pay40,
+    srcSet: `${pay70} 70w, ${pay40} 40w`,
   },
   {
     title: "Secure Booking",
     text: "Complete your booking safely with secure online payment.",
-    image: bookingImg,
+    src: booking40,
+    srcSet: `${booking70} 70w, ${booking40} 40w`,
   },
   {
     title: "Enjoy Your Event",
     text: "Relax and celebrate while we handle all the hassle.",
-    image: enjoyImg,
+    src: enjoy40,
+    srcSet: `${enjoy70} 70w, ${enjoy40} 40w`,
   },
 ];
 
@@ -75,21 +92,6 @@ const StepsSection = () => {
         >
           𝐇𝐨𝐰 𝐄𝐯𝐞𝐧𝐭𝐬𝐁𝐫𝐢𝐝𝐠𝐞 𝐖𝐨𝐫𝐤𝐬
         </h2>
-        {/* <motion.h2
-          initial={{ opacity: 0, y: -30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 2, ease: "easeInOut" }}
-          ref={headingRef}
-          className={`relative inline-block text-xl mb-4 sm:text-2xl md:text-5xl font-semibold text-[#001f3f]
-            after:content-[''] after:block after:w-0 after:h-[4px]
-            after:bg-gradient-to-r after:from-[#001f3f] after:via-yellow-500 after:to-[#001f3f] 
-            after:rounded-full
-            after:transition-all after:duration-[1000ms] after:ease-in-out after:mt-2 after:mx-auto
-            ${isVisible ? "after:w-3/4" : "after:w-0"}`}
-        >
-          𝐇𝐨𝐰 𝐄𝐯𝐞𝐧𝐭𝐬𝐁𝐫𝐢𝐝𝐠𝐞 𝐖𝐨𝐫𝐤𝐬
-        </motion.h2> */}
         <p className="sm:text-base md:text-md font-normal text-[#001f3f] max-w-4xl lg:max-w-6xl mx-auto px-2">
           From Search to Celebration – We’ve Got You Covered. Discover trusted
           vendors, compare options, negotiate directly, and book securely all in
@@ -98,38 +100,28 @@ const StepsSection = () => {
       </div>
 
       {/* Steps Grid */}
-      <div
-        className="
-    grid 
-    grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6
-    gap-6 justify-items-center
-  "
-      >
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 justify-items-center">
         {steps.map((step, index) => (
           <div
-            // initial={{ opacity: 0, y: 50 }}
-            // whileInView={{ x: [0, 50, 0] }}
-            // whileInView={{ opacity: 1, y: 0 }}
-            // viewport={{ once: true, amount: 0.3 }}
-            // transition={{ duration: index * 0.75, ease: "easeInOut" }}
             key={index}
-            className="
-        flex flex-col items-center justify-start text-center border border-gray-400
+            className="flex flex-col items-center justify-start text-center border border-gray-400
         bg-yellow-50 rounded-2xl shadow-md 
         hover:shadow-2xl transition-shadow duration-300
-       sm:w-[210px] sm:h-[220px] md:w-[210px] md:h-[270px] lg:w-[200px] lg:h-[270px]
-        p-4
-      "
+        sm:w-[210px] sm:h-[220px] md:w-[210px] md:h-[270px] lg:w-[200px] lg:h-[270px]
+        p-4"
           >
             {/* Image */}
-            <div
-              className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center rounded-full 
+            <div className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center rounded-full 
                     bg-[#e8eff7] shadow-md mb-4 overflow-hidden"
             >
               <img
-                src={step.image}
+                src={step.src}
+                srcSet={step.srcSet}
+                sizes="(max-width: 768px) 70px, 40px"
                 alt={step.title}
                 className="w-10 h-10 object-contain"
+                loading="lazy"
+                decoding="async"
               />
             </div>
 
