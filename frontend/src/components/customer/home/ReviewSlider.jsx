@@ -30,75 +30,61 @@ const ReviewSlider = () => {
   }, [reviews]);
 
   // Fetch user-submitted reviews from backend
+  // Define fetchReviews function
+  const fetchReviews = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get(`${BACKEND_URL}/reviews/all?page=1&limit=50`);
+      const fetched = res.data.reviews || [];
+
+      const formatted = fetched
+        .filter((r) => r.rating >= 3) // Show 3+ star reviews
+        .map((r) => {
+          const name = r.userName || r.userEmail?.split("@")[0] || "Anonymous";
+          const initials =
+            r.initials ||
+            name
+              .split(" ")
+              .map((n) => n[0])
+              .join("")
+              .toUpperCase()
+              .slice(0, 2);
+          return {
+            userName: name,
+            rating: r.rating,
+            reviewMessage: r.reviewMessage,
+            profileImage: r.profileImage || null,
+            initials,
+            reviewType: r.reviewType,
+          };
+        });
+
+      setReviews(formatted);
+      setError(null);
+    } catch (err) {
+      setError(`Failed to fetch reviews: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // IntersectionObserver to fetch only when slider is visible
   useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        setLoading(true);
-        console.log("Fetching reviews from:", `${BACKEND_URL}/reviews/all`);
+    const slider = document.getElementById("review-slider");
+    if (!slider) return;
 
-        // Fetch ALL reviews first to debug
-        const res = await axios.get(
-          `${BACKEND_URL}/reviews/all?page=1&limit=50`
-        );
-        console.log("Raw API response:", res.data);
-
-        const fetched = res.data.reviews || [];
-        console.log("Fetched reviews:", fetched);
-
-        if (fetched.length === 0) {
-          console.log("No reviews found in database");
-          setReviews([]);
-          setError("No reviews found");
-          return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          fetchReviews(); // fetch reviews when slider scrolls into view
+          observer.disconnect(); // stop observing after first fetch
         }
+      },
+      { threshold: 0.1 }
+    );
 
-        // Filter and format reviews
-        const formatted = fetched
-          .filter((r) => {
-            console.log(`Review rating: ${r.rating}, type: ${r.reviewType}`);
-            return r.rating >= 3; // Show 3+ star reviews for now (lowered from 4 for testing)
-          })
-          .map((r) => {
-            console.log("Processing review:", r);
-
-            // Use the enriched data from backend
-            const name =
-              r.userName || r.userEmail?.split("@")[0] || "Anonymous User";
-            const initials =
-              r.initials ||
-              name
-                .split(" ")
-                .map((n) => n[0])
-                .join("")
-                .toUpperCase()
-                .slice(0, 2);
-
-            const formatted = {
-              userName: name,
-              rating: r.rating,
-              reviewMessage: r.reviewMessage,
-              profileImage: r.profileImage || null,
-              initials,
-              reviewType: r.reviewType,
-            };
-
-            console.log("Formatted review:", formatted);
-            return formatted;
-          });
-
-        console.log("Final formatted reviews:", formatted);
-        setReviews(formatted);
-        setError(null);
-      } catch (err) {
-        console.error("Failed to fetch reviews:", err);
-        console.error("Error response:", err.response?.data);
-        setError(`Failed to fetch reviews: ${err.message}`);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchReviews();
+    observer.observe(slider);
+    return () => observer.disconnect();
   }, []);
 
   const duplicatedReviews = reviews.length > 0 ? [...reviews] : [];
@@ -128,7 +114,7 @@ const ReviewSlider = () => {
       </div> */}
 
       {/* Review Slider */}
-      <div className="review_wrapper" ref={containerRef}>
+      <div id="review-slider" className="review_wrapper" ref={containerRef}>
         {loading ? (
           <div className="text-center py-8">
             <p className="decoration-sky-950">Loading reviews...</p>

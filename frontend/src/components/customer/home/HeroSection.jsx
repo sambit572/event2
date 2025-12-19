@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { IoStarHalfOutline } from "react-icons/io5";
+
 import { VscStarFull } from "react-icons/vsc";
 import { motion, useMotionValue, useTransform } from "framer-motion";
 

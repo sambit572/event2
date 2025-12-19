@@ -6,10 +6,6 @@ const Features = React.lazy(() =>
   import("../../components/customer/home/Features")
 );
 
-const CulturalDanceSlider = React.lazy(() =>
-  import("../common/CulturalDanceSlider.jsx")
-);
-
 const StepsSection = React.lazy(() =>
   import("../../components/customer/home/StepsSection.jsx")
 );
@@ -94,22 +90,7 @@ const Home = () => {
       }
     }
   }, [location]);
-  const [showSlider, setShowSlider] = useState(false);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setShowSlider(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: "200px" }
-    );
-
-    const target = document.getElementById("slider-trigger");
-    if (target) observer.observe(target);
-  }, []);
   return (
     <>
       <Seo
@@ -117,25 +98,11 @@ const Home = () => {
         description="Book and manage events effortlessly with Eventsbridge. Discover venues, plan online events and simplify bookings all in one place."
       />
       <div className="home">
-        {/* <ImageSlider images={images} /> */}
         <HeroSection />
         <Suspense fallback={<div>Loading ...</div>}>
           <Features />
-
-          <div id="slider-trigger">{showSlider && <CulturalDanceSlider />}</div>
         </Suspense>
-
-        {/* <img className="addbanner" src={banner} alt="" /> */}
         <div id="categories" className="categories-head1">
-          {/* <motion.h1
-            initial={{ opacity: 0, y: -30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.5, ease: "easeInOut" }}
-            className="align_center categories-head mt-8"
-          >
-            𝐂𝐀𝐓𝐄𝐆𝐎𝐑𝐈𝐄𝐒
-          </motion.h1> */}
           <h1 className="align_center categories-head mt-8">𝐂𝐀𝐓𝐄𝐆𝐎𝐑𝐈𝐄𝐒</h1>
         </div>
         <p className="category-subheads text-center">
@@ -145,16 +112,6 @@ const Home = () => {
         {/* Category Grid */}
         <div className="align_center category_section">
           {visibleCategories.map((category, index) => (
-            // <motion.div
-            //   key={index}
-            //   initial={{ opacity: 0, y: 50 }}
-            //   whileInView={{ opacity: 1, y: 0 }}
-            //   viewport={{ once: true, amount: 0.3 }}
-            //   transition={{ duration: index * 0.2, ease: "easeInOut" }}
-            // >
-            //   {" "}
-            //   <CategoryCard category={category} />
-            // </motion.div>
             <div key={index}>
               <CategoryCard category={category} />
             </div>
