@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import toast from "react-hot-toast";
 
 import { useNavigate } from "react-router-dom";
-import { auth } from "../../utils/firebase.js";
+import { getFirebaseAuth } from "../../utils/firebase.js";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import OTPVerification from "../common/OTPVerification.jsx";
 import SuccessBlock from "../common/SuccessBlock.jsx";
@@ -25,6 +25,7 @@ const VendorLogin = ({ onClose, onSwitchToLogin }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
   const [showForgotModal, setShowForgotModal] = useState(false);
+  const auth = getFirebaseAuth();
   const [formData, setFormData] = useState({
     phoneNo: "",
     email: "",
