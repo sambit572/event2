@@ -221,7 +221,7 @@ export default function HeroSection() {
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 2, ease: "easeInOut" }}
             className="
-    absolute z-30 bg-blue-400 shadow-2xl rounded-2xl p-1
+    absolute z-30  shadow-2xl rounded-2xl p-1
     w-20 top-8 left-0              /* MOBILE DEFAULT */
 sm-mid:left-4 sm-mid:w-24
     sm:w-36 sm:top-12 sm:left-2      /* SMALL SCREENS (480px–640px) */
@@ -233,12 +233,12 @@ sm-mid:left-4 sm-mid:w-24
             <img
               decoding="async"
               loading="lazy" // ✅ critical for FCP
-              src="/assets/home/herosection/heroimage3-160.webp"
+              src="/assets/home/herosection/teamwork.webp"
               srcSet="
-    /assets/home/herosection/heroimage3-40.webp 40w,
-    /assets/home/herosection/heroimage3-80.webp 80w,
-    /assets/home/herosection/heroimage3-160.webp 160w,
-    /assets/home/herosection/heroimage3-320.webp 320w
+    /assets/home/herosection/teamwork.webp 40w,
+    /assets/home/herosection/teamwork.webp 80w,
+    /assets/home/herosection/teamwork.webp 160w,
+    /assets/home/herosection/teamwork.webp 320w
   "
               sizes="
     (max-width: 640px) 40px,
@@ -248,12 +248,36 @@ sm-mid:left-4 sm-mid:w-24
               width="176"
               height="176"
               alt="Preview"
-              className="w-full h-20 sm:h-36 md:h-40 lg:h-44 object-cover rounded-xl"
+              className="w-full  h-20 sm:h-36 md:h-40 lg:h-44 rounded-xl"
             />
 
-            {/* <span className="absolute top-3 right-3 bg-black text-white text-xs px-2 py-[2px] rounded-full">
-              2:01
-            </span> */}
+            {/* CENTERED TEXT */}
+            <div className="absolute top-1 flex shadow-5xl shadow-black/40 flex-col items-center justify-center text-center px-2">
+              <p
+                className="font-extrabold text-xl sm:text-5xl drop-shadow-lg"
+                style={{
+                  WebkitTextStroke: "2px white",
+                  color: "black",
+                }}
+              >
+                100+
+              </p>
+
+              <p
+                className="text-xs sm:text-lg font-semibold drop-shadow  shadow-black/40"
+                style={{
+                  WebkitTextStroke: "0.3px black",
+                  color: "cyan",
+                }}
+              >
+                Verified Vendors
+              </p>
+            </div>
+
+            {/* BOTTOM LABEL */}
+            <div className="absolute  top-1/2 bg-yellow-300 m-1 mt-0 p-1 rounded-lg text-center text-xs sm:text-sm md:text-sm lg:text-base font-semibold">
+              <p>Find the best vendor of the right place</p>
+            </div>
           </motion.div>
 
           {/* Middle Left Card */}
@@ -392,14 +416,23 @@ sm-mid:right-2 sm-mid:w-28
     lg:w-[240px] lg:bottom-20 lg:right-6    /* DESKTOP — YOUR ORIGINAL VALUES */
   "
           >
+            <div className="flex items-center m-1 rounded-lg font-bold justify-center flex-wrap sm:gap-2 mt-0 bg-teal-300 sm:mt-2">
+              <h1>Live-Price Negotiation</h1>
+              {/* <span className="bg-red-600 text-white text-xs sm:text-sm px-2 py-[2px] rounded-lg">
+                1.5k
+              </span>
+              <span>❤️</span>
+
+              <span className=" text-xs">Book Now</span> */}
+            </div>
             <img
               decoding="async"
               loading="lazy" // ✅ very important
-              src="/assets/home/herosection/heroimage1-480.webp"
+              src="/assets/home/herosection/negotiation.webp"
               srcSet="
-    /assets/home/herosection/heroimage1-360.webp 360w,
-    /assets/home/herosection/heroimage1-480.webp 480w,
-    /assets/home/herosection/heroimage1-180.webp 180w,
+    /assets/home/herosection/negotiation.webp 360w,
+    /assets/home/herosection/negotiation.webp 480w,
+    /assets/home/herosection/negotiation.webp 180w,
   "
               sizes="
     (max-width: 640px) 90vw,
@@ -409,17 +442,8 @@ sm-mid:right-2 sm-mid:w-28
               width="662"
               height="364"
               alt="Preview"
-              className="w-full h-20 sm:h-32 md:h-44 object-cover rounded-t-xl"
+              className="w-full h-20 sm:h-32 md:h-44  rounded-t-xl"
             />
-
-            <div className="flex items-center justify-center flex-wrap sm:gap-2 mt-0 sm:mt-2">
-              <span className="bg-red-600 text-white text-xs sm:text-sm px-2 py-[2px] rounded-lg">
-                1.5k
-              </span>
-              <span>❤️</span>
-
-              <span className=" text-xs">Book Now</span>
-            </div>
           </motion.div>
         </div>
       </motion.div>
