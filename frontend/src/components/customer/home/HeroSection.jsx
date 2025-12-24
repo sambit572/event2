@@ -58,11 +58,11 @@ export default function HeroSection() {
 
         <div className="relative w-full mt-8 flex justify-center items-center  overflow-hidden bg-white">
           {/* ===== Background Circle Layers ===== */}
-          <div className="absolute flex justify-center items-center">
+          <div className="absolute flex  justify-center items-center">
             {/* Large Circle */}
-            <div className="absolute w-[1000px] top-[-140px] h-[1000px] rounded-full   bg-gradient-to-b border-4 to-transparent opacity-60"></div>
+            <div className="absolute w-[1000px] top-[-140px] h-[1000px] rounded-full   bg-gradient-to-b border-2 border-lime-200 to-transparent opacity-60"></div>
             {/* Medium Circle */}
-            <div className="absolute w-[800px] top-[-70px] h-[800px] rounded-full   bg-gradient-to-b border-2 to-transparent opacity-60"></div>
+            <div className="absolute w-[800px]  top-[-70px] h-[800px] rounded-full   border-[#86fde8] bg-gradient-to-b border-2 to-transparent opacity-60"></div>
 
             {/* Small Circle */}
             <div
@@ -221,10 +221,10 @@ export default function HeroSection() {
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 2, ease: "easeInOut" }}
             className="
-    absolute z-10 border-2 border-sky-500 shadow-2xl rounded-2xl p-1
+    absolute z-10 border-2 border-blue-700 shadow-2xl rounded-2xl p-1
     w-[90px] top-8 left-0              /* MOBILE DEFAULT */
 sm-mid:left-16 sm-mid:w-30
-    sm:w-36 sm:top-12 sm:left-2 sm:border-2     /* SMALL SCREENS (480px–640px) */
+    sm:w-36 sm:top-12 sm:left-2 sm:border-[3px]     /* SMALL SCREENS (480px–640px) */
     md:w-40 md:top-16 md:left-8     /* MID SCREENS (768px–1024px) */
 
     lg:w-48 lg:top-20 lg:left-28  /* DESKTOP (YOUR ORIGINAL VALUES) */
@@ -277,7 +277,7 @@ sm-mid:left-16 sm-mid:w-30
             {/* BOTTOM LABEL */}
             <div className=" bg-yellow-300 p-0.5 sm:m-1 sm:p-1 md-p-2 rounded-lg text-center sm:text-sm">
               <p className="text-[6px] md:text-xs">
-                Find the best vendor of the right place
+                Find the best vendor at the lowest price
               </p>
             </div>
           </motion.div>
@@ -408,10 +408,10 @@ sm-mid:right-10 sm-mid:w-24
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 2, ease: "easeInOut" }}
             className="
-    absolute z-10 bg-yellow-50 shadow-xl rounded-2xl border-2 border-black p-0
+    absolute z-10 bg-yellow-50 shadow-xl rounded-2xl border-[1px] border-amber-400 p-0
     w-[90px]  bottom-4 right-0              /* MOBILE (360–480px) */
 sm-mid:right-2 sm-mid:w-28
-    sm:w-40 sm:bottom-16 sm:right-0 sm:border-2     /* SMALL SCREENS (480–640px) */
+    sm:w-40 sm:bottom-16 sm:right-0      /* SMALL SCREENS (480–640px) */
 
     md:w-44 md:bottom-16 md:right-4 md:h-40   /* MEDIUM/TABLET (768–1024px) */
 
