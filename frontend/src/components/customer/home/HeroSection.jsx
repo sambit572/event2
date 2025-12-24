@@ -221,16 +221,16 @@ export default function HeroSection() {
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 2, ease: "easeInOut" }}
             className="
-    absolute z-30  shadow-2xl rounded-2xl p-1
-    w-20 top-8 left-0              /* MOBILE DEFAULT */
-sm-mid:left-4 sm-mid:w-24
-    sm:w-36 sm:top-12 sm:left-2      /* SMALL SCREENS (480px–640px) */
+    absolute z-10 border-2 border-sky-500 shadow-2xl rounded-2xl p-1
+    w-[90px] top-8 left-0              /* MOBILE DEFAULT */
+sm-mid:left-16 sm-mid:w-30
+    sm:w-36 sm:top-12 sm:left-2 sm:border-2     /* SMALL SCREENS (480px–640px) */
     md:w-40 md:top-16 md:left-8     /* MID SCREENS (768px–1024px) */
 
-    lg:w-44 lg:top-20 lg:left-28  /* DESKTOP (YOUR ORIGINAL VALUES) */
+    lg:w-48 lg:top-20 lg:left-28  /* DESKTOP (YOUR ORIGINAL VALUES) */
   "
           >
-            <img
+            {/* <img
               decoding="async"
               loading="lazy" // ✅ critical for FCP
               src="/assets/home/herosection/teamwork.webp"
@@ -249,12 +249,12 @@ sm-mid:left-4 sm-mid:w-24
               height="176"
               alt="Preview"
               className="w-full  h-20 sm:h-36 md:h-40 lg:h-44 rounded-xl"
-            />
+            /> */}
 
             {/* CENTERED TEXT */}
-            <div className="absolute top-1 flex shadow-5xl shadow-black/40 flex-col items-center justify-center text-center px-2">
+            <div className="flex shadow-5xl shadow-black/40 flex-col px-2">
               <p
-                className="font-extrabold text-xl sm:text-5xl drop-shadow-lg"
+                className="font-extrabold  sm:font-extrabold text-2xl sm:text-5xl drop-shadow-lg"
                 style={{
                   WebkitTextStroke: "2px white",
                   color: "black",
@@ -264,10 +264,10 @@ sm-mid:left-4 sm-mid:w-24
               </p>
 
               <p
-                className="text-xs sm:text-lg font-semibold drop-shadow  shadow-black/40"
+                className="text-[7px] sm:text-end sm:text-sm sm:font-semibold drop-shadow shadow-black/40"
                 style={{
-                  WebkitTextStroke: "0.3px black",
-                  color: "cyan",
+                  // WebkitTextStroke: "1px white",
+                  color: "black",
                 }}
               >
                 Verified Vendors
@@ -275,8 +275,10 @@ sm-mid:left-4 sm-mid:w-24
             </div>
 
             {/* BOTTOM LABEL */}
-            <div className="absolute  top-1/2 bg-yellow-300 m-1 mt-0 p-1 rounded-lg text-center text-xs sm:text-sm md:text-sm lg:text-base font-semibold">
-              <p>Find the best vendor of the right place</p>
+            <div className=" bg-yellow-300 p-0.5 sm:m-1 sm:p-1 md-p-2 rounded-lg text-center sm:text-sm">
+              <p className="text-[6px] md:text-xs">
+                Find the best vendor of the right place
+              </p>
             </div>
           </motion.div>
 
@@ -296,13 +298,13 @@ sm-mid:left-4 sm-mid:w-24
     absolute z-50 flex space-x-1 bg-stone-800 text-green92 shadow-xl
     rounded-2xl py-0 px-2
 
-    text-sm bottom-32 left-2           /* MOBILE: 360px–480px */
+    text-sm bottom-36 left-5           /* MOBILE: 360px–480px */
 sm-mid:left-8 
     sm:text-2xl sm:left-6 sm:bottom-52 /* SMALL SCREENS: 480–640px */
 
-    md:text-3xl md:left-12 md:bottom-64 /* MEDIUM: 768–1024px */
+    md:text-3xl md:left-12 md:bottom-72 /* MEDIUM: 768–1024px */
 
-    lg:text-3xl lg:left-44 lg:bottom-56 /* DESKTOP: YOUR ORIGINAL VALUES */
+    lg:text-3xl lg:left-44 lg:bottom-76 /* DESKTOP: YOUR ORIGINAL VALUES */
 
     w-20 sm:w-36 md:w-40 lg:w-40
   "
@@ -329,8 +331,8 @@ sm-mid:left-8
             transition={{ duration: 2, ease: "easeInOut" }}
             className="
     absolute z-30 bg-purple32 shadow-xl rounded-2xl py-1 px-2
-    w-24 left-0 bottom-4            /* MOBILE (360px–480px) */
-sm-mid:w-28
+    w-[90px] left-0 bottom-4            /* MOBILE (360px–480px) */
+sm-mid:w-28 sm-mid:left-8
     sm:w-36 sm:bottom-16   /* SMALL SCREENS */
 
     md:w-40 md:left-8 md:bottom-16 /* MEDIUM (768px–1024px) */
@@ -364,8 +366,8 @@ sm-mid:w-28
             transition={{ duration: 2, ease: "easeInOut" }}
             className="
     absolute z-10 bg-aceeff shadow-xl rounded-2xl px-2 py-1
-    w-24  h-204 top-8 right-0                        /* MOBILE (360px–480px) */
-sm-mid:right-6 sm-mid:w-24
+    w-[90px]  h-204 top-8 right-0                        /* MOBILE (360px–480px) */
+sm-mid:right-10 sm-mid:w-24
     sm:w-36 sm:h-36 sm:top-16  sm:py-2 sm:right-10               /* SMALL SCREENS (480–640px) */
 
     md:w-48 md:top-16 md:right-10             /* MEDIUM (768–1024px) */
@@ -374,10 +376,10 @@ sm-mid:right-6 sm-mid:w-24
   "
           >
             <h2 className="font-bold text-xl sm:text-6xl">Join</h2>
-            <p className="text-gray-800 text-md font-bold sm:text-xl">
+            <p className="text-gray-800 text-sm font-semibold sm:text-xl">
               As A Vendor
             </p>
-            <p className="text-gray-800 font-semibold text-xs sm:text-sm">
+            <p className="text-gray-800 font-semibold text-[8px] sm:text-sm">
               With zero cost
             </p>
 
@@ -406,18 +408,20 @@ sm-mid:right-6 sm-mid:w-24
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 2, ease: "easeInOut" }}
             className="
-    absolute z-10 bg-white shadow-xl rounded-2xl p-0
-    w-28  bottom-4 right-0              /* MOBILE (360–480px) */
+    absolute z-10 bg-yellow-50 shadow-xl rounded-2xl border-2 border-black p-0
+    w-[90px]  bottom-4 right-0              /* MOBILE (360–480px) */
 sm-mid:right-2 sm-mid:w-28
-    sm:w-40 sm:bottom-16 sm:right-0      /* SMALL SCREENS (480–640px) */
+    sm:w-40 sm:bottom-16 sm:right-0 sm:border-2     /* SMALL SCREENS (480–640px) */
 
-    md:w-44 md:bottom-16 md:right-4    /* MEDIUM/TABLET (768–1024px) */
+    md:w-44 md:bottom-16 md:right-4 md:h-40   /* MEDIUM/TABLET (768–1024px) */
 
-    lg:w-[240px] lg:bottom-20 lg:right-6    /* DESKTOP — YOUR ORIGINAL VALUES */
+    lg:w-[240px] lg:h-48 lg:bottom-20 lg:right-6    /* DESKTOP — YOUR ORIGINAL VALUES */
   "
           >
-            <div className="flex items-center m-1 rounded-lg font-bold justify-center flex-wrap sm:gap-2 mt-0 bg-teal-300 sm:mt-2">
-              <h1>Live-Price Negotiation</h1>
+            <div className="flex mt-1 py-1 items-center m-1 rounded-xl sm:font-bold justify-center flex-wrap bg-[#FFAA00]">
+              <h1 className="text-[6px] text-black font-bold text-center sm:text-xs lg:text-lg">
+                Live-Price Negotiation
+              </h1>
               {/* <span className="bg-red-600 text-white text-xs sm:text-sm px-2 py-[2px] rounded-lg">
                 1.5k
               </span>
@@ -442,7 +446,7 @@ sm-mid:right-2 sm-mid:w-28
               width="662"
               height="364"
               alt="Preview"
-              className="w-full h-20 sm:h-32 md:h-44  rounded-t-xl"
+              className="w-full  h-16 sm:h-32 md:h-30 lg:h-36 rounded-xl"
             />
           </motion.div>
         </div>
