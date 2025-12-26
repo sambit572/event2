@@ -117,6 +117,12 @@ export const CategoryData = [
     image: getCategoryImage("event_company"),
     tagline: "Crafting Moments, Managing Memories",
   },
+  {
+    id: "Hotel-Resorts",
+    title: "Hotel & Resorts",
+    image: getCategoryImage("hotel-resort"),
+    tagline: "Crafting Moments, Managing Memories",
+  },
 ];
 
 export default CategoryData;

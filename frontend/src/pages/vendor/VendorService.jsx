@@ -149,6 +149,7 @@ function VendorService({ currentStep }) {
     "Card Design & Printing",
     "Magic Shows",
     "Event Management Company",
+    "Hotel & Resorts",
   ];
 
   const allLocations = {

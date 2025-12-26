@@ -106,7 +106,7 @@ const Home = () => {
         <HeroSection />
         <Suspense fallback={<div>Loading ...</div>}>
           <Features />
-          <AddsBanner />
+          {/* <AddsBanner /> */}
         </Suspense>
         <div id="categories" className="categories-head1">
           <h1 className="align_center categories-head mt-8">𝐂𝐀𝐓𝐄𝐆𝐎𝐑𝐈𝐄𝐒</h1>

@@ -25,6 +25,7 @@ import carBanner from "../../assets/serviceListBanner/car-ban.webp";
 import fireworksBanner from "/categories/fireworks.webp";
 import cardBanner from "/categories/marriage-card.webp";
 import magicBanner from "/categories/magician.webp";
+import resortBanner from "/categories/resortBanner.webp";
 // import stageBanner from "../../assets/home/categoriesImages/stage_decor.webp";
 import eventBanner from "/categories/event_company.webp";
 import balloonBanner from "../../assets/serviceListBanner/balloon banner.webp";
@@ -81,6 +82,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
     // "Stage Decor": stageBanner,
     "Event Management Company": eventBanner,
     "Balloon Decor": balloonBanner,
+    "Hotel & Resorts": resortBanner,
   };
 
   // ✅ Define subcategories for each main category

@@ -47,7 +47,7 @@ export default function HeroSection() {
         <div className="flex gap-3 sm:gap-4 mt-2 sm:mt-4 flex-wrap justify-center px-4">
           <a
             href="#categories"
-            className="bg-black font-semibold text-white px-5 sm:px-6 py-1.5 sm:py-3 rounded-3xl text-xs sm:text-base md:text-lg"
+            className="bg-black hover:border-black hover:border-2 hover:bg-zinc-200 hover:text-black transition-all duration-300 ease-in-out font-semibold text-white px-5 sm:px-6 py-1.5 sm:py-3 rounded-3xl text-xs sm:text-base md:text-lg"
           >
             Book Now
           </a>
@@ -446,7 +446,7 @@ sm-mid:right-2 sm-mid:w-28
               width="662"
               height="364"
               alt="Preview"
-              className="w-full  h-16 sm:h-32 md:h-30 lg:h-36 rounded-xl"
+              className="w-full object-contain h-16 sm:h-32 md:h-30 lg:h-36 rounded-xl"
             />
           </motion.div>
         </div>
