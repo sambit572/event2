@@ -207,6 +207,17 @@ const categories = [
       "High-quality balloons & safe materials",
     ],
   },
+  {
+  name: "Hotel & Resorts",
+  defaultWhyChooseUs: [
+    "Wide range of hotels & resorts to suit every budget",
+    "Premium locations with modern amenities",
+    "Comfortable rooms with exceptional hospitality",
+    "Ideal venues for weddings, events & business stays",
+    "Verified properties with reliable service standards",
+  ],
+},
+
 ];
 
 const seedCategories = async () => {

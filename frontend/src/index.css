@@ -1,12 +1,11 @@
 /* Import Google Fonts */
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
-
 /* Custom font JTUSjIg1 */
-@font-face {
+/* @font-face {
   font-family: "JTUSjIg1";
   src: url("/fonts/JTUSjIg1.woff2") format("woff2");
-  font-display: swap; /* renders fallback font immediately */
-}
+  font-display: swap; 
+} */
 
 /* Tailwind base */
 @tailwind base;
@@ -23,8 +22,12 @@
   }
 
   html,
-  body {
+  /* body {
     font-family: "JTUSjIg1", "Montserrat", sans-serif;
+    scroll-behavior: smooth;
+  } */
+     body {
+    font-family: "Montserrat", sans-serif;
     scroll-behavior: smooth;
   }
 }

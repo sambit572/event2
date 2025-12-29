@@ -196,11 +196,11 @@
     width: 100%;
   }
 
-  .serviceCard<img decoding="async" {
+  /* .serviceCard<img decoding="async" {
     width: 100%;
     height: 220px;
     margin-bottom: 10px;
-  }
+  } */
 
   .thumbnailColumn {
     flex-direction: column;
@@ -210,10 +210,10 @@
     margin-bottom: 10px;
   }
 
-  .thumbnailColumn <img decoding="async" {
+  /* .thumbnailColumn <img decoding="async" {
     width: 60px;
     height: 40px;
-  }
+  } */
 
   .serviceDescription {
     padding: 0 10px;
