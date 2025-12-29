@@ -223,11 +223,11 @@ export default function HeroSection() {
             className="
     absolute z-10 border-2 border-blue-700 shadow-2xl rounded-2xl p-1
     w-[90px] top-8 left-0              /* MOBILE DEFAULT */
-sm-mid:left-16 sm-mid:w-30
-    sm:w-36 sm:top-12 sm:left-2 sm:border-[3px]     /* SMALL SCREENS (480px–640px) */
-    md:w-40 md:top-16 md:left-8     /* MID SCREENS (768px–1024px) */
+sm-mid:left-8 sm-mid:w-30
+    sm:w-40 sm:top-12 sm:left-2 sm:border-[3px]     /* SMALL SCREENS (480px–640px) */
+    md:w-48 md:top-16 md:left-4     /* MID SCREENS (768px–1024px) */
 
-    lg:w-48 lg:top-20 lg:left-28  /* DESKTOP (YOUR ORIGINAL VALUES) */
+    lg:w-52 lg:top-20 lg:left-18  /* DESKTOP (YOUR ORIGINAL VALUES) */
   "
           >
             {/* <img
@@ -276,7 +276,7 @@ sm-mid:left-16 sm-mid:w-30
 
             {/* BOTTOM LABEL */}
             <div className=" bg-yellow-300 p-0.5 sm:m-1 sm:p-1 md-p-2 rounded-lg text-center sm:text-sm">
-              <p className="text-[6px] md:text-xs">
+              <p className="text-[6px] sm:text-xs md:text-xs">
                 Find the best vendor at the lowest price
               </p>
             </div>
@@ -300,7 +300,7 @@ sm-mid:left-16 sm-mid:w-30
 
     text-sm bottom-36 left-5           /* MOBILE: 360px–480px */
 sm-mid:left-8 
-    sm:text-2xl sm:left-6 sm:bottom-52 /* SMALL SCREENS: 480–640px */
+    sm:text-2xl sm:left-6 sm:bottom-60 /* SMALL SCREENS: 480–640px */
 
     md:text-3xl md:left-12 md:bottom-72 /* MEDIUM: 768–1024px */
 
@@ -332,10 +332,10 @@ sm-mid:left-8
             className="
     absolute z-30 bg-purple32 shadow-xl rounded-2xl py-1 px-2
     w-[90px] left-0 bottom-4            /* MOBILE (360px–480px) */
-sm-mid:w-28 sm-mid:left-8
-    sm:w-36 sm:bottom-16   /* SMALL SCREENS */
+sm-mid:w-28 sm-mid:h-25 sm-mid:left-8
+    sm:w-40 sm:bottom-16   /* SMALL SCREENS */
 
-    md:w-40 md:left-8 md:bottom-16 /* MEDIUM (768px–1024px) */
+    md:w-48 md:left-4 md:bottom-16 /* MEDIUM (768px–1024px) */
 
     lg:w-[250px] lg:left-8 lg:bottom-16 /* DESKTOP (your original) */
   "
@@ -367,10 +367,10 @@ sm-mid:w-28 sm-mid:left-8
             className="
     absolute z-10 bg-aceeff shadow-xl rounded-2xl px-2 py-1
     w-[90px]  h-204 top-8 right-0                        /* MOBILE (360px–480px) */
-sm-mid:right-10 sm-mid:w-24
-    sm:w-36 sm:h-36 sm:top-16  sm:py-2 sm:right-10               /* SMALL SCREENS (480–640px) */
+sm-mid:right-4 sm-mid:w-28
+    sm:w-40 sm:h-36 sm:top-16  sm:py-2 sm:right-4               /* SMALL SCREENS (480–640px) */
 
-    md:w-48 md:top-16 md:right-10             /* MEDIUM (768–1024px) */
+    md:w-52 md:top-16 md:right-2             /* MEDIUM (768–1024px) */
 
     lg:w-[320px] lg:p-4 lg:top-12 lg:right-2 lg:h-40 lg:pr-0  /* DESKTOP (your original position & size) */
   "
