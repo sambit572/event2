@@ -23,9 +23,9 @@ export const SearchResult = ({
     return `${mins}m`;
   };
 
-  const handleServiceClick = (serviceId) => {
-    navigate(`/service/${categories}/${serviceId}`);
-  };
+  const handleServiceClick = (service) => {
+  navigate(`/service/${service.serviceCategory}/${service._id}`);
+};
 
   const handleCategoryClick = (categoryName) => {
     navigate(`/category/${categoryName}`);
@@ -43,7 +43,7 @@ export const SearchResult = ({
             {services.map((service) => (
               <div
                 key={service._id}
-                onClick={() => handleServiceClick(service._id)}
+                onClick={() => handleServiceClick(service)}
                 className=" rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer"
               >
                 <div className="relative h-48">
