@@ -94,7 +94,9 @@ const OrderSummary = () => {
       .toUpperCase()}`;
 
     // Generate UPI URI
-    const upiUri = `upi://pay?pa=merchant@paytm&pn=EventVendor&am=${orderSummary.grandTotal}&cu=INR&tn=Order-${orderId}`;
+    const upiUri = `upi://pay?pa=merchant@paytm&pn=EventVendor&am=${Math.round(
+      orderSummary.grandTotal * 0.2
+    )}&cu=INR&tn=Order-${orderId}`;
 
     // Set expiration to 15 minutes from now
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000).toISOString();
