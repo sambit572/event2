@@ -280,7 +280,7 @@ input[type="range"].thumb-right {
   z-index: 1100;
   background-color: #001f3f;
   color: white;
-  padding: 8px 12px;
+  padding: 7px 11px;
   border: none;
   border-radius: 8px;
   font-weight: 600;
@@ -290,7 +290,7 @@ input[type="range"].thumb-right {
 }
 
 .filter-toggle-btn .filter-icon {
-  font-size: 20px;
+  font-size: 17px;
 }
 
 .filter-toggle-btn .filter-text {
@@ -392,7 +392,7 @@ input[type="range"].thumb-right {
   }
 
   .filter-toggle-btn {
-    top: 90px;
+    top: 61px;
 
     right: 30px;
   }
@@ -413,7 +413,7 @@ input[type="range"].thumb-right {
 }
 @media screen and (max-width: 460px) {
   .filter-toggle-btn {
-    top: 55px;
+    top: 53px;
 
     right: 20px;
   }

@@ -100,7 +100,7 @@ export const categoriesData = {
     "Birthday Balloon Decoration",
     "Theme-Based Balloon Decoration",
     "Baby Shower Balloon Decoration",
-  ],
+  ]
 };
 
 export const locationData = {

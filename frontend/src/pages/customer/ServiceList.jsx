@@ -25,6 +25,7 @@ import carBanner from "../../assets/serviceListBanner/car-ban.webp";
 import fireworksBanner from "/categories/fireworks.webp";
 import cardBanner from "/categories/marriage-card.webp";
 import magicBanner from "/categories/magician.webp";
+import resortBanner from "/categories/resortBanner.webp";
 // import stageBanner from "../../assets/home/categoriesImages/stage_decor.webp";
 import eventBanner from "/categories/event_company.webp";
 import balloonBanner from "../../assets/serviceListBanner/balloon banner.webp";
@@ -81,6 +82,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
     // "Stage Decor": stageBanner,
     "Event Management Company": eventBanner,
     "Balloon Decor": balloonBanner,
+    "Hotel & Resorts": resortBanner,
   };
 
   // ✅ Define subcategories for each main category
@@ -194,6 +196,13 @@ const ServiceList = ({ onSwitchToLogin }) => {
       "Theme-Based Balloon Decoration",
       "Baby Shower Balloon Decoration",
     ],
+    "Hotel & Resorts": [
+      "All",
+      "Luxury Hotels",
+      "Wedding Hotels & Resorts",
+      "Resorts",
+      "Beach Resorts",
+    ],
   };
 
   // ✅ Show sticky header only after scrolling past banner
@@ -268,6 +277,20 @@ const ServiceList = ({ onSwitchToLogin }) => {
 
   const handleApplyFilters = (filters) => {
     console.log("Applying filters:", filters);
+    const min = Number(filters.minPrice);
+    const max = Number(filters.maxPrice);
+
+    // ❌ Negative price validation
+    if ((filters.minPrice && min < 0) || (filters.maxPrice && max < 0)) {
+      alert("Price cannot be negative");
+      return;
+    }
+
+    // ❌ Min > Max validation
+    if (filters.minPrice && filters.maxPrice && min > max) {
+      alert("Minimum price cannot be greater than Maximum price");
+      return;
+    }
     // Initialize results by filtering services
     const results = services.filter((service) => {
       console.log("Inspecting service:", service); // Debugging log
@@ -275,10 +298,14 @@ const ServiceList = ({ onSwitchToLogin }) => {
       const serviceMin = Number(service.minPrice) || 0;
       const serviceMax = Number(service.maxPrice) || 0;
 
-      // ✅ Price overlap check
       const priceMatch =
         (!filters.minPrice && !filters.maxPrice) ||
-        (serviceMin >= filters.minPrice && serviceMax <= filters.maxPrice);
+        (filters.minPrice && !filters.maxPrice && serviceMin >= min) ||
+        (!filters.minPrice && filters.maxPrice && serviceMax <= max) ||
+        (filters.minPrice &&
+          filters.maxPrice &&
+          serviceMin >= min &&
+          serviceMax <= max);
 
       // ✅ Rating check
       const ratingValue =

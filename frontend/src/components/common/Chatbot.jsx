@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import "./Chatbot.css";
-import logo128 from "../../assets/serverLogo-128.webp";
-import logo256 from "../../assets/serverLogo-256.webp";
-import logo384 from "../../assets/serverLogo-384.webp";
-import logo512 from "../../assets/serverLogo-512.webp";
+
+import logo from "../../assets/serverLogo.webp";
 
 const chatbotFAQs = [
   "What is EventsBridge?",
@@ -101,12 +99,12 @@ const Chatbot = () => {
         fetchPriority="low"
         alt="Chat Icon"
         className="chat-icon"
-        src={logo256}
+        src={logo}
         srcSet={`
-    ${logo128} 128w,
-    ${logo256} 256w,
-    ${logo384} 384w,
-    ${logo512} 512w
+    ${logo} 128w,
+    ${logo} 256w,
+    ${logo} 384w,
+    ${logo} 512w
   `}
         sizes="
     (max-width: 640px) 96px,

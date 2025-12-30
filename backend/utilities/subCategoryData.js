@@ -90,4 +90,10 @@ export const SUBCATEGORY_MAP = {
     "Theme-Based Balloon Decoration",
     "Baby Shower Balloon Decoration",
   ],
+     "Hotel & Resorts": [
+      "Luxury Hotels",
+      "Wedding Hotels & Resorts",
+      "Resorts",
+      "Beach Resorts",
+    ],
 };

@@ -81,8 +81,8 @@
   position: relative;
   width: 200px;
   height: 400px;
-  border: 12px solid #000;
-  border-radius: 40px;
+  border: 7px solid #000;
+  border-radius: 30px;
   background: #fff;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   overflow: hidden;
@@ -178,6 +178,20 @@
     top: 290px;
     right: -150px;
   }
+  .features-diagonal-layout {
+    gap: 5px;
+  }
+  .phone-notch {
+    width: 120px;
+    height: 15px;
+  }
+  .phone-wrapper {
+    width: 200px;
+    height: 400px;
+    margin: 20px;
+    border: 6px solid #000;
+    border-radius: 30px;
+  }
 }
 @media screen and (max-width: 960px) {
   /* Left side diagonal */
@@ -215,10 +229,19 @@
     top: 290px;
     right: -100px;
   }
+  .features-diagonal-layout {
+    gap: 50px;
+  }
+  .phone-notch {
+    width: 120px;
+    height: 15px;
+  }
   .phone-wrapper {
-    width: 160px;
-    height: 320px;
+    width: 200px;
+    height: 400px;
     margin: 20px;
+    border: 6px solid #000;
+    border-radius: 30px;
   }
 }
 
@@ -228,10 +251,43 @@
     align-items: center;
   }
 
-  .features-left .feature,
-  .features-right .feature {
-    position: static;
-    margin: 12px 0;
+  .features-left .feature-1 {
+    top: 0;
+    left: -230px;
+  }
+  .features-left .feature-2 {
+    top: 130px;
+    left: -80px;
+  }
+  .features-left .feature-3 {
+    top: 160px;
+    left: -230px;
+  }
+  .features-left .feature-4 {
+    top: 290px;
+    left: -80px;
+  }
+
+  /* Right side diagonal */
+  .features-right .feature-1 {
+    top: 0;
+    right: -230px;
+  }
+  .features-right .feature-2 {
+    top: 130px;
+    right: -80px;
+  }
+  .features-right .feature-3 {
+    top: 150px;
+    right: -230px;
+  }
+  .features-right .feature-4 {
+    top: 290px;
+    right: -80px;
+  }
+  .phone-notch {
+    width: 100px;
+    height: 15px;
   }
 
   .feature {
@@ -240,7 +296,9 @@
 
   .phone-wrapper {
     width: 180px;
-    height: 360px;
+    height: 380px;
+    border-radius: 30px;
+    border: 6px solid #000;
   }
 
   .phone-content {
@@ -248,25 +306,30 @@
   }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 778px) {
   .features-diagonal-layout {
     flex-direction: row;
     align-items: center;
   }
-
   .features-left .feature,
   .features-right .feature {
     position: static;
     margin: 10px 0;
   }
 
-  .feature {
-    width: 120px;
+  .phone-notch {
+    width: 100px;
+    height: 15px;
+  }
+  .phone-wrapper {
+    width: 190px;
+    height: 400px;
+    border: 5px solid #000;
+    border-radius: 25px;
   }
 
-  .phone-wrapper {
-    width: 250px;
-    height: 450px;
+  .feature {
+    width: 120px;
   }
 
   .phone-content {
@@ -274,14 +337,24 @@
   }
 }
 
-@media screen and (max-width: 520px) {
+@media screen and (max-width: 660px) {
+  .phone-wrapper {
+    width: 200px;
+    height: 350px;
+    border: 4px solid #000;
+    border-radius: 25px;
+  }
+}
+@media screen and (max-width: 560px) {
   .feature {
     width: 110px;
   }
-
+  .features-diagonal-layout {
+    gap: 5px;
+  }
   .phone-wrapper {
-    width: 150px;
-    height: 300px;
+    width: 170px;
+    height: 370px;
   }
 
   .phone-content {
@@ -293,10 +366,18 @@
   .feature {
     width: 100px;
   }
-
+  .features-diagonal-layout {
+    gap: 0px;
+  }
+  .phone-notch {
+    width: 60px;
+    height: 15px;
+  }
   .phone-wrapper {
-    width: 200px;
-    height: 270px;
+    width: 190px;
+    height: 320px;
+    border: 4px solid #000;
+    border-radius: 25px;
   }
 
   .phone-content {
@@ -311,8 +392,10 @@
   }
 
   .phone-wrapper {
-    width: 200px;
-    height: 240px;
+    width: 250px;
+    height: 260px;
+    border: 3px solid #000;
+    border-radius: 18px;
   }
 
   .phone-content {

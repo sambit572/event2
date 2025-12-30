@@ -47,7 +47,7 @@ export default function HeroSection() {
         <div className="flex gap-3 sm:gap-4 mt-2 sm:mt-4 flex-wrap justify-center px-4">
           <a
             href="#categories"
-            className="bg-black font-semibold text-white px-5 sm:px-6 py-1.5 sm:py-3 rounded-3xl text-xs sm:text-base md:text-lg"
+            className="bg-black hover:border-black hover:border-2 hover:bg-zinc-200 hover:text-black transition-all duration-300 ease-in-out font-semibold text-white px-5 sm:px-6 py-1.5 sm:py-3 rounded-3xl text-xs sm:text-base md:text-lg"
           >
             Book Now
           </a>
@@ -58,11 +58,11 @@ export default function HeroSection() {
 
         <div className="relative w-full mt-8 flex justify-center items-center  overflow-hidden bg-white">
           {/* ===== Background Circle Layers ===== */}
-          <div className="absolute flex justify-center items-center">
+          <div className="absolute flex  justify-center items-center">
             {/* Large Circle */}
-            <div className="absolute w-[1000px] top-[-140px] h-[1000px] rounded-full   bg-gradient-to-b border-4 to-transparent opacity-60"></div>
+            <div className="absolute w-[1000px] top-[-140px] h-[1000px] rounded-full   bg-gradient-to-b border-2 border-lime-200 to-transparent opacity-60"></div>
             {/* Medium Circle */}
-            <div className="absolute w-[800px] top-[-70px] h-[800px] rounded-full   bg-gradient-to-b border-2 to-transparent opacity-60"></div>
+            <div className="absolute w-[800px]  top-[-70px] h-[800px] rounded-full   border-[#86fde8] bg-gradient-to-b border-2 to-transparent opacity-60"></div>
 
             {/* Small Circle */}
             <div
@@ -221,24 +221,24 @@ export default function HeroSection() {
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 2, ease: "easeInOut" }}
             className="
-    absolute z-30 bg-blue-400 shadow-2xl rounded-2xl p-1
-    w-20 top-8 left-0              /* MOBILE DEFAULT */
-sm-mid:left-4 sm-mid:w-24
-    sm:w-36 sm:top-12 sm:left-2      /* SMALL SCREENS (480px–640px) */
-    md:w-40 md:top-16 md:left-8     /* MID SCREENS (768px–1024px) */
+    absolute z-10 border-2 border-blue-700 shadow-2xl rounded-2xl p-1
+    w-[90px] top-8 left-0              /* MOBILE DEFAULT */
+sm-mid:left-8 sm-mid:w-30
+    sm:w-40 sm:top-12 sm:left-2 sm:border-[3px]     /* SMALL SCREENS (480px–640px) */
+    md:w-48 md:top-16 md:left-4     /* MID SCREENS (768px–1024px) */
 
-    lg:w-44 lg:top-20 lg:left-28  /* DESKTOP (YOUR ORIGINAL VALUES) */
+    lg:w-52 lg:top-20 lg:left-18  /* DESKTOP (YOUR ORIGINAL VALUES) */
   "
           >
-            <img
+            {/* <img
               decoding="async"
               loading="lazy" // ✅ critical for FCP
-              src="/assets/home/herosection/heroimage3-160.webp"
+              src="/assets/home/herosection/teamwork.webp"
               srcSet="
-    /assets/home/herosection/heroimage3-40.webp 40w,
-    /assets/home/herosection/heroimage3-80.webp 80w,
-    /assets/home/herosection/heroimage3-160.webp 160w,
-    /assets/home/herosection/heroimage3-320.webp 320w
+    /assets/home/herosection/teamwork.webp 40w,
+    /assets/home/herosection/teamwork.webp 80w,
+    /assets/home/herosection/teamwork.webp 160w,
+    /assets/home/herosection/teamwork.webp 320w
   "
               sizes="
     (max-width: 640px) 40px,
@@ -248,12 +248,38 @@ sm-mid:left-4 sm-mid:w-24
               width="176"
               height="176"
               alt="Preview"
-              className="w-full h-20 sm:h-36 md:h-40 lg:h-44 object-cover rounded-xl"
-            />
+              className="w-full  h-20 sm:h-36 md:h-40 lg:h-44 rounded-xl"
+            /> */}
 
-            {/* <span className="absolute top-3 right-3 bg-black text-white text-xs px-2 py-[2px] rounded-full">
-              2:01
-            </span> */}
+            {/* CENTERED TEXT */}
+            <div className="flex shadow-5xl shadow-black/40 flex-col px-2">
+              <p
+                className="font-extrabold  sm:font-extrabold text-2xl sm:text-5xl drop-shadow-lg"
+                style={{
+                  WebkitTextStroke: "2px white",
+                  color: "black",
+                }}
+              >
+                100+
+              </p>
+
+              <p
+                className="text-[7px] sm:text-end sm:text-sm sm:font-semibold drop-shadow shadow-black/40"
+                style={{
+                  // WebkitTextStroke: "1px white",
+                  color: "black",
+                }}
+              >
+                Verified Vendors
+              </p>
+            </div>
+
+            {/* BOTTOM LABEL */}
+            <div className=" bg-yellow-300 p-0.5 sm:m-1 sm:p-1 md-p-2 rounded-lg text-center sm:text-sm">
+              <p className="text-[6px] sm:text-xs md:text-xs">
+                Find the best vendor at the lowest price
+              </p>
+            </div>
           </motion.div>
 
           {/* Middle Left Card */}
@@ -272,13 +298,13 @@ sm-mid:left-4 sm-mid:w-24
     absolute z-50 flex space-x-1 bg-stone-800 text-green92 shadow-xl
     rounded-2xl py-0 px-2
 
-    text-sm bottom-32 left-2           /* MOBILE: 360px–480px */
+    text-sm bottom-36 left-5           /* MOBILE: 360px–480px */
 sm-mid:left-8 
-    sm:text-2xl sm:left-6 sm:bottom-52 /* SMALL SCREENS: 480–640px */
+    sm:text-2xl sm:left-6 sm:bottom-60 /* SMALL SCREENS: 480–640px */
 
-    md:text-3xl md:left-12 md:bottom-64 /* MEDIUM: 768–1024px */
+    md:text-3xl md:left-12 md:bottom-72 /* MEDIUM: 768–1024px */
 
-    lg:text-3xl lg:left-44 lg:bottom-56 /* DESKTOP: YOUR ORIGINAL VALUES */
+    lg:text-3xl lg:left-44 lg:bottom-76 /* DESKTOP: YOUR ORIGINAL VALUES */
 
     w-20 sm:w-36 md:w-40 lg:w-40
   "
@@ -305,11 +331,11 @@ sm-mid:left-8
             transition={{ duration: 2, ease: "easeInOut" }}
             className="
     absolute z-30 bg-purple32 shadow-xl rounded-2xl py-1 px-2
-    w-24 left-0 bottom-4            /* MOBILE (360px–480px) */
-sm-mid:w-28
-    sm:w-36 sm:bottom-16   /* SMALL SCREENS */
+    w-[90px] left-0 bottom-4            /* MOBILE (360px–480px) */
+sm-mid:w-28 sm-mid:h-25 sm-mid:left-8
+    sm:w-40 sm:bottom-16   /* SMALL SCREENS */
 
-    md:w-40 md:left-8 md:bottom-16 /* MEDIUM (768px–1024px) */
+    md:w-48 md:left-4 md:bottom-16 /* MEDIUM (768px–1024px) */
 
     lg:w-[250px] lg:left-8 lg:bottom-16 /* DESKTOP (your original) */
   "
@@ -340,20 +366,20 @@ sm-mid:w-28
             transition={{ duration: 2, ease: "easeInOut" }}
             className="
     absolute z-10 bg-aceeff shadow-xl rounded-2xl px-2 py-1
-    w-24  h-204 top-8 right-0                        /* MOBILE (360px–480px) */
-sm-mid:right-6 sm-mid:w-24
-    sm:w-36 sm:h-36 sm:top-16  sm:py-2 sm:right-10               /* SMALL SCREENS (480–640px) */
+    w-[90px]  h-204 top-8 right-0                        /* MOBILE (360px–480px) */
+sm-mid:right-4 sm-mid:w-28
+    sm:w-40 sm:h-36 sm:top-16  sm:py-2 sm:right-4               /* SMALL SCREENS (480–640px) */
 
-    md:w-48 md:top-16 md:right-10             /* MEDIUM (768–1024px) */
+    md:w-52 md:top-16 md:right-2             /* MEDIUM (768–1024px) */
 
     lg:w-[320px] lg:p-4 lg:top-12 lg:right-2 lg:h-40 lg:pr-0  /* DESKTOP (your original position & size) */
   "
           >
             <h2 className="font-bold text-xl sm:text-6xl">Join</h2>
-            <p className="text-gray-800 text-md font-bold sm:text-xl">
+            <p className="text-gray-800 text-sm font-semibold sm:text-xl">
               As A Vendor
             </p>
-            <p className="text-gray-800 font-semibold text-xs sm:text-sm">
+            <p className="text-gray-800 font-semibold text-[8px] sm:text-sm">
               With zero cost
             </p>
 
@@ -382,24 +408,35 @@ sm-mid:right-6 sm-mid:w-24
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 2, ease: "easeInOut" }}
             className="
-    absolute z-10 bg-white shadow-xl rounded-2xl p-0
-    w-28  bottom-4 right-0              /* MOBILE (360–480px) */
+    absolute z-10 bg-yellow-50 shadow-xl rounded-2xl border-[1px] border-amber-400 p-0
+    w-[90px]  bottom-4 right-0              /* MOBILE (360–480px) */
 sm-mid:right-2 sm-mid:w-28
     sm:w-40 sm:bottom-16 sm:right-0      /* SMALL SCREENS (480–640px) */
 
-    md:w-44 md:bottom-16 md:right-4    /* MEDIUM/TABLET (768–1024px) */
+    md:w-44 md:bottom-16 md:right-4 md:h-40   /* MEDIUM/TABLET (768–1024px) */
 
-    lg:w-[240px] lg:bottom-20 lg:right-6    /* DESKTOP — YOUR ORIGINAL VALUES */
+    lg:w-[240px] lg:h-48 lg:bottom-20 lg:right-6    /* DESKTOP — YOUR ORIGINAL VALUES */
   "
           >
+            <div className="flex mt-1 py-1 items-center m-1 rounded-xl sm:font-bold justify-center flex-wrap bg-[#FFAA00]">
+              <h1 className="text-[6px] text-black font-bold text-center sm:text-xs lg:text-lg">
+                Live-Price Negotiation
+              </h1>
+              {/* <span className="bg-red-600 text-white text-xs sm:text-sm px-2 py-[2px] rounded-lg">
+                1.5k
+              </span>
+              <span>❤️</span>
+
+              <span className=" text-xs">Book Now</span> */}
+            </div>
             <img
               decoding="async"
               loading="lazy" // ✅ very important
-              src="/assets/home/herosection/heroimage1-480.webp"
+              src="/assets/home/herosection/negotiation.webp"
               srcSet="
-    /assets/home/herosection/heroimage1-360.webp 360w,
-    /assets/home/herosection/heroimage1-480.webp 480w,
-    /assets/home/herosection/heroimage1-180.webp 180w,
+    /assets/home/herosection/negotiation.webp 360w,
+    /assets/home/herosection/negotiation.webp 480w,
+    /assets/home/herosection/negotiation.webp 180w,
   "
               sizes="
     (max-width: 640px) 90vw,
@@ -409,17 +446,8 @@ sm-mid:right-2 sm-mid:w-28
               width="662"
               height="364"
               alt="Preview"
-              className="w-full h-20 sm:h-32 md:h-44 object-cover rounded-t-xl"
+              className="w-full object-contain h-16 sm:h-32 md:h-30 lg:h-36 rounded-xl"
             />
-
-            <div className="flex items-center justify-center flex-wrap sm:gap-2 mt-0 sm:mt-2">
-              <span className="bg-red-600 text-white text-xs sm:text-sm px-2 py-[2px] rounded-lg">
-                1.5k
-              </span>
-              <span>❤️</span>
-
-              <span className=" text-xs">Book Now</span>
-            </div>
           </motion.div>
         </div>
       </motion.div>

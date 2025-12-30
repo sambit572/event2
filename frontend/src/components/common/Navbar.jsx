@@ -154,7 +154,17 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
 
   const handleSearchNavigate = (text) => {
     if (!text.trim()) return;
-    navigate(`/search?query=${encodeURIComponent(text.trim())}`);
+
+    const keyword = text.toLowerCase().trim();
+
+    // 🔥 Map aliases → category
+    if (RELATED_TERMS[keyword]) {
+      navigate(`/category/${RELATED_TERMS[keyword]}`);
+      return;
+    }
+
+    // fallback → search page
+    navigate(`/search?query=${encodeURIComponent(text)}`);
   };
 
   const fetchUserProfile = async () => {
@@ -317,12 +327,13 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
 
   const placeholders = [
     "Search for Services and more..",
-    "e.g, dj",
-    "e.g, tenthouse",
-    "e.g, cultural troupe",
+    "e.g, DJ Services & Brash Band",
+    "e.g, Decor & Tenthouse",
+    "e.g, Classical Music & Dance",
     "e.g, pandit",
-    "e.g, photographer",
-    "e.g, musical band",
+    "e.g, Photo & Videography",
+    "e.g, Music Concert & Orchestra",
+    "e.g, Beauty Makeover",
   ];
   const [placeholder, setPlaceholder] = useState(0);
   useEffect(() => {
@@ -410,25 +421,39 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                 onChange={(e) => {
                   const value = e.target.value;
                   setSearchInput(value);
-                  if (value.trim() === "") {
+
+                  if (value.trim().length <= 1) {
+                    setSuggestions([]);
                     setShowSuggestions(false);
                     return;
                   }
-                  if (value.trim().length > 1) {
-                    fetchDynamicSuggestions(value);
-                  }
+
+                  // 1️⃣ Backend suggestions
+                  fetchDynamicSuggestions(value);
+
+                  // 2️⃣ Local category + history suggestions
                   const localHistory =
                     JSON.parse(localStorage.getItem("searchHistory")) || [];
+
                   const matchingCategories = CATEGORIES.filter((cat) =>
                     cat.toLowerCase().includes(value.toLowerCase())
                   );
+
                   const matchingHistory = localHistory.filter((term) =>
                     term.toLowerCase().includes(value.toLowerCase())
                   );
-                  const combinedSuggestions = [
-                    ...new Set([...matchingCategories, ...matchingHistory]),
-                  ].slice(0, 5);
-                  setSuggestions(combinedSuggestions);
+
+                  // 3️⃣ Merge safely (DON'T overwrite)
+                  setSuggestions((prev) =>
+                    [
+                      ...new Set([
+                        ...prev,
+                        ...matchingCategories,
+                        ...matchingHistory,
+                      ]),
+                    ].slice(0, 6)
+                  );
+
                   setShowSuggestions(true);
                 }}
                 autoFocus
@@ -455,10 +480,8 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                     key={index}
                     className="suggestion-item"
                     onClick={() => {
-                      setSearchInput(suggestion);
-                      navigate(
-                        `/search?query=${encodeURIComponent(suggestion.trim())}`
-                      );
+                      handleSearchNavigate(suggestion);
+                      setSearchInput("");
                       setShowSuggestions(false);
                     }}
                   >

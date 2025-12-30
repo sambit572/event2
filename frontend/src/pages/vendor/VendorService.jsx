@@ -149,6 +149,7 @@ function VendorService({ currentStep }) {
     "Card Design & Printing",
     "Magic Shows",
     "Event Management Company",
+    "Hotel & Resorts",
   ];
 
   const allLocations = {
@@ -292,6 +293,12 @@ function VendorService({ currentStep }) {
       "Birthday Balloon Decoration",
       "Theme-Based Balloon Decoration",
       "Baby Shower Balloon Decoration",
+    ],
+    "Hotel & Resorts": [
+      "Luxury Hotels",
+      "Wedding Hotels & Resorts",
+      "Resorts",
+      "Beach Resorts",
     ],
   };
 

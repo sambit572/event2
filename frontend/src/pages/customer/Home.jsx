@@ -2,6 +2,10 @@ import React, { useState, useEffect, useRef, Suspense } from "react";
 import axios from "axios";
 import "./Home.css";
 import { Seo } from "../../seo/seo.js";
+
+const AddsBanner = React.lazy(() =>
+  import("./../../components/customer/home/AddsBanner")
+);
 const Features = React.lazy(() =>
   import("../../components/customer/home/Features")
 );
@@ -19,6 +23,7 @@ import categories from "../../utils/CatogoryData.jsx";
 // import StepsSection from "../../components/customer/home/StepsSection.jsx";
 // import CulturalDanceSlider from "../common/CulturalDanceSlider.jsx";
 import HeroSection from "../../components/customer/home/HeroSection.jsx";
+// import AddsBanner from "../../components/customer/home/AddsBanner.jsx";
 // import Features from "./../../components/customer/home/Features";
 
 // ✅ Lazy load heavy components below
@@ -101,6 +106,7 @@ const Home = () => {
         <HeroSection />
         <Suspense fallback={<div>Loading ...</div>}>
           <Features />
+          {/* <AddsBanner /> */}
         </Suspense>
         <div id="categories" className="categories-head1">
           <h1 className="align_center categories-head mt-8">𝐂𝐀𝐓𝐄𝐆𝐎𝐑𝐈𝐄𝐒</h1>

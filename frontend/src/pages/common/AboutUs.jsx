@@ -60,7 +60,7 @@ const AboutUs = () => {
         {/* First Section */}
         <div className="flex flex-col lg:flex-col items-center gap-10">
           {/* Left - Image Section */}
-          <div className="w-full -mt-11">
+          {/* <div className="w-full -mt-11">
             <img
               decoding="async"
               loading="lazy"
@@ -68,7 +68,7 @@ const AboutUs = () => {
               alt="About Eventsbridge Platform"
               className="w-full h-auto  max-h-[550px] object-fill mt-5 rounded-xl border border-gray-200 shadow-lg"
             />
-          </div>
+          </div> */}
 
           {/* Right - Textual Content */}
           <div className="w-full space-y-5">
