@@ -26,6 +26,7 @@ const VendorLogin = ({ onClose, onSwitchToLogin }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [showForgotModal, setShowForgotModal] = useState(false);
   const auth = getFirebaseAuth();
+  console.log(auth);
   const [formData, setFormData] = useState({
     phoneNo: "",
     email: "",
@@ -33,7 +34,7 @@ const VendorLogin = ({ onClose, onSwitchToLogin }) => {
   });
   const [errorMsg, setErrorMsg] = useState("");
   const { user } = useSelector((state) => state.user);
-  console.log("Current user in login:", user);
+  // console.log("Current user in login:", user);
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add("overflow-hidden");
@@ -69,15 +70,19 @@ const VendorLogin = ({ onClose, onSwitchToLogin }) => {
   };
 
   function setupRecaptcha() {
-    if (window.recaptchaVerifier) window.recaptchaVerifier.clear();
-    window.recaptchaVerifier = new RecaptchaVerifier(
-      auth,
-      "recaptcha-container",
-      {
-        size: "invisible",
-        callback: () => console.log("Recaptcha passed"),
-      }
-    );
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        auth,
+        "recaptcha-container",
+        {
+          size: "invisible",
+          callback: (response) => console.log("Recaptcha passed", response),
+          "expired-callback": () => {
+            window.recaptchaVerifier.clear();
+          },
+        },
+      );
+    }
   }
 
   async function handleGetOTP(e) {
@@ -98,6 +103,7 @@ const VendorLogin = ({ onClose, onSwitchToLogin }) => {
       console.log("OTP sent successfully : ", confirmationResult);
       setStep("otp");
     } catch (err) {
+      console.error(err);
       setErrorMsg("OTP send failed. Try again.");
     }
   }
