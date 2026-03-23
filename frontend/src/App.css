@@ -1,0 +1,46 @@
+/* .app {
+  display: flex;
+  background-color: blueviolet;
+} */
+/* Centers the toast container */
+.Toastify__toast-container {
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+/* Optional: style the toast itself */
+.custom-toast {
+  background: rgb(250, 250, 164);
+  color: rgb(196, 63, 63);
+  font-size: 16px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.custom-toast-body {
+  text-align: center;
+}
+
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+
+  #receipt-print-area,
+  #receipt-print-area * {
+    visibility: visible !important;
+  }
+
+  #receipt-print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+
+  @page {
+    margin: 0;
+  }
+}

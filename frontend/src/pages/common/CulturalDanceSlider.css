@@ -1,0 +1,23 @@
+/* Fade / Zoom Animations */
+.zoom-in {
+  transform: scale(1);
+  opacity: 1;
+  transition: transform 0.8s ease, opacity 0.8s ease;
+}
+.zoom-out {
+  transform: scale(0.9);
+  opacity: 0;
+  transition: transform 0.8s ease, opacity 0.8s ease;
+}
+
+/* Sliding between states */
+.slide-in {
+  transform: translateY(0);
+  opacity: 1;
+  transition: transform 0.8s ease, opacity 0.8s ease;
+}
+.slide-out {
+  transform: translateY(-100%);
+  opacity: 0;
+  transition: transform 0.8s ease, opacity 0.8s ease;
+}

@@ -1,0 +1,65 @@
+/* --- CONTAINER FOR BOTH BUTTONS --- */
+.form-buttons {
+  display: flex;
+  justify-content: center; /* Center the buttons within the container */
+  align-items: center;
+  gap: 20px;
+  max-width: 320px; /* Keep a max-width for desktop */
+  margin: 0 auto; /* Center the container itself */
+}
+
+/* --- COMMON STYLES FOR BOTH BUTTONS --- */
+.back-btn,
+.submits-btn {
+  flex: 1; /* IMPROVEMENT: Let buttons share space equally */
+  height: 42px;
+  width: 93px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* --- INDIVIDUAL BUTTON STYLES --- */
+.back-btn {
+  background-color: #b5afaf;
+  color: white;
+}
+
+.back-btn:hover {
+  background-color: #a29b9b;
+}
+
+.back-arrow-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.submits-btn {
+  background-color: #32cd32;
+  color: white;
+}
+
+/* --- FIX: Corrected class name from .submit-btn to .submits-btn --- */
+.submits-btn:hover {
+  background-color: #28a428;
+}
+
+/* ============ RESPONSIVE (SIMPLIFIED & FIXED) ============ */
+@media (max-width: 480px) {
+  .form-buttons {
+    flex-direction: column; /* Stack buttons vertically */
+    gap: 12px;
+  }
+
+  .back-btn,
+  .submits-btn {
+    width: 100%; /* IMPROVEMENT: Buttons take full width when stacked */
+  }
+}

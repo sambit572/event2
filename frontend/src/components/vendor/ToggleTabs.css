@@ -1,0 +1,132 @@
+.tab-btn {
+  display: flex;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  margin-left: 50px;
+  /* background-color: #e9e91c; */
+  background-color: #e5e5de;
+  padding: 10px 20px;
+  color: #0d1b2a;
+  max-width: fit-content;
+  border-radius: 6.25rem;
+  position: relative;
+  width: 290px !important;
+  overflow: hidden;
+  font-family: "Montserrat";
+}
+
+.tab-btn button {
+  border-radius: 6.2rem;
+  z-index: 2;
+  border: none;
+  background-color: transparent;
+  color: #0d1b2a;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease,
+    border-color 0.3s ease;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  position: relative;
+  width: max-content;
+  padding-right: 19px;
+}
+
+.tab-btn .active {
+  color: #e5e5de;
+  font-weight: 600;
+  border-color: #f5efff;
+  background: transparent;
+}
+
+/* Sliding background box */
+.bg-slider {
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  width: 50%;
+  border-radius: 6.25rem;
+  background-color: #001f3f;
+  /* subtle purple highlight */
+  z-index: 1;
+  transition: all 0.43s ease;
+}
+
+.bg-slider.services {
+  left: 4%;
+  width: 40%;
+}
+
+.bg-slider.bookings {
+  left: 45%;
+  width: 44%;
+}
+
+@media (max-width: 1024px) {
+  .bg-slider.services {
+    left: 8%;
+    width: 40%;
+  }
+
+  .bg-slider.bookings {
+    left: 50%;
+    width: 44%;
+  }
+}
+
+@media (max-width: 530px) {
+  .tab-btn {
+    width: 290px !important;
+    align-items: start;
+    /* right: 120px; */
+    /* background-color: #000; */
+  }
+}
+
+@media (max-width: 480px) {
+  .tab-btn {
+    width: 290px !important;
+    align-items: start;
+    /* right: 90px; */
+    /* background-color: #000; */
+  }
+}
+
+@media (max-width: 431px) {
+   .tab-btn button {
+    font-size: 12px;
+    width: max-content;
+  }
+  
+
+  /* .bg-slider.services {
+    left: 5%;
+    width: 40%;
+    top: 16%;
+  } */
+
+  /* .bg-slider.bookings {
+    left: 51%;
+    width: 44%;
+    height: 35px;
+    top: 16%;
+  } */
+}
+
+@media (max-width: 380px) {
+  .tab-btn button {
+    font-size: 11px;
+  }
+  /* .bg-slider.services {
+    left: 8%;
+    width: 40%;
+  } */
+
+  /* .bg-slider.bookings {
+    left: 50%;
+    width: 46%;
+    height: 35px;
+  } */
+}

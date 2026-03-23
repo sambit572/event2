@@ -1,0 +1,83 @@
+/* Container for the milestones section */
+.milestones-wrapper {
+  padding: 4rem 2rem;
+  margin-top: 40px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  z-index: 1;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Background image layer */
+.milestones-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/milestome.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(12px) brightness(0.8);
+  transform: scale(1.05); /* avoids blur edge cut */
+  z-index: -2;
+}
+
+/* Soft overlay for readability */
+.milestones-wrapper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(255, 248, 225, 0.8),
+    rgba(255, 236, 179, 0.8)
+  );
+  z-index: -1;
+  border-radius: 12px;
+}
+
+
+.milestone-card {
+  flex: 1 1 220px;
+  min-width: 160px;
+  text-align: center;
+  padding: 1.5rem 1rem;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  backdrop-filter: blur(6px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.milestone-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Milestone number styling */
+.milestone-number {
+  font-size: 2.8rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  color: #f58300; /* Accent orange */
+}
+
+/* Milestone label styling */
+.milestone-label {
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #1a237e; /* Deep blue */
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 500px) {
+  .milestones-wrapper {
+    margin-top: 0px;
+    padding: 0;
+  }
+}

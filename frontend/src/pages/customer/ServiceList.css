@@ -1,0 +1,223 @@
+/* Category Hero Banner */
+.categoryHero {
+  position: relative;
+  width: 100%;
+  height: 240px; /* big image height */
+  overflow: hidden;
+  margin-top: -2px;
+}
+
+.categoryHero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(70%); /* darken for text visibility */
+}
+
+.categoryHeroTitle {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+.backArrow {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  font-size: 1.8rem;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 50%;
+  padding: 6px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.stickyHeader {
+  position: fixed; /* change from sticky → fixed */
+  top: 60px; /* exactly 60px below navbar */
+  left: 0;
+  width: 100%;
+  z-index: 50;
+  background: #fff;
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid #ddd;
+  opacity: 1; /* always visible */
+  transform: translateY(0); /* no slide-in */
+}
+
+.stickyHeader.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.stickyHeader h2 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #002147;
+}
+
+.stickyHeader .backArrowSticky {
+  font-size: 1.5rem;
+  color: #002147;
+  cursor: pointer;
+}
+
+.serviceList {
+  display: flex;
+  margin-top: 5px;
+  width: 100%;
+}
+
+.singleServiceCard {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border: 1px solid #b9b5b5;
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin: 0px 10px 18px 13px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.38); /* light shadow */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+/* Hover effect (edges only, not inside the card) */
+.singleServiceCard:hover {
+  border-color: #3498db; /* highlight border */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12); /* slightly stronger shadow */
+  background-color: #ffffff; /* stays white (no tint in the middle) */
+}
+.serviceCardDetails {
+  width: 100%;
+  background-color: #fff;
+  box-sizing: border-box;
+  height: 100vh;
+  scrollbar-width: none;
+  z-index: 1;
+  overflow-y: hidden; /* 🚫 no scroll initially */
+}
+
+.serviceCardDetails.scrollable {
+  overflow-y: auto; /* ✅ enable scroll when filter is fixed */
+}
+.subcategory-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 10px;
+  margin: 15px 0;
+}
+
+.subcategory-tabs {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  flex-wrap: nowrap;
+  padding: 10px 0;
+}
+
+.subcategory-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.subcategory-tab {
+  padding: 8px 18px;
+  border-radius: 25px;
+  background: #f4f4f4;
+  cursor: pointer;
+  font-weight: 500;
+  border: none;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.subcategory-tab:hover {
+  background: #ffd699;
+  color: #333;
+}
+
+.subcategory-tab.active {
+  background: #ff7f50;
+  color: white;
+  box-shadow: 0 4px 12px rgba(255, 127, 80, 0.3);
+}
+
+.scroll-btn {
+  background: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: #ff7f50;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+}
+
+.scroll-btn:hover {
+  background: #ff7f50;
+  color: white;
+  transform: scale(1.1);
+}
+
+/* For screen widths between 1012px and 1350px */
+@media screen and (min-width: 1024px) and (max-width: 1350px) {
+  .serviceCardDetails {
+    /* THIS IS THE FIX: Changed from 80% to 100% */
+    width: 100%;
+  }
+  .singleServiceCard {
+    width: 100%;
+  }
+}
+
+/* Responsive styling for tablet (≤1024px) */
+@media (max-width: 1024px) {
+  .serviceCardDetails {
+    margin-top: 50px;
+  }
+  .singleServiceCard {
+    margin-top: 10px;
+  }
+}
+@media (max-width: 768px) {
+  .categoryHero {
+    height: 180px;
+  }
+  .categoryHeroTitle {
+    font-size: 1.3rem;
+  }
+  .backArrow {
+    font-size: 1.4rem;
+    padding: 4px;
+  }
+  .stickyHeader {
+    top: 58px;
+    padding: 8px 12px;
+  }
+  .serviceCardDetails {
+    margin-top: 0;
+  }
+  .stickyHeader h2 {
+    font-size: 0.85rem;
+  }
+
+  .stickyHeader .backArrowSticky {
+    font-size: 1rem;
+  }
+  .subcategory-wrapper {
+    margin-top: 57px;
+  }
+}

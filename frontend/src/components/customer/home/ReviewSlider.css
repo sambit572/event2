@@ -1,0 +1,218 @@
+.review_section {
+  padding: 5px 0 0px 0;
+  background-color: #f1f2f3;
+  overflow: hidden;
+}
+.review_card:hover {
+  transform: scale(1.05);
+}
+
+.heading_review {
+  background: #f3c12d;
+  color: rgb(0, 0, 0);
+  padding: 5px 10px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  width: 250px;
+  margin: 40px auto;
+  border: 6px double #001f3f;
+  border-radius: 30px 10px 30px 10px;
+  display: block;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center;
+}
+
+.subheadings {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-top: -20px;
+  margin-bottom: 40px;
+  color: #3b0340e1;
+  letter-spacing: 0.5px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.review_wrapper {
+  max-width: 100%;
+  margin: 40px;
+}
+
+.review_container {
+  display: flex;
+  flex-wrap: nowrap;
+  will-change: transform;
+}
+
+.review_card {
+  background: linear-gradient(135deg, #f1edc3, #ffffff);
+  color: black;
+  border-radius: 10px;
+  padding: 70px 20px 20px 20px; /* Added top padding for avatar space */
+  text-align: center;
+  min-height: 250px;
+  width: 300px;
+  flex: 0 0 auto;
+  margin: 60px 5px 0 5px; /* Added top margin for avatar overflow */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Changed from center to flex-start */
+  align-items: center;
+  transition: all 0.3s ease-in-out;
+  position: relative; /* Added for absolute positioned avatars */
+}
+
+.review_rating {
+  font-size: 1.5rem;
+  margin: 10px 0; /* Increased margin */
+}
+
+.star {
+  font-size: 1.3rem;
+  margin-right: 2px;
+}
+
+.star.filled {
+  color: #44f32d;
+}
+
+.star.empty {
+  color: #ccc;
+}
+
+.review_card h3 {
+  margin: 15px 0 10px 0; /* Adjusted margins */
+  font-size: 1.2rem;
+}
+
+.review_card p {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: black;
+  margin: 10px 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1280px) {
+  .review_card {
+    width: 250px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .review_card {
+    width: 230px;
+  }
+}
+
+@media (max-width: 768px) {
+  .review_card {
+    width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .review_card {
+    width: 280px;
+  }
+}
+
+.review_avatar {
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%); /* Center the avatar horizontally */
+  width: 105px;
+  height: 105px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #c3d21c;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  z-index: 10; /* Ensure avatar appears above card */
+}
+
+@media (max-width: 380px) {
+  .review_card {
+    width: 250px;
+  }
+}
+
+.review_form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin: 30px auto;
+  padding: 25px;
+  background: #fefefe;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  max-width: 320px;
+  width: 100%;
+}
+
+.review_form input,
+.review_form textarea,
+.review_form select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+  font-family: inherit;
+}
+
+.review_form input:focus,
+.review_form textarea:focus,
+.review_form select:focus {
+  border-color: #f3c12d;
+  box-shadow: 0 0 5px rgba(243, 193, 45, 0.4);
+}
+
+.review_form textarea {
+  resize: none;
+  height: 90px;
+}
+
+.review_form button {
+  padding: 10px 20px;
+  background-color: #f3c12d;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  color: #222;
+  transition: background-color 0.3s ease;
+}
+
+.review_form button:hover {
+  background-color: #e0af24;
+}
+
+.initials_avatar {
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%); /* Center the avatar horizontally */
+  width: 105px;
+  height: 105px;
+  border-radius: 50%;
+  background-color: #3a3a3a;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  border: 3px solid #c3d21c;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  text-transform: uppercase;
+  z-index: 10; /* Ensure avatar appears above card */
+}
