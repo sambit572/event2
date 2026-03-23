@@ -310,8 +310,8 @@ function VendorService({ currentStep }) {
   // Locations based on selected state
   const filteredLocations = selectedState
     ? allLocations[selectedState].filter((loc) =>
-        loc.toLowerCase().includes(locationSearchTerm.toLowerCase())
-      )
+      loc.toLowerCase().includes(locationSearchTerm.toLowerCase())
+    )
     : [];
 
   const filteredStates = Object.keys(allLocations).filter((state) =>
@@ -651,8 +651,7 @@ function VendorService({ currentStep }) {
             !pkg.maxPlates
           ) {
             alert(
-              `Please fill all fields for the package "${
-                pkg.packageName || "Unnamed"
+              `Please fill all fields for the package "${pkg.packageName || "Unnamed"
               }".`
             );
             return false;
@@ -1026,19 +1025,19 @@ function VendorService({ currentStep }) {
                           fontSize: "12px",
                           background:
                             selectedSubcategories.length ===
-                            availableSubcategories.length
+                              availableSubcategories.length
                               ? "#e0e0e0"
                               : "#4b2bb3",
                           color:
                             selectedSubcategories.length ===
-                            availableSubcategories.length
+                              availableSubcategories.length
                               ? "#999"
                               : "white",
                           border: "none",
                           borderRadius: "4px",
                           cursor:
                             selectedSubcategories.length ===
-                            availableSubcategories.length
+                              availableSubcategories.length
                               ? "not-allowed"
                               : "pointer",
                           fontWeight: "500",
@@ -1621,19 +1620,19 @@ function VendorService({ currentStep }) {
                       fontSize: "12px",
                       background:
                         selectedLocations.length ===
-                        allLocations[selectedState]?.length
+                          allLocations[selectedState]?.length
                           ? "#e0e0e0"
                           : "#4b2bb3",
                       color:
                         selectedLocations.length ===
-                        allLocations[selectedState]?.length
+                          allLocations[selectedState]?.length
                           ? "#999"
                           : "white",
                       border: "none",
                       borderRadius: "4px",
                       cursor:
                         selectedLocations.length ===
-                        allLocations[selectedState]?.length
+                          allLocations[selectedState]?.length
                           ? "not-allowed"
                           : "pointer",
                       fontWeight: "500",

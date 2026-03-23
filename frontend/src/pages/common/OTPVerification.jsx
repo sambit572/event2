@@ -43,11 +43,11 @@ const OTPVerification = ({
   };
 
   const handleKeyDown = (e, index) => {
-  if (e.key === "Backspace" && otp[index] === "" && index > 0) {
-    // Focus the previous input box
-    safeRefs.current[index - 1].focus();
-  }
-};
+    if (e.key === "Backspace" && otp[index] === "" && index > 0) {
+      // Focus the previous input box
+      safeRefs.current[index - 1].focus();
+    }
+  };
 
   const handleVerify = async () => {
     const otpCode = otp.join("");
@@ -61,6 +61,8 @@ const OTPVerification = ({
         setErrorMessage("OTP session expired. Please try signing in again.");
         return;
       }
+      console.log("Submitting OTP:", typeof otpCode, `"${otpCode}"`); // Should output: string "123456"
+      // const result = await window.confirmationResult.confirm(String(otpCode).trim());
       const result = await window.confirmationResult.confirm(otpCode);
       console.log("Phone auth success:", result.user);
 

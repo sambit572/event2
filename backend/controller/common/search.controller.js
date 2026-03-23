@@ -111,11 +111,11 @@ export const searchController = async (req, res) => {
         }
         if (minPrice && !isNaN(minPrice)) {
             // Find services where its maxPrice is greater than or equal to the desired minPrice
-            initialMatchStage.maxPrice = { ...initialMatchStage.maxPrice, $gte: parseInt(minPrice) };
+            initialMatchStage.minPrice = { ...initialMatchStage.minPrice, $gte: parseInt(minPrice) };
         }
         if (maxPrice && !isNaN(maxPrice)) {
             // Find services where its minPrice is less than or equal to the desired maxPrice
-            initialMatchStage.minPrice = { ...initialMatchStage.minPrice, $lte: parseInt(maxPrice) };
+            initialMatchStage.maxPrice = { ...initialMatchStage.maxPrice, $lte: parseInt(maxPrice) };
         }
 
         // --- 3. The Main Aggregation Pipeline ---
