@@ -28,7 +28,7 @@ function StepProgress({ currentStep }) {
 
   return (
     // UPDATED: Added margin-top for space from the navbar
-    <div className="w-full max-w-4xl mx-auto mt-[40px] sm:mt-[60px] rounded-2xl p-4 sm:p-5 font-sans" style={{ background: "linear-gradient(135deg, #1a1040 0%, #2d1b69 100%)", boxShadow: "0 8px 32px rgba(0,0,0,0.35)", border: "1px solid rgba(255,255,255,0.08)" }}>
+    <div className="w-full max-w-4xl mx-auto mt-[8px] sm:mt-[12px] rounded-2xl p-3 sm:p-4 font-sans" style={{ background: "linear-gradient(135deg, #1a1040 0%, #2d1b69 100%)", boxShadow: "0 8px 32px rgba(0,0,0,0.35)", border: "1px solid rgba(255,255,255,0.08)" }}>
       <div className="flex items-start">
         {steps.map((step, index) => {
           const isCompleted = index < currentStep;

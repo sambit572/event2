@@ -301,7 +301,15 @@ export default function VendorPayment() {
   // };
 
   return (
-    <div className="vendor-payment-page">
+    <div className="vendor-payment-page" style={{
+      background: "linear-gradient(135deg, #0f0c29 0%, #302b63 40%, #24243e 100%)",
+      minHeight: "calc(100vh - 130px)",
+      position: "relative",
+      overflow: "hidden",
+    }}>
+      <div style={{position:"absolute",top:"-60px",left:"-60px",width:"280px",height:"280px",borderRadius:"50%",background:"radial-gradient(circle,rgba(45,212,191,0.15) 0%,transparent 70%)",pointerEvents:"none"}} />
+      <div style={{position:"absolute",bottom:"-40px",right:"-40px",width:"320px",height:"320px",borderRadius:"50%",background:"radial-gradient(circle,rgba(99,102,241,0.18) 0%,transparent 70%)",pointerEvents:"none"}} />
+      <div style={{position:"absolute",inset:0,opacity:0.04,backgroundImage:"linear-gradient(rgba(255,255,255,0.6) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.6) 1px,transparent 1px)",backgroundSize:"40px 40px",pointerEvents:"none"}} />
       {showPopup && (
         <div className="popup-message">Please fill all required fields!</div>
       )}

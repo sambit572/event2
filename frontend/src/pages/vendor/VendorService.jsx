@@ -870,7 +870,21 @@ function VendorService({ currentStep }) {
         </div>
       )}
 
-      <div className="form-container">
+      <div style={{
+        background: "linear-gradient(135deg, #0f0c29 0%, #302b63 40%, #24243e 100%)",
+        minHeight: "calc(100vh - 130px)",
+        display: "flex",
+        alignItems: "flex-start",
+        justifyContent: "center",
+        padding: "0 0 12px 0",
+        position: "relative",
+        overflow: "hidden",
+      }}>
+      {/* bg orbs */}
+      <div style={{position:"absolute",top:"-60px",left:"-60px",width:"280px",height:"280px",borderRadius:"50%",background:"radial-gradient(circle,rgba(45,212,191,0.15) 0%,transparent 70%)",pointerEvents:"none"}} />
+      <div style={{position:"absolute",bottom:"-40px",right:"-40px",width:"320px",height:"320px",borderRadius:"50%",background:"radial-gradient(circle,rgba(99,102,241,0.18) 0%,transparent 70%)",pointerEvents:"none"}} />
+      <div style={{position:"absolute",inset:0,opacity:0.04,backgroundImage:"linear-gradient(rgba(255,255,255,0.6) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.6) 1px,transparent 1px)",backgroundSize:"40px 40px",pointerEvents:"none"}} />
+      <div className="form-container" style={{position:"relative",zIndex:1}}>
         <div className="form-wrapper">
           <div className="form-column">
             <div className="ServiceCategory">
@@ -1130,7 +1144,7 @@ function VendorService({ currentStep }) {
                 required
               />
               {previewImages.length > 0 && (
-                <div className="preview-container">
+                <div className="preview-container" style={{maxHeight:"170px",overflow:"hidden"}}>
                   <div className="main-preview">
                     {selectedFiles[selectedImageIndex]?.type?.startsWith(
                       "video/"
@@ -1138,7 +1152,7 @@ function VendorService({ currentStep }) {
                       <video
                         src={previewImages[selectedImageIndex]}
                         controls
-                        style={{ maxWidth: "100%", maxHeight: "300px" }}
+                        style={{ maxWidth: "100%", maxHeight: "110px" }}
                       />
                     ) : (
                       <img
@@ -1158,8 +1172,8 @@ function VendorService({ currentStep }) {
                             }
                             onClick={() => setSelectedImageIndex(idx)}
                             style={{
-                              width: "60px",
-                              height: "60px",
+                              width: "48px",
+                              height: "48px",
                               objectFit: "cover",
                             }}
                             muted
@@ -1741,8 +1755,7 @@ function VendorService({ currentStep }) {
           </div>
         </div>
       </div>
+      </div>
     </>
   );
 }
-
-export default VendorService;

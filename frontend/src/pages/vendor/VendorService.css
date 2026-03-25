@@ -1,33 +1,33 @@
 .form-container {
   background: linear-gradient(135deg, #f0edff 0%, #e8e8e0 100%);
-  padding: 24px;
-  margin: 24px auto;
+  padding: 14px 18px;
+  margin: 8px auto;
   border-radius: 16px;
   box-shadow: 0 6px 20px rgba(75, 43, 179, 0.12);
   border: 1px solid #d5ccf5;
-  width: 90%;
+  width: 92%;
   max-width: 960px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
 }
 .form-wrapper {
   display: flex;
   justify-content: space-between;
-  gap: 24px;
+  gap: 16px;
   align-items: stretch;
 }
 .form-column {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 9px;
 }
 .form-right {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 8px;
 }
 .form-divider {
   width: 2px;
@@ -39,31 +39,31 @@
 @media (max-width: 1200px) {
   .form-container {
     width: 95%;
-    padding: 20px;
+    padding: 12px 16px;
   }
   .form-wrapper {
-    gap: 20px;
+    gap: 14px;
   }
 }
 @media (max-width: 1024px) {
   .form-container {
     width: 95%;
-    padding: 18px;
-    margin: 20px auto;
+    padding: 11px 14px;
+    margin: 8px auto;
   }
   .form-wrapper {
-    gap: 18px;
+    gap: 12px;
   }
 }
 @media (max-width: 768px) {
   .form-container {
     width: 95%;
-    padding: 25px;
-    margin: 30px auto;
+    padding: 10px 12px;
+    margin: 6px auto;
   }
   .form-wrapper {
     flex-direction: column;
-    gap: 30px;
+    gap: 10px;
   }
   .form-divider {
     width: 100%;
@@ -75,21 +75,21 @@
 @media (max-width: 600px) {
   .form-container {
     width: 95%;
-    padding: 20px;
-    margin: 20px auto;
-    gap: 25px;
+    padding: 8px 10px;
+    margin: 5px auto;
+    gap: 8px;
   }
   .form-column,
   .form-right {
-    gap: 20px;
+    gap: 7px;
   }
 }
 @media (max-width: 480px) {
   .form-container {
     width: 95%;
-    padding: 16px;
-    margin: 15px auto;
-    gap: 20px;
+    padding: 7px 9px;
+    margin: 4px auto;
+    gap: 7px;
   }
 }
 @media (max-width: 400px) {
@@ -115,7 +115,7 @@
 .ServiceCategory label {
   font-weight: 600;
   color: #4b2bb3;
-  font-size: 14px;
+  font-size: 12px;
 }
 .ServiceSubCategory {
   display: flex;
@@ -125,7 +125,7 @@
 .ServiceSubCategory label {
   font-weight: 600;
   color: #4b2bb3;
-  font-size: 14px;
+  font-size: 12px;
 }
 .category-wrapper {
   position: relative;
@@ -136,7 +136,7 @@
   align-items: center;
   border: 2px solid #4b2bb3;
   border-radius: 8px;
-  padding: 7px 10px;
+  padding: 5px 8px;
   background-color: #fff;
   transition: border-color 0.3s ease;
 }
@@ -173,7 +173,7 @@
   border: 2px solid #4b2bb3;
   border-top: none;
   border-radius: 0 0 8px 8px;
-  max-height: 180px;
+  max-height: 130px;
   overflow-y: auto;
   z-index: 1000;
   padding: 0;
@@ -217,7 +217,7 @@
 .ServiceImageUploadPreview {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 5px;
 }
 .ServiceImageUploadPreview label {
   font-weight: 600;
@@ -226,7 +226,7 @@
 }
 .ServiceImageUploadPreview input[type="file"] {
   border: 2px solid #9d7bf9;
-  padding: 10px;
+  padding: 5px;
   border-radius: 8px;
   background-color: #fff;
   color: #4b2bb3;
@@ -236,7 +236,7 @@
 .preview-container {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 6px;
   align-items: stretch;
 }
 .main-preview {
@@ -251,13 +251,13 @@
   display: block;
   width: 100%;
   height: auto;
-  max-height: 450px;
+  max-height: 110px;
   object-fit: contain;
 }
 .thumbnail-preview {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 5px;
 }
 .thumbnail-wrapper {
   position: relative;
@@ -267,8 +267,8 @@
 }
 .thumbnail-wrapper img,
 .thumbnail-wrapper video {
-  width: 80px;
-  height: 80px;
+  width: 52px;
+  height: 52px;
   object-fit: cover;
   border: 2px solid #ddd;
   border-radius: 6px;
@@ -314,7 +314,7 @@
   }
   .thumbnail-preview {
     flex-direction: column;
-    max-height: 300px;
+    max-height: 120px;
     overflow-y: auto;
     flex-shrink: 0;
   }
@@ -326,19 +326,19 @@
 .price-range-container {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 5px;
 }
 .section-label {
   font-weight: 600;
   color: #4b2bb3;
-  font-size: 14px;
+  font-size: 12px;
 }
 .input-field,
 .duration-field {
-  padding: 7px 10px;
-  border-radius: 8px;
+  padding: 5px 8px;
+  border-radius: 7px;
   border: 2px solid #c5b9f5;
-  font-size: 13px;
+  font-size: 12px;
   background-color: #fff;
   color: #4b2bb3;
   outline: none;
@@ -351,7 +351,7 @@
 .ServiceName {
   font-weight: 600;
   color: #4b2bb3;
-  font-size: 14px;
+  font-size: 12px;
 }
 .duration-inputs {
   display: flex;
@@ -390,7 +390,7 @@
   border: 2px solid #7a4fff;
   border-radius: 8px;
   background-color: #fff;
-  padding: 7px 10px;
+  padding: 5px 8px;
   color: #4b2bb3;
   transition: border-color 0.3s ease;
 }
@@ -402,7 +402,7 @@
   border: 1px solid #4b2bb3;
   border-radius: 6px;
   margin-top: 4px;
-  max-height: 200px;
+  max-height: 130px;
   overflow-y: auto;
   z-index: 100;
   list-style: none;
@@ -451,9 +451,9 @@
 }
 .description-textarea {
   width: 100%;
-  min-height: 90px;
-  padding: 8px 12px;
-  font-size: 13px;
+  min-height: 68px;
+  padding: 6px 10px;
+  font-size: 12px;
   border: 2px solid #c5b9f5;
   border-radius: 8px;
   background-color: #fff;

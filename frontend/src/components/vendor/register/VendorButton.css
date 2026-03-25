@@ -2,24 +2,24 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 20px;
-  padding: 20px;
-  margin: 20px auto 0;
-  max-width: 300px; /* or adjust based on your design */
+  gap: 12px;
+  padding: 8px 10px;
+  margin: 6px auto 0;
+  max-width: 300px;
   width: 100%;
   box-sizing: border-box;
 }
 
 .navigation-buttons button {
-  padding: 12px 24px;
+  padding: 8px 18px;
   font-weight: 600;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  height: 48px;
-  min-width: 100px;
+  height: 38px;
+  min-width: 90px;
   transition: all 0.3s ease;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .back-button {
@@ -86,16 +86,16 @@
 /* Large Desktop */
 @media (min-width: 1200px) {
   .navigation-buttons {
-    padding: 10px;
-    margin: 10px 350px 20px 190px;
-    gap: 30px;
+    padding: 6px 8px;
+    margin: 4px auto 0;
+    gap: 16px;
   }
 
   .navigation-buttons button {
-    padding: 14px 28px;
-    height: 52px;
-    min-width: 120px;
-    font-size: 16px;
+    padding: 8px 20px;
+    height: 38px;
+    min-width: 100px;
+    font-size: 14px;
   }
 
   .button-icon {
@@ -107,16 +107,16 @@
 /* Desktop */
 @media (min-width: 1024px) and (max-width: 1199px) {
   .navigation-buttons {
-    padding: 22px;
-    gap: 25px;
-    margin: 20px 150px 40px 190px;
+    padding: 6px 8px;
+    gap: 16px;
+    margin: 4px auto 0;
   }
 
   .navigation-buttons button {
-    padding: 13px 26px;
-    height: 50px;
-    min-width: 110px;
-    font-size: 15px;
+    padding: 7px 18px;
+    height: 36px;
+    min-width: 95px;
+    font-size: 13px;
   }
 
   .button-icon {
