@@ -310,240 +310,156 @@ export default function VendorPayment() {
       <div className="payment-box">
         <h2 className="payment-box-title">Bank Details</h2>
 
-        <label>
-          Account Holder Name <span className="required-icon">*</span>
-          <input
-            type="text"
-            name="accountHolderName"
-            value={formData.accountHolderName}
-            onChange={handleChange}
-            placeholder="Enter account name"
-          />
-          {panVerification.verifiedName && (
-            <small style={{ color: "#28a745", fontSize: "12px" }}>
-              Verified name: {panVerification.verifiedName}
-            </small>
-          )}
-        </label>
+        <div className="payment-fields-grid">
 
-        <label>
-          Bank Account number <span className="required-icon">*</span>
-          <input
-            type="text"
-            name="accountNumber"
-            value={formData.accountNumber}
-            onChange={handleChange}
-            placeholder="Enter account number"
-          />
-        </label>
-
-        <div className="input-wrapper">
           <label>
-            IFSC Code <span className="required-icon">*</span>
-          </label>
-
-          <div className="ifsc-flex">
+            Account Holder Name <span className="required-icon">*</span>
             <input
               type="text"
-              name="ifscCode"
-              value={formData.ifscCode}
-              onChange={handleIFSCChange}
-              placeholder="Enter IFSC code"
-              maxLength="11"
-              style={{
-                borderColor:
-                  isIFSCVerified === false
-                    ? "red"
-                    : isIFSCVerified === true
-                    ? "green"
+              name="accountHolderName"
+              value={formData.accountHolderName}
+              onChange={handleChange}
+              placeholder="Enter account name"
+            />
+            {panVerification.verifiedName && (
+              <small style={{ color: "#28a745", fontSize: "11px" }}>
+                Verified: {panVerification.verifiedName}
+              </small>
+            )}
+          </label>
+
+          <label>
+            Bank Account Number <span className="required-icon">*</span>
+            <input
+              type="text"
+              name="accountNumber"
+              value={formData.accountNumber}
+              onChange={handleChange}
+              placeholder="Enter account number"
+            />
+          </label>
+
+          <div className="input-wrapper">
+            <label>
+              IFSC Code <span className="required-icon">*</span>
+            </label>
+            <div className="ifsc-flex">
+              <input
+                type="text"
+                name="ifscCode"
+                value={formData.ifscCode}
+                onChange={handleIFSCChange}
+                placeholder="Enter IFSC code"
+                maxLength="11"
+                style={{
+                  borderColor:
+                    isIFSCVerified === false
+                      ? "red"
+                      : isIFSCVerified === true
+                      ? "green"
+                      : "",
+                }}
+              />
+            </div>
+            {isIFSCVerified === true && (
+              <div className="mt-1 flex items-center gap-1 animate-fade">
+                <span className="text-xs bg-green-600 text-white px-2 py-0.5 rounded-full font-semibold">✓ Verified</span>
+              </div>
+            )}
+            {isIFSCVerified === false && (
+              <div className="mt-1 flex items-center gap-1 animate-fade">
+                <span className="text-xs bg-red-600 text-white px-2 py-0.5 rounded-full font-semibold">✗ Invalid IFSC</span>
+              </div>
+            )}
+            {isIFSCVerified === "loading" && (
+              <div className="mt-1 flex items-center gap-1 animate-pulse">
+                <span className="text-xs bg-blue-600 text-white px-2 py-0.5 rounded-full font-semibold">Checking...</span>
+              </div>
+            )}
+          </div>
+
+          <label>
+            Bank Branch Name <span className="required-icon">*</span>
+            <input
+              type="text"
+              name="branchName"
+              value={formData.branchName}
+              onChange={handleChange}
+              placeholder="Enter bank branch name"
+            />
+          </label>
+
+          <label>
+            GSTIN (Optional)
+            <input
+              type="text"
+              name="gst"
+              value={formData.gst}
+              onChange={handleChange}
+              placeholder="Enter GSTIN if available"
+            />
+          </label>
+
+          <div className="upi-wrapper">
+            <label>
+              UPI Id (Optional)
+              <input
+                type="text"
+                name="upiId"
+                value={formData.upiId}
+                onChange={handleChange}
+                placeholder="Enter UPI Id"
+              />
+            </label>
+            <div className="upi-input-with-icon">
+              <img
+                decoding="async"
+                loading="lazy"
+                src="/question.webp"
+                alt="info"
+                title="You can find your UPI ID using your banking app or UPI-enabled apps like PhonePe, Google Pay, Paytm, etc."
+              />
+            </div>
+          </div>
+
+          <label className="full-width">
+            PAN Card Number <span className="required-icon">*</span>
+            <div style={{ position: "relative" }}>
+              <input
+                type="text"
+                name="panNumber"
+                value={formData.panNumber}
+                onChange={handlePANChange}
+                placeholder="ABCDE1234F"
+                pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
+                maxLength="10"
+                required
+                style={{
+                  borderColor: panVerification.isVerified
+                    ? "#28a745"
+                    : panVerification.verificationMessage &&
+                      !panVerification.isVerified
+                    ? "#dc3545"
                     : "",
-              }}
-            />
-          </div>
-          {isIFSCVerified === true && (
-            <div className="mt-2 flex items-center gap-2 animate-fade">
-              <span className="text-xs bg-green-600 text-white px-2 py-1 rounded-full font-semibold">
-                Verified
-              </span>
-              <p className="text-sm text-green-700 font-medium">
-                IFSC Successfully Validated
-              </p>
-            </div>
-          )}
-
-          {isIFSCVerified === false && (
-            <div className="mt-2 flex items-center gap-2 animate-fade">
-              <span className="text-xs bg-red-600 text-white px-2 py-1 rounded-full font-semibold">
-                Error
-              </span>
-              <p className="text-sm text-red-700 font-medium">
-                Invalid IFSC — Check Again
-              </p>
-            </div>
-          )}
-
-          {isIFSCVerified === "loading" && (
-            <div className="mt-2 flex items-center gap-2 animate-pulse">
-              <span className="text-xs bg-blue-600 text-white px-2 py-1 rounded-full font-semibold">
-                Checking
-              </span>
-              <p className="text-sm text-blue-700 font-medium">
-                Validating IFSC...
-              </p>
-            </div>
-          )}
-        </div>
-
-        {/* <div className="input-wrapper">
-          <label>
-            IFSC Code <span className="required-icon">*</span>
-          </label>
-          <div className="input-with-icon">
-            <input
-              type="text"
-              name="ifscCode"
-              value={formData.ifscCode}
-              onChange={handleChange}
-              placeholder="Enter IFSC code"
-            />
-            <img decoding="async"
- fetchPriority
-="low"
-loading="lazy"              src="/question.webp"
-              alt="info"
-              title="You can find this on your cheque or bank passbook."
-            />
-          </div>
-        </div> */}
-
-        <label>
-          Bank Branch Name <span className="required-icon">*</span>
-          <input
-            type="text"
-            name="branchName"
-            value={formData.branchName}
-            onChange={handleChange}
-            placeholder="Enter bank branch name"
-          />
-        </label>
-
-        <label>
-          GSTIN (Optional)
-          <input
-            type="text"
-            name="gst"
-            value={formData.gst}
-            onChange={handleChange}
-            placeholder="Enter GSTIN if available"
-          />
-        </label>
-
-        <div className="upi-wrapper">
-          <label>
-            UPI Id (Optional)
-            <input
-              type="text"
-              name="upiId"
-              value={formData.upiId}
-              onChange={handleChange}
-              placeholder="Enter UPI Id"
-            />
-          </label>
-          <div className="upi-input-with-icon">
-            <img
-              decoding="async"
-              loading="lazy"
-              src="/question.webp"
-              alt="info"
-              title="You can find your UPI ID using your banking app or UPI-enabled apps like PhonePe, Google Pay, Paytm, etc."
-            />
-          </div>
-        </div>
-
-        <label>
-          PAN Card Number <span className="required-icon">*</span>
-          <div style={{ position: "relative" }}>
-            <input
-              type="text"
-              name="panNumber"
-              value={formData.panNumber}
-              onChange={handlePANChange}
-              /* onBlur={() => {
-                if (
-                  formData.panNumber.length === 10 &&
-                  !panVerification.isVerified
-                ) {
-                  verifyPAN(formData.panNumber);
-                }
-              }} */
-              placeholder="ABCDE1234F"
-              pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
-              maxLength="10"
-              required
-              style={{
-                borderColor: panVerification.isVerified
-                  ? "#28a745"
-                  : panVerification.verificationMessage &&
-                    !panVerification.isVerified
-                  ? "#dc3545"
-                  : "#ccc",
-              }}
-            />
-
-            {/* PAN Verification Status */}
-            {panVerification.isVerifying && (
-              <div
-                style={{
-                  position: "absolute",
-                  right: "10px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  display: "flex",
-                  alignItems: "center",
                 }}
-              >
-                <div
-                  style={{
-                    width: "16px",
-                    height: "16px",
-                    border: "2px solid #f3f3f3",
-                    borderTop: "2px solid #007bff",
-                    borderRadius: "50%",
-                    animation: "spin 1s linear infinite",
-                  }}
-                ></div>
-              </div>
+              />
+              {panVerification.isVerifying && (
+                <div style={{ position: "absolute", right: "10px", top: "50%", transform: "translateY(-50%)" }}>
+                  <div style={{ width: "14px", height: "14px", border: "2px solid #f3f3f3", borderTop: "2px solid #007bff", borderRadius: "50%", animation: "spin 1s linear infinite" }}></div>
+                </div>
+              )}
+              {panVerification.isVerified && (
+                <div style={{ position: "absolute", right: "10px", top: "50%", transform: "translateY(-50%)", color: "#28a745", fontSize: "16px" }}>✓</div>
+              )}
+            </div>
+            {panVerification.verificationMessage && (
+              <small style={{ color: panVerification.isVerified ? "#28a745" : "#dc3545", fontSize: "11px", marginTop: "2px" }}>
+                {panVerification.verificationMessage}
+              </small>
             )}
+          </label>
 
-            {panVerification.isVerified && (
-              <div
-                style={{
-                  position: "absolute",
-                  right: "10px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  color: "#28a745",
-                  fontSize: "18px",
-                }}
-              >
-                ✓
-              </div>
-            )}
-          </div>
-          {/* Verification Message */}
-          {panVerification.verificationMessage && (
-            <small
-              style={{
-                color: panVerification.isVerified ? "#28a745" : "#dc3545",
-                fontSize: "12px",
-                marginTop: "4px",
-                display: "block",
-              }}
-            >
-              {panVerification.verificationMessage}
-            </small>
-          )}
-        </label>
+        </div>{/* end grid */}
 
         <Button onBack={handleBack} onNext={handleNext} />
       </div>
@@ -557,7 +473,6 @@ loading="lazy"              src="/question.webp"
           }
         }
       `}</style>
-         
     </div>
   );
 }

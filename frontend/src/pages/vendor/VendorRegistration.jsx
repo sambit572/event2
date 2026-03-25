@@ -286,25 +286,92 @@ const VendorRegister = () => {
         <StepProgress currentStep={0} />
         {isLoading && <Spinner />}
 
-        <div className="min-h-screen w-full bg-gray-100 flex items-center justify-center p-4 sm:p-6 lg:p-8">
-          <div className="w-full max-w-6xl flex flex-col lg:flex-row shadow-2xl rounded-2xl overflow-hidden">
-            {/* LEFT SIDE: Form area - Full width on mobile */}
+        {/* ── BEAUTIFUL PAGE BACKGROUND ── */}
+        <div
+          className="min-h-screen w-screen flex items-center justify-center p-3 sm:p-4 lg:p-0 relative overflow-hidden"
+          style={{
+            background: "linear-gradient(135deg, #0f0c29 0%, #302b63 40%, #24243e 100%)",
+          }}
+        >
+          {/* Decorative blobs (your original + 3 new premium orbs I added) */}
+          <div style={{
+            position: "absolute", top: "-80px", left: "-80px",
+            width: "340px", height: "340px", borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(45,212,191,0.18) 0%, transparent 70%)",
+            pointerEvents: "none",
+          }} />
+          <div style={{
+            position: "absolute", bottom: "-60px", right: "-60px",
+            width: "420px", height: "420px", borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(99,102,241,0.22) 0%, transparent 70%)",
+            pointerEvents: "none",
+          }} />
+          <div style={{
+            position: "absolute", top: "40%", left: "30%",
+            width: "200px", height: "200px", borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(244,114,182,0.1) 0%, transparent 70%)",
+            pointerEvents: "none",
+          }} />
+
+          {/* === NEW PREMIUM ORBS ADDED FOR BEAUTIFUL DEPTH === */}
+          <div style={{
+            position: "absolute", top: "15%", right: "10%",
+            width: "280px", height: "280px", borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(167,139,250,0.15) 0%, transparent 70%)",
+            pointerEvents: "none",
+            animation: "gentlePulse 8s infinite ease-in-out",
+          }} />
+          <div style={{
+            position: "absolute", bottom: "25%", left: "8%",
+            width: "180px", height: "180px", borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(251,113,133,0.12) 0%, transparent 70%)",
+            pointerEvents: "none",
+            animation: "gentlePulse 12s infinite ease-in-out",
+          }} />
+          <div style={{
+            position: "absolute", top: "65%", right: "25%",
+            width: "320px", height: "320px", borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(45,212,191,0.09) 0%, transparent 70%)",
+            pointerEvents: "none",
+            animation: "gentlePulse 10s infinite ease-in-out",
+          }} />
+
+          {/* Subtle grid overlay (your original) */}
+          <div style={{
+            position: "absolute", inset: 0, opacity: 0.04,
+            backgroundImage: "linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)",
+            backgroundSize: "40px 40px",
+            pointerEvents: "none",
+          }} />
+
+          {/* NEW: Subtle animated light sweep for premium feel */}
+          <div style={{
+            position: "absolute",
+            inset: 0,
+            background: "linear-gradient(90deg, transparent 40%, rgba(255,255,255,0.12) 50%, transparent 60%)",
+            animation: "lightSweep 15s linear infinite",
+            pointerEvents: "none",
+            opacity: 0.15,
+          }} />
+
+          <div className="relative z-10 w-full max-w-7xl flex flex-col lg:flex-row shadow-2xl rounded-2xl overflow-hidden" style={{ boxShadow: "0 25px 60px rgba(0,0,0,0.5)" }}>
+            {/* LEFT SIDE: Form area */}
             <div
-              className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8 lg:p-12 bg-cover bg-center relative"
+              className="w-full lg:w-1/2 flex items-center justify-center p-3 sm:p-5 lg:p-7 bg-cover bg-center relative"
               style={{
                 backgroundImage: `url(${laptopBackground})`,
               }}
             >
-              <div className="absolute inset-0 bg-black/30 "></div>
+              <div className="absolute inset-0 bg-black/40"></div>
               <div className="relative z-10 w-full max-w-md">
                 {/* Changed from bg-stone-100/95 to bg-stone-100/75 for more transparency */}
-                <div className="bg-stone-100/65 backdrop-blur-md rounded-xl shadow-lg p-8">
-                  <div className="flex flex-col gap-4">
+                <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-5 border border-white/50">
+                  <div className="flex flex-col gap-3">
                     <div className="text-left">
-                      <h2 className="text-3xl font-bold text-gray-800">
+                      <h2 className="text-xl font-bold text-gray-800">
                         Create Vendor Account
                       </h2>
-                      <p className="text-gray-600 mt-1">
+                      <p className="text-gray-500 mt-0.5 text-sm">
                         Welcome! Please fill in the details to register.
                       </p>
                     </div>
@@ -320,7 +387,7 @@ const VendorRegister = () => {
                     )}
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-xs font-medium text-gray-600 mb-0.5">
                         Full Name <span className="text-red-600">*</span>
                       </label>
                       <input
@@ -329,13 +396,13 @@ const VendorRegister = () => {
                         placeholder="Enter your full name"
                         value={form.fullName}
                         onChange={handleChange}
-                        className="w-full p-3 bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition"
+                        className="w-full p-2 text-sm bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition"
                         required
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-xs font-medium text-gray-600 mb-0.5">
                         Email Address <span className="text-red-600">*</span>
                       </label>
                       <input
@@ -344,13 +411,13 @@ const VendorRegister = () => {
                         placeholder="Enter your email address"
                         value={form.email}
                         onChange={handleChange}
-                        className="w-full p-3 bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition"
+                        className="w-full p-2 text-sm bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition"
                         required
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-xs font-medium text-gray-600 mb-0.5">
                         Phone Number <span className="text-red-600">*</span>
                       </label>
                       <input
@@ -359,13 +426,13 @@ const VendorRegister = () => {
                         placeholder="Enter your phone number"
                         value={form.phone}
                         onChange={handleChange}
-                        className="w-full p-3 bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition"
+                        className="w-full p-2 text-sm bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition"
                         required
                       />
                     </div>
 
                     <div className="relative">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-xs font-medium text-gray-600 mb-0.5">
                         Password <span className="text-red-600">*</span>
                       </label>
                       <div className="relative">
@@ -375,13 +442,13 @@ const VendorRegister = () => {
                           placeholder="Enter password"
                           value={form.password}
                           onChange={handleChange}
-                          className="w-full p-3 pr-12 bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition"
+                          className="w-full p-2 pr-10 text-sm bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition"
                           required
                         />
                         <button
                           type="button"
                           onClick={togglePasswordVisibility}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 w-6 h-6 flex items-center justify-center"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 w-5 h-5 flex items-center justify-center"
                         >
                           {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
                         </button>
@@ -389,7 +456,7 @@ const VendorRegister = () => {
                     </div>
 
                     <div className="relative">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-xs font-medium text-gray-600 mb-0.5">
                         Confirm Password <span className="text-red-600">*</span>
                       </label>
                       <div className="relative">
@@ -399,13 +466,13 @@ const VendorRegister = () => {
                           placeholder="Confirm password"
                           value={form.confirmPassword}
                           onChange={handleChange}
-                          className="w-full p-3 pr-12 bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition"
+                          className="w-full p-2 pr-10 text-sm bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition"
                           required
                         />
                         <button
                           type="button"
                           onClick={togglePasswordVisibility}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 w-6 h-6 flex items-center justify-center"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 w-5 h-5 flex items-center justify-center"
                         >
                           {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
                         </button>
@@ -413,7 +480,7 @@ const VendorRegister = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-xs font-medium text-gray-600 mb-0.5">
                         Profile Picture (Optional)
                       </label>
                       <input
@@ -421,14 +488,14 @@ const VendorRegister = () => {
                         name="profilePic"
                         accept="image/*"
                         onChange={handleChange}
-                        className="w-full p-3 bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+                        className="w-full p-2 text-sm bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition file:mr-3 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
                       />
                     </div>
 
                     <button
                       onClick={handleSubmit}
                       disabled={loading}
-                      className="w-full mt-4 bg-green-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-700 transition-all duration-300 shadow-md hover:shadow-lg disabled:bg-gray-400 disabled:cursor-not-allowed"
+                      className="w-full mt-1 bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition-all duration-300 shadow-md hover:shadow-lg disabled:bg-gray-400 disabled:cursor-not-allowed text-sm"
                     >
                       {loading ? "Registering..." : "Next"}
                     </button>
@@ -437,32 +504,98 @@ const VendorRegister = () => {
               </div>
             </div>
 
-            {/* RIGHT SIDE: Branding area - Hidden on mobile */}
-            <div className="hidden lg:flex w-full lg:w-1/2 bg-white flex-col items-center justify-center text-center p-8 relative">
-              {/* Placeholder for the illustrated image */}
-              <div className="w-full max-w-sm mt-[-80px] ml-10">
+            {/* RIGHT SIDE: Beautiful branded panel */}
+            <div
+              className="hidden lg:flex w-full lg:w-1/2 flex-col items-center justify-center text-center p-10 relative overflow-hidden"
+              style={{
+                background: "linear-gradient(160deg, #1a1040 0%, #2d1b69 50%, #0f2027 100%)",
+              }}
+            >
+              {/* Glow orbs inside right panel */}
+              <div style={{
+                position: "absolute", top: "-40px", right: "-40px",
+                width: "220px", height: "220px", borderRadius: "50%",
+                background: "radial-gradient(circle, rgba(45,212,191,0.25) 0%, transparent 70%)",
+                pointerEvents: "none",
+              }} />
+              <div style={{
+                position: "absolute", bottom: "20px", left: "-30px",
+                width: "180px", height: "180px", borderRadius: "50%",
+                background: "radial-gradient(circle, rgba(139,92,246,0.25) 0%, transparent 70%)",
+                pointerEvents: "none",
+              }} />
+
+              {/* Illustrated image */}
+              <div className="relative z-10 w-full max-w-xs mb-4">
                 <img
                   decoding="async"
                   loading="lazy"
                   src="../new-illustrator.png"
                   alt="Registration Illustration"
-                  className="w-full h-auto object-contain"
+                  className="w-full h-auto object-contain drop-shadow-2xl"
                 />
               </div>
-              <h1 className="text-4xl font-bold text-gray-800 mb-4 mt-[-10px] ">
+
+              {/* Headline */}
+              <h1
+                className="relative z-10 text-3xl font-extrabold mb-3"
+                style={{
+                  background: "linear-gradient(90deg, #2dd4bf, #a78bfa, #f472b6)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
                 Register Here
               </h1>
-              <p className="text-lg text-gray-600 max-w-md mx-auto leading-relaxed">
-                Join EventsBridge, your one-stop platform for discovering and
-                booking trusted vendors, planning events, and creating
-                unforgettable experiences. We make event planning simple, fast,
-                and hassle-freeregister today and take the first step toward
-                smarter celebrations.
+
+              {/* Divider line */}
+              <div style={{
+                width: "60px", height: "3px", borderRadius: "2px",
+                background: "linear-gradient(90deg, #2dd4bf, #a78bfa)",
+                margin: "0 auto 14px",
+              }} />
+
+              {/* Description */}
+              <p className="relative z-10 text-sm max-w-xs mx-auto leading-relaxed" style={{ color: "rgba(255,255,255,0.7)" }}>
+                Join <span style={{ color: "#2dd4bf", fontWeight: 600 }}>EventsBridge</span> — your one-stop platform for discovering trusted vendors, planning events, and creating unforgettable experiences.
               </p>
+
+              {/* Feature badges */}
+              <div className="relative z-10 flex flex-wrap gap-2 justify-center mt-5">
+                {["🎉 Event Planning", "🤝 Trusted Vendors", "⚡ Fast & Easy"].map((badge) => (
+                  <span
+                    key={badge}
+                    className="text-xs px-3 py-1 rounded-full font-semibold"
+                    style={{
+                      background: "rgba(255,255,255,0.08)",
+                      border: "1px solid rgba(255,255,255,0.15)",
+                      color: "rgba(255,255,255,0.85)",
+                      backdropFilter: "blur(4px)",
+                    }}
+                  >
+                    {badge}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Add this small CSS block once in your index.css or App.css for the new animations */}
+      <style>
+        {`
+          @keyframes gentlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+          }
+          @keyframes lightSweep {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(300%); }
+          }
+        `}
+      </style>
     </>
   );
 };

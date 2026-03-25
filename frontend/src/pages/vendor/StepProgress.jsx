@@ -28,7 +28,7 @@ function StepProgress({ currentStep }) {
 
   return (
     // UPDATED: Added margin-top for space from the navbar
-    <div className="w-full max-w-4xl mx-auto mt-[40px] sm:mt-[80px] bg-gray-50 rounded-3xl shadow-md p-4 sm:p-6 font-sans">
+    <div className="w-full max-w-4xl mx-auto mt-[40px] sm:mt-[60px] rounded-2xl p-4 sm:p-5 font-sans" style={{ background: "linear-gradient(135deg, #1a1040 0%, #2d1b69 100%)", boxShadow: "0 8px 32px rgba(0,0,0,0.35)", border: "1px solid rgba(255,255,255,0.08)" }}>
       <div className="flex items-start">
         {steps.map((step, index) => {
           const isCompleted = index < currentStep;
@@ -51,7 +51,7 @@ function StepProgress({ currentStep }) {
                 <div
                   className={`
                     absolute left-1/2 w-full h-1 transition-colors duration-500
-                    ${isCompleted ? "bg-teal-500" : "bg-gray-200"}
+                    ${isCompleted ? "bg-teal-500" : "bg-white/15"}
                     top-[18px] sm:top-[26px]
                   `}
                 />
@@ -63,7 +63,7 @@ function StepProgress({ currentStep }) {
                   relative z-10 flex items-center justify-center rounded-full border-2 transition-all duration-300
                   ${isCompleted ? "bg-teal-500 border-teal-500" : ""}
                   ${isActive ? "bg-white border-teal-500 scale-110" : ""}
-                  ${isPending ? "bg-gray-100 border-gray-200" : ""}
+                  ${isPending ? "bg-white/10 border-white/20" : ""}
                   w-10 h-10 sm:w-14 sm:h-14
                 `}
               >
@@ -86,8 +86,8 @@ function StepProgress({ currentStep }) {
               <div
                 className={`
                   mt-3 font-semibold whitespace-nowrap
-                  ${isActive ? "text-teal-600" : "text-gray-800"}
-                  ${isPending ? "text-gray-400" : ""}
+                  ${isActive ? "text-teal-400" : "text-white/80"}
+                  ${isPending ? "text-white/40" : ""}
                   text-[11px] sm:text-base
                 `}
               >
@@ -98,7 +98,7 @@ function StepProgress({ currentStep }) {
               <div
                 className={`
                   mt-1.5 font-medium
-                  ${isCompleted || isActive ? "text-teal-600" : "text-gray-400"}
+                  ${isCompleted || isActive ? "text-teal-400" : "text-white/40"}
                   text-[10px] sm:text-sm
                 `}
               >

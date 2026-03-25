@@ -1,32 +1,33 @@
 .form-container {
-  background-color: #e5e5de;
-  padding: 40px;
-  margin: 50px auto;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #f0edff 0%, #e8e8e0 100%);
+  padding: 24px;
+  margin: 24px auto;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(75, 43, 179, 0.12);
+  border: 1px solid #d5ccf5;
   width: 90%;
-  max-width: 1400px;
+  max-width: 960px;
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 20px;
 }
 .form-wrapper {
   display: flex;
   justify-content: space-between;
-  gap: 40px;
+  gap: 24px;
   align-items: stretch;
 }
 .form-column {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 16px;
 }
 .form-right {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 14px;
 }
 .form-divider {
   width: 2px;
@@ -38,20 +39,20 @@
 @media (max-width: 1200px) {
   .form-container {
     width: 95%;
-    padding: 35px;
+    padding: 20px;
   }
   .form-wrapper {
-    gap: 30px;
+    gap: 20px;
   }
 }
 @media (max-width: 1024px) {
   .form-container {
     width: 95%;
-    padding: 30px;
-    margin: 40px auto;
+    padding: 18px;
+    margin: 20px auto;
   }
   .form-wrapper {
-    gap: 25px;
+    gap: 18px;
   }
 }
 @media (max-width: 768px) {
@@ -135,7 +136,7 @@
   align-items: center;
   border: 2px solid #4b2bb3;
   border-radius: 8px;
-  padding: 10px 12px;
+  padding: 7px 10px;
   background-color: #fff;
   transition: border-color 0.3s ease;
 }
@@ -334,10 +335,10 @@
 }
 .input-field,
 .duration-field {
-  padding: 10px 12px;
+  padding: 7px 10px;
   border-radius: 8px;
   border: 2px solid #c5b9f5;
-  font-size: 14px;
+  font-size: 13px;
   background-color: #fff;
   color: #4b2bb3;
   outline: none;
@@ -389,7 +390,7 @@
   border: 2px solid #7a4fff;
   border-radius: 8px;
   background-color: #fff;
-  padding: 10px 12px;
+  padding: 7px 10px;
   color: #4b2bb3;
   transition: border-color 0.3s ease;
 }
@@ -450,9 +451,9 @@
 }
 .description-textarea {
   width: 100%;
-  min-height: 120px;
-  padding: 12px 15px;
-  font-size: 14px;
+  min-height: 90px;
+  padding: 8px 12px;
+  font-size: 13px;
   border: 2px solid #c5b9f5;
   border-radius: 8px;
   background-color: #fff;
