@@ -871,7 +871,7 @@ function VendorService({ currentStep }) {
       )}
 
       <div style={{
-        background: "linear-gradient(135deg, #0f0c29 0%, #302b63 40%, #24243e 100%)",
+        background: "linear-gradient(135deg, #001228 0%, #001f3f 45%, #0a2a4a 100%)",
         minHeight: "calc(100vh - 130px)",
         display: "flex",
         alignItems: "flex-start",
@@ -881,8 +881,8 @@ function VendorService({ currentStep }) {
         overflow: "hidden",
       }}>
       {/* bg orbs */}
-      <div style={{position:"absolute",top:"-60px",left:"-60px",width:"280px",height:"280px",borderRadius:"50%",background:"radial-gradient(circle,rgba(45,212,191,0.15) 0%,transparent 70%)",pointerEvents:"none"}} />
-      <div style={{position:"absolute",bottom:"-40px",right:"-40px",width:"320px",height:"320px",borderRadius:"50%",background:"radial-gradient(circle,rgba(99,102,241,0.18) 0%,transparent 70%)",pointerEvents:"none"}} />
+      <div style={{position:"absolute",top:"-60px",left:"-60px",width:"280px",height:"280px",borderRadius:"50%",background:"radial-gradient(circle,rgba(249,200,35,0.15) 0%,transparent 70%)",pointerEvents:"none"}} />
+      <div style={{position:"absolute",bottom:"-40px",right:"-40px",width:"320px",height:"320px",borderRadius:"50%",background:"radial-gradient(circle,rgba(255,147,15,0.15) 0%,transparent 70%)",pointerEvents:"none"}} />
       <div style={{position:"absolute",inset:0,opacity:0.04,backgroundImage:"linear-gradient(rgba(255,255,255,0.6) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.6) 1px,transparent 1px)",backgroundSize:"40px 40px",pointerEvents:"none"}} />
       <div className="form-container" style={{position:"relative",zIndex:1}}>
         <div className="form-wrapper">
@@ -956,9 +956,9 @@ function VendorService({ currentStep }) {
                       style={{
                         display: "flex",
                         alignItems: "center",
-                        background: "#f7f3ff",
-                        color: "#4b2bb3",
-                        border: "1px solid #4b2bb3",
+                        background: "#eef4ff",
+                        color: "#001f3f",
+                        border: "1px solid #001f3f",
                         borderRadius: "6px",
                         padding: "2px 6px",
                         fontSize: "14px",
@@ -974,7 +974,7 @@ function VendorService({ currentStep }) {
                         }
                         style={{
                           marginLeft: "4px",
-                          color: "#4b2bb3",
+                          color: "#001f3f",
                           cursor: "pointer",
                           border: "none",
                           background: "transparent",
@@ -1070,8 +1070,8 @@ function VendorService({ currentStep }) {
                             padding: "4px 12px",
                             fontSize: "12px",
                             background: "transparent",
-                            color: "#4b2bb3",
-                            border: "1px solid #4b2bb3",
+                            color: "#001f3f",
+                            border: "1px solid #001f3f",
                             borderRadius: "4px",
                             cursor: "pointer",
                             fontWeight: "500",
@@ -1093,7 +1093,7 @@ function VendorService({ currentStep }) {
                         onClick={handleSelectAllSubcategories}
                         style={{
                           fontWeight: "600",
-                          color: "#4b2bb3",
+                          color: "#001f3f",
                           borderBottom: "1px solid #e0e0e0",
                           background: "#f7f3ff",
                         }}
@@ -1215,7 +1215,7 @@ function VendorService({ currentStep }) {
                     value={minPrice}
                     min="1"
                     onChange={(e) => setMinPrice(e.target.value)}
-                    className="w-1/2 rounded-md px-3 py-2 bg-[#fff] text-[#4b2bb3] border-2 border-[#c5b9f5] focus:outline-none focus:border-[2px] focus:border-[#4b2bb3] cursor-text caret-black"
+                    className="w-1/2 rounded-md px-3 py-2 bg-[#fff] text-[#001f3f] border-2 border-[#b8cce4] focus:outline-none focus:border-[2px] focus:border-[#001f3f] cursor-text caret-black"
                   />
                   <span className="text-gray-600 font-semibold">-</span>
                   <input
@@ -1224,7 +1224,7 @@ function VendorService({ currentStep }) {
                     value={maxPrice}
                     min="1"
                     onChange={(e) => setMaxPrice(e.target.value)}
-                    className="w-1/2 rounded-md px-3 py-2 bg-[#f7f3ff] text-[#4b2bb3] border-2 border-[#c5b9f5] focus:outline-none focus:border-[2px] focus:border-[#4b2bb3] cursor-text caret-black"
+                    className="w-1/2 rounded-md px-3 py-2 bg-[#f5f8ff] text-[#001f3f] border-2 border-[#b8cce4] focus:outline-none focus:border-[2px] focus:border-[#001f3f] cursor-text caret-black"
                   />
                 </div>
               </div>
@@ -1398,7 +1398,7 @@ function VendorService({ currentStep }) {
           <div className="form-divider"></div>
 
           <div className="form-right">
-            <h3 style={{ color: "#4b2bb3", fontWeight: "600" }}>
+            <h3 style={{ color: "#001f3f", fontWeight: "600" }}>
               Estimated Duration *
             </h3>
             <div className="duration-inputs">
@@ -1461,9 +1461,9 @@ function VendorService({ currentStep }) {
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      background: "#f7f3ff",
-                      color: "#4b2bb3",
-                      border: "1px solid #4b2bb3",
+                      background: "#eef4ff",
+                      color: "#001f3f",
+                      border: "1px solid #001f3f",
                       borderRadius: "6px",
                       padding: "2px 6px",
                       fontSize: "14px",
@@ -1475,7 +1475,7 @@ function VendorService({ currentStep }) {
                       onClick={() => setSelectedState("")}
                       style={{
                         marginLeft: "4px",
-                        color: "#4b2bb3",
+                        color: "#001f3f",
                         cursor: "pointer",
                         border: "none",
                         background: "transparent",
@@ -1559,9 +1559,9 @@ function VendorService({ currentStep }) {
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      background: "#f7f3ff",
-                      color: "#4b2bb3",
-                      border: "1px solid #4b2bb3",
+                      background: "#eef4ff",
+                      color: "#001f3f",
+                      border: "1px solid #001f3f",
                       borderRadius: "6px",
                       padding: "2px 6px",
                       fontSize: "14px",
@@ -1577,7 +1577,7 @@ function VendorService({ currentStep }) {
                       }
                       style={{
                         marginLeft: "4px",
-                        color: "#4b2bb3",
+                        color: "#001f3f",
                         cursor: "pointer",
                         border: "none",
                         background: "transparent",
@@ -1664,8 +1664,8 @@ function VendorService({ currentStep }) {
                         padding: "4px 12px",
                         fontSize: "12px",
                         background: "transparent",
-                        color: "#4b2bb3",
-                        border: "1px solid #4b2bb3",
+                        color: "#001f3f",
+                        border: "1px solid #001f3f",
                         borderRadius: "4px",
                         cursor: "pointer",
                         fontWeight: "500",
@@ -1684,7 +1684,7 @@ function VendorService({ currentStep }) {
                       onClick={handleSelectAllLocations}
                       style={{
                         fontWeight: "600",
-                        color: "#4b2bb3",
+                        color: "#001f3f",
                         borderBottom: "1px solid #e0e0e0",
                         background: "#f7f3ff",
                       }}
@@ -1759,3 +1759,5 @@ function VendorService({ currentStep }) {
     </>
   );
 }
+
+export default VendorService;

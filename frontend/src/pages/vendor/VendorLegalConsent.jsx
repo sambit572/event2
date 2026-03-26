@@ -257,7 +257,7 @@ export default function VendorLegalConsent() {
 
   return (
     <div className="legal-consent-page" style={{
-      background: "linear-gradient(135deg, #0f0c29 0%, #302b63 40%, #24243e 100%)",
+      background: "linear-gradient(135deg, #001228 0%, #001f3f 45%, #0a2a4a 100%)",
       minHeight: "calc(100vh - 130px)",
       position: "relative",
       overflow: "hidden",
@@ -269,7 +269,7 @@ export default function VendorLegalConsent() {
 
       {isLoading && <Spinner />}
 
-      <div className="bg-[#e5e5de] rounded-[14px] max-w-[580px] my-[12px] mx-auto p-[18px] shadow-sm max-lg:max-w-[95%] max-lg:p-[16px] max-md:max-w-[95%] max-md:p-4 max-[480px]:max-w-[94%] max-[480px]:p-3 max-[480px]:overflow-x-hidden">
+      <div className="bg-[#f5f0e8] rounded-[14px] max-w-[580px] my-[12px] mx-auto p-[18px] shadow-sm max-lg:max-w-[95%] max-lg:p-[16px] max-md:max-w-[95%] max-md:p-4 max-[480px]:max-w-[94%] max-[480px]:p-3 max-[480px]:overflow-x-hidden">
         <p className="text-sm mb-3 leading-[1.5] text-black max-md:text-xs max-[480px]:text-xs max-[480px]:leading-[1.4]">
           Before submitting your registration, please review and agree to the
           following terms and authorizations.
@@ -288,7 +288,7 @@ export default function VendorLegalConsent() {
             />
             <a
               href="/terms-and-conditions"
-              className="hover:underline hover:text-blue-600 focus:underline focus:text-blue-600 active:underline active:text-blue-600"
+              className="hover:underline hover:text-amber-600 focus:underline focus:text-amber-600 active:underline active:text-amber-600 text-[#001f3f] font-medium"
             >
               I agree to the Terms and Conditions
             </a>
@@ -307,7 +307,7 @@ export default function VendorLegalConsent() {
             />
             <a
               href="/refund-policy"
-              className="hover:underline hover:text-blue-600 focus:underline focus:text-blue-600 active:underline active:text-blue-600"
+              className="hover:underline hover:text-amber-600 focus:underline focus:text-amber-600 active:underline active:text-amber-600 text-[#001f3f] font-medium"
             >
               I agree to the Commission and Payment Terms
             </a>
@@ -329,7 +329,7 @@ export default function VendorLegalConsent() {
             />
             <a
               href="/privacy-policy"
-              className="hover:underline hover:text-blue-600 focus:underline focus:text-blue-600 active:underline active:text-blue-600"
+              className="hover:underline hover:text-amber-600 focus:underline focus:text-amber-600 active:underline active:text-amber-600 text-[#001f3f] font-medium"
             >
               I authorize KYC Verification using PAN/Aadhaar
             </a>

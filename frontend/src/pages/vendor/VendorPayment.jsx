@@ -302,7 +302,7 @@ export default function VendorPayment() {
 
   return (
     <div className="vendor-payment-page" style={{
-      background: "linear-gradient(135deg, #0f0c29 0%, #302b63 40%, #24243e 100%)",
+      background: "linear-gradient(135deg, #001228 0%, #001f3f 45%, #0a2a4a 100%)",
       minHeight: "calc(100vh - 130px)",
       position: "relative",
       overflow: "hidden",

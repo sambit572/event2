@@ -288,28 +288,29 @@ const VendorRegister = () => {
 
         {/* ── BEAUTIFUL PAGE BACKGROUND ── */}
         <div
-          className="min-h-screen w-screen flex items-center justify-center p-3 sm:p-4 lg:p-0 relative overflow-hidden"
+          className="w-full flex items-center justify-center p-2 sm:p-3 relative overflow-hidden"
           style={{
-            background: "linear-gradient(135deg, #0f0c29 0%, #302b63 40%, #24243e 100%)",
+            background: "linear-gradient(135deg, #001228 0%, #001f3f 45%, #0a2a4a 100%)",
+            minHeight: "calc(100vh - 150px)",
           }}
         >
           {/* Decorative blobs (your original + 3 new premium orbs I added) */}
           <div style={{
             position: "absolute", top: "-80px", left: "-80px",
             width: "340px", height: "340px", borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(45,212,191,0.18) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(249,200,35,0.18) 0%, transparent 70%)",
             pointerEvents: "none",
           }} />
           <div style={{
             position: "absolute", bottom: "-60px", right: "-60px",
             width: "420px", height: "420px", borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(99,102,241,0.22) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(255,147,15,0.18) 0%, transparent 70%)",
             pointerEvents: "none",
           }} />
           <div style={{
             position: "absolute", top: "40%", left: "30%",
             width: "200px", height: "200px", borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(244,114,182,0.1) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(255,209,102,0.12) 0%, transparent 70%)",
             pointerEvents: "none",
           }} />
 
@@ -317,23 +318,9 @@ const VendorRegister = () => {
           <div style={{
             position: "absolute", top: "15%", right: "10%",
             width: "280px", height: "280px", borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(167,139,250,0.15) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(249,200,35,0.12) 0%, transparent 70%)",
             pointerEvents: "none",
             animation: "gentlePulse 8s infinite ease-in-out",
-          }} />
-          <div style={{
-            position: "absolute", bottom: "25%", left: "8%",
-            width: "180px", height: "180px", borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(251,113,133,0.12) 0%, transparent 70%)",
-            pointerEvents: "none",
-            animation: "gentlePulse 12s infinite ease-in-out",
-          }} />
-          <div style={{
-            position: "absolute", top: "65%", right: "25%",
-            width: "320px", height: "320px", borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(45,212,191,0.09) 0%, transparent 70%)",
-            pointerEvents: "none",
-            animation: "gentlePulse 10s infinite ease-in-out",
           }} />
 
           {/* Subtle grid overlay (your original) */}
@@ -354,7 +341,7 @@ const VendorRegister = () => {
             opacity: 0.15,
           }} />
 
-          <div className="relative z-10 w-full max-w-7xl flex flex-col lg:flex-row shadow-2xl rounded-2xl overflow-hidden" style={{ boxShadow: "0 25px 60px rgba(0,0,0,0.5)" }}>
+          <div className="relative z-10 w-full max-w-4xl flex flex-col lg:flex-row shadow-2xl rounded-2xl overflow-hidden" style={{ boxShadow: "0 25px 60px rgba(0,0,0,0.5)" }}>
             {/* LEFT SIDE: Form area */}
             <div
               className="w-full lg:w-1/2 flex items-center justify-center p-3 sm:p-5 lg:p-7 bg-cover bg-center relative"
@@ -365,10 +352,10 @@ const VendorRegister = () => {
               <div className="absolute inset-0 bg-black/40"></div>
               <div className="relative z-10 w-full max-w-md">
                 {/* Changed from bg-stone-100/95 to bg-stone-100/75 for more transparency */}
-                <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-5 border border-white/50">
-                  <div className="flex flex-col gap-3">
+                <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-4 border border-white/50">
+                  <div className="flex flex-col gap-2">
                     <div className="text-left">
-                      <h2 className="text-xl font-bold text-gray-800">
+                      <h2 className="text-lg font-bold text-gray-800">
                         Create Vendor Account
                       </h2>
                       <p className="text-gray-500 mt-0.5 text-sm">
@@ -396,7 +383,7 @@ const VendorRegister = () => {
                         placeholder="Enter your full name"
                         value={form.fullName}
                         onChange={handleChange}
-                        className="w-full p-2 text-sm bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition"
+                        className="w-full p-2 text-sm bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:outline-none transition"
                         required
                       />
                     </div>
@@ -411,7 +398,7 @@ const VendorRegister = () => {
                         placeholder="Enter your email address"
                         value={form.email}
                         onChange={handleChange}
-                        className="w-full p-2 text-sm bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition"
+                        className="w-full p-2 text-sm bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:outline-none transition"
                         required
                       />
                     </div>
@@ -426,7 +413,7 @@ const VendorRegister = () => {
                         placeholder="Enter your phone number"
                         value={form.phone}
                         onChange={handleChange}
-                        className="w-full p-2 text-sm bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition"
+                        className="w-full p-2 text-sm bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:outline-none transition"
                         required
                       />
                     </div>
@@ -442,7 +429,7 @@ const VendorRegister = () => {
                           placeholder="Enter password"
                           value={form.password}
                           onChange={handleChange}
-                          className="w-full p-2 pr-10 text-sm bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition"
+                          className="w-full p-2 pr-10 text-sm bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:outline-none transition"
                           required
                         />
                         <button
@@ -466,7 +453,7 @@ const VendorRegister = () => {
                           placeholder="Confirm password"
                           value={form.confirmPassword}
                           onChange={handleChange}
-                          className="w-full p-2 pr-10 text-sm bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition"
+                          className="w-full p-2 pr-10 text-sm bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:outline-none transition"
                           required
                         />
                         <button
@@ -488,14 +475,14 @@ const VendorRegister = () => {
                         name="profilePic"
                         accept="image/*"
                         onChange={handleChange}
-                        className="w-full p-2 text-sm bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition file:mr-3 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+                        className="w-full p-2 text-sm bg-white/90 backdrop-blur-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:outline-none transition file:mr-3 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-amber-50 file:text-amber-800 hover:file:bg-amber-100"
                       />
                     </div>
 
                     <button
                       onClick={handleSubmit}
                       disabled={loading}
-                      className="w-full mt-1 bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition-all duration-300 shadow-md hover:shadow-lg disabled:bg-gray-400 disabled:cursor-not-allowed text-sm"
+                      className="w-full mt-1 font-bold py-2 px-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg disabled:bg-gray-400 disabled:cursor-not-allowed text-sm" style={{ background: "linear-gradient(90deg, #f9c823, #ff930f)", color: "#001f3f" }}
                     >
                       {loading ? "Registering..." : "Next"}
                     </button>
@@ -508,20 +495,20 @@ const VendorRegister = () => {
             <div
               className="hidden lg:flex w-full lg:w-1/2 flex-col items-center justify-center text-center p-10 relative overflow-hidden"
               style={{
-                background: "linear-gradient(160deg, #1a1040 0%, #2d1b69 50%, #0f2027 100%)",
+                background: "linear-gradient(160deg, #001228 0%, #001f3f 50%, #0a2a4a 100%)",
               }}
             >
               {/* Glow orbs inside right panel */}
               <div style={{
                 position: "absolute", top: "-40px", right: "-40px",
                 width: "220px", height: "220px", borderRadius: "50%",
-                background: "radial-gradient(circle, rgba(45,212,191,0.25) 0%, transparent 70%)",
+                background: "radial-gradient(circle, rgba(249,200,35,0.28) 0%, transparent 70%)",
                 pointerEvents: "none",
               }} />
               <div style={{
                 position: "absolute", bottom: "20px", left: "-30px",
                 width: "180px", height: "180px", borderRadius: "50%",
-                background: "radial-gradient(circle, rgba(139,92,246,0.25) 0%, transparent 70%)",
+                background: "radial-gradient(circle, rgba(255,147,15,0.22) 0%, transparent 70%)",
                 pointerEvents: "none",
               }} />
 
@@ -540,7 +527,7 @@ const VendorRegister = () => {
               <h1
                 className="relative z-10 text-3xl font-extrabold mb-3"
                 style={{
-                  background: "linear-gradient(90deg, #2dd4bf, #a78bfa, #f472b6)",
+                  background: "linear-gradient(90deg, #f9c823, #ff930f, #ffd166)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
@@ -552,13 +539,13 @@ const VendorRegister = () => {
               {/* Divider line */}
               <div style={{
                 width: "60px", height: "3px", borderRadius: "2px",
-                background: "linear-gradient(90deg, #2dd4bf, #a78bfa)",
+                background: "linear-gradient(90deg, #f9c823, #ff930f)",
                 margin: "0 auto 14px",
               }} />
 
               {/* Description */}
               <p className="relative z-10 text-sm max-w-xs mx-auto leading-relaxed" style={{ color: "rgba(255,255,255,0.7)" }}>
-                Join <span style={{ color: "#2dd4bf", fontWeight: 600 }}>EventsBridge</span> — your one-stop platform for discovering trusted vendors, planning events, and creating unforgettable experiences.
+                Join <span style={{ color: "#f9c823", fontWeight: 600 }}>EventsBridge</span> — your one-stop platform for discovering trusted vendors, planning events, and creating unforgettable experiences.
               </p>
 
               {/* Feature badges */}
@@ -568,9 +555,9 @@ const VendorRegister = () => {
                     key={badge}
                     className="text-xs px-3 py-1 rounded-full font-semibold"
                     style={{
-                      background: "rgba(255,255,255,0.08)",
-                      border: "1px solid rgba(255,255,255,0.15)",
-                      color: "rgba(255,255,255,0.85)",
+                      background: "rgba(249,200,35,0.08)",
+                      border: "1px solid rgba(249,200,35,0.2)",
+                      color: "rgba(255,230,120,0.9)",
                       backdropFilter: "blur(4px)",
                     }}
                   >

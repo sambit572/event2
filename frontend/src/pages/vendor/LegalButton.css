@@ -28,12 +28,12 @@
 
 /* --- INDIVIDUAL BUTTON STYLES --- */
 .back-btn {
-  background-color: #b5afaf;
+  background-color: #001f3f;
   color: white;
 }
 
 .back-btn:hover {
-  background-color: #a29b9b;
+  background-color: #0a3a6e;
 }
 
 .back-arrow-icon {
@@ -42,13 +42,13 @@
 }
 
 .submits-btn {
-  background-color: #32cd32;
-  color: white;
+  background-color: #f9c823;
+  color: #001f3f;
 }
 
 /* --- FIX: Corrected class name from .submit-btn to .submits-btn --- */
 .submits-btn:hover {
-  background-color: #28a428;
+  background-color: #ff930f;
 }
 
 /* ============ RESPONSIVE (SIMPLIFIED & FIXED) ============ */
