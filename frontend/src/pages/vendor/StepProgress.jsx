@@ -99,7 +99,7 @@ export default function StepProgress({ currentStep = 0 }) {
           left: 50%;
           width: 100%;
           height: 2px;
-          background: rgba(255,255,255,0.08);
+          background: rgba(255,255,255,0.18);
           z-index: 0;
         }
 
@@ -143,10 +143,10 @@ export default function StepProgress({ currentStep = 0 }) {
         }
 
         .sp-step.pending .sp-circle {
-          background: rgba(255,255,255,0.05);
-          color: rgba(255,255,255,0.3);
-          border: 1.5px solid rgba(255,255,255,0.1);
-          box-shadow: none;
+          background: rgba(255,255,255,0.1);
+          color: rgba(255,255,255,0.75);
+          border: 1.5px solid rgba(255,255,255,0.35);
+          box-shadow: 0 0 0 3px rgba(255,255,255,0.05);
         }
 
         /* Labels */
@@ -159,7 +159,7 @@ export default function StepProgress({ currentStep = 0 }) {
 
         .sp-step.completed .sp-label { color: #fbbf24; }
         .sp-step.active .sp-label { color: #e0e7ff; }
-        .sp-step.pending .sp-label { color: rgba(255,255,255,0.3); }
+        .sp-step.pending .sp-label { color: rgba(255,255,255,0.65); }
 
         .sp-status {
           margin-top: 4px;
@@ -187,7 +187,7 @@ export default function StepProgress({ currentStep = 0 }) {
           animation: pulse 1.4s ease-in-out infinite;
         }
 
-        .sp-step.pending .sp-status { color: rgba(255,255,255,0.2); }
+        .sp-step.pending .sp-status { color: rgba(255,255,255,0.5); }
 
         @keyframes pulse {
           0%, 100% { opacity: 1; transform: scale(1); }
