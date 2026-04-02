@@ -112,7 +112,7 @@ const OrderSummary = () => {
       },
     });
   };
-  const handleBackToCart = () => navigate("/cart");
+  const handleBackToCart = () => navigate("/your-cart");
 
   // Helper function to get service details based on order type
   const getServiceDetails = (item) => {
