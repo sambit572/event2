@@ -871,20 +871,27 @@ function VendorService({ currentStep }) {
       )}
 
       <div style={{
-        background: "linear-gradient(135deg, #001228 0%, #001f3f 45%, #0a2a4a 100%)",
+        background: "linear-gradient(135deg, #060d1a 0%, #0b1a2e 50%, #0d1f38 100%)",
         minHeight: "calc(100vh - 130px)",
         display: "flex",
-        alignItems: "flex-start",
+        alignItems: "center",
         justifyContent: "center",
-        padding: "0 0 12px 0",
+        padding: "16px 16px 20px",
         position: "relative",
         overflow: "hidden",
       }}>
-      {/* bg orbs */}
-      <div style={{position:"absolute",top:"-60px",left:"-60px",width:"280px",height:"280px",borderRadius:"50%",background:"radial-gradient(circle,rgba(249,200,35,0.15) 0%,transparent 70%)",pointerEvents:"none"}} />
-      <div style={{position:"absolute",bottom:"-40px",right:"-40px",width:"320px",height:"320px",borderRadius:"50%",background:"radial-gradient(circle,rgba(255,147,15,0.15) 0%,transparent 70%)",pointerEvents:"none"}} />
-      <div style={{position:"absolute",inset:0,opacity:0.04,backgroundImage:"linear-gradient(rgba(255,255,255,0.6) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.6) 1px,transparent 1px)",backgroundSize:"40px 40px",pointerEvents:"none"}} />
-      <div className="form-container" style={{position:"relative",zIndex:1}}>
+      {/* premium bg orbs */}
+      <div style={{position:"absolute",top:-120,left:-80,width:420,height:420,borderRadius:"50%",background:"radial-gradient(circle,rgba(245,158,11,0.12) 0%,transparent 65%)",pointerEvents:"none"}} />
+      <div style={{position:"absolute",bottom:-80,right:-80,width:380,height:380,borderRadius:"50%",background:"radial-gradient(circle,rgba(99,102,241,0.14) 0%,transparent 65%)",pointerEvents:"none"}} />
+      <div style={{position:"absolute",inset:0,opacity:0.03,backgroundImage:"linear-gradient(rgba(255,255,255,1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,1) 1px,transparent 1px)",backgroundSize:"48px 48px",pointerEvents:"none"}} />
+      <div className="form-container">
+        <style>{`
+          @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+          .form-container, .form-container * { font-family: 'Plus Jakarta Sans', sans-serif; }
+          .vs-fadein { animation: vs-fadein 0.4s ease; }
+          @keyframes vs-fadein { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+        `}</style>
+        <div className="form-section-title">Service Details — Step 2 of 4</div>
         <div className="form-wrapper">
           <div className="form-column">
             <div className="ServiceCategory">
@@ -1398,7 +1405,7 @@ function VendorService({ currentStep }) {
           <div className="form-divider"></div>
 
           <div className="form-right">
-            <h3 style={{ color: "#001f3f", fontWeight: "600" }}>
+            <h3 style={{ color: "#374151", fontWeight: "600", fontSize: "11.5px", letterSpacing: "0.2px", marginBottom: 5 }}>
               Estimated Duration *
             </h3>
             <div className="duration-inputs">
@@ -1410,7 +1417,7 @@ function VendorService({ currentStep }) {
                 value={days}
                 onChange={(e) => setDays(e.target.value)}
               />
-              <span>d :</span>
+              <span className="duration-label">d :</span>
               <input
                 type="number"
                 min="0"
@@ -1420,7 +1427,7 @@ function VendorService({ currentStep }) {
                 value={hours}
                 onChange={(e) => setHours(e.target.value)}
               />
-              <span>h :</span>
+              <span className="duration-label">h :</span>
               <input
                 type="number"
                 min="0"
@@ -1430,7 +1437,7 @@ function VendorService({ currentStep }) {
                 value={minutes}
                 onChange={(e) => setMinutes(e.target.value)}
               />
-              <span>m</span>
+              <span className="duration-label">m</span>
             </div>
 
             <label htmlFor="state-location" className="state-location-label">
