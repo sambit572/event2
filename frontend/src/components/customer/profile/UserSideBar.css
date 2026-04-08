@@ -543,9 +543,9 @@
 
 @media (max-width: 820px) {
   .user-sidebar {
-    position: relative;
+    position: fixed;
     left: 0;
-    bottom: 0;
+    top: 0;
     width: 240px;
     background: #001f3f;
     backdrop-filter: blur(14px);
@@ -591,9 +591,9 @@
 
 @media (max-width: 768px) {
   .user-sidebar {
-    position: relative;
+    position: fixed;
     left: 0;
-    bottom: 0;
+    top: 0;
     width: 240px;
     background: #001f3f;
     backdrop-filter: blur(14px);
