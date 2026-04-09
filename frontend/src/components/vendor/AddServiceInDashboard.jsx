@@ -6,6 +6,7 @@ import Spinner from "./../../components/common/Spinner";
 import ReactCrop, { centerCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import { toast } from "react-toastify";
+import { BACKEND_URL } from "../../utils/constant";
 
 const getCroppedImg = (image, crop) => {
   const canvas = document.createElement("canvas");
@@ -578,10 +579,12 @@ function VendorService({ currentStep }) {
       } else {
         // Keep non-catering logic as is
         formData.append("pricingType", "flat");
+        formData.append("minPrice", minPrice);
+        formData.append("maxPrice", maxPrice);
       }
 
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/vendors/create-service`,
+        `${BACKEND_URL}/vendors/create-service`,
         formData,
         {
           headers: {
