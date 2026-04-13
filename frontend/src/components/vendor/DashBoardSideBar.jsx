@@ -1,15 +1,31 @@
 import React, { useState, useEffect } from "react";
 import "./DashBoardSideBar.css";
-import { FaEdit, FaCamera, FaUpload, FaTrash } from "react-icons/fa";
+import { FaCamera, FaUpload, FaTrash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { UseVendorProfile } from "./UseVendorProfile.jsx";
 import axios from "axios";
 import { setVendor } from "../../redux/VendorSlice.js";
 import { IoKey } from "react-icons/io5";
 import { BsBank } from "react-icons/bs";
-import { IoIosArrowUp } from "react-icons/io";
-import { IoIosArrowDown } from "react-icons/io";
+import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 import { MdOutlineEdit } from "react-icons/md";
+import {
+  MdDashboard,
+  MdBookOnline,
+  MdAnalytics,
+  MdPeople,
+  MdSettings,
+  MdSave,
+  MdCancel,
+} from "react-icons/md";
+
+const NAV_ITEMS = [
+  { key: "services",  label: "Services",  icon: MdDashboard  },
+  { key: "bookings",  label: "Bookings",  icon: MdBookOnline },
+  { key: "analytics", label: "Analytics", icon: MdAnalytics  },
+  { key: "customers", label: "Customers", icon: MdPeople     },
+  { key: "settings",  label: "Settings",  icon: MdSettings   },
+];
 
 function DashBoardSideBar({
   isOpen,
@@ -17,6 +33,8 @@ function DashBoardSideBar({
   setConfirmPasswordModal,
   setIsVerified,
   setVendorShowPasswordModal,
+  activeTab,
+  setActiveTab,
 }) {
   const dispatch = useDispatch();
   const vendor = useSelector((state) => state.vendor.vendor);
@@ -25,87 +43,54 @@ function DashBoardSideBar({
   const [uploading, setUploading] = useState(false);
   const [removing, setRemoving] = useState(false);
   const [showRemoveConfirm, setShowRemoveConfirm] = useState(false);
+  const [showProfileSection, setShowProfileSection] = useState(false);
 
-  // ✅ 1. Destructure the new `resetForm` function from your hook.
-  const { form, updateField, updateVendor, updateBank, resetForm } =
-    UseVendorProfile();
-
-  console.log("DashBoardSideBar render - isVerified:", isVerified);
-  console.log("DashBoardSideBar render - editMode:", editMode);
+  const { form, updateField, updateVendor, updateBank, resetForm } = UseVendorProfile();
 
   useEffect(() => {
-    if (!isVerified) return; // only run when verified
-
+    if (!isVerified) return;
     if (editMode) {
       (async () => {
         await updateVendor();
-        console.log("Vendor updated successfully");
-
         await updateBank();
-        console.log("Bank updated successfully");
-
-        setEditMode(false); // exit edit mode
-        setIsVerified(false); // reset verification flag
+        setEditMode(false);
+        setIsVerified(false);
       })();
     }
   }, [isVerified]);
 
   const handleToggleEdit = () => {
-    if (editMode) {
-      setConfirmPasswordModal(true);
-    } else {
-      setEditMode(true);
-    }
+    if (editMode) setConfirmPasswordModal(true);
+    else setEditMode(true);
   };
 
-  // ✅ 2. Create the handler for the Cancel button.
   const handleCancelEdit = () => {
-    resetForm(); // This reverts any unsaved changes in the form state.
-    setEditMode(false); // This switches the UI back to view mode.
+    resetForm();
+    setEditMode(false);
   };
 
   const getInitialsAvatar = (name) => {
     if (!name) return "NA";
-    return name
-      .split(" ")
-      .map((n) => n[0]?.toUpperCase())
-      .join("")
-      .slice(0, 2);
+    return name.split(" ").map((n) => n[0]?.toUpperCase()).join("").slice(0, 2);
   };
 
   const handleImageUpload = async (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
-
-    if (!file.type.startsWith("image/")) {
-      alert("Please select an image file");
-      return;
-    }
-
-    if (file.size > 9 * 1024 * 1024) {
-      alert("File size should be less than 9MB");
-      return;
-    }
-
+    if (!file.type.startsWith("image/")) { alert("Please select an image file"); return; }
+    if (file.size > 9 * 1024 * 1024) { alert("File size should be less than 9MB"); return; }
     setUploading(true);
     try {
       const formData = new FormData();
       formData.append("vendorId", vendor._id);
       formData.append("profilePicture", file);
-
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/vendors/upload-profile`,
         formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-          withCredentials: true,
-        }
+        { headers: { "Content-Type": "multipart/form-data" }, withCredentials: true }
       );
-
       dispatch(setVendor(res.data.data));
-      alert("Profile photo uploaded successfully!");
     } catch (err) {
-      console.error("Upload error:", err);
       alert("Failed to upload profile photo.");
     } finally {
       setUploading(false);
@@ -118,20 +103,13 @@ function DashBoardSideBar({
     try {
       const formData = new FormData();
       formData.append("removeProfilePicture", "true");
-
       const res = await axios.put(
         `${import.meta.env.VITE_BACKEND_URL}/vendors/${vendor._id}`,
         formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-          withCredentials: true,
-        }
+        { headers: { "Content-Type": "multipart/form-data" }, withCredentials: true }
       );
-
       dispatch(setVendor(res.data.data));
-      alert("Profile photo removed successfully!");
     } catch (err) {
-      console.error("Remove photo error:", err);
       alert("Failed to remove photo.");
     } finally {
       setRemoving(false);
@@ -140,287 +118,196 @@ function DashBoardSideBar({
   };
 
   return (
-    <div className={`dash-sidebar ${isOpen ? "open" : ""}`}>
-      <h2 className="dashboardHeading">DASHBOARD</h2>
-      <div className="sidebar-content">
-        <div className="profile-photo-container">
-          <div className="profile-photo-wrapper">
+    <aside className={`dash-sidebar ${isOpen ? "open" : ""}`}>
+      {/* Brand */}
+      <div className="sb-brand">
+        <div className="sb-brand-logo">EB</div>
+        <div>
+          <div className="sb-brand-title">EventsBridge</div>
+          <div className="sb-brand-sub">Vendor Portal</div>
+        </div>
+      </div>
+
+      <div className="sb-body">
+        {/* Avatar card */}
+        <div className="sb-avatar-card">
+          <div className="sb-avatar-wrap" onClick={() => document.getElementById("vendor-photo").click()}>
             {vendor?.profilePicture ? (
-              <img
-                decoding="async"
-                loading="lazy"
-                src={vendor.profilePicture}
-                alt="Profile"
-                className="user-profile-pic"
-                onClick={() => document.getElementById("vendor-photo").click()}
-              />
+              <img src={vendor.profilePicture} alt="Profile" className="sb-avatar-img" />
             ) : (
-              <div
-                className="user-profile-pic profile-initials"
-                onClick={() => document.getElementById("vendor-photo").click()}
-              >
-                {getInitialsAvatar(form.fullName)}
-              </div>
+              <div className="sb-avatar-initials">{getInitialsAvatar(form.fullName)}</div>
             )}
-            <div
-              className="camera-icon-overlay"
-              onClick={() => document.getElementById("vendor-photo").click()}
-            >
-              {uploading ? (
-                <FaUpload className="camera-icon spinning" />
-              ) : (
-                <FaCamera className="camera-icon" />
-              )}
+            <div className="sb-camera-badge">
+              {uploading ? <FaUpload className="spinning" size={12} /> : <FaCamera size={12} />}
             </div>
           </div>
+          <input type="file" id="vendor-photo" accept="image/*"
+            onChange={handleImageUpload} style={{ display: "none" }} disabled={uploading} />
 
-          <input
-            type="file"
-            id="vendor-photo"
-            accept="image/*"
-            onChange={handleImageUpload}
-            style={{ display: "none" }}
-            disabled={uploading}
-          />
+          <div className="sb-vendor-name">
+            {editMode ? (
+              <input type="text" value={form.fullName} className="sb-edit-input"
+                onChange={(e) => updateField("fullName", e.target.value)} />
+            ) : (
+              <span>{form.fullName?.toUpperCase()}</span>
+            )}
+          </div>
+          <div className={`sb-status-badge ${form.active ? "sb-active" : "sb-inactive"}`}>
+            <span className="sb-status-dot" />
+            {form.active ? "Active" : "Inactive"}
+          </div>
         </div>
 
-        {/* Confirmation Dialog */}
-        {showRemoveConfirm && (
-          <div className="remove-confirm-overlay">
-            <div className="remove-confirm-dialog">
-              <h3>Remove Profile Photo</h3>
-              <p>Are you sure you want to remove your profile photo?</p>
-              <div className="remove-confirm-buttons">
-                <button
-                  className="confirm-remove-btn"
-                  onClick={handleImageRemove}
-                  disabled={removing}
-                >
-                  {removing ? "Removing..." : "Yes Remove"}
-                </button>
-                <button
-                  className="cancel-remove-btn"
-                  onClick={() => setShowRemoveConfirm(false)}
-                  disabled={removing}
-                >
-                  Cancel
-                </button>
+        {/* Navigation */}
+        <nav className="sb-nav">
+          <div className="sb-nav-label">Navigation</div>
+          {NAV_ITEMS.map(({ key, label, icon: Icon }) => (
+            <button
+              key={key}
+              className={`sb-nav-item ${activeTab === key ? "sb-nav-active" : ""}`}
+              onClick={() => setActiveTab(key)}
+            >
+              <Icon size={18} className="sb-nav-icon" />
+              <span>{label}</span>
+              {activeTab === key && <span className="sb-nav-pip" />}
+            </button>
+          ))}
+        </nav>
+
+        {/* Profile Details (collapsible) */}
+        <div className="sb-section">
+          <button className="sb-section-toggle" onClick={() => setShowProfileSection(!showProfileSection)}>
+            <span className="sb-nav-label" style={{ margin: 0 }}>Profile Details</span>
+            <span className="text-gray-400">{showProfileSection ? <IoIosArrowUp /> : <IoIosArrowDown />}</span>
+          </button>
+
+          {showProfileSection && (
+            <div className="sb-profile-details">
+              <div className="sb-detail-row">
+                <span className="sb-detail-label">Email</span>
+                {editMode ? (
+                  <input type="email" value={form.email} className="sb-edit-input"
+                    onChange={(e) => updateField("email", e.target.value)} />
+                ) : (
+                  <span className="sb-detail-val">{form.email}</span>
+                )}
+              </div>
+              <div className="sb-detail-row">
+                <span className="sb-detail-label">Phone</span>
+                {editMode ? (
+                  <input type="text" value={form.phoneNumber} className="sb-edit-input"
+                    onChange={(e) => updateField("phoneNumber", e.target.value)} />
+                ) : (
+                  <span className="sb-detail-val">{form.phoneNumber}</span>
+                )}
+              </div>
+              <div className="sb-detail-row">
+                <span className="sb-detail-label">Events Hosted</span>
+                <span className="sb-events-badge">{vendor?.eventsHosted ?? 0}</span>
+              </div>
+              {editMode && (
+                <div className="sb-detail-row" style={{ alignItems: "center" }}>
+                  <span className="sb-detail-label">Status</span>
+                  <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
+                    <div style={{ position: "relative", width: 44, height: 24 }}>
+                      <input type="checkbox" checked={form.active}
+                        onChange={() => updateField("active", !form.active)}
+                        style={{ opacity: 0, width: 0, height: 0 }} />
+                      <div style={{
+                        position: "absolute", inset: 0, borderRadius: 12,
+                        background: form.active ? "#22c55e" : "#6b7280", transition: "background 0.3s"
+                      }} />
+                      <div style={{
+                        position: "absolute", top: 3, left: form.active ? 23 : 3,
+                        width: 18, height: 18, borderRadius: "50%", background: "#fff",
+                        boxShadow: "0 1px 4px rgba(0,0,0,0.3)", transition: "left 0.3s"
+                      }} />
+                    </div>
+                    <span style={{ color: "#fff", fontSize: 13 }}>{form.active ? "Active" : "Inactive"}</span>
+                  </label>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Account actions */}
+        <div className="sb-section">
+          <div className="sb-nav-label">Account</div>
+          <button className="sb-action-btn" onClick={() => setVendorShowPasswordModal(true)}>
+            <IoKey size={15} /> Change Password
+          </button>
+          <button className="sb-action-btn"
+            onClick={() => updateField("bankDropdownOpen", !form.bankDropdownOpen)}>
+            <BsBank size={14} />
+            <span>Bank Details</span>
+            <span style={{ marginLeft: "auto" }}>{form.bankDropdownOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}</span>
+          </button>
+
+          {form.bankDropdownOpen && (
+            <div className="sb-bank-panel">
+              <div className="sb-bank-row">
+                <span>Account No.</span>
+                {editMode ? (
+                  <input type="text" value={form.tempAccountNumber} className="sb-edit-input"
+                    style={{ color: "#000" }}
+                    onChange={(e) => updateField("tempAccountNumber", e.target.value)} />
+                ) : (
+                  <span>****{form.accountNumber?.slice(-4)}</span>
+                )}
+              </div>
+              <div className="sb-bank-row">
+                <span>IFSC</span>
+                {editMode ? (
+                  <input type="text" value={form.tempIfscCode} className="sb-edit-input"
+                    style={{ color: "#000" }}
+                    onChange={(e) => updateField("tempIfscCode", e.target.value)} />
+                ) : (
+                  <span>{form.ifscCode}</span>
+                )}
               </div>
             </div>
-          </div>
-        )}
-
-        <ul className="custom-list-decor-dashboard">
-          <li className="text-white font-montserrat text-[20px] not-italic font-bold leading-normal mt-[-12px] text-center tracking-[1px]">
-            {editMode ? (
-              <input
-                type="text"
-                value={form.fullName}
-                className="custom-li"
-                onChange={(e) => updateField("fullName", e.target.value)}
-              />
-            ) : (
-              form.fullName.toUpperCase()
-            )}
-          </li>
-
-          {editMode ? (
-            <label className="flex items-center justify-center gap-3  mt-2 mb-2 cursor-pointer select-none">
-              <div className="relative">
-                <input
-                  type="checkbox"
-                  checked={form.active}
-                  onChange={() => updateField("active", !form.active)}
-                  className="sr-only peer"
-                />
-                <div className="w-12 h-6 rounded-full bg-gray-300 peer-checked:bg-green-500 transition-colors duration-300"></div>
-                <div
-                  className="absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow-md 
-                  transition-all duration-300 peer-checked:translate-x-6"
-                ></div>
-              </div>
-              <span
-                className={`font-semibold transition-colors duration-300 ${
-                  form.active
-                    ? "text-white font-bold"
-                    : "text-gray-200 font-semibold"
-                }`}
-              >
-                {form.active ? "Active" : "Inactive"}
-              </span>
-            </label>
-          ) : (
-            <span className="status-indicator">
-              <span
-                className={`status-dot ${
-                  form.active ? "active-dot" : "inactive-dot"
-                }`}
-              ></span>
-              {form.active ? "Active" : "Inactive"}
-            </span>
           )}
 
-          <li className="text-[#d4d4d4] mr-2 text-[13px] text-center not-italic font-medium leading-normal mt-[15px] tracking-[0.5px]">
-            {editMode ? (
-              <input
-                type="email"
-                value={form.email}
-                className="custom-li"
-                onChange={(e) => updateField("email", e.target.value)}
-              />
-            ) : (
-              form.email
-            )}
-          </li>
-
-          <li className="text-[#fff] text-[16px] ml-5 not-italic font-medium leading-normal mt-[1px] tracking-[0.5px]">
-            {editMode ? (
-              <input
-                type="text"
-                value={form.phoneNumber}
-                className="custom-li"
-                onChange={(e) => updateField("phoneNumber", e.target.value)}
-              />
-            ) : (
-              form.phoneNumber
-            )}
-          </li>
-          <p className="mt-3 ml-5 text-[#fff] font-semibold text-[18px]">
-            Quick Status
-          </p>
-          <li className="text-[15px] ml-5 not-italic font-medium leading-normal mt-[1px] tracking-[0.5px]">
-            <span className=" text-[#d4d4d4]">Event Hosted</span>{" "}
-            <span className="text-[#fff] ml-14">
-              {vendor?.eventsHosted ?? 0}
-            </span>
-          </li>
-
-          <div
-            className="flex mt-5 ml-5 cursor-pointer hover:text-[#f3c12d]"
-            onClick={() => setVendorShowPasswordModal(true)}
-          >
-            <span className="font-semibold mr-2 mt-0.5 text-[#fff] hover:text-[#f3c12d]">
-              <IoKey className="text-[20px]" />
-            </span>
-            <span>Change Password</span>
-          </div>
-
-          <li>
-            <div
-              onClick={() =>
-                updateField("bankDropdownOpen", !form.bankDropdownOpen)
-              }
-              className="flex items-center cursor-pointer mt-4 ml-5 hover:text-[#f3c12d] "
-            >
-              <span>
-                <BsBank className="text-[16px] mr-2" />
-              </span>
-              <span className="mr-10 ">Bank Details </span>{" "}
-              <span>
-                {form.bankDropdownOpen ? (
-                  <IoIosArrowUp className="text-white text-lg font-bold transition-transform duration-200 hover:text-[#f3c12d]" />
-                ) : (
-                  <IoIosArrowDown className="text-white text-lg font-bold transition-transform duration-200 hover:text-[#f3c12d]" />
-                )}
-              </span>
-            </div>
-
-            {form.bankDropdownOpen && (
-              <div className="dropdown-content">
-                <div>
-                  <strong className="vendor-accno">Account Number:</strong>{" "}
-                  {editMode ? (
-                    <input
-                      type="text"
-                      style={{ color: "black" }}
-                      value={form.tempAccountNumber}
-                      onChange={(e) =>
-                        updateField("tempAccountNumber", e.target.value)
-                      }
-                    />
-                  ) : (
-                    `****${form.accountNumber?.slice(-4)}`
-                  )}
-                </div>
-                <div>
-                  <strong className="vendor-ifsc">IFSC Code:</strong>{" "}
-                  {editMode ? (
-                    <input
-                      type="text"
-                      style={{ color: "black" }}
-                      value={form.tempIfscCode}
-                      onChange={(e) =>
-                        updateField("tempIfscCode", e.target.value)
-                      }
-                    />
-                  ) : (
-                    form.ifscCode
-                  )}
-                </div>
-              </div>
-            )}
-          </li>
-        </ul>
-
-        {/* ✅ 3. Updated button section to show Save/Cancel in edit mode. */}
-        <div className="edit-buttons-container">
           {editMode ? (
-            <div className="flex gap-3 items-center justify-center">
-              <button
-                onClick={handleToggleEdit}
-                className="mt-2 px-5 py-2.5 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 
-                shadow-md hover:from-blue-600 hover:to-blue-700 hover:shadow-lg 
-                active:scale-95 active:shadow-inner 
-                transition-all duration-200 ease-in-out"
-              >
-                Save
-              </button>
-
-              <button
-                onClick={handleCancelEdit}
-                className="mt-2 px-5 py-2.5 rounded-xl font-semibold text-white bg-gradient-to-r from-red-500 to-red-600 
-                shadow-md hover:from-red-600 hover:to-red-700 hover:shadow-lg 
-                active:scale-95 active:shadow-inner 
-                transition-all duration-200 ease-in-out ml-3"
-              >
-                Cancel
-              </button>
+            <div className="sb-edit-actions">
+              <button onClick={handleToggleEdit} className="sb-btn-save"><MdSave size={14} /> Save</button>
+              <button onClick={handleCancelEdit} className="sb-btn-cancel"><MdCancel size={14} /> Cancel</button>
             </div>
           ) : (
-            <div
-              className="flex items-center ml-5 mt-4 cursor-pointer text-[16px] hover:text-[#f3c12d]"
-              onClick={handleToggleEdit}
-            >
-              <span className="mr-2 text-lg">
-                <MdOutlineEdit />
-              </span>{" "}
-              <span>Edit</span>
-            </div>
+            <button className="sb-action-btn" onClick={handleToggleEdit}>
+              <MdOutlineEdit size={15} /> Edit Profile
+            </button>
+          )}
+
+          {vendor?.profilePicture && (
+            <button className="sb-action-btn sb-action-danger"
+              onClick={() => setShowRemoveConfirm(true)} disabled={uploading || removing}>
+              <FaTrash size={12} />
+              {removing ? "Removing..." : "Remove Photo"}
+            </button>
           )}
         </div>
       </div>
-      {vendor?.profilePicture && (
-        <button
-          className={`flex items-center justify-center gap-2 bg-gradient-to-br from-[#FFD93D] to-[#E6B800] text-[#2D004D] px-4 py-2 rounded-[30px] cursor-pointer text-[13px] font-semibold text-center transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] border-0 shadow-[0_4px_15px_rgba(255,107,107,0.3)] relative overflow-hidden mt-3 font-montserrat tracking-[0.5px] ml-8 remove-photo-btn ${
-            removing ? "removing" : ""
-          }`}
-          onClick={() => setShowRemoveConfirm(true)}
-          disabled={uploading || removing}
-        >
-          {removing ? (
-            <>
-              <FaUpload className="remove-icon spinning" />
-              <span className="remove-text">Removing...</span>
-            </>
-          ) : (
-            <>
-              <FaTrash className="remove-icon" />
-              <span className="remove-text">Remove Photo</span>
-            </>
-          )}
-        </button>
+
+      {/* Remove confirm */}
+      {showRemoveConfirm && (
+        <div className="sb-overlay">
+          <div className="sb-confirm-box">
+            <h3 style={{ fontWeight: 700, color: "#001f3f", marginBottom: 8 }}>Remove Profile Photo?</h3>
+            <p style={{ fontSize: 13, color: "#6b7280", marginBottom: 16 }}>This cannot be undone.</p>
+            <div style={{ display: "flex", gap: 10 }}>
+              <button className="sb-btn-save" style={{ flex: 1 }} onClick={handleImageRemove} disabled={removing}>
+                {removing ? "Removing..." : "Yes, Remove"}
+              </button>
+              <button className="sb-btn-cancel" style={{ flex: 1 }} onClick={() => setShowRemoveConfirm(false)}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
       )}
-    </div>
+    </aside>
   );
 }
 

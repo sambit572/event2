@@ -72,7 +72,7 @@ const VendorMenu = ({
 
                 {/* My Dashboard */}
                 <div
-                  className="group flex items-center gap-4 cursor-pointer px-5 py-4 rounded-2xl transition-all duration-300
+                  className="group flex items-center gap-4 cursor-pointer px-5 py-2 rounded-2xl transition-all duration-300
                              bg-gradient-to-r from-blue-50 to-white hover:from-blue-100 hover:to-blue-50 hover:shadow-xl hover:-translate-y-0.5"
                   onClick={() => {
                     setShowVendorDropdown(false);
@@ -91,7 +91,7 @@ const VendorMenu = ({
 
                 {/* Sign Out */}
                 <div
-                  className="group flex items-center gap-4 cursor-pointer px-5 py-4 rounded-2xl transition-all duration-300
+                  className="group flex items-center gap-4 cursor-pointer px-5 py-2 rounded-2xl transition-all duration-300
                              bg-gradient-to-r from-red-50 to-white hover:from-red-100 hover:to-red-50 hover:shadow-xl hover:-translate-y-0.5"
                   onClick={() => {
                     setShowVendorDropdown(false);
