@@ -1,397 +1,508 @@
 import React, { useEffect, useRef, useState } from "react";
 
-// Lazy-load Chart.js from CDN
-function useChartJs(callback) {
+/* ── Google Fonts ── */
+const fontLink = document.createElement("link");
+fontLink.rel = "stylesheet";
+fontLink.href = "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap";
+document.head.appendChild(fontLink);
+
+/* ── Global Styles ── */
+const globalStyle = document.createElement("style");
+globalStyle.textContent = `
+  * { box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; margin: 0; }
+  :root {
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --border: #e2e8f0;
+    --text-primary: #0f172a;
+    --text-secondary: #64748b;
+    --text-muted: #94a3b8;
+    --navy: #1e3a5f;
+    --blue: #3b82f6;
+    --violet: #7c3aed;
+    --amber: #f59e0b;
+    --green: #16a34a;
+    --red: #ef4444;
+    --orange: #f97316;
+  }
+  .kpi-card { transition: transform 0.18s ease, box-shadow 0.18s ease; }
+  .kpi-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.1) !important; }
+  .btn-primary { transition: background 0.15s ease, transform 0.1s ease; }
+  .btn-primary:hover { background: #162d4a !important; transform: scale(1.02); }
+  .btn-primary:active { transform: scale(0.98); }
+  .tip-row { transition: background 0.15s ease; border-radius: 8px; padding: 4px 6px; }
+  .tip-row:hover { background: rgba(0,0,0,0.04); }
+`;
+document.head.appendChild(globalStyle);
+
+/* ── Chart.js Loader ── */
+function useChartJs(callback, deps = []) {
   useEffect(() => {
-    if (window.Chart) {
-      callback(window.Chart);
-      return;
-    }
+    if (window.Chart) { callback(window.Chart); return; }
     const script = document.createElement("script");
-    script.src = "https://cdn.jsdelivr.net/npm/chart.js";
+    script.src = "https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js";
     script.onload = () => callback(window.Chart);
     document.head.appendChild(script);
-  }, []);
+  }, deps);
 }
 
-/* ─── KPI Card ─── */
-function KpiCard({ icon, label, value, badge, badgeColor, trend, trendColor }) {
+/* ── Reusable Card ── */
+function Card({ children, style = {} }) {
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col gap-2 min-w-0">
-      <div className="flex items-center gap-2 text-sm text-gray-500 font-medium">
-        <span className="text-lg">{icon}</span>
-        {label}
-      </div>
-      <div className="flex items-end justify-between gap-2 flex-wrap">
-        <span className="text-2xl font-bold text-[#1e293b] leading-tight">{value}</span>
-        {badge && (
-          <span
-            className="text-xs font-semibold px-2 py-0.5 rounded-full"
-            style={{ background: badgeColor || "#fef9c3", color: "#92400e" }}
-          >
-            {badge}
-          </span>
-        )}
-        {trend && (
-          <span className="text-sm font-semibold" style={{ color: trendColor || "#16a34a" }}>
-            {trend}
-          </span>
-        )}
-      </div>
+    <div style={{
+      background: "var(--card)", border: "1px solid var(--border)",
+      borderRadius: 16, padding: 20,
+      boxShadow: "0 1px 6px rgba(0,0,0,0.06)", ...style,
+    }}>
+      {children}
     </div>
   );
 }
 
-/* ─── Market Trends Line Chart ─── */
+/* ── Section Title ── */
+function SectionTitle({ children, style = {} }) {
+  return (
+    <h2 style={{ margin: "0 0 16px", fontSize: 14, fontWeight: 700, color: "var(--text-primary)", letterSpacing: "0.01em", ...style }}>
+      {children}
+    </h2>
+  );
+}
+
+/* ── Insight Box ── */
+function InsightBox({ text, color = "#fef3c7", border = "#fde68a", textColor = "#78350f", icon = "💡", style = {} }) {
+  return (
+    <div style={{
+      background: color, border: `1px solid ${border}`,
+      borderRadius: 10, padding: "11px 14px",
+      display: "flex", gap: 8, alignItems: "flex-start",
+      marginTop: 12, ...style,
+    }}>
+      <span style={{ fontSize: 15, lineHeight: 1.3, flexShrink: 0 }}>{icon}</span>
+      <p style={{ margin: 0, fontSize: 12.5, color: textColor, lineHeight: 1.6, fontFamily: "'DM Sans', sans-serif" }}>{text}</p>
+    </div>
+  );
+}
+
+/* ── KPI Card ── */
+function KpiCard({ icon, label, value, sub, subColor = "#16a34a", bg = "#fffbeb", border = "#fed7aa" }) {
+  return (
+    <div className="kpi-card" style={{
+      background: bg, border: `1px solid ${border}`,
+      borderRadius: 14, padding: "14px 16px",
+      boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
+    }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+        <span style={{ fontSize: 17 }}>{icon}</span>
+        <span style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)" }}>{label}</span>
+      </div>
+      <div style={{ fontSize: 20, fontWeight: 700, color: "var(--text-primary)", fontFamily: "'DM Mono', monospace" }}>{value}</div>
+      {sub && <div style={{ fontSize: 11.5, color: subColor, fontWeight: 600, marginTop: 4 }}>{sub}</div>}
+    </div>
+  );
+}
+
+/* ── Market Trends Line Chart ── */
 function MarketTrendsChart() {
   const canvasRef = useRef(null);
   const chartRef = useRef(null);
-
   useChartJs((Chart) => {
     if (!canvasRef.current) return;
     if (chartRef.current) chartRef.current.destroy();
-
     const labels = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-
     chartRef.current = new Chart(canvasRef.current, {
       type: "line",
       data: {
         labels,
         datasets: [
           {
-            label: "Your Price (₹)",
-            data: [22000,25000,24000,27000,28000,30000,31000,33000,32000,34000,35000,37000],
-            borderColor: "#6d28d9",
-            backgroundColor: "rgba(109,40,217,0.08)",
-            fill: true,
-            tension: 0.4,
-            pointRadius: 4,
-            pointBackgroundColor: "#6d28d9",
-            borderWidth: 2,
+            label: "Average Market Listed Price",
+            data: [32000,33000,31000,34000,35000,36000,37000,38000,37500,39000,40000,41000],
+            borderColor: "#3b82f6", backgroundColor: "rgba(59,130,246,0.08)",
+            fill: true, tension: 0.45, pointRadius: 3.5, pointBackgroundColor: "#3b82f6",
+            pointHoverRadius: 6, borderWidth: 2.2,
           },
           {
-            label: "Market Average (₹)",
-            data: [20000,22000,23000,25000,27000,29000,30000,31000,31500,33000,34000,35500],
-            borderColor: "#059669",
-            backgroundColor: "rgba(5,150,105,0.06)",
-            fill: false,
-            tension: 0.4,
-            pointRadius: 4,
-            pointBackgroundColor: "#059669",
-            borderWidth: 2,
-            borderDash: [5,3],
+            label: "Average Market Bookings Price",
+            data: [30000,31000,29000,32000,33000,34000,35000,36000,35500,37000,38000,39000],
+            borderColor: "#ef4444", backgroundColor: "rgba(239,68,68,0.06)",
+            fill: true, tension: 0.45, pointRadius: 3.5, pointBackgroundColor: "#ef4444",
+            pointHoverRadius: 6, borderWidth: 2.2,
           },
           {
-            label: "Demand Trend",
-            data: [18000,19000,20000,21000,24000,27000,29000,30000,32000,33500,35000,38000],
-            borderColor: "#f59e0b",
-            backgroundColor: "rgba(245,158,11,0.06)",
-            fill: false,
-            tension: 0.4,
-            pointRadius: 4,
-            pointBackgroundColor: "#f59e0b",
-            borderWidth: 2,
+            label: "My Average Booking Price",
+            data: [27000,28500,27000,29000,30000,31000,31500,32500,32000,33000,34000,35000],
+            borderColor: "#f59e0b", backgroundColor: "rgba(245,158,11,0.07)",
+            fill: true, tension: 0.45, pointRadius: 3.5, pointBackgroundColor: "#f59e0b",
+            pointHoverRadius: 6, borderWidth: 2.2, borderDash: [5, 4],
           },
         ],
       },
       options: {
-        responsive: true,
-        maintainAspectRatio: false,
+        responsive: true, maintainAspectRatio: false,
         interaction: { mode: "index", intersect: false },
         plugins: {
-          legend: {
-            position: "top",
-            labels: { font: { size: 12 }, boxWidth: 14, padding: 16 },
-          },
+          legend: { position: "top", labels: { font: { size: 10.5, family: "'DM Sans'" }, boxWidth: 10, padding: 12 } },
           tooltip: {
-            callbacks: {
-              label: (ctx) => ` ${ctx.dataset.label}: ₹${ctx.parsed.y.toLocaleString("en-IN")}`,
-            },
+            backgroundColor: "#0f172a", titleFont: { family: "'DM Sans'", size: 11 },
+            bodyFont: { family: "'DM Mono'", size: 11 }, padding: 10, cornerRadius: 8,
+            callbacks: { label: (ctx) => ` ${ctx.dataset.label}: ₹${ctx.parsed.y.toLocaleString("en-IN")}` },
           },
         },
         scales: {
           y: {
-            ticks: {
-              callback: (v) => `₹${(v/1000).toFixed(0)}k`,
-              font: { size: 11 },
-            },
+            min: 0, max: 45000,
+            ticks: { callback: (v) => v === 0 ? "0" : `${(v/1000).toFixed(0)}K`, font: { size: 10 }, color: "#94a3b8" },
             grid: { color: "rgba(0,0,0,0.04)" },
           },
-          x: {
-            grid: { display: false },
-            ticks: { font: { size: 11 } },
-          },
+          x: { grid: { display: false }, ticks: { font: { size: 10 }, color: "#94a3b8" } },
         },
       },
     });
   });
-
-  return (
-    <div className="relative" style={{ height: "260px" }}>
-      <canvas ref={canvasRef} />
-      {/* Annotations */}
-      <div
-        className="absolute top-4 left-12 bg-red-50 border border-red-200 text-red-700 text-xs font-semibold px-3 py-1.5 rounded-lg pointer-events-none"
-        style={{ whiteSpace: "nowrap" }}
-      >
-        Low Booking → Reduce Price <span className="text-red-500 font-bold">-8%</span>
-      </div>
-      <div
-        className="absolute top-4 right-8 bg-green-50 border border-green-200 text-green-700 text-xs font-semibold px-3 py-1.5 rounded-lg pointer-events-none"
-        style={{ whiteSpace: "nowrap" }}
-      >
-        High Demand → Increase Price <span className="text-green-600 font-bold">+12%</span>
-      </div>
-    </div>
-  );
+  return <div style={{ height: 220 }}><canvas ref={canvasRef} /></div>;
 }
 
-/* ─── Region Pie Chart ─── */
-function RegionPieChart() {
+/* ── Booking Distribution Pie ── */
+function BookingDistributionChart() {
   const canvasRef = useRef(null);
   const chartRef = useRef(null);
-
+  const segments = [
+    { label: "Local Festivals", value: 26, color: "#FF0000" },
+    { label: "Wedding", value: 33.2, color: "#a78bfa" },
+    { label: "Navratri", value: 8.5, color: "#fbbf24" },
+    // { label: "Re-Bookings", value: 7.2, color: "#c4b5fd" },
+  ];
   useChartJs((Chart) => {
     if (!canvasRef.current) return;
     if (chartRef.current) chartRef.current.destroy();
-
     chartRef.current = new Chart(canvasRef.current, {
       type: "doughnut",
       data: {
-        labels: ["Bhubaneswar", "Cuttack", "Balasore", "Puri"],
-        datasets: [{
-          data: [125, 90, 50, 45],
-          backgroundColor: ["#6d28d9","#f59e0b","#e879f9","#38bdf8"],
-          borderWidth: 2,
-          borderColor: "#fff",
-          hoverOffset: 8,
-        }],
+        labels: segments.map(s => s.label),
+        datasets: [{ data: segments.map(s => s.value), backgroundColor: segments.map(s => s.color), borderWidth: 2.5, borderColor: "#fff", hoverOffset: 8 }],
       },
       options: {
-        responsive: true,
-        maintainAspectRatio: false,
+        responsive: true, maintainAspectRatio: false, cutout: "52%",
         plugins: {
           legend: { display: false },
           tooltip: {
-            callbacks: {
-              label: (ctx) => ` ${ctx.label}: ${ctx.parsed} requests`,
-            },
+            backgroundColor: "#0f172a", titleFont: { family: "'DM Sans'", size: 11 },
+            bodyFont: { family: "'DM Mono'", size: 11 }, padding: 10, cornerRadius: 8,
+            callbacks: { label: (ctx) => ` ${ctx.label}: ${ctx.parsed}%` },
           },
         },
       },
     });
   });
-
   return (
-    <div style={{ height: "180px", width: "180px" }}>
-      <canvas ref={canvasRef} />
+    <div style={{ display: "flex", alignItems: "center", gap: 22, flexWrap: "wrap" }}>
+      <div style={{ width: 145, height: 145, flexShrink: 0 }}>
+        <canvas ref={canvasRef} />
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+        {segments.map(s => (
+          <div key={s.label} style={{ display: "flex", alignItems: "center", gap: 9 }}>
+            <span style={{ width: 9, height: 9, borderRadius: "50%", background: s.color, flexShrink: 0, boxShadow: `0 0 0 2px ${s.color}33` }} />
+            <span style={{ fontSize: 12, color: "#374151", flex: 1 }}>{s.label}</span>
+            <span style={{ fontSize: 12.5, fontWeight: 700, color: "#111827", paddingLeft: 10, fontFamily: "'DM Mono'" }}>{s.value}%</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
 
-/* ─── Pricing Modal ─── */
+/* ── Improve Conversion Card ── */
+function ImproveConversionCard() {
+  const tips = [
+    "Respond within 3 minutes to inquiries",
+    "Offer 5–10% discount for users",
+    "Improve profile images & reviews",
+  ];
+  return (
+    <div style={{
+      background: "linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%)",
+      border: "1px solid #ddd6fe", borderRadius: 12,
+      padding: "14px 16px", marginTop: 14,
+    }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+        <span style={{ fontSize: 16 }}>🔄</span>
+        <span style={{ fontSize: 13, fontWeight: 700, color: "#4c1d95" }}>Improve Conversion</span>
+      </div>
+      {tips.map((tip, i) => (
+        <div key={i} style={{ display: "flex", gap: 7, alignItems: "flex-start", marginBottom: i < tips.length - 1 ? 7 : 0 }}>
+          <span style={{ color: "#7c3aed", fontWeight: 700, fontSize: 12, marginTop: 1 }}>✓</span>
+          <span style={{ fontSize: 12, color: "#5b21b6", lineHeight: 1.5 }}>{tip}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ── Service Locations Horizontal Bar ── */
+function ServiceLocationsChart() {
+  const canvasRef = useRef(null);
+  const chartRef = useRef(null);
+  useChartJs((Chart) => {
+    if (!canvasRef.current) return;
+    if (chartRef.current) chartRef.current.destroy();
+    chartRef.current = new Chart(canvasRef.current, {
+      type: "bar",
+      data: {
+        labels: ["Kendrapada", "Balasore", "Bhubaneswar", "Cuttack", "Puri"],
+        datasets: [{
+          data: [22, 28, 75, 42, 60],
+          backgroundColor: ["#f87171","#fbbf24","#f97316","#a78bfa","#60a5fa"],
+          borderRadius: 6, borderSkipped: false,
+          hoverBackgroundColor: ["#ef4444","#f59e0b","#ea580c","#8b5cf6","#3b82f6"],
+        }],
+      },
+      options: {
+        indexAxis: "y",
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: "#0f172a", titleFont: { family: "'DM Sans'", size: 11 },
+            bodyFont: { family: "'DM Mono'", size: 11 }, padding: 10, cornerRadius: 8,
+            callbacks: { label: (ctx) => ` Count: ${ctx.parsed.x}` },
+          },
+        },
+        scales: {
+          x: { min: 0, max: 85, ticks: { font: { size: 10 }, color: "#94a3b8" }, grid: { color: "rgba(0,0,0,0.04)" } },
+          y: { ticks: { font: { size: 11 }, color: "#374151" }, grid: { display: false } },
+        },
+      },
+    });
+  });
+  return <div style={{ height: 185 }}><canvas ref={canvasRef} /></div>;
+}
+
+/* ── Monthly Revenue Bar ── */
+function MonthlyRevenueChart() {
+  const canvasRef = useRef(null);
+  const chartRef = useRef(null);
+  useChartJs((Chart) => {
+    if (!canvasRef.current) return;
+    if (chartRef.current) chartRef.current.destroy();
+    chartRef.current = new Chart(canvasRef.current, {
+      type: "bar",
+      data: {
+        labels: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+        datasets: [{
+          label: "My Revenue",
+          data: [30000, 65000, 40000, 55000, null, null, null, null, null, null, null, null],
+          backgroundColor: (ctx) => {
+            const chart = ctx.chart;
+            const { ctx: c, chartArea } = chart;
+            if (!chartArea) return "#60a5fa";
+            const grad = c.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+            grad.addColorStop(0, "#3b82f6");
+            grad.addColorStop(1, "#93c5fd");
+            return grad;
+          },
+          borderRadius: 6, borderSkipped: false,
+          hoverBackgroundColor: "#2563eb",
+        }],
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { position: "top", labels: { font: { size: 11, family: "'DM Sans'" }, boxWidth: 10, padding: 12 } },
+          tooltip: {
+            backgroundColor: "#0f172a", titleFont: { family: "'DM Sans'", size: 11 },
+            bodyFont: { family: "'DM Mono'", size: 11 }, padding: 10, cornerRadius: 8,
+            callbacks: { label: (ctx) => ctx.parsed.y != null ? ` ₹${ctx.parsed.y.toLocaleString("en-IN")}` : " No data" },
+          },
+        },
+        scales: {
+          y: {
+            min: 0, max: 70000,
+            ticks: { callback: (v) => v === 0 ? "0" : `${(v/1000).toFixed(0)}K`, font: { size: 10 }, color: "#94a3b8" },
+            grid: { color: "rgba(0,0,0,0.04)" },
+          },
+          x: { grid: { display: false }, ticks: { font: { size: 10 }, color: "#94a3b8" } },
+        },
+      },
+    });
+  });
+  return <div style={{ height: 235 }}><canvas ref={canvasRef} /></div>;
+}
+
+/* ── Adjust Pricing Modal ── */
 function AdjustPricingModal({ onClose }) {
   const [minAdj, setMinAdj] = useState("1000");
   const [maxAdj, setMaxAdj] = useState("2000");
+  const [applied, setApplied] = useState(false);
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md relative">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-xl font-bold"
-        >✕</button>
-        <h2 className="text-xl font-bold text-[#1e293b] mb-1">Adjust Your Pricing</h2>
-        <p className="text-sm text-gray-500 mb-6">
-          Based on Bhubaneswar demand data, we recommend increasing your prices.
+    <div style={{
+      position: "fixed", inset: 0, background: "rgba(15,23,42,0.55)",
+      display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999,
+      backdropFilter: "blur(4px)",
+    }} onClick={onClose}>
+      <div style={{
+        background: "#fff", borderRadius: 20, padding: "32px 28px",
+        width: "100%", maxWidth: 430, position: "relative",
+        boxShadow: "0 25px 60px rgba(0,0,0,0.25)",
+        fontFamily: "'DM Sans', sans-serif",
+      }} onClick={e => e.stopPropagation()}>
+        <button onClick={onClose} style={{
+          position: "absolute", top: 16, right: 18,
+          background: "#f1f5f9", border: "none", borderRadius: "50%",
+          width: 30, height: 30, fontSize: 16, cursor: "pointer", color: "#64748b",
+          display: "flex", alignItems: "center", justifyContent: "center",
+        }}>✕</button>
+
+        <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 6 }}>
+          <span style={{ fontSize: 22 }}>💰</span>
+          <h2 style={{ fontSize: 18, fontWeight: 700, color: "#0f172a", margin: 0 }}>Adjust Your Pricing</h2>
+        </div>
+        <p style={{ fontSize: 13, color: "#64748b", margin: "0 0 22px", lineHeight: 1.6 }}>
+          Based on Bhubaneswar demand data, we recommend increasing your prices to match market trends.
         </p>
-        <div className="flex gap-4 mb-4">
-          <div className="flex-1">
-            <label className="block text-xs font-semibold text-gray-500 mb-1">Min Increase (₹)</label>
-            <input
-              type="number"
-              value={minAdj}
-              onChange={e => setMinAdj(e.target.value)}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400"
-            />
-          </div>
-          <div className="flex-1">
-            <label className="block text-xs font-semibold text-gray-500 mb-1">Max Increase (₹)</label>
-            <input
-              type="number"
-              value={maxAdj}
-              onChange={e => setMaxAdj(e.target.value)}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400"
-            />
-          </div>
+
+        <div style={{ display: "flex", gap: 14, marginBottom: 16 }}>
+          {[["Min Increase (₹)", minAdj, setMinAdj], ["Max Increase (₹)", maxAdj, setMaxAdj]].map(([label, val, setter]) => (
+            <div key={label} style={{ flex: 1 }}>
+              <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: "#64748b", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.05em" }}>{label}</label>
+              <input type="number" value={val} onChange={e => setter(e.target.value)}
+                style={{
+                  width: "100%", border: "1.5px solid #e2e8f0", borderRadius: 10,
+                  padding: "9px 12px", fontSize: 14, fontWeight: 600, color: "#0f172a",
+                  outline: "none", fontFamily: "'DM Mono'", transition: "border-color 0.15s",
+                }}
+                onFocus={e => e.target.style.borderColor = "#3b82f6"}
+                onBlur={e => e.target.style.borderColor = "#e2e8f0"}
+              />
+            </div>
+          ))}
         </div>
-        <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3 mb-6 text-sm text-yellow-800">
-          💡 Increasing by ₹{parseInt(minAdj||0).toLocaleString("en-IN")} – ₹{parseInt(maxAdj||0).toLocaleString("en-IN")} could boost your revenue by up to <strong>15%</strong>.
+
+        <div style={{
+          background: "#fffbeb", border: "1px solid #fde68a",
+          borderRadius: 10, padding: "11px 14px", marginBottom: 22,
+          fontSize: 13, color: "#92400e", lineHeight: 1.6,
+        }}>
+          💡 Increasing by <strong>₹{parseInt(minAdj || 0).toLocaleString("en-IN")} – ₹{parseInt(maxAdj || 0).toLocaleString("en-IN")}</strong> could boost your revenue by up to <strong>15%</strong>.
         </div>
-        <button
-          onClick={() => { alert(`✅ Pricing updated! Increase of ₹${minAdj}–₹${maxAdj} applied to your services.`); onClose(); }}
-          className="w-full bg-[#001f3f] text-white py-2.5 rounded-xl font-semibold hover:bg-[#002d5a] transition-colors"
-        >
-          Apply Pricing Adjustment
-        </button>
+
+        {applied ? (
+          <div style={{
+            background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 10,
+            padding: "12px 14px", textAlign: "center", fontSize: 14, fontWeight: 600, color: "#16a34a",
+          }}>
+            ✅ Pricing updated! Increase of ₹{minAdj}–₹{maxAdj} applied.
+          </div>
+        ) : (
+          <button
+            className="btn-primary"
+            onClick={() => setApplied(true)}
+            style={{
+              width: "100%", background: "#1e3a5f", color: "#fff",
+              border: "none", borderRadius: 12, padding: "12px 0",
+              fontSize: 14, fontWeight: 600, cursor: "pointer",
+              letterSpacing: "0.02em", fontFamily: "'DM Sans'",
+            }}>
+            Apply Pricing Adjustment
+          </button>
+        )}
       </div>
     </div>
   );
 }
 
-/* ─── Main MarketAnalytics Component ─── */
+/* ── Smart Tips Banner ── */
+function SmartTipsBanner() {
+  const tips = [
+    { icon: "📝", text: <><strong>Increase your price by ₹1,000–₹2,000</strong> &nbsp;Demand is high in your category this month (+18%)</> },
+    { icon: "🔄", text: <><strong>Offer 10% discount in Balasore</strong> &nbsp;Low conversion rate detected (only 22%)</> },
+    { icon: "⚡", text: <><strong>Tip:</strong> Weekend bookings are 2× higher – enable availability</> },
+  ];
+  return (
+    <div style={{
+      background: "linear-gradient(135deg, #fefce8 0%, #fef9c3 100%)",
+      border: "1px solid #e9e97a", borderRadius: 14,
+      padding: "14px 18px", marginBottom: 16,
+    }}>
+      {tips.map((t, i) => (
+        <div key={i} className="tip-row" style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: i < tips.length - 1 ? 8 : 0 }}>
+          <span style={{ fontSize: 14, marginTop: 1, flexShrink: 0 }}>{t.icon}</span>
+          <p style={{ margin: 0, fontSize: 12.5, color: "#374151", lineHeight: 1.6, fontFamily: "'DM Sans'" }}>{t.text}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ── Main Export ── */
 export default function MarketAnalytics() {
   const [showModal, setShowModal] = useState(false);
 
-  const regions = [
-    { name: "Bhubaneswar", count: 125, badge: "+30%", color: "#6d28d9" },
-    { name: "Cuttack",     count: 90,  badge: null,   color: "#f59e0b" },
-    { name: "Balasore",    count: 50,  badge: null,   color: "#e879f9" },
-    { name: "Puri",        count: 45,  badge: null,   color: "#38bdf8" },
-  ];
-
-  const maxCount = Math.max(...regions.map(r => r.count));
-
   return (
-    <div className="px-4 pb-8 pt-2 space-y-5">
-      {/* Page title */}
-      <div className="flex items-center gap-2">
-        <h1 className="text-2xl font-bold text-[#1e293b]">Market Analytics</h1>
-        <span className="text-gray-400 text-sm">✦</span>
-      </div>
+    <div style={{ padding: "18px 18px 50px", background: "#f1f5f9", minHeight: "100%", fontFamily: "'DM Sans', sans-serif" }}>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <KpiCard icon="💰" label="Total Revenue" value="₹2,10,000" trend="↑ +8%" trendColor="#16a34a" />
-        <KpiCard icon="🏷️" label="Your Avg Price" value="₹28,000" trend="↑ +5%" trendColor="#16a34a" />
-        <KpiCard icon="📊" label="Vs Market Price" value="-12%" trend="↓" trendColor="#dc2626" badge="Below Market" badgeColor="#fee2e2" />
-        <KpiCard icon="📍" label="High Demand Area" value="Bhubaneswar" badge="+30%" badgeColor="#fef9c3" />
-      </div>
-
-      {/* Recommendation Banner */}
-      <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="flex items-start gap-3">
-          <span className="text-xl mt-0.5">💡</span>
-          <div>
-            <span className="font-bold text-yellow-900 text-sm">Recommendation: </span>
-            <span className="text-yellow-800 text-sm">
-              Focus on Bhubaneswar. Increase your prices by{" "}
-              <strong>₹1000–₹2000</strong> to match demand, especially for premium services.
-            </span>
-          </div>
+      {/* ── Header ── */}
+      <div style={{ marginBottom: 16, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
+        <div>
+          <h1 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: "#0f172a" }}>📈 Market Analytics</h1>
+          <p style={{ margin: "3px 0 0", fontSize: 12.5, color: "#64748b" }}>Live insights for your service area · April 2026</p>
         </div>
-        <button
-          onClick={() => setShowModal(true)}
-          className="shrink-0 bg-[#001f3f] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#002d5a] transition-colors whitespace-nowrap"
-        >
-          Adjust Pricing
-        </button>
-      </div>
-
-      {/* Market Trends */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-        <div className="flex flex-wrap items-center gap-3 mb-1">
-          <h2 className="text-base font-bold text-[#1e293b]">Market Trends</h2>
-          <span className="text-xs font-semibold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full">
-            This Week's Pricing Insight
-          </span>
-          <span className="ml-auto text-xs text-gray-400 font-medium">Last 12 months</span>
-        </div>
-        <p className="text-xs text-gray-400 mb-4">DJ Services &amp; Brass Band — Odisha Region</p>
-        <MarketTrendsChart />
-        <div className="mt-4 bg-purple-50 border border-purple-100 rounded-xl px-4 py-2.5 text-sm text-purple-800 font-medium">
-          🎯 <strong>Demand is high.</strong> Increase prices by{" "}
-          <span className="font-bold">10–15%</span> to capture more bookings.
+        <div style={{
+          background: "#dbeafe", border: "1px solid #93c5fd",
+          borderRadius: 20, padding: "5px 14px",
+          fontSize: 11.5, fontWeight: 600, color: "#1e40af",
+        }}>
+          🔴 Live
         </div>
       </div>
 
-      {/* Region-wise Requests + My Service Report */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-
-        {/* Region-wise Requests */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-          <h2 className="text-base font-bold text-[#1e293b] mb-0.5">My Statics</h2>
-          <p className="text-xs text-gray-400 mb-4">Last 30 days performance</p>
-
-          <div className="flex items-center gap-6">
-            <RegionPieChart />
-            <div className="flex-1 space-y-3">
-              {regions.map((r) => (
-                <div key={r.name} className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 flex-1 min-w-0">
-                    <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: r.color }} />
-                    <span className="text-sm text-gray-700 truncate">{r.name}</span>
-                  </div>
-                  <span className="text-sm font-bold text-[#1e293b]">{r.count}</span>
-                  {r.badge && (
-                    <span className="text-xs font-semibold bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full">
-                      {r.badge}
-                    </span>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Horizontal bars */}
-          <div className="mt-5 space-y-2">
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">My Revenue</p>
-            {regions.map((r) => (
-              <div key={r.name} className="flex items-center gap-3">
-                <span className="text-xs text-gray-500 w-24 shrink-0">{r.name}</span>
-                <div className="flex-1 bg-gray-100 rounded-full h-2.5 overflow-hidden">
-                  <div
-                    className="h-full rounded-full transition-all duration-700"
-                    style={{
-                      width: `${(r.count / maxCount) * 100}%`,
-                      background: r.color,
-                    }}
-                  />
-                </div>
-                <span className="text-xs font-semibold text-gray-600 w-8 text-right">{r.count}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* My Service Report */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-          <h2 className="text-base font-bold text-[#1e293b] mb-4">My Service Report</h2>
-
-          {[
-            { color: "#6d28d9", label: "Booking",          count: 232, status: "Done" },
-            { color: "#f59e0b", label: "Service Inquiry",  count: 196, status: "Done" },
-            { color: "#e879f9", label: "Profile Views",    count: 50,  status: "Done" },
-          ].map((item) => (
-            <div key={item.label} className="flex items-center gap-3 py-3 border-b border-gray-50 last:border-0">
-              <span className="w-3 h-3 rounded-full shrink-0" style={{ background: item.color }} />
-              <span className="flex-1 text-sm text-gray-700 font-medium">{item.label}</span>
-              <span className="text-sm font-bold text-[#1e293b]">{item.count}</span>
-              <span className="flex items-center gap-1 text-xs font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded-full">
-                ✓ {item.status}
-              </span>
-            </div>
-          ))}
-
-          {/* Summary stats */}
-          <div className="mt-5 grid grid-cols-3 gap-3">
-            {[
-              { label: "Conversion Rate", value: "18.5%" },
-              { label: "Avg Response Time", value: "2.4 hrs" },
-              { label: "Rating", value: "4.8 ⭐" },
-            ].map((s) => (
-              <div key={s.label} className="bg-gray-50 rounded-xl p-3 text-center">
-                <p className="text-lg font-bold text-[#1e293b]">{s.value}</p>
-                <p className="text-xs text-gray-400 mt-0.5 leading-tight">{s.label}</p>
-              </div>
-            ))}
-          </div>
-
-          <button className="mt-4 w-full border border-gray-200 text-gray-600 text-sm font-medium py-2 rounded-xl hover:bg-gray-50 transition-colors">
-            Read more →
-          </button>
-        </div>
+      {/* ── KPI Row ── */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(155px, 1fr))", gap: 12, marginBottom: 14 }}>
+        <KpiCard icon="💰" label="Total Revenue" value="₹2,10,000" sub="↑ +8% vs last month" bg="#fffbeb" border="#fed7aa" />
+        <KpiCard icon="📊" label="Conversion Rate" value="32%" sub="↑ +6%" bg="#f5f3ff" border="#ddd6fe" />
+        <KpiCard icon="💰" label="Avg Customer Budget" value="₹25K–₹35K" bg="#fffbeb" border="#fed7aa" />
+        <KpiCard icon="📍" label="High Demand Area" value="Bhubaneswar" sub="↑ +30% demand" bg="#f0fdf4" border="#bbf7d0" />
       </div>
 
+      {/* ── Smart Tips ── */}
+      <SmartTipsBanner />
+
+      {/* ── Row 1: Market Trends + Booking Distribution ── */}
+      <div style={{ display: "grid", gridTemplateColumns: "70% 30%", gap: 14, marginBottom: 14 }}>
+        <Card>
+          <SectionTitle>Market Price &amp; Demand Trends</SectionTitle>
+          <MarketTrendsChart />
+          <InsightBox text={
+            <><strong>Insight:</strong><br />
+            Your price is 12% lower than market & other vendors' price.<br />
+            You can safely increase pricing without losing bookings.</>
+          } />
+        </Card>
+
+        <Card>
+          <SectionTitle>Booking Distribution</SectionTitle>
+          <BookingDistributionChart />
+          <InsightBox
+            icon="💡"
+            text={<><strong>Insight</strong><br />50% users are only inquiring — improve conversion with better pricing or faster response.</>}
+            color="#f5f3ff" border="#ddd6fe" textColor="#5b21b6"
+          />
+          <ImproveConversionCard />
+        </Card>
+
+      </div>
+
+      {/* ── Row 2: Service Locations ── */}
+      <Card style={{ marginBottom: 14 }}>
+        <SectionTitle>Most Service Location's</SectionTitle>
+        <ServiceLocationsChart />
+        <InsightBox text={
+          <><strong>Insight:</strong><br />
+          Bhubaneswar has the highest Price service Location.<br />
+          Consider increasing price or targeting premium customers here.</>
+        } />
+      </Card>
       {showModal && <AdjustPricingModal onClose={() => setShowModal(false)} />}
     </div>
   );

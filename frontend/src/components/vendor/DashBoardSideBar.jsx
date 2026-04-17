@@ -14,17 +14,13 @@ import {
   MdBookOnline,
   MdAnalytics,
   MdPeople,
-  MdSettings,
-  MdSave,
-  MdCancel,
 } from "react-icons/md";
 
 const NAV_ITEMS = [
-  { key: "services",  label: "Services",  icon: MdDashboard  },
-  { key: "bookings",  label: "Bookings",  icon: MdBookOnline },
-  { key: "analytics", label: "Analytics", icon: MdAnalytics  },
-  { key: "customers", label: "Customers", icon: MdPeople     },
-  { key: "settings",  label: "Settings",  icon: MdSettings   },
+  { key: "services",  label: "My Services",  icon: MdDashboard },
+  { key: "bookings",  label: "My Bookings",  icon: MdBookOnline },
+  { key: "analytics", label: "My Analytics", icon: MdAnalytics },
+  { key: "customers", label: "My Customers", icon: MdPeople },
 ];
 
 function DashBoardSideBar({
@@ -57,7 +53,7 @@ function DashBoardSideBar({
         setIsVerified(false);
       })();
     }
-  }, [isVerified]);
+  }, [isVerified, editMode]);
 
   const handleToggleEdit = () => {
     if (editMode) setConfirmPasswordModal(true);
@@ -119,45 +115,46 @@ function DashBoardSideBar({
 
   return (
     <aside className={`dash-sidebar ${isOpen ? "open" : ""}`}>
-      {/* Brand */}
-      <div className="sb-brand">
-        <div className="sb-brand-logo">EB</div>
-        <div>
-          <div className="sb-brand-title">EventsBridge</div>
-          <div className="sb-brand-sub">Vendor Portal</div>
+      {/* Replaced Logo with Profile Card at the top */}
+      <div className="sb-avatar-card" style={{ margin: "20px 16px 30px 16px", padding: "20px 16px", borderRadius: "16px" }}>
+        <div className="sb-avatar-wrap" onClick={() => document.getElementById("vendor-photo").click()}>
+          {vendor?.profilePicture ? (
+            <img src={vendor.profilePicture} alt="Profile" className="sb-avatar-img" />
+          ) : (
+            <div className="sb-avatar-initials">{getInitialsAvatar(form.fullName)}</div>
+          )}
+          <div className="sb-camera-badge">
+            {uploading ? <FaUpload className="spinning" size={12} /> : <FaCamera size={12} />}
+          </div>
+        </div>
+        <input 
+          type="file" 
+          id="vendor-photo" 
+          accept="image/*"
+          onChange={handleImageUpload} 
+          style={{ display: "none" }} 
+          disabled={uploading} 
+        />
+
+        <div className="sb-vendor-name" style={{ fontSize: "18px", marginTop: "12px" }}>
+          {editMode ? (
+            <input 
+              type="text" 
+              value={form.fullName} 
+              className="sb-edit-input"
+              onChange={(e) => updateField("fullName", e.target.value)} 
+            />
+          ) : (
+            <span>{form.fullName?.toUpperCase()}</span>
+          )}
+        </div>
+        <div className={`sb-status-badge ${form.active ? "sb-active" : "sb-inactive"}`}>
+          <span className="sb-status-dot" />
+          {form.active ? "Active" : "Inactive"}
         </div>
       </div>
 
       <div className="sb-body">
-        {/* Avatar card */}
-        <div className="sb-avatar-card">
-          <div className="sb-avatar-wrap" onClick={() => document.getElementById("vendor-photo").click()}>
-            {vendor?.profilePicture ? (
-              <img src={vendor.profilePicture} alt="Profile" className="sb-avatar-img" />
-            ) : (
-              <div className="sb-avatar-initials">{getInitialsAvatar(form.fullName)}</div>
-            )}
-            <div className="sb-camera-badge">
-              {uploading ? <FaUpload className="spinning" size={12} /> : <FaCamera size={12} />}
-            </div>
-          </div>
-          <input type="file" id="vendor-photo" accept="image/*"
-            onChange={handleImageUpload} style={{ display: "none" }} disabled={uploading} />
-
-          <div className="sb-vendor-name">
-            {editMode ? (
-              <input type="text" value={form.fullName} className="sb-edit-input"
-                onChange={(e) => updateField("fullName", e.target.value)} />
-            ) : (
-              <span>{form.fullName?.toUpperCase()}</span>
-            )}
-          </div>
-          <div className={`sb-status-badge ${form.active ? "sb-active" : "sb-inactive"}`}>
-            <span className="sb-status-dot" />
-            {form.active ? "Active" : "Inactive"}
-          </div>
-        </div>
-
         {/* Navigation */}
         <nav className="sb-nav">
           <div className="sb-nav-label">Navigation</div>
@@ -290,7 +287,7 @@ function DashBoardSideBar({
         </div>
       </div>
 
-      {/* Remove confirm */}
+      {/* Remove confirm modal */}
       {showRemoveConfirm && (
         <div className="sb-overlay">
           <div className="sb-confirm-box">
