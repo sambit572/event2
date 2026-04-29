@@ -49,11 +49,7 @@ globalStyle.textContent = `
 `;
 document.head.appendChild(globalStyle);
 
-/* ── Category Config ──
-   BACKEND NOTE: Fetch from GET /api/categories
-   Each item: { id: string, label: string, icon: string }
-   Pass selectedCategory.id as ?categoryId= to every analytics endpoint.
-*/
+
 const CATEGORIES = [
   { id: "dj_service",      label: "DJ Service and Brass Band",  icon: "🎧" },
   { id: "music_concert",   label: "Music Concert",              icon: "🎵" },
@@ -97,10 +93,7 @@ function InsightBox({ text, color = "#fef3c7", border = "#fde68a", textColor = "
   );
 }
 
-/* ── KPI Card ──
-   BACKEND NOTE: Values from GET /api/analytics/kpi?categoryId=<id>&vendorId=<id>
-   Shape: { myAvgPrice, avgCustomerBudget, serviceDemandPct, conversionRatePct, highDemandArea, highDemandAreaChange }
-*/
+
 function KpiCard({ icon, label, value, sub, subColor = "#16a34a", bg = "#fffbeb", border = "#fed7aa" }) {
   return (
     <div className="kpi-card" style={{ background: bg, border: `1px solid ${border}`, borderRadius: 14, padding: "14px 16px", boxShadow: "0 1px 4px rgba(0,0,0,0.05)" }}>
@@ -114,8 +107,7 @@ function KpiCard({ icon, label, value, sub, subColor = "#16a34a", bg = "#fffbeb"
   );
 }
 
-/* ── Select Category Button ── */
-/* ── Select Category Button ── */
+
 function SelectCategoryButton({ selectedCategory, onSelect }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
@@ -142,29 +134,27 @@ function SelectCategoryButton({ selectedCategory, onSelect }) {
         onMouseEnter={e => { e.currentTarget.style.opacity = "0.9"; e.currentTarget.style.transform = "scale(1.02)"; }}
         onMouseLeave={e => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "scale(1)"; }}
       >
-        {/* Fixed button name as requested */}
         <span style={{ fontSize: 18 }}>📋</span>
         <span>SELECT CATEGORY</span>
-        <span style={{ 
-          display: "inline-block", 
-          transition: "transform 0.18s", 
-          transform: open ? "rotate(180deg)" : "rotate(0)", 
-          fontSize: 11, 
-          marginLeft: 4 
+        <span style={{
+          display: "inline-block",
+          transition: "transform 0.18s",
+          transform: open ? "rotate(180deg)" : "rotate(0)",
+          fontSize: 11,
+          marginLeft: 4
         }}>▼</span>
       </button>
 
       {open && (
         <div className="cat-dropdown">
-          {/* Header inside popup (matches your video) */}
-          <div style={{ 
-            padding: "10px 16px 8px", 
-            fontSize: 11, 
-            fontWeight: 700, 
-            color: "#94a3b8", 
-            textTransform: "uppercase", 
-            letterSpacing: "0.08em", 
-            borderBottom: "1px solid #d8dfe7" 
+          <div style={{
+            padding: "10px 16px 8px",
+            fontSize: 11,
+            fontWeight: 700,
+            color: "#94a3b8",
+            textTransform: "uppercase",
+            letterSpacing: "0.08em",
+            borderBottom: "1px solid #d8dfe7"
           }}>
             SELECT CATEGORY
           </div>
@@ -186,10 +176,7 @@ function SelectCategoryButton({ selectedCategory, onSelect }) {
   );
 }
 
-/* ── Smart Tips Banner ──
-   BACKEND NOTE: GET /api/analytics/smart-tips?categoryId=<id>&vendorId=<id>
-   Shape: { tips: [{ icon: string, text: string }] }
-*/
+
 function SmartTipsBanner() {
   const tips = [
     { icon: "📝", text: <><strong>Cut your price by ₹8,000–₹15,000</strong> this month for More Bookings.</> },
@@ -208,10 +195,7 @@ function SmartTipsBanner() {
   );
 }
 
-/* ── Market Trends Line Chart ──
-   BACKEND NOTE: GET /api/analytics/market-trends?categoryId=<id>&vendorId=<id>
-   Shape: { labels: string[], avgListedPrice: number[], avgBookingsPrice: number[], myAvgBookingPrice: number[] }
-*/
+
 function MarketTrendsChart() {
   const canvasRef = useRef(null);
   const chartRef  = useRef(null);
@@ -245,10 +229,7 @@ function MarketTrendsChart() {
   return <div style={{ height: 220 }}><canvas ref={canvasRef} /></div>;
 }
 
-/* ── Booking Distribution Doughnut ──
-   BACKEND NOTE: GET /api/analytics/booking-distribution?categoryId=<id>&vendorId=<id>
-   Shape: { segments: [{ label: string, value: number, color: string }] }
-*/
+
 function BookingDistributionChart() {
   const canvasRef = useRef(null);
   const chartRef  = useRef(null);
@@ -301,10 +282,7 @@ function ImproveConversionCard() {
   );
 }
 
-/* ── Service Locations Bar ──
-   BACKEND NOTE: GET /api/analytics/service-locations?categoryId=<id>&vendorId=<id>
-   Shape: { locations: [{ name: string, bookingCount: number }] }
-*/
+
 function ServiceLocationsChart() {
   const canvasRef = useRef(null);
   const chartRef  = useRef(null);
@@ -330,10 +308,7 @@ function ServiceLocationsChart() {
   return <div style={{ height: 185 }}><canvas ref={canvasRef} /></div>;
 }
 
-/* ── Future Demand Forecast ──
-   BACKEND NOTE: GET /api/analytics/demand-forecast?categoryId=<id>
-   Shape: { segments: [{ label, value, color }], upcomingSeason: string, expectedDemandPct: number }
-*/
+
 function FutureDemandForecast() {
   const canvasRef = useRef(null);
   const chartRef  = useRef(null);
@@ -375,10 +350,7 @@ function FutureDemandForecast() {
   );
 }
 
-/* ── Benchmark Panel ──
-   BACKEND NOTE: GET /api/analytics/benchmark?categoryId=<id>&vendorId=<id>
-   Shape: { metrics: [{ label: string, icon: string, status: "high"|"average"|"low" }] }
-*/
+
 function BenchmarkPanel() {
   const metrics = [
     { label: "Pricing Position", icon: "💰", status: "average" },
@@ -388,7 +360,8 @@ function BenchmarkPanel() {
   ];
   const statusColor = { high: "#16a34a", average: "#f59e0b", low: "#ef4444" };
   return (
-    <Card>
+    // ✅ FIX 3: flex: 1 makes this card grow to fill remaining sidebar height
+    <Card style={{ flex: 1 }}>
       <SectionTitle>Benchmark Against Top Vendors</SectionTitle>
       <div style={{ display: "flex", gap: 14, marginBottom: 14, fontSize: 11.5, fontWeight: 600 }}>
         {["High","Average","Low"].map((s, i) => (
@@ -411,10 +384,7 @@ function BenchmarkPanel() {
   );
 }
 
-/* ── Adjust Pricing Modal ──
-   BACKEND NOTE: On submit → PATCH /api/vendor/pricing?categoryId=<id>&vendorId=<id>
-   Body: { minAdjustment: number, maxAdjustment: number }
-*/
+
 function AdjustPricingModal({ onClose }) {
   const [minAdj, setMinAdj] = useState("1000");
   const [maxAdj, setMaxAdj] = useState("2000");
@@ -449,18 +419,10 @@ function AdjustPricingModal({ onClose }) {
   );
 }
 
-/* ══════════════════════════════════════════
-   MAIN EXPORT
-   BACKEND NOTE:
-   - selectedCategory.id → pass as ?categoryId= on every fetch
-   - vendorId → read from auth context / JWT
-   - On category change: re-fetch KPIs, trends, tips, locations, forecast, benchmark
-   ══════════════════════════════════════════ */
+
 export default function MarketAnalytics() {
   const [showModal, setShowModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(CATEGORIES[0]);
-
-  // BACKEND HOOK: useEffect(() => { refetchAll(selectedCategory.id); }, [selectedCategory.id]);
 
   return (
     <div style={{ padding: "18px 18px 50px", background: "#f1f5f9", minHeight: "100%", fontFamily: "'DM Sans', sans-serif" }}>
@@ -477,22 +439,23 @@ export default function MarketAnalytics() {
       {/* ── KPI Row ── */}
       <div style={{
         display: "grid",
-        gridTemplateColumns: "1fr 1fr 1fr 1fr 1.25fr",   // ← first 4 equal, last wider
+        gridTemplateColumns: "1fr 1fr 1fr 1fr 1.25fr",
         gap: 12,
         marginBottom: 14
       }}>
-      <KpiCard icon="💰" label="My Avg Price" value="60,000" bg="#fffbeb" border="#fed7aa" />
-      <KpiCard icon="👤" label="Avg Customer's Budget" value="₹45K" bg="#f5f3ff" border="#ddd6fe" />
-      <KpiCard icon="📋" label="Service Demand" value={<span style={{ color: "#16a34a" }}>High <span style={{ fontSize: 16 }}>75%</span></span>} bg="#f0fdf4" border="#bbf7d0" />
-      <KpiCard icon="📊" label="Market Conversion Rate" value={<span style={{ color: "#ef4444" }}>Low <span style={{ fontSize: 16 }}>32%</span></span>} bg="#fff1f2" border="#fecdd3" />
-      <KpiCard icon="📍" label="High Demand Area" value="Bhubaneswar" sub="↑ +30%" subColor="#16a34a" bg="#f0fdf4" border="#bbf7d0" />
+        <KpiCard icon="💰" label="My Avg Price" value="60,000" bg="#fffbeb" border="#fed7aa" />
+        <KpiCard icon="👤" label="Avg Customer's Budget" value="₹45K" bg="#f5f3ff" border="#ddd6fe" />
+        <KpiCard icon="📋" label="Service Demand" value={<span style={{ color: "#16a34a" }}>High <span style={{ fontSize: 16 }}>75%</span></span>} bg="#f0fdf4" border="#bbf7d0" />
+        <KpiCard icon="📊" label="Market Conversion Rate" value={<span style={{ color: "#ef4444" }}>Low <span style={{ fontSize: 16 }}>32%</span></span>} bg="#fff1f2" border="#fecdd3" />
+        <KpiCard icon="📍" label="High Demand Area" value="Bhubaneswar" sub="↑ +30%" subColor="#16a34a" bg="#f0fdf4" border="#bbf7d0" />
       </div>
 
       {/* ── Smart Tips ── */}
       <SmartTipsBanner />
 
       {/* ── Main Grid: Left wide | Right sidebar ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: 14, marginBottom: 14 }}>
+      {/* ✅ FIX 1: alignItems "stretch" makes both columns equal height */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: 14, marginBottom: 14, alignItems: "stretch" }}>
 
         {/* Left */}
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
@@ -509,12 +472,13 @@ export default function MarketAnalytics() {
           </Card>
         </div>
 
-        {/* Right sidebar */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+        {/* ✅ FIX 2: height "100%" + display flex so sidebar fills full column height */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 14, height: "100%" }}>
           <FutureDemandForecast />
           <BenchmarkPanel />
         </div>
       </div>
+
       {showModal && <AdjustPricingModal onClose={() => setShowModal(false)} />}
     </div>
   );

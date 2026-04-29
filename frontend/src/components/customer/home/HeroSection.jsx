@@ -1,456 +1,263 @@
 import { useEffect } from "react";
-import { FaArrowTrendUp } from "react-icons/fa6";
-import { IoStarHalfOutline } from "react-icons/io5";
-
-import { VscStarFull } from "react-icons/vsc";
 import { motion, useMotionValue, useTransform } from "framer-motion";
 
 export default function HeroSection() {
   const scrollY = useMotionValue(0);
-
-  // Scale effect: shrink slightly as user scrolls down
-  const scale = useTransform(scrollY, [0, 500], [1, 0.8]);
-
-  // Optional: tilt effect for more 3D feel
-  const rotateX = useTransform(scrollY, [0, 500], [0, 5]);
-  const rotateY = useTransform(scrollY, [0, 500], [0, 0]); // slight Y tilt if desired
-
-  // Optional: move upward slightly for more depth
-  const y = useTransform(scrollY, [0, 500], [0, -100]);
+  const opacity = useTransform(scrollY, [0, 400], [1, 0.6]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      scrollY.set(window.scrollY);
-    };
+    const handleScroll = () => scrollY.set(window.scrollY);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [scrollY]);
 
   return (
-    <div className="perspective-1000">
-      <motion.div
-        style={{ scale, rotateX, rotateY, y }}
-        className="w-full flex flex-col items-center px-2 pt-2 bg-white overflow-hidden"
-      >
-        {/* Heading */}
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-center leading-snug sm:leading-tight max-w-md sm:max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto pt-10">
-          Celebrate Without Limits
-        </h1>
+    <motion.section
+      style={{
+        opacity,
+        background:
+          "radial-gradient(ellipse at 60% 50%, #F5C518 0%, #FAD961 25%, #FDE99A 55%, #FEF6D0 80%, #FFFBEE 100%)",
+        paddingTop: "94px",
+      }}
+      className="relative w-full min-h-screen overflow-hidden flex items-center"
+    >
+      <div className="relative z-10 w-full px-6 sm:px-10 lg:px-16 xl:px-24 flex flex-col lg:flex-row items-center justify-between gap-12 py-16">
 
-        {/* Subtext */}
-        <p className="text-gray-600 text-center text-base sm:text-lg md:text-xl mt-1 sm:mt-2 max-w-sm sm:max-w-xl md:max-w-2xl mx-auto px-4">
-          Lets book top event vendors without budget pressure — discover,
-          compare, negotiate, and pay later with EMIs.
-        </p>
-
-        {/* Buttons */}
-        <div className="flex gap-3 sm:gap-4 mt-2 sm:mt-4 flex-wrap justify-center px-4">
-          <a
-            href="#categories"
-            className="bg-black hover:border-black hover:border-2 hover:bg-zinc-200 hover:text-black transition-all duration-300 ease-in-out font-semibold text-white px-5 sm:px-6 py-1.5 sm:py-3 rounded-3xl text-xs sm:text-base md:text-lg"
+        {/* ===== LEFT CONTENT ===== */}
+        <motion.div
+          className="flex-1 w-full max-w-full lg:max-w-[52%]"
+          initial={{ opacity: 0, x: -40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
+          {/* Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="inline-flex items-center gap-2 bg-white/80 border border-yellow-300 rounded-full px-4 py-2 mb-8 shadow-sm"
           >
-            Book Now
-          </a>
-          <button className="border-2 border-black px-5 font-semibold sm:px-6 py-1.5 sm:py-3 rounded-3xl text-xs sm:text-base md:text-lg">
-            Pay With EMI
-          </button>
-        </div>
-
-        <div className="relative w-full mt-8 flex justify-center items-center  overflow-hidden bg-white">
-          {/* ===== Background Circle Layers ===== */}
-          <div className="absolute flex  justify-center items-center">
-            {/* Large Circle */}
-            <div className="absolute w-[1000px] top-[-140px] h-[1000px] rounded-full   bg-gradient-to-b border-2 border-lime-200 to-transparent opacity-60"></div>
-            {/* Medium Circle */}
-            <div className="absolute w-[800px]  top-[-70px] h-[800px] rounded-full   border-[#86fde8] bg-gradient-to-b border-2 to-transparent opacity-60"></div>
-
-            {/* Small Circle */}
-            <div
-              className="absolute w-[600px] top-[-10px] h-[600px] rounded-full bg-gradient-to-b from-voilet32 to-transparent
- opacity-60"
-            ></div>
-          </div>
-          {/* ===== Phone Frame ===== */}
-          <div className="relative inline-block">
-            {/* LEFT SIDE BUTTONS (RESPONSIVE) */}
-            {/* Extra button */}
-            <div
-              className="
-      absolute left-[-2px] top-[20%]
-      w-1 h-4                      /* mobile */
-      sm:w-2 sm:h-6                 /* tablet */
-      md:w-2 md:h-8                 /* medium */
-      lg:w-2 lg:h-10                 /* desktop */
-      bg-[#5D465B]  shadow-md
-    "
-            ></div>
-            {/* Volume Up */}
-            <div
-              className="
-      absolute left-[-2px] top-[30%]
-      w-1 h-6                      /* mobile */
-      sm:w-2 sm:h-8                 /* tablet */
-      md:w-2 md:h-10                 /* medium */
-      lg:w-2 lg:h-12                 /* desktop */
-      bg-[#5D465B]  shadow-md
-    "
-            ></div>
-
-            {/* Volume Down */}
-            <div
-              className="
-      absolute left-[-2px] top-[40%]
-      w-1 h-6
-      sm:w-2 sm:h-8
-      md:w-2 md:h-10
-      lg:w-2 lg:h-12
-      bg-[#5D465B]  shadow-md
-    "
-            ></div>
-
-            {/* RIGHT SIDE POWER BUTTON (RESPONSIVE) */}
-            <div
-              className="
-      absolute right-[-2px] top-[30%]
-      w-1 h-10                      /* mobile */
-      sm:w-2 sm:h-16                  /* small */
-      md:w-2 md:h-20                  /* medium */
-      lg:w-2 lg:h-24                /* desktop */
-      bg-[#5D465B]   shadow-md
-    "
-            ></div>
-
-            {/* PHONE FRAME (UNCHANGED, RESPONSIVE ALREADY) */}
-            <div
-              className="
-      relative z-20 border-[2px] 
-      w-36 h-65 rounded-t-[20px]
-      sm:w-64 sm:h-[500px] sm:rounded-t-[20px] sm:border-[3px] sm:border-b-0
-      md:w-80 md:h-[600px] md:rounded-t-[20px] md:border-[4px] md:border-b-0
-      lg:w-[320px] lg:h-[600px] lg:rounded-t-[25px] lg:border-[5px] lg:border-b-0
-      overflow-hidden
-       border-b-0 border-[#5D465B] 
-      shadow-xl bg-gray-[#5D465B] 
-    "
+            <span className="text-sm">🏅</span>
+            <span
+              className="text-xs font-bold tracking-widest text-gray-800"
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
-              {/* NOTCH */}
-              {/* <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-3 bg-black rounded-b-2xl z-30"></div>
-              <div className="absolute top-0.5 left-1/2 -translate-x-1/2 w-12 h-1 bg-gray-700 rounded-full z-30"></div> */}
-              {/* <div className="absolute top-1 left-[60%] w-2 h-2 bg-gray-700 rounded-full z-30"></div> */}
+              100+ VERIFIED VENDORS
+            </span>
+          </motion.div>
 
-              {/* IMAGE */}
-              <div
-                className="border-[4px] 
-    rounded-t-[15px] border-b-0 border-black
-      shadow-xl bg-black
-        sm:rounded-t-[15px] sm:border-[5px] sm:border-b-0
-      md:rounded-t-[20spx] md:border-[6px] md:border-b-0
-      lg:rounded-t-[20px] lg:border-[8px] lg:border-b-0"
+          {/* Heading */}
+          <motion.h1
+            className="font-black leading-none mb-6"
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+          >
+            <span className="block text-6xl sm:text-7xl lg:text-7xl xl:text-8xl text-gray-900 tracking-tight">
+              Celebrate
+            </span>
+            <span
+              className="block text-6xl sm:text-7xl lg:text-7xl xl:text-8xl tracking-tight"
+              style={{ color: "#E6A800", fontStyle: "italic" }}
+            >
+              Without
+            </span>
+            <span className="block text-6xl sm:text-7xl lg:text-7xl xl:text-8xl text-gray-900 tracking-tight">
+              Limits
+            </span>
+          </motion.h1>
+
+          {/* Subtext */}
+          <motion.p
+            className="text-gray-600 text-base sm:text-lg leading-relaxed mb-10 max-w-sm"
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.35 }}
+          >
+            The Digital Concierge for modern celebrations. Book luxury venues,
+            artisan catering, and master planners in one click.
+          </motion.p>
+
+          {/* Buttons */}
+          <motion.div
+            className="flex gap-4 flex-wrap items-center mb-10"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.45 }}
+          >
+            {/* ✅ FIX: was missing the opening `<a` — only `href=` was present */}
+            <a
+              href="#categories"
+              className="flex items-center gap-3 text-white font-bold text-base px-7 py-4 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+              style={{
+                backgroundColor: "#111111",
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+              }}
+            >
+              Book Now <span className="text-lg">→</span>
+            </a>
+            <button
+              className="flex items-center gap-2 border-2 border-gray-900 text-gray-900 font-bold text-base px-7 py-4 rounded-full transition-all duration-300"
+              style={{
+                backgroundColor: "rgba(255,255,255,0.6)",
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+              }}
+            >
+              Pay With EMI
+            </button>
+          </motion.div>
+
+          {/* Social proof */}
+          <motion.div
+            className="flex items-center gap-3"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+          >
+            <div className="flex -space-x-3">
+              {["#4A90D9", "#E67E22", "#27AE60"].map((color, i) => (
+                <div
+                  key={i}
+                  className="w-9 h-9 rounded-full border-2 border-white shadow-sm flex items-center justify-center text-white text-xs font-bold"
+                  style={{ backgroundColor: color, zIndex: 3 - i }}
+                >
+                  {["A", "B", "C"][i]}
+                </div>
+              ))}
+            </div>
+            <p
+              className="text-sm text-gray-600 font-medium"
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+            >
+              Joined by{" "}
+              <span className="font-bold text-gray-900">2.4k+</span> happy
+              hosts this month
+            </p>
+          </motion.div>
+        </motion.div>
+
+        {/* ===== RIGHT — PHONE MOCKUP ===== */}
+        <motion.div
+          className="flex-1 flex justify-center lg:justify-end items-center relative w-full"
+          style={{ minHeight: "520px" }}
+          initial={{ opacity: 0, x: 60 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.9, ease: "easeOut", delay: 0.2 }}
+        >
+          {/* TOP RATED floating card */}
+          <motion.div
+            className="absolute left-0 sm:left-4 lg:-left-4 xl:left-0 top-1/4 z-20 bg-white rounded-2xl p-3 w-44"
+            style={{ boxShadow: "0 8px 30px rgba(0,0,0,0.12)" }}
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, delay: 0.8 }}
+          >
+            <div className="flex items-center gap-1.5 mb-1.5">
+              <span className="text-yellow-400 text-sm">⭐</span>
+              <span
+                className="text-xs font-black text-gray-800 tracking-wider"
+                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
               >
-                <style>
-                  {`
-          .lcp-wrapper {
-            width: 100%;
-            aspect-ratio: 9 / 20;
-          }
+                TOP RATED
+              </span>
+            </div>
+            <p
+              className="text-gray-500 text-xs leading-snug"
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+            >
+              Artisan Floral &amp; Decor services for premium destination
+              weddings.
+            </p>
+          </motion.div>
 
-          .lcp-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-top-left-radius: 15px;
-            border-top-right-radius: 15px;
-            animation: fadeIn 0.6s ease-out forwards;
-          }
+          {/* PHONE FRAME */}
+          <div
+            className="relative z-10"
+            style={{
+              width: "260px",
+              height: "520px",
+              background: "#111111",
+              borderRadius: "40px",
+              padding: "12px",
+              boxShadow:
+                "0 40px 80px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.1)",
+            }}
+          >
+            {/* Notch */}
+            <div
+              className="absolute top-3 left-1/2 -translate-x-1/2 bg-black rounded-full z-30"
+              style={{ width: "90px", height: "24px" }}
+            />
 
-          @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-          }
-        `}
-                </style>
+            {/* Screen */}
+            <div
+              className="w-full h-full rounded-3xl overflow-hidden bg-white"
+              style={{ paddingTop: "28px" }}
+            >
+              {/* Yellow hero banner inside app */}
+              <div
+                className="w-full flex items-center justify-center"
+                style={{
+                  height: "180px",
+                  background:
+                    "linear-gradient(135deg, #F5C518 0%, #FFD700 100%)",
+                }}
+              >
+                <span style={{ fontSize: "48px" }}>🎉</span>
+              </div>
 
-                <picture className="lcp-wrapper">
-                  {/* 📱 Mobile */}
-                  <source
-                    media="(max-width: 640px)"
-                    srcSet="
-            /assets/home/herosection/heroimage4-480-240.webp 240w,
-            /assets/home/herosection/heroimage4-480-320.webp 320w
-          "
-                    sizes="100vw"
-                  />
-
-                  {/* 💻 Tablet / Desktop */}
-                  <source
-                    media="(min-width: 641px)"
-                    srcSet="
-            /assets/home/herosection/heroimage4-480-360.webp 360w,
-            /assets/home/herosection/heroimage4-480.webp 480w
-          "
-                    sizes="100vw"
-                  />
-
-                  <img
-                    src="/assets/home/herosection/heroimage4-360.webp"
-                    alt="Preview"
-                    width="360"
-                    height="800"
-                    fetchpriority="high"
-                    loading="eager"
-                    decoding="async"
-                    className="lcp-img"
-                  />
-                </picture>
+              {/* Skeleton UI */}
+              <div className="p-4 flex flex-col gap-3">
+                <div className="flex gap-2">
+                  <div className="flex-1 h-16 bg-gray-100 rounded-xl" />
+                  <div className="flex-1 h-16 bg-gray-100 rounded-xl" />
+                </div>
+                <div className="h-3 bg-gray-100 rounded-full w-3/4" />
+                <div className="h-3 bg-gray-100 rounded-full w-1/2" />
+                <div
+                  className="h-10 rounded-xl mt-2"
+                  style={{ background: "#111111" }}
+                />
               </div>
             </div>
           </div>
 
-          {/* ===== Floating Cards (Outside Circle) ===== */}
-
-          {/* Top Left Card */}
+          {/* BOOKING CONFIRMED floating card */}
           <motion.div
-            initial={{
-              opacity: 0,
-              x:
-                typeof window !== "undefined" && window.innerWidth < 640
-                  ? -20
-                  : -100,
+            className="absolute bottom-16 right-0 sm:right-4 lg:-right-2 xl:right-0 z-20 rounded-2xl px-4 py-3 flex items-center gap-2.5"
+            style={{
+              background: "rgba(17,17,17,0.88)",
+              backdropFilter: "blur(12px)",
+              boxShadow: "0 8px 30px rgba(0,0,0,0.25)",
+              minWidth: "170px",
             }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 2, ease: "easeInOut" }}
-            className="
-    absolute z-10 border-2 border-blue-700 shadow-2xl rounded-2xl p-1
-    w-[90px] top-8 left-0              /* MOBILE DEFAULT */
-sm-mid:left-8 sm-mid:w-30
-    sm:w-40 sm:top-12 sm:left-2 sm:border-[3px]     /* SMALL SCREENS (480px–640px) */
-    md:w-48 md:top-16 md:left-4     /* MID SCREENS (768px–1024px) */
-
-    lg:w-52 lg:top-20 lg:left-18  /* DESKTOP (YOUR ORIGINAL VALUES) */
-  "
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, delay: 1.0 }}
           >
-            {/* <img
-              decoding="async"
-              loading="lazy" // ✅ critical for FCP
-              src="/assets/home/herosection/teamwork.webp"
-              srcSet="
-    /assets/home/herosection/teamwork.webp 40w,
-    /assets/home/herosection/teamwork.webp 80w,
-    /assets/home/herosection/teamwork.webp 160w,
-    /assets/home/herosection/teamwork.webp 320w
-  "
-              sizes="
-    (max-width: 640px) 40px,
-    (max-width: 1024px) 144px,
-    176px
-  "
-              width="176"
-              height="176"
-              alt="Preview"
-              className="w-full  h-20 sm:h-36 md:h-40 lg:h-44 rounded-xl"
-            /> */}
-
-            {/* CENTERED TEXT */}
-            <div className="flex shadow-5xl shadow-black/40 flex-col px-2">
-              <p
-                className="font-extrabold  sm:font-extrabold text-2xl sm:text-5xl drop-shadow-lg"
-                style={{
-                  WebkitTextStroke: "2px white",
-                  color: "black",
-                }}
-              >
-                100+
-              </p>
-
-              <p
-                className="text-[7px] sm:text-end sm:text-sm sm:font-semibold drop-shadow shadow-black/40"
-                style={{
-                  // WebkitTextStroke: "1px white",
-                  color: "black",
-                }}
-              >
-                Verified Vendors
-              </p>
-            </div>
-
-            {/* BOTTOM LABEL */}
-            <div className=" bg-yellow-300 p-0.5 sm:m-1 sm:p-1 md-p-2 rounded-lg text-center sm:text-sm">
-              <p className="text-[6px] sm:text-xs md:text-xs">
-                Find the best vendor at the lowest price
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Middle Left Card */}
-          <motion.div
-            initial={{
-              opacity: 0,
-              x:
-                typeof window !== "undefined" && window.innerWidth < 640
-                  ? -20
-                  : -100,
-            }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 2, ease: "easeInOut" }}
-            className="
-    absolute z-50 flex space-x-1 bg-stone-800 text-green92 shadow-xl
-    rounded-2xl py-0 px-2
-
-    text-sm bottom-36 left-5           /* MOBILE: 360px–480px */
-sm-mid:left-8 
-    sm:text-2xl sm:left-6 sm:bottom-60 /* SMALL SCREENS: 480–640px */
-
-    md:text-3xl md:left-12 md:bottom-72 /* MEDIUM: 768–1024px */
-
-    lg:text-3xl lg:left-44 lg:bottom-76 /* DESKTOP: YOUR ORIGINAL VALUES */
-
-    w-20 sm:w-36 md:w-40 lg:w-40
-  "
-          >
-            <VscStarFull />
-            <VscStarFull />
-            <VscStarFull />
-            <VscStarFull />
-
-            <IoStarHalfOutline />
-          </motion.div>
-
-          {/*bottom Left Card */}
-          <motion.div
-            initial={{
-              opacity: 0,
-              x:
-                typeof window !== "undefined" && window.innerWidth < 640
-                  ? -20
-                  : -100,
-            }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 2, ease: "easeInOut" }}
-            className="
-    absolute z-30 bg-purple32 shadow-xl rounded-2xl py-1 px-2
-    w-[90px] left-0 bottom-4            /* MOBILE (360px–480px) */
-sm-mid:w-28 sm-mid:h-25 sm-mid:left-8
-    sm:w-40 sm:bottom-16   /* SMALL SCREENS */
-
-    md:w-48 md:left-4 md:bottom-16 /* MEDIUM (768px–1024px) */
-
-    lg:w-[250px] lg:left-8 lg:bottom-16 /* DESKTOP (your original) */
-  "
-          >
-            <div className="font-bold text-xl sm:text-3xl">
-              <p className="text-gray-700 text-sm font-semibold sm:text-xl">
-                Up to
-              </p>
-              80%
-            </div>
-
-            <p className="text-gray-700 text-sm font-semibold sm:text-xl">
-              Pay With EMI
-            </p>
-          </motion.div>
-
-          {/* Top Right Card */}
-          <motion.div
-            initial={{
-              opacity: 0,
-              x:
-                typeof window !== "undefined" && window.innerWidth < 640
-                  ? 20
-                  : 100,
-            }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 2, ease: "easeInOut" }}
-            className="
-    absolute z-10 bg-aceeff shadow-xl rounded-2xl px-2 py-1
-    w-[90px]  h-204 top-8 right-0                        /* MOBILE (360px–480px) */
-sm-mid:right-4 sm-mid:w-28
-    sm:w-40 sm:h-36 sm:top-16  sm:py-2 sm:right-4               /* SMALL SCREENS (480–640px) */
-
-    md:w-52 md:top-16 md:right-2             /* MEDIUM (768–1024px) */
-
-    lg:w-[320px] lg:p-4 lg:top-12 lg:right-2 lg:h-40 lg:pr-0  /* DESKTOP (your original position & size) */
-  "
-          >
-            <h2 className="font-bold text-xl sm:text-6xl">Join</h2>
-            <p className="text-gray-800 text-sm font-semibold sm:text-xl">
-              As A Vendor
-            </p>
-            <p className="text-gray-800 font-semibold text-[8px] sm:text-sm">
-              With zero cost
-            </p>
-
-            <FaArrowTrendUp
-              className="
-    absolute text-stone-800 opacity-20
-    w-8 h-10 scale-[2]
-    lg:w-32 lg:h-20
-    lg:scale-[1.6]       /* <-- Increase this value */
-    right-8 bottom-6
-    z-20 pointer-events-none
-  "
+            <div
+              className="w-2 h-2 rounded-full flex-shrink-0"
+              style={{ backgroundColor: "#22C55E" }}
             />
-          </motion.div>
-
-          {/* Bottom Right Card */}
-          <motion.div
-            initial={{
-              opacity: 0,
-              x:
-                typeof window !== "undefined" && window.innerWidth < 640
-                  ? 20
-                  : 100,
-            }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 2, ease: "easeInOut" }}
-            className="
-    absolute z-10 bg-yellow-50 shadow-xl rounded-2xl border-[1px] border-amber-400 p-0
-    w-[90px]  bottom-4 right-0              /* MOBILE (360–480px) */
-sm-mid:right-2 sm-mid:w-28
-    sm:w-40 sm:bottom-16 sm:right-0      /* SMALL SCREENS (480–640px) */
-
-    md:w-44 md:bottom-16 md:right-4 md:h-40   /* MEDIUM/TABLET (768–1024px) */
-
-    lg:w-[240px] lg:h-48 lg:bottom-20 lg:right-6    /* DESKTOP — YOUR ORIGINAL VALUES */
-  "
-          >
-            <div className="flex mt-1 py-1 items-center m-1 rounded-xl sm:font-bold justify-center flex-wrap bg-[#FFAA00]">
-              <h1 className="text-[6px] text-black font-bold text-center sm:text-xs lg:text-lg">
-                Live-Price Negotiation
-              </h1>
-              {/* <span className="bg-red-600 text-white text-xs sm:text-sm px-2 py-[2px] rounded-lg">
-                1.5k
-              </span>
-              <span>❤️</span>
-
-              <span className=" text-xs">Book Now</span> */}
+            <div>
+              <p
+                className="text-white text-xs font-bold"
+                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+              >
+                Booking Confirmed
+              </p>
+              <p
+                className="text-gray-400 text-xs"
+                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+              >
+                Live vendor tracking
+              </p>
             </div>
-            <img
-              decoding="async"
-              loading="lazy" // ✅ very important
-              src="/assets/home/herosection/negotiation.webp"
-              srcSet="
-    /assets/home/herosection/negotiation.webp 360w,
-    /assets/home/herosection/negotiation.webp 480w,
-    /assets/home/herosection/negotiation.webp 180w,
-  "
-              sizes="
-    (max-width: 640px) 90vw,
-    (max-width: 1024px) 60vw,
-    662px
-  "
-              width="662"
-              height="364"
-              alt="Preview"
-              className="w-full object-contain h-16 sm:h-32 md:h-30 lg:h-36 rounded-xl"
-            />
           </motion.div>
-        </div>
-      </motion.div>
-    </div>
+        </motion.div>
+      </div>
+    </motion.section>
   );
 }
