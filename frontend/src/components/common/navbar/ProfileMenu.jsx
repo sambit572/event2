@@ -62,9 +62,8 @@ const ProfileMenu = ({
       {/* Dropdown */}
       {showProfileDropdown && (
         <div
-          className="absolute top-[62px] right-0 z-[2000] cursor-default"
+          className="fixed top-[70px] left-1/2 -translate-x-1/2 w-[92vw] sm:absolute sm:top-[62px] sm:left-auto sm:right-0 sm:translate-x-0 sm:w-[300px] z-[2000] cursor-default"
           style={{
-            width: "300px",
             background: "#ffffff",
             borderRadius: "20px",
             boxShadow: "0 4px 24px rgba(0,0,0,0.08)",

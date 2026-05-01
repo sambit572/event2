@@ -213,7 +213,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
     }
   };
 
-  const navItems = ["Explore", "Venues", "Planners", "Magazine"];
+  const navItems = ["Explore", "Venues", "Planners"];
 
   return (
     <>
@@ -317,8 +317,8 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
           {/* Auth Buttons + existing icons */}
           <div className="flex items-center gap-2">
 
-            {/* Existing vendor/profile/cart icons — only shown when logged in */}
             <div className="nav-icons">
+              {/* Profile — always visible */}
               <div ref={profileRef}>
                 <ProfileMenu
                   userFirstName={userFirstName}
@@ -333,7 +333,9 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                   setShowVendorDropdown={setShowVendorDropdown}
                 />
               </div>
-              <div ref={vendorRef}>
+
+              {/* Vendor — hidden on mobile (moved to 3-dot dropdown) */}
+              <div ref={vendorRef} className="hidden-on-mobile">
                 <VendorMenu
                   VendorFirstName={VendorFirstName}
                   userFirstName={userFirstName}
@@ -346,7 +348,11 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
                   vendorLogout={vendorLogout}
                 />
               </div>
-              <CartButton cartCount={user.cartCount} handleAddToCart={handleAddToCart} />
+
+              {/* Cart — hidden on mobile (moved to 3-dot dropdown) */}
+              <div className="hidden-on-mobile">
+                <CartButton cartCount={user.cartCount} handleAddToCart={handleAddToCart} />
+              </div>
             </div>
 
             {/* Sign In / Get Started — shown when NOT logged in */}
@@ -357,13 +363,18 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
               </div>
             )}
 
-            {/* Three dots menu */}
+            {/* Three dots menu — now receives vendor & cart props for mobile */}
             <div ref={ellipsisRef}>
               <ThreeDot
                 showEllipsisDropdown={showEllipsisDropdown}
                 setShowEllipsisDropdown={setShowEllipsisDropdown}
                 setShowVendorDropdown={setShowVendorDropdown}
                 setShowProfileDropdown={setShowProfileDropdown}
+                VendorFirstName={VendorFirstName}
+                cartCount={user.cartCount}
+                handleAddToCart={handleAddToCart}
+                onOpenVendorLogin={onOpenVendorLogin}
+                vendorLogout={vendorLogout}
               />
             </div>
           </div>

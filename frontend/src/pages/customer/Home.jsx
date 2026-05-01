@@ -31,7 +31,7 @@ const Home = () => {
     () => sessionStorage.getItem("showAll") === "true"
   );
   const [hovered, setHovered] = useState(false);
-  const visibleCategories = showAll ? categories : categories.slice(0, 6);
+  const visibleCategories = showAll ? categories : categories.slice(0, 8);
 
   const handleShowAll = () => {
     sessionStorage.setItem("showAll", "true");
@@ -89,13 +89,16 @@ const Home = () => {
         {/* Section 2 — Hero */}
         <HeroSection />
 
+         {/* Scrolling features ticker */}
+        <Suspense fallback={<div>Loading...</div>}>
+          <Features />
+          <AddsBanner />
+        </Suspense>
+
         {/* Section 3 — Everything for your Dream Event */}
         <DreamEventSection />
 
-        {/* Scrolling features ticker */}
-        <Suspense fallback={<div>Loading...</div>}>
-          <Features />
-        </Suspense>
+       
 
         {/* Categories */}
         <div id="categories" className="categories-head1">
@@ -113,7 +116,7 @@ const Home = () => {
           ))}
         </div>
         <div className="flex justify-center w-full items-center mb-4">
-          {!showAll && categories.length > 6 && (
+          {!showAll && categories.length > 8 && (
             <button
               className="browse-all-btn"
               onClick={handleShowAll}

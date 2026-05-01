@@ -19,7 +19,7 @@ const features = [
 
 const Features = () => {
   return (
-    <div className="w-full overflow-hidden border-y border-gray-200 bg-white ">
+    <div className="w-full overflow-hidden border-y border-gray-200 bg-white mt-8">
       <div className="flex gap-10 animate-scroll whitespace-nowrap">
         {[...features, ...features].map((f, i) => (
           <div

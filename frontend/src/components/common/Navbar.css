@@ -11,7 +11,7 @@
   letter-spacing: 1.2px;
   color: #111111;
   font-family: "Plus Jakarta Sans", sans-serif;
-  position: fixed;
+  position: relative;
   top: 0;
   z-index: 100;
 }
@@ -193,6 +193,11 @@
   align-items: center;
 }
 
+/* ===== HIDE VENDOR & CART ON MOBILE (they move into 3-dot dropdown) ===== */
+.hidden-on-mobile {
+  display: flex;
+}
+
 /* ===== SUGGESTIONS DROPDOWN ===== */
 .suggestions-dropdown {
   position: fixed;
@@ -281,9 +286,18 @@
   .search-bar { width: 160px; }
 }
 
+/* ── Hide desktop nav links on mobile — they move into 3-dot dropdown ── */
 @media (max-width: 768px) {
   .nav-links { display: none; }
   .suggestions-dropdown { width: 80%; left: 10%; }
+
+  /* Tighten right-side auth area */
+  .navbar-auth { gap: 8px; }
+  .get-started-btn { padding: 8px 14px; font-size: 13px; }
+  .signin-btn { font-size: 13px; }
+
+  /* Hide Vendor and Cart icons — now inside 3-dot dropdown */
+  .hidden-on-mobile { display: none; }
 }
 
 @media (max-width: 740px) {
@@ -291,13 +305,14 @@
     display: block;
     animation: dropdownFade 0.25s ease;
   }
+  /* Collapse search bar to icon-only on mobile */
   .search-bar {
     border: none;
     background: transparent;
     box-shadow: none;
     width: 36px;
     padding: 0;
-    margin: 0 8px;
+    margin: 0 4px;
   }
   .search-bar:focus-within,
   .search-bar.active { width: 36px; border: none; box-shadow: none; }
@@ -307,21 +322,21 @@
 }
 
 @media (max-width: 680px) {
-  .navbar { padding: 0 16px; height: 54px; }
-  .logo { font-size: 21px; margin-right: 0; }
+  .navbar { padding: 0 14px; height: 52px; top: 30px; }
+  .logo { font-size: 20px; margin-right: 0; }
   .announcement-bar { font-size: 10px; padding: 6px 12px; }
-  .navbar { top: 30px; }
-  .get-started-btn { padding: 8px 14px; font-size: 13px; }
-  .signin-btn { font-size: 13px; }
+  .get-started-btn { padding: 7px 12px; font-size: 12px; border-radius: 20px; }
 }
 
 @media (max-width: 460px) {
-  .logo { font-size: 19px; }
-  .announcement-bar { letter-spacing: 0.5px; font-size: 9px; }
+  .logo { font-size: 18px; }
+  .announcement-bar { letter-spacing: 0.4px; font-size: 9px; }
+  /* Hide "Sign In" text button — user can still log in via profile icon */
   .signin-btn { display: none; }
+  .get-started-btn { padding: 7px 11px; font-size: 12px; }
 }
 
 @media (max-width: 360px) {
-  .logo { font-size: 17px; }
-  .get-started-btn { padding: 7px 12px; font-size: 12px; }
+  .logo { font-size: 16px; }
+  .get-started-btn { padding: 6px 10px; font-size: 11px; }
 }
