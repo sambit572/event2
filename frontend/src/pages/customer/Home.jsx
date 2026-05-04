@@ -19,9 +19,6 @@ import HeroSection from "../../components/customer/home/HeroSection.jsx";
 import DreamEventSection from "../../components/customer/home/DreamEventSection.jsx";
 import TrustSection from "../../components/customer/home/TrustSection.jsx";
 
-const ReviewSlider = React.lazy(() =>
-  import("../../components/customer/home/ReviewSlider.jsx")
-);
 const FaqSection = React.lazy(() =>
   import("../../components/customer/home/FaqSection.jsx")
 );
@@ -128,12 +125,11 @@ const Home = () => {
           )}
         </div>
 
-        {/* Section 4 — 3-Step Success + Reviews + FAQ */}
+        {/* Section 4 — 3-Step Success + FAQ */}
         
         <Suspense fallback={<div>Loading...</div>}>
           <StepsSection />
           <TrustSection />
-          <ReviewSlider />
           <FaqSection />
         </Suspense>
 
