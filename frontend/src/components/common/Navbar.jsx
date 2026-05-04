@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import "./Navbar.css";
 import { FaSearch } from "react-icons/fa";
+import logoImg from "../../assets/EventsBridge_Plain logo.png";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -239,7 +240,8 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
 
         {/* Logo */}
         <div className="logo" onClick={handleHomeClick}>
-          EventsBridge
+          <img src={logoImg} alt="EventsBridge" className="logo-icon" />
+          <span className="logo-text">EventsBridge</span>
         </div>
 
         {/* Center Nav Links */}

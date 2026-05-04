@@ -1,7 +1,6 @@
 .courseCard {
   position: relative;
   width: 100%;
-  height: 300px;
   border-radius: 8px;
   overflow: hidden;
   background: #fff;
@@ -10,6 +9,7 @@
   cursor: pointer;
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .courseCard:hover {
@@ -47,6 +47,7 @@
   position: relative;
   z-index: 2;
   background-color: #fff;
+  flex: 1;
 }
 
 .courseTitle {
@@ -106,8 +107,8 @@
 
   /* ✨ 3D Text Effect */
   text-shadow: 
-    1px 1px 2px rgba(0, 0, 0, 0.6),   /* main depth */
-    -1px -1px 1px rgba(255, 255, 255, 0.4); /* highlight */
+    1px 1px 2px rgba(0, 0, 0, 0.6),
+    -1px -1px 1px rgba(255, 255, 255, 0.4);
 }
 
 /* Badge like NEW or POPULAR */
@@ -163,7 +164,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.5); /* soft background */
+  background-color: rgba(255, 255, 255, 0.5);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 .courseCard:hover .courseImage {
@@ -179,13 +180,14 @@
 .courseTaglineResponsive {
   margin-bottom: -5px;
   color: #666;
-  display: none; /* Hidden on desktop */
+  display: none;
 }
 .imageWrapper {
   position: relative;
   width: 100%;
-  height: 250px;
+  height: 200px;
   overflow: hidden;
+  flex-shrink: 0;
 }
 @media (max-width: 1024px) {
   .courseTaglineOverlay {
@@ -199,12 +201,8 @@
 
 /* Responsive tweaks */
 @media (max-width: 450px) {
-  .courseCard {
-    height: auto;
-  }
-
   .courseImage {
-    height: 200px;
+    height: 100%;
   }
 
   .courseTitle {
@@ -216,6 +214,6 @@
   }
   .imageWrapper {
     width: 100%;
-    height: 190px;
+    height: 160px;
   }
 }

@@ -11,18 +11,42 @@
 .categories-head {
   background-color: #f3c12d;
   color: #001f3f;
-  padding: 5px 20px;
+  padding: 10px 36px;
   text-align: center;
   font-size: 1.5rem;
-  font-weight: bold;
+  font-weight: 900;
   width: fit-content;
-  border: 6px double #001f3f;
-  border-radius: 30px 10px 30px 10px;
-  display: inline-block;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  letter-spacing: 1px;
+  border: none;
+  border-radius: 50px;
+  display: inline-flex;
+  align-items: center;
+  box-shadow:
+    0 4px 0px #a8830d,
+    0 8px 24px rgba(243, 193, 45, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  letter-spacing: 3px;
   text-transform: uppercase;
-  transition: transform 0.3s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.categories-head::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50px 50px 0 0;
+  pointer-events: none;
+}
+
+.categories-head:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 6px 0px #a8830d,
+    0 14px 32px rgba(243, 193, 45, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 .heading {
@@ -41,12 +65,19 @@
 .category_section {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: 1fr;
   gap: 12px;
   padding: 0 16px 32px 16px;
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
   box-sizing: border-box;
+  align-items: stretch;
+}
+
+.category_section > div {
+  display: flex;
+  flex-direction: column;
 }
 
 .browse-all-btn {

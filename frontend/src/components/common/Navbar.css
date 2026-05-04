@@ -38,6 +38,7 @@
   z-index: 1000;
   display: flex;
   align-items: center;
+  gap: 8px;
   font-size: 24px;
   cursor: pointer;
   font-family: "Plus Jakarta Sans", sans-serif;
@@ -46,6 +47,18 @@
   letter-spacing: -0.5px;
   white-space: nowrap;
   margin-right: 32px;
+}
+
+.logo-icon {
+  height: 32px;
+  width: 32px;
+  display: none;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.logo-text {
+  display: inline;
 }
 
 /* ===== CENTER NAV LINKS ===== */
@@ -298,6 +311,11 @@
 
   /* Hide Vendor and Cart icons — now inside 3-dot dropdown */
   .hidden-on-mobile { display: none; }
+
+  /* Show logo icon only, hide text */
+  .logo-text { display: none; }
+  .logo-icon { display: block; }
+  .logo { margin-right: 0; }
 }
 
 @media (max-width: 740px) {

@@ -43,7 +43,7 @@ export default function DreamEventSection() {
             </h2>
           </motion.div>
 
-          <motion.button
+          {/* <motion.button
             onClick={() => navigate("/#categories")}
             className="flex items-center gap-2 text-sm font-bold text-gray-800 border border-gray-200 rounded-full px-5 py-2.5 hover:bg-gray-50 transition-all duration-200"
             style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
@@ -53,7 +53,7 @@ export default function DreamEventSection() {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             View All Categories →
-          </motion.button>
+          </motion.button> */}
         </div>
 
         {/* ── MOBILE LAYOUT (< 768px): single column stack ── */}

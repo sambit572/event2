@@ -34,7 +34,7 @@ const ProfileMenu = ({
     >
       {/* Profile trigger button */}
       <div
-        className="group flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all duration-300 
+        className="group flex items-center gap-2 px-3 py-1 rounded-2xl transition-all duration-300 
                    hover:bg-gradient-to-r hover:from-[#001f3f] hover:to-[#004080] hover:text-white"
       >
         <span

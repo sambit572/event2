@@ -32,7 +32,7 @@ const VendorMenu = ({
     >
       {/* Vendor section - Trigger button */}
       <div
-        className="group flex items-center gap-2 px-3 py-1.5 rounded-2xl transition-all duration-300
+        className="group flex items-center gap-2 px-3 py-1 rounded-2xl transition-all duration-300
                    hover:bg-gradient-to-r hover:from-[#001f3f] hover:to-[#003366] hover:text-white
                    hover:shadow-[0_0_20px_-5px] hover:shadow-[#001f3f]/40
                    max-[1024px]:text-[12px] max-[820px]:text-[11px]"
