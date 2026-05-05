@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import "./Navbar.css";
 import { FaSearch } from "react-icons/fa";
-import logoImg from "../../assets/EventsBridge_Plain logo.png";
+import logoImg from "../../assets/EventsBridgeOnlyLogo.png";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
