@@ -1,0 +1,54 @@
+/* ── Flip Card Base ── */
+.dream-flip-card {
+  perspective: 1200px;
+  width: 100%;
+  cursor: pointer;
+}
+
+.dream-flip-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.65s cubic-bezier(0.4, 0.2, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.dream-flip-card:hover .dream-flip-inner {
+  transform: rotateY(180deg);
+}
+
+.dream-flip-front,
+.dream-flip-back {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.dream-flip-back {
+  transform: rotateY(180deg);
+}
+
+/* ── Mobile: disable 3D flip, show tap toggle instead ── */
+@media (max-width: 767px) {
+  .dream-flip-card:hover .dream-flip-inner {
+    transform: none;
+  }
+
+  .dream-flip-back {
+    display: none;
+  }
+
+  .dream-flip-card.flipped .dream-flip-front {
+    display: none;
+  }
+
+  .dream-flip-card.flipped .dream-flip-back {
+    display: flex;
+    position: relative;
+    transform: none;
+    min-height: inherit;
+  }
+}

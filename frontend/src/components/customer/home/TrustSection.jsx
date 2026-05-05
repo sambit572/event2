@@ -12,10 +12,10 @@ const itemVariants = {
 };
 
 const stats = [
-  { value: "99%",   label: "Customer Certification", yellow: true  },
-  { value: "100+",  label: "Verified Vendors",        yellow: false },
-  { value: "24 X 7",label: "Support",                 yellow: false },
-  { value: "20+",   label: "Service Category",        yellow: true  },
+  { value: "99%",    label: "Customer Certification", yellow: true  },
+  { value: "100+",   label: "Verified Vendors",        yellow: false },
+  { value: "24 X 7", label: "Support",                 yellow: false },
+  { value: "20+",    label: "Service Category",        yellow: true  },
 ];
 
 export default function TrustSection() {
@@ -23,18 +23,20 @@ export default function TrustSection() {
   const isInView = useInView(ref, { once: true, amount: 0.2 });
 
   return (
-    <section
-      style={{ background: "#0E0E0E" }}
-      className="w-full py-12 sm:py-16"
-    >
+    <section style={{ background: "#0E0E0E" }} className="w-full py-12 sm:py-16">
       <style>{`
-        .trust-wrapper {
+        /* ── Matches .category_section exactly ── */
+        .trust-outer {
+          max-width: 1400px;
+          margin: 0 auto;
           padding: 0 16px;
+          box-sizing: border-box;
         }
         @media (min-width: 640px) {
-          .trust-wrapper { padding: 0 32px; }
+          .trust-outer { padding: 0 32px 0 32px; }
         }
 
+        /* ── Inner layout ── */
         .trust-inner {
           display: flex;
           flex-direction: column;
@@ -49,32 +51,23 @@ export default function TrustSection() {
           }
         }
 
-        .trust-heading {
-          flex: 0 0 auto;
-          width: 100%;
-        }
+        .trust-heading { width: 100%; }
         @media (min-width: 768px) {
-          .trust-heading {
-            width: 38%;
-            max-width: 340px;
-          }
+          .trust-heading { width: 32%; flex-shrink: 0; }
         }
 
+        /* ── Cards grid ── */
         .trust-cards-grid {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 10px;
+          gap: 12px;
           width: 100%;
+          max-width: 620px;
           flex: 1;
+          margin-left: auto;
         }
-        @media (min-width: 480px) {
-          .trust-cards-grid { gap: 14px; }
-        }
-        @media (min-width: 768px) {
-          .trust-cards-grid { gap: 12px; }
-        }
-        @media (min-width: 1024px) {
-          .trust-cards-grid { gap: 14px; }
+        @media (min-width: 640px) {
+          .trust-cards-grid { gap: 16px; }
         }
 
         .trust-card {
@@ -84,30 +77,31 @@ export default function TrustSection() {
           flex-direction: column;
           gap: 4px;
           min-height: 90px;
+          box-sizing: border-box;
         }
         @media (min-width: 640px) {
-          .trust-card { padding: 20px 22px; min-height: 110px; border-radius: 14px; }
+          .trust-card { padding: 22px 24px; min-height: 110px; border-radius: 14px; }
         }
         @media (min-width: 1024px) {
-          .trust-card { padding: 24px 26px; min-height: 120px; }
+          .trust-card { padding: 26px 28px; min-height: 124px; }
         }
 
         .trust-card-value {
           font-family: 'Plus Jakarta Sans', sans-serif;
           font-weight: 900;
           line-height: 1;
-          font-size: clamp(22px, 5vw, 40px);
+          font-size: clamp(22px, 4.5vw, 40px);
         }
         .trust-card-label {
           font-family: 'Plus Jakarta Sans', sans-serif;
-          font-size: clamp(10px, 2vw, 13px);
+          font-size: clamp(10px, 1.8vw, 13px);
           font-weight: 500;
           line-height: 1.3;
-          margin-top: 4px;
+          margin-top: 5px;
         }
       `}</style>
 
-      <div className="trust-wrapper w-full">
+      <div className="trust-outer">
         <motion.div
           ref={ref}
           className="trust-inner"
@@ -116,13 +110,13 @@ export default function TrustSection() {
           animate={isInView ? "visible" : "hidden"}
         >
 
-          {/* ── Left: heading ── */}
+          {/* ── Left heading ── */}
           <motion.div className="trust-heading" variants={itemVariants}>
             <h2 style={{
               fontFamily: "'Plus Jakarta Sans', sans-serif",
               fontWeight: 800,
-              fontSize: "clamp(22px, 4.5vw, 40px)",
-              lineHeight: 1.2,
+              fontSize: "clamp(22px, 4vw, 40px)",
+              lineHeight: 1.25,
               color: "#fff",
             }}>
               Trusted By Industry
@@ -131,7 +125,7 @@ export default function TrustSection() {
             </h2>
           </motion.div>
 
-          {/* ── Right: 2×2 stat cards ── */}
+          {/* ── Right 2×2 cards ── */}
           <motion.div className="trust-cards-grid" variants={containerVariants}>
             {stats.map((stat) => (
               <motion.div
@@ -139,21 +133,14 @@ export default function TrustSection() {
                 variants={itemVariants}
                 whileHover={{ scale: 1.03, transition: { duration: 0.18 } }}
                 className="trust-card"
-                style={{
-                  background: stat.yellow ? "#F5C518" : "#1B1B3A",
-                  cursor: "default",
-                }}
+                style={{ background: stat.yellow ? "#F5C518" : "#1B1B3A" }}
               >
-                <div
-                  className="trust-card-value"
-                  style={{ color: stat.yellow ? "#0E0E0E" : "#F5C518" }}
-                >
+                <div className="trust-card-value"
+                  style={{ color: stat.yellow ? "#0E0E0E" : "#F5C518" }}>
                   {stat.value}
                 </div>
-                <div
-                  className="trust-card-label"
-                  style={{ color: stat.yellow ? "#1a1a1a" : "#ccc" }}
-                >
+                <div className="trust-card-label"
+                  style={{ color: stat.yellow ? "#1a1a1a" : "#ccc" }}>
                   {stat.label}
                 </div>
               </motion.div>
