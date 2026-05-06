@@ -207,7 +207,7 @@ function Footer() {
                   alt="Email"
                   className="icon"
                 />{" "}
-                techsupport@eventsbridge.com
+                support@eventsbridge.com
               </p>
             </a>
             <p
@@ -606,7 +606,7 @@ function Footer() {
                       className="icon"
                       alt=""
                     />{" "}
-                    techsupport@eventsbridge.com{" "}
+                    support@eventsbridge.com{" "}
                   </p>
                   <p>
                     <img

@@ -1,6 +1,40 @@
 import { useRef } from "react";
-import { FaStore, FaSignOutAlt, FaTachometerAlt } from "react-icons/fa";
+import { FaSignOutAlt, FaTachometerAlt } from "react-icons/fa";
 import { toast } from "react-hot-toast";
+
+const VendorIcon = ({ className }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    className={className}
+    fill="none"
+    aria-hidden="true"
+  >
+    <defs>
+      <linearGradient id="vendorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#001f3f" />
+        <stop offset="100%" stopColor="#0055a5" />
+      </linearGradient>
+    </defs>
+    <path
+      d="M3 9h18l-1.5-4.5A1 1 0 0 0 18.55 4H5.45a1 1 0 0 0-.95.5L3 9Z"
+      fill="url(#vendorGrad)"
+      opacity="0.85"
+    />
+    <path
+      d="M7 4.5 5.5 9M12 4v5M17 4.5 18.5 9"
+      stroke="#F5C518"
+      strokeWidth="1.2"
+      strokeLinecap="round"
+    />
+    <rect x="3" y="9" width="18" height="11" rx="1" fill="url(#vendorGrad)" opacity="0.15" />
+    <rect x="3" y="9" width="18" height="11" rx="1" stroke="url(#vendorGrad)" strokeWidth="1.5" fill="none" />
+    <rect x="9.5" y="14" width="5" height="6" rx="0.8" fill="url(#vendorGrad)" opacity="0.7" />
+    <rect x="4.5" y="11.5" width="4" height="3" rx="0.5" fill="#F5C518" opacity="0.8" />
+    <rect x="15.5" y="11.5" width="4" height="3" rx="0.5" fill="#F5C518" opacity="0.8" />
+    <circle cx="13.8" cy="17.2" r="0.5" fill="#F5C518" />
+  </svg>
+);
 
 const VendorMenu = ({
   VendorFirstName,
@@ -38,7 +72,7 @@ const VendorMenu = ({
                    max-[1024px]:text-[12px] max-[820px]:text-[11px]"
         onClick={toggleVendorDropdown}
       >
-        <FaStore className="text-[#001f3f] text-[20px] transition-all duration-300 group-hover:text-white group-hover:scale-110 group-active:scale-95" />
+        <VendorIcon className="w-[22px] h-[22px] transition-all duration-300 group-hover:scale-110 group-active:scale-95" />
         <span className="text-[#001F3F] font-semibold hidden sm:inline md:hidden lg:inline group-hover:text-white transition-colors duration-300">
           {!VendorFirstName ? "Be a Vendor" : `Hi, ${VendorFirstName}`}
         </span>
@@ -144,7 +178,7 @@ const VendorMenu = ({
                     }
                   }}
                 >
-                  <FaStore className="text-lg" />
+                  <VendorIcon className="w-[18px] h-[18px]" />
                   Register
                 </button>
 

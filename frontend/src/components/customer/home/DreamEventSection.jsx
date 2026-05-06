@@ -228,7 +228,7 @@ export default function DreamEventSection() {
         <motion.div
           className="hidden md:grid gap-4"
           style={{
-            gridTemplateColumns: "1.4fr 1fr 1fr",
+            gridTemplateColumns: "55% 1fr 1fr",
             gridTemplateRows: "300px 300px",
           }}
           variants={containerVariants}
