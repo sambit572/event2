@@ -51,4 +51,33 @@
     transform: none;
     min-height: inherit;
   }
+
+  /* Mobile layout — 2 column grid */
+  .dream-mobile-layout {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  /* Grand Venues — full width */
+  .dream-mobile-grand {
+    grid-column: 1 / -1;
+  }
+
+  /* Catering — full width */
+  .dream-mobile-catering {
+    grid-column: 1 / -1;
+  }
+
+  /* EMI + Vendor — side by side */
+  .dream-mobile-emi,
+  .dream-mobile-vendor {
+    grid-column: span 1;
+  }
+
+  /* Full Planning + Mandap — side by side */
+  .dream-mobile-planning,
+  .dream-mobile-mandap {
+    grid-column: span 1;
+  }
 }

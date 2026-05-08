@@ -16,11 +16,11 @@ export default function DreamEventSection() {
   const navigate = useNavigate();
 
   return (
-    <section className="w-full bg-white py-20 px-4 sm:px-6 xl:px-20">
+    <section className="w-full bg-white py-12 px-4 sm:px-6 xl:px-20">
       <div className="w-full max-w-[1600px] mx-auto">
 
         {/* Header Row */}
-        <div className="flex items-end justify-between mb-10 flex-wrap gap-4">
+        <div className="flex items-end justify-between mb-8 flex-wrap gap-4">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -34,7 +34,7 @@ export default function DreamEventSection() {
               THE DIFFERENCE
             </p>
             <h2
-              className="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 leading-tight"
+              className="text-2xl sm:text-4xl lg:text-5xl font-black text-gray-900 leading-tight"
               style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
               Everything for your{" "}
@@ -45,15 +45,15 @@ export default function DreamEventSection() {
           </motion.div>
         </div>
 
-        {/* ── MOBILE LAYOUT (< 768px): single column stack ── */}
-        <div className="flex flex-col gap-4 md:hidden">
+        {/* ── MOBILE LAYOUT (< 768px): 2-column grid ── */}
+        <div className="dream-mobile-layout md:hidden">
 
-          {/* Grand Venues — Flip Card */}
-          <div className="dream-flip-card" style={{ minHeight: "280px" }}>
+          {/* Grand Venues — full width */}
+          <div className="dream-mobile-grand dream-flip-card" style={{ minHeight: "240px" }}>
             <div className="dream-flip-inner">
               {/* Front */}
               <div
-                className="dream-flip-front rounded-3xl overflow-hidden"
+                className="dream-flip-front rounded-2xl overflow-hidden"
                 style={{ background: "linear-gradient(145deg, #1a1a1a 0%, #2d2d2d 100%)" }}
               >
                 <div
@@ -65,30 +65,30 @@ export default function DreamEventSection() {
                   }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-6">
+                <div className="absolute bottom-0 left-0 right-0 p-5">
                   <span
-                    className="inline-block text-xs font-black tracking-widest px-3 py-1 rounded-full mb-3"
+                    className="inline-block text-xs font-black tracking-widest px-3 py-1 rounded-full mb-2"
                     style={{ background: "#F5C518", color: "#111" }}
                   >
                     POPULAR
                   </span>
-                  <h3 className="text-white text-2xl font-black mb-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                  <h3 className="text-white text-xl font-black mb-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
                     Grand Venues
                   </h3>
-                  <p className="text-gray-300 text-sm">Stunning spaces for every scale</p>
+                  <p className="text-gray-300 text-xs">Stunning spaces for every scale</p>
                 </div>
               </div>
               {/* Back */}
               <div
-                className="dream-flip-back rounded-3xl overflow-hidden flex flex-col items-center justify-center gap-4 p-6"
+                className="dream-flip-back rounded-2xl overflow-hidden flex flex-col items-center justify-center gap-3 p-5"
                 style={{ background: "linear-gradient(145deg, #1a1a1a 0%, #2d2d2d 100%)" }}
               >
-                <p className="text-white text-center text-base font-semibold" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                <p className="text-white text-center text-sm font-semibold" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
                   Discover stunning banquet halls & outdoor venues for weddings, receptions, and corporate events.
                 </p>
                 <button
                   onClick={() => navigate("/category/banquet-hall")}
-                  className="text-gray-900 font-bold text-sm px-6 py-3 rounded-full hover:opacity-80 transition-all duration-200"
+                  className="text-gray-900 font-bold text-sm px-5 py-2.5 rounded-full hover:opacity-80 transition-all duration-200"
                   style={{ background: "#F5C518" }}
                 >
                   Explore Venues →
@@ -97,36 +97,36 @@ export default function DreamEventSection() {
             </div>
           </div>
 
-          {/* Artisan Catering — Flip Card */}
-          <div className="dream-flip-card" style={{ minHeight: "200px" }}>
+          {/* Artisan Catering — full width */}
+          <div className="dream-mobile-catering dream-flip-card" style={{ minHeight: "160px" }}>
             <div className="dream-flip-inner">
               {/* Front */}
               <div
-                className="dream-flip-front rounded-3xl overflow-hidden p-6 flex flex-col justify-between"
+                className="dream-flip-front rounded-2xl overflow-hidden p-5 flex flex-col justify-between"
                 style={{ background: "linear-gradient(135deg, #F5C518 0%, #FFD700 100%)" }}
               >
-                <div className="text-4xl">🍽️</div>
+                <div className="text-3xl">🍽️</div>
                 <div>
-                  <h3 className="text-gray-900 text-xl font-black mb-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                  <h3 className="text-gray-900 text-lg font-black mb-0.5" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
                     Artisan Catering
                   </h3>
-                  <p className="text-gray-700 text-sm">Flavours that speak love</p>
+                  <p className="text-gray-700 text-xs">Flavours that speak love</p>
                 </div>
-                <div className="absolute top-5 right-5 w-9 h-9 bg-black/10 rounded-full flex items-center justify-center">
-                  <span className="text-gray-800 font-bold">→</span>
+                <div className="absolute top-4 right-4 w-8 h-8 bg-black/10 rounded-full flex items-center justify-center">
+                  <span className="text-gray-800 font-bold text-sm">→</span>
                 </div>
               </div>
               {/* Back */}
               <div
-                className="dream-flip-back rounded-3xl overflow-hidden flex flex-col items-center justify-center gap-4 p-6"
+                className="dream-flip-back rounded-2xl overflow-hidden flex flex-col items-center justify-center gap-3 p-5"
                 style={{ background: "linear-gradient(135deg, #111 0%, #222 100%)" }}
               >
-                <p className="text-white text-center text-sm font-semibold" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                <p className="text-white text-center text-xs font-semibold" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
                   Handcrafted menus tailored to your occasion — from intimate dinners to lavish buffets.
                 </p>
                 <button
                   onClick={() => navigate("/category/catering")}
-                  className="text-gray-900 font-bold text-sm px-6 py-3 rounded-full hover:opacity-80 transition-all"
+                  className="text-gray-900 font-bold text-xs px-5 py-2.5 rounded-full hover:opacity-80 transition-all"
                   style={{ background: "#F5C518" }}
                 >
                   View Caterers →
@@ -141,12 +141,12 @@ export default function DreamEventSection() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="relative overflow-hidden rounded-3xl p-6 flex flex-col justify-center"
-            style={{ minHeight: "160px", background: "#f7f7f7" }}
+            className="dream-mobile-emi relative overflow-hidden rounded-2xl p-5 flex flex-col justify-center"
+            style={{ minHeight: "130px", background: "#f7f7f7" }}
           >
-            <p className="text-gray-600 text-sm font-semibold mb-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Up to</p>
-            <p className="font-black leading-none mb-1" style={{ fontSize: "clamp(2.5rem, 8vw, 3.5rem)", color: "#111" }}>80%</p>
-            <p className="text-sm font-bold" style={{ color: "#E6A800", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Pay with Emi</p>
+            <p className="text-gray-600 text-xs font-semibold mb-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Up to</p>
+            <p className="font-black leading-none mb-1" style={{ fontSize: "clamp(2rem, 10vw, 3rem)", color: "#111" }}>80%</p>
+            <p className="text-xs font-bold" style={{ color: "#E6A800", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Pay with Emi</p>
           </motion.div>
 
           {/* Join As a Vendor */}
@@ -155,20 +155,20 @@ export default function DreamEventSection() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="relative overflow-hidden rounded-3xl p-6 flex flex-col justify-between"
-            style={{ minHeight: "180px", background: "#F5C518" }}
+            className="dream-mobile-vendor relative overflow-hidden rounded-2xl p-5 flex flex-col justify-between"
+            style={{ minHeight: "130px", background: "#F5C518" }}
           >
             <div>
-              <h3 className="text-gray-900 text-xl font-black mb-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+              <h3 className="text-gray-900 text-base font-black mb-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
                 Join As a Vendor
               </h3>
-              <p className="text-gray-700 text-sm mb-4">
-                Scale your Business with Elite EventsBridge Network with <strong>Zero Cost</strong>
+              <p className="text-gray-700 text-xs mb-3">
+                Scale your Business with <strong>Zero Cost</strong>
               </p>
             </div>
             <button
               onClick={() => navigate("/vendor/register")}
-              className="self-start text-white font-bold text-sm px-6 py-3 rounded-full hover:opacity-80 transition-all duration-200"
+              className="self-start text-white font-bold text-xs px-4 py-2 rounded-full hover:opacity-80 transition-all duration-200"
               style={{ background: "#111" }}
             >
               Join Now
@@ -182,18 +182,18 @@ export default function DreamEventSection() {
             whileInView="visible"
             viewport={{ once: true }}
             onClick={() => navigate("/category/photographer")}
-            className="relative overflow-hidden rounded-3xl cursor-pointer group p-6 flex flex-col justify-between"
-            style={{ minHeight: "200px", background: "linear-gradient(135deg, #f7f7f7 0%, #eeeeee 100%)" }}
+            className="dream-mobile-planning relative overflow-hidden rounded-2xl cursor-pointer p-5 flex flex-col justify-between"
+            style={{ minHeight: "130px", background: "linear-gradient(135deg, #f7f7f7 0%, #eeeeee 100%)" }}
           >
-            <div className="text-4xl">📋</div>
+            <div className="text-3xl">📋</div>
             <div>
-              <h3 className="text-gray-900 text-xl font-black mb-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+              <h3 className="text-gray-900 text-base font-black mb-0.5" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
                 Full Planning
               </h3>
-              <p className="text-gray-500 text-sm">End-to-end event management</p>
+              <p className="text-gray-500 text-xs">End-to-end event management</p>
             </div>
-            <div className="absolute top-5 right-5 w-9 h-9 bg-black/5 rounded-full flex items-center justify-center">
-              <span className="text-gray-700 font-bold">→</span>
+            <div className="absolute top-4 right-4 w-8 h-8 bg-black/5 rounded-full flex items-center justify-center">
+              <span className="text-gray-700 font-bold text-sm">→</span>
             </div>
           </motion.div>
 
@@ -204,17 +204,17 @@ export default function DreamEventSection() {
             whileInView="visible"
             viewport={{ once: true }}
             onClick={() => navigate("/category/tenthouse")}
-            className="relative overflow-hidden rounded-3xl cursor-pointer group p-6 flex flex-col justify-between"
-            style={{ minHeight: "200px", background: "linear-gradient(135deg, #111111 0%, #222222 100%)" }}
+            className="dream-mobile-mandap relative overflow-hidden rounded-2xl cursor-pointer p-5 flex flex-col justify-between"
+            style={{ minHeight: "130px", background: "linear-gradient(135deg, #111111 0%, #222222 100%)" }}
           >
-            <div className="text-4xl">🕌</div>
+            <div className="text-3xl">🕌</div>
             <div>
-              <h3 className="text-white text-xl font-black mb-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+              <h3 className="text-white text-base font-black mb-0.5" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
                 Inclusive & Mandap
               </h3>
-              <p className="text-gray-400 text-sm">Sacred setups, every tradition</p>
+              <p className="text-gray-400 text-xs">Sacred setups, every tradition</p>
               <button
-                className="mt-4 text-gray-900 font-bold text-xs px-5 py-2.5 rounded-full hover:opacity-80 transition-all duration-200"
+                className="mt-3 text-gray-900 font-bold text-xs px-4 py-2 rounded-full hover:opacity-80 transition-all duration-200"
                 style={{ background: "#F5C518" }}
               >
                 Book Now
@@ -301,8 +301,6 @@ export default function DreamEventSection() {
             </div>
           </motion.div>
 
-          {/* TOP-RIGHT ROW: Artisan Catering Flip + EMI Card */}
-
           {/* Artisan Catering — Flip Card */}
           <motion.div
             variants={cardVariants}
@@ -358,29 +356,16 @@ export default function DreamEventSection() {
               background: "#f7f7f7",
             }}
           >
-            <p
-              className="text-gray-500 text-sm font-semibold mb-1"
-              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-            >
+            <p className="text-gray-500 text-sm font-semibold mb-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
               Up to
             </p>
-            <p
-              className="font-black leading-none mb-2"
-              style={{ fontSize: "clamp(3rem, 5vw, 4.5rem)", color: "#111", fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-            >
+            <p className="font-black leading-none mb-2" style={{ fontSize: "clamp(3rem, 5vw, 4.5rem)", color: "#111", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
               80%
             </p>
-            <p
-              className="text-lg font-bold"
-              style={{ color: "#E6A800", fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-            >
+            <p className="text-lg font-bold" style={{ color: "#E6A800", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
               Pay with Emi
             </p>
-            {/* Decorative circle */}
-            <div
-              className="absolute -bottom-8 -right-8 w-32 h-32 rounded-full opacity-10"
-              style={{ background: "#E6A800" }}
-            />
+            <div className="absolute -bottom-8 -right-8 w-32 h-32 rounded-full opacity-10" style={{ background: "#E6A800" }} />
           </motion.div>
 
           {/* BOTTOM-RIGHT WIDE: Join As a Vendor (spans 2 cols) */}
@@ -394,21 +379,10 @@ export default function DreamEventSection() {
             }}
             whileHover={{ scale: 1.015, transition: { duration: 0.2 } }}
           >
-            {/* Decorative circles */}
-            <div
-              className="absolute -top-10 -right-10 w-48 h-48 rounded-full opacity-20"
-              style={{ background: "#111" }}
-            />
-            <div
-              className="absolute bottom-4 right-20 w-24 h-24 rounded-full opacity-10"
-              style={{ background: "#111" }}
-            />
-
+            <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full opacity-20" style={{ background: "#111" }} />
+            <div className="absolute bottom-4 right-20 w-24 h-24 rounded-full opacity-10" style={{ background: "#111" }} />
             <div className="relative z-10">
-              <h3
-                className="text-gray-900 text-2xl font-black mb-2"
-                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-              >
+              <h3 className="text-gray-900 text-2xl font-black mb-2" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
                 Join As a Vendor
               </h3>
               <p className="text-gray-700 text-sm max-w-xs">
