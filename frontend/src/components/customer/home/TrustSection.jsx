@@ -27,13 +27,13 @@ export default function TrustSection() {
       <style>{`
         /* ── Matches .category_section exactly ── */
         .trust-outer {
-          max-width: 1400px;
+          max-width: 1680px;
           margin: 0 auto;
           padding: 0 16px;
           box-sizing: border-box;
         }
         @media (min-width: 640px) {
-          .trust-outer { padding: 0 32px 0 32px; }
+          .trust-outer { padding: 0 16px 0 16px; }
         }
 
         /* ── Inner layout ── */
