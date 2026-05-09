@@ -27,7 +27,7 @@ export default function HeroSection() {
         <motion.div
           className="flex-1 w-full max-w-full lg:max-w-[52%]"
           initial={{ opacity: 0, x: -40 }}
-          animate={{ opacity: 1, x: 0 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           {/* Badge */}
@@ -141,9 +141,9 @@ export default function HeroSection() {
         {/* ===== RIGHT — PHONE MOCKUP ===== */}
         <motion.div
           className="flex-1 flex justify-center lg:justify-end items-center relative w-full"
-          style={{ minHeight: "520px" }}
+          style={{ minHeight: "580px", paddingBottom: "40px" }}
           initial={{ opacity: 0, x: 60 }}
-          animate={{ opacity: 1, x: 0 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: "easeOut", delay: 0.2 }}
         >
           {/* TOP RATED floating card */}
@@ -151,7 +151,7 @@ export default function HeroSection() {
             className="absolute left-0 sm:left-4 lg:-left-4 xl:left-0 top-1/4 z-20 bg-white rounded-2xl p-3 w-44"
             style={{ boxShadow: "0 8px 30px rgba(0,0,0,0.12)" }}
             initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.8 }}
           >
             <div className="flex items-center gap-1.5 mb-1.5">
@@ -226,15 +226,18 @@ export default function HeroSection() {
 
           {/* BOOKING CONFIRMED floating card */}
           <motion.div
-            className="absolute bottom-16 right-0 sm:right-4 lg:-right-2 xl:right-0 z-20 rounded-2xl px-4 py-3 flex items-center gap-2.5"
+            className="absolute z-20 rounded-2xl px-4 py-3 flex items-center gap-2.5"
             style={{
               background: "rgba(17,17,17,0.88)",
               backdropFilter: "blur(12px)",
               boxShadow: "0 8px 30px rgba(0,0,0,0.25)",
               minWidth: "170px",
+              bottom: "-20px",
+              left: "50%",
+              transform: "translateX(-50%)",
             }}
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 1.0 }}
           >
             <div
