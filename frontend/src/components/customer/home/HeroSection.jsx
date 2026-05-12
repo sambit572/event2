@@ -27,7 +27,7 @@ export default function HeroSection() {
         <motion.div
           className="flex-1 w-full max-w-full lg:max-w-[52%]"
           initial={{ opacity: 0, x: -40 }}
-          animate={{ opacity: 1, y: 0 }}
+          animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           {/* Badge */}
@@ -140,10 +140,10 @@ export default function HeroSection() {
 
         {/* ===== RIGHT — PHONE MOCKUP ===== */}
         <motion.div
-          className="flex-1 flex justify-center lg:justify-end items-center relative w-full"
-          style={{ minHeight: "580px", paddingBottom: "40px" }}
+          className="flex-1 flex justify-end items-center relative w-full"
+          style={{ minHeight: "520px", paddingRight: "0px", marginRight: "-40px" }}
           initial={{ opacity: 0, x: 60 }}
-          animate={{ opacity: 1, y: 0 }}
+          animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.9, ease: "easeOut", delay: 0.2 }}
         >
           {/* TOP RATED floating card */}
@@ -151,7 +151,7 @@ export default function HeroSection() {
             className="absolute left-0 sm:left-4 lg:-left-4 xl:left-0 top-1/4 z-20 bg-white rounded-2xl p-3 w-44"
             style={{ boxShadow: "0 8px 30px rgba(0,0,0,0.12)" }}
             initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.8 }}
           >
             <div className="flex items-center gap-1.5 mb-1.5">
@@ -172,72 +172,32 @@ export default function HeroSection() {
             </p>
           </motion.div>
 
-          {/* PHONE FRAME */}
-          <div
+          {/* PHONE IMAGE — transparent bg, no white border */}
+          <motion.img
+            src="/EB-MOBILEIMG.webp"
+            alt="EventsBridge App Preview"
             className="relative z-10"
             style={{
-              width: "260px",
-              height: "520px",
-              background: "#111111",
-              borderRadius: "40px",
-              padding: "12px",
-              boxShadow:
-                "0 40px 80px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.1)",
+              height: "580px",
+              width: "auto",
+              objectFit: "contain",
+              filter: "drop-shadow(0 32px 48px rgba(0,0,0,0.22))",
             }}
-          >
-            {/* Notch */}
-            <div
-              className="absolute top-3 left-1/2 -translate-x-1/2 bg-black rounded-full z-30"
-              style={{ width: "90px", height: "24px" }}
-            />
-
-            {/* Screen */}
-            <div
-              className="w-full h-full rounded-3xl overflow-hidden bg-white"
-              style={{ paddingTop: "28px" }}
-            >
-              {/* Yellow hero banner inside app */}
-              <div
-                className="w-full flex items-center justify-center"
-                style={{
-                  height: "180px",
-                  background:
-                    "linear-gradient(135deg, #F5C518 0%, #FFD700 100%)",
-                }}
-              >
-                <span style={{ fontSize: "48px" }}>🎉</span>
-              </div>
-
-              {/* Skeleton UI */}
-              <div className="p-4 flex flex-col gap-3">
-                <div className="flex gap-2">
-                  <div className="flex-1 h-16 bg-gray-100 rounded-xl" />
-                  <div className="flex-1 h-16 bg-gray-100 rounded-xl" />
-                </div>
-                <div className="h-3 bg-gray-100 rounded-full w-3/4" />
-                <div className="h-3 bg-gray-100 rounded-full w-1/2" />
-                <div
-                  className="h-10 rounded-xl mt-2"
-                  style={{ background: "#111111" }}
-                />
-              </div>
-            </div>
-          </div>
+            whileHover={{ scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 200, damping: 20 }}
+          />
 
           {/* BOOKING CONFIRMED floating card */}
           <motion.div
-            className="absolute z-20 rounded-2xl px-4 py-3 flex items-center gap-2.5"
+            className="absolute bottom-16 right-0 sm:right-4 lg:-right-2 xl:right-0 z-20 rounded-2xl px-4 py-3 flex items-center gap-2.5"
             style={{
               background: "rgba(17,17,17,0.88)",
               backdropFilter: "blur(12px)",
               boxShadow: "0 8px 30px rgba(0,0,0,0.25)",
               minWidth: "170px",
-              bottom: "-20px",
-              left: "50%",
-              transform: "translateX(-50%)",
             }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 1.0 }}
           >
             <div

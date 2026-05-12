@@ -1,6 +1,7 @@
 // src/components/common/ThreeDot.jsx
 import { useRef, useState, useEffect } from "react";
 import { FaBars, FaCompass, FaMapMarkerAlt, FaCalendarAlt, FaShoppingCart, FaTimes, FaChevronRight } from "react-icons/fa";
+import logoImg from "../../../assets/EventsBridgeOnlyLogo.png";
 import { FcAbout, FcAssistant } from "react-icons/fc";
 import { MdStorefront } from "react-icons/md";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -135,13 +136,11 @@ const ThreeDot = ({
           display: "flex", alignItems: "center", justifyContent: "space-between",
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: "9px" }}>
-            <div style={{
-              width: "28px", height: "28px", borderRadius: "7px",
-              background: "#f5c518",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: "12px", fontWeight: 900, color: "#001f3f",
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-            }}>EB</div>
+            <img
+              src={logoImg}
+              alt="EventsBridge"
+              style={{ width: "32px", height: "32px", objectFit: "contain" }}
+            />
             <span style={{
               color: "#fff", fontWeight: 700, fontSize: "15px",
               fontFamily: "'Plus Jakarta Sans', sans-serif",
