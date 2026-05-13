@@ -31,6 +31,12 @@
   transform: rotateY(180deg);
 }
 
+/* ── On hover: hide all overlays & text on back — pure photo only ── */
+.dream-flip-card:hover .dream-back-overlay {
+  opacity: 0;
+  transition: opacity 0.25s ease 0.55s;
+}
+
 /* ── Mobile: disable 3D flip, show tap toggle instead ── */
 @media (max-width: 767px) {
   .dream-flip-card:hover .dream-flip-inner {

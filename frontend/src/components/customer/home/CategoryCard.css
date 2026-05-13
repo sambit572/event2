@@ -42,12 +42,13 @@
   padding: 16px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 6px;
   position: relative;
   z-index: 2;
   background-color: #fff;
   flex: 1;
+  min-height: 90px;
 }
 
 .courseTitle {
@@ -206,7 +207,7 @@
   }
 
   .courseTitle {
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .courseInfo {
@@ -214,6 +215,13 @@
   }
   .imageWrapper {
     width: 100%;
-    height: 160px;
+    height: 150px;
+  }
+  .courseContent {
+    min-height: 80px;
+    padding: 12px;
+  }
+  .courseTaglineResponsive {
+    font-size: 12px;
   }
 }

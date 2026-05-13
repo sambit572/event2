@@ -216,7 +216,7 @@ const App = () => {
         <VendorChangePassword onClose={() => setShowPasswordModal(false)} />
       )}
 
-      <main className="custom-mt mt-[52px]  sm:mt-[52px] md:mt-[62px]">
+      <main className="custom-mt mt-[94px] sm:mt-[94px] md:mt-[94px]">
         {vendor?._id && <VendorSocketManager />}
         <Toaster
           toastOptions={{

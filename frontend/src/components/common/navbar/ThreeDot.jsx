@@ -35,13 +35,8 @@ const ThreeDot = ({
   }, []);
 
   useEffect(() => {
-    if (isMobile && showEllipsisDropdown) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
     return () => { document.body.style.overflow = ""; };
-  }, [isMobile, showEllipsisDropdown]);
+  }, []);
 
   const toggle = () => {
     setShowEllipsisDropdown((prev) => {
@@ -56,11 +51,11 @@ const ThreeDot = ({
     <div
       onClick={onClick}
       style={{
-        display: "flex", alignItems: "center", gap: "12px",
-        padding: "10px 13px", borderRadius: "12px", cursor: "pointer",
+        display: "flex", alignItems: "center", gap: "10px",
+        padding: "8px 10px", borderRadius: "10px", cursor: "pointer",
         background: active ? "#fef3c7" : "#ffffff",
         border: active ? "1.5px solid #f5c518" : "1.5px solid #f0f0f0",
-        marginBottom: "6px", transition: "all 0.15s ease",
+        marginBottom: "5px", transition: "all 0.15s ease",
       }}
       onMouseEnter={e => { if (!active) e.currentTarget.style.background = "#f8f8f8"; }}
       onMouseLeave={e => { if (!active) e.currentTarget.style.background = active ? "#fef3c7" : "#ffffff"; }}
@@ -99,69 +94,60 @@ const ThreeDot = ({
     }}>{children}</p>
   );
 
-  /* ── MOBILE: drops from top, covers 55% height ── */
+  /* ── MOBILE: compact dropdown below navbar ── */
   const mobilePanel = (
     <>
-      {/* Backdrop — covers the bottom 45% */}
+      {/* Backdrop */}
       <div
         onClick={() => setShowEllipsisDropdown(false)}
         style={{
           position: "fixed", inset: 0,
-          background: "rgba(0,0,0,0.35)",
-          backdropFilter: "blur(1.5px)",
+          background: "rgba(0,0,0,0.25)",
           zIndex: 2998,
-          animation: "fadeIn 0.2s ease",
+          animation: "fadeIn 0.15s ease",
         }}
       />
 
-      {/* Panel — anchored to top, 55vh tall */}
+      {/* Compact dropdown panel — anchored to top-right below navbar */}
       <div style={{
         position: "fixed",
-        top: 0, left: 0, right: 0,
-        height: "55vh",
-        background: "#f7f7f2",
-        borderRadius: "0 0 24px 24px",
+        top: "94px",   /* below announcement bar (~30px) + navbar (~60px) */
+        right: "12px",
+        width: "230px",
+        background: "#ffffff",
+        borderRadius: "14px",
         zIndex: 2999,
-        display: "flex", flexDirection: "column",
-        boxShadow: "0 8px 40px rgba(0,0,0,0.18)",
-        animation: "slideDown 0.28s cubic-bezier(0.32,0.72,0,1)",
+        boxShadow: "0 8px 32px rgba(0,0,0,0.16)",
+        border: "1px solid #eeeeee",
+        animation: "fadeSlideDown 0.2s cubic-bezier(0.32,0.72,0,1)",
         overflow: "hidden",
       }}>
 
-        {/* Header */}
+        {/* Compact header */}
         <div style={{
           background: "linear-gradient(135deg, #001f3f 0%, #003366 100%)",
-          padding: "48px 20px 14px", /* top padding accounts for announcement bar + navbar */
-          flexShrink: 0,
+          padding: "10px 14px",
           display: "flex", alignItems: "center", justifyContent: "space-between",
         }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "9px" }}>
-            <img
-              src={logoImg}
-              alt="EventsBridge"
-              style={{ width: "32px", height: "32px", objectFit: "contain" }}
-            />
-            <span style={{
-              color: "#fff", fontWeight: 700, fontSize: "15px",
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-            }}>Menu</span>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <img src={logoImg} alt="EventsBridge" style={{ width: "24px", height: "24px", objectFit: "contain" }} />
+            <span style={{ color: "#fff", fontWeight: 700, fontSize: "13px", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Menu</span>
           </div>
           <div
             onClick={() => setShowEllipsisDropdown(false)}
             style={{
-              width: "28px", height: "28px", borderRadius: "7px",
+              width: "24px", height: "24px", borderRadius: "6px",
               background: "rgba(255,255,255,0.15)",
               display: "flex", alignItems: "center", justifyContent: "center",
               cursor: "pointer",
             }}
           >
-            <FaTimes size={13} style={{ color: "#fff" }} />
+            <FaTimes size={11} style={{ color: "#fff" }} />
           </div>
         </div>
 
-        {/* Scrollable menu items */}
-        <div style={{ flex: 1, overflowY: "auto", padding: "14px 14px 20px" }}>
-
+        {/* Menu items */}
+        <div style={{ padding: "10px 10px 12px" }}>
           <SectionLabel>Navigation</SectionLabel>
           {NAV_ITEMS.map((item) => (
             <MenuItem
@@ -175,7 +161,7 @@ const ThreeDot = ({
             />
           ))}
 
-          <div style={{ margin: "10px 0 8px", borderTop: "1px solid #e5e5e5" }} />
+          <div style={{ margin: "8px 0 6px", borderTop: "1px solid #f0f0f0" }} />
           <SectionLabel>Vendor</SectionLabel>
           {VendorFirstName ? (
             <>
@@ -187,25 +173,17 @@ const ThreeDot = ({
           )}
           <MenuItem icon={<FaShoppingCart />} iconColor="#001f3f" iconBg="#f0f4ff" label="Cart" badge={cartCount} onClick={() => { handleAddToCart?.(); setShowEllipsisDropdown(false); }} />
 
-          <div style={{ margin: "10px 0 8px", borderTop: "1px solid #e5e5e5" }} />
+          <div style={{ margin: "8px 0 6px", borderTop: "1px solid #f0f0f0" }} />
           <SectionLabel>More</SectionLabel>
           <MenuItem icon={<FcAbout />} iconBg="#f0f9ff" label="About Us" active={location.pathname === "/about_us"} onClick={() => go("/about_us")} />
           <MenuItem icon={<FcAssistant />} iconBg="#fff7ed" label="Help Us" active={location.pathname === "/help_us"} onClick={() => go("/help_us")} />
         </div>
-
-        {/* Bottom pill handle */}
-        <div style={{ padding: "8px 0 12px", display: "flex", justifyContent: "center", flexShrink: 0 }}>
-          <div style={{
-            width: "40px", height: "4px", borderRadius: "99px",
-            background: "#d1d5db",
-          }} />
-        </div>
       </div>
 
       <style>{`
-        @keyframes slideDown {
-          from { transform: translateY(-100%); }
-          to   { transform: translateY(0); }
+        @keyframes fadeSlideDown {
+          from { opacity: 0; transform: translateY(-8px); }
+          to   { opacity: 1; transform: translateY(0); }
         }
         @keyframes fadeIn {
           from { opacity: 0; }

@@ -1,5 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
 
+/* ===== FIXED HEADER WRAPPER ===== */
+.navbar-fixed-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
 /* ===== ANNOUNCEMENT BAR ===== */
 .announcement-bar {
   width: 100%;
@@ -27,7 +36,7 @@
   background: #ffffff;
   border-bottom: 1px solid #eeeeee;
   position: relative;
-  top: 34px; /* height of announcement bar */
+  top: 0;
   z-index: 99;
   font-family: "Plus Jakarta Sans", sans-serif;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
@@ -340,7 +349,7 @@
 }
 
 @media (max-width: 680px) {
-  .navbar { padding: 0 14px; height: 52px; top: 30px; }
+  .navbar { padding: 0 14px; height: 52px; top: 0; }
   .logo { font-size: 20px; margin-right: 0; }
   .announcement-bar { font-size: 10px; padding: 6px 12px; }
   .get-started-btn { padding: 7px 12px; font-size: 12px; border-radius: 20px; }

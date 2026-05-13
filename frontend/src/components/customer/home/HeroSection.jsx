@@ -140,8 +140,8 @@ export default function HeroSection() {
 
         {/* ===== RIGHT — PHONE MOCKUP ===== */}
         <motion.div
-          className="flex-1 flex justify-end items-center relative w-full"
-          style={{ minHeight: "520px", paddingRight: "0px", marginRight: "-40px" }}
+          className="flex-1 flex justify-center lg:justify-end items-center relative w-full"
+          style={{ minHeight: "420px", paddingRight: "0px", marginRight: "0px" }}
           initial={{ opacity: 0, x: 60 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.9, ease: "easeOut", delay: 0.2 }}
@@ -176,9 +176,8 @@ export default function HeroSection() {
           <motion.img
             src="/EB-MOBILEIMG.webp"
             alt="EventsBridge App Preview"
-            className="relative z-10"
+            className="relative z-10 h-[380px] sm:h-[480px] lg:h-[580px]"
             style={{
-              height: "580px",
               width: "auto",
               objectFit: "contain",
               filter: "drop-shadow(0 32px 48px rgba(0,0,0,0.22))",

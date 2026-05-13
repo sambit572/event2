@@ -118,18 +118,18 @@ function GrandVenuesCard({ className, style, minHeight }) {
               backgroundPosition: "center",
             }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/10" />
+          <div className="dream-back-overlay absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/10" />
 
           {/* photo counter */}
           <div
-            className="absolute top-4 right-4 text-white text-xs font-bold px-3 py-1 rounded-full z-10"
+            className="dream-back-overlay absolute top-4 right-4 text-white text-xs font-bold px-3 py-1 rounded-full z-10"
             style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)" }}
           >
             {photoIndex + 1} / {venuePhotos.length}
           </div>
 
           {/* bottom content */}
-          <div className="absolute bottom-0 left-0 right-0 p-7 z-10 flex flex-col gap-3">
+          <div className="dream-back-overlay absolute bottom-0 left-0 right-0 p-7 z-10 flex flex-col gap-3">
             <div>
               <p
                 className="text-yellow-400 text-xs font-bold tracking-widest uppercase mb-1"
@@ -264,9 +264,9 @@ export default function DreamEventSection() {
             className="dream-mobile-emi relative overflow-hidden rounded-2xl p-5 flex flex-col justify-center"
             style={{ minHeight: "130px", background: "#f7f7f7" }}
           >
-            <p className="text-gray-600 text-xs font-semibold mb-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Up to</p>
-            <p className="font-black leading-none mb-1" style={{ fontSize: "clamp(2rem, 10vw, 3rem)", color: "#111" }}>80%</p>
-            <p className="text-xs font-bold" style={{ color: "#E6A800", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Pay with Emi</p>
+            <p className="font-semibold mb-1" style={{ fontSize: "14px", color: "#555", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Up to</p>
+            <p className="font-black leading-none mb-1" style={{ fontSize: "clamp(3rem, 14vw, 4.5rem)", color: "#111", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>80%</p>
+            <p className="font-bold" style={{ fontSize: "15px", color: "#E6A800", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Pay with Emi</p>
           </motion.div>
 
           {/* Join As a Vendor */}
@@ -383,9 +383,9 @@ export default function DreamEventSection() {
             className="relative overflow-hidden rounded-3xl p-7 flex flex-col justify-center"
             style={{ gridColumn: "3", gridRow: "1", background: "#f7f7f7" }}
           >
-            <p className="text-gray-500 text-sm font-semibold mb-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Up to</p>
-            <p className="font-black leading-none mb-2" style={{ fontSize: "clamp(3rem, 5vw, 4.5rem)", color: "#111", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>80%</p>
-            <p className="text-lg font-bold" style={{ color: "#E6A800", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Pay with Emi</p>
+            <p className="font-semibold mb-1" style={{ fontSize: "16px", color: "#555", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Up to</p>
+            <p className="font-black leading-none mb-2" style={{ fontSize: "clamp(4rem, 7vw, 6rem)", color: "#111", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>80%</p>
+            <p className="font-bold" style={{ fontSize: "20px", color: "#E6A800", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Pay with Emi</p>
             <div className="absolute -bottom-8 -right-8 w-32 h-32 rounded-full opacity-10" style={{ background: "#E6A800" }} />
           </motion.div>
 

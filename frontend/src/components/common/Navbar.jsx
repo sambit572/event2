@@ -218,6 +218,8 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
 
   return (
     <>
+      {/* ===== FIXED HEADER WRAPPER ===== */}
+      <div className="navbar-fixed-wrapper">
       {/* ===== ANNOUNCEMENT BAR ===== */}
       <div className="announcement-bar">
         ELEVATE EVERY CELEBRATION • BOOK VERIFIED VENDORS NOW
@@ -396,6 +398,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
           />
         </div>
       )}
+      </div>{/* end navbar-fixed-wrapper */}
     </>
   );
 };
