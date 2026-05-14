@@ -59,11 +59,11 @@
 }
 
 .logo-icon {
-  height: 32px;
-  width: 32px;
+  height: 36px;
+  width: 36px;
   display: none;
-  object-fit: cover;
-  border-radius: 50%;
+  object-fit: contain;
+  border-radius: 8px;
 }
 
 .logo-text {
@@ -321,9 +321,15 @@
   /* Hide Vendor and Cart icons — now inside 3-dot dropdown */
   .hidden-on-mobile { display: none; }
 
+  /* Remove hover background on profile button on mobile */
+  .mobile-profile-btn {
+    background: transparent !important;
+    padding: 0 !important;
+  }
+
   /* Show logo icon only, hide text */
   .logo-text { display: none; }
-  .logo-icon { display: block; }
+  .logo-icon { display: block !important; }
   .logo { margin-right: 0; }
 }
 

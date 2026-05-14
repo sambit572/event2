@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import "./DreamEventSection.css";
 
 const containerVariants = {
@@ -26,6 +26,91 @@ const venuePhotos = [
   { src: "/categories/ballon decor.webp",  label: "Balloon Decor" },
   { src: "/categories/fireworks.webp",     label: "Fireworks" },
 ];
+
+// ── Event Types for Artisan Catering Card ──
+const eventTypes = [
+  { emoji: "💍", label: "Weddings & Receptions" },
+  { emoji: "🎂", label: "Birthday Celebrations" },
+  { emoji: "🏢", label: "Corporate Events" },
+  { emoji: "💑", label: "Engagement Ceremonies" },
+  { emoji: "❤️", label: "Anniversary Parties" },
+  { emoji: "👶", label: "Baby Shower Events" },
+  { emoji: "🎵", label: "Concerts & Live Shows" },
+  // { emoji: "🎓", label: "College & Farewell Events" },
+  // { emoji: "🪔", label: "Religious & Cultural Functions" },
+  // { emoji: "🎉", label: "Private Parties & Gatherings" },
+];
+
+// ── Artisan Catering Card with animated event scroller ──
+function ArtisanCateringCard({ className, style, isMobile }) {
+  const navigate = useNavigate();
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+  const intervalRef = useRef(null);
+
+  useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      if (!isHovered) {
+        setActiveIndex((prev) => (prev + 1) % eventTypes.length);
+      }
+    }, 1400);
+    return () => clearInterval(intervalRef.current);
+  }, [isHovered]);
+
+  return (
+    <div
+      className={`artisan-catering-card ${className || ""}`}
+      style={style}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={() => navigate("/category/catering")}
+    >
+      {/* Animated background glow blobs */}
+      <div className="catering-blob catering-blob-1" />
+      <div className="catering-blob catering-blob-2" />
+      <div className="catering-blob catering-blob-3" />
+
+      {/* Header */}
+      <div className="catering-header">
+        <div className="catering-icon-wrap">
+          <span className="catering-icon-emoji">🍽️</span>
+        </div>
+        <div className="catering-arrow">→</div>
+      </div>
+
+      {/* Title */}
+      <div className="catering-title-block">
+        <h3 className="catering-title">Artisan Catering</h3>
+        <p className="catering-subtitle">Flavours that speak love</p>
+      </div>
+
+      {/* Event Types Scroll List */}
+      <div className="catering-events-list">
+        {eventTypes.map((evt, i) => (
+          <div
+            key={i}
+            className={`catering-event-item ${i === activeIndex ? "active" : ""} ${
+              i === (activeIndex - 1 + eventTypes.length) % eventTypes.length ? "prev" : ""
+            }`}
+            onMouseEnter={() => setActiveIndex(i)}
+          >
+            <span className="catering-event-emoji">{evt.emoji}</span>
+            <span className="catering-event-label">{evt.label}</span>
+            <span className="catering-event-dot" />
+          </div>
+        ))}
+      </div>
+
+      {/* CTA */}
+      <button
+        className="catering-cta"
+        onClick={(e) => { e.stopPropagation(); navigate("/category/catering"); }}
+      >
+        View Caterers →
+      </button>
+    </div>
+  );
+}
 
 // ── Grand Venues Flip Card (cycling photos on each hover) ──
 function GrandVenuesCard({ className, style, minHeight }) {
@@ -223,40 +308,7 @@ export default function DreamEventSection() {
           <GrandVenuesCard className="dream-mobile-grand" minHeight="240px" />
 
           {/* Artisan Catering */}
-          <div className="dream-mobile-catering dream-flip-card" style={{ minHeight: "160px" }}>
-            <div className="dream-flip-inner">
-              <div
-                className="dream-flip-front rounded-2xl overflow-hidden p-5 flex flex-col justify-between"
-                style={{ background: "linear-gradient(135deg, #F5C518 0%, #FFD700 100%)" }}
-              >
-                <div className="text-3xl">🍽️</div>
-                <div>
-                  <h3 className="text-gray-900 text-lg font-black mb-0.5" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-                    Artisan Catering
-                  </h3>
-                  <p className="text-gray-700 text-xs">Flavours that speak love</p>
-                </div>
-                <div className="absolute top-4 right-4 w-8 h-8 bg-black/10 rounded-full flex items-center justify-center">
-                  <span className="text-gray-800 font-bold text-sm">→</span>
-                </div>
-              </div>
-              <div
-                className="dream-flip-back rounded-2xl overflow-hidden flex flex-col items-center justify-center gap-3 p-5"
-                style={{ background: "linear-gradient(135deg, #111 0%, #222 100%)" }}
-              >
-                <p className="text-white text-center text-xs font-semibold" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-                  Handcrafted menus tailored to your occasion — from intimate dinners to lavish buffets.
-                </p>
-                <button
-                  onClick={() => navigate("/category/catering")}
-                  className="text-gray-900 font-bold text-xs px-5 py-2.5 rounded-full hover:opacity-80 transition-all"
-                  style={{ background: "#F5C518" }}
-                >
-                  View Caterers →
-                </button>
-              </div>
-            </div>
-          </div>
+          <ArtisanCateringCard className="dream-mobile-catering" style={{ minHeight: "220px" }} isMobile={true} />
 
           {/* EMI Card */}
           <motion.div
@@ -280,7 +332,6 @@ export default function DreamEventSection() {
               <p className="text-gray-700 text-xs mb-3">Scale your Business with <strong>Zero Cost</strong></p>
             </div>
             <button
-              onClick={() => navigate("/vendor/register")}
               className="self-start text-white font-bold text-xs px-4 py-2 rounded-full hover:opacity-80 transition-all duration-200"
               style={{ background: "#111" }}
             >
@@ -341,40 +392,7 @@ export default function DreamEventSection() {
 
           {/* Artisan Catering */}
           <motion.div variants={cardVariants} style={{ gridColumn: "2", gridRow: "1" }}>
-            <div className="dream-flip-card" style={{ height: "100%" }}>
-              <div className="dream-flip-inner" style={{ borderRadius: "1.5rem" }}>
-                <div
-                  className="dream-flip-front rounded-3xl overflow-hidden p-6 flex flex-col justify-between"
-                  style={{ background: "linear-gradient(135deg, #F5C518 0%, #FFD700 100%)" }}
-                >
-                  <div className="text-4xl">🍽️</div>
-                  <div>
-                    <h3 className="text-gray-900 text-xl font-black mb-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Artisan Catering</h3>
-                    <p className="text-gray-700 text-sm">Flavours that speak love</p>
-                  </div>
-                  <div className="absolute top-5 right-5 w-9 h-9 bg-black/10 rounded-full flex items-center justify-center">
-                    <span className="text-gray-800 font-bold">→</span>
-                  </div>
-                  {/* <p className="text-gray-600 text-xs mt-2">Hover to explore →</p> */}
-                </div>
-                <div
-                  className="dream-flip-back rounded-3xl overflow-hidden flex flex-col items-center justify-center gap-4 p-6"
-                  style={{ background: "linear-gradient(135deg, #111 0%, #222 100%)" }}
-                >
-                  <div className="text-4xl">🍽️</div>
-                  <p className="text-white text-center text-sm font-semibold leading-relaxed" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-                    Handcrafted menus tailored to your occasion — from intimate dinners to lavish buffets.
-                  </p>
-                  <button
-                    onClick={() => navigate("/category/catering")}
-                    className="text-gray-900 font-bold text-sm px-6 py-2.5 rounded-full hover:opacity-80 transition-all"
-                    style={{ background: "#F5C518" }}
-                  >
-                    View Caterers →
-                  </button>
-                </div>
-              </div>
-            </div>
+            <ArtisanCateringCard style={{ height: "100%" }} />
           </motion.div>
 
           {/* EMI Card */}
@@ -405,7 +423,6 @@ export default function DreamEventSection() {
               </p>
             </div>
             <button
-              onClick={() => navigate("/vendor/register")}
               className="relative z-10 self-start text-white font-bold text-sm px-7 py-3 rounded-full hover:opacity-80 transition-all duration-200 mt-4"
               style={{ background: "#111" }}
             >
