@@ -176,7 +176,7 @@ export default function HeroSection() {
           <motion.img
             src="/EB-MOBILEIMG.webp"
             alt="EventsBridge App Preview"
-            className="relative z-10 h-[380px] sm:h-[480px] lg:h-[580px]"
+            className="relative z-10 h-[480px] sm:h-[620px] lg:h-[580px] "
             style={{
               width: "auto",
               objectFit: "contain",

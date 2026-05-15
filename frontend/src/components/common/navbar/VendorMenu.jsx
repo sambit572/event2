@@ -74,7 +74,7 @@ const VendorMenu = ({
       >
         <VendorIcon className="w-[22px] h-[22px] transition-all duration-300 group-hover:scale-110 group-active:scale-95" />
         <span className="text-[#001F3F] font-semibold hidden sm:inline md:hidden lg:inline group-hover:text-white transition-colors duration-300">
-          {!VendorFirstName ? "Be a Vendor" : `Hi, ${VendorFirstName}`}
+          {!VendorFirstName ? "Be a Partner" : `Hi, ${VendorFirstName}`}
         </span>
       </div>
 
