@@ -13,18 +13,20 @@ const cardVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
 };
 
-// ── 10 venue photos from /public/categories/ ──
+// ── 12 flip images from /public/ ──
 const venuePhotos = [
-  { src: "/categories/banquithall.webp",   label: "Banquet Hall" },
-  { src: "/categories/hotel-resort.webp",  label: "Hotel Resort" },
-  { src: "/categories/stage_decor.webp",   label: "Stage Decor" },
-  { src: "/categories/flower-decor.webp",  label: "Flower Decor" },
-  { src: "/categories/tent_house.webp",    label: "Tent House" },
-  { src: "/categories/event_company.webp", label: "Event Setup" },
-  { src: "/categories/resortBanner.webp",  label: "Resort Venue" },
-  { src: "/categories/frame_image.webp",   label: "Frame Setup" },
-  { src: "/categories/ballon decor.webp",  label: "Balloon Decor" },
-  { src: "/categories/fireworks.webp",     label: "Fireworks" },
+  { src: "/flipimg1.webp",  label: "Grand Venue" },
+  { src: "/flipimg2.webp",  label: "Grand Venue" },
+  { src: "/flipimg3.webp",  label: "Grand Venue" },
+  { src: "/flipimg4.webp",  label: "Grand Venue" },
+  { src: "/flipimg5.webp",  label: "Grand Venue" },
+  { src: "/flipimg6.webp",  label: "Grand Venue" },
+  { src: "/flipimg7.webp",  label: "Grand Venue" },
+  { src: "/flipimg8.webp",  label: "Grand Venue" },
+  { src: "/flipimg9.webp",  label: "Grand Venue" },
+  { src: "/flipimg10.webp", label: "Grand Venue" },
+  { src: "/flipimg11.webp", label: "Grand Venue" },
+  { src: "/flipimg12.webp", label: "Grand Venue" },
 ];
 
 // ── Event Types for Artisan Catering Card ──

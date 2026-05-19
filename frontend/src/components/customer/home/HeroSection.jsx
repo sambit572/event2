@@ -181,6 +181,7 @@ export default function HeroSection() {
               width: "auto",
               objectFit: "contain",
               filter: "drop-shadow(0 32px 48px rgba(0,0,0,0.22))",
+              marginLeft: "-40px",
             }}
             whileHover={{ scale: 1.02 }}
             transition={{ type: "spring", stiffness: 200, damping: 20 }}
@@ -188,14 +189,14 @@ export default function HeroSection() {
 
           {/* BOOKING CONFIRMED floating card */}
           <motion.div
-            className="absolute bottom-16 right-0 sm:right-4 lg:-right-2 xl:right-0 z-20 rounded-2xl px-4 py-3 flex items-center gap-2.5"
+            className="absolute bottom-16 left-0 sm:left-4 lg:-left-4 xl:left-0 z-20 rounded-2xl px-4 py-3 flex items-center gap-2.5"
             style={{
               background: "rgba(17,17,17,0.88)",
               backdropFilter: "blur(12px)",
               boxShadow: "0 8px 30px rgba(0,0,0,0.25)",
               minWidth: "170px",
             }}
-            initial={{ opacity: 0, x: 30 }}
+            initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 1.0 }}
           >
