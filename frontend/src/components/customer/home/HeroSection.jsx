@@ -172,53 +172,58 @@ export default function HeroSection() {
             </p>
           </motion.div>
 
-          {/* PHONE IMAGE — transparent bg, no white border */}
-          <motion.img
-            src="/EB-MOBILEIMG.webp"
-            alt="EventsBridge App Preview"
-            className="relative z-10 h-[480px] sm:h-[620px] lg:h-[580px] "
-            style={{
-              width: "auto",
-              objectFit: "contain",
-              filter: "drop-shadow(0 32px 48px rgba(0,0,0,0.22))",
-              marginLeft: "-40px",
-            }}
-            whileHover={{ scale: 1.02 }}
-            transition={{ type: "spring", stiffness: 200, damping: 20 }}
-          />
-
-          {/* BOOKING CONFIRMED floating card */}
-          <motion.div
-            className="absolute bottom-16 left-0 sm:left-4 lg:-left-4 xl:left-0 z-20 rounded-2xl px-4 py-3 flex items-center gap-2.5"
-            style={{
-              background: "rgba(17,17,17,0.88)",
-              backdropFilter: "blur(12px)",
-              boxShadow: "0 8px 30px rgba(0,0,0,0.25)",
-              minWidth: "170px",
-            }}
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7, delay: 1.0 }}
-          >
-            <div
-              className="w-2 h-2 rounded-full flex-shrink-0"
-              style={{ backgroundColor: "#22C55E" }}
+          {/* PHONE IMAGE + BOOKING CONFIRMED wrapper */}
+          <div className="relative inline-block lg:ml-[-40px] lg:mr-[12%]" style={{ margin: "0 auto" }}>
+            <motion.img
+              src="/EB-MOBILEIMG.webp"
+              alt="EventsBridge App Preview"
+              className="relative z-10 h-[480px] sm:h-[620px] lg:h-[580px]"
+              style={{
+                width: "auto",
+                objectFit: "contain",
+                filter: "drop-shadow(0 32px 48px rgba(0,0,0,0.22))",
+                display: "block",
+              }}
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 200, damping: 20 }}
             />
-            <div>
-              <p
-                className="text-white text-xs font-bold"
-                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-              >
-                Booking Confirmed
-              </p>
-              <p
-                className="text-gray-400 text-xs"
-                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-              >
-                Live vendor tracking
-              </p>
-            </div>
-          </motion.div>
+
+            {/* BOOKING CONFIRMED floating card — anchored to right of phone */}
+            <motion.div
+              className="hidden lg:flex absolute z-20 rounded-2xl px-4 py-3 items-center gap-2.5"
+              style={{
+                background: "rgba(17,17,17,0.88)",
+                backdropFilter: "blur(12px)",
+                boxShadow: "0 8px 30px rgba(0,0,0,0.25)",
+                minWidth: "170px",
+                bottom: "64px",
+                left: "100%",
+                marginLeft: "12px",
+              }}
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.7, delay: 1.0 }}
+            >
+              <div
+                className="w-2 h-2 rounded-full flex-shrink-0"
+                style={{ backgroundColor: "#22C55E" }}
+              />
+              <div>
+                <p
+                  className="text-white text-xs font-bold"
+                  style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                >
+                  Booking Confirmed
+                </p>
+                <p
+                  className="text-gray-400 text-xs"
+                  style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                >
+                  Live vendor tracking
+                </p>
+              </div>
+            </motion.div>
+          </div>
         </motion.div>
       </div>
     </motion.section>

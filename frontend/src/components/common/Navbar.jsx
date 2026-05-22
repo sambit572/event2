@@ -222,7 +222,7 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
       <div className="navbar-fixed-wrapper">
       {/* ===== ANNOUNCEMENT BAR ===== */}
       <div className="announcement-bar">
-        Your All-in-One Marketplace for Memorable Events
+        Your All-in-One Marketplace for Trusted Events Vendors
       </div>
 
       {/* ===== MAIN NAVBAR ===== */}

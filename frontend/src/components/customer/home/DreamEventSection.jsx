@@ -188,7 +188,7 @@ function GrandVenuesCard({ className, style, minHeight }) {
               className="text-white text-3xl font-black mb-1"
               style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
-              Grand Venues
+              Grand Celebrations
             </h3>
             <p className="text-gray-300 text-sm mb-5">Stunning spaces for every scale</p>
             {/* <p className="text-gray-400 text-xs">Hover to explore →</p> */}
@@ -330,7 +330,7 @@ export default function DreamEventSection() {
             style={{ minHeight: "130px", background: "#F5C518" }}
           >
             <div>
-              <h3 className="text-gray-900 text-base font-black mb-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Join As a Vendor</h3>
+              <h3 className="text-gray-900 text-base font-black mb-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Join As a Partner</h3>
               <p className="text-gray-700 text-xs mb-3">Scale your Business with <strong>Zero Cost</strong></p>
             </div>
             <button
@@ -419,7 +419,7 @@ export default function DreamEventSection() {
             <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full opacity-20" style={{ background: "#111" }} />
             <div className="absolute bottom-4 right-20 w-24 h-24 rounded-full opacity-10" style={{ background: "#111" }} />
             <div className="relative z-10">
-              <h3 className="text-gray-900 text-2xl font-black mb-2" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Join As a Vendor</h3>
+              <h3 className="text-gray-900 text-2xl font-black mb-2" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Join As a Partner</h3>
               <p className="text-gray-700 text-sm max-w-xs">
                 Scale your Business with Elite EventsBridge Network with <strong>Zero Cost</strong>
               </p>
