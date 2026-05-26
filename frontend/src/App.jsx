@@ -63,7 +63,7 @@ import DashboardEnforcement from "./utils/DashboardEnforcement.jsx";
 const BookingSuccess = React.lazy(() =>
   import("./pages/common/BookingSuccess.jsx")
 );
-import PrivacyPolicy from "./components/common/PrivacyPolicy.jsx";
+import SitePrivacy from "./components/common/SitePrivacy.jsx";
 import RefundPolicy from "./components/common/RefundPolicy.jsx";
 import TermsAndConditions from "./components/common/TermsAndConditions.jsx";
 //Feedback
@@ -362,7 +362,7 @@ const App = () => {
               </Suspense>
             }
           />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/privacy-policy" element={<SitePrivacy />} />
           <Route path="/refund-policy" element={<RefundPolicy />} />
           <Route
             path="/terms-and-conditions"

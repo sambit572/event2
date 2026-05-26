@@ -4,8 +4,6 @@ import PropTypes from "prop-types";
 import toast from "react-hot-toast";
 
 import { useNavigate } from "react-router-dom";
-import { getFirebaseAuth } from "../../utils/firebase.js";
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import OTPVerification from "../common/OTPVerification.jsx";
 import SuccessBlock from "../common/SuccessBlock.jsx";
 import axios from "axios";
@@ -16,6 +14,23 @@ import { FiEyeOff, FiEye } from "react-icons/fi";
 import { RxCross2 } from "react-icons/rx";
 import VendorForgotPass from "./VendorForgetPass.jsx"; //  NEW
 import { BACKEND_URL } from "../../utils/constant.js";
+
+let firebaseAuthCache = null;
+async function loadFirebaseAuth() {
+  if (!firebaseAuthCache) {
+    const [{ getFirebaseAuth }, authModule] = await Promise.all([
+      import("../../utils/firebase.js"),
+      import("firebase/auth"),
+    ]);
+    const auth = getFirebaseAuth();
+    firebaseAuthCache = {
+      auth,
+      RecaptchaVerifier: authModule.RecaptchaVerifier,
+      signInWithPhoneNumber: authModule.signInWithPhoneNumber,
+    };
+  }
+  return firebaseAuthCache;
+}
 
 const VendorLogin = ({ onClose, onSwitchToLogin }) => {
   const dispatch = useDispatch();
@@ -64,6 +79,25 @@ const VendorLogin = ({ onClose, onSwitchToLogin }) => {
       };
     }
   }, [step, onClose]);
+
+  // Clean up reCAPTCHA when the modal mounts/unmounts
+  useEffect(() => {
+    // Clear on mount to remove any stale instances
+    if (window.recaptchaVerifier) {
+      window.recaptchaVerifier = null;
+    }
+    return () => {
+      // Clear on unmount
+      if (window.recaptchaVerifier) {
+        try {
+          window.recaptchaVerifier.clear();
+        } catch (e) {
+          console.error("Cleanup error:", e);
+        }
+        window.recaptchaVerifier = null;
+      }
+    };
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

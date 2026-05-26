@@ -6,7 +6,7 @@
   "scripts": {
     "test": "vitest",
     "start": "npm run dev",
-    "dev": "vite",
+    "dev": "vite --host 127.0.0.1",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
