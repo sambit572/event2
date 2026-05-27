@@ -17,6 +17,9 @@ import {
 
 const vendorServicesCacheKey = (vendorId) => `vendor:${vendorId}:services`;
 
+/* =========================================================
+   HELPER: PROCESS IMAGE / VIDEO MEDIA
+   ========================================================= */
 const processServiceMedia = async (files, serviceName = "Service Media") => {
   if (!files || files.length === 0) {
     throw new ApiError(400, "No media files received");
@@ -26,7 +29,7 @@ const processServiceMedia = async (files, serviceName = "Service Media") => {
   const videoUrls = [];
 
   for (const file of files) {
-    // 🌟 IMAGE → Cloudinary
+    // ✅ IMAGE → Cloudinary
     if (file.mimetype.startsWith("image/")) {
       const cloudRes = await uploadOnCloudinary(file.path);
       if (cloudRes?.secure_url) {
@@ -39,7 +42,7 @@ const processServiceMedia = async (files, serviceName = "Service Media") => {
       }
     }
 
-    // 🌟 VIDEO → YouTube
+    // ✅ VIDEO → YouTube
     else if (file.mimetype.startsWith("video/")) {
       try {
         const title = `Service Video - ${serviceName}`;
@@ -62,9 +65,19 @@ const processServiceMedia = async (files, serviceName = "Service Media") => {
   return mediaUrls;
 };
 
+/* =========================================================
+   CREATE SERVICE
+   ✅ FIXED:
+   - Better validation logs
+   - Stable service creation
+   - ALWAYS UPSERT for one vendor service flow
+   ========================================================= */
 export const createService = async (req, res) => {
   try {
     console.log("🔵 createService called");
+    console.log("📥 req.body:", req.body);
+    console.log("📥 req.files:", req.files);
+    console.log("📥 req.vendor:", req.vendor?._id);
 
     const {
       serviceCategory,
@@ -85,34 +98,62 @@ export const createService = async (req, res) => {
       packages,
     } = req.body;
 
+    /* =========================
+       REQUIRED FIELD CHECK
+       ========================= */
     if (!serviceCategory || !serviceName || !locationOffered || !serviceDes) {
-      return res
-        .status(400)
-        .json({ message: "All required fields must be filled" });
+      console.log("❌ Missing required fields:", {
+        serviceCategory,
+        serviceName,
+        locationOffered,
+        serviceDes,
+      });
+
+      return res.status(400).json({
+        message: "All required fields must be filled",
+      });
     }
 
+    /* =========================
+       LOCATION VALIDATION
+       ========================= */
     const stateLocationsArray = Array.isArray(stateLocationOffered)
       ? stateLocationOffered
-      : [stateLocationOffered];
+      : stateLocationOffered
+        ? [stateLocationOffered]
+        : [];
+
     if (stateLocationsArray.length === 0) {
-      return res
-        .status(400)
-        .json({ message: "Please select at least one state location" });
+      console.log("❌ No state location selected");
+      return res.status(400).json({
+        message: "Please select at least one state location",
+      });
     }
 
     const locationsArray = Array.isArray(locationOffered)
       ? locationOffered
-      : [locationOffered];
+      : locationOffered
+        ? [locationOffered]
+        : [];
+
     if (locationsArray.length === 0) {
-      return res
-        .status(400)
-        .json({ message: "Please select at least one location" });
+      console.log("❌ No location selected");
+      return res.status(400).json({
+        message: "Please select at least one location",
+      });
     }
 
+    /* =========================
+       BASE SERVICE DATA
+       ========================= */
     const serviceData = {
       vendorId: req.vendor._id,
       serviceCategory,
-      subCategory: Array.isArray(subCategory) ? subCategory : [subCategory],
+      subCategory: subCategory
+        ? Array.isArray(subCategory)
+          ? subCategory
+          : [subCategory]
+        : [],
       serviceName,
       stateLocationOffered: stateLocationsArray,
       locationOffered: locationsArray,
@@ -122,128 +163,187 @@ export const createService = async (req, res) => {
     const finalPricingType = pricingType || "flat";
     serviceData.pricingType = finalPricingType;
 
-    // ==========================================
-    // ✅ FIXED CATERING PRICING LOGIC
-    // ==========================================
+    /* =========================
+       PRICING VALIDATION
+       ========================= */
     if (finalPricingType === "perPlate") {
       let hasBasePrice = false;
       let hasPackages = false;
 
-      // Check and save base per-plate pricing
+      // ✅ Base per plate pricing
       if (perPlatePrice && minPlates && maxPlates) {
         if (+perPlatePrice <= 0 || +minPlates <= 0 || +maxPlates <= 0) {
-          return res
-            .status(400)
-            .json({ message: "Per-plate values must be positive numbers." });
+          console.log("❌ Invalid perPlate values:", {
+            perPlatePrice,
+            minPlates,
+            maxPlates,
+          });
+
+          return res.status(400).json({
+            message: "Per-plate values must be positive numbers.",
+          });
         }
+
         if (+minPlates >= +maxPlates) {
-          return res
-            .status(400)
-            .json({ message: "Min plates must be less than max plates." });
+          console.log("❌ Min plates >= max plates");
+          return res.status(400).json({
+            message: "Min plates must be less than max plates.",
+          });
         }
-        // ✅ ALWAYS save base price if provided
+
         serviceData.perPlatePrice = perPlatePrice;
         serviceData.minPlates = minPlates;
         serviceData.maxPlates = maxPlates;
         hasBasePrice = true;
       }
 
-      // Check and save packages
+      // ✅ Packages
       if (packages) {
-        const parsedPackages = JSON.parse(packages);
-        if (Array.isArray(parsedPackages) && parsedPackages.length > 0) {
-          // Validate each package
-          for (const pkg of parsedPackages) {
-            if (
-              !pkg.packageName ||
-              !pkg.perPlatePrice ||
-              !pkg.minPlates ||
-              !pkg.maxPlates
-            ) {
-              return res.status(400).json({
-                message: `Package "${
-                  pkg.packageName || "Unnamed"
-                }" has missing fields`,
-              });
+        try {
+          const parsedPackages =
+            typeof packages === "string" ? JSON.parse(packages) : packages;
+
+          if (Array.isArray(parsedPackages) && parsedPackages.length > 0) {
+            for (const pkg of parsedPackages) {
+              if (
+                !pkg.packageName ||
+                !pkg.perPlatePrice ||
+                !pkg.minPlates ||
+                !pkg.maxPlates
+              ) {
+                return res.status(400).json({
+                  message: `Package "${pkg.packageName || "Unnamed"
+                    }" has missing fields`,
+                });
+              }
+
+              if (
+                +pkg.perPlatePrice <= 0 ||
+                +pkg.minPlates <= 0 ||
+                +pkg.maxPlates <= 0
+              ) {
+                return res.status(400).json({
+                  message: `Package "${pkg.packageName}" must have positive values`,
+                });
+              }
+
+              if (+pkg.minPlates >= +pkg.maxPlates) {
+                return res.status(400).json({
+                  message: `Package "${pkg.packageName}": min plates must be less than max plates`,
+                });
+              }
             }
-            if (
-              +pkg.perPlatePrice <= 0 ||
-              +pkg.minPlates <= 0 ||
-              +pkg.maxPlates <= 0
-            ) {
-              return res.status(400).json({
-                message: `Package "${pkg.packageName}" must have positive values`,
-              });
-            }
-            if (+pkg.minPlates >= +pkg.maxPlates) {
-              return res.status(400).json({
-                message: `Package "${pkg.packageName}": min plates must be less than max plates`,
-              });
-            }
+
+            serviceData.packages = parsedPackages;
+            hasPackages = true;
           }
-          serviceData.packages = parsedPackages;
-          hasPackages = true;
+        } catch (pkgErr) {
+          console.error("❌ Invalid packages JSON:", pkgErr);
+          return res.status(400).json({
+            message: "Invalid package data format",
+          });
         }
       }
 
-      // At least one form of pricing must be provided
       if (!hasBasePrice && !hasPackages) {
+        console.log("❌ No valid perPlate pricing provided");
         return res.status(400).json({
           message:
             "For catering services, provide either base per-plate pricing or at least one package.",
         });
       }
+
+      // clear flat pricing if perPlate
+      serviceData.minPrice = undefined;
+      serviceData.maxPrice = undefined;
     } else {
-      // Non-catering services
+      // ✅ Flat pricing
       if (!minPrice || !maxPrice) {
+        console.log("❌ Missing flat pricing:", { minPrice, maxPrice });
         return res.status(400).json({
           message: "Min and max prices are required for this service category",
         });
       }
+
       if (+minPrice <= 0 || +maxPrice <= 0) {
-        return res
-          .status(400)
-          .json({ message: "Price values must be greater than 0" });
+        return res.status(400).json({
+          message: "Price values must be greater than 0",
+        });
       }
+
       if (+minPrice >= +maxPrice) {
-        return res
-          .status(400)
-          .json({ message: "Min price must be less than max price" });
+        return res.status(400).json({
+          message: "Min price must be less than max price",
+        });
       }
+
       serviceData.minPrice = minPrice;
       serviceData.maxPrice = maxPrice;
+
+      // clear perPlate fields if flat
+      serviceData.perPlatePrice = undefined;
+      serviceData.minPlates = undefined;
+      serviceData.maxPlates = undefined;
+      serviceData.packages = [];
     }
 
+    /* =========================
+       DURATION VALIDATION
+       ========================= */
     const duration =
-      parseInt(days) * 24 * 60 + parseInt(hrs) * 60 + parseInt(mins);
+      parseInt(days || 0) * 24 * 60 +
+      parseInt(hrs || 0) * 60 +
+      parseInt(mins || 0);
+
     if (isNaN(duration) || duration <= 0) {
-      return res.status(400).json({ message: "Invalid estimated duration" });
+      console.log("❌ Invalid duration:", { days, hrs, mins, duration });
+      return res.status(400).json({
+        message: "Invalid estimated duration",
+      });
     }
+
     serviceData.duration = duration;
+
+    /* =========================
+       MEDIA VALIDATION
+       ========================= */
+    if (!req.files || req.files.length === 0) {
+      console.log("❌ No media files uploaded");
+      return res.status(400).json({
+        message: "Please upload at least one image or video",
+      });
+    }
 
     const mediaUrls = await processServiceMedia(req.files, serviceName);
     serviceData.serviceImage = mediaUrls;
 
+    /* =========================
+       NEW UPDATED FIX
+       ✅ ALWAYS UPSERT SERVICE
+       This avoids issue after delete/re-add
+       ========================= */
     let newService;
     let responseMessage;
 
-    if (req.vendor.isRegistrationComplete === false) {
-      newService = await Service.findOneAndUpdate(
-        { vendorId: req.vendor._id },
-        serviceData,
-        { new: true, upsert: true }
-      );
+    newService = await Service.findOneAndUpdate(
+      { vendorId: req.vendor._id },
+      serviceData,
+      { new: true, upsert: true }
+    );
 
+    if (req.vendor.isRegistrationComplete === false) {
       await Vendor.findByIdAndUpdate(req.vendor._id, {
         $set: { registrationProgress: 2 },
       });
 
       responseMessage = "Service saved successfully during registration";
     } else {
-      newService = await Service.create(serviceData);
-      responseMessage = "New service created successfully";
+      responseMessage = "Service created/updated successfully";
     }
 
+    /* =========================
+       CACHE INVALIDATION
+       ========================= */
     await client.del(`services:category:${serviceCategory.toLowerCase()}`);
     await client.del(`services:id:${newService._id}`);
     await client.del(`services:all`);
@@ -254,34 +354,39 @@ export const createService = async (req, res) => {
       .json(new ApiResponse(200, newService, responseMessage));
   } catch (error) {
     console.error("❌ Service creation error:", error);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({
+      message: error?.message || "Internal server error",
+    });
   }
 };
 
+/* =========================================================
+   CHECK SERVICE EXISTS
+   ========================================================= */
 export const checkServiceExists = async (req, res) => {
   try {
     const cacheKey = "check_service_exists";
 
-    // 1️⃣ Check cache
     const cachedData = await client.get(cacheKey);
     if (cachedData) {
       return res.status(200).json(JSON.parse(cachedData));
     }
 
-    // 2️⃣ Query MongoDB
     const existingService = await Service.findOne().sort({ createdAt: -1 });
-
     const response = existingService ? { exists: true } : { exists: false };
 
-    // 3️⃣ Save in Redis (short expiry, 60 sec)
     await client.setEx(cacheKey, 60, JSON.stringify(response));
 
     return res.status(200).json(response);
   } catch (error) {
     console.error("Error checking service:", error);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
+
+/* =========================================================
+   GET MY SERVICES
+   ========================================================= */
 export const getMyServices = async (req, res) => {
   try {
     const vendorId = req.vendor._id.toString();
@@ -290,15 +395,13 @@ export const getMyServices = async (req, res) => {
     const cachedData = await client.get(cacheKey);
     if (cachedData) {
       console.log("⚡ Returning services from Redis cache");
-      return res
-        .status(200)
-        .json(
-          new ApiResponse(
-            200,
-            JSON.parse(cachedData),
-            "Services for the current vendor fetched successfully (from cache)"
-          )
-        );
+      return res.status(200).json(
+        new ApiResponse(
+          200,
+          JSON.parse(cachedData),
+          "Services for the current vendor fetched successfully (from cache)"
+        )
+      );
     }
 
     const services = await Service.find({ vendorId })
@@ -310,21 +413,22 @@ export const getMyServices = async (req, res) => {
     await client.setEx(cacheKey, 300, JSON.stringify(services));
 
     console.log("✅ Fetched services from DB and cached in Redis");
-    return res
-      .status(200)
-      .json(
-        new ApiResponse(
-          200,
-          services,
-          "Services for the current vendor fetched successfully"
-        )
-      );
+    return res.status(200).json(
+      new ApiResponse(
+        200,
+        services,
+        "Services for the current vendor fetched successfully"
+      )
+    );
   } catch (err) {
     console.error("Error fetching services:", err);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
+/* =========================================================
+   UPDATE SERVICE
+   ========================================================= */
 export const updateService = async (req, res) => {
   try {
     console.log("inside update service..");
@@ -391,11 +495,7 @@ export const updateService = async (req, res) => {
       pricingType || existingService.pricingType || "flat";
     updateData.pricingType = finalPricingType;
 
-    // ==========================================
-    // ✅ FIXED UPDATE PRICING LOGIC
-    // ==========================================
     if (finalPricingType === "perPlate") {
-      // Update base per-plate pricing if provided
       if (
         perPlatePrice !== undefined &&
         minPlates !== undefined &&
@@ -415,7 +515,6 @@ export const updateService = async (req, res) => {
         }
       }
 
-      // Update packages if provided
       if (packages !== undefined) {
         updateData.packages = packages
           ? typeof packages === "string"
@@ -424,11 +523,9 @@ export const updateService = async (req, res) => {
           : [];
       }
 
-      // Clear flat pricing fields
       updateData.minPrice = undefined;
       updateData.maxPrice = undefined;
     } else {
-      // Flat pricing logic
       if (minPrice !== undefined && maxPrice !== undefined) {
         if (parseInt(minPrice) <= 0 || parseInt(maxPrice) <= 0) {
           return res
@@ -444,7 +541,6 @@ export const updateService = async (req, res) => {
         updateData.maxPrice = maxPrice;
       }
 
-      // Clear per-plate pricing fields
       updateData.perPlatePrice = undefined;
       updateData.minPlates = undefined;
       updateData.maxPlates = undefined;
@@ -479,6 +575,12 @@ export const updateService = async (req, res) => {
   }
 };
 
+/* =========================================================
+   DELETE SERVICE
+   ✅ FIXED:
+   - Removed duplicate Cloudinary deletion
+   - Cleaner delete flow
+   ========================================================= */
 export const deleteService = async (req, res) => {
   try {
     const vendorId = req.vendor._id;
@@ -492,7 +594,6 @@ export const deleteService = async (req, res) => {
         .json(new ApiError(404, "Service not found or not authorized"));
     }
 
-    // ✅ MODIFIED SECTION: Handle deletion from both Cloudinary and YouTube
     const cloudinaryDeletionPromises = [];
     const youtubeDeletionPromises = [];
 
@@ -500,7 +601,6 @@ export const deleteService = async (req, res) => {
 
     if (Array.isArray(mediaArray) && mediaArray.length > 0) {
       mediaArray.forEach((mediaUrl) => {
-        // Differentiate based on the URL's domain
         if (mediaUrl.includes("youtube.com") || mediaUrl.includes("youtu.be")) {
           youtubeDeletionPromises.push(deleteVideoFromYouTube(mediaUrl));
         } else if (mediaUrl.includes("cloudinary.com")) {
@@ -513,34 +613,26 @@ export const deleteService = async (req, res) => {
       });
     }
 
-    // Execute all deletion promises concurrently and wait for them to settle
     const mediaDeletionResults = await Promise.allSettled([
       ...cloudinaryDeletionPromises,
       ...youtubeDeletionPromises,
     ]);
 
-    console.log("Media deletion results:", mediaDeletionResults);
+    console.log("🗑 Media deletion results:", mediaDeletionResults);
 
-    // Finally, delete the service from the database
-    let deletionResults = [];
-    if (
-      Array.isArray(existingService.serviceImage) &&
-      existingService.serviceImage.length > 0
-    ) {
-      deletionResults = await Promise.allSettled(
-        existingService.serviceImage.map((imageUrl) =>
-          deleteFromCloudinary(imageUrl)
-        )
-      );
-    }
     await existingService.deleteOne();
 
-    // Invalidate any relevant Redis caches
+    // Optional: reset registration progress if your flow depends on it
+    // await Vendor.findByIdAndUpdate(vendorId, {
+    //   $set: { registrationProgress: 1 },
+    // });
+
     await client.del(`vendor:${vendorId}:services`);
     await client.del(`services:id:${serviceId}`);
     await client.del(
       `services:category:${existingService.serviceCategory.toLowerCase()}`
     );
+    await client.del(`services:all`);
 
     return res.status(200).json(
       new ApiResponse(
@@ -549,7 +641,6 @@ export const deleteService = async (req, res) => {
           deletedServiceId: existingService._id,
           mediaDeletions: mediaDeletionResults,
           deletedService: existingService,
-          imageDeletions: deletionResults,
         },
         "Service and associated media deleted successfully"
       )
@@ -562,9 +653,12 @@ export const deleteService = async (req, res) => {
   }
 };
 
+/* =========================================================
+   UPDATE AVAILABILITY
+   ========================================================= */
 export const updateAvailability = async (req, res) => {
   try {
-    const vendorId = req.vendor._id; // attached via auth middleware
+    const vendorId = req.vendor._id;
     const serviceId = req.params.id;
     const { available } = req.body;
 
@@ -576,7 +670,7 @@ export const updateAvailability = async (req, res) => {
 
     const service = await Service.findOne({
       _id: serviceId,
-      vendorId: vendorId, // ensure vendor owns the service
+      vendorId: vendorId,
     });
 
     if (!service) {
@@ -589,7 +683,6 @@ export const updateAvailability = async (req, res) => {
     service.available = available;
     await service.save();
 
-    // ✅ Invalidate cache after update
     const cacheKey = `vendor:${vendorId}:services`;
     await client.del(cacheKey);
 
@@ -602,6 +695,9 @@ export const updateAvailability = async (req, res) => {
   }
 };
 
+/* =========================================================
+   UPLOAD SERVICE MEDIA
+   ========================================================= */
 export const uploadServiceMedia = async (req, res) => {
   console.log("Incoming files for media upload:", req.files);
   try {
@@ -613,7 +709,6 @@ export const uploadServiceMedia = async (req, res) => {
 
     const imageUrls = [];
     const videoUrls = [];
-    // Extract serviceName from the body to create a descriptive video title
     const { serviceName = "Service Video" } = req.body;
 
     for (const file of req.files) {
@@ -664,6 +759,9 @@ export const uploadServiceMedia = async (req, res) => {
   }
 };
 
+/* =========================================================
+   UPDATE SERVICE IMAGE FIRST
+   ========================================================= */
 export const updateServiceImageFirst = async (req, res) => {
   console.log("Incoming update data:", req.body);
   try {
@@ -708,6 +806,9 @@ export const updateServiceImageFirst = async (req, res) => {
   }
 };
 
+/* =========================================================
+   GET SUBCATEGORY LIST
+   ========================================================= */
 export const getSubcategoryList = async (req, res) => {
   try {
     const category = req.params.category;

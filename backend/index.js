@@ -1,15 +1,16 @@
 import "./loadEnv.js";
 
 // ✅ Import required modules
-import client from "./db/redisClient.js";
+import client, { connectRedis } from "./db/redisClient.js";
 import { app } from "./app.js";
 import { connectToDb } from "./db/db.js";
-import mongoose from "mongoose"; // ✅ Import mongoose for DB close
+import mongoose from "mongoose";
 import { createServer } from "http";
 import initSocket from "./socket/index.js";
 
-
 let server;
+let io;
+
 try {
   server = createServer(app);
   console.log("✅ HTTP server created successfully");
@@ -18,9 +19,8 @@ try {
   process.exit(1);
 }
 
-let io;
 try {
-  io = initSocket(server); // ✅ Store io for cleanup
+  io = initSocket(server);
   console.log("✅ Socket.IO initialized successfully");
 } catch (err) {
   console.error("❌ Socket initialization failed:", err);
@@ -29,23 +29,28 @@ try {
 
 const port = process.env.PORT || 8000;
 
-// Connect to DB and start server
-connectToDb()
-  .then(async () => {
-    try {
-      await client.flushAll();
-      console.log("🧹 All cached data cleared on server restart.");
-    } catch (err) {
-      console.error("⚠️ Failed to clear cache on startup:", err);
-    }
+// ✅ Start app properly
+const startServer = async () => {
+  try {
+    // 1️⃣ Connect Redis safely
+    await connectRedis();
+
+    // 2️⃣ Connect MongoDB
+    await connectToDb();
+
+    // ❌ DO NOT flush all Redis in production
+    // await client.flushAll();
+
     server.listen(port, () => {
       console.log(`✅ Server running on port ${port}`);
     });
-  })
-  .catch((err) => {
-    console.error(`❌ DB connection failed: ${err}`);
+  } catch (err) {
+    console.error("❌ Startup failed:", err);
     process.exit(1);
-  });
+  }
+};
+
+startServer();
 
 // ✅ Handle unexpected async errors
 process.on("unhandledRejection", (reason) => {
@@ -59,7 +64,7 @@ process.on("uncaughtException", (err) => {
   closeServer();
 });
 
-// ✅ Graceful shutdown on signals (e.g., Ctrl+C, Kubernetes stop)
+// ✅ Graceful shutdown on signals
 process.on("SIGINT", closeServer);
 process.on("SIGTERM", closeServer);
 
@@ -80,14 +85,19 @@ async function closeServer() {
       console.log("✅ Socket.IO closed.");
     }
 
-    // 3️⃣ Close DB connection
+    // 3️⃣ Close MongoDB connection
     if (mongoose.connection.readyState === 1) {
-      // connected
       await mongoose.connection.close(false);
       console.log("✅ MongoDB connection closed.");
     }
 
-    process.exit(0); // Normal exit
+    // 4️⃣ Close Redis connection
+    if (client?.isOpen) {
+      await client.quit();
+      console.log("✅ Redis connection closed.");
+    }
+
+    process.exit(0);
   } catch (err) {
     console.error("❌ Error during graceful shutdown:", err);
     process.exit(1);
