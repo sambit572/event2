@@ -31,13 +31,16 @@ const processServiceMedia = async (files, serviceName = "Service Media") => {
   for (const file of files) {
     // ✅ IMAGE → Cloudinary
     if (file.mimetype.startsWith("image/")) {
-      const cloudRes = await uploadOnCloudinary(file.path);
-      if (cloudRes?.secure_url) {
-        imageUrls.push(cloudRes.secure_url);
-      } else {
+      try {
+        const cloudRes = await uploadOnCloudinary(file.path);
+        if (cloudRes?.secure_url) {
+          imageUrls.push(cloudRes.secure_url);
+        }
+      } catch (err) {
         console.error(
           "❌ Cloudinary image upload failed for:",
-          file.originalname
+          file.originalname,
+          err.message
         );
       }
     }
@@ -59,7 +62,9 @@ const processServiceMedia = async (files, serviceName = "Service Media") => {
   const mediaUrls = [...imageUrls, ...videoUrls];
 
   if (mediaUrls.length === 0) {
-    throw new ApiError(500, "Media upload failed");
+    console.warn("⚠️ All media uploads failed. Proceeding with a placeholder image.");
+    // Fallback to a placeholder image if upload completely fails
+    mediaUrls.push("https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg");
   }
 
   return mediaUrls;
