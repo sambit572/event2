@@ -1,0 +1,289 @@
+/* ── Section ── */
+.tvv-section {
+  width: 100%;
+  background: #fff;
+  padding: 48px 0 48px;
+  box-sizing: border-box;
+  max-width: 1680px;
+  margin: 0 auto;
+}
+
+/* ── Header ── */
+.tvv-header {
+  margin-bottom: 24px;
+  padding: 0 24px;
+}
+
+.tvv-eyebrow {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  color: #aaa;
+  text-transform: uppercase;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  margin: 0 0 6px;
+}
+
+.tvv-title {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+  font-weight: 900;
+  color: #111;
+  line-height: 1.1;
+  margin: 0 0 6px;
+}
+
+.tvv-title-accent {
+  color: #E6A800;
+  font-style: italic;
+}
+
+.tvv-subtitle {
+  font-size: 14px;
+  color: #888;
+  margin: 0;
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+/* ── Carousel outer wrapper ── */
+.tvv-carousel-wrapper {
+  position: relative;
+  width: 100%;
+  padding: 0 24px;
+  box-sizing: border-box;
+}
+
+/* This clips the track — only 4 cards show */
+.tvv-track-outer {
+  overflow: hidden;
+  width: 100%;
+}
+
+/* The moving strip — wider than the viewport */
+.tvv-track {
+  display: flex;
+  gap: 18px;
+  /* NO overflow hidden here — it must be wide enough for all cards */
+  padding: 8px 0 16px;
+  will-change: transform;
+}
+
+/* ── Each card = exactly 1/4 of the visible area ── */
+.tvv-card {
+  /* (100% - 3 gaps of 18px) / 4 */
+  flex: 0 0 calc((100% - 54px) / 4);
+  min-width: 0;
+  border-radius: 14px;
+  background: #fff;
+  border: 1.5px solid #eee;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.tvv-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 36px rgba(0,0,0,0.13);
+  border-color: #E6A800;
+}
+
+/* ── Portrait image ── */
+.tvv-img-wrap {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  background: #f0f0f0;
+  flex-shrink: 0;
+}
+
+.tvv-img-strip {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tvv-slide-img {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+/* EVENTSBRIDGE label */
+.tvv-brand-label {
+  position: absolute;
+  top: 12px; left: 12px;
+  z-index: 4;
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  border: 1px solid rgba(255,255,255,0.3);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+/* Rank medal */
+.tvv-rank-badge {
+  position: absolute;
+  top: 10px; right: 10px;
+  font-size: 22px;
+  z-index: 4;
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.35));
+}
+
+/* Verified badge */
+.tvv-verified-badge {
+  position: absolute;
+  bottom: 10px; left: 10px;
+  z-index: 4;
+  background: #16a34a;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px 3px 6px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  letter-spacing: 0.3px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+/* Inner image prev/next arrows */
+.tvv-arrow {
+  position: absolute;
+  top: 50%; transform: translateY(-50%);
+  z-index: 5;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,0,0,0.45);
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  padding: 0;
+}
+.tvv-arrow:hover { background: rgba(0,0,0,0.72); }
+.tvv-arrow-left  { left: 8px; }
+.tvv-arrow-right { right: 8px; }
+
+/* Dot indicators */
+.tvv-dots {
+  position: absolute;
+  bottom: 10px; right: 10px;
+  z-index: 4;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.tvv-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.5);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s, transform 0.2s;
+}
+.tvv-dot-active { background: #fff; transform: scale(1.3); }
+
+/* ── Card info ── */
+.tvv-card-info {
+  padding: 12px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.tvv-service-name {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  color: #111;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tvv-category {
+  font-size: 12px;
+  color: #888;
+  margin: 0;
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+/* Stars */
+.tvv-stars { display: flex; align-items: center; gap: 1px; margin-top: 5px; }
+.tvv-star        { font-size: 13px; line-height: 1; }
+.tvv-star.filled { color: #F5C518; }
+.tvv-star.half   { color: #F5C518; opacity: 0.6; }
+.tvv-star.empty  { color: #ccc; }
+.tvv-rating-num  { font-size: 12px; font-weight: 700; color: #444; margin-left: 4px; font-family: "Plus Jakarta Sans", sans-serif; }
+
+/* ── Carousel outer nav arrows ── */
+.tvv-carousel-arrow {
+  position: absolute;
+  top: 50%; transform: translateY(-60%);
+  z-index: 10;
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,0,0,0.55);
+  color: #fff;
+  font-size: 26px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.2s;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  padding: 0;
+}
+.tvv-carousel-arrow:hover {
+  background: #E6A800;
+  transform: translateY(-60%) scale(1.08);
+}
+.tvv-carousel-arrow-left  { left: -16px; }
+.tvv-carousel-arrow-right { right: -16px; }
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  /* 3 cards */
+  .tvv-card { flex: 0 0 calc((100% - 36px) / 3); }
+}
+
+@media (max-width: 768px) {
+  .tvv-section { padding: 32px 0; }
+  .tvv-header { padding: 0 16px; }
+  .tvv-carousel-wrapper { padding: 0 16px; }
+  /* 2 cards */
+  .tvv-card { flex: 0 0 calc((100% - 14px) / 2); }
+  .tvv-track { gap: 14px; }
+  .tvv-img-wrap { height: 240px; }
+  .tvv-carousel-arrow { display: none; }
+}
+
+@media (max-width: 480px) {
+  .tvv-img-wrap { height: 200px; }
+  .tvv-service-name { font-size: 13px; }
+}

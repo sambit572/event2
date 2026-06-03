@@ -18,6 +18,7 @@ import categories from "../../utils/CatogoryData.jsx";
 import HeroSection from "../../components/customer/home/HeroSection.jsx";
 import DreamEventSection from "../../components/customer/home/DreamEventSection.jsx";
 import TrustSection from "../../components/customer/home/TrustSection.jsx";
+import TopVerifiedVendors from "../../components/customer/home/TopVerifiedVendors.jsx";
 
 const FaqSection = React.lazy(() =>
   import("../../components/customer/home/FaqSection.jsx")
@@ -95,7 +96,8 @@ const Home = () => {
         {/* Section 3 — Everything for your Dream Event */}
         <DreamEventSection />
 
-       
+        {/* Top Verified Vendors */}
+        <TopVerifiedVendors />
 
         {/* Categories */}
         <div id="categories" className="categories-head1">
