@@ -255,7 +255,7 @@ export default function TopVerifiedVendors() {
       <div className="tvv-header">
         <p className="tvv-eyebrow">HANDPICKED FOR YOU</p>
         <h2 className="tvv-title">
-          Top Verified <span className="tvv-title-accent">Vendors</span>
+          Top Verified <span className="tvv-title-accent">Partners</span>
         </h2>
         <p className="tvv-subtitle">Premium partners ranked by performance & trust</p>
       </div>

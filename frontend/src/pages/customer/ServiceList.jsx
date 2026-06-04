@@ -16,8 +16,8 @@ import photoBanner from "../../assets/serviceListBanner/photo-ban.webp";
 import foodBanner from "../../assets/serviceListBanner/catering-banner.webp";
 import banquetBanner from "../../assets/serviceListBanner/banquet-banner.webp";
 import danceBanner from "../../assets/serviceListBanner/classical-ban.webp";
-import islamicBanner from "../../assets/serviceListBanner/moulib-ban (2).webp";
-import christianBanner from "../../assets/serviceListBanner/christian-ban.webp";
+import bouncersBanner from "../../assets/serviceListBanner/bouncers-security-ban.webp";
+import starsBanner from "../../assets/serviceListBanner/stars-influencers-ban.webp";
 import panditBanner from "/categories/pandit.webp";
 import makeupBanner from "../../assets/serviceListBanner/beauty-ban.webp";
 import floralBanner from "../../assets/serviceListBanner/flower-ban.webp";
@@ -62,15 +62,15 @@ const ServiceList = ({ onSwitchToLogin }) => {
   const [showArrows, setShowArrows] = useState(false);
 
   const bannerMap = {
-    "DJ Services & Brash Band": djBanner,
+    "DJ & Brash Band": djBanner,
     "Music Concert & Orchestra": musicBanner,
     "Decor & Tenthouse": decorBanner,
     "Photo & Videography": photoBanner,
     "Food & Catering": foodBanner,
     "Banquet Hall & Mandap": banquetBanner,
     "Classical Music & Dance": danceBanner,
-    "Islamic Maulbi": islamicBanner,
-    "Christian Priest": christianBanner,
+    "Bouncers & Security": bouncersBanner,
+    "Stars & Influencers": starsBanner,
     "Hindu Pandit": panditBanner,
     "Beauty Makeover": makeupBanner,
     "Floral Decor": floralBanner,
@@ -87,7 +87,7 @@ const ServiceList = ({ onSwitchToLogin }) => {
 
   // ✅ Define subcategories for each main category
   const subcategoryMap = {
-    "DJ Services & Brash Band": [
+    "DJ & Brash Band": [
       "All",
       "Wedding DJ",
       "Corporate Event DJ",
@@ -132,21 +132,21 @@ const ServiceList = ({ onSwitchToLogin }) => {
       "Instrumental Performance",
       "Bharatanatyam Dance",
     ],
-    "Islamic Maulbi": [
+    "Bouncers & Security": [
       "All",
-      "Religious Sermon",
-      "Tilawat",
-      "Marriage Ceremonies",
-      "Funeral Services",
+      "Event Security",
+      "VIP Protection",
+      "Crowd Management",
+      "Corporate Security",
       "Special Event",
     ],
-    "Christian Priest": [
+    "Stars & Influencers": [
       "All",
-      "Christening",
-      "Wedding Ceremony",
-      "Funeral Service",
-      "Blessings Prayers",
-      "Church Program",
+      "Celebrity Appearance",
+      "Brand Ambassador",
+      "Social Media Influencer",
+      "Live Performance",
+      "Special Event",
     ],
     "Hindu Pandit": [
       "All",

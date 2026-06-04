@@ -12,7 +12,7 @@ import insta40 from "/instagram-40.webp";
 import insta80 from "/instagram-80.webp";
 
 export const categoriesData = {
-  "DJ Services & Brash Band": [
+  "DJ & Brash Band": [
     "Wedding DJ",
     "Corporate Event DJ",
     "Private Party DJ",
@@ -50,20 +50,19 @@ export const categoriesData = {
     "Instrumental Performance",
     "Bharatanatyam Dance",
   ],
-  "Islamic Maulbi": [
-    "Religious Sermon",
-    "Tilawat",
-    "Marriage Ceremonies",
-    "Funeral Services",
+  "Bouncers & Security": [
+    "Event Security",
+    "VIP Protection",
+    "Crowd Management",
+    "Corporate Security",
     "Special Event",
   ],
-  "Christian Priest": [
-    "All",
-    "Christening",
-    "Wedding Ceremony",
-    "Funeral Service",
-    "Blessings Prayers",
-    "Church Program",
+  "Stars & Influencers": [
+    "Celebrity Appearance",
+    "Brand Ambassador",
+    "Social Media Influencer",
+    "Live Performance",
+    "Special Event",
   ],
   "Hindu Pandit": [
     "Wedding Ceremony",

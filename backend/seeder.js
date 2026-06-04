@@ -8,7 +8,7 @@ import { name } from "agenda/dist/agenda/name.js";
 // EXACT category names matching your CategoryData.jsx
 const categories = [
   {
-    name: "DJ Services & Brash Band",
+    name: "DJ & Brash Band",
     defaultWhyChooseUs: [
       "Bringing electrifying beats and non-stop energy to light up your celebrations",
       "Backup Equipment Always On-Hand",
@@ -78,23 +78,23 @@ const categories = [
     ],
   },
   {
-    name: "Islamic Maulbi", // Exact match
+    name: "Bouncers & Security",
     defaultWhyChooseUs: [
-      "Qualified & experienced Islamic scholars",
-      "Traditional ceremony guidance",
-      "Flexible scheduling arrangements",
-      "Respectful & professional service",
-      "Complete ritual knowledge",
+      "Trained & licensed security professionals",
+      "24/7 event coverage & crowd control",
+      "VIP & guest protection services",
+      "Professional and disciplined team",
+      "Customizable security packages",
     ],
   },
   {
-    name: "Christian Priest",
+    name: "Stars & Influencers",
     defaultWhyChooseUs: [
-      "Ordained & experienced clergy",
-      "Traditional & modern ceremony options",
-      "Personalized service approach",
-      "Professional ceremony guidance",
-      "Flexible scheduling availability",
+      "Access to top Ollywood stars & influencers",
+      "Boost your event's prestige & social reach",
+      "Verified celebrity appearances",
+      "Flexible booking for any event type",
+      "Dedicated coordination & support",
     ],
   },
   {

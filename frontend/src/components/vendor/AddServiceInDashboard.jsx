@@ -128,15 +128,15 @@ function VendorService({ currentStep }) {
   };
 
   const categories = [
-    "DJ Services & Brash Band",
+    "DJ & Brash Band",
     "Music Concert & Orchestra",
     "Decor & Tenthouse",
     "Photo & Videography",
     "Food & Catering",
     "Banquet Hall & Mandap",
     "Classical Music & Dance",
-    "Islamic Maulbi",
-    "Christian Priest",
+    "Bouncers & Security",
+    "Stars & Influencers",
     "Hindu Pandit",
     "Beauty Makeover",
     "Balloon Decor",
@@ -202,7 +202,7 @@ function VendorService({ currentStep }) {
   };
   // ✅ Define subcategories for each main category
   const subcategories = {
-    "DJ Services & Brash Band": [
+    "DJ & Brash Band": [
       "Wedding DJ",
       "Corporate Event DJ",
       "Private Party DJ",
@@ -240,20 +240,19 @@ function VendorService({ currentStep }) {
       "Instrumental Performance",
       "Bharatanatyam Dance",
     ],
-    "Islamic Maulbi": [
-      "Religious Sermon",
-      "Tilawat",
-      "Marriage Ceremonies",
-      "Funeral Services",
+    "Bouncers & Security": [
+      "Event Security",
+      "VIP Protection",
+      "Crowd Management",
+      "Corporate Security",
       "Special Event",
     ],
-    "Christian Priest": [
-      "All",
-      "Christening",
-      "Wedding Ceremony",
-      "Funeral Service",
-      "Blessings Prayers",
-      "Church Program",
+    "Stars & Influencers": [
+      "Celebrity Appearance",
+      "Brand Ambassador",
+      "Social Media Influencer",
+      "Live Performance",
+      "Special Event",
     ],
     "Hindu Pandit": [
       "Wedding Ceremony",

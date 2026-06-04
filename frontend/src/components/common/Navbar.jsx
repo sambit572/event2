@@ -17,7 +17,7 @@ import ThreeDot from "./navbar/ThreeDot";
 
 const CATEGORIES = [
   "dj","band","tenthouse","photographer","pandit","magic","cultural-troupe",
-  "islamic","christian","catering","makeup","floral","transport","fireworks","card-design",
+  "bouncers-security","stars-influencers","catering","makeup","floral","transport","fireworks","card-design",
 ];
 
 const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
@@ -64,8 +64,10 @@ const Navbar = ({ onOpenLogin, onOpenRegister, onOpenVendorLogin }) => {
   mapAliases(["transport","car","vehicle","cab"], "transport");
   mapAliases(["fireworks","firework","crackers","pataka"], "fireworks");
   mapAliases(["card","invitation","invite","invites","cards"], "card-design");
-  mapAliases(["church","christian","weddingchurch"], "christian");
-  mapAliases(["islam","muslim","imam","maulbi","moulbi","muslim priest"], "islamic");
+  mapAliases(["church","christian","weddingchurch"], "stars-influencers");
+  mapAliases(["islam","muslim","imam","maulbi","moulbi","muslim priest"], "bouncers-security");
+  mapAliases(["bouncer","bouncers","security","guard","guards","event security"], "bouncers-security");
+  mapAliases(["star","stars","influencer","influencers","celebrity","celeb","actor","actress"], "stars-influencers");
   mapAliases(["culture","troupe","artist","folk","dance","group dance"], "cultural-troupe");
 
   useEffect(() => {

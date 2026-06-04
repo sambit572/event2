@@ -330,8 +330,17 @@ export default function DreamEventSection() {
             style={{ minHeight: "130px", background: "#F5C518" }}
           >
             <div>
-              <h3 className="text-gray-900 text-base font-black mb-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Join As a Partner</h3>
-              <p className="text-gray-700 text-xs mb-3">Scale your Business with <strong>Zero Cost</strong></p>
+              <h3 className="text-gray-900 font-black mb-3" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "1.35rem", lineHeight: 1.1 }}>Join As a Partner</h3>
+              <div className="flex flex-col gap-1.5 mb-3">
+                <div className="flex items-center gap-2">
+                  <span className="flex items-center justify-center w-5 h-5 rounded-full font-black text-xs flex-shrink-0" style={{ background: "#111", color: "#F5C518" }}>✓</span>
+                  <span className="font-black text-gray-900 text-sm" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Zero Joining Fee</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="flex items-center justify-center w-5 h-5 rounded-full font-black text-xs flex-shrink-0" style={{ background: "#111", color: "#F5C518" }}>✓</span>
+                  <span className="font-black text-gray-900 text-sm" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Zero Commission</span>
+                </div>
+              </div>
             </div>
             <button
               className="self-start text-white font-bold text-xs px-4 py-2 rounded-full hover:opacity-80 transition-all duration-200"
@@ -419,10 +428,21 @@ export default function DreamEventSection() {
             <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full opacity-20" style={{ background: "#111" }} />
             <div className="absolute bottom-4 right-20 w-24 h-24 rounded-full opacity-10" style={{ background: "#111" }} />
             <div className="relative z-10">
-              <h3 className="text-gray-900 text-2xl font-black mb-2" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Join As a Partner</h3>
-              <p className="text-gray-700 text-sm max-w-xs">
-                Scale your Business with Elite EventsBridge Network with <strong>Zero Cost</strong>
-              </p>
+              <h3 className="text-gray-900 font-black mb-4" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.6rem)", lineHeight: 1.1 }}>Join As a Partner</h3>
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center gap-3">
+                  <span className="flex items-center justify-center w-7 h-7 rounded-full font-black text-sm flex-shrink-0" style={{ background: "#111", color: "#F5C518" }}>✓</span>
+                  <span className="font-black text-gray-900" style={{ fontSize: "clamp(1rem, 1.8vw, 1.3rem)", fontFamily: "'Plus Jakarta Sans', sans-serif", letterSpacing: "-0.01em" }}>
+                    Zero Joining Fee
+                  </span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="flex items-center justify-center w-7 h-7 rounded-full font-black text-sm flex-shrink-0" style={{ background: "#111", color: "#F5C518" }}>✓</span>
+                  <span className="font-black text-gray-900" style={{ fontSize: "clamp(1rem, 1.8vw, 1.3rem)", fontFamily: "'Plus Jakarta Sans', sans-serif", letterSpacing: "-0.01em" }}>
+                    Zero Commission
+                  </span>
+                </div>
+              </div>
             </div>
             <button
               className="relative z-10 self-start text-white font-bold text-sm px-7 py-3 rounded-full hover:opacity-80 transition-all duration-200 mt-4"

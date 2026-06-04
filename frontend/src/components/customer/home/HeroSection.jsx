@@ -42,7 +42,7 @@ export default function HeroSection() {
               className="text-xs font-bold tracking-widest text-gray-800"
               style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
-              100+ VERIFIED VENDORS
+              100+ VERIFIED PARTNERS
             </span>
           </motion.div>
 

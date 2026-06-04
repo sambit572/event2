@@ -3,7 +3,7 @@ import { getCategoryImage } from "./getCategoryImage";
 export const CategoryData = [
   {
     id: "dj",
-    title: "DJ Services & Brash Band",
+    title: "DJ & Brash Band",
     image: getCategoryImage("dj_image"),
     tagline: "Beats That Breathe Fun",
   },
@@ -57,16 +57,16 @@ export const CategoryData = [
     tagline: "Colorful Creations for Every Celebration",
   },
   {
-    id: "islamic",
-    title: "Islamic Maulbi",
-    image: getCategoryImage("moulbi"),
-    tagline: "Prayers that Guide Hearts",
+    id: "bouncers-security",
+    title: "Bouncers & Security",
+    image: getCategoryImage("bouncers-security"),
+    tagline: "Safe Events, Secure Memories",
   },
   {
-    id: "christian",
-    title: "Christian Priest",
-    image: getCategoryImage("father"),
-    tagline: "Grace in Every Verse",
+    id: "stars-influencers",
+    title: "Stars & Influencers",
+    image: getCategoryImage("stars-influencers"),
+    tagline: "Star Power for Your Event",
   },
   {
     id: "pandit",
