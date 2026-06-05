@@ -9,12 +9,11 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// ✅ Upload File to Cloudinary (returns result or null)
+// ✅ Upload File to Cloudinary (returns result or throws error)
 const uploadOnCloudinary = async (localFilePath) => {
   try {
     if (!localFilePath) {
-      console.log("❌ Error: localFilePath is missing");
-      return null;
+      throw new Error("localFilePath is missing");
     }
 
     const result = await cloudinary.uploader.upload(localFilePath, {
@@ -23,17 +22,19 @@ const uploadOnCloudinary = async (localFilePath) => {
     });
 
     // Delete local file after upload
-    fs.unlinkSync(localFilePath);
+    if (fs.existsSync(localFilePath)) {
+      fs.unlinkSync(localFilePath);
+    }
 
     return result; // includes url, public_id etc.
   } catch (error) {
-    console.error("❌ Error during upload:", error);
+    console.error("❌ Error during Cloudinary upload:", error);
 
     if (fs.existsSync(localFilePath)) {
       fs.unlinkSync(localFilePath); // cleanup temp file on error
     }
 
-    return null;
+    throw error; // Throw the error so the controller can catch and report it
   }
 };
 

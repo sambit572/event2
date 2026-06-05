@@ -4,8 +4,6 @@ import PropTypes from "prop-types";
 import toast from "react-hot-toast";
 
 import { useNavigate } from "react-router-dom";
-import { getFirebaseAuth } from "../../utils/firebase.js";
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import OTPVerification from "../common/OTPVerification.jsx";
 import SuccessBlock from "../common/SuccessBlock.jsx";
 import axios from "axios";
@@ -17,6 +15,23 @@ import { RxCross2 } from "react-icons/rx";
 import VendorForgotPass from "./VendorForgetPass.jsx"; //  NEW
 import { BACKEND_URL } from "../../utils/constant.js";
 
+let firebaseAuthCache = null;
+async function loadFirebaseAuth() {
+  if (!firebaseAuthCache) {
+    const [{ getFirebaseAuth }, authModule] = await Promise.all([
+      import("../../utils/firebase.js"),
+      import("firebase/auth"),
+    ]);
+    const auth = getFirebaseAuth();
+    firebaseAuthCache = {
+      auth,
+      RecaptchaVerifier: authModule.RecaptchaVerifier,
+      signInWithPhoneNumber: authModule.signInWithPhoneNumber,
+    };
+  }
+  return firebaseAuthCache;
+}
+
 const VendorLogin = ({ onClose, onSwitchToLogin }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -26,6 +41,7 @@ const VendorLogin = ({ onClose, onSwitchToLogin }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [showForgotModal, setShowForgotModal] = useState(false);
   const auth = getFirebaseAuth();
+  console.log(auth);
   const [formData, setFormData] = useState({
     phoneNo: "",
     email: "",
@@ -33,7 +49,7 @@ const VendorLogin = ({ onClose, onSwitchToLogin }) => {
   });
   const [errorMsg, setErrorMsg] = useState("");
   const { user } = useSelector((state) => state.user);
-  console.log("Current user in login:", user);
+  // console.log("Current user in login:", user);
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add("overflow-hidden");
@@ -64,20 +80,43 @@ const VendorLogin = ({ onClose, onSwitchToLogin }) => {
     }
   }, [step, onClose]);
 
+  // Clean up reCAPTCHA when the modal mounts/unmounts
+  useEffect(() => {
+    // Clear on mount to remove any stale instances
+    if (window.recaptchaVerifier) {
+      window.recaptchaVerifier = null;
+    }
+    return () => {
+      // Clear on unmount
+      if (window.recaptchaVerifier) {
+        try {
+          window.recaptchaVerifier.clear();
+        } catch (e) {
+          console.error("Cleanup error:", e);
+        }
+        window.recaptchaVerifier = null;
+      }
+    };
+  }, []);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   function setupRecaptcha() {
-    if (window.recaptchaVerifier) window.recaptchaVerifier.clear();
-    window.recaptchaVerifier = new RecaptchaVerifier(
-      auth,
-      "recaptcha-container",
-      {
-        size: "invisible",
-        callback: () => console.log("Recaptcha passed"),
-      }
-    );
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        auth,
+        "recaptcha-container",
+        {
+          size: "invisible",
+          callback: (response) => console.log("Recaptcha passed", response),
+          "expired-callback": () => {
+            window.recaptchaVerifier.clear();
+          },
+        },
+      );
+    }
   }
 
   async function handleGetOTP(e) {
@@ -98,6 +137,7 @@ const VendorLogin = ({ onClose, onSwitchToLogin }) => {
       console.log("OTP sent successfully : ", confirmationResult);
       setStep("otp");
     } catch (err) {
+      console.error(err);
       setErrorMsg("OTP send failed. Try again.");
     }
   }

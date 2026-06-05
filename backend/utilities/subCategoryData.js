@@ -1,6 +1,6 @@
 // ✅ Define subcategories for each main category
 export const SUBCATEGORY_MAP = {
-  "DJ & Brash Band": [
+  "DJ Services & Brash Band": [
     "Wedding DJ",
     "Corporate Event DJ",
     "Private Party DJ",
@@ -38,19 +38,20 @@ export const SUBCATEGORY_MAP = {
     "Instrumental Performance",
     "Bharatanatyam Dance",
   ],
-  "Bouncers & Security": [
-    "Event Security",
-    "VIP Protection",
-    "Crowd Management",
-    "Corporate Security",
+  "Islamic Maulbi": [
+    "Religious Sermon",
+    "Tilawat",
+    "Marriage Ceremonies",
+    "Funeral Services",
     "Special Event",
   ],
-  "Stars & Influencers": [
-    "Celebrity Appearance",
-    "Brand Ambassador",
-    "Social Media Influencer",
-    "Live Performance",
-    "Special Event",
+  "Christian Priest": [
+    "All",
+    "Christening",
+    "Wedding Ceremony",
+    "Funeral Service",
+    "Blessings Prayers",
+    "Church Program",
   ],
   "Hindu Pandit": [
     "Wedding Ceremony",

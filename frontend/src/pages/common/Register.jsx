@@ -63,14 +63,13 @@ const Register = ({ onClose, onSwitchToLogin }) => {
 
     try {
       setLoading(true);
-      const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
       const response = await axios.post(
-        `${BACKEND_URL}/user/signup`,
+        `${import.meta.env.VITE_BACKEND_URL}/user/signup`,
         formData,
         { withCredentials: true }
       );
 
-      if (response?.data?.statusCode === 400 || response?.data?.message === "User already exists") {
+      if (response?.data?.message === "user do exist") {
         setErrorMsg("User already exists. Please log in.");
         setLoading(false);
         return;

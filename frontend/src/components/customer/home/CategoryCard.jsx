@@ -8,7 +8,12 @@ const CategoryCard = ({ category }) => {
     <div
       className="courseCard"
       onClick={() => {
-        navigate(`/category/${category.title}`, {
+        const slug = category.title
+          .toLowerCase()
+          .replace(/[^a-z0-9\s-]/g, "")
+          .trim()
+          .replace(/\s+/g, "-");
+        navigate(`/category/${slug}`, {
           state: { category }, // ✅ pass full category object
         });
       }}

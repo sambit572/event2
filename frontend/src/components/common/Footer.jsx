@@ -12,7 +12,7 @@ import insta40 from "/instagram-40.webp";
 import insta80 from "/instagram-80.webp";
 
 export const categoriesData = {
-  "DJ & Brash Band": [
+  "DJ Services & Brash Band": [
     "Wedding DJ",
     "Corporate Event DJ",
     "Private Party DJ",
@@ -50,19 +50,20 @@ export const categoriesData = {
     "Instrumental Performance",
     "Bharatanatyam Dance",
   ],
-  "Bouncers & Security": [
-    "Event Security",
-    "VIP Protection",
-    "Crowd Management",
-    "Corporate Security",
+  "Islamic Maulbi": [
+    "Religious Sermon",
+    "Tilawat",
+    "Marriage Ceremonies",
+    "Funeral Services",
     "Special Event",
   ],
-  "Stars & Influencers": [
-    "Celebrity Appearance",
-    "Brand Ambassador",
-    "Social Media Influencer",
-    "Live Performance",
-    "Special Event",
+  "Christian Priest": [
+    "All",
+    "Christening",
+    "Wedding Ceremony",
+    "Funeral Service",
+    "Blessings Prayers",
+    "Church Program",
   ],
   "Hindu Pandit": [
     "Wedding Ceremony",
@@ -206,7 +207,7 @@ function Footer() {
                   alt="Email"
                   className="icon"
                 />{" "}
-                support@eventsbridge.com
+                techsupport@eventsbridge.com
               </p>
             </a>
             <p
@@ -605,7 +606,7 @@ function Footer() {
                       className="icon"
                       alt=""
                     />{" "}
-                    support@eventsbridge.com{" "}
+                    techsupport@eventsbridge.com{" "}
                   </p>
                   <p>
                     <img

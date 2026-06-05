@@ -16,7 +16,7 @@ import "./cronjobs/startCronjobs.js";
 import feedbackRoutes from "./routes/common/feedback.routes.js";
 import serviceRoutes from "./routes/common/serviceList.routes.js";
 import reportRoutes from "./routes/common/report.routes.js";
-import wishlistRoutes from "./routes/user/wishlist.routes.js"; // Import wishlist routes
+import wishlistRoutes from "./routes/user/wishlist.routes.js";
 import cartRouter from "./routes/user/cart.routes.js";
 import { searchRouter } from "./routes/common/search.routes.js";
 import calendarRoutes from "./routes/common/calendar.routes.js";
@@ -26,12 +26,15 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const isProduction = process.env.NODE_ENV === "production"; // ✅ Auto detect
+const isProduction = process.env.NODE_ENV === "production";
 
 // ✅ Middleware Setup
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      process.env.FRONTEND_URL,
+    ].filter(Boolean),
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
@@ -53,23 +56,28 @@ app.use(cookieParser());
 (async () => {
   try {
     await startAgenda();
+    console.log("✅ Agenda started successfully");
   } catch (err) {
     console.error("❌ Agenda init failed:", err);
   }
 })();
-//rads api for testing
-// Cached API with Redis
+
+// ✅ Test Cached API with Redis (Safe version)
 app.get("/api/slow-api", async (req, res) => {
   const cacheKey = "user:data";
 
-  // 1. Check Redis first
-  const cached = await client.get(cacheKey);
+  try {
+    // 1. Check Redis first
+    const cached = await client.get(cacheKey);
 
-  if (cached) {
-    return res.json({ source: "cache", data: JSON.parse(cached) });
+    if (cached) {
+      return res.json({ source: "cache", data: JSON.parse(cached) });
+    }
+  } catch (err) {
+    console.error("❌ Redis GET failed:", err.message);
   }
 
-  // 2. If not in cache → simulate slow API (5 sec)
+  // 2. Simulate slow API (5 sec)
   await new Promise((resolve) => setTimeout(resolve, 5000));
 
   const data = {
@@ -78,8 +86,12 @@ app.get("/api/slow-api", async (req, res) => {
     time: new Date().toISOString(),
   };
 
-  // 3. Save in Redis for future (set expiry 30 sec)
-  await client.setEx(cacheKey, 30, JSON.stringify(data));
+  try {
+    // 3. Save in Redis for future (set expiry 30 sec)
+    await client.setEx(cacheKey, 30, JSON.stringify(data));
+  } catch (err) {
+    console.error("❌ Redis SET failed:", err.message);
+  }
 
   res.json({ source: "API", data });
 });
@@ -93,7 +105,7 @@ app.use("/api/vendors", vendor_router);
 app.use("/api/test", test_router);
 app.use("/api/feedback", feedbackRoutes);
 app.use("/api/common", serviceRoutes);
-app.use("/api/wishlist", wishlistRoutes); // Use wishlist routes
+app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/cart", cartRouter);
 app.use("/api/calendar", calendarRoutes);
 app.use("/api/user-bookings", userBookingHistoryRoutes);
@@ -118,7 +130,7 @@ app.use(errorHandler);
 
 // ✅ Serve Frontend Only in Production (Vite -> dist)
 if (isProduction) {
-  const frontendPath = path.join(__dirname, "../frontend/dist"); // ✅ Vite output folder
+  const frontendPath = path.join(__dirname, "../frontend/dist");
 
   app.use(express.static(frontendPath));
 

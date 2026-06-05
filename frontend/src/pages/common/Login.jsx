@@ -13,24 +13,21 @@ import ForgotPass from "./../customer/ForgotPass";
 import { FiEyeOff, FiEye } from "react-icons/fi";
 import Spinner from "./../../components/common/Spinner";
 import { Seo } from "../../seo/seo.js";
-let firebaseAuthCache = null;
 
+let firebaseAuthCache = null;
 async function loadFirebaseAuth() {
   if (!firebaseAuthCache) {
     const [{ getFirebaseAuth }, authModule] = await Promise.all([
-      import("../../utils/firebase.js"), // your new firebaseAuth file
+      import("../../utils/firebase.js"),
       import("firebase/auth"),
     ]);
-
-    const auth = await getFirebaseAuth();
-
+    const auth = getFirebaseAuth();
     firebaseAuthCache = {
       auth,
       RecaptchaVerifier: authModule.RecaptchaVerifier,
       signInWithPhoneNumber: authModule.signInWithPhoneNumber,
     };
   }
-
   return firebaseAuthCache;
 }
 
@@ -52,41 +49,22 @@ const Login = ({ onClose, onSwitchToRegister }) => {
   const [errorMsg, setErrorMsg] = useState("");
   const recaptchaVerifierRef = useRef(null);
 
-  // Initialize reCAPTCHA
+  // Clean up reCAPTCHA when the modal mounts/closes so it doesn't reference dead DOM elements
   useEffect(() => {
-    let cancelled = false;
-
-    (async () => {
-      try {
-        const { auth, RecaptchaVerifier } = await loadFirebaseAuth();
-
-        if (cancelled || recaptchaVerifierRef.current) return;
-
-        const verifier = new RecaptchaVerifier(
-          auth,
-          "recaptcha-container",
-          {
-            size: "invisible",
-            callback: (response) => {
-              console.log("Enterprise reCAPTCHA passed", response);
-            },
-            "expired-callback": () => {
-              verifier.clear();
-              recaptchaVerifierRef.current = null;
-            },
-          },
-          { type: "recaptcha-enterprise" }
-        );
-
-        await verifier.render();
-        recaptchaVerifierRef.current = verifier;
-      } catch (err) {
-        setErrorMsg("Enterprise reCAPTCHA failed to load.");
-      }
-    })();
-
+    // Clear on mount to remove any stale instances
+    if (window.recaptchaVerifier) {
+      window.recaptchaVerifier = null;
+    }
+    
     return () => {
-      cancelled = true;
+      if (window.recaptchaVerifier) {
+        try {
+          window.recaptchaVerifier.clear();
+        } catch (e) {
+          console.error("Cleanup error:", e);
+        }
+        window.recaptchaVerifier = null;
+      }
     };
   }, []);
 
@@ -101,32 +79,50 @@ const Login = ({ onClose, onSwitchToRegister }) => {
     const phone = formData.phoneNo.replace(/\D/g, "");
     const phoneNumber = "+91" + phone;
 
-    if (!recaptchaVerifierRef.current) {
-      setIsLoading(false);
-      return setErrorMsg("ReCAPTCHA is not ready. Please wait...");
-    }
-
     if (!/^\+91\d{10}$/.test(phoneNumber)) {
       setIsLoading(false);
       return setErrorMsg("Invalid Indian phone number.");
     }
 
     try {
-      const { auth, signInWithPhoneNumber } = await loadFirebaseAuth();
+      const { auth, signInWithPhoneNumber, RecaptchaVerifier } = await loadFirebaseAuth();
+
+      // Initialize reCAPTCHA if it doesn't exist yet
+      if (!window.recaptchaVerifier) {
+        window.recaptchaVerifier = new RecaptchaVerifier(
+          auth,
+          "recaptcha-container",
+          {
+            size: "invisible",
+            callback: (response) => {
+              console.log("reCAPTCHA solved:", response);
+            },
+          }
+        );
+      }
 
       const confirmationResult = await signInWithPhoneNumber(
         auth,
         phoneNumber,
-        recaptchaVerifierRef.current
+        window.recaptchaVerifier
       );
 
       window.confirmationResult = confirmationResult;
       setStep("otp");
     } catch (err) {
       console.error("OTP error:", err);
-      recaptchaVerifierRef.current?.clear();
-      recaptchaVerifierRef.current = null;
-      setErrorMsg("OTP send failed. Check number or reCAPTCHA.");
+      
+      // Clear reCAPTCHA on error so it can be re-initialized cleanly
+      if (window.recaptchaVerifier) {
+        try {
+          window.recaptchaVerifier.clear();
+        } catch (clearErr) {
+          console.error("Error clearing reCAPTCHA:", clearErr);
+        }
+        window.recaptchaVerifier = null;
+      }
+      
+      setErrorMsg(err.message || "OTP send failed. Please try again.");
     }
 
     setIsLoading(false);

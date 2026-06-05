@@ -3,7 +3,7 @@ import { firebaseApp } from "./firebaseCore";
 
 let authInstance;
 
-export async function getFirebaseAuth() {
+export function getFirebaseAuth() {
   if (!authInstance) {
     authInstance = getAuth(firebaseApp);
     authInstance.languageCode = "en";

@@ -1,60 +1,210 @@
 import Vendor from "../../model/vendor/vendor.model.js";
-import { ApiError } from "../../utilities/ApiError.js";
-import { ApiResponse } from "../../utilities/ApiResponse.js";
-import fs from "fs/promises";
-import { isValidPhoneNumber } from "libphonenumber-js";
-import { uploadOnCloudinary } from "../../utilities/cloudinary.js";
-import { validateEmailDomain } from "../../utilities/verifyDNS.js";
-import { sendEmail } from "../../utilities/sendEmail.js";
-import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
-import crypto from "crypto";
 import { User } from "../../model/user/user.model.js";
 import { Service } from "../../model/vendor/service.model.js";
 
+import { ApiError } from "../../utilities/ApiError.js";
+import { ApiResponse } from "../../utilities/ApiResponse.js";
+
+import { uploadOnCloudinary } from "../../utilities/cloudinary.js";
+import { validateEmailDomain } from "../../utilities/verifyDNS.js";
+import { sendEmail } from "../../utilities/sendEmail.js";
+
+import fs from "fs/promises";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import crypto from "crypto";
+
+import { isValidPhoneNumber } from "libphonenumber-js";
+
+// ======================================================
+// ENV
+// ======================================================
+
 const isProd = process.env.NODE_ENV === "production";
 
-const baseOption = {
+// ======================================================
+// COOKIE CONFIG
+// ======================================================
+
+const cookieOptions = {
   httpOnly: true,
-  secure: isProd ? "true" : "false", // true in prod, false in dev
+  secure: isProd,
   sameSite: isProd ? "None" : "Lax",
   path: "/",
 };
 
 const accessTokenOption = {
-  ...baseOption,
-  expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 day
+  ...cookieOptions,
+  expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
 };
 
 const refreshTokenOption = {
-  ...baseOption,
-  expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000), // 10 days
+  ...cookieOptions,
+  expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000),
 };
+
+// ======================================================
+// HELPERS
+// ======================================================
+
+const sendAuthResponse = (
+  res,
+  statusCode,
+  vendor,
+  accessToken,
+  refreshToken,
+  message
+) => {
+  return res
+    .status(statusCode)
+    .cookie(
+      "vendorAccessToken",
+      accessToken,
+      accessTokenOption
+    )
+    .cookie(
+      "vendorRefreshToken",
+      refreshToken,
+      refreshTokenOption
+    )
+    .json(
+      new ApiResponse(
+        statusCode,
+        {
+          vendor,
+          accessToken,
+          refreshToken,
+        },
+        message
+      )
+    );
+};
+
+const deleteCloudinaryImage = async (
+  imageUrl
+) => {
+  try {
+    if (
+      !imageUrl ||
+      !imageUrl.includes("cloudinary")
+    ) {
+      return;
+    }
+
+    const publicId = imageUrl
+      .split("/")
+      .pop()
+      .split(".")[0];
+
+    await uploadOnCloudinary(
+      null,
+      publicId,
+      true
+    );
+  } catch (error) {
+    console.error(
+      "Cloudinary delete failed:",
+      error
+    );
+  }
+};
+
+const generateVendorTokens = async (
+  vendorId
+) => {
+  const vendor = await Vendor.findById(
+    vendorId
+  );
+
+  if (!vendor) {
+    throw new ApiError(
+      404,
+      "Vendor not found"
+    );
+  }
+
+  const accessToken =
+    vendor.generateAccessToken();
+
+  const refreshToken =
+    vendor.generateRefreshToken();
+
+  vendor.refreshToken = refreshToken;
+
+  await vendor.save({
+    validateBeforeSave: false,
+  });
+
+  return {
+    accessToken,
+    refreshToken,
+  };
+};
+
+// ======================================================
+// REGISTER VENDOR
+// ======================================================
 
 const registerVendor = async (req, res) => {
   try {
-    const { fullName, email, phoneNumber, password } = req.body;
+    const {
+      fullName,
+      email,
+      phoneNumber,
+      password,
+    } = req.body;
 
-    // 1. Basic Validation
-    if ([fullName, email, phoneNumber, password].some((field) => !field)) {
+    if (
+      [
+        fullName,
+        email,
+        phoneNumber,
+        password,
+      ].some((field) => !field)
+    ) {
       return res
         .status(400)
         .json(
           new ApiError(
             400,
-            "All required fields (full name, email, phone number, password) must be provided."
+            "All required fields must be provided."
           )
         );
     }
 
-    const isValidDns = await validateEmailDomain(email);
+    const normalizedEmail = email
+      .trim()
+      .toLowerCase();
+
+    const normalizedPhone =
+      phoneNumber.trim();
+
+    const isValidDns =
+      await validateEmailDomain(
+        normalizedEmail
+      );
+
     if (!isValidDns) {
-      return res.status(400).json(new ApiError(400, "Invalid email domain"));
+      return res
+        .status(400)
+        .json(
+          new ApiError(
+            400,
+            "Invalid email domain"
+          )
+        );
     }
-    // 2. Check if vendor already exists
-    const existingVendor = await Vendor.findOne({
-      $or: [{ email }, { phoneNumber }],
-    });
+
+    const existingVendor =
+      await Vendor.findOne({
+        $or: [
+          { email: normalizedEmail },
+          {
+            phoneNumber:
+              normalizedPhone,
+          },
+        ],
+      });
 
     if (existingVendor) {
       return res
@@ -62,628 +212,1137 @@ const registerVendor = async (req, res) => {
         .json(
           new ApiError(
             409,
-            "A vendor with this email or phone number already exists."
+            "Vendor already exists"
           )
         );
     }
 
-    // 3. Optional: Upload to Cloudinary
     let profilePictureUrl = "";
+
     if (req.file) {
-      const cloudinaryResult = await uploadOnCloudinary(req.file.path);
+      const cloudinaryResult =
+        await uploadOnCloudinary(
+          req.file.path
+        );
+
       if (!cloudinaryResult?.url) {
         return res
           .status(500)
           .json(
-            new ApiError(500, "Failed to upload profile picture to Cloudinary.")
+            new ApiError(
+              500,
+              "Profile picture upload failed"
+            )
           );
       }
-      profilePictureUrl = cloudinaryResult.url;
+
+      profilePictureUrl =
+        cloudinaryResult.url;
     }
 
-    // 4. Create Vendor
-    const newVendor = await Vendor.create({
-      fullName,
-      email,
-      phoneNumber,
-      password,
-      profilePicture: profilePictureUrl, // May be empty string
-      registrationProgress: 1,
-    });
+    const newVendor =
+      await Vendor.create({
+        fullName: fullName.trim(),
+        email: normalizedEmail,
+        phoneNumber:
+          normalizedPhone,
+        password,
+        profilePicture:
+          profilePictureUrl,
+        registrationProgress: 1,
+      });
 
-    const { accessToken, refreshToken } = await generateVendorTokens(
+    const {
+      accessToken,
+      refreshToken,
+    } = await generateVendorTokens(
       newVendor._id
     );
 
     await sendEmail({
-      to: email,
-      subject: "🎉 Welcome to EventsBridge - Vendor Registration",
+      to: normalizedEmail,
+      subject:
+        "🎉 Welcome to EventsBridge",
       html: `
-    <h2>Hi ${fullName},</h2>
-    <p>Thank you for registering as a vendor on <strong>EventsBridge</strong>!</p>
-    <p><strong>Your Registration Details:</strong></p>
-    <ul>
-      <li><strong>Name:</strong> ${fullName}</li>
-      <li><strong>Email:</strong> ${email}</li>
-      <li><strong>Phone No:</strong> ${phoneNumber}</li>
-    </ul>
-    <p>We’re thrilled to have your services onboard!</p>
-    <br/>
-    <p>Warm regards,<br/>Team EventsBridge</p>
-  `,
+      <h2>Hi ${fullName},</h2>
+      <p>Thank you for registering on EventsBridge.</p>
+      <p>We’re excited to onboard your services.</p>
+      <br/>
+      <p>Team EventsBridge</p>
+      `,
     });
 
-    // 5. Return success response
-    return res
-      .status(200)
-      .cookie("vendorAccessToken", accessToken, accessTokenOption)
-      .cookie("vendorRefreshToken", refreshToken, refreshTokenOption)
-      .json(new ApiResponse(200, newVendor, "Vendor registered successfully."));
-  } catch (error) {
-    console.error("Vendor registration error:", error);
-
-    // Mongoose schema validation
-    if (error.name === "ValidationError") {
-      const messages = Object.values(error.errors).map((err) => err.message);
-      return res
-        .status(400)
-        .json(new ApiError(400, `Validation failed: ${messages.join(", ")}`));
-    }
-
-    return res.status(500).json(new ApiError(500, "Internal server error"));
-  }
-};
-
-const updateVendor = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const updateData = { ...req.body };
-    const file = req.file;
-
-    // Never allow password updates through this route
-    delete updateData.password;
-    delete updateData.confirmPassword;
-
-    console.log("Update data received:", updateData);
-
-    const vendor = await Vendor.findById(id);
-    if (!vendor) {
-      return res
-        .status(404)
-        .json(new ApiError(404, "Vendor not found for update."));
-    }
-
-    // Handle profile picture removal
-    if (updateData.removeProfilePicture === "true") {
-      if (
-        vendor.profilePicture &&
-        vendor.profilePicture.includes("cloudinary")
-      ) {
-        const publicId = vendor.profilePicture.split("/").pop().split(".")[0];
-        await uploadOnCloudinary(null, publicId, true); // Custom delete method
-      }
-      updateData.profilePicture = "";
-    }
-
-    // Handle profile picture replacement
-    if (file) {
-      if (
-        vendor.profilePicture &&
-        vendor.profilePicture.includes("cloudinary")
-      ) {
-        const publicId = vendor.profilePicture.split("/").pop().split(".")[0];
-        await uploadOnCloudinary(null, publicId, true);
-      }
-
-      const cloudinaryResult = await uploadOnCloudinary(file.path);
-      if (!cloudinaryResult?.url) {
-        return res
-          .status(500)
-          .json(new ApiError(500, "Failed to upload new profile picture."));
-      }
-
-      updateData.profilePicture = cloudinaryResult.url;
-    }
-
-    // 🚫 No bank update logic here
-
-    const updatedVendor = await Vendor.findByIdAndUpdate(id, updateData, {
-      new: true,
-      runValidators: true,
-    }).select("-password");
-
-    return res
-      .status(200)
-      .json(
-        new ApiResponse(200, updatedVendor, "Vendor updated successfully.")
+    const vendorData =
+      await Vendor.findById(
+        newVendor._id
+      ).select(
+        "-password -refreshToken"
       );
+
+    return sendAuthResponse(
+      res,
+      201,
+      vendorData,
+      accessToken,
+      refreshToken,
+      "Vendor registered successfully"
+    );
   } catch (error) {
-    console.error("Error updating vendor:", error);
+    console.error(
+      "Vendor registration error:",
+      error
+    );
 
-    // Clean up uploaded file if an error occurs
-    if (req.file?.path) {
-      try {
-        await fs.unlink(req.file.path);
-      } catch (unlinkError) {
-        console.error("Failed to delete uploaded file:", unlinkError);
-      }
-    }
-
-    // Handle validation errors
     if (error.name === "ValidationError") {
-      const messages = Object.values(error.errors).map((err) => err.message);
+      const messages =
+        Object.values(error.errors).map(
+          (err) => err.message
+        );
+
       return res
         .status(400)
         .json(
           new ApiError(
             400,
-            `Validation failed during update: ${messages.join(", ")}`
+            messages.join(", ")
           )
         );
     }
 
-    // Handle duplicate email or phone
     if (error.code === 11000) {
-      const field = Object.keys(error.keyValue)[0];
       return res
         .status(409)
         .json(
-          new ApiError(409, `Another vendor already exists with this ${field}.`)
+          new ApiError(
+            409,
+            "Vendor already exists"
+          )
         );
     }
 
-    // Generic internal server error
     return res
       .status(500)
-      .json(new ApiError(500, "Internal server error during vendor update."));
-  }
-};
-
-const generateVendorTokens = async (vendorId) => {
-  const vendor = await Vendor.findById(vendorId);
-  const accessToken = vendor.generateAccessToken();
-  const refreshToken = vendor.generateRefreshToken();
-  vendor.refreshToken = refreshToken;
-  await vendor.save({ validateBeforeSave: false });
-  return { accessToken, refreshToken };
-};
-
-const loginVendor = async (req, res) => {
-  const { email, phoneNumber, password } = req.body;
-  if (!(email || phoneNumber) || !password)
-    return res
-      .status(400)
-      .json(new ApiError(400, "Email/Phone and password required"));
-
-  const vendor = await Vendor.findOne({
-    $or: [{ email }, { phoneNumber }],
-  });
-
-  if (!vendor)
-    return res.status(404).json(new ApiError(404, "Vendor not found"));
-  const valid = await vendor.comparePassword(password);
-  if (!valid)
-    return res.status(400).json(new ApiError(400, "Incorrect password"));
-
-  const { accessToken, refreshToken } = await generateVendorTokens(vendor._id);
-  const data = await Vendor.findById(vendor._id).select(
-    "-password -refreshToken -accessToken"
-  );
-  return res
-    .status(200)
-    .cookie("vendorAccessToken", accessToken, accessTokenOption)
-    .cookie("vendorRefreshToken", refreshToken, refreshTokenOption)
-    .json(
-      new ApiResponse(
-        200,
-        { vendor: data, accessToken, refreshToken },
-        "Vendor logged in successfully"
-      )
-    );
-};
-
-// ✅ Logout Vendor
-const vendorLogout = async (req, res) => {
-  if (req.vendor && req.vendor._id) {
-    await Vendor.findByIdAndUpdate(req.vendor._id, {
-      $unset: { refreshToken: 1 },
-    });
-  }
-  return res
-    .status(200)
-    .clearCookie("vendorAccessToken", accessTokenOption)
-    .clearCookie("vendorRefreshToken", refreshTokenOption)
-    .json(new ApiResponse(200, {}, "Vendor logged out"));
-};
-
-// ✅ Forgot Password
-const sendVendorResetLink = async (req, res) => {
-  const { email } = req.body;
-  const vendor = await Vendor.findOne({ email });
-  if (!vendor)
-    return res.status(404).json(new ApiError(404, "Vendor not found"));
-
-  const resetToken = crypto.randomBytes(32).toString("hex");
-  vendor.resetPasswordToken = resetToken;
-  vendor.resetPasswordTokenExpires = Date.now() + 3600000;
-  await vendor.save();
-
-  const resetUrl = `${process.env.FRONTEND_URL}/vendor/reset-password/${resetToken}`;
-
-  // use your central mailer
-  const result = await sendEmail({
-    to: vendor.email,
-    subject: "Vendor Password Reset",
-    html: `<p>Click <a href="${resetUrl}">here</a> to reset your password.</p>`,
-  });
-
-  if (!result.success) {
-    return res
-      .status(500)
-      .json(new ApiError(500, "Failed to send reset email", result.error));
-  }
-
-  return res
-    .status(200)
-    .json(new ApiResponse(200, null, "Reset link sent to vendor email"));
-};
-
-// ✅ Reset Password
-const resetVendorPassword = async (req, res) => {
-  const { resetToken } = req.params;
-  const { newPassword } = req.body;
-
-  const vendor = await Vendor.findOne({
-    resetPasswordToken: resetToken,
-    resetPasswordTokenExpires: { $gt: Date.now() },
-  });
-
-  if (!vendor)
-    return res.status(400).json(new ApiError(400, "Token invalid or expired"));
-
-  vendor.password = newPassword;
-  vendor.resetPasswordToken = undefined;
-  vendor.resetPasswordTokenExpires = undefined;
-  await vendor.save();
-
-  return res
-    .status(200)
-    .json(new ApiResponse(200, null, "Vendor password reset successfully"));
-};
-
-// ✅ Change Password (requires auth, uses req.vendor from middleware)
-const changeVendorPassword = async (req, res) => {
-  const { oldPassword, newPassword } = req.body;
-  const vendor = await Vendor.findById(req.vendor._id);
-
-  const valid = await bcrypt.compare(oldPassword, vendor.password);
-  if (!valid)
-    return res.status(400).json(new ApiError(400, "Incorrect old password"));
-  if (oldPassword === newPassword)
-    return res
-      .status(400)
-      .json(new ApiError(400, "New password cannot be same as old"));
-
-  vendor.password = newPassword;
-  await vendor.save();
-
-  return res
-    .status(200)
-    .json(new ApiResponse(200, null, "Password changed successfully"));
-};
-
-// ✅ Silent Login (with vendor refresh token)
-const vendorSilentLogin = async (req, res) => {
-  const token = req.cookies.vendorRefreshToken;
-  if (!token)
-    return res.status(401).json(new ApiResponse(401, null, "No token"));
-
-  let decoded;
-  try {
-    decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
-  } catch (err) {
-    return res
-      .status(401)
-      .json(new ApiResponse(401, null, "Invalid or expired token"));
-  }
-
-  const vendor = await Vendor.findById(decoded._id);
-  if (!vendor)
-    return res.status(404).json(new ApiError(404, "Vendor not found"));
-
-  const { accessToken, refreshToken } = await generateVendorTokens(vendor._id);
-
-  console.log("vendorSilentLogin working fine ");
-
-  return res
-    .status(200)
-    .cookie("vendorAccessToken", accessToken, accessTokenOption)
-    .cookie("vendorRefreshToken", refreshToken, refreshTokenOption)
-    .json(
-      new ApiResponse(
-        200,
-        { vendor, accessToken },
-        "Vendor login via refresh successful"
-      )
-    );
-};
-
-const checkVendorEmailStatus = async (req, res) => {
-  const { email } = req.body;
-
-  if (!email) {
-    return res.status(400).json({ message: "Email is required" });
-  }
-
-  try {
-    const existsInVendor = await Vendor.exists({ email });
-    const existsInUser = await User.exists({ email });
-
-    return res.status(200).json({
-      existsInVendor: Boolean(existsInVendor),
-      existsInUser: Boolean(existsInUser),
-    });
-  } catch (error) {
-    console.error("Error checking email status:", error.message);
-    return res.status(500).json({ message: "Internal server error" });
-  }
-};
-
-const getVendorProfile = async (req, res) => {
-  try {
-    const vendor = req.vendor; // Set in middleware
-
-    if (!vendor) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Vendor not found" });
-    }
-
-    res.status(200).json({ success: true, data: vendor });
-  } catch (error) {
-    res
-      .status(500)
-      .json({ success: false, message: "Server Error", error: error.message });
-  }
-};
-
-const verifyConfirmPassword = async (req, res, next) => {
-  try {
-    const { password } = req.body;
-    const vendor = await Vendor.findById(req.vendor._id); // check this line!
-
-    if (!vendor) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Vendor not found" });
-    }
-
-    const isMatch = await bcrypt.compare(password, vendor.password);
-    if (isMatch) {
-      return res.json({ success: true });
-    } else {
-      return res
-        .status(401)
-        .json({ success: false, message: "Incorrect password" });
-    }
-  } catch (error) {
-    console.error("❌ Backend error:", error);
-    return res.status(500).json({ success: false, message: "Server error" });
-  }
-};
-
-const updateVendorProfilePicture = async (req, res, next) => {
-  try {
-    const id = req.vendor._id; // 👈 Comes from JWT middleware
-    const file = req.file;
-
-    if (!file) {
-      return next(new ApiError(400, "No file uploaded."));
-    }
-
-    const vendor = await Vendor.findById(id);
-    if (!vendor) {
-      return next(new ApiError(404, "Vendor not found."));
-    }
-
-    // Delete old image from Cloudinary (if exists)
-    if (vendor.profilePicture && vendor.profilePicture.includes("cloudinary")) {
-      const publicId = vendor.profilePicture.split("/").pop().split(".")[0];
-      await uploadOnCloudinary(null, publicId, true); // Delete old
-    }
-
-    const cloudinaryResult = await uploadOnCloudinary(file.path);
-    if (!cloudinaryResult?.url) {
-      return next(new ApiError(500, "Failed to upload new profile picture."));
-    }
-
-    vendor.profilePicture = cloudinaryResult.url;
-    await vendor.save();
-
-    res
-      .status(200)
       .json(
-        new ApiResponse(200, vendor, "Profile picture updated successfully.")
+        new ApiError(
+          500,
+          "Internal server error"
+        )
       );
-  } catch (error) {
-    console.error("Error uploading profile:", error);
-
-    if (req.file && req.file.path) {
-      try {
-        await fs.unlink(req.file.path);
-      } catch (unlinkError) {
-        console.error("Error deleting uploaded file:", unlinkError);
-      }
-    }
-
-    next(new ApiError(500, "Internal server error during profile update."));
   }
 };
-// ✅  Get Vendor Search Suggestions
-const getSearchSuggestions = async (req, res) => {
-  try {
-    const { query } = req.query;
 
-    if (!query || query.trim().length < 1) {
+// ======================================================
+// LOGIN VENDOR
+// ======================================================
+
+const loginVendor = async (
+  req,
+  res
+) => {
+  try {
+    const {
+      email,
+      phoneNumber,
+      password,
+    } = req.body;
+
+    if (
+      !(email || phoneNumber) ||
+      !password
+    ) {
       return res
         .status(400)
-        .json(new ApiError(400, "Search query is required"));
-    }
-
-    const searchTerm = query.trim().toLowerCase();
-
-    const matches = await Service.aggregate([
-      {
-        $match: {
-          $or: [
-            { serviceName: { $regex: searchTerm, $options: "i" } },
-            { serviceCategory: { $regex: searchTerm, $options: "i" } },
-            { locationOffered: { $regex: searchTerm, $options: "i" } },
-          ],
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          serviceName: 1,
-          serviceCategory: 1,
-          locationOffered: 1,
-        },
-      },
-      {
-        $limit: 15,
-      },
-    ]);
-
-    const serviceNames = new Set();
-    const categories = new Set();
-    const locations = new Set();
-
-    for (const match of matches) {
-      if (
-        match.serviceName &&
-        match.serviceName.toLowerCase().includes(searchTerm)
-      ) {
-        serviceNames.add(match.serviceName);
-      }
-
-      if (
-        match.serviceCategory &&
-        match.serviceCategory.toLowerCase().includes(searchTerm)
-      ) {
-        categories.add(match.serviceCategory);
-      }
-
-      if (
-        match.locationOffered &&
-        match.locationOffered.toLowerCase().includes(searchTerm)
-      ) {
-        locations.add(match.locationOffered);
-      }
-    }
-
-    const suggestions = [];
-
-    [...serviceNames].forEach((label) =>
-      suggestions.push({ label, type: "service" })
-    );
-    [...categories].forEach((label) =>
-      suggestions.push({ label, type: "category" })
-    );
-    [...locations].forEach((label) =>
-      suggestions.push({ label, type: "location" })
-    );
-
-    if (suggestions.length === 0) {
-      return res
-        .status(200)
         .json(
-          new ApiResponse(200, [], "No suggestions found for this search.")
+          new ApiError(
+            400,
+            "Email/Phone and password required"
+          )
         );
+    }
+
+    const vendor =
+      await Vendor.findOne({
+        $or: [
+          { email },
+          { phoneNumber },
+        ],
+      });
+
+    if (!vendor) {
+      return res
+        .status(404)
+        .json(
+          new ApiError(
+            404,
+            "Vendor not found"
+          )
+        );
+    }
+
+    if (vendor.isBlocked) {
+      return res
+        .status(403)
+        .json(
+          new ApiError(
+            403,
+            "Vendor account blocked"
+          )
+        );
+    }
+
+    const valid =
+      await vendor.comparePassword(
+        password
+      );
+
+    if (!valid) {
+      return res
+        .status(400)
+        .json(
+          new ApiError(
+            400,
+            "Incorrect password"
+          )
+        );
+    }
+
+    const {
+      accessToken,
+      refreshToken,
+    } = await generateVendorTokens(
+      vendor._id
+    );
+
+    const data =
+      await Vendor.findById(
+        vendor._id
+      ).select(
+        "-password -refreshToken"
+      );
+
+    return sendAuthResponse(
+      res,
+      200,
+      data,
+      accessToken,
+      refreshToken,
+      "Vendor logged in successfully"
+    );
+  } catch (error) {
+    console.error(
+      "Vendor login error:",
+      error
+    );
+
+    return res
+      .status(500)
+      .json(
+        new ApiError(
+          500,
+          "Internal server error"
+        )
+      );
+  }
+};
+
+// ======================================================
+// LOGOUT
+// ======================================================
+
+const vendorLogout = async (
+  req,
+  res
+) => {
+  try {
+    if (req.vendor?._id) {
+      await Vendor.findByIdAndUpdate(
+        req.vendor._id,
+        {
+          $unset: {
+            refreshToken: 1,
+          },
+        }
+      );
     }
 
     return res
       .status(200)
-      .json(new ApiResponse(200, suggestions, "Search suggestions fetched"));
+      .clearCookie(
+        "vendorAccessToken",
+        accessTokenOption
+      )
+      .clearCookie(
+        "vendorRefreshToken",
+        refreshTokenOption
+      )
+      .json(
+        new ApiResponse(
+          200,
+          {},
+          "Vendor logged out"
+        )
+      );
   } catch (error) {
-    console.error("Suggestion error:", error.message);
-    return res.status(500).json(new ApiError(500, "Internal Server Error"));
+    return res
+      .status(500)
+      .json(
+        new ApiError(
+          500,
+          "Logout failed"
+        )
+      );
   }
 };
 
-// dashboard
-const getVendorDashboard = async (req, res) => {
-  console.log("📍 getVendorDashboard called");
+// ======================================================
+// GET PROFILE
+// ======================================================
+
+const getVendorProfile = async (
+  req,
+  res
+) => {
   try {
-    const currentStep = req.vendor.registrationProgress;
-    const currentPath = req.query.currentPath;
+    return res.status(200).json(
+      new ApiResponse(
+        200,
+        req.vendor,
+        "Vendor profile fetched"
+      )
+    );
+  } catch (error) {
+    return res
+      .status(500)
+      .json(
+        new ApiError(
+          500,
+          "Failed to fetch profile"
+        )
+      );
+  }
+};
 
-    console.log("📍 Current frontend path:", currentPath);
-    console.log("🧠 Vendor DB progress:", currentStep);
+// ======================================================
+// UPDATE PROFILE
+// ======================================================
 
-    // Optional logic based on currentPath
-    // You can use a map or regex to validate allowed paths for each step
+const updateVendor = async (
+  req,
+  res
+) => {
+  try {
+    const { id } = req.params;
 
-    if (!currentStep || currentStep < 4) {
-      let redirectTo = "";
+    const updateData = {
+      ...req.body,
+    };
 
-      if (currentStep === 1) {
-        redirectTo = "/category/VendorService";
+    delete updateData.password;
+    delete updateData.confirmPassword;
+
+    const vendor =
+      await Vendor.findById(id);
+
+    if (!vendor) {
+      return res
+        .status(404)
+        .json(
+          new ApiError(
+            404,
+            "Vendor not found"
+          )
+        );
+    }
+
+    if (
+      updateData.removeProfilePicture ===
+      "true"
+    ) {
+      await deleteCloudinaryImage(
+        vendor.profilePicture
+      );
+
+      updateData.profilePicture = "";
+    }
+
+    if (req.file) {
+      await deleteCloudinaryImage(
+        vendor.profilePicture
+      );
+
+      const cloudinaryResult =
+        await uploadOnCloudinary(
+          req.file.path
+        );
+
+      if (!cloudinaryResult?.url) {
+        return res
+          .status(500)
+          .json(
+            new ApiError(
+              500,
+              "Image upload failed"
+            )
+          );
       }
-      if (currentStep === 2) {
-        redirectTo = "/vendor/payment-info";
+
+      updateData.profilePicture =
+        cloudinaryResult.url;
+    }
+
+    const updatedVendor =
+      await Vendor.findByIdAndUpdate(
+        id,
+        updateData,
+        {
+          new: true,
+          runValidators: true,
+        }
+      ).select("-password");
+
+    return res.status(200).json(
+      new ApiResponse(
+        200,
+        updatedVendor,
+        "Vendor updated successfully"
+      )
+    );
+  } catch (error) {
+    console.error(
+      "Vendor update error:",
+      error
+    );
+
+    if (req.file?.path) {
+      try {
+        await fs.unlink(
+          req.file.path
+        );
+      } catch { }
+    }
+
+    return res
+      .status(500)
+      .json(
+        new ApiError(
+          500,
+          "Vendor update failed"
+        )
+      );
+  }
+};
+
+// ======================================================
+// UPDATE PROFILE PICTURE
+// ======================================================
+
+const updateVendorProfilePicture =
+  async (req, res) => {
+    try {
+      const id = req.vendor._id;
+
+      if (!req.file) {
+        return res
+          .status(400)
+          .json(
+            new ApiError(
+              400,
+              "No image uploaded"
+            )
+          );
       }
-      if (currentStep === 3) {
-        redirectTo = "/vendor/legal-consent";
+
+      const vendor =
+        await Vendor.findById(id);
+
+      if (!vendor) {
+        return res
+          .status(404)
+          .json(
+            new ApiError(
+              404,
+              "Vendor not found"
+            )
+          );
+      }
+
+      await deleteCloudinaryImage(
+        vendor.profilePicture
+      );
+
+      const cloudinaryResult =
+        await uploadOnCloudinary(
+          req.file.path
+        );
+
+      if (!cloudinaryResult?.url) {
+        return res
+          .status(500)
+          .json(
+            new ApiError(
+              500,
+              "Image upload failed"
+            )
+          );
+      }
+
+      vendor.profilePicture =
+        cloudinaryResult.url;
+
+      await vendor.save();
+
+      return res.status(200).json(
+        new ApiResponse(
+          200,
+          vendor,
+          "Profile picture updated"
+        )
+      );
+    } catch (error) {
+      console.error(error);
+
+      return res
+        .status(500)
+        .json(
+          new ApiError(
+            500,
+            "Profile update failed"
+          )
+        );
+    }
+  };
+
+// ======================================================
+// CHANGE PASSWORD
+// ======================================================
+
+const changeVendorPassword =
+  async (req, res) => {
+    try {
+      const {
+        oldPassword,
+        newPassword,
+      } = req.body;
+
+      const vendor =
+        await Vendor.findById(
+          req.vendor._id
+        );
+
+      const valid =
+        await bcrypt.compare(
+          oldPassword,
+          vendor.password
+        );
+
+      if (!valid) {
+        return res
+          .status(400)
+          .json(
+            new ApiError(
+              400,
+              "Incorrect old password"
+            )
+          );
+      }
+
+      if (
+        oldPassword === newPassword
+      ) {
+        return res
+          .status(400)
+          .json(
+            new ApiError(
+              400,
+              "New password cannot be same"
+            )
+          );
+      }
+
+      vendor.password =
+        newPassword;
+
+      await vendor.save();
+
+      return res.status(200).json(
+        new ApiResponse(
+          200,
+          null,
+          "Password changed successfully"
+        )
+      );
+    } catch (error) {
+      return res
+        .status(500)
+        .json(
+          new ApiError(
+            500,
+            "Password change failed"
+          )
+        );
+    }
+  };
+
+// ======================================================
+// VERIFY PASSWORD
+// ======================================================
+
+const verifyConfirmPassword =
+  async (req, res) => {
+    try {
+      const { password } = req.body;
+
+      const vendor =
+        await Vendor.findById(
+          req.vendor._id
+        );
+
+      if (!vendor) {
+        return res
+          .status(404)
+          .json(
+            new ApiError(
+              404,
+              "Vendor not found"
+            )
+          );
+      }
+
+      const isMatch =
+        await bcrypt.compare(
+          password,
+          vendor.password
+        );
+
+      if (!isMatch) {
+        return res
+          .status(401)
+          .json(
+            new ApiError(
+              401,
+              "Incorrect password"
+            )
+          );
+      }
+
+      return res.status(200).json(
+        new ApiResponse(
+          200,
+          true,
+          "Password verified"
+        )
+      );
+    } catch (error) {
+      return res
+        .status(500)
+        .json(
+          new ApiError(
+            500,
+            "Verification failed"
+          )
+        );
+    }
+  };
+
+// ======================================================
+// SILENT LOGIN
+// ======================================================
+
+const vendorSilentLogin =
+  async (req, res) => {
+    try {
+      const token =
+        req.cookies
+          .vendorRefreshToken;
+
+      if (!token) {
+        return res
+          .status(401)
+          .json(
+            new ApiError(
+              401,
+              "No refresh token"
+            )
+          );
+      }
+
+      let decoded;
+
+      try {
+        decoded = jwt.verify(
+          token,
+          process.env
+            .REFRESH_TOKEN_SECRET
+        );
+      } catch {
+        return res
+          .status(401)
+          .json(
+            new ApiError(
+              401,
+              "Invalid token"
+            )
+          );
+      }
+
+      const vendor =
+        await Vendor.findById(
+          decoded._id
+        );
+
+      if (!vendor) {
+        return res
+          .status(404)
+          .json(
+            new ApiError(
+              404,
+              "Vendor not found"
+            )
+          );
+      }
+
+      const {
+        accessToken,
+        refreshToken,
+      } =
+        await generateVendorTokens(
+          vendor._id
+        );
+
+      return sendAuthResponse(
+        res,
+        200,
+        vendor,
+        accessToken,
+        refreshToken,
+        "Vendor login successful"
+      );
+    } catch (error) {
+      return res
+        .status(500)
+        .json(
+          new ApiError(
+            500,
+            "Silent login failed"
+          )
+        );
+    }
+  };
+
+// ======================================================
+// RESET PASSWORD EMAIL
+// ======================================================
+
+const sendVendorResetLink =
+  async (req, res) => {
+    try {
+      const { email } = req.body;
+
+      const vendor =
+        await Vendor.findOne({
+          email,
+        });
+
+      if (!vendor) {
+        return res
+          .status(404)
+          .json(
+            new ApiError(
+              404,
+              "Vendor not found"
+            )
+          );
+      }
+
+      const resetToken =
+        crypto
+          .randomBytes(32)
+          .toString("hex");
+
+      vendor.resetPasswordToken =
+        resetToken;
+
+      vendor.resetPasswordTokenExpires =
+        Date.now() + 3600000;
+
+      await vendor.save();
+
+      const resetUrl = `${process.env.FRONTEND_URL}/vendor/reset-password/${resetToken}`;
+
+      await sendEmail({
+        to: vendor.email,
+        subject:
+          "Vendor Password Reset",
+        html: `
+        <p>
+          Click
+          <a href="${resetUrl}">
+            here
+          </a>
+          to reset your password.
+        </p>
+        `,
+      });
+
+      return res.status(200).json(
+        new ApiResponse(
+          200,
+          null,
+          "Reset link sent"
+        )
+      );
+    } catch (error) {
+      return res
+        .status(500)
+        .json(
+          new ApiError(
+            500,
+            "Reset link failed"
+          )
+        );
+    }
+  };
+
+// ======================================================
+// RESET PASSWORD
+// ======================================================
+
+const resetVendorPassword =
+  async (req, res) => {
+    try {
+      const { resetToken } =
+        req.params;
+
+      const { newPassword } =
+        req.body;
+
+      const vendor =
+        await Vendor.findOne({
+          resetPasswordToken:
+            resetToken,
+          resetPasswordTokenExpires:
+          {
+            $gt: Date.now(),
+          },
+        });
+
+      if (!vendor) {
+        return res
+          .status(400)
+          .json(
+            new ApiError(
+              400,
+              "Token invalid or expired"
+            )
+          );
+      }
+
+      vendor.password =
+        newPassword;
+
+      vendor.resetPasswordToken =
+        undefined;
+
+      vendor.resetPasswordTokenExpires =
+        undefined;
+
+      await vendor.save();
+
+      return res.status(200).json(
+        new ApiResponse(
+          200,
+          null,
+          "Password reset successful"
+        )
+      );
+    } catch (error) {
+      return res
+        .status(500)
+        .json(
+          new ApiError(
+            500,
+            "Password reset failed"
+          )
+        );
+    }
+  };
+
+// ======================================================
+// CHECK EMAIL STATUS
+// ======================================================
+
+const checkVendorEmailStatus =
+  async (req, res) => {
+    try {
+      const { email } = req.body;
+
+      if (!email) {
+        return res
+          .status(400)
+          .json(
+            new ApiError(
+              400,
+              "Email required"
+            )
+          );
+      }
+
+      const existsInVendor =
+        await Vendor.exists({
+          email,
+        });
+
+      const existsInUser =
+        await User.exists({
+          email,
+        });
+
+      return res.status(200).json(
+        new ApiResponse(
+          200,
+          {
+            existsInVendor:
+              Boolean(
+                existsInVendor
+              ),
+            existsInUser:
+              Boolean(
+                existsInUser
+              ),
+          },
+          "Email status checked"
+        )
+      );
+    } catch (error) {
+      return res
+        .status(500)
+        .json(
+          new ApiError(
+            500,
+            "Email check failed"
+          )
+        );
+    }
+  };
+
+// ======================================================
+// SEARCH SUGGESTIONS
+// ======================================================
+
+const getSearchSuggestions =
+  async (req, res) => {
+    try {
+      const { query } =
+        req.query;
+
+      if (
+        !query ||
+        query.trim().length < 1
+      ) {
+        return res
+          .status(400)
+          .json(
+            new ApiError(
+              400,
+              "Search query required"
+            )
+          );
+      }
+
+      const searchTerm = query
+        .trim()
+        .toLowerCase();
+
+      const matches =
+        await Service.aggregate([
+          {
+            $match: {
+              $or: [
+                {
+                  serviceName: {
+                    $regex:
+                      searchTerm,
+                    $options: "i",
+                  },
+                },
+                {
+                  serviceCategory:
+                  {
+                    $regex:
+                      searchTerm,
+                    $options: "i",
+                  },
+                },
+                {
+                  locationOffered:
+                  {
+                    $regex:
+                      searchTerm,
+                    $options: "i",
+                  },
+                },
+              ],
+            },
+          },
+          {
+            $project: {
+              _id: 0,
+              serviceName: 1,
+              serviceCategory: 1,
+              locationOffered: 1,
+            },
+          },
+          {
+            $limit: 15,
+          },
+        ]);
+
+      return res.status(200).json(
+        new ApiResponse(
+          200,
+          matches,
+          "Suggestions fetched"
+        )
+      );
+    } catch (error) {
+      return res
+        .status(500)
+        .json(
+          new ApiError(
+            500,
+            "Suggestion fetch failed"
+          )
+        );
+    }
+  };
+
+// ======================================================
+// DASHBOARD
+// ======================================================
+
+const getVendorDashboard =
+  async (req, res) => {
+    try {
+      const currentStep =
+        req.vendor
+          .registrationProgress;
+
+      const redirectMap = {
+        1: "/category/VendorService",
+        2: "/vendor/payment-info",
+        3: "/vendor/legal-consent",
+      };
+
+      if (
+        !currentStep ||
+        currentStep < 4
+      ) {
+        return res.status(200).json({
+          incomplete: true,
+          redirectTo:
+            redirectMap[
+            currentStep
+            ] || "",
+        });
       }
 
       return res.status(200).json({
-        incomplete: true,
-        redirectTo,
+        incomplete: false,
+        message: `Welcome ${req.vendor.fullName}`,
+        vendor: req.vendor,
       });
+    } catch (error) {
+      return res
+        .status(500)
+        .json({
+          message:
+            "Dashboard loading failed",
+        });
     }
+  };
 
-    return res.status(200).json({
-      incomplete: false,
-      message: `Welcome to your dashboard, ${req.vendor.fullName}`,
-      vendor: req.vendor,
-    });
-  } catch (err) {
-    console.error("Dashboard error:", err);
-    return res.status(500).json({ message: "Dashboard loading failed" });
-  }
-};
+// ======================================================
+// VERIFY LOGIN
+// ======================================================
 
-const verifyVendorLogin = async (req, res) => {
-  const { phoneNo } = req.body;
+const verifyVendorLogin =
+  async (req, res) => {
+    try {
+      const { phoneNo } =
+        req.body;
 
-  console.log("verifyVendorLogin called with phoneNo:", phoneNo);
-  if (!phoneNo || !isValidPhoneNumber(phoneNo, "IN")) {
-    return res.status(400).json(new ApiError(400, "Invalid phone number"));
-  }
+      if (
+        !phoneNo ||
+        !isValidPhoneNumber(
+          phoneNo,
+          "IN"
+        )
+      ) {
+        return res
+          .status(400)
+          .json(
+            new ApiError(
+              400,
+              "Invalid phone number"
+            )
+          );
+      }
 
-  const vendor = await Vendor.findOne({ phoneNumber: phoneNo });
-  if (!vendor)
-    return res.status(404).json(new ApiError(404, "Vendor not found"));
+      const vendor =
+        await Vendor.findOne({
+          phoneNumber:
+            phoneNo,
+        });
 
-  const { accessToken, refreshToken } = await generateVendorTokens(vendor._id);
+      if (!vendor) {
+        return res
+          .status(404)
+          .json(
+            new ApiError(
+              404,
+              "Vendor not found"
+            )
+          );
+      }
 
-  const loggedInVendor = await Vendor.findById(vendor._id).select(
-    "-password -refreshToken"
-  );
+      const {
+        accessToken,
+        refreshToken,
+      } =
+        await generateVendorTokens(
+          vendor._id
+        );
 
-  return res
-    .status(200)
-    .cookie("vendorAccessToken", accessToken, accessTokenOption)
-    .cookie("vendorRefreshToken", refreshToken, refreshTokenOption)
-    .json(
-      new ApiResponse(
+      const loggedInVendor =
+        await Vendor.findById(
+          vendor._id
+        ).select(
+          "-password -refreshToken"
+        );
+
+      return sendAuthResponse(
+        res,
         200,
-        { loggedInVendor, accessToken, refreshToken },
-        "Vendor Login successful"
-      )
-    );
-};
+        loggedInVendor,
+        accessToken,
+        refreshToken,
+        "Vendor login successful"
+      );
+    } catch (error) {
+      return res
+        .status(500)
+        .json(
+          new ApiError(
+            500,
+            "Vendor verification failed"
+          )
+        );
+    }
+  };
+
+// ======================================================
+// EXPORTS
+// ======================================================
 
 export {
   registerVendor,

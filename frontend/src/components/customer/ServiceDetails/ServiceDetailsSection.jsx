@@ -14,8 +14,8 @@ const ServiceDetailsSection = ({ title, category, idealFor, inclusions }) => {
         <strong>Ideal For:</strong> {idealFor}
       </p>
 
-
-      <h3>What’s Included:</h3>
+    
+      <h3>What's Included:</h3>
       <ul className="details-list">
         {inclusions && inclusions.length > 0 ? (
           inclusions.map((item, index) => <li key={index}>{item}</li>)
